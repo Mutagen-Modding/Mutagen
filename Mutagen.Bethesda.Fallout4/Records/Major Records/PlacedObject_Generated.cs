@@ -279,15 +279,15 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportLocName => this.TeleportLocName;
         #endregion
-        #region MultiboundReference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _MultiboundReference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> MultiboundReference
+        #region MultiBoundReference
+        private readonly IFormLinkNullable<ILinkedReferenceGetter> _MultiBoundReference = new FormLinkNullable<ILinkedReferenceGetter>();
+        public IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference
         {
-            get => _MultiboundReference;
-            set => _MultiboundReference.SetTo(value);
+            get => _MultiBoundReference;
+            set => _MultiBoundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference;
+        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -479,14 +479,14 @@ namespace Mutagen.Bethesda.Fallout4
         INavigationDoorLinkGetter? IPlacedObjectGetter.NavigationDoorLink => this.NavigationDoorLink;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
         #endregion
         #region LocationRefType
         private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _LocationRefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(initialValue, new Alpha.Mask<TItem>(initialValue));
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
                 this.TeleportLocName = initialValue;
-                this.MultiboundReference = initialValue;
+                this.MultiBoundReference = initialValue;
                 this.XWCN = initialValue;
                 this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(initialValue, new WaterVelocity.Mask<TItem>(initialValue));
                 this.AcousticRestriction = initialValue;
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Alpha,
                 TItem TeleportDestination,
                 TItem TeleportLocName,
-                TItem MultiboundReference,
+                TItem MultiBoundReference,
                 TItem XWCN,
                 TItem WaterVelocity,
                 TItem AcousticRestriction,
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(Alpha, new Alpha.Mask<TItem>(Alpha));
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
                 this.TeleportLocName = TeleportLocName;
-                this.MultiboundReference = MultiboundReference;
+                this.MultiBoundReference = MultiBoundReference;
                 this.XWCN = XWCN;
                 this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(WaterVelocity, new WaterVelocity.Mask<TItem>(WaterVelocity));
                 this.AcousticRestriction = AcousticRestriction;
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Alpha.Mask<TItem>?>? Alpha { get; set; }
             public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
             public TItem TeleportLocName;
-            public TItem MultiboundReference;
+            public TItem MultiBoundReference;
             public TItem XWCN;
             public MaskItem<TItem, WaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
             public TItem AcousticRestriction;
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Alpha, rhs.Alpha)) return false;
                 if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
                 if (!object.Equals(this.TeleportLocName, rhs.TeleportLocName)) return false;
-                if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
+                if (!object.Equals(this.MultiBoundReference, rhs.MultiBoundReference)) return false;
                 if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
                 if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
                 if (!object.Equals(this.AcousticRestriction, rhs.AcousticRestriction)) return false;
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Alpha);
                 hash.Add(this.TeleportDestination);
                 hash.Add(this.TeleportLocName);
-                hash.Add(this.MultiboundReference);
+                hash.Add(this.MultiBoundReference);
                 hash.Add(this.XWCN);
                 hash.Add(this.WaterVelocity);
                 hash.Add(this.AcousticRestriction);
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.All(eval)) return false;
                 }
                 if (!eval(this.TeleportLocName)) return false;
-                if (!eval(this.MultiboundReference)) return false;
+                if (!eval(this.MultiBoundReference)) return false;
                 if (!eval(this.XWCN)) return false;
                 if (WaterVelocity != null)
                 {
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if (this.TeleportDestination.Specific != null && this.TeleportDestination.Specific.Any(eval)) return true;
                 }
                 if (eval(this.TeleportLocName)) return true;
-                if (eval(this.MultiboundReference)) return true;
+                if (eval(this.MultiBoundReference)) return true;
                 if (eval(this.XWCN)) return true;
                 if (WaterVelocity != null)
                 {
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Alpha = this.Alpha == null ? null : new MaskItem<R, Alpha.Mask<R>?>(eval(this.Alpha.Overall), this.Alpha.Specific?.Translate(eval));
                 obj.TeleportDestination = this.TeleportDestination == null ? null : new MaskItem<R, TeleportDestination.Mask<R>?>(eval(this.TeleportDestination.Overall), this.TeleportDestination.Specific?.Translate(eval));
                 obj.TeleportLocName = eval(this.TeleportLocName);
-                obj.MultiboundReference = eval(this.MultiboundReference);
+                obj.MultiBoundReference = eval(this.MultiBoundReference);
                 obj.XWCN = eval(this.XWCN);
                 obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, WaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
                 obj.AcousticRestriction = eval(this.AcousticRestriction);
@@ -2116,9 +2116,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(TeleportLocName, "TeleportLocName");
                     }
-                    if (printMask?.MultiboundReference ?? true)
+                    if (printMask?.MultiBoundReference ?? true)
                     {
-                        sb.AppendItem(MultiboundReference, "MultiboundReference");
+                        sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                     }
                     if (printMask?.XWCN ?? true)
                     {
@@ -2432,7 +2432,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Alpha.ErrorMask?>? Alpha;
             public MaskItem<Exception?, TeleportDestination.ErrorMask?>? TeleportDestination;
             public Exception? TeleportLocName;
-            public Exception? MultiboundReference;
+            public Exception? MultiBoundReference;
             public Exception? XWCN;
             public MaskItem<Exception?, WaterVelocity.ErrorMask?>? WaterVelocity;
             public Exception? AcousticRestriction;
@@ -2535,8 +2535,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return TeleportDestination;
                     case PlacedObject_FieldIndex.TeleportLocName:
                         return TeleportLocName;
-                    case PlacedObject_FieldIndex.MultiboundReference:
-                        return MultiboundReference;
+                    case PlacedObject_FieldIndex.MultiBoundReference:
+                        return MultiBoundReference;
                     case PlacedObject_FieldIndex.XWCN:
                         return XWCN;
                     case PlacedObject_FieldIndex.WaterVelocity:
@@ -2713,8 +2713,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedObject_FieldIndex.TeleportLocName:
                         this.TeleportLocName = ex;
                         break;
-                    case PlacedObject_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = ex;
+                    case PlacedObject_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = ex;
                         break;
                     case PlacedObject_FieldIndex.XWCN:
                         this.XWCN = ex;
@@ -2943,8 +2943,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedObject_FieldIndex.TeleportLocName:
                         this.TeleportLocName = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = (Exception?)obj;
+                    case PlacedObject_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.XWCN:
                         this.XWCN = (Exception?)obj;
@@ -3127,7 +3127,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Alpha != null) return true;
                 if (TeleportDestination != null) return true;
                 if (TeleportLocName != null) return true;
-                if (MultiboundReference != null) return true;
+                if (MultiBoundReference != null) return true;
                 if (XWCN != null) return true;
                 if (WaterVelocity != null) return true;
                 if (AcousticRestriction != null) return true;
@@ -3321,7 +3321,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(TeleportLocName, "TeleportLocName");
                 }
                 {
-                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                    sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                 }
                 {
                     sb.AppendItem(XWCN, "XWCN");
@@ -3560,7 +3560,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Alpha = this.Alpha.Combine(rhs.Alpha, (l, r) => l.Combine(r));
                 ret.TeleportDestination = this.TeleportDestination.Combine(rhs.TeleportDestination, (l, r) => l.Combine(r));
                 ret.TeleportLocName = this.TeleportLocName.Combine(rhs.TeleportLocName);
-                ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
+                ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.XWCN = this.XWCN.Combine(rhs.XWCN);
                 ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
                 ret.AcousticRestriction = this.AcousticRestriction.Combine(rhs.AcousticRestriction);
@@ -3655,7 +3655,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Alpha.TranslationMask? Alpha;
             public TeleportDestination.TranslationMask? TeleportDestination;
             public bool TeleportLocName;
-            public bool MultiboundReference;
+            public bool MultiBoundReference;
             public bool XWCN;
             public WaterVelocity.TranslationMask? WaterVelocity;
             public bool AcousticRestriction;
@@ -3727,7 +3727,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Emittance = defaultOn;
                 this.LitWater = defaultOn;
                 this.TeleportLocName = defaultOn;
-                this.MultiboundReference = defaultOn;
+                this.MultiBoundReference = defaultOn;
                 this.XWCN = defaultOn;
                 this.AcousticRestriction = defaultOn;
                 this.IsActivationPoint = defaultOn;
@@ -3793,7 +3793,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Alpha != null ? Alpha.OnOverall : DefaultOn, Alpha?.GetCrystal()));
                 ret.Add((TeleportDestination != null ? TeleportDestination.OnOverall : DefaultOn, TeleportDestination?.GetCrystal()));
                 ret.Add((TeleportLocName, null));
-                ret.Add((MultiboundReference, null));
+                ret.Add((MultiBoundReference, null));
                 ret.Add((XWCN, null));
                 ret.Add((WaterVelocity != null ? WaterVelocity.OnOverall : DefaultOn, WaterVelocity?.GetCrystal()));
                 ret.Add((AcousticRestriction, null));
@@ -4026,7 +4026,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Alpha? Alpha { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new IFormLinkNullable<IMessageGetter> TeleportLocName { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> MultiboundReference { get; set; }
+        new IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> AcousticRestriction { get; set; }
@@ -4048,7 +4048,7 @@ namespace Mutagen.Bethesda.Fallout4
         new LockData? Lock { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new IFormLinkNullable<ILocationReferenceTypeGetter> LocationRefType { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
@@ -4132,7 +4132,7 @@ namespace Mutagen.Bethesda.Fallout4
         IAlphaGetter? Alpha { get; }
         ITeleportDestinationGetter? TeleportDestination { get; }
         IFormLinkNullableGetter<IMessageGetter> TeleportLocName { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> MultiboundReference { get; }
+        IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference { get; }
         ReadOnlyMemorySlice<Byte>? XWCN { get; }
         IWaterVelocityGetter? WaterVelocity { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> AcousticRestriction { get; }
@@ -4154,7 +4154,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILockDataGetter? Lock { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IsIgnoredBySandbox { get; }
@@ -4381,7 +4381,7 @@ namespace Mutagen.Bethesda.Fallout4
         Alpha = 26,
         TeleportDestination = 27,
         TeleportLocName = 28,
-        MultiboundReference = 29,
+        MultiBoundReference = 29,
         XWCN = 30,
         WaterVelocity = 31,
         AcousticRestriction = 32,
@@ -4616,7 +4616,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Alpha = null;
             item.TeleportDestination = null;
             item.TeleportLocName.Clear();
-            item.MultiboundReference.Clear();
+            item.MultiBoundReference.Clear();
             item.XWCN = default;
             item.WaterVelocity = null;
             item.AcousticRestriction.Clear();
@@ -4694,7 +4694,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.LitWater.RemapLinks(mapping);
             obj.TeleportDestination?.RemapLinks(mapping);
             obj.TeleportLocName.Relink(mapping);
-            obj.MultiboundReference.Relink(mapping);
+            obj.MultiBoundReference.Relink(mapping);
             obj.AcousticRestriction.Relink(mapping);
             obj.Layer.Relink(mapping);
             obj.MaterialSwap.Relink(mapping);
@@ -4848,7 +4848,7 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.TeleportLocName = item.TeleportLocName.Equals(rhs.TeleportLocName);
-            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
+            ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
             ret.XWCN = MemorySliceExt.SequenceEqual(item.XWCN, rhs.XWCN);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
                 item.WaterVelocity,
@@ -5148,9 +5148,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.TeleportLocName.FormKeyNullable, "TeleportLocName");
             }
-            if (printMask?.MultiboundReference ?? true)
+            if (printMask?.MultiBoundReference ?? true)
             {
-                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+                sb.AppendItem(item.MultiBoundReference.FormKeyNullable, "MultiBoundReference");
             }
             if ((printMask?.XWCN ?? true)
                 && item.XWCN is {} XWCNItem)
@@ -5597,9 +5597,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.TeleportLocName.Equals(rhs.TeleportLocName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundReference) ?? true))
             {
-                if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+                if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
@@ -5928,7 +5928,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(TeleportDestinationitem);
             }
             hash.Add(item.TeleportLocName);
-            hash.Add(item.MultiboundReference);
+            hash.Add(item.MultiBoundReference);
             if (item.XWCN is {} XWCNItem)
             {
                 hash.Add(XWCNItem);
@@ -6135,9 +6135,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return TeleportLocNameInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
+            if (FormLinkInformation.TryFactory(obj.MultiBoundReference, out var MultiBoundReferenceInfo))
             {
-                yield return MultiboundReferenceInfo;
+                yield return MultiBoundReferenceInfo;
             }
             if (FormLinkInformation.TryFactory(obj.AcousticRestriction, out var AcousticRestrictionInfo))
             {
@@ -6664,9 +6664,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.TeleportLocName.SetTo(rhs.TeleportLocName.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundReference) ?? true))
             {
-                item.MultiboundReference.SetTo(rhs.MultiboundReference.FormKeyNullable);
+                item.MultiBoundReference.SetTo(rhs.MultiBoundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
@@ -7555,7 +7555,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.XTNM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MultiboundReference,
+                item: item.MultiBoundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -8041,8 +8041,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlacedObject_FieldIndex.MultiboundReference;
+                    item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
                 {
@@ -8520,9 +8520,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _TeleportLocNameLocation;
         public IFormLinkNullableGetter<IMessageGetter> TeleportLocName => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _TeleportLocNameLocation);
         #endregion
-        #region MultiboundReference
-        private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiboundReferenceLocation);
+        #region MultiBoundReference
+        private int? _MultiBoundReferenceLocation;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -8607,7 +8607,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region LocationRefType
         private int? _LocationRefTypeLocation;
@@ -8903,8 +8903,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiboundReferenceLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.MultiboundReference;
+                    _MultiBoundReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
                 {

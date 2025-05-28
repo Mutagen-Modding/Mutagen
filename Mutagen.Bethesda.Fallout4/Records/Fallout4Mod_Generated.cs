@@ -9739,11 +9739,6 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ILocationRecord":
-                case "ILocationRecordGetter":
-                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);

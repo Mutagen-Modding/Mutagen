@@ -515,7 +515,6 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ILocationReferenceType :
         IFallout4MajorRecordInternal,
-        ILocationRecord,
         ILocationReferenceTypeGetter,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>
     {
@@ -534,7 +533,6 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ILocationReferenceTypeGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
-        ILocationRecordGetter,
         ILoquiObject<ILocationReferenceTypeGetter>,
         IMapsToGetter<ILocationReferenceTypeGetter>
     {

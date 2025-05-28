@@ -217,14 +217,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -304,15 +304,15 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance;
         #endregion
-        #region MultiboundReference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _MultiboundReference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> MultiboundReference
+        #region MultiBoundReference
+        private readonly IFormLinkNullable<ILinkedReferenceGetter> _MultiBoundReference = new FormLinkNullable<ILinkedReferenceGetter>();
+        public IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference
         {
-            get => _MultiboundReference;
-            set => _MultiboundReference.SetTo(value);
+            get => _MultiBoundReference;
+            set => _MultiBoundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference;
+        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedNpcGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region IsIgnoredBySandbox2
         public Boolean IsIgnoredBySandbox2 { get; set; } = default(Boolean);
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.FactionRank = initialValue;
                 this.Emittance = initialValue;
-                this.MultiboundReference = initialValue;
+                this.MultiBoundReference = initialValue;
                 this.IsIgnoredBySandbox2 = initialValue;
                 this.Scale = initialValue;
                 this.Position = initialValue;
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Ownership,
                 TItem FactionRank,
                 TItem Emittance,
-                TItem MultiboundReference,
+                TItem MultiBoundReference,
                 TItem IsIgnoredBySandbox2,
                 TItem Scale,
                 TItem Position,
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.FactionRank = FactionRank;
                 this.Emittance = Emittance;
-                this.MultiboundReference = MultiboundReference;
+                this.MultiBoundReference = MultiBoundReference;
                 this.IsIgnoredBySandbox2 = IsIgnoredBySandbox2;
                 this.Scale = Scale;
                 this.Position = Position;
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public TItem FactionRank;
             public TItem Emittance;
-            public TItem MultiboundReference;
+            public TItem MultiBoundReference;
             public TItem IsIgnoredBySandbox2;
             public TItem Scale;
             public TItem Position;
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
-                if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
+                if (!object.Equals(this.MultiBoundReference, rhs.MultiBoundReference)) return false;
                 if (!object.Equals(this.IsIgnoredBySandbox2, rhs.IsIgnoredBySandbox2)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.Position, rhs.Position)) return false;
@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Ownership);
                 hash.Add(this.FactionRank);
                 hash.Add(this.Emittance);
-                hash.Add(this.MultiboundReference);
+                hash.Add(this.MultiBoundReference);
                 hash.Add(this.IsIgnoredBySandbox2);
                 hash.Add(this.Scale);
                 hash.Add(this.Position);
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (!eval(this.FactionRank)) return false;
                 if (!eval(this.Emittance)) return false;
-                if (!eval(this.MultiboundReference)) return false;
+                if (!eval(this.MultiBoundReference)) return false;
                 if (!eval(this.IsIgnoredBySandbox2)) return false;
                 if (!eval(this.Scale)) return false;
                 if (!eval(this.Position)) return false;
@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (eval(this.FactionRank)) return true;
                 if (eval(this.Emittance)) return true;
-                if (eval(this.MultiboundReference)) return true;
+                if (eval(this.MultiBoundReference)) return true;
                 if (eval(this.IsIgnoredBySandbox2)) return true;
                 if (eval(this.Scale)) return true;
                 if (eval(this.Position)) return true;
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 obj.FactionRank = eval(this.FactionRank);
                 obj.Emittance = eval(this.Emittance);
-                obj.MultiboundReference = eval(this.MultiboundReference);
+                obj.MultiBoundReference = eval(this.MultiBoundReference);
                 obj.IsIgnoredBySandbox2 = eval(this.IsIgnoredBySandbox2);
                 obj.Scale = eval(this.Scale);
                 obj.Position = eval(this.Position);
@@ -1118,9 +1118,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Emittance, "Emittance");
                     }
-                    if (printMask?.MultiboundReference ?? true)
+                    if (printMask?.MultiBoundReference ?? true)
                     {
-                        sb.AppendItem(MultiboundReference, "MultiboundReference");
+                        sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                     }
                     if (printMask?.IsIgnoredBySandbox2 ?? true)
                     {
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public Exception? FactionRank;
             public Exception? Emittance;
-            public Exception? MultiboundReference;
+            public Exception? MultiBoundReference;
             public Exception? IsIgnoredBySandbox2;
             public Exception? Scale;
             public Exception? Position;
@@ -1251,8 +1251,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return FactionRank;
                     case PlacedNpc_FieldIndex.Emittance:
                         return Emittance;
-                    case PlacedNpc_FieldIndex.MultiboundReference:
-                        return MultiboundReference;
+                    case PlacedNpc_FieldIndex.MultiBoundReference:
+                        return MultiBoundReference;
                     case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
                         return IsIgnoredBySandbox2;
                     case PlacedNpc_FieldIndex.Scale:
@@ -1357,8 +1357,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = ex;
                         break;
-                    case PlacedNpc_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = ex;
+                    case PlacedNpc_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = ex;
                         break;
                     case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
                         this.IsIgnoredBySandbox2 = ex;
@@ -1470,8 +1470,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
                         this.IsIgnoredBySandbox2 = (Exception?)obj;
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Ownership != null) return true;
                 if (FactionRank != null) return true;
                 if (Emittance != null) return true;
-                if (MultiboundReference != null) return true;
+                if (MultiBoundReference != null) return true;
                 if (IsIgnoredBySandbox2 != null) return true;
                 if (Scale != null) return true;
                 if (Position != null) return true;
@@ -1694,7 +1694,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Emittance, "Emittance");
                 }
                 {
-                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                    sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                 }
                 {
                     sb.AppendItem(IsIgnoredBySandbox2, "IsIgnoredBySandbox2");
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
-                ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
+                ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.IsIgnoredBySandbox2 = this.IsIgnoredBySandbox2.Combine(rhs.IsIgnoredBySandbox2);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.Position = this.Position.Combine(rhs.Position);
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Ownership.TranslationMask? Ownership;
             public bool FactionRank;
             public bool Emittance;
-            public bool MultiboundReference;
+            public bool MultiBoundReference;
             public bool IsIgnoredBySandbox2;
             public bool Scale;
             public bool Position;
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.FavorCost = defaultOn;
                 this.FactionRank = defaultOn;
                 this.Emittance = defaultOn;
-                this.MultiboundReference = defaultOn;
+                this.MultiBoundReference = defaultOn;
                 this.IsIgnoredBySandbox2 = defaultOn;
                 this.Scale = defaultOn;
                 this.Position = defaultOn;
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((FactionRank, null));
                 ret.Add((Emittance, null));
-                ret.Add((MultiboundReference, null));
+                ret.Add((MultiBoundReference, null));
                 ret.Add((IsIgnoredBySandbox2, null));
                 ret.Add((Scale, null));
                 ret.Add((Position, null));
@@ -2064,7 +2064,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
         new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
         new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
         new ExtendedList<SplineConnection> SplineConnections { get; }
@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Ownership? Ownership { get; set; }
         new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> MultiboundReference { get; set; }
+        new IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference { get; set; }
         new Boolean IsIgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new P3Float Position { get; set; }
@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
         IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
         IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IsIgnoredBySandbox { get; }
         IReadOnlyList<ISplineConnectionGetter> SplineConnections { get; }
@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Fallout4
         IOwnershipGetter? Ownership { get; }
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> MultiboundReference { get; }
+        IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference { get; }
         Boolean IsIgnoredBySandbox2 { get; }
         Single? Scale { get; }
         P3Float Position { get; }
@@ -2356,7 +2356,7 @@ namespace Mutagen.Bethesda.Fallout4
         Ownership = 32,
         FactionRank = 33,
         Emittance = 34,
-        MultiboundReference = 35,
+        MultiBoundReference = 35,
         IsIgnoredBySandbox2 = 36,
         Scale = 37,
         Position = 38,
@@ -2513,7 +2513,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Ownership = null;
             item.FactionRank = default;
             item.Emittance.Clear();
-            item.MultiboundReference.Clear();
+            item.MultiBoundReference.Clear();
             item.IsIgnoredBySandbox2 = default(Boolean);
             item.Scale = default;
             item.Position = default(P3Float);
@@ -2552,7 +2552,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.EnableParent?.RemapLinks(mapping);
             obj.Ownership?.RemapLinks(mapping);
             obj.Emittance.Relink(mapping);
-            obj.MultiboundReference.Relink(mapping);
+            obj.MultiBoundReference.Relink(mapping);
         }
         
         #endregion
@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
-            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
+            ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
             ret.IsIgnoredBySandbox2 = item.IsIgnoredBySandbox2 == rhs.IsIgnoredBySandbox2;
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Position = item.Position.Equals(rhs.Position);
@@ -2902,9 +2902,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
-            if (printMask?.MultiboundReference ?? true)
+            if (printMask?.MultiBoundReference ?? true)
             {
-                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+                sb.AppendItem(item.MultiBoundReference.FormKeyNullable, "MultiBoundReference");
             }
             if (printMask?.IsIgnoredBySandbox2 ?? true)
             {
@@ -3110,9 +3110,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiBoundReference) ?? true))
             {
-                if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+                if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2) ?? true))
             {
@@ -3229,7 +3229,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.Emittance);
-            hash.Add(item.MultiboundReference);
+            hash.Add(item.MultiBoundReference);
             hash.Add(item.IsIgnoredBySandbox2);
             if (item.Scale is {} Scaleitem)
             {
@@ -3352,9 +3352,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return EmittanceInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
+            if (FormLinkInformation.TryFactory(obj.MultiBoundReference, out var MultiBoundReferenceInfo))
             {
-                yield return MultiboundReferenceInfo;
+                yield return MultiBoundReferenceInfo;
             }
             yield break;
         }
@@ -3743,9 +3743,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Emittance.SetTo(rhs.Emittance.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiBoundReference) ?? true))
             {
-                item.MultiboundReference.SetTo(rhs.MultiboundReference.FormKeyNullable);
+                item.MultiBoundReference.SetTo(rhs.MultiBoundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2) ?? true))
             {
@@ -4095,7 +4095,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.XEMI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MultiboundReference,
+                item: item.MultiBoundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
@@ -4376,8 +4376,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlacedNpc_FieldIndex.MultiboundReference;
+                    item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XIBS:
                 {
@@ -4538,7 +4538,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IsIgnoredBySandbox
@@ -4567,9 +4567,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _EmittanceLocation;
         public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
-        #region MultiboundReference
-        private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiboundReferenceLocation);
+        #region MultiBoundReference
+        private int? _MultiBoundReferenceLocation;
+        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region IsIgnoredBySandbox2
         private int? _IsIgnoredBySandbox2Location;
@@ -4849,8 +4849,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiboundReferenceLocation = (stream.Position - offset);
-                    return (int)PlacedNpc_FieldIndex.MultiboundReference;
+                    _MultiBoundReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XIBS:
                 {

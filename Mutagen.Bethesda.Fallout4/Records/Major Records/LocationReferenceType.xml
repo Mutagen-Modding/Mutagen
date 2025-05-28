@@ -5,6 +5,5 @@
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <ByteArray name="TNAM" recordType="TNAM" />
     </Fields>
-    <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
 </Loqui>

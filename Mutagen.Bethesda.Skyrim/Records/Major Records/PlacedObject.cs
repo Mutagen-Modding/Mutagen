@@ -30,7 +30,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         Ground = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         Ground = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -158,11 +158,36 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IPlacementGetter? IPlacedGetter.Placement => this.Placement;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IVirtualMachineAdapterGetter? IPlacedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IEmittanceGetter> IPlacedGetter.Emittance => this.Emittance;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedGetter.MultiBoundReference => this.MultiBoundReference;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IActivateParentsGetter? IPlacedGetter.ActivateParents => this.ActivateParents;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IEncounterZoneGetter> IPlacedGetter.EncounterZone => this.EncounterZone;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? IPlacedGetter.LocationRefTypes => this.LocationRefTypes;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IOwnerGetter> IPlacedGetter.Owner => this.Owner;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<ILocationGetter> IPlacedGetter.LocationReference => this.LocationReference;
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IEnableParentGetter? IPlacedGetter.EnableParent => this.EnableParent;
 }
