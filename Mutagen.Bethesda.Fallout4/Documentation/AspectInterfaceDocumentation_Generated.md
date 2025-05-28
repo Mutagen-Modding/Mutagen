@@ -46,6 +46,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### IHasVoiceType
 - Npc
+- TalkingActivator
 ### IHaveVirtualMachineAdapter
 - Activator
 - APlacedTrap
@@ -795,6 +796,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 ### TalkingActivator
 - IHasDestructible
+- IHasVoiceType
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled

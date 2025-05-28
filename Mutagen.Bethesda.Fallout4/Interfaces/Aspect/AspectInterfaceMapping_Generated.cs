@@ -98,6 +98,7 @@ namespace Mutagen.Bethesda.Fallout4
                 new ILoquiRegistration[]
                 {
                     Npc_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasVoiceType),

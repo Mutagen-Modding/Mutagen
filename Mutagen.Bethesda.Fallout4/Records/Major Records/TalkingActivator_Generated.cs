@@ -209,15 +209,15 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int16? ITalkingActivatorGetter.FNAM => this.FNAM;
         #endregion
-        #region VoiceType
-        private readonly IFormLinkNullable<IVoiceTypeGetter> _VoiceType = new FormLinkNullable<IVoiceTypeGetter>();
-        public IFormLinkNullable<IVoiceTypeGetter> VoiceType
+        #region Voice
+        private readonly IFormLinkNullable<IVoiceTypeGetter> _Voice = new FormLinkNullable<IVoiceTypeGetter>();
+        public IFormLinkNullable<IVoiceTypeGetter> Voice
         {
-            get => _VoiceType;
-            set => _VoiceType.SetTo(value);
+            get => _Voice;
+            set => _Voice.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType;
+        IFormLinkNullableGetter<IVoiceTypeGetter> ITalkingActivatorGetter.Voice => this.Voice;
         #endregion
 
         #region To String
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PNAM = initialValue;
                 this.LoopingSound = initialValue;
                 this.FNAM = initialValue;
-                this.VoiceType = initialValue;
+                this.Voice = initialValue;
             }
 
             public Mask(
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem PNAM,
                 TItem LoopingSound,
                 TItem FNAM,
-                TItem VoiceType)
+                TItem Voice)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PNAM = PNAM;
                 this.LoopingSound = LoopingSound;
                 this.FNAM = FNAM;
-                this.VoiceType = VoiceType;
+                this.Voice = Voice;
             }
 
             #pragma warning disable CS8618
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem PNAM;
             public TItem LoopingSound;
             public TItem FNAM;
-            public TItem VoiceType;
+            public TItem Voice;
             #endregion
 
             #region Equals
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
                 if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.VoiceType, rhs.VoiceType)) return false;
+                if (!object.Equals(this.Voice, rhs.Voice)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.PNAM);
                 hash.Add(this.LoopingSound);
                 hash.Add(this.FNAM);
-                hash.Add(this.VoiceType);
+                hash.Add(this.Voice);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.PNAM)) return false;
                 if (!eval(this.LoopingSound)) return false;
                 if (!eval(this.FNAM)) return false;
-                if (!eval(this.VoiceType)) return false;
+                if (!eval(this.Voice)) return false;
                 return true;
             }
             #endregion
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.PNAM)) return true;
                 if (eval(this.LoopingSound)) return true;
                 if (eval(this.FNAM)) return true;
-                if (eval(this.VoiceType)) return true;
+                if (eval(this.Voice)) return true;
                 return false;
             }
             #endregion
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PNAM = eval(this.PNAM);
                 obj.LoopingSound = eval(this.LoopingSound);
                 obj.FNAM = eval(this.FNAM);
-                obj.VoiceType = eval(this.VoiceType);
+                obj.Voice = eval(this.Voice);
             }
             #endregion
 
@@ -551,9 +551,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(FNAM, "FNAM");
                     }
-                    if (printMask?.VoiceType ?? true)
+                    if (printMask?.Voice ?? true)
                     {
-                        sb.AppendItem(VoiceType, "VoiceType");
+                        sb.AppendItem(Voice, "Voice");
                     }
                 }
             }
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? PNAM;
             public Exception? LoopingSound;
             public Exception? FNAM;
-            public Exception? VoiceType;
+            public Exception? Voice;
             #endregion
 
             #region IErrorMask
@@ -602,8 +602,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return LoopingSound;
                     case TalkingActivator_FieldIndex.FNAM:
                         return FNAM;
-                    case TalkingActivator_FieldIndex.VoiceType:
-                        return VoiceType;
+                    case TalkingActivator_FieldIndex.Voice:
+                        return Voice;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -641,8 +641,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case TalkingActivator_FieldIndex.FNAM:
                         this.FNAM = ex;
                         break;
-                    case TalkingActivator_FieldIndex.VoiceType:
-                        this.VoiceType = ex;
+                    case TalkingActivator_FieldIndex.Voice:
+                        this.Voice = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -682,8 +682,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case TalkingActivator_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
                         break;
-                    case TalkingActivator_FieldIndex.VoiceType:
-                        this.VoiceType = (Exception?)obj;
+                    case TalkingActivator_FieldIndex.Voice:
+                        this.Voice = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (PNAM != null) return true;
                 if (LoopingSound != null) return true;
                 if (FNAM != null) return true;
-                if (VoiceType != null) return true;
+                if (Voice != null) return true;
                 return false;
             }
             #endregion
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(FNAM, "FNAM");
                 }
                 {
-                    sb.AppendItem(VoiceType, "VoiceType");
+                    sb.AppendItem(Voice, "Voice");
                 }
             }
             #endregion
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.PNAM = this.PNAM.Combine(rhs.PNAM);
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.VoiceType = this.VoiceType.Combine(rhs.VoiceType);
+                ret.Voice = this.Voice.Combine(rhs.Voice);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool PNAM;
             public bool LoopingSound;
             public bool FNAM;
-            public bool VoiceType;
+            public bool Voice;
             #endregion
 
             #region Ctors
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PNAM = defaultOn;
                 this.LoopingSound = defaultOn;
                 this.FNAM = defaultOn;
-                this.VoiceType = defaultOn;
+                this.Voice = defaultOn;
             }
 
             #endregion
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((PNAM, null));
                 ret.Add((LoopingSound, null));
                 ret.Add((FNAM, null));
-                ret.Add((VoiceType, null));
+                ret.Add((Voice, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1001,6 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
+        IHasVoiceType,
         IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
@@ -1042,7 +1043,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Int32? PNAM { get; set; }
         new IFormLinkNullable<ISoundMarkerGetter> LoopingSound { get; set; }
         new Int16? FNAM { get; set; }
-        new IFormLinkNullable<IVoiceTypeGetter> VoiceType { get; set; }
+        new IFormLinkNullable<IVoiceTypeGetter> Voice { get; set; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1063,6 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
+        IHasVoiceTypeGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ITalkingActivatorGetter>,
@@ -1117,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout4
         Int32? PNAM { get; }
         IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound { get; }
         Int16? FNAM { get; }
-        IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType { get; }
+        IFormLinkNullableGetter<IVoiceTypeGetter> Voice { get; }
 
         #region Mutagen
         TalkingActivator.MajorFlag MajorFlags { get; }
@@ -1307,7 +1309,7 @@ namespace Mutagen.Bethesda.Fallout4
         PNAM = 13,
         LoopingSound = 14,
         FNAM = 15,
-        VoiceType = 16,
+        Voice = 16,
     }
     #endregion
 
@@ -1423,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.PNAM = default;
             item.LoopingSound.Clear();
             item.FNAM = default;
-            item.VoiceType.Clear();
+            item.Voice.Clear();
             base.Clear(item);
         }
         
@@ -1446,7 +1448,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.LoopingSound.Relink(mapping);
-            obj.VoiceType.Relink(mapping);
+            obj.Voice.Relink(mapping);
         }
         
         #endregion
@@ -1538,7 +1540,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.PNAM = item.PNAM == rhs.PNAM;
             ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
             ret.FNAM = item.FNAM == rhs.FNAM;
-            ret.VoiceType = item.VoiceType.Equals(rhs.VoiceType);
+            ret.Voice = item.Voice.Equals(rhs.Voice);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1641,9 +1643,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(FNAMItem, "FNAM");
             }
-            if (printMask?.VoiceType ?? true)
+            if (printMask?.Voice ?? true)
             {
-                sb.AppendItem(item.VoiceType.FormKeyNullable, "VoiceType");
+                sb.AppendItem(item.Voice.FormKeyNullable, "Voice");
             }
         }
         
@@ -1747,9 +1749,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.FNAM != rhs.FNAM) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Voice) ?? true))
             {
-                if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
+                if (!lhs.Voice.Equals(rhs.Voice)) return false;
             }
             return true;
         }
@@ -1806,7 +1808,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(FNAMitem);
             }
-            hash.Add(item.VoiceType);
+            hash.Add(item.Voice);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1868,9 +1870,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return LoopingSoundInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.VoiceType, out var VoiceTypeInfo))
+            if (FormLinkInformation.TryFactory(obj.Voice, out var VoiceInfo))
             {
-                yield return VoiceTypeInfo;
+                yield return VoiceInfo;
             }
             yield break;
         }
@@ -2089,9 +2091,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FNAM = rhs.FNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Voice) ?? true))
             {
-                item.VoiceType.SetTo(rhs.VoiceType.FormKeyNullable);
+                item.Voice.SetTo(rhs.Voice.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -2320,7 +2322,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.VoiceType,
+                item: item.Voice,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM));
         }
 
@@ -2466,8 +2468,8 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)TalkingActivator_FieldIndex.VoiceType;
+                    item.Voice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)TalkingActivator_FieldIndex.Voice;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2575,9 +2577,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FNAMLocation;
         public Int16? FNAM => _FNAMLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
-        #region VoiceType
-        private int? _VoiceTypeLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceTypeLocation);
+        #region Voice
+        private int? _VoiceLocation;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2719,8 +2721,8 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VoiceTypeLocation = (stream.Position - offset);
-                    return (int)TalkingActivator_FieldIndex.VoiceType;
+                    _VoiceLocation = (stream.Position - offset);
+                    return (int)TalkingActivator_FieldIndex.Voice;
                 }
                 case RecordTypeInts.XXXX:
                 {
