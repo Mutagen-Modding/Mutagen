@@ -9,8 +9,6 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
     public static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
     public static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
     public const string DataDirectory = "Data";
-    private static readonly string DataPrefix = DataDirectory + System.IO.Path.DirectorySeparatorChar;
-    private static readonly string DataPrefixAlt = DataDirectory + System.IO.Path.AltDirectorySeparatorChar;
     private static readonly string DataInfix = System.IO.Path.DirectorySeparatorChar + DataDirectory + System.IO.Path.DirectorySeparatorChar;
     private static readonly string DataInfixAlt = System.IO.Path.AltDirectorySeparatorChar + DataDirectory + System.IO.Path.AltDirectorySeparatorChar;
     private static readonly int DataPrefixLength = DataDirectory.Length + 1;
