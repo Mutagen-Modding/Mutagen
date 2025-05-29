@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins;
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -11,5 +12,6 @@ public partial class TalkingActivator
         RadioStation = 0x0002_0000,
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }

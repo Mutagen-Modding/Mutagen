@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ public partial class Npc
         BleedoutOverride = 0x2000_0000
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }
 
