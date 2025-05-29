@@ -98,7 +98,7 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
     private static bool TryLocateDataTrimIndex(ReadOnlySpan<char> path, out int index)
     {
         index = 0;
-        while (true)
+        while (path.Length > index)
         {
             var shiftIndex = path.Slice(index).IndexOf(DataDirectory, PathComparison);
             if (shiftIndex == -1) return false;
@@ -113,6 +113,8 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
                 index = DataPrefixLength + index;
             }
         }
+
+        return false;
     }
 
     private static bool EnclosedByDirectoryPaths(ReadOnlySpan<char> path, int index)
