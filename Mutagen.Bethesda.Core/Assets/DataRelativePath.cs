@@ -9,8 +9,6 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
     public static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
     public static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
     public const string DataDirectory = "Data";
-    private static readonly string DataPrefix = DataDirectory + System.IO.Path.DirectorySeparatorChar;
-    private static readonly string DataPrefixAlt = DataDirectory + System.IO.Path.AltDirectorySeparatorChar;
     private static readonly string DataInfix = System.IO.Path.DirectorySeparatorChar + DataDirectory + System.IO.Path.DirectorySeparatorChar;
     private static readonly string DataInfixAlt = System.IO.Path.AltDirectorySeparatorChar + DataDirectory + System.IO.Path.AltDirectorySeparatorChar;
     private static readonly int DataPrefixLength = DataDirectory.Length + 1;
@@ -98,7 +96,7 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
     private static bool TryLocateDataTrimIndex(ReadOnlySpan<char> path, out int index)
     {
         index = 0;
-        while (true)
+        while (path.Length > index)
         {
             var shiftIndex = path.Slice(index).IndexOf(DataDirectory, PathComparison);
             if (shiftIndex == -1) return false;
@@ -113,6 +111,8 @@ public readonly struct DataRelativePath : IEquatable<DataRelativePath>, ICompara
                 index = DataPrefixLength + index;
             }
         }
+
+        return false;
     }
 
     private static bool EnclosedByDirectoryPaths(ReadOnlySpan<char> path, int index)
