@@ -127,17 +127,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region UniqueActorRemoved
+        #region UniqueActorReferencesRemoved
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<INpcGetter>>? _UniqueActorRemoved;
-        public ExtendedList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved
+        private ExtendedList<IFormLinkGetter<INpcGetter>>? _UniqueActorReferencesRemoved;
+        public ExtendedList<IFormLinkGetter<INpcGetter>>? UniqueActorReferencesRemoved
         {
-            get => this._UniqueActorRemoved;
-            set => this._UniqueActorRemoved = value;
+            get => this._UniqueActorReferencesRemoved;
+            set => this._UniqueActorReferencesRemoved = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ILocationGetter.UniqueActorRemoved => _UniqueActorRemoved;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ILocationGetter.UniqueActorReferencesRemoved => _UniqueActorReferencesRemoved;
         #endregion
 
         #endregion
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
                 this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
-                this.UniqueActorRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UniqueActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
                 this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
                 this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PersistentActorReferencesRemoved,
                 TItem UniqueActorReferencesAdded,
                 TItem UniqueActorReferencesStatic,
-                TItem UniqueActorRemoved,
+                TItem UniqueActorReferencesRemoved,
                 TItem LocationRefTypeReferencesAdded,
                 TItem LocationRefTypeReferencesStatic,
                 TItem LocationRefTypeReferencesRemoved,
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PersistentActorReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
                 this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
                 this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
-                this.UniqueActorRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UniqueActorRemoved, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UniqueActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UniqueActorReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
                 this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
                 this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
                 this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypeReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PersistentActorReferencesRemoved;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>? UniqueActorReferencesAdded;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>? UniqueActorReferencesStatic;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? UniqueActorRemoved;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? UniqueActorReferencesRemoved;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>? LocationRefTypeReferencesAdded;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>? LocationRefTypeReferencesStatic;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypeReferencesRemoved;
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.PersistentActorReferencesRemoved, rhs.PersistentActorReferencesRemoved)) return false;
                 if (!object.Equals(this.UniqueActorReferencesAdded, rhs.UniqueActorReferencesAdded)) return false;
                 if (!object.Equals(this.UniqueActorReferencesStatic, rhs.UniqueActorReferencesStatic)) return false;
-                if (!object.Equals(this.UniqueActorRemoved, rhs.UniqueActorRemoved)) return false;
+                if (!object.Equals(this.UniqueActorReferencesRemoved, rhs.UniqueActorReferencesRemoved)) return false;
                 if (!object.Equals(this.LocationRefTypeReferencesAdded, rhs.LocationRefTypeReferencesAdded)) return false;
                 if (!object.Equals(this.LocationRefTypeReferencesStatic, rhs.LocationRefTypeReferencesStatic)) return false;
                 if (!object.Equals(this.LocationRefTypeReferencesRemoved, rhs.LocationRefTypeReferencesRemoved)) return false;
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.PersistentActorReferencesRemoved);
                 hash.Add(this.UniqueActorReferencesAdded);
                 hash.Add(this.UniqueActorReferencesStatic);
-                hash.Add(this.UniqueActorRemoved);
+                hash.Add(this.UniqueActorReferencesRemoved);
                 hash.Add(this.LocationRefTypeReferencesAdded);
                 hash.Add(this.LocationRefTypeReferencesStatic);
                 hash.Add(this.LocationRefTypeReferencesRemoved);
@@ -690,12 +690,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (this.UniqueActorRemoved != null)
+                if (this.UniqueActorReferencesRemoved != null)
                 {
-                    if (!eval(this.UniqueActorRemoved.Overall)) return false;
-                    if (this.UniqueActorRemoved.Specific != null)
+                    if (!eval(this.UniqueActorReferencesRemoved.Overall)) return false;
+                    if (this.UniqueActorReferencesRemoved.Specific != null)
                     {
-                        foreach (var item in this.UniqueActorRemoved.Specific)
+                        foreach (var item in this.UniqueActorReferencesRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -904,12 +904,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (this.UniqueActorRemoved != null)
+                if (this.UniqueActorReferencesRemoved != null)
                 {
-                    if (eval(this.UniqueActorRemoved.Overall)) return true;
-                    if (this.UniqueActorRemoved.Specific != null)
+                    if (eval(this.UniqueActorReferencesRemoved.Overall)) return true;
+                    if (this.UniqueActorReferencesRemoved.Specific != null)
                     {
-                        foreach (var item in this.UniqueActorRemoved.Specific)
+                        foreach (var item in this.UniqueActorReferencesRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -1140,14 +1140,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (UniqueActorRemoved != null)
+                if (UniqueActorReferencesRemoved != null)
                 {
-                    obj.UniqueActorRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UniqueActorRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (UniqueActorRemoved.Specific != null)
+                    obj.UniqueActorReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UniqueActorReferencesRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (UniqueActorReferencesRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.UniqueActorRemoved.Specific = l;
-                        foreach (var item in UniqueActorRemoved.Specific)
+                        obj.UniqueActorReferencesRemoved.Specific = l;
+                        foreach (var item in UniqueActorReferencesRemoved.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -1438,16 +1438,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.UniqueActorRemoved?.Overall ?? true)
-                        && UniqueActorRemoved is {} UniqueActorRemovedItem)
+                    if ((printMask?.UniqueActorReferencesRemoved?.Overall ?? true)
+                        && UniqueActorReferencesRemoved is {} UniqueActorReferencesRemovedItem)
                     {
-                        sb.AppendLine("UniqueActorRemoved =>");
+                        sb.AppendLine("UniqueActorReferencesRemoved =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(UniqueActorRemovedItem.Overall);
-                            if (UniqueActorRemovedItem.Specific != null)
+                            sb.AppendItem(UniqueActorReferencesRemovedItem.Overall);
+                            if (UniqueActorReferencesRemovedItem.Specific != null)
                             {
-                                foreach (var subItem in UniqueActorRemovedItem.Specific)
+                                foreach (var subItem in UniqueActorReferencesRemovedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PersistentActorReferencesRemoved;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>? UniqueActorReferencesAdded;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>? UniqueActorReferencesStatic;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UniqueActorRemoved;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UniqueActorReferencesRemoved;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>? LocationRefTypeReferencesAdded;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>? LocationRefTypeReferencesStatic;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypeReferencesRemoved;
@@ -1762,8 +1762,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return UniqueActorReferencesAdded;
                     case Location_FieldIndex.UniqueActorReferencesStatic:
                         return UniqueActorReferencesStatic;
-                    case Location_FieldIndex.UniqueActorRemoved:
-                        return UniqueActorRemoved;
+                    case Location_FieldIndex.UniqueActorReferencesRemoved:
+                        return UniqueActorReferencesRemoved;
                     case Location_FieldIndex.LocationRefTypeReferencesAdded:
                         return LocationRefTypeReferencesAdded;
                     case Location_FieldIndex.LocationRefTypeReferencesStatic:
@@ -1827,8 +1827,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Location_FieldIndex.UniqueActorReferencesStatic:
                         this.UniqueActorReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.UniqueActorRemoved:
-                        this.UniqueActorRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Location_FieldIndex.UniqueActorReferencesRemoved:
+                        this.UniqueActorReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Location_FieldIndex.LocationRefTypeReferencesAdded:
                         this.LocationRefTypeReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(ex, null);
@@ -1913,8 +1913,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Location_FieldIndex.UniqueActorReferencesStatic:
                         this.UniqueActorReferencesStatic = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.UniqueActorRemoved:
-                        this.UniqueActorRemoved = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Location_FieldIndex.UniqueActorReferencesRemoved:
+                        this.UniqueActorReferencesRemoved = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Location_FieldIndex.LocationRefTypeReferencesAdded:
                         this.LocationRefTypeReferencesAdded = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>)obj;
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (PersistentActorReferencesRemoved != null) return true;
                 if (UniqueActorReferencesAdded != null) return true;
                 if (UniqueActorReferencesStatic != null) return true;
-                if (UniqueActorRemoved != null) return true;
+                if (UniqueActorReferencesRemoved != null) return true;
                 if (LocationRefTypeReferencesAdded != null) return true;
                 if (LocationRefTypeReferencesStatic != null) return true;
                 if (LocationRefTypeReferencesRemoved != null) return true;
@@ -2125,15 +2125,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (UniqueActorRemoved is {} UniqueActorRemovedItem)
+                if (UniqueActorReferencesRemoved is {} UniqueActorReferencesRemovedItem)
                 {
-                    sb.AppendLine("UniqueActorRemoved =>");
+                    sb.AppendLine("UniqueActorReferencesRemoved =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(UniqueActorRemovedItem.Overall);
-                        if (UniqueActorRemovedItem.Specific != null)
+                        sb.AppendItem(UniqueActorReferencesRemovedItem.Overall);
+                        if (UniqueActorReferencesRemovedItem.Specific != null)
                         {
-                            foreach (var subItem in UniqueActorRemovedItem.Specific)
+                            foreach (var subItem in UniqueActorReferencesRemovedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.PersistentActorReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PersistentActorReferencesRemoved?.Overall, rhs.PersistentActorReferencesRemoved?.Overall), Noggog.ExceptionExt.Combine(this.PersistentActorReferencesRemoved?.Specific, rhs.PersistentActorReferencesRemoved?.Specific));
                 ret.UniqueActorReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UniqueActorReferencesAdded?.Overall, rhs.UniqueActorReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorReferencesAdded?.Specific, rhs.UniqueActorReferencesAdded?.Specific));
                 ret.UniqueActorReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UniqueActorReferencesStatic?.Overall, rhs.UniqueActorReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorReferencesStatic?.Specific, rhs.UniqueActorReferencesStatic?.Specific));
-                ret.UniqueActorRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.UniqueActorRemoved?.Overall, rhs.UniqueActorRemoved?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorRemoved?.Specific, rhs.UniqueActorRemoved?.Specific));
+                ret.UniqueActorReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.UniqueActorReferencesRemoved?.Overall, rhs.UniqueActorReferencesRemoved?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorReferencesRemoved?.Specific, rhs.UniqueActorReferencesRemoved?.Specific));
                 ret.LocationRefTypeReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesAdded?.Overall, rhs.LocationRefTypeReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesAdded?.Specific, rhs.LocationRefTypeReferencesAdded?.Specific));
                 ret.LocationRefTypeReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesStatic?.Overall, rhs.LocationRefTypeReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesStatic?.Specific, rhs.LocationRefTypeReferencesStatic?.Specific));
                 ret.LocationRefTypeReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesRemoved?.Overall, rhs.LocationRefTypeReferencesRemoved?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesRemoved?.Specific, rhs.LocationRefTypeReferencesRemoved?.Specific));
@@ -2435,7 +2435,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PersistentActorReferencesRemoved;
             public UniqueActorReference.TranslationMask? UniqueActorReferencesAdded;
             public UniqueActorReference.TranslationMask? UniqueActorReferencesStatic;
-            public bool UniqueActorRemoved;
+            public bool UniqueActorReferencesRemoved;
             public LocationRefTypeReference.TranslationMask? LocationRefTypeReferencesAdded;
             public LocationRefTypeReference.TranslationMask? LocationRefTypeReferencesStatic;
             public bool LocationRefTypeReferencesRemoved;
@@ -2464,7 +2464,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.PersistentActorReferencesRemoved = defaultOn;
-                this.UniqueActorRemoved = defaultOn;
+                this.UniqueActorReferencesRemoved = defaultOn;
                 this.LocationRefTypeReferencesRemoved = defaultOn;
                 this.InitiallyDisabledReferencesAdded = defaultOn;
                 this.InitiallyDisabledReferencesStatic = defaultOn;
@@ -2489,7 +2489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PersistentActorReferencesRemoved, null));
                 ret.Add((UniqueActorReferencesAdded == null ? DefaultOn : !UniqueActorReferencesAdded.GetCrystal().CopyNothing, UniqueActorReferencesAdded?.GetCrystal()));
                 ret.Add((UniqueActorReferencesStatic == null ? DefaultOn : !UniqueActorReferencesStatic.GetCrystal().CopyNothing, UniqueActorReferencesStatic?.GetCrystal()));
-                ret.Add((UniqueActorRemoved, null));
+                ret.Add((UniqueActorReferencesRemoved, null));
                 ret.Add((LocationRefTypeReferencesAdded == null ? DefaultOn : !LocationRefTypeReferencesAdded.GetCrystal().CopyNothing, LocationRefTypeReferencesAdded?.GetCrystal()));
                 ret.Add((LocationRefTypeReferencesStatic == null ? DefaultOn : !LocationRefTypeReferencesStatic.GetCrystal().CopyNothing, LocationRefTypeReferencesStatic?.GetCrystal()));
                 ret.Add((LocationRefTypeReferencesRemoved, null));
@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved { get; set; }
         new ExtendedList<UniqueActorReference>? UniqueActorReferencesAdded { get; set; }
         new ExtendedList<UniqueActorReference>? UniqueActorReferencesStatic { get; set; }
-        new ExtendedList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved { get; set; }
+        new ExtendedList<IFormLinkGetter<INpcGetter>>? UniqueActorReferencesRemoved { get; set; }
         new ExtendedList<LocationRefTypeReference>? LocationRefTypeReferencesAdded { get; set; }
         new ExtendedList<LocationRefTypeReference>? LocationRefTypeReferencesStatic { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; set; }
@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved { get; }
         IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesAdded { get; }
         IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesStatic { get; }
-        IReadOnlyList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved { get; }
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? UniqueActorReferencesRemoved { get; }
         IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesAdded { get; }
         IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesStatic { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; }
@@ -2931,7 +2931,7 @@ namespace Mutagen.Bethesda.Skyrim
         PersistentActorReferencesRemoved = 9,
         UniqueActorReferencesAdded = 10,
         UniqueActorReferencesStatic = 11,
-        UniqueActorRemoved = 12,
+        UniqueActorReferencesRemoved = 12,
         LocationRefTypeReferencesAdded = 13,
         LocationRefTypeReferencesStatic = 14,
         LocationRefTypeReferencesRemoved = 15,
@@ -3071,7 +3071,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.PersistentActorReferencesRemoved = null;
             item.UniqueActorReferencesAdded = null;
             item.UniqueActorReferencesStatic = null;
-            item.UniqueActorRemoved = null;
+            item.UniqueActorReferencesRemoved = null;
             item.LocationRefTypeReferencesAdded = null;
             item.LocationRefTypeReferencesStatic = null;
             item.LocationRefTypeReferencesRemoved = null;
@@ -3113,7 +3113,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.PersistentActorReferencesRemoved?.RemapLinks(mapping);
             obj.UniqueActorReferencesAdded?.RemapLinks(mapping);
             obj.UniqueActorReferencesStatic?.RemapLinks(mapping);
-            obj.UniqueActorRemoved?.RemapLinks(mapping);
+            obj.UniqueActorReferencesRemoved?.RemapLinks(mapping);
             obj.LocationRefTypeReferencesAdded?.RemapLinks(mapping);
             obj.LocationRefTypeReferencesStatic?.RemapLinks(mapping);
             obj.LocationRefTypeReferencesRemoved?.RemapLinks(mapping);
@@ -3217,8 +3217,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.UniqueActorReferencesStatic,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UniqueActorRemoved = item.UniqueActorRemoved.CollectionEqualsHelper(
-                rhs.UniqueActorRemoved,
+            ret.UniqueActorReferencesRemoved = item.UniqueActorReferencesRemoved.CollectionEqualsHelper(
+                rhs.UniqueActorReferencesRemoved,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.LocationRefTypeReferencesAdded = item.LocationRefTypeReferencesAdded.CollectionEqualsHelper(
@@ -3397,13 +3397,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.UniqueActorRemoved?.Overall ?? true)
-                && item.UniqueActorRemoved is {} UniqueActorRemovedItem)
+            if ((printMask?.UniqueActorReferencesRemoved?.Overall ?? true)
+                && item.UniqueActorReferencesRemoved is {} UniqueActorReferencesRemovedItem)
             {
-                sb.AppendLine("UniqueActorRemoved =>");
+                sb.AppendLine("UniqueActorReferencesRemoved =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in UniqueActorRemovedItem)
+                    foreach (var subItem in UniqueActorReferencesRemovedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3679,9 +3679,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.UniqueActorReferencesStatic.SequenceEqualNullable(rhs.UniqueActorReferencesStatic, (l, r) => ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.UniqueActorReferencesStatic)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorRemoved) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorReferencesRemoved) ?? true))
             {
-                if (!lhs.UniqueActorRemoved.SequenceEqualNullable(rhs.UniqueActorRemoved)) return false;
+                if (!lhs.UniqueActorReferencesRemoved.SequenceEqualNullable(rhs.UniqueActorReferencesRemoved)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesAdded) ?? true))
             {
@@ -3792,7 +3792,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.PersistentActorReferencesRemoved);
             hash.Add(item.UniqueActorReferencesAdded);
             hash.Add(item.UniqueActorReferencesStatic);
-            hash.Add(item.UniqueActorRemoved);
+            hash.Add(item.UniqueActorReferencesRemoved);
             hash.Add(item.LocationRefTypeReferencesAdded);
             hash.Add(item.LocationRefTypeReferencesStatic);
             hash.Add(item.LocationRefTypeReferencesRemoved);
@@ -3885,9 +3885,9 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.UniqueActorRemoved is {} UniqueActorRemovedItem)
+            if (obj.UniqueActorReferencesRemoved is {} UniqueActorReferencesRemovedItem)
             {
-                foreach (var item in UniqueActorRemovedItem)
+                foreach (var item in UniqueActorReferencesRemovedItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4209,21 +4209,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorRemoved) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorReferencesRemoved) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.UniqueActorRemoved);
+                errorMask?.PushIndex((int)Location_FieldIndex.UniqueActorReferencesRemoved);
                 try
                 {
-                    if ((rhs.UniqueActorRemoved != null))
+                    if ((rhs.UniqueActorReferencesRemoved != null))
                     {
-                        item.UniqueActorRemoved = 
-                            rhs.UniqueActorRemoved
+                        item.UniqueActorReferencesRemoved = 
+                            rhs.UniqueActorReferencesRemoved
                                 .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<INpcGetter>>();
                     }
                     else
                     {
-                        item.UniqueActorRemoved = null;
+                        item.UniqueActorReferencesRemoved = null;
                     }
                 }
                 catch (Exception ex)
@@ -4805,7 +4805,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
-                items: item.UniqueActorRemoved,
+                items: item.UniqueActorReferencesRemoved,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCUN),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -5100,12 +5100,12 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RCUN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UniqueActorRemoved = 
+                    item.UniqueActorReferencesRemoved = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<INpcGetter>>();
-                    return (int)Location_FieldIndex.UniqueActorRemoved;
+                    return (int)Location_FieldIndex.UniqueActorReferencesRemoved;
                 }
                 case RecordTypeInts.ACSR:
                 {
@@ -5340,7 +5340,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved { get; private set; }
         public IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesAdded { get; private set; }
         public IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesStatic { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? UniqueActorReferencesRemoved { get; private set; }
         public IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesAdded { get; private set; }
         public IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesStatic { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; private set; }
@@ -5516,13 +5516,13 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.RCUN:
                 {
-                    this.UniqueActorRemoved = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<INpcGetter>>(
+                    this.UniqueActorReferencesRemoved = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<INpcGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
-                    return (int)Location_FieldIndex.UniqueActorRemoved;
+                    return (int)Location_FieldIndex.UniqueActorReferencesRemoved;
                 }
                 case RecordTypeInts.ACSR:
                 {

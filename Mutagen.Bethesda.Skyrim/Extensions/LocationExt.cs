@@ -63,25 +63,34 @@ public static class LocationExt
             .Where(x => !removed.Contains(x.Actor.FormKey));
     }
 
-    public static IEnumerable<ILocationRefTypeReferenceGetter> LocationRefTypeReference(this ILocationGetter location)
+    public static IEnumerable<IUniqueActorReferenceGetter> UniqueActorReferences(this ILocationGetter location)
     {
-        var staticReferences = location.LocationRefTypeReferencesStatic;
-        if (staticReferences is not null)
+        IEnumerable<IUniqueActorReferenceGetter> Added()
         {
-            foreach (var reference in staticReferences)
+            var staticReferences = location.UniqueActorReferencesStatic;
+            if (staticReferences is not null)
             {
-                yield return reference;
+                foreach (var reference in staticReferences)
+                {
+                    yield return reference;
+                }
+            }
+
+            var addedReferences = location.UniqueActorReferencesAdded;
+            if (addedReferences is not null)
+            {
+                foreach (var reference in addedReferences)
+                {
+                    yield return reference;
+                }
             }
         }
 
-        var addedReferences = location.LocationRefTypeReferencesAdded;
-        if (addedReferences is not null)
-        {
-            foreach (var reference in addedReferences)
-            {
-                yield return reference;
-            }
-        }
+        var removed = location.UniqueActorReferencesRemoved?.Select(x => x.FormKey).ToArray();
+        if (removed is null) return Added();
+
+        return Added()
+            .Where(x => !removed.Contains(x.Actor.FormKey));
     }
 
     public static IEnumerable<IFormLinkGetter<IPlacedGetter>> InitiallyDisabledReferences(this ILocationGetter location)

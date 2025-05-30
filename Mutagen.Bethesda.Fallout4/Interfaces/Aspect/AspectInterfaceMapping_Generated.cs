@@ -93,6 +93,17 @@ namespace Mutagen.Bethesda.Fallout4
                     Setter: typeof(IHasIcons),
                     Getter: typeof(IHasIconsGetter)));
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(IHasVoiceType)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Npc_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasVoiceType),
+                    Getter: typeof(IHasVoiceTypeGetter)));
+            dict[typeof(IHasVoiceTypeGetter)] = dict[typeof(IHasVoiceType)] with { Setter = false };
             dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

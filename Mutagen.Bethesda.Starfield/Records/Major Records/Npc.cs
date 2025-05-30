@@ -134,6 +134,7 @@ public partial class Npc
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IANpcLevelGetter INpcGetter.Level => Level;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }
 
