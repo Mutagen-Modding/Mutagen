@@ -58,15 +58,7 @@ public class AssetLinkGetter<TAssetType> :
         else
         {
             _givenPath = path;
-            
-            if (!Bethesda.Assets.DataRelativePath.HasDataDirectory(path) 
-                && !HasBaseFolder(path))
-            {
-                path = Path.Combine(AssetInstance.BaseFolder, path);
-            }
-
-            _DataRelativePath = path;
-            AssertHasBaseFolder(_DataRelativePath.Path);
+            _DataRelativePath = GetDataRelativePath(path);
         }
     }
 
@@ -80,9 +72,20 @@ public class AssetLinkGetter<TAssetType> :
         else
         {
             _givenPath = path;
-            _DataRelativePath = path;
+            _DataRelativePath = GetDataRelativePath(path.Path);
             AssertHasBaseFolder(_DataRelativePath.Path);
         }
+    }
+
+    protected static string GetDataRelativePath(string path)
+    {
+        if (!Bethesda.Assets.DataRelativePath.HasDataDirectory(path) 
+            && !HasBaseFolder(path))
+        {
+            path = Path.Combine(AssetInstance.BaseFolder, path);
+        }
+
+        return path;
     }
 
     protected static bool HasBaseFolder(string path)
@@ -245,8 +248,16 @@ public class AssetLink<TAssetType> :
         get => _givenPath;
         set
         {
-            _givenPath = value;
-            _DataRelativePath = new DataRelativePath(value);
+            if (value == Bethesda.Assets.DataRelativePath.NullPath)
+            {
+                _DataRelativePath = Bethesda.Assets.DataRelativePath.NullPath;
+                _givenPath = Bethesda.Assets.DataRelativePath.NullPath;
+            }
+            else
+            {
+                _givenPath = value;
+                _DataRelativePath = GetDataRelativePath(value);
+            }
         }
     }
 
