@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
+                source: StringsSource.DL);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
-                        source: StringsSource.Normal,
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Class_FieldIndex.Description;
@@ -2302,7 +2302,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;

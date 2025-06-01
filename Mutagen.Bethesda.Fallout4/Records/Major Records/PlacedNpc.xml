@@ -35,7 +35,7 @@
         <Interface>IEmittance</Interface>
       </FormLink>
       <FormLink name="MultiBoundReference" recordType="XMBR">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <!-- Possibly unneeded.  Never seen, just listed in xEdit -->
       <Bool name="IsIgnoredBySandbox2" boolAsMarker="XIBS" />
@@ -50,7 +50,6 @@
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>
 </Loqui>

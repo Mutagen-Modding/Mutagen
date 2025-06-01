@@ -130,10 +130,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ILeveledPackInTarget
 - LeveledPackIn
 - PackIn
-### ILinkedReference
-- APlacedTrap
-- PlacedNpc
-- PlacedObject
 ### ILocationOwner
 - Faction
 - Npc
@@ -247,7 +243,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructibleObjectTarget
 ### APlacedTrap
 - IKeywordLinkedReference
-- ILinkedReference
 - IPlaced
 - IPlacedThing
 ### Armor
@@ -393,7 +388,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlanetContentTarget
 ### PlacedNpc
 - IKeywordLinkedReference
-- ILinkedReference
 - IOwner
 - IPlaced
 - IPlacedSimple
@@ -401,7 +395,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IBiomeObjectPackInTarget
 - ICellOrObject
 - IKeywordLinkedReference
-- ILinkedReference
 - IPlaced
 - IPlacedSimple
 - IPlacedThing

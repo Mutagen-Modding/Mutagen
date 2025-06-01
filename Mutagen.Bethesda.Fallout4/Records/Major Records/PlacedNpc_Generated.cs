@@ -305,14 +305,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance;
         #endregion
         #region MultiBoundReference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _MultiBoundReference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference
+        private readonly IFormLinkNullable<IPlacedGetter> _MultiBoundReference = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> MultiBoundReference
         {
             get => _MultiBoundReference;
             set => _MultiBoundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedNpcGetter.MultiBoundReference => this.MultiBoundReference;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedNpcGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region IsIgnoredBySandbox2
         public Boolean IsIgnoredBySandbox2 { get; set; } = default(Boolean);
@@ -2035,7 +2035,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
-        ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
         IPlaced,
         IPlacedNpcGetter,
@@ -2074,7 +2073,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Ownership? Ownership { get; set; }
         new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference { get; set; }
+        new IFormLinkNullable<IPlacedGetter> MultiBoundReference { get; set; }
         new Boolean IsIgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new P3Float Position { get; set; }
@@ -2100,7 +2099,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
-        ILinkedReferenceGetter,
         ILoquiObject<IPlacedNpcGetter>,
         IMapsToGetter<IPlacedNpcGetter>,
         IPlacedGetter,
@@ -2142,7 +2140,7 @@ namespace Mutagen.Bethesda.Fallout4
         IOwnershipGetter? Ownership { get; }
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference { get; }
+        IFormLinkNullableGetter<IPlacedGetter> MultiBoundReference { get; }
         Boolean IsIgnoredBySandbox2 { get; }
         Single? Scale { get; }
         P3Float Position { get; }
@@ -4569,7 +4567,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MultiBoundReference
         private int? _MultiBoundReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiBoundReferenceLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region IsIgnoredBySandbox2
         private int? _IsIgnoredBySandbox2Location;

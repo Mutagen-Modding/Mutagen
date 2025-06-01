@@ -3587,30 +3587,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
-        /// Scope a load order query to ILinkedReference
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ILinkedReference</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter> ILinkedReference(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ILinkedReference
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ILinkedReference</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter> ILinkedReference(this IEnumerable<ISkyrimModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to IPlaced
         /// </summary>
         /// <param name="listings">ModListings to query</param>

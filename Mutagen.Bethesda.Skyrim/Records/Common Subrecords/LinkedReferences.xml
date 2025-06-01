@@ -7,7 +7,7 @@
       </FormLink>
       <Break />
       <FormLink name="Reference">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
     </Fields>
   </Object>

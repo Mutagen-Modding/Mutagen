@@ -62,14 +62,14 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference;
         #endregion
         #region Reference
-        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> ILinkedReferencesGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ILinkedReferences>
     {
         new IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
     }
 
     public partial interface ILinkedReferencesGetter :
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
 
     }
 
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordLinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

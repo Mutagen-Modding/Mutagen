@@ -62,14 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ILocationReferenceTypeGetter> ILocationRefTypeReferenceGetter.LocationRefType => this.LocationRefType;
         #endregion
         #region Ref
-        private readonly IFormLink<ILinkedReferenceGetter> _Ref = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Ref
+        private readonly IFormLink<IPlacedGetter> _Ref = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Ref
         {
             get => _Ref;
             set => _Ref.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILocationRefTypeReferenceGetter.Ref => this.Ref;
+        IFormLinkGetter<IPlacedGetter> ILocationRefTypeReferenceGetter.Ref => this.Ref;
         #endregion
         #region Location
         private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationRefTypeReference>
     {
         new IFormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Ref { get; set; }
+        new IFormLink<IPlacedGetter> Ref { get; set; }
         new IFormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LocationRefTypeReference_Registration.Instance;
         IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
-        IFormLinkGetter<ILinkedReferenceGetter> Ref { get; }
+        IFormLinkGetter<IPlacedGetter> Ref { get; }
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
 
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ILinkedReferenceGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(

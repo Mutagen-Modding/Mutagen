@@ -1386,13 +1386,6 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     foreach (var subItem in obj.SubBlocks)

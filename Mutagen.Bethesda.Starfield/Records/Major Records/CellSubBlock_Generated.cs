@@ -1369,13 +1369,6 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     foreach (var subItem in obj.Cells)

@@ -45,7 +45,6 @@
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>
 </Loqui>

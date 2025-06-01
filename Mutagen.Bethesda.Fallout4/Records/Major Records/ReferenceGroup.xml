@@ -4,7 +4,7 @@
     <Fields>
       <String name="Name" recordType="NNAM" />
       <FormLink name="Reference" recordType="RNAM">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <ByteArray name="PNAM" recordType="PNAM" />
     </Fields>

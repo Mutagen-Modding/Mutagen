@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Reference
-        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default(EnableParent.Flag);
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<IEnableParent>
     {
-        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public EnableParent.Flag Flags => (EnableParent.Flag)_structData.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

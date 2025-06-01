@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Actor
-        private readonly IFormLink<ILinkedReferenceGetter> _Actor = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Actor
+        private readonly IFormLink<IPlacedGetter> _Actor = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Actor
         {
             get => _Actor;
             set => _Actor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor;
+        IFormLinkGetter<IPlacedGetter> ILocationReferenceGetter.Actor => this.Actor;
         #endregion
         #region Location
         private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Starfield
         ILocationReferenceGetter,
         ILoquiObjectSetter<ILocationReference>
     {
-        new IFormLink<ILinkedReferenceGetter> Actor { get; set; }
+        new IFormLink<IPlacedGetter> Actor { get; set; }
         new IFormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
         new Int32 Unknown { get; set; }
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Actor { get; }
+        IFormLinkGetter<IPlacedGetter> Actor { get; }
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
         Int32 Unknown { get; }
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4), swapCoords: true);
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));

@@ -9762,15 +9762,6 @@ namespace Mutagen.Bethesda.Fallout4
                         type: type,
                         keys: keys);
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     obj.Cells.Remove(

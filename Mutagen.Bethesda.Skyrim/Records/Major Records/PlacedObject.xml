@@ -40,7 +40,7 @@
       <RefDirect name="WaterVelocity" refName="WaterVelocity" />
       <ByteArray name="XCVL" recordType="XCVL" />
       <FormLink name="XCZR" recordType="XCZR">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <ByteArray name="XCZA" recordType="XCZA" />
       <FormLink name="XCZC" refName="Cell" recordType="XCZC" />
@@ -79,7 +79,6 @@
       <ByteArray name="DistantLodData" recordType="XLOD" />
       <RefDirect name="Placement" refName="Placement" />
     </Fields>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>

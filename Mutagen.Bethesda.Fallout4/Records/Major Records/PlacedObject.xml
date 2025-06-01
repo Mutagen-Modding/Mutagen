@@ -34,7 +34,7 @@
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <FormLink name="TeleportLocName" refName="Message" recordType="XTNM" />
       <FormLink name="MultiBoundReference" recordType="XMBR">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <ByteArray name="XWCN" recordType="XWCN" />
       <RefDirect name="WaterVelocity" refName="WaterVelocity" />
@@ -76,14 +76,14 @@
       <Bool name="OpenByDefault" boolAsMarker="ONAM" />
       <RefDirect name="MapMarker" refName="PlacedObjectMapMarker" markerType="XMRK" />
       <FormLink name="AttachRef" recordType="XATR">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <RefList name="SplineConnections" refName="SplineLink" />
       <RefList name="PowerGridConnections" refName="PowerGridConnection" counterRecType="XWPG" additive="true" />
       <ByteArray name="XCVR" recordType="XCVR" />
       <ByteArray name="XCVL" recordType="XCVL" />
       <FormLink name="CurrentZoneReference" recordType="XCZR">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <ByteArray name="XCZA" recordType="XCZA" />
       <FormLink name="CurrentZoneCell" refName="Cell" recordType="XCZC" />
@@ -103,7 +103,6 @@
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPreCutMapEntryReference</LinkInterface>
   </Object>

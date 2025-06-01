@@ -36,7 +36,7 @@ public static class IPlacedExt
         if (placed.EnableParent != null && disableType != DisableType.JustInitiallyDisabled)
         {
             placed.EnableParent.Flags = EnableParent.Flag.SetEnableStateToOppositeOfParent;
-            placed.EnableParent.Reference.SetTo(Constants.Player.Cast<ILinkedReferenceGetter>());
+            placed.EnableParent.Reference.SetTo(Constants.Player.Cast<IPlacedGetter>());
         }
 
         placed.MajorRecordFlagsRaw = Enums.SetFlag(placed.MajorRecordFlagsRaw, (int)SkyrimMajorRecordFlag.InitiallyDisabled, true);

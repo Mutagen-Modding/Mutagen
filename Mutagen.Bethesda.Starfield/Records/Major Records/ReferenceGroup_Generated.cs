@@ -90,14 +90,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region Reference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _Reference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> Reference
+        private readonly IFormLinkNullable<IPlacedGetter> _Reference = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IReferenceGroupGetter.Reference => this.Reference;
+        IFormLinkNullableGetter<IPlacedGetter> IReferenceGroupGetter.Reference => this.Reference;
         #endregion
         #region PackIn
         private readonly IFormLinkNullable<IPackInGetter> _PackIn = new FormLinkNullable<IPackInGetter>();
@@ -110,14 +110,14 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IPackInGetter> IReferenceGroupGetter.PackIn => this.PackIn;
         #endregion
         #region LNAM
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _LNAM = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> LNAM
+        private readonly IFormLinkNullable<IPlacedGetter> _LNAM = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> LNAM
         {
             get => _LNAM;
             set => _LNAM.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IReferenceGroupGetter.LNAM => this.LNAM;
+        IFormLinkNullableGetter<IPlacedGetter> IReferenceGroupGetter.LNAM => this.LNAM;
         #endregion
         #region MNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -848,9 +848,9 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLinkNullable<IPlacedGetter> Reference { get; set; }
         new IFormLinkNullable<IPackInGetter> PackIn { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> LNAM { get; set; }
+        new IFormLinkNullable<IPlacedGetter> LNAM { get; set; }
         new ExtendedList<UInt32>? MNAM { get; set; }
     }
 
@@ -880,9 +880,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         String? Name { get; }
         #endregion
-        IFormLinkNullableGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkNullableGetter<IPlacedGetter> Reference { get; }
         IFormLinkNullableGetter<IPackInGetter> PackIn { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM { get; }
+        IFormLinkNullableGetter<IPlacedGetter> LNAM { get; }
         IReadOnlyList<UInt32>? MNAM { get; }
 
     }
@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _ReferenceLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         #region PackIn
         private int? _PackInLocation;
@@ -2094,7 +2094,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LNAM
         private int? _LNAMLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> LNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _LNAMLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> LNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _LNAMLocation);
         #endregion
         public IReadOnlyList<UInt32>? MNAM { get; private set; }
         partial void CustomFactoryEnd(

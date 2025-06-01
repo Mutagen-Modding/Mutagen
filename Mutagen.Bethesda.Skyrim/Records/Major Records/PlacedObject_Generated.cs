@@ -353,14 +353,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
         #region XCZR
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _XCZR = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> XCZR
+        private readonly IFormLinkNullable<IPlacedGetter> _XCZR = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> XCZR
         {
             get => _XCZR;
             set => _XCZR.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.XCZR => this.XCZR;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.XCZR => this.XCZR;
         #endregion
         #region XCZA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3255,7 +3255,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
-        ILinkedReference,
         ILoquiObjectSetter<IPlacedObjectInternal>,
         IPlaced,
         IPlacedObjectGetter,
@@ -3295,7 +3294,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? XWCS { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new MemorySlice<Byte>? XCVL { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; set; }
+        new IFormLinkNullable<IPlacedGetter> XCZR { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
         new IFormLinkNullable<ICellGetter> XCZC { get; set; }
         new Single? Scale { get; set; }
@@ -3343,7 +3342,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
-        ILinkedReferenceGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
@@ -3385,7 +3383,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? XWCS { get; }
         IWaterVelocityGetter? WaterVelocity { get; }
         ReadOnlyMemorySlice<Byte>? XCVL { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> XCZR { get; }
+        IFormLinkNullableGetter<IPlacedGetter> XCZR { get; }
         ReadOnlyMemorySlice<Byte>? XCZA { get; }
         IFormLinkNullableGetter<ICellGetter> XCZC { get; }
         Single? Scale { get; }
@@ -7144,7 +7142,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region XCZR
         private int? _XCZRLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _XCZRLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _XCZRLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;
