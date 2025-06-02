@@ -51,9 +51,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        public Race.BodyIndex? Index { get; set; }
+        public Race.BodyPart? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Race.BodyIndex? IBodyPartGetter.Index => this.Index;
+        Race.BodyPart? IBodyPartGetter.Index => this.Index;
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         IBodyPartGetter,
         ILoquiObjectSetter<IBodyPart>
     {
-        new Race.BodyIndex? Index { get; set; }
+        new Race.BodyPart? Index { get; set; }
         new String? Icon { get; set; }
     }
 
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
-        Race.BodyIndex? Index { get; }
+        Race.BodyPart? Index { get; }
         String? Icon { get; }
 
     }
@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<Race.BodyPart, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Index,
                 length: 4,
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Index = EnumBinaryTranslation<Race.BodyPart, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)BodyPart_FieldIndex.Index;
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Index
         private int? _IndexLocation;
-        public Race.BodyIndex? Index => _IndexLocation.HasValue ? (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyIndex?);
+        public Race.BodyPart? Index => _IndexLocation.HasValue ? (Race.BodyPart)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyPart?);
         #endregion
         #region Icon
         private int? _IconLocation;

@@ -87,7 +87,7 @@
   </Object>
   <Object name="FacePart" objType="Subrecord">
     <Fields>
-      <Enum name="Index" enumName="Race.FaceIndex" recordType="INDX" byteLength="4" />
+      <Enum name="Index" enumName="Race.FacePart" recordType="INDX" byteLength="4" />
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />
     </Fields>
@@ -100,7 +100,7 @@
   </Object>
   <Object name="BodyPart" objType="Subrecord">
     <Fields>
-      <Enum name="Index" enumName="Race.BodyIndex" recordType="INDX" byteLength="4" />
+      <Enum name="Index" enumName="Race.BodyPart" recordType="INDX" byteLength="4" />
       <String name="Icon" recordType="ICON" />
     </Fields>
   </Object>
