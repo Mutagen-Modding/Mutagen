@@ -76,7 +76,7 @@ public class AssetLinkGetter<TAssetType> :
         }
     }
 
-    protected static string GetDataRelativePath(string path)
+    protected static DataRelativePath GetDataRelativePath(string path)
     {
         if (!DataRelativePath.HasDataDirectory(path)
             && !HasBaseFolder(path))
@@ -84,7 +84,7 @@ public class AssetLinkGetter<TAssetType> :
             path = Path.Combine(AssetInstance.BaseFolder, path);
         }
 
-        return path;
+        return new DataRelativePath(path);
     }
 
     protected static bool HasBaseFolder(string path)
