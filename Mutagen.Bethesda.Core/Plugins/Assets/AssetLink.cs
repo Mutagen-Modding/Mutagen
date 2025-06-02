@@ -72,7 +72,6 @@ public class AssetLinkGetter<TAssetType> :
         {
             _givenPath = path;
             _dataRelativePath = GetDataRelativePath(path.Path);
-            AssertHasBaseFolder(_dataRelativePath.Path);
         }
     }
 
