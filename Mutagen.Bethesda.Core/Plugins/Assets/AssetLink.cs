@@ -78,12 +78,19 @@ public class AssetLinkGetter<TAssetType> :
 
     protected static DataRelativePath GetDataRelativePath(string path)
     {
-        if (!DataRelativePath.HasDataDirectory(path)
-            && !HasBaseFolder(path))
+        if (DataRelativePath.HasDataDirectory(path))
+        {
+            var dataRelativePath = new DataRelativePath(path);
+            AssertHasBaseFolder(dataRelativePath.Path);
+            return dataRelativePath;
+        }
+
+        if (!HasBaseFolder(path))
         {
             path = Path.Combine(AssetInstance.BaseFolder, path);
         }
 
+        // No check if the data relative path has a base folder is needed here
         return new DataRelativePath(path);
     }
 
