@@ -30,7 +30,7 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, IReadOnlyCollection<ModKey>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
     internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>();
-    internal ILoadOrderGetter<IModListingGetter<TModGetter>>? _knownModLoadOrder { get; init; }
+    internal ILoadOrderGetter<IModListingGetter<IModGetter>>? _knownModLoadOrder { get; init; }
 }
 
 /// <summary>
@@ -146,6 +146,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilder WithLoadOrder(
+        ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilder WithLoadOrder(
         ILoadOrderGetter<IModListingGetter<IModMasterStyledGetter>> loadOrder);
 
     /// <summary>
@@ -236,6 +244,25 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params);
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithNoLoadOrder() => WithNoLoadOrder(); 
+    
+    public IBinaryModdedWriteBuilder WithLoadOrder(ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder)
+    {
+        return new BinaryModdedWriteBuilder<TModGetter>(_mod, _params with
+        {
+            _loadOrderSetter = (m, p, alreadyKnownMasters) =>
+            {
+                return p._param with
+                {
+                    MasterFlagsLookup = loadOrder
+                        .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                        .ResolveExistingMods(),
+                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
+                };
+            },
+            _knownModLoadOrder = loadOrder,
+        });
+    }
     
     /// <summary>
     /// Writes the mod with given load order as reference
