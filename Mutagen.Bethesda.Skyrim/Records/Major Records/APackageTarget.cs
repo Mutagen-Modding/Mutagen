@@ -24,7 +24,7 @@ public partial class APackageTarget
         {
             APackageTarget.Type.SpecificReference => new PackageTargetSpecificReference()
             {
-                Reference = new FormLink<ILinkedReferenceGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
+                Reference = new FormLink<IPlacedGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
             },
             APackageTarget.Type.ObjectID => new PackageTargetObjectID()
             {

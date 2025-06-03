@@ -55,14 +55,14 @@ namespace Mutagen.Bethesda.Skyrim
         public EnableParent.VersioningBreaks Versioning { get; set; } = default(EnableParent.VersioningBreaks);
         #endregion
         #region Reference
-        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default(EnableParent.Flag);
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEnableParent>
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => EnableParent_Registration.Instance;
         EnableParent.VersioningBreaks Versioning { get; }
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public EnableParent.Flag Flags => _structData.Span.Length <= 0x4 ? default : (EnableParent.Flag)_structData.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0x5 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

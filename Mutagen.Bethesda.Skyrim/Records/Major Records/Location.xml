@@ -77,7 +77,7 @@
     <Fields>
       <FormLink name="LocationRefType" refName="LocationReferenceType" />
       <FormLink name="Ref">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>

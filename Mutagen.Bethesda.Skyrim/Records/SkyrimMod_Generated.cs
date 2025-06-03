@@ -8909,15 +8909,6 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "IPlaced":
                 case "IPlacedGetter":
                     obj.Cells.Remove(

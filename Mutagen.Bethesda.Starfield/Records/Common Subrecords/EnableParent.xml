@@ -3,7 +3,7 @@
   <Object name="EnableParent" objType="Subrecord" recordType="XESP">
     <Fields>
       <FormLink name="Reference">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <Enum name="Flags" enumName="EnableParent.Flag" byteLength="1" />
       <ByteArray name="Unknown" byteLength="3" nullable="False" />

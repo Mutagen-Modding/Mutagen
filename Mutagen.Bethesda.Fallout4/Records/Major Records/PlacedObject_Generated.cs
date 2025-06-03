@@ -280,14 +280,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportLocName => this.TeleportLocName;
         #endregion
         #region MultiBoundReference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _MultiBoundReference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference
+        private readonly IFormLinkNullable<IPlacedGetter> _MultiBoundReference = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> MultiBoundReference
         {
             get => _MultiBoundReference;
             set => _MultiBoundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.MultiBoundReference => this.MultiBoundReference;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -607,14 +607,14 @@ namespace Mutagen.Bethesda.Fallout4
         IPlacedObjectMapMarkerGetter? IPlacedObjectGetter.MapMarker => this.MapMarker;
         #endregion
         #region AttachRef
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _AttachRef = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> AttachRef
+        private readonly IFormLinkNullable<IPlacedGetter> _AttachRef = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> AttachRef
         {
             get => _AttachRef;
             set => _AttachRef.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
         #endregion
         #region SplineConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -667,14 +667,14 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
         #region CurrentZoneReference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _CurrentZoneReference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> CurrentZoneReference
+        private readonly IFormLinkNullable<IPlacedGetter> _CurrentZoneReference = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> CurrentZoneReference
         {
             get => _CurrentZoneReference;
             set => _CurrentZoneReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.CurrentZoneReference => this.CurrentZoneReference;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.CurrentZoneReference => this.CurrentZoneReference;
         #endregion
         #region XCZA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3991,7 +3991,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
-        ILinkedReference,
         ILoquiObjectSetter<IPlacedObjectInternal>,
         IPlaced,
         IPlacedObjectGetter,
@@ -4026,7 +4025,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Alpha? Alpha { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new IFormLinkNullable<IMessageGetter> TeleportLocName { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> MultiBoundReference { get; set; }
+        new IFormLinkNullable<IPlacedGetter> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> AcousticRestriction { get; set; }
@@ -4064,12 +4063,12 @@ namespace Mutagen.Bethesda.Fallout4
         new Single? FavorCost { get; set; }
         new Boolean OpenByDefault { get; set; }
         new PlacedObjectMapMarker? MapMarker { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> AttachRef { get; set; }
+        new IFormLinkNullable<IPlacedGetter> AttachRef { get; set; }
         new ExtendedList<SplineLink> SplineConnections { get; }
         new ExtendedList<PowerGridConnection>? PowerGridConnections { get; set; }
         new MemorySlice<Byte>? XCVR { get; set; }
         new MemorySlice<Byte>? XCVL { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> CurrentZoneReference { get; set; }
+        new IFormLinkNullable<IPlacedGetter> CurrentZoneReference { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
         new IFormLinkNullable<ICellGetter> CurrentZoneCell { get; set; }
         new Single? Scale { get; set; }
@@ -4094,7 +4093,6 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
-        ILinkedReferenceGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
@@ -4132,7 +4130,7 @@ namespace Mutagen.Bethesda.Fallout4
         IAlphaGetter? Alpha { get; }
         ITeleportDestinationGetter? TeleportDestination { get; }
         IFormLinkNullableGetter<IMessageGetter> TeleportLocName { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference { get; }
+        IFormLinkNullableGetter<IPlacedGetter> MultiBoundReference { get; }
         ReadOnlyMemorySlice<Byte>? XWCN { get; }
         IWaterVelocityGetter? WaterVelocity { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> AcousticRestriction { get; }
@@ -4170,12 +4168,12 @@ namespace Mutagen.Bethesda.Fallout4
         Single? FavorCost { get; }
         Boolean OpenByDefault { get; }
         IPlacedObjectMapMarkerGetter? MapMarker { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef { get; }
+        IFormLinkNullableGetter<IPlacedGetter> AttachRef { get; }
         IReadOnlyList<ISplineLinkGetter> SplineConnections { get; }
         IReadOnlyList<IPowerGridConnectionGetter>? PowerGridConnections { get; }
         ReadOnlyMemorySlice<Byte>? XCVR { get; }
         ReadOnlyMemorySlice<Byte>? XCVL { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> CurrentZoneReference { get; }
+        IFormLinkNullableGetter<IPlacedGetter> CurrentZoneReference { get; }
         ReadOnlyMemorySlice<Byte>? XCZA { get; }
         IFormLinkNullableGetter<ICellGetter> CurrentZoneCell { get; }
         Single? Scale { get; }
@@ -8522,7 +8520,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MultiBoundReference
         private int? _MultiBoundReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _MultiBoundReferenceLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -8656,7 +8654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IPlacedObjectMapMarkerGetter? MapMarker { get; private set; }
         #region AttachRef
         private int? _AttachRefLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _AttachRefLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
         public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<ISplineLinkGetter>();
         #region PowerGridConnections
@@ -8673,7 +8671,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CurrentZoneReference
         private int? _CurrentZoneReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> CurrentZoneReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _CurrentZoneReferenceLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> CurrentZoneReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _CurrentZoneReferenceLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;

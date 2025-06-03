@@ -109,7 +109,7 @@
   <Object name="PackageTargetSpecificReference" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Reference">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
     </Fields>
   </Object>

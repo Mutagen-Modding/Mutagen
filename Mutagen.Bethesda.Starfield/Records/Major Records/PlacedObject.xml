@@ -85,7 +85,7 @@
       <RefDirect name="Spline" refName="PlacedObjectSpline" />
       <ByteArray name="XNSE" recordType="XNSE" unknown="true" />
       <FormLink name="AttachRef" recordType="XATR">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <Percent name="HealthPercent" recordType="XHLT" />
@@ -108,7 +108,6 @@
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>ICellOrObject</LinkInterface>
     <LinkInterface>ITraversalTarget</LinkInterface>

@@ -62,14 +62,14 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<ILocationReferenceTypeGetter> ILocationCellStaticReferenceGetter.LocationRefType => this.LocationRefType;
         #endregion
         #region Marker
-        private readonly IFormLink<ILinkedReferenceGetter> _Marker = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Marker
+        private readonly IFormLink<IPlacedGetter> _Marker = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Marker
         {
             get => _Marker;
             set => _Marker.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker;
+        IFormLinkGetter<IPlacedGetter> ILocationCellStaticReferenceGetter.Marker => this.Marker;
         #endregion
         #region Location
         private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ILocationCellStaticReference>
     {
         new IFormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Marker { get; set; }
+        new IFormLink<IPlacedGetter> Marker { get; set; }
         new IFormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
         new Int32 Unknown { get; set; }
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LocationCellStaticReference_Registration.Instance;
         IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
-        IFormLinkGetter<ILinkedReferenceGetter> Marker { get; }
+        IFormLinkGetter<IPlacedGetter> Marker { get; }
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
         Int32 Unknown { get; }
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ILinkedReferenceGetter> Marker => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Marker => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4), swapCoords: true);
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));

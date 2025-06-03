@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Reference
-        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IActivateParentGetter.Reference => this.Reference;
         #endregion
         #region Delay
         public Single Delay { get; set; } = default(Single);
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IActivateParent>
     {
-        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new Single Delay { get; set; }
     }
 
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ActivateParent_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         Single Delay { get; }
 
     }
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single Delay => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

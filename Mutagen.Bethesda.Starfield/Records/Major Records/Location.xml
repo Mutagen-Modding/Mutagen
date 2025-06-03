@@ -76,7 +76,7 @@
   <Object name="LocationReference" objType="Subrecord">
     <Fields>
       <FormLink name="Actor">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>
@@ -103,7 +103,7 @@
     <Fields>
       <FormLink name="LocationRefType" refName="LocationReferenceType" />
       <FormLink name="Marker">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>

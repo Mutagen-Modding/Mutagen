@@ -504,18 +504,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IEffectRecord),
                 Getter: typeof(IEffectRecordGetter)));
         dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
-        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                PlacedNpc_Registration.Instance,
-                PlacedObject_Registration.Instance,
-                APlacedTrap_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(ILinkedReference),
-                Getter: typeof(ILinkedReferenceGetter)));
-        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
