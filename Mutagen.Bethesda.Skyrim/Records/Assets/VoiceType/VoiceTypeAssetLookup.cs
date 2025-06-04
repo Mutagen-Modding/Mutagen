@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -23,7 +24,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
 
     //Caches
-    private readonly Dictionary<FormKey, VoiceContainer> _questCache = new();
+    private readonly ConcurrentDictionary<FormKey, VoiceContainer> _questCache = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfosCache = new();
 
     public void Prep(IAssetLinkCache linkCache)
@@ -168,7 +169,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         else
         {
             questVoices = GetVoices(quest, topic.FormKey.ModKey);
-            _questCache.Add(quest.FormKey, questVoices);
+            _questCache.TryAdd(quest.FormKey, questVoices);
         }
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
@@ -369,7 +370,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         else
         {
             questVoices = GetVoices(quest, topic.FormKey.ModKey);
-            _questCache.Add(quest.FormKey, questVoices);
+            _questCache.TryAdd(quest.FormKey, questVoices);
         }
 
         return questVoices;
