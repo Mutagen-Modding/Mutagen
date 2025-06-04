@@ -264,7 +264,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             voiceContainer = GetAllDefaultVoices();
         }
 
-        foreach (var formKey in voiceContainer.Voices.SelectMany(x => x.Value))
+        foreach (var formKey in voiceContainer.Voices.SelectMany(x =>
+                 {
+                     if (x.Value.Any()) return x.Value;
+
+                     // Get speakers with voice type when the whole voice type is used (there are no speakers)
+                     return _speakerVoices
+                         .Where(y => y.Value.Contains(x.Key))
+                         .Select(y => y.Key);
+                 }))
         {
             yield return new FormLink<IHasVoiceTypeGetter>(formKey);
         }
