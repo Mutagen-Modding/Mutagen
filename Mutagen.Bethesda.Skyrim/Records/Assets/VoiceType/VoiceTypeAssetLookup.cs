@@ -208,35 +208,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
         var voices = GetVoices(topic, response, quest);
-        if (!questVoices.IsDefault)
-        {
-            if (voices.IsDefault)
-            {
-                voices = (VoiceContainer)questVoices.Clone();
-            }
-            else
-            {
-                voices.IntersectWith(questVoices);
-            }
-        }
+        voices.IntersectWith(questVoices);
 
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.TryGetValue(response.FormKey, out var responseFormKeys))
-        {
-            var userConditions = new VoiceContainer(true);
-            foreach (var responseKey in responseFormKeys)
-            {
-                var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
-                if (responseContext is not { Parent.Record: {} }) continue;
-
-                if (!responseContext.TryGetParent<IDialogTopicGetter>(out var currentTopic)) continue;
-                var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
-                if (currentQuest == null) continue;
-
-                userConditions.Insert(GetVoices(responseContext.Record.Conditions, quest, topic.FormKey.ModKey));
-            }
-
-            voices.Merge(userConditions);
-        }
+        LimitVoicesToSharedInfoUsages(voices, topic, response);
 
         return voices;
     }
@@ -359,39 +333,34 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
         var voices = GetVoices(topic, responses, quest);
+        voices.IntersectWith(questVoices);
 
-        if (!questVoices.IsDefault)
-        {
-            //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voice
-            if (voices.IsDefault)
-            {
-                voices = (VoiceContainer)questVoices.Clone();
-            }
-            else
-            {
-                voices.IntersectWith(questVoices);
-            }
-        }
-
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.TryGetValue(responses.FormKey, out var responseFormKeys))
-        {
-            var userConditions = new VoiceContainer(true);
-            foreach (var responseKey in responseFormKeys)
-            {
-                var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
-                if (responseContext is not { Parent.Record: not null }) continue;
-
-                if (!responseContext.TryGetParent<IDialogTopicGetter>(out var currentTopic)) continue;
-                var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
-                if (currentQuest == null) continue;
-
-                userConditions.Insert(GetVoices(responseContext.Record.Conditions, quest, topic.FormKey.ModKey));
-            }
-
-            voices.Merge(userConditions);
-        }
+        LimitVoicesToSharedInfoUsages(voices, topic, responses);
 
         return voices;
+    }
+
+    private void LimitVoicesToSharedInfoUsages(VoiceContainer voices, IDialogTopicGetter topic, IDialogResponsesGetter responses) {
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.TryGetValue(responses.FormKey, out var responseFormKeys))
+        {
+            var userConditions = responseFormKeys
+                .Select(responseKey =>
+                {
+
+                    var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
+                    if (responseContext is not { Parent.Record: not null }) return null;
+
+                    if (!responseContext.TryGetParent<IDialogTopicGetter>(out var currentTopic)) return null;
+                    var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
+                    if (currentQuest == null) return null;
+
+                    return GetVoices(responseContext.Record.Conditions, currentQuest, topic.FormKey.ModKey);
+                })
+                .WhereNotNull()
+                .MergeInsert(true);
+
+            voices.IntersectWith(userConditions);
+        }
     }
 
     private VoiceContainer GetQuestVoices(IDialogTopicGetter topic, IQuestGetter quest)
@@ -447,11 +416,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Check scene
         if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
         {
-            voices.Merge(GetVoices(quest, aliasIndex, topic.FormKey.ModKey));
+            voices.IntersectWith(GetVoices(quest, aliasIndex, topic.FormKey.ModKey));
         }
 
         //Search conditions
-        if (response.Conditions.Any()) voices.Merge(GetVoices(response.Conditions, quest, topic.FormKey.ModKey));
+        if (response.Conditions.Any())
+        {
+            voices.IntersectWith(GetVoices(response.Conditions, quest, topic.FormKey.ModKey));
+        }
 
         return voices;
     }
@@ -479,22 +451,21 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
 
         //Merge OR blocks
-        return voiceTypesOrBlock.Any() ? voiceTypesOrBlock.MergeAll() : new VoiceContainer(true);
+        return voiceTypesOrBlock.Any() ? voiceTypesOrBlock.MergeIntersect() : new VoiceContainer(true);
     }
 
     private VoiceContainer GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions, IQuestGetter quest, ModKey currentMod)
     {
-        var voices = new VoiceContainer(true);
+        return conditions
+            .Select(condition =>
+            {
+                var conditionVoices = GetVoices(condition, quest, currentMod);
+                if (conditionVoices.IsDefault) return null;
 
-        foreach (var condition in conditions)
-        {
-            var conditionVoices = GetVoices(condition, quest, currentMod);
-            if (conditionVoices.IsDefault) continue;
-
-            voices.Insert(conditionVoices);
-        }
-
-        return voices;
+                return conditionVoices;
+            })
+            .WhereNotNull()
+            .MergeInsert(true);
     }
 
     private VoiceContainer GetVoices(IConditionGetter condition, IQuestGetter quest, ModKey currentMod)
@@ -583,7 +554,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     var formList = isInList.FormList.Link.TryResolve(_formLinkCache);
                     //Only look at speakers in the form list
-                    if (formList != null) voices = formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert();
+                    if (formList != null) voices = formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert(false);
                 }
 
                 break;
@@ -794,7 +765,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        return voices.MergeInsert();
+        return voices.MergeInsert(false);
     }
 
     private VoiceContainer GetVoices(IQuestGetter quest, ModKey currentMod) => GetVoices(quest.DialogConditions, quest, currentMod);
