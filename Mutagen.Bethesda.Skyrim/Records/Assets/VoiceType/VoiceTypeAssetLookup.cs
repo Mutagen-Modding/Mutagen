@@ -53,6 +53,21 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 }
             }
 
+            foreach (var leveledNpc in mod.EnumerateMajorRecords<ILeveledNpcGetter>())
+            {
+                if (leveledNpc.Entries is null) continue;
+
+                var voiceTypes = leveledNpc.Entries
+                    .Select(x => x.Data?.Reference)
+                    .WhereNotNull()
+                    .SelectMany(GetVoiceTypes)
+                    .ToHashSet();
+
+                _speakerVoices
+                    .GetOrAdd(leveledNpc.FormKey)
+                    .Add(voiceTypes);
+            }
+
             foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>())
             {
                 _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc));
