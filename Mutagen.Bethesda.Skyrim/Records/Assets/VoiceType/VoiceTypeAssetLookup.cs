@@ -11,7 +11,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private ILinkCache _formLinkCache = null!;
 
     //Databases
-    private readonly Dictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
+    private readonly ConcurrentDictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
     private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
     private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
 
@@ -817,7 +817,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         var vc = new VoiceContainer(_speakerVoices);
         vc.InvertVoiceTypes(_defaultVoiceTypes[mod]);
-        _defaultSpeakerVoices.Add(mod, vc);
+        _defaultSpeakerVoices.TryAdd(mod, vc);
         return vc;
     }
 
