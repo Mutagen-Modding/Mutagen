@@ -34,6 +34,25 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var childRaces = new HashSet<FormKey>();
         foreach (var mod in _formLinkCache.PriorityOrder)
         {
+            foreach (var quest in mod.EnumerateMajorRecords<IQuestGetter>())
+            {
+                foreach (var alias in quest.Aliases)
+                {
+                    var uniqueActor = alias.UniqueActor.FormKey;
+                    if (uniqueActor.IsNull) continue;
+
+                    foreach (var faction in alias.Factions)
+                    {
+                        if (!faction.IsNull)
+                        {
+                            _factionNPCs
+                                .GetOrAdd(faction.FormKey)
+                                .Add(uniqueActor);
+                        }
+                    }
+                }
+            }
+
             foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>())
             {
                 _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc));
