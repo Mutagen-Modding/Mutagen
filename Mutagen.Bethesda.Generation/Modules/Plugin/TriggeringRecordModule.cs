@@ -396,6 +396,12 @@ public class TriggeringRecordModule : GenerationModule
         }
         else if (field is GenderedType gendered)
         {
+            if (gendered.SubTypeGeneration is ListType listType
+                && listType.SubTypeGeneration is LoquiType)
+            {
+                await SetContainerSubTriggers(obj, listType);
+            }
+            
             if (gendered.SubTypeGeneration is LoquiType or ListType)
             {
                 await SetRecordTrigger(

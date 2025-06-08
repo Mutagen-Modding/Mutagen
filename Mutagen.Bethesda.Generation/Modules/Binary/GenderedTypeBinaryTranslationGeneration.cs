@@ -558,6 +558,26 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                                 args.Add($"translationParams: {converterAccessor}");
                             }
                         }
+                        else if (gendered.SubTypeGeneration is ListType loquiList
+                                 && subTransl is PluginListBinaryTranslationGeneration pluginListBinaryTranslationGeneration2
+                                 && loquiList.SubTypeGeneration is LoquiType listLoqui) 
+                        {
+                            args.AddPassArg("stream");
+                            await args.Add(async subFg =>
+                            {
+                                subFg.AppendLine("creator: (s, p, t) => ");
+                                using (subFg.CurlyBrace())
+                                {
+                                    await pluginListBinaryTranslationGeneration2.GenerateWrapperRecordTypeParseGeneral(
+                                        subFg, objGen, loquiList,
+                                        streamAccessor: "s",
+                                        locationAccessor: null,
+                                        packageAccessor: "p",
+                                        retAccessor: "return ",
+                                        converterAccessor: "t");
+                                }
+                            });
+                        }
                         else if (gendered.SubTypeGeneration is ListType list
                                  && subTransl is PluginListBinaryTranslationGeneration pluginListBinaryTranslationGeneration)
                         {
