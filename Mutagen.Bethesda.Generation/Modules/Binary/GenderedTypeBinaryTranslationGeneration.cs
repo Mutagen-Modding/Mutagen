@@ -212,10 +212,15 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
 
         var allowDirectWrite = subTransl.AllowDirectWrite(objGen, gendered.SubTypeGeneration);
         var loqui = gendered.SubTypeGeneration as LoquiType;
+        if (loqui == null && gendered.SubTypeGeneration is ListType list 
+            && list.SubTypeGeneration is LoquiType loquiList)
+        {
+            loqui = loquiList;
+        }
         bool needsMasters = gendered.SubTypeGeneration is FormLinkType ||
                             (loqui != null && loqui.GetFieldData().HasTrigger);
         var typeName = gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-        if (loqui != null)
+        if (loqui != null && gendered.SubTypeGeneration is LoquiType)
         {
             typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
         }

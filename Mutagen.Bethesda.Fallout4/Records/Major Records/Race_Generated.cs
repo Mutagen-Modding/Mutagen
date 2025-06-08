@@ -5317,7 +5317,10 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.HNAM,
                 RecordTypes.HLTX,
                 RecordTypes.QSTI,
-                RecordTypes.BSMP);
+                RecordTypes.BSMP,
+                RecordTypes.BSMB,
+                RecordTypes.BSMS,
+                RecordTypes.BMMP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
