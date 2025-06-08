@@ -687,13 +687,7 @@
     <Compile Include="Records\Major Records\RaceStats_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FacePart_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BodyData_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyPart_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\FaceGenData_Generated.cs">
@@ -903,6 +897,12 @@
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
+    <Compile Include="Records\Major Records\FacePartItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPartItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

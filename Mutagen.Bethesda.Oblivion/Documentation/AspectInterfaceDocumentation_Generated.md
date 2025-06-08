@@ -14,7 +14,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - Creature
 - Door
-- FacePart
+- FacePartItem
 - Flora
 - Furniture
 - Grass
@@ -136,7 +136,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Eye
 - INamed
-### FacePart
+### FacePartItem
 - IModeled
 ### Faction
 - INamed

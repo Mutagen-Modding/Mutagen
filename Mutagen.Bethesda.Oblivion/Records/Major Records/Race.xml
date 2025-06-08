@@ -27,7 +27,7 @@
           <RefDirect refName="RaceStats" />
         </Fields>
       </Gendered>
-      <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
+      <RefList name="FaceData" refName="FacePartItem" markerType="NAM0" />
       <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
         <Fields>
           <RefDirect refName="BodyData" />
@@ -85,7 +85,7 @@
       <UInt8 name="Luck" />
     </Fields>
   </Object>
-  <Object name="FacePart" objType="Subrecord">
+  <Object name="FacePartItem" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="Race.FacePart" recordType="INDX" byteLength="4" />
       <RefDirect name="Model" refName="Model" />
@@ -95,10 +95,10 @@
   <Object name="BodyData" objType="Subrecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <RefList name="BodyParts" refName="BodyPart" />
+      <RefList name="BodyParts" refName="BodyPartItem" />
     </Fields>
   </Object>
-  <Object name="BodyPart" objType="Subrecord">
+  <Object name="BodyPartItem" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="Race.BodyPart" recordType="INDX" byteLength="4" />
       <String name="Icon" recordType="ICON" />
