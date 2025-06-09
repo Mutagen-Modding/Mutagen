@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -22,8 +21,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
 
     //Caches
-    private readonly ConcurrentDictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
-    private readonly ConcurrentDictionary<FormKey, VoiceContainer> _questCache = new();
+    private readonly object _defaultSpeakerVoicesLock = new();
+    private readonly Dictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
+    private readonly object _questCacheLock = new();
+    private readonly Dictionary<FormKey, VoiceContainer> _questCache = new();
 
     public void Prep(IAssetLinkCache linkCache)
     {
@@ -354,13 +355,16 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetQuestVoices(IDialogTopicGetter topic, IQuestGetter quest)
     {
-        if (!_questCache.TryGetValue(quest.FormKey, out var questVoices))
+        lock (_questCacheLock)
         {
-            questVoices = GetVoices(quest, topic.FormKey.ModKey);
-            _questCache.TryAdd(quest.FormKey, questVoices);
-        }
+            if (!_questCache.TryGetValue(quest.FormKey, out var questVoices))
+            {
+                questVoices = GetVoices(quest, topic.FormKey.ModKey);
+                _questCache.TryAdd(quest.FormKey, questVoices);
+            }
 
-        return questVoices;
+            return questVoices;
+        }
     }
 
     private static (string questString, string topicString) GetQuestAndTopicStrings(IDialogTopicGetter topic, IQuestGetter quest)
@@ -768,12 +772,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetDefaultVoices(ModKey mod)
     {
-        if (_defaultSpeakerVoices.TryGetValue(mod, out var defaultVoiceTypes)) return defaultVoiceTypes;
+        lock (_defaultSpeakerVoicesLock)
+        {
+            if (_defaultSpeakerVoices.TryGetValue(mod, out var defaultVoiceTypes)) return defaultVoiceTypes;
 
-        var vc = new VoiceContainer(_speakerVoices);
-        vc.InvertVoiceTypes(_defaultVoiceTypes[mod]);
-        _defaultSpeakerVoices.TryAdd(mod, vc);
-        return vc;
+            var vc = new VoiceContainer(_speakerVoices);
+            vc.InvertVoiceTypes(_defaultVoiceTypes[mod]);
+            _defaultSpeakerVoices.TryAdd(mod, vc);
+            return vc;
+        }
     }
 
     private VoiceContainer Invert(VoiceContainer voiceContainer, bool invertDefaultVoices, ModKey currentMod)
