@@ -19,7 +19,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<bool, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfosCache = new();
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
 
     //Caches
     private readonly ConcurrentDictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
@@ -103,7 +103,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 if (!response.ResponseData.IsNull)
                 {
-                    _sharedInfosCache
+                    _sharedInfoUsages
                         .GetOrAdd(response.ResponseData.FormKey)
                         .Add(response.FormKey);
                 }
@@ -190,7 +190,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (response.Responses.All(r => !r.Sound.IsNull)) return new VoiceContainer();
 
         //If this is a shared info and it's not used, return no voices
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfosCache.ContainsKey(response.FormKey)) return new VoiceContainer();
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfoUsages.ContainsKey(response.FormKey)) return new VoiceContainer();
 
         //Get quest voices
         VoiceContainer questVoices;
@@ -339,7 +339,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     }
 
     private void LimitVoicesToSharedInfoUsages(VoiceContainer voices, IDialogTopicGetter topic, IDialogResponsesGetter responses) {
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfosCache.TryGetValue(responses.FormKey, out var responseFormKeys))
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfoUsages.TryGetValue(responses.FormKey, out var responseFormKeys))
         {
             var userConditions = responseFormKeys
                 .Select(responseKey =>
