@@ -193,16 +193,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfoUsages.ContainsKey(response.FormKey)) return new VoiceContainer();
 
         //Get quest voices
-        VoiceContainer questVoices;
-        if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
-        {
-            questVoices = questVoiceContainer;
-        }
-        else
-        {
-            questVoices = GetVoices(quest, topic.FormKey.ModKey);
-            _questCache.TryAdd(quest.FormKey, questVoices);
-        }
+        var questVoices = GetQuestVoices(topic, quest);
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
         var voices = GetVoices(topic, response, quest);
@@ -363,12 +354,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetQuestVoices(IDialogTopicGetter topic, IQuestGetter quest)
     {
-        VoiceContainer questVoices;
-        if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
-        {
-            questVoices = questVoiceContainer;
-        }
-        else
+        if (!_questCache.TryGetValue(quest.FormKey, out var questVoices))
         {
             questVoices = GetVoices(quest, topic.FormKey.ModKey);
             _questCache.TryAdd(quest.FormKey, questVoices);
