@@ -11,21 +11,19 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private ILinkCache _formLinkCache = null!;
 
     //Databases
-    private readonly ConcurrentDictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
     private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
     private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
-
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
     private readonly Dictionary<bool, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
-
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfosCache = new();
 
     //Caches
+    private readonly ConcurrentDictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
     private readonly ConcurrentDictionary<FormKey, VoiceContainer> _questCache = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfosCache = new();
 
     public void Prep(IAssetLinkCache linkCache)
     {
