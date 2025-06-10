@@ -2,11 +2,11 @@
 
 public static class VoiceContainerExtension
 {
-    public static VoiceContainer MergeInsert(this IEnumerable<VoiceContainer> voiceContainers)
+    public static VoiceContainer MergeInsert(this IEnumerable<VoiceContainer> voiceContainers, bool isDefaultIfEmpty)
     {
-        if (!voiceContainers.Any()) return new VoiceContainer();
+        if (!voiceContainers.Any()) return new VoiceContainer(isDefaultIfEmpty);
 
-        var output = new VoiceContainer(true);
+        var output = new VoiceContainer();
         foreach (var voiceContainer in voiceContainers)
         {
             output.Insert(voiceContainer);
@@ -15,19 +15,21 @@ public static class VoiceContainerExtension
         return output;
     }
 
-    public static VoiceContainer MergeAll(this IEnumerable<VoiceContainer> voiceContainers)
+    public static VoiceContainer MergeIntersect(this IEnumerable<VoiceContainer> voiceContainers)
     {
         var voiceContainerList = voiceContainers.ToList();
 
-        if (!voiceContainerList.Any()) return new VoiceContainer();
-        if (voiceContainerList.Count == 1) return voiceContainerList[0];
+        switch (voiceContainerList) {
+            case []: return new VoiceContainer();
+            case [var voiceContainer]: return voiceContainer;
+            default:
+                var output = new VoiceContainer(true);
+                foreach (var voiceContainer in voiceContainerList)
+                {
+                    output.IntersectWith(voiceContainer);
+                }
 
-        var output = new VoiceContainer(true);
-        foreach (var voiceContainer in voiceContainerList)
-        {
-            output.Merge(voiceContainer);
+                return output;
         }
-
-        return output;
     }
 }
