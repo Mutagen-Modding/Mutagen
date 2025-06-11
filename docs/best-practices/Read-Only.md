@@ -9,7 +9,13 @@ Mutagen offers up records in several ways.  Consider dealing with an Npc, it wou
 In most example code, APIs, and projects you look at the code will mostly be dealing with `INpcGetter`, and you should too.
 
 ## Late Mutation
-The best practice is to convert from readonly interfaces to mutable version as late as possible.  This allows the systems to avoid parsing the whole record when it's not applicable.
+The best practice is to convert from readonly interfaces to mutable version as late as possible.  This allows the systems to avoid parsing the whole record when it's not applicable.  
+
+To transition to a mutable object is typically done via [Override Mechanics](../plugins/Create,-Duplicate,-and-Override.md), which leans on copying the readonly object into a mutable one, which reads and parses all the fields during that process.
+
+## Reasoning
+
+Doing the bulk of your work on readonly objects has several major upsides.
 
 ### Readonly Increases Speed
 A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](../plugins/Importing-and-Construction.md).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
@@ -17,6 +23,11 @@ A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big wa
 As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means creating a more "normal" settable `Npc` class, and reading ALL the data within that record to fill out each field one by one.  This is often a waste of time.
 
 Take a look at our original example, if the Npc in question has a Level higher than 5, then all that work and time of reading the other fields is wasted.  Once we find out the level is higher than 5, we no longer care about it anymore, and would prefer to have not parsed any of the other data.  This is just one small example where it is preferable to remain in the parse-on-demand readonly mode as long as possible.
+
+### Helps Avoid Malformed Mod Issues
+If a mod has a single malformed record, this can cause parsing issues.  By using readonly mods, you will avoid interacting with this object entirely if it's not of interest to your program.   For example, if there's a malformed NavMesh object in a mod, but your program is only interested in Weapons, then you'll avoid the problem record entirely.
+
+However, if your code was interested in that malformed NavMesh, then of course the core issue will still need to be dealt with, either by notifying the mod author, upgrading Mutagen code to handle it better, etc.
 
 ### Adds Clearer Intention to Modifications
 #### A Fully Mutable Ecosystem Has Easy Pitfalls
