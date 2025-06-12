@@ -1,16 +1,24 @@
-﻿using Mutagen.Bethesda.Plugins.Records;
-using Noggog;
+﻿using System.Reflection;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
 public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
 {
+    private static readonly MethodInfo MethodInfo;
+    
+    static ImmutableLoadOrderReferencedByCache()
+    {
+        MethodInfo = typeof(ImmutableLoadOrderReferencedByCache).GetMethod(nameof(GetReferencedByGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!;
+    }
+    
     private record struct CacheKey(
         FormKey FormKey,
-        Type Type);
+        Type ReferencedType,
+        Type ReferencedByType);
     
     private record CacheItem(
-        IReadOnlyCollection<FormKey>? FormKeys,
+        IReadOnlyCollection<FormKey> FormKeys,
         object? FormLinks);
     
     private readonly ILinkCache _linkCache;
@@ -29,13 +37,36 @@ public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
         return GetReferencedBy<TReferencedBy>(majorRecord.ToStandardizedIdentifier());
     }
     
-    public IReadOnlyCollection<FormKey> GetReferencedBy(FormKey formKey)
+    public IReadOnlyCollection<FormKey> GetReferencedBy(IMajorRecordGetter majorRecord)
     {
-        var key = new CacheKey(formKey, typeof(IMajorRecordGetter));
+        return GetReferencedBy(majorRecord.ToStandardizedIdentifier());
+    }
+
+    public IReadOnlyCollection<FormKey> GetReferencedBy(IFormLinkIdentifier identifier)
+    {
+        var key = new CacheKey(identifier.FormKey, 
+            ReferencedType: identifier.Type,
+            ReferencedByType: typeof(IMajorRecordGetter));
         
         lock (_cache)
         {
-            if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys ?? [];
+            if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys;
+        }
+        
+        var genMethod = MethodInfo.MakeGenericMethod(typeof(IMajorRecordGetter));
+        var cacheItem = (CacheItem)genMethod.Invoke(this, [identifier])!;
+        return cacheItem.FormKeys;
+    }
+
+    public IReadOnlyCollection<FormKey> GetReferencedBy(FormKey formKey)
+    {
+        var key = new CacheKey(formKey, 
+            ReferencedType: typeof(IMajorRecordGetter),
+            ReferencedByType: typeof(IMajorRecordGetter));
+        
+        lock (_cache)
+        {
+            if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys;
         }
         
         HashSet<FormKey> result = new();
@@ -61,38 +92,50 @@ public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
         IFormLinkIdentifier identifier)
         where TReferencedBy : class, IMajorRecordGetter
     {
-        var key = new CacheKey(identifier.FormKey, identifier.Type);
+        var cacheItem = GetReferencedByGeneric<TReferencedBy>(identifier);
+        if (cacheItem.FormLinks is IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> links) return links;
+        throw new ArgumentException($"Could not get cached formlinks for {identifier} referenced by {typeof(TReferencedBy)}");
+    }
+    
+    private CacheItem GetReferencedByGeneric<TReferencedBy>(
+        IFormLinkIdentifier identifier)
+        where TReferencedBy : class, IMajorRecordGetter
+    {
+        var key = new CacheKey(
+            identifier.FormKey,
+            ReferencedType: identifier.Type,
+            ReferencedByType: typeof(TReferencedBy));
 
         lock (_cache)
         {
             if (_cache.TryGetValue(key, out var cached))
             {
-                if (cached.FormLinks is IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> links)
-                {
-                    return links;
-                }
-                return [];
+                return cached;
             }
         }
         
-        HashSet<IFormLinkGetter<TReferencedBy>> result = new();
+        HashSet<IFormLinkGetter<TReferencedBy>> formLinks = new();
+        HashSet<FormKey> formKeys = new();
         foreach (var record in _linkCache.PriorityOrder.WinningOverrides<TReferencedBy>()) 
         {
             // ToDo
             // Upgrade EnumerateFormLinks to query on type so we're not looping all links unnecessarily
             if (record.EnumerateFormLinks().Any(reference => reference.FormKey == identifier.FormKey)) 
             {
-                result.Add(record.ToLink());
+                formLinks.Add(record.ToLink());
+                formKeys.Add(record.FormKey);
             }
         }
+
+        var ret = new CacheItem(
+            FormKeys: formKeys,
+            FormLinks: formLinks);
         
         lock (_cache)
         {
-            _cache[key] = new CacheItem(
-                FormKeys: null,
-                FormLinks: result);
+            _cache[key] = ret;
         }
 
-        return result;
+        return ret;
     }
 }

@@ -16,17 +16,28 @@ public class ImmutableLoadOrderReferencedByCacheTests
         Race r)
     {
         var linkCache = mod.ToImmutableLinkCache();
-        var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
-        cache.GetReferencedBy(r.FormKey)
-            .ShouldBeEmpty();
-        cache.GetReferencedBy<Npc>(r)
-            .ShouldBeEmpty();
-        cache.GetReferencedBy<Npc>(r.ToStandardizedIdentifier())
-            .ShouldBeEmpty();
-        cache.GetReferencedBy<Npc>(r.ToLinkGetter())
-            .ShouldBeEmpty();
-        cache.GetReferencedBy<Npc>(r.ToLink())
-            .ShouldBeEmpty();
+        
+        void TestUnypedResult(Func<ImmutableLoadOrderReferencedByCache, IReadOnlyCollection<FormKey>> referencedCall)
+        {
+            var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
+            var referenced = referencedCall(cache);
+            referenced.ShouldBeEmpty();
+        }
+        
+        void TestTypedResult(Func<ImmutableLoadOrderReferencedByCache, IReadOnlyCollection<IFormLinkGetter<INpcGetter>>> referencedCall)
+        {
+            var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
+            var referenced = referencedCall(cache);
+            referenced.ShouldBeEmpty();
+        }
+        
+        TestUnypedResult(c => c.GetReferencedBy(r.FormKey));
+        TestTypedResult(c => c.GetReferencedBy<Npc>(r));
+        TestUnypedResult(c => c.GetReferencedBy(r));
+        TestTypedResult(c => c.GetReferencedBy<Npc>(r.ToStandardizedIdentifier()));
+        TestUnypedResult(c => c.GetReferencedBy(r.ToStandardizedIdentifier()));
+        TestTypedResult(c => c.GetReferencedBy<Npc>(r.ToLinkGetter()));
+        TestTypedResult(c => c.GetReferencedBy<Npc>(r.ToLink()));
     }
 
     [Theory, MutagenModAutoData]
@@ -38,21 +49,31 @@ public class ImmutableLoadOrderReferencedByCacheTests
     {
         n.Race.SetTo(r);
         var linkCache = mod.ToImmutableLinkCache();
-        var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
-        var referenced = cache.GetReferencedBy(r.FormKey);
-        referenced.ShouldHaveCount(1);
-        referenced.ShouldEqualEnumerable(n.FormKey);
-        
-        void TestResult(IReadOnlyCollection<IFormLinkGetter<INpcGetter>> npcReferenced)
+
+        void TestUntypedResult(Func<ImmutableLoadOrderReferencedByCache, IReadOnlyCollection<FormKey>> referencedCall)
         {
+            var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
+            var referenced = referencedCall(cache);
+            referenced.ShouldHaveCount(1);
+            referenced.ShouldEqualEnumerable(n.FormKey);
+        }
+
+        TestUntypedResult(c => c.GetReferencedBy(r.FormKey));
+
+        void TestTypedResult(Func<ImmutableLoadOrderReferencedByCache, IReadOnlyCollection<IFormLinkGetter<INpcGetter>>> npcReferencedCall)
+        {
+            var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
+            var npcReferenced = npcReferencedCall(cache);
             npcReferenced.ShouldHaveCount(1);
             npcReferenced.ShouldEqualEnumerable(n.ToLink<INpcGetter>());
         }
 
-        TestResult(cache.GetReferencedBy<INpcGetter>(r));
-        TestResult(cache.GetReferencedBy<INpcGetter>(r.ToStandardizedIdentifier()));
-        TestResult(cache.GetReferencedBy<INpcGetter>(r.ToLinkGetter()));
-        TestResult(cache.GetReferencedBy<INpcGetter>(r.ToLink()));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r));
+        TestUntypedResult(c => c.GetReferencedBy(r));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r.ToStandardizedIdentifier()));
+        TestUntypedResult(c => c.GetReferencedBy(r.ToStandardizedIdentifier()));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r.ToLinkGetter()));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r.ToLink()));
     }
 
     [Theory, MutagenModAutoData]
@@ -71,12 +92,19 @@ public class ImmutableLoadOrderReferencedByCacheTests
         n22.Race.SetTo(r);
         var linkCache = new[] { mod, mod2 }.ToImmutableLinkCache();
         var cache = new ImmutableLoadOrderReferencedByCache(linkCache);
-        var referenced = cache.GetReferencedBy(r.FormKey);
-        referenced.ShouldHaveCount(2);
-        referenced.ShouldBeSubsetOf([n12.FormKey, n22.FormKey]);
-        
-        void TestResult(IReadOnlyCollection<IFormLinkGetter<INpcGetter>> npcReferenced)
+
+        void TestUntypedResult(Func<ImmutableLoadOrderReferencedByCache, IReadOnlyCollection<FormKey>> referencedCall)
         {
+            var referenced = referencedCall(cache);
+            referenced.ShouldHaveCount(2);
+            referenced.ShouldBeSubsetOf([n12.FormKey, n22.FormKey]);
+        }
+        
+        TestUntypedResult(c => c.GetReferencedBy(r.FormKey));
+
+        void TestTypedResult(Func<ImmutableLoadOrderReferencedByCache, IReadOnlyCollection<IFormLinkGetter<INpcGetter>>> npcReferencedCall)
+        {
+            var npcReferenced = npcReferencedCall(cache);
             npcReferenced.ShouldHaveCount(2);
             npcReferenced.ShouldBeSubsetOf(
             [
@@ -85,9 +113,11 @@ public class ImmutableLoadOrderReferencedByCacheTests
             ]);
         }
 
-        TestResult(cache.GetReferencedBy<INpcGetter>(r));
-        TestResult(cache.GetReferencedBy<INpcGetter>(r.ToStandardizedIdentifier()));
-        TestResult(cache.GetReferencedBy<INpcGetter>(r.ToLinkGetter()));
-        TestResult(cache.GetReferencedBy<INpcGetter>(r.ToLink()));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r));
+        TestUntypedResult(c => c.GetReferencedBy(r));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r.ToStandardizedIdentifier()));
+        TestUntypedResult(c => c.GetReferencedBy(r.ToStandardizedIdentifier()));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r.ToLinkGetter()));
+        TestTypedResult(c => c.GetReferencedBy<INpcGetter>(r.ToLink()));
     }
 }
