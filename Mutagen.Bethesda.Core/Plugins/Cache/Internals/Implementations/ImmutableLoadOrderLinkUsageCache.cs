@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
@@ -23,6 +24,8 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     
     private readonly ILinkCache _linkCache;
     private readonly Dictionary<CacheKey, CacheItem> _cache = new();
+    private readonly object _untypedReferencesCacheLock = new();
+    private Dictionary<FormKey, HashSet<FormKey>>? _untypedReferencesCache;
     
     public ImmutableLoadOrderLinkUsageCache(
         ILinkCache linkCache)
@@ -57,6 +60,27 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         var cacheItem = (CacheItem)genMethod.Invoke(this, [identifier])!;
         return cacheItem.FormKeys;
     }
+    
+    private Dictionary<FormKey, HashSet<FormKey>> GetUntypedReferencesCache()
+    {
+        lock (_untypedReferencesCacheLock)
+        {
+            if (_untypedReferencesCache is not null) return _untypedReferencesCache;
+            _untypedReferencesCache = new();
+            foreach (var record in _linkCache.PriorityOrder.WinningOverrides<IMajorRecordGetter>())
+            {
+                foreach (var fk in record.EnumerateFormLinks()
+                             .Select(x => x.FormKey)
+                             .Where(x => !x.IsNull))
+                {
+                    _untypedReferencesCache
+                        .GetOrAdd(fk)
+                        .Add(record.FormKey);
+                }
+            }
+            return _untypedReferencesCache;
+        }
+    }
 
     public IReadOnlyCollection<FormKey> GetUsagesOf(FormKey formKey)
     {
@@ -69,13 +93,16 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys;
         }
         
-        HashSet<FormKey> result = new();
-        foreach (var record in _linkCache.PriorityOrder.WinningOverrides<IMajorRecordGetter>()) 
+        var untypedReferencesCache = GetUntypedReferencesCache();
+
+        IReadOnlyCollection<FormKey> result;
+        if (untypedReferencesCache.TryGetValue(formKey, out var set))
         {
-            if (record.EnumerateFormLinks().Any(reference => reference.FormKey == formKey)) 
-            {
-                result.Add(record.FormKey);
-            }
+            result = set;
+        }
+        else
+        {
+            result = [];
         }
         
         lock (_cache)
