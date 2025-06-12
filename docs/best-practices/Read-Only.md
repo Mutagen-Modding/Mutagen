@@ -20,7 +20,6 @@ Doing the bulk of your work on readonly objects has several major upsides.
 ### Readonly Increases Speed
 A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing readonly records in a highly specialized fashion that are very lightweight and fast.   But one of their downsides is they are read only.
 
-As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means creating a more "normal" settable `Npc` class, and reading ALL the data within that record to fill out each field one by one.  This is often a waste of time.
 
 ```cs
 foreach (var npc in mod.Npcs)
@@ -34,6 +33,8 @@ foreach (var npc in mod.Npcs)
 ```
 
 For 99% of Npcs, we will just want to check if the HealthOffset is less than 100, and if so, skip.  Readonly mods are able to ONLY parse the data related to HealthOffset, and thus for 99% of the Npcs can skip 99% of the parsing work.
+
+As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means reading ALL the data within that record to fill out each field one by one.  This is often a waste of time, and so should be done as late as possible after all filtering and investigation code has run on readonly objects.
 
 ### Helps Avoid Malformed Mod Issues
 If a mod has a single malformed record, this can cause parsing issues.  By using readonly mods, you will avoid interacting with this object entirely if it's not of interest to your program.   For example, if there's a malformed NavMesh object in a mod, but your program is only interested in Weapons, then you'll avoid the problem record entirely.
