@@ -41,7 +41,7 @@ As soon as you want to modify something, you have to [first convert it to a sett
 ### Helps Avoid Malformed Mod Issues
 If a mod has a single malformed record, this can cause parsing issues.  By using readonly mods, you will avoid interacting with this object entirely if it's not of interest to your program.   For example, if there's a malformed NavMesh object in a mod, but your program is only interested in Weapons, then you'll avoid the problem record entirely.
 
-However, if your code was interested in that malformed NavMesh, then of course the core issue will still need to be dealt with, either by notifying the mod author, upgrading Mutagen code to handle it better, etc.
+However, if your code was interested in that specific malformed field of that NavMesh, then of course the core issue will still need to be dealt with, either by notifying the mod author, upgrading Mutagen code to handle it better, etc.
 
 ### Adds Clearer Intention to Modifications
 #### A Fully Mutable Ecosystem Has Easy Pitfalls
