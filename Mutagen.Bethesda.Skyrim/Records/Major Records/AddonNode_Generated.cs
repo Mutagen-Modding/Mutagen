@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region MasterParticleSystemCap
         public UInt16 MasterParticleSystemCap { get; set; } = default(UInt16);
         #endregion
-        #region AlwaysLoaded
-        public Boolean AlwaysLoaded { get; set; } = default(Boolean);
+        #region Flags
+        public AddonNode.Flag Flags { get; set; } = default(AddonNode.Flag);
         #endregion
 
         #region To String
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NodeIndex = initialValue;
                 this.Sound = initialValue;
                 this.MasterParticleSystemCap = initialValue;
-                this.AlwaysLoaded = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem NodeIndex,
                 TItem Sound,
                 TItem MasterParticleSystemCap,
-                TItem AlwaysLoaded)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NodeIndex = NodeIndex;
                 this.Sound = Sound;
                 this.MasterParticleSystemCap = MasterParticleSystemCap;
-                this.AlwaysLoaded = AlwaysLoaded;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem NodeIndex;
             public TItem Sound;
             public TItem MasterParticleSystemCap;
-            public TItem AlwaysLoaded;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.NodeIndex, rhs.NodeIndex)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
                 if (!object.Equals(this.MasterParticleSystemCap, rhs.MasterParticleSystemCap)) return false;
-                if (!object.Equals(this.AlwaysLoaded, rhs.AlwaysLoaded)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.NodeIndex);
                 hash.Add(this.Sound);
                 hash.Add(this.MasterParticleSystemCap);
-                hash.Add(this.AlwaysLoaded);
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.NodeIndex)) return false;
                 if (!eval(this.Sound)) return false;
                 if (!eval(this.MasterParticleSystemCap)) return false;
-                if (!eval(this.AlwaysLoaded)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.NodeIndex)) return true;
                 if (eval(this.Sound)) return true;
                 if (eval(this.MasterParticleSystemCap)) return true;
-                if (eval(this.AlwaysLoaded)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.NodeIndex = eval(this.NodeIndex);
                 obj.Sound = eval(this.Sound);
                 obj.MasterParticleSystemCap = eval(this.MasterParticleSystemCap);
-                obj.AlwaysLoaded = eval(this.AlwaysLoaded);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -328,9 +328,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
                     }
-                    if (printMask?.AlwaysLoaded ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(AlwaysLoaded, "AlwaysLoaded");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
             }
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? NodeIndex;
             public Exception? Sound;
             public Exception? MasterParticleSystemCap;
-            public Exception? AlwaysLoaded;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -367,8 +367,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Sound;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         return MasterParticleSystemCap;
-                    case AddonNode_FieldIndex.AlwaysLoaded:
-                        return AlwaysLoaded;
+                    case AddonNode_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -394,8 +394,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         this.MasterParticleSystemCap = ex;
                         break;
-                    case AddonNode_FieldIndex.AlwaysLoaded:
-                        this.AlwaysLoaded = ex;
+                    case AddonNode_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -423,8 +423,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         this.MasterParticleSystemCap = (Exception?)obj;
                         break;
-                    case AddonNode_FieldIndex.AlwaysLoaded:
-                        this.AlwaysLoaded = (Exception?)obj;
+                    case AddonNode_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (NodeIndex != null) return true;
                 if (Sound != null) return true;
                 if (MasterParticleSystemCap != null) return true;
-                if (AlwaysLoaded != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
                 }
                 {
-                    sb.AppendItem(AlwaysLoaded, "AlwaysLoaded");
+                    sb.AppendItem(Flags, "Flags");
                 }
             }
             #endregion
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.NodeIndex = this.NodeIndex.Combine(rhs.NodeIndex);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
                 ret.MasterParticleSystemCap = this.MasterParticleSystemCap.Combine(rhs.MasterParticleSystemCap);
-                ret.AlwaysLoaded = this.AlwaysLoaded.Combine(rhs.AlwaysLoaded);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool NodeIndex;
             public bool Sound;
             public bool MasterParticleSystemCap;
-            public bool AlwaysLoaded;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NodeIndex = defaultOn;
                 this.Sound = defaultOn;
                 this.MasterParticleSystemCap = defaultOn;
-                this.AlwaysLoaded = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((NodeIndex, null));
                 ret.Add((Sound, null));
                 ret.Add((MasterParticleSystemCap, null));
-                ret.Add((AlwaysLoaded, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 NodeIndex { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
-        new Boolean AlwaysLoaded { get; set; }
+        new AddonNode.Flag Flags { get; set; }
     }
 
     public partial interface IAddonNodeInternal :
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 NodeIndex { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         UInt16 MasterParticleSystemCap { get; }
-        Boolean AlwaysLoaded { get; }
+        AddonNode.Flag Flags { get; }
 
     }
 
@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         NodeIndex = 9,
         Sound = 10,
         MasterParticleSystemCap = 11,
-        AlwaysLoaded = 12,
+        Flags = 12,
     }
     #endregion
 
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.NodeIndex = default(Int32);
             item.Sound.Clear();
             item.MasterParticleSystemCap = default(UInt16);
-            item.AlwaysLoaded = default(Boolean);
+            item.Flags = default(AddonNode.Flag);
             base.Clear(item);
         }
         
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.NodeIndex = item.NodeIndex == rhs.NodeIndex;
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
-            ret.AlwaysLoaded = item.AlwaysLoaded == rhs.AlwaysLoaded;
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1229,9 +1229,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.MasterParticleSystemCap, "MasterParticleSystemCap");
             }
-            if (printMask?.AlwaysLoaded ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendItem(item.AlwaysLoaded, "AlwaysLoaded");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1311,9 +1311,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.MasterParticleSystemCap != rhs.MasterParticleSystemCap) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.AlwaysLoaded) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Flags) ?? true))
             {
-                if (lhs.AlwaysLoaded != rhs.AlwaysLoaded) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             return true;
         }
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.NodeIndex);
             hash.Add(item.Sound);
             hash.Add(item.MasterParticleSystemCap);
-            hash.Add(item.AlwaysLoaded);
+            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1542,9 +1542,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.MasterParticleSystemCap = rhs.MasterParticleSystemCap;
             }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.AlwaysLoaded) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Flags) ?? true))
             {
-                item.AlwaysLoaded = rhs.AlwaysLoaded;
+                item.Flags = rhs.Flags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1738,23 +1738,11 @@ namespace Mutagen.Bethesda.Skyrim
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
                 writer.Write(item.MasterParticleSystemCap);
-                AddonNodeBinaryWriteTranslation.WriteBinaryAlwaysLoaded(
-                    writer: writer,
-                    item: item);
+                EnumBinaryTranslation<AddonNode.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 2);
             }
-        }
-
-        public static partial void WriteBinaryAlwaysLoadedCustom(
-            MutagenWriter writer,
-            IAddonNodeGetter item);
-
-        public static void WriteBinaryAlwaysLoaded(
-            MutagenWriter writer,
-            IAddonNodeGetter item)
-        {
-            WriteBinaryAlwaysLoadedCustom(
-                writer: writer,
-                item: item);
         }
 
         public void Write(
@@ -1853,10 +1841,11 @@ namespace Mutagen.Bethesda.Skyrim
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 2) return null;
                     item.MasterParticleSystemCap = dataFrame.ReadUInt16();
-                    AddonNodeBinaryCreateTranslation.FillBinaryAlwaysLoadedCustom(
-                        frame: dataFrame,
-                        item: item);
-                    return (int)AddonNode_FieldIndex.AlwaysLoaded;
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Flags = EnumBinaryTranslation<AddonNode.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    return (int)AddonNode_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1869,10 +1858,6 @@ namespace Mutagen.Bethesda.Skyrim
                         translationParams: translationParams.WithNoConverter());
             }
         }
-
-        public static partial void FillBinaryAlwaysLoadedCustom(
-            MutagenFrame frame,
-            IAddonNodeInternal item);
 
     }
 
@@ -1942,10 +1927,10 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _MasterParticleSystemCap_IsSet => _DNAMLocation.HasValue;
         public UInt16 MasterParticleSystemCap => _MasterParticleSystemCap_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_MasterParticleSystemCapLocation, 2)) : default(UInt16);
         #endregion
-        #region AlwaysLoaded
-        private int _AlwaysLoadedLocation => _DNAMLocation!.Value.Min + 0x2;
-        public partial Boolean GetAlwaysLoadedCustom();
-        public Boolean AlwaysLoaded => GetAlwaysLoadedCustom();
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x2;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public AddonNode.Flag Flags => _Flags_IsSet ? (AddonNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2042,7 +2027,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)AddonNode_FieldIndex.AlwaysLoaded;
+                    return (int)AddonNode_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

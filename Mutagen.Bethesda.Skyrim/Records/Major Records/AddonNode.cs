@@ -1,43 +1,10 @@
-using Mutagen.Bethesda.Plugins.Binary.Streams;
-using System.Buffers.Binary;
-
 namespace Mutagen.Bethesda.Skyrim;
 
-partial class AddonNodeBinaryCreateTranslation
+public partial class AddonNode
 {
-    public static partial void FillBinaryAlwaysLoadedCustom(MutagenFrame frame, IAddonNodeInternal item)
+    public enum Flag
     {
-        var flags = frame.ReadUInt16();
-        item.AlwaysLoaded = flags switch 
-        {
-            1 => false,
-            3 => true,
-            _ => throw new NotImplementedException()
-        };
+        MasterParticleSystem = 0x0001,
+        AlwaysLoaded = 0x0003,
     }
-}
-
-partial class AddonNodeBinaryWriteTranslation
-{
-    public static partial void WriteBinaryAlwaysLoadedCustom(MutagenWriter writer, IAddonNodeGetter item)
-    {
-        if (item.AlwaysLoaded)
-        {
-            writer.Write((short)3);
-        }
-        else
-        {
-            writer.Write((short)1);
-        }
-    }
-}
-
-partial class AddonNodeBinaryOverlay
-{
-    public partial Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_AlwaysLoadedLocation)) switch
-    {
-        1 => false,
-        3 => true,
-        _ => throw new NotImplementedException()
-    };
 }
