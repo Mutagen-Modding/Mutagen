@@ -262,7 +262,7 @@
         <Compile Include="Plugins\Binary\Translations\TypedWriteParams.cs" />
         <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
         <Compile Include="Plugins\Cache\Internals\Implementations\ImmutableLoadOrderLinkCache.cs" />
-        <Compile Include="Plugins\Cache\Internals\Implementations\ImmutableLoadOrderReferencedByCache.cs" />
+        <Compile Include="Plugins\Cache\Internals\Implementations\ILinkUsageCache.cs" />
         <Compile Include="Plugins\Cache\Internals\Implementations\ImmutableModLinkCache.cs" />
         <Compile Include="Plugins\Cache\Internals\Implementations\Internal\DepthCache.cs" />
         <Compile Include="Plugins\Cache\Internals\Implementations\Internal\ImmutableLoadOrderLinkCacheCategory.cs" />
@@ -277,7 +277,7 @@
         <Compile Include="Plugins\Cache\Internals\Implementations\MutableLoadOrderLinkCache.cs" />
         <Compile Include="Plugins\Cache\Internals\Implementations\MutableModLinkCache.cs" />
         <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistrations.cs" />
-        <Compile Include="Plugins\Cache\IReferencedByCache.cs" />
+        <Compile Include="Plugins\Cache\ILinkUsageCache.cs" />
         <Compile Include="Plugins\Cache\ResolveTarget.cs" />
         <Compile Include="Plugins\Converters\FormKeyTypeConverter.cs" />
         <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />

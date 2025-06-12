@@ -3,13 +3,13 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
-public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
+public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
 {
     private static readonly MethodInfo MethodInfo;
     
-    static ImmutableLoadOrderReferencedByCache()
+    static ImmutableLoadOrderLinkUsageCache()
     {
-        MethodInfo = typeof(ImmutableLoadOrderReferencedByCache).GetMethod(nameof(GetReferencedByGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!;
+        MethodInfo = typeof(ImmutableLoadOrderLinkUsageCache).GetMethod(nameof(GetReferencedByGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!;
     }
     
     private record struct CacheKey(
@@ -24,25 +24,25 @@ public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
     private readonly ILinkCache _linkCache;
     private readonly Dictionary<CacheKey, CacheItem> _cache = new();
     
-    public ImmutableLoadOrderReferencedByCache(
+    public ImmutableLoadOrderLinkUsageCache(
         ILinkCache linkCache)
     {
         _linkCache = linkCache;
     }
     
-    public IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetReferencedBy<TReferencedBy>(
+    public IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetUsagesOf<TReferencedBy>(
         IMajorRecordGetter majorRecord) 
         where TReferencedBy : class, IMajorRecordGetter
     {
-        return GetReferencedBy<TReferencedBy>(majorRecord.ToStandardizedIdentifier());
+        return GetUsagesOf<TReferencedBy>(majorRecord.ToStandardizedIdentifier());
     }
     
-    public IReadOnlyCollection<FormKey> GetReferencedBy(IMajorRecordGetter majorRecord)
+    public IReadOnlyCollection<FormKey> GetUsagesOf(IMajorRecordGetter majorRecord)
     {
-        return GetReferencedBy(majorRecord.ToStandardizedIdentifier());
+        return GetUsagesOf(majorRecord.ToStandardizedIdentifier());
     }
 
-    public IReadOnlyCollection<FormKey> GetReferencedBy(IFormLinkIdentifier identifier)
+    public IReadOnlyCollection<FormKey> GetUsagesOf(IFormLinkIdentifier identifier)
     {
         var key = new CacheKey(identifier.FormKey, 
             ReferencedType: identifier.Type,
@@ -58,7 +58,7 @@ public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
         return cacheItem.FormKeys;
     }
 
-    public IReadOnlyCollection<FormKey> GetReferencedBy(FormKey formKey)
+    public IReadOnlyCollection<FormKey> GetUsagesOf(FormKey formKey)
     {
         var key = new CacheKey(formKey, 
             ReferencedType: typeof(IMajorRecordGetter),
@@ -88,7 +88,7 @@ public sealed class ImmutableLoadOrderReferencedByCache : IReferencedByCache
         return result;
     }
     
-    public IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetReferencedBy<TReferencedBy>(
+    public IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetUsagesOf<TReferencedBy>(
         IFormLinkIdentifier identifier)
         where TReferencedBy : class, IMajorRecordGetter
     {

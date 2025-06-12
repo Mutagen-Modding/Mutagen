@@ -2,22 +2,22 @@
 
 namespace Mutagen.Bethesda.Plugins.Cache;
 
-public interface IReferencedByCache
+public interface ILinkUsageCache
 {
-    IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetReferencedBy<TReferencedBy>(
+    IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetUsagesOf<TReferencedBy>(
         IFormLinkIdentifier identifier)
         where TReferencedBy : class, IMajorRecordGetter;
     
-    IReadOnlyCollection<FormKey> GetReferencedBy(
+    IReadOnlyCollection<FormKey> GetUsagesOf(
         IFormLinkIdentifier identifier);
 
-    IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetReferencedBy<TReferencedBy>(
+    IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetUsagesOf<TReferencedBy>(
         IMajorRecordGetter majorRecord)
         where TReferencedBy : class, IMajorRecordGetter;
 
-    IReadOnlyCollection<FormKey> GetReferencedBy(
+    IReadOnlyCollection<FormKey> GetUsagesOf(
         IMajorRecordGetter majorRecord);
 
     [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-    IReadOnlyCollection<FormKey> GetReferencedBy(FormKey formKey);
+    IReadOnlyCollection<FormKey> GetUsagesOf(FormKey formKey);
 }
