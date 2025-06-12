@@ -8,7 +8,6 @@ Mutagen offers up records in several ways.  Consider dealing with an Npc, it wou
 
 In most example code, APIs, and projects you look at the code will mostly be dealing with `INpcGetter`, and you should too.
 
-## Late Mutation
 The best practice is to convert from readonly interfaces to mutable version as late as possible.  This allows the systems to avoid parsing the whole record when it's not applicable.  
 
 To transition to a mutable object is typically done via [Override Mechanics](../plugins/Create,-Duplicate,-and-Override.md#overriding-records), which leans on copying the readonly object into a mutable one, which reads and parses all the fields during that process.
@@ -22,11 +21,14 @@ A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big wa
 
 
 ```cs
-foreach (var npc in mod.Npcs)
+foreach (var readonlyNpc in mod.Npcs)
 {
+    // Readonly phase
 	// Skip npc if health offset greater than 100
-    if (npc.Configuration.HealthOffset < 100) continue;
+    if (readonlyNpc.Configuration.HealthOffset < 100) continue;
 
+    // Mutable phase
+    var npc = outgoingMod.Npcs.GetOrAddAsOverride(readonlyNpc);
     // Set all lower health offsets to be at least 100
     npc.Configuration.HealthOffset = 100;
 }
