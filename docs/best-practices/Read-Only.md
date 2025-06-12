@@ -34,7 +34,7 @@ foreach (var npc in mod.Npcs)
 
 For 99% of Npcs, we will just want to check if the HealthOffset is less than 100, and if so, skip.  Readonly mods are able to ONLY parse the data related to HealthOffset, and thus for 99% of the Npcs can skip 99% of the parsing work.
 
-As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means reading ALL the data within that record to fill out each field one by one.  This is often a waste of time, and so should be done as late as possible after all filtering and investigation code has run on readonly objects.
+As soon as you want to modify something, you have to [first convert it to a settable version of the record](../plugins/Create,-Duplicate,-and-Override.md#overriding-records).  This means reading ALL the data within that record to fill out each field one by one.  This is often a waste of time, and so should be done as late as possible after all filtering and investigation code has run on readonly objects.
 
 ### Helps Avoid Malformed Mod Issues
 If a mod has a single malformed record, this can cause parsing issues.  By using readonly mods, you will avoid interacting with this object entirely if it's not of interest to your program.   For example, if there's a malformed NavMesh object in a mod, but your program is only interested in Weapons, then you'll avoid the problem record entirely.
