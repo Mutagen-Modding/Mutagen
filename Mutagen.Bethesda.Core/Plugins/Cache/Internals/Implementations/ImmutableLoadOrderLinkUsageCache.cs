@@ -33,11 +33,11 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         _linkCache = linkCache;
     }
     
-    public IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetUsagesOf<TReferencedBy>(
+    public IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> GetUsagesOf<TUserRecordScope>(
         IMajorRecordGetter majorRecord) 
-        where TReferencedBy : class, IMajorRecordGetter
+        where TUserRecordScope : class, IMajorRecordGetter
     {
-        return GetUsagesOf<TReferencedBy>(majorRecord.ToStandardizedIdentifier());
+        return GetUsagesOf<TUserRecordScope>(majorRecord.ToStandardizedIdentifier());
     }
     
     public IReadOnlyCollection<FormKey> GetUsagesOf(IMajorRecordGetter majorRecord)
@@ -115,23 +115,23 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         return result;
     }
     
-    public IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> GetUsagesOf<TReferencedBy>(
+    public IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> GetUsagesOf<TUserRecordScope>(
         IFormLinkIdentifier identifier)
-        where TReferencedBy : class, IMajorRecordGetter
+        where TUserRecordScope : class, IMajorRecordGetter
     {
-        var cacheItem = GetReferencedByGeneric<TReferencedBy>(identifier);
-        if (cacheItem.FormLinks is IReadOnlyCollection<IFormLinkGetter<TReferencedBy>> links) return links;
-        throw new ArgumentException($"Could not get cached formlinks for {identifier} referenced by {typeof(TReferencedBy)}");
+        var cacheItem = GetReferencedByGeneric<TUserRecordScope>(identifier);
+        if (cacheItem.FormLinks is IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> links) return links;
+        throw new ArgumentException($"Could not get cached formlinks for {identifier} referenced by {typeof(TUserRecordScope)}");
     }
     
-    private CacheItem GetReferencedByGeneric<TReferencedBy>(
+    private CacheItem GetReferencedByGeneric<TUserRecordScope>(
         IFormLinkIdentifier identifier)
-        where TReferencedBy : class, IMajorRecordGetter
+        where TUserRecordScope : class, IMajorRecordGetter
     {
         var key = new CacheKey(
             identifier.FormKey,
             ReferencedType: identifier.Type,
-            ReferencedByType: typeof(TReferencedBy));
+            ReferencedByType: typeof(TUserRecordScope));
 
         lock (_cache)
         {
@@ -141,9 +141,9 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             }
         }
         
-        HashSet<IFormLinkGetter<TReferencedBy>> formLinks = new();
+        HashSet<IFormLinkGetter<TUserRecordScope>> formLinks = new();
         HashSet<FormKey> formKeys = new();
-        foreach (var record in _linkCache.PriorityOrder.WinningOverrides<TReferencedBy>()) 
+        foreach (var record in _linkCache.PriorityOrder.WinningOverrides<TUserRecordScope>()) 
         {
             // ToDo
             // Upgrade EnumerateFormLinks to query on type so we're not looping all links unnecessarily
