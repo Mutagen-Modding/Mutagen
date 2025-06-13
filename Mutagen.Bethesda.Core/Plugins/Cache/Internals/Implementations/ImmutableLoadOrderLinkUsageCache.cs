@@ -7,8 +7,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
 {
     private record struct CacheKey(
         FormKey FormKey,
-        Type ReferencedType,
-        Type ReferencedByType);
+        Type UserRecordType);
     
     private record CacheItem(
         IReadOnlyCollection<FormKey> FormKeys,
@@ -40,8 +39,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     public IReadOnlyCollection<FormKey> GetUsagesOf(IFormLinkIdentifier identifier)
     {
         var key = new CacheKey(identifier.FormKey, 
-            ReferencedType: identifier.Type,
-            ReferencedByType: typeof(IMajorRecordGetter));
+            UserRecordType: typeof(IMajorRecordGetter));
         
         lock (_cache)
         {
@@ -75,8 +73,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     public IReadOnlyCollection<FormKey> GetUsagesOf(FormKey formKey)
     {
         var key = new CacheKey(formKey, 
-            ReferencedType: typeof(IMajorRecordGetter),
-            ReferencedByType: typeof(IMajorRecordGetter));
+            UserRecordType: typeof(IMajorRecordGetter));
         
         lock (_cache)
         {
@@ -120,8 +117,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     {
         var key = new CacheKey(
             identifier.FormKey,
-            ReferencedType: identifier.Type,
-            ReferencedByType: typeof(TUserRecordScope));
+            UserRecordType: typeof(TUserRecordScope));
 
         lock (_cache)
         {
