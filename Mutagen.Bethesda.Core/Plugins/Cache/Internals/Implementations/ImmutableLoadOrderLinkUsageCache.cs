@@ -1,18 +1,10 @@
-﻿using System.Reflection;
-using Mutagen.Bethesda.Plugins.Records;
+﻿using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
 public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
 {
-    private static readonly MethodInfo MethodInfo;
-    
-    static ImmutableLoadOrderLinkUsageCache()
-    {
-        MethodInfo = typeof(ImmutableLoadOrderLinkUsageCache).GetMethod(nameof(GetReferencedByGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!;
-    }
-    
     private record struct CacheKey(
         FormKey FormKey,
         Type ReferencedType,
@@ -56,9 +48,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys;
         }
         
-        var genMethod = MethodInfo.MakeGenericMethod(typeof(IMajorRecordGetter));
-        var cacheItem = (CacheItem)genMethod.Invoke(this, [identifier])!;
-        return cacheItem.FormKeys;
+        return GetUsagesOfGeneric<IMajorRecordGetter>(identifier).FormKeys;
     }
     
     private Dictionary<FormKey, HashSet<FormKey>> GetUntypedReferencesCache()
@@ -119,12 +109,12 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         IFormLinkIdentifier identifier)
         where TUserRecordScope : class, IMajorRecordGetter
     {
-        var cacheItem = GetReferencedByGeneric<TUserRecordScope>(identifier);
+        var cacheItem = GetUsagesOfGeneric<TUserRecordScope>(identifier);
         if (cacheItem.FormLinks is IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> links) return links;
         throw new ArgumentException($"Could not get cached formlinks for {identifier} referenced by {typeof(TUserRecordScope)}");
     }
     
-    private CacheItem GetReferencedByGeneric<TUserRecordScope>(
+    private CacheItem GetUsagesOfGeneric<TUserRecordScope>(
         IFormLinkIdentifier identifier)
         where TUserRecordScope : class, IMajorRecordGetter
     {
