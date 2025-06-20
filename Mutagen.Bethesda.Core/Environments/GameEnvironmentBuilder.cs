@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
@@ -38,6 +39,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
 
     private ImmutableList<TMod> MutableMods { get; init; }
+    private StringsReadParameters? StringsReadParameters { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
@@ -157,6 +159,19 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     public GameEnvironmentBuilder<TMod, TModGetter> WithFileSystem(IFileSystem fileSystem)
     {
         return this with { FileSystem = fileSystem };
+    }
+
+    /// <summary>
+    /// Sets the string parameters to be used when creating mods
+    /// </summary>
+    /// <param name="stringParameters">String parameters to use</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithStringParameters(StringsReadParameters stringParameters)
+    {
+        return this with
+        {
+            StringsReadParameters = stringParameters
+        };
     }
 
     public GameEnvironmentBuilder<TMod, TModGetter> WithResolver(Func<Type, object?> resolver)
@@ -293,7 +308,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                 fs,
                 dataDirectory));
 
-        ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
+        ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import(new BinaryReadParameters()
+        {
+            FileSystem = fs,
+            StringsParam = StringsReadParameters
+        });
         foreach (var filter in ModListingProcessors)
         {
             lo = filter(param, lo.ListedOrder).ToLoadOrder();
@@ -353,6 +372,7 @@ public sealed record GameEnvironmentBuilder
     private Func<GameEnvironmentBuilderProcessorParameters, ILoadOrderListingGetter[]>? HardcodedListings { get; init; }
 
     private ImmutableList<IMod> MutableMods { get; init; }
+    private StringsReadParameters? StringsReadParameters { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
@@ -462,6 +482,19 @@ public sealed record GameEnvironmentBuilder
     public GameEnvironmentBuilder WithFileSystem(IFileSystem fileSystem)
     {
         return this with { FileSystem = fileSystem };
+    }
+
+    /// <summary>
+    /// Sets the string parameters to be used when creating mods
+    /// </summary>
+    /// <param name="stringParameters">String parameters to use</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder WithStringParameters(StringsReadParameters stringParameters)
+    {
+        return this with
+        {
+            StringsReadParameters = stringParameters
+        };
     }
 
     public GameEnvironmentBuilder WithResolver(Func<Type, object?> resolver)
@@ -600,7 +633,8 @@ public sealed record GameEnvironmentBuilder
 
         ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import(new BinaryReadParameters()
         {
-            FileSystem = fs
+            FileSystem = fs,
+            StringsParam = StringsReadParameters
         });
         foreach (var filter in ModListingProcessors)
         {
