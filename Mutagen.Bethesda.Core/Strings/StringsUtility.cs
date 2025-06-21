@@ -175,11 +175,22 @@ public static class StringsUtility
         var extensionIndex = name.LastIndexOf('.');
         if (extensionIndex == -1) return false;
         if (!TryConvertToStringSource(name.Slice(extensionIndex + 1), out source)) return false;
-        var separatorIndex = name.LastIndexOf('_');
-        if (separatorIndex == -1) return false;
-        if (separatorIndex > extensionIndex) return false;
-        var languageSpan = name.Slice(separatorIndex + 1, extensionIndex - separatorIndex - 1);
-        modName = name.Slice(0, separatorIndex);
+        var lastSeparatorIndex = name.LastIndexOf('_');
+        if (lastSeparatorIndex == -1) return false;
+        if (lastSeparatorIndex > extensionIndex) return false;
+        ReadOnlySpan<char> languageSpan;
+        var secondToLastSeparatorIndex = name.Slice(0, lastSeparatorIndex).LastIndexOf('_');
+        if (secondToLastSeparatorIndex != -1)
+        {
+            languageSpan = name.Slice(secondToLastSeparatorIndex + 1, extensionIndex - secondToLastSeparatorIndex - 1);
+            modName = name.Slice(0, secondToLastSeparatorIndex);
+            if (TryGetLanguage(languageFormat, languageSpan, out language))
+            {
+                return true;
+            }
+        }
+        languageSpan = name.Slice(lastSeparatorIndex + 1, extensionIndex - lastSeparatorIndex - 1);
+        modName = name.Slice(0, lastSeparatorIndex);
         return TryGetLanguage(languageFormat, languageSpan, out language);
     }
 
