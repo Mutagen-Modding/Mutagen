@@ -70,11 +70,11 @@ public class GameEnvironmentBuilderTests
         env.LoadOrderFilePath.ShouldBe(pluginListingsPathProvider.Path);
         env.CreationClubListingsFilePath.ShouldBe(cccListingPathContext.Path);
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -105,11 +105,11 @@ public class GameEnvironmentBuilderTests
         env.LoadOrderFilePath.ShouldBe(pluginListingsPathProvider.Path);
         env.CreationClubListingsFilePath.ShouldBe(cccListingPathContext.Path);
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -261,11 +261,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeysToUse.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeysToUse);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeysToUse);
     }
     
     [Theory]
@@ -295,11 +295,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeysToUse.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeysToUse);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeysToUse);
     }
     
     [Theory]
@@ -329,11 +329,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -363,11 +363,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -395,11 +395,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -427,11 +427,149 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void TransformLoadOrderWithManualLoadOrder(
+        IFileSystem fs,
+        ModKey[] modKeys,
+        ModKey[] modKeys2,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, modKeys.And(modKeys2).ToArray(), dataDirectoryProvider, pluginListingsPathProvider);
+
+        using var env = GameEnvironment.Typical.Builder(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .WithLoadOrder(modKeys2)
+            .TransformLoadOrderListings(x => x.Where(x => x.ModKey != modKeys2[1]))
+            .Build();
+        
+        var expectedKeys = modKeys2
+            .Where(x => x != modKeys2[1])
+            .ToArray();
+
+        env.LoadOrder.Count.ShouldBe(expectedKeys.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(expectedKeys);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void TransformLoadOrderWithManualLoadOrderGeneric(
+        IFileSystem fs,
+        ModKey[] modKeys,
+        ModKey[] modKeys2,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, modKeys.And(modKeys2).ToArray(), dataDirectoryProvider, pluginListingsPathProvider);
+
+        using var env = GameEnvironment.Typical.Builder<ISkyrimMod, ISkyrimModGetter>(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .WithLoadOrder(modKeys2)
+            .TransformLoadOrderListings(x => x.Where(x => x.ModKey != modKeys2[1]))
+            .Build();
+        
+        var expectedKeys = modKeys2
+            .Where(x => x != modKeys2[1])
+            .ToArray();
+
+        env.LoadOrder.Count.ShouldBe(expectedKeys.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(expectedKeys);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void HardcodingLoadOrderWipesTransforms(
+        IFileSystem fs,
+        ModKey[] modKeys,
+        ModKey[] modKeys2,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, modKeys.And(modKeys2).ToArray(), dataDirectoryProvider, pluginListingsPathProvider);
+
+        using var env = GameEnvironment.Typical.Builder(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .TransformLoadOrderListings(x => x.Select(x => new LoadOrderListing($"ABC{x.ModKey}", x.Enabled)))
+            .WithLoadOrder(modKeys2)
+            .Build();
+        
+        env.LoadOrder.Count.ShouldBe(modKeys2.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys2);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys2);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys2);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void HardcodingLoadOrderWipesTransformsGeneric(
+        IFileSystem fs,
+        ModKey[] modKeys,
+        ModKey[] modKeys2,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, modKeys.And(modKeys2).ToArray(), dataDirectoryProvider, pluginListingsPathProvider);
+
+        using var env = GameEnvironment.Typical.Builder<ISkyrimMod, ISkyrimModGetter>(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .TransformLoadOrderListings(x => x.Select(x => new LoadOrderListing($"ABC{x.ModKey}", x.Enabled)))
+            .WithLoadOrder(modKeys2)
+            .Build();
+        
+        env.LoadOrder.Count.ShouldBe(modKeys2.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys2);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys2);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys2);
     }
     
     [Theory]
@@ -462,11 +600,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys.And(outputModKey));
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys.And(outputModKey));
     }
     
     [Theory]
@@ -497,10 +635,10 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys.And(outputModKey));
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys.And(outputModKey));
     }
 }

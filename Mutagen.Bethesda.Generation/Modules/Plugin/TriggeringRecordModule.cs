@@ -396,6 +396,12 @@ public class TriggeringRecordModule : GenerationModule
         }
         else if (field is GenderedType gendered)
         {
+            if (gendered.SubTypeGeneration is ListType listType
+                && listType.SubTypeGeneration is LoquiType)
+            {
+                await SetContainerSubTriggers(obj, listType);
+            }
+            
             if (gendered.SubTypeGeneration is LoquiType or ListType)
             {
                 await SetRecordTrigger(
@@ -562,21 +568,7 @@ public class TriggeringRecordModule : GenerationModule
         }
         else if (field is GenderedType gendered)
         {
-            if (!data.MarkerType.HasValue
-                && gendered.MaleMarker.HasValue
-                && gendered.ItemNullable)
-            {
-                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.MaleMarker.Value));
-                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.FemaleMarker.Value));
-                data.TriggeringRecordTypes.Add(gendered.MaleMarker.Value);
-                data.TriggeringRecordTypes.Add(gendered.FemaleMarker.Value);
-            }
-            else if (gendered.GenderEnumRecord.HasValue)
-            {
-                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.GenderEnumRecord.Value));
-                data.TriggeringRecordTypes.Add(gendered.GenderEnumRecord.Value);
-            }
-            else if (gendered.SubTypeGeneration is LoquiType genderedLoqui)
+            void SetGenderedLoquiItems(LoquiType genderedLoqui)
             {
                 foreach (var gen in genderedLoqui.GetFieldData().GenerationTypes)
                 {
@@ -601,6 +593,30 @@ public class TriggeringRecordModule : GenerationModule
                         }
                     }
                 }
+            }
+
+            if (!data.MarkerType.HasValue
+                && gendered.MaleMarker.HasValue
+                && gendered.ItemNullable)
+            {
+                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.MaleMarker.Value));
+                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.FemaleMarker.Value));
+                data.TriggeringRecordTypes.Add(gendered.MaleMarker.Value);
+                data.TriggeringRecordTypes.Add(gendered.FemaleMarker.Value);
+            }
+            else if (gendered.GenderEnumRecord.HasValue)
+            {
+                data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.GenderEnumRecord.Value));
+                data.TriggeringRecordTypes.Add(gendered.GenderEnumRecord.Value);
+            }
+            else if (gendered.SubTypeGeneration is LoquiType genderedLoqui)
+            {
+                SetGenderedLoquiItems(genderedLoqui);
+            }
+            else if (gendered.SubTypeGeneration is ListType list
+                     && list.SubTypeGeneration is LoquiType listLoqui)
+            {
+                SetGenderedLoquiItems(listLoqui);
             }
         }
 

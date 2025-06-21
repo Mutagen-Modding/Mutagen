@@ -150,7 +150,7 @@ public class WriteOptionsTests
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).ShouldEqual(modKey);
+        reimport.MasterReferences.Select(x => x.Master).ShouldEqualEnumerable(modKey);
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -207,7 +207,7 @@ public class WriteOptionsTests
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).ShouldEqual(modKey);
+        reimport.MasterReferences.Select(x => x.Master).ShouldEqualEnumerable(modKey);
     }
 
     [Theory, MutagenAutoData]

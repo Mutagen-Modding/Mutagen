@@ -8,7 +8,7 @@ public partial class Race
         Playable = 0x01,
     }
 
-    public enum FaceIndex
+    public enum FacePart
     {
         Head = 0,
         EarMale = 1,
@@ -21,7 +21,7 @@ public partial class Race
         EyeRight = 8,
     }
 
-    public enum BodyIndex
+    public enum BodyPart
     {
         UpperBody = 0,
         LowerBody = 1,

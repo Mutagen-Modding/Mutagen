@@ -54,29 +54,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region ColorInfluence
-        public Single? ColorInfluence { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.ColorInfluence => this.ColorInfluence;
+        public Single ColorInfluence { get; set; } = default(Single);
         #endregion
         #region FadeDistanceRadiusScale
-        public Single? FadeDistanceRadiusScale { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.FadeDistanceRadiusScale => this.FadeDistanceRadiusScale;
+        public Single FadeDistanceRadiusScale { get; set; } = default(Single);
         #endregion
-        #region ENAM
-        public Single? ENAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.ENAM => this.ENAM;
+        #region ExposureInfluence
+        public Single ExposureInfluence { get; set; } = default(Single);
         #endregion
-        #region MNAM
-        public Single? MNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.MNAM => this.MNAM;
+        #region MinEV100
+        public Single MinEV100 { get; set; } = default(Single);
         #endregion
-        #region XNAM
-        public Single? XNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILensFlareGetter.XNAM => this.XNAM;
+        #region MaxEV100
+        public Single MaxEV100 { get; set; } = default(Single);
         #endregion
         #region Sprites
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,9 +109,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ColorInfluence = initialValue;
                 this.FadeDistanceRadiusScale = initialValue;
-                this.ENAM = initialValue;
-                this.MNAM = initialValue;
-                this.XNAM = initialValue;
+                this.ExposureInfluence = initialValue;
+                this.MinEV100 = initialValue;
+                this.MaxEV100 = initialValue;
                 this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
             }
 
@@ -135,9 +125,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ColorInfluence,
                 TItem FadeDistanceRadiusScale,
-                TItem ENAM,
-                TItem MNAM,
-                TItem XNAM,
+                TItem ExposureInfluence,
+                TItem MinEV100,
+                TItem MaxEV100,
                 TItem Sprites)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -150,9 +140,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ColorInfluence = ColorInfluence;
                 this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
-                this.ENAM = ENAM;
-                this.MNAM = MNAM;
-                this.XNAM = XNAM;
+                this.ExposureInfluence = ExposureInfluence;
+                this.MinEV100 = MinEV100;
+                this.MaxEV100 = MaxEV100;
                 this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
             }
 
@@ -167,9 +157,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem ColorInfluence;
             public TItem FadeDistanceRadiusScale;
-            public TItem ENAM;
-            public TItem MNAM;
-            public TItem XNAM;
+            public TItem ExposureInfluence;
+            public TItem MinEV100;
+            public TItem MaxEV100;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>? Sprites;
             #endregion
 
@@ -186,9 +176,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ColorInfluence, rhs.ColorInfluence)) return false;
                 if (!object.Equals(this.FadeDistanceRadiusScale, rhs.FadeDistanceRadiusScale)) return false;
-                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
-                if (!object.Equals(this.MNAM, rhs.MNAM)) return false;
-                if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
+                if (!object.Equals(this.ExposureInfluence, rhs.ExposureInfluence)) return false;
+                if (!object.Equals(this.MinEV100, rhs.MinEV100)) return false;
+                if (!object.Equals(this.MaxEV100, rhs.MaxEV100)) return false;
                 if (!object.Equals(this.Sprites, rhs.Sprites)) return false;
                 return true;
             }
@@ -197,9 +187,9 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ColorInfluence);
                 hash.Add(this.FadeDistanceRadiusScale);
-                hash.Add(this.ENAM);
-                hash.Add(this.MNAM);
-                hash.Add(this.XNAM);
+                hash.Add(this.ExposureInfluence);
+                hash.Add(this.MinEV100);
+                hash.Add(this.MaxEV100);
                 hash.Add(this.Sprites);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -213,9 +203,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.All(eval)) return false;
                 if (!eval(this.ColorInfluence)) return false;
                 if (!eval(this.FadeDistanceRadiusScale)) return false;
-                if (!eval(this.ENAM)) return false;
-                if (!eval(this.MNAM)) return false;
-                if (!eval(this.XNAM)) return false;
+                if (!eval(this.ExposureInfluence)) return false;
+                if (!eval(this.MinEV100)) return false;
+                if (!eval(this.MaxEV100)) return false;
                 if (this.Sprites != null)
                 {
                     if (!eval(this.Sprites.Overall)) return false;
@@ -238,9 +228,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (base.Any(eval)) return true;
                 if (eval(this.ColorInfluence)) return true;
                 if (eval(this.FadeDistanceRadiusScale)) return true;
-                if (eval(this.ENAM)) return true;
-                if (eval(this.MNAM)) return true;
-                if (eval(this.XNAM)) return true;
+                if (eval(this.ExposureInfluence)) return true;
+                if (eval(this.MinEV100)) return true;
+                if (eval(this.MaxEV100)) return true;
                 if (this.Sprites != null)
                 {
                     if (eval(this.Sprites.Overall)) return true;
@@ -270,9 +260,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ColorInfluence = eval(this.ColorInfluence);
                 obj.FadeDistanceRadiusScale = eval(this.FadeDistanceRadiusScale);
-                obj.ENAM = eval(this.ENAM);
-                obj.MNAM = eval(this.MNAM);
-                obj.XNAM = eval(this.XNAM);
+                obj.ExposureInfluence = eval(this.ExposureInfluence);
+                obj.MinEV100 = eval(this.MinEV100);
+                obj.MaxEV100 = eval(this.MaxEV100);
                 if (Sprites != null)
                 {
                     obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), Enumerable.Empty<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>());
@@ -314,17 +304,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
                     }
-                    if (printMask?.ENAM ?? true)
+                    if (printMask?.ExposureInfluence ?? true)
                     {
-                        sb.AppendItem(ENAM, "ENAM");
+                        sb.AppendItem(ExposureInfluence, "ExposureInfluence");
                     }
-                    if (printMask?.MNAM ?? true)
+                    if (printMask?.MinEV100 ?? true)
                     {
-                        sb.AppendItem(MNAM, "MNAM");
+                        sb.AppendItem(MinEV100, "MinEV100");
                     }
-                    if (printMask?.XNAM ?? true)
+                    if (printMask?.MaxEV100 ?? true)
                     {
-                        sb.AppendItem(XNAM, "XNAM");
+                        sb.AppendItem(MaxEV100, "MaxEV100");
                     }
                     if ((printMask?.Sprites?.Overall ?? true)
                         && Sprites is {} SpritesItem)
@@ -358,9 +348,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public Exception? ColorInfluence;
             public Exception? FadeDistanceRadiusScale;
-            public Exception? ENAM;
-            public Exception? MNAM;
-            public Exception? XNAM;
+            public Exception? ExposureInfluence;
+            public Exception? MinEV100;
+            public Exception? MaxEV100;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>? Sprites;
             #endregion
 
@@ -374,12 +364,12 @@ namespace Mutagen.Bethesda.Starfield
                         return ColorInfluence;
                     case LensFlare_FieldIndex.FadeDistanceRadiusScale:
                         return FadeDistanceRadiusScale;
-                    case LensFlare_FieldIndex.ENAM:
-                        return ENAM;
-                    case LensFlare_FieldIndex.MNAM:
-                        return MNAM;
-                    case LensFlare_FieldIndex.XNAM:
-                        return XNAM;
+                    case LensFlare_FieldIndex.ExposureInfluence:
+                        return ExposureInfluence;
+                    case LensFlare_FieldIndex.MinEV100:
+                        return MinEV100;
+                    case LensFlare_FieldIndex.MaxEV100:
+                        return MaxEV100;
                     case LensFlare_FieldIndex.Sprites:
                         return Sprites;
                     default:
@@ -398,14 +388,14 @@ namespace Mutagen.Bethesda.Starfield
                     case LensFlare_FieldIndex.FadeDistanceRadiusScale:
                         this.FadeDistanceRadiusScale = ex;
                         break;
-                    case LensFlare_FieldIndex.ENAM:
-                        this.ENAM = ex;
+                    case LensFlare_FieldIndex.ExposureInfluence:
+                        this.ExposureInfluence = ex;
                         break;
-                    case LensFlare_FieldIndex.MNAM:
-                        this.MNAM = ex;
+                    case LensFlare_FieldIndex.MinEV100:
+                        this.MinEV100 = ex;
                         break;
-                    case LensFlare_FieldIndex.XNAM:
-                        this.XNAM = ex;
+                    case LensFlare_FieldIndex.MaxEV100:
+                        this.MaxEV100 = ex;
                         break;
                     case LensFlare_FieldIndex.Sprites:
                         this.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(ex, null);
@@ -427,14 +417,14 @@ namespace Mutagen.Bethesda.Starfield
                     case LensFlare_FieldIndex.FadeDistanceRadiusScale:
                         this.FadeDistanceRadiusScale = (Exception?)obj;
                         break;
-                    case LensFlare_FieldIndex.ENAM:
-                        this.ENAM = (Exception?)obj;
+                    case LensFlare_FieldIndex.ExposureInfluence:
+                        this.ExposureInfluence = (Exception?)obj;
                         break;
-                    case LensFlare_FieldIndex.MNAM:
-                        this.MNAM = (Exception?)obj;
+                    case LensFlare_FieldIndex.MinEV100:
+                        this.MinEV100 = (Exception?)obj;
                         break;
-                    case LensFlare_FieldIndex.XNAM:
-                        this.XNAM = (Exception?)obj;
+                    case LensFlare_FieldIndex.MaxEV100:
+                        this.MaxEV100 = (Exception?)obj;
                         break;
                     case LensFlare_FieldIndex.Sprites:
                         this.Sprites = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>)obj;
@@ -450,9 +440,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ColorInfluence != null) return true;
                 if (FadeDistanceRadiusScale != null) return true;
-                if (ENAM != null) return true;
-                if (MNAM != null) return true;
-                if (XNAM != null) return true;
+                if (ExposureInfluence != null) return true;
+                if (MinEV100 != null) return true;
+                if (MaxEV100 != null) return true;
                 if (Sprites != null) return true;
                 return false;
             }
@@ -487,13 +477,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
                 }
                 {
-                    sb.AppendItem(ENAM, "ENAM");
+                    sb.AppendItem(ExposureInfluence, "ExposureInfluence");
                 }
                 {
-                    sb.AppendItem(MNAM, "MNAM");
+                    sb.AppendItem(MinEV100, "MinEV100");
                 }
                 {
-                    sb.AppendItem(XNAM, "XNAM");
+                    sb.AppendItem(MaxEV100, "MaxEV100");
                 }
                 if (Sprites is {} SpritesItem)
                 {
@@ -523,9 +513,9 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
                 ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
-                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
-                ret.MNAM = this.MNAM.Combine(rhs.MNAM);
-                ret.XNAM = this.XNAM.Combine(rhs.XNAM);
+                ret.ExposureInfluence = this.ExposureInfluence.Combine(rhs.ExposureInfluence);
+                ret.MinEV100 = this.MinEV100.Combine(rhs.MinEV100);
+                ret.MaxEV100 = this.MaxEV100.Combine(rhs.MaxEV100);
                 ret.Sprites = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LensFlareSprite.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sprites?.Overall, rhs.Sprites?.Overall), Noggog.ExceptionExt.Combine(this.Sprites?.Specific, rhs.Sprites?.Specific));
                 return ret;
             }
@@ -551,9 +541,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public bool ColorInfluence;
             public bool FadeDistanceRadiusScale;
-            public bool ENAM;
-            public bool MNAM;
-            public bool XNAM;
+            public bool ExposureInfluence;
+            public bool MinEV100;
+            public bool MaxEV100;
             public LensFlareSprite.TranslationMask? Sprites;
             #endregion
 
@@ -565,9 +555,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ColorInfluence = defaultOn;
                 this.FadeDistanceRadiusScale = defaultOn;
-                this.ENAM = defaultOn;
-                this.MNAM = defaultOn;
-                this.XNAM = defaultOn;
+                this.ExposureInfluence = defaultOn;
+                this.MinEV100 = defaultOn;
+                this.MaxEV100 = defaultOn;
             }
 
             #endregion
@@ -577,9 +567,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ColorInfluence, null));
                 ret.Add((FadeDistanceRadiusScale, null));
-                ret.Add((ENAM, null));
-                ret.Add((MNAM, null));
-                ret.Add((XNAM, null));
+                ret.Add((ExposureInfluence, null));
+                ret.Add((MinEV100, null));
+                ret.Add((MaxEV100, null));
                 ret.Add((Sprites == null ? DefaultOn : !Sprites.GetCrystal().CopyNothing, Sprites?.GetCrystal()));
             }
 
@@ -725,11 +715,11 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ILensFlareInternal>,
         IStarfieldMajorRecordInternal
     {
-        new Single? ColorInfluence { get; set; }
-        new Single? FadeDistanceRadiusScale { get; set; }
-        new Single? ENAM { get; set; }
-        new Single? MNAM { get; set; }
-        new Single? XNAM { get; set; }
+        new Single ColorInfluence { get; set; }
+        new Single FadeDistanceRadiusScale { get; set; }
+        new Single ExposureInfluence { get; set; }
+        new Single MinEV100 { get; set; }
+        new Single MaxEV100 { get; set; }
         new ExtendedList<LensFlareSprite>? Sprites { get; set; }
     }
 
@@ -748,11 +738,11 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<ILensFlareGetter>
     {
         static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
-        Single? ColorInfluence { get; }
-        Single? FadeDistanceRadiusScale { get; }
-        Single? ENAM { get; }
-        Single? MNAM { get; }
-        Single? XNAM { get; }
+        Single ColorInfluence { get; }
+        Single FadeDistanceRadiusScale { get; }
+        Single ExposureInfluence { get; }
+        Single MinEV100 { get; }
+        Single MaxEV100 { get; }
         IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; }
 
     }
@@ -932,9 +922,9 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ColorInfluence = 7,
         FadeDistanceRadiusScale = 8,
-        ENAM = 9,
-        MNAM = 10,
-        XNAM = 11,
+        ExposureInfluence = 9,
+        MinEV100 = 10,
+        MaxEV100 = 11,
         Sprites = 12,
     }
     #endregion
@@ -1033,11 +1023,11 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILensFlareInternal item)
         {
             ClearPartial();
-            item.ColorInfluence = default;
-            item.FadeDistanceRadiusScale = default;
-            item.ENAM = default;
-            item.MNAM = default;
-            item.XNAM = default;
+            item.ColorInfluence = default(Single);
+            item.FadeDistanceRadiusScale = default(Single);
+            item.ExposureInfluence = default(Single);
+            item.MinEV100 = default(Single);
+            item.MaxEV100 = default(Single);
             item.Sprites = null;
             base.Clear(item);
         }
@@ -1125,9 +1115,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ColorInfluence = item.ColorInfluence.EqualsWithin(rhs.ColorInfluence);
             ret.FadeDistanceRadiusScale = item.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale);
-            ret.ENAM = item.ENAM.EqualsWithin(rhs.ENAM);
-            ret.MNAM = item.MNAM.EqualsWithin(rhs.MNAM);
-            ret.XNAM = item.XNAM.EqualsWithin(rhs.XNAM);
+            ret.ExposureInfluence = item.ExposureInfluence.EqualsWithin(rhs.ExposureInfluence);
+            ret.MinEV100 = item.MinEV100.EqualsWithin(rhs.MinEV100);
+            ret.MaxEV100 = item.MaxEV100.EqualsWithin(rhs.MaxEV100);
             ret.Sprites = item.Sprites.CollectionEqualsHelper(
                 rhs.Sprites,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1181,30 +1171,25 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ColorInfluence ?? true)
-                && item.ColorInfluence is {} ColorInfluenceItem)
+            if (printMask?.ColorInfluence ?? true)
             {
-                sb.AppendItem(ColorInfluenceItem, "ColorInfluence");
+                sb.AppendItem(item.ColorInfluence, "ColorInfluence");
             }
-            if ((printMask?.FadeDistanceRadiusScale ?? true)
-                && item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleItem)
+            if (printMask?.FadeDistanceRadiusScale ?? true)
             {
-                sb.AppendItem(FadeDistanceRadiusScaleItem, "FadeDistanceRadiusScale");
+                sb.AppendItem(item.FadeDistanceRadiusScale, "FadeDistanceRadiusScale");
             }
-            if ((printMask?.ENAM ?? true)
-                && item.ENAM is {} ENAMItem)
+            if (printMask?.ExposureInfluence ?? true)
             {
-                sb.AppendItem(ENAMItem, "ENAM");
+                sb.AppendItem(item.ExposureInfluence, "ExposureInfluence");
             }
-            if ((printMask?.MNAM ?? true)
-                && item.MNAM is {} MNAMItem)
+            if (printMask?.MinEV100 ?? true)
             {
-                sb.AppendItem(MNAMItem, "MNAM");
+                sb.AppendItem(item.MinEV100, "MinEV100");
             }
-            if ((printMask?.XNAM ?? true)
-                && item.XNAM is {} XNAMItem)
+            if (printMask?.MaxEV100 ?? true)
             {
-                sb.AppendItem(XNAMItem, "XNAM");
+                sb.AppendItem(item.MaxEV100, "MaxEV100");
             }
             if ((printMask?.Sprites?.Overall ?? true)
                 && item.Sprites is {} SpritesItem)
@@ -1279,17 +1264,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ENAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ExposureInfluence) ?? true))
             {
-                if (!lhs.ENAM.EqualsWithin(rhs.ENAM)) return false;
+                if (!lhs.ExposureInfluence.EqualsWithin(rhs.ExposureInfluence)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MinEV100) ?? true))
             {
-                if (!lhs.MNAM.EqualsWithin(rhs.MNAM)) return false;
+                if (!lhs.MinEV100.EqualsWithin(rhs.MinEV100)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.XNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MaxEV100) ?? true))
             {
-                if (!lhs.XNAM.EqualsWithin(rhs.XNAM)) return false;
+                if (!lhs.MaxEV100.EqualsWithin(rhs.MaxEV100)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
             {
@@ -1323,26 +1308,11 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILensFlareGetter item)
         {
             var hash = new HashCode();
-            if (item.ColorInfluence is {} ColorInfluenceitem)
-            {
-                hash.Add(ColorInfluenceitem);
-            }
-            if (item.FadeDistanceRadiusScale is {} FadeDistanceRadiusScaleitem)
-            {
-                hash.Add(FadeDistanceRadiusScaleitem);
-            }
-            if (item.ENAM is {} ENAMitem)
-            {
-                hash.Add(ENAMitem);
-            }
-            if (item.MNAM is {} MNAMitem)
-            {
-                hash.Add(MNAMitem);
-            }
-            if (item.XNAM is {} XNAMitem)
-            {
-                hash.Add(XNAMitem);
-            }
+            hash.Add(item.ColorInfluence);
+            hash.Add(item.FadeDistanceRadiusScale);
+            hash.Add(item.ExposureInfluence);
+            hash.Add(item.MinEV100);
+            hash.Add(item.MaxEV100);
             hash.Add(item.Sprites);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1455,17 +1425,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FadeDistanceRadiusScale = rhs.FadeDistanceRadiusScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ENAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ExposureInfluence) ?? true))
             {
-                item.ENAM = rhs.ENAM;
+                item.ExposureInfluence = rhs.ExposureInfluence;
             }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MinEV100) ?? true))
             {
-                item.MNAM = rhs.MNAM;
+                item.MinEV100 = rhs.MinEV100;
             }
-            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.XNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.MaxEV100) ?? true))
             {
-                item.XNAM = rhs.XNAM;
+                item.MaxEV100 = rhs.MaxEV100;
             }
             if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.Sprites) ?? true))
             {
@@ -1668,25 +1638,25 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ColorInfluence,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FadeDistanceRadiusScale,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.ENAM,
+                item: item.ExposureInfluence,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.MNAM,
+                item: item.MinEV100,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.XNAM,
+                item: item.MaxEV100,
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILensFlareSpriteGetter>.Instance.WriteWithCounter(
                 writer: writer,
@@ -1784,20 +1754,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.ENAM;
+                    item.ExposureInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.ExposureInfluence;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.MNAM;
+                    item.MinEV100 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.MinEV100;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LensFlare_FieldIndex.XNAM;
+                    item.MaxEV100 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LensFlare_FieldIndex.MaxEV100;
                 }
                 case RecordTypeInts.LFSP:
                 {
@@ -1872,23 +1842,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ColorInfluence
         private int? _ColorInfluenceLocation;
-        public Single? ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region FadeDistanceRadiusScale
         private int? _FadeDistanceRadiusScaleLocation;
-        public Single? FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single FadeDistanceRadiusScale => _FadeDistanceRadiusScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeDistanceRadiusScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region ENAM
-        private int? _ENAMLocation;
-        public Single? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region ExposureInfluence
+        private int? _ExposureInfluenceLocation;
+        public Single ExposureInfluence => _ExposureInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExposureInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region MNAM
-        private int? _MNAMLocation;
-        public Single? MNAM => _MNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region MinEV100
+        private int? _MinEV100Location;
+        public Single MinEV100 => _MinEV100Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MinEV100Location.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region XNAM
-        private int? _XNAMLocation;
-        public Single? XNAM => _XNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region MaxEV100
+        private int? _MaxEV100Location;
+        public Single MaxEV100 => _MaxEV100Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxEV100Location.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         public IReadOnlyList<ILensFlareSpriteGetter>? Sprites { get; private set; }
         partial void CustomFactoryEnd(
@@ -1972,18 +1942,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ENAMLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.ENAM;
+                    _ExposureInfluenceLocation = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.ExposureInfluence;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MNAMLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.MNAM;
+                    _MinEV100Location = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.MinEV100;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _XNAMLocation = (stream.Position - offset);
-                    return (int)LensFlare_FieldIndex.XNAM;
+                    _MaxEV100Location = (stream.Position - offset);
+                    return (int)LensFlare_FieldIndex.MaxEV100;
                 }
                 case RecordTypeInts.LFSP:
                 {

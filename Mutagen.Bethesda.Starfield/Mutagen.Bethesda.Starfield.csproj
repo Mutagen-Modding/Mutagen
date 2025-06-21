@@ -154,6 +154,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IHasVoiceType.cs" />
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -2242,17 +2243,20 @@
     <Compile Include="Records\Major Records\Ingestible.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRule.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\InstanceNamingRules.cs">
       <DependentUpon>InstanceNamingRules.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Layer.cs">
+      <DependentUpon>Layer.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledBaseForm.cs">
+      <DependentUpon>LeveledBaseForm.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
@@ -2270,6 +2274,9 @@
       <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Location.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationOwnerData.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
@@ -5129,9 +5136,6 @@
     <Compile Include="Records\Major Records\Ingestible_Generated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRules_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Key_Generated.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
@@ -5558,7 +5562,7 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ItemResource_Generated.cs">
-      <DependentUpon>ItemComponent.xml</DependentUpon>
+      <DependentUpon>ItemResource.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResourceTarget_Generated.cs" />
     <Compile Include="Records\Major Records\QuestAdapter_Generated.cs">
@@ -6312,15 +6316,6 @@
     <Compile Include="Records\Common Subrecords\OffsetRotation_Generated.cs">
       <DependentUpon>OffsetRotation.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRuleSet_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRuleProperties_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\FurnitureMarkerEntryPoints_Generated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
@@ -6611,9 +6606,6 @@
     <Compile Include="Records\Major Records\NoteTerminal_Generated.cs">
       <DependentUpon>Note.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LocationFaction_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\TerminalMenuItemDisplayText_Generated.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
@@ -6846,6 +6838,46 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentData_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleSet_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FloraInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ContainerInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleProperty_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ILocationOwner_Generated.cs" />
+    <Compile Include="Records\Major Records\LocationOwnerData_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

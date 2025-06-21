@@ -111,7 +111,7 @@ public class OverriddenFormsWritingTests
         reimport.ModHeader.OverriddenForms.ShouldNotBeNull();
         reimport.ModHeader.OverriddenForms!
             .Select(x => x.FormKey)
-            .ShouldEqual(fk);
+            .ShouldEqualEnumerable(fk);
     }
 
     /*[Theory, MutagenAutoData]

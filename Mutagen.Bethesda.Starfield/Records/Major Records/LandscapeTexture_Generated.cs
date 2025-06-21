@@ -78,10 +78,10 @@ namespace Mutagen.Bethesda.Starfield
         #region HavokRestitution
         public Byte HavokRestitution { get; set; } = default(Byte);
         #endregion
-        #region QNAM
-        public Single? QNAM { get; set; }
+        #region Dirtiness
+        public Percent? Dirtiness { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILandscapeTextureGetter.QNAM => this.QNAM;
+        Percent? ILandscapeTextureGetter.Dirtiness => this.Dirtiness;
         #endregion
 
         #region To String
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaterialType = initialValue;
                 this.HavokFriction = initialValue;
                 this.HavokRestitution = initialValue;
-                this.QNAM = initialValue;
+                this.Dirtiness = initialValue;
             }
 
             public Mask(
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MaterialType,
                 TItem HavokFriction,
                 TItem HavokRestitution,
-                TItem QNAM)
+                TItem Dirtiness)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaterialType = MaterialType;
                 this.HavokFriction = HavokFriction;
                 this.HavokRestitution = HavokRestitution;
-                this.QNAM = QNAM;
+                this.Dirtiness = Dirtiness;
             }
 
             #pragma warning disable CS8618
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem MaterialType;
             public TItem HavokFriction;
             public TItem HavokRestitution;
-            public TItem QNAM;
+            public TItem Dirtiness;
             #endregion
 
             #region Equals
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MaterialType, rhs.MaterialType)) return false;
                 if (!object.Equals(this.HavokFriction, rhs.HavokFriction)) return false;
                 if (!object.Equals(this.HavokRestitution, rhs.HavokRestitution)) return false;
-                if (!object.Equals(this.QNAM, rhs.QNAM)) return false;
+                if (!object.Equals(this.Dirtiness, rhs.Dirtiness)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MaterialType);
                 hash.Add(this.HavokFriction);
                 hash.Add(this.HavokRestitution);
-                hash.Add(this.QNAM);
+                hash.Add(this.Dirtiness);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.MaterialType)) return false;
                 if (!eval(this.HavokFriction)) return false;
                 if (!eval(this.HavokRestitution)) return false;
-                if (!eval(this.QNAM)) return false;
+                if (!eval(this.Dirtiness)) return false;
                 return true;
             }
             #endregion
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.MaterialType)) return true;
                 if (eval(this.HavokFriction)) return true;
                 if (eval(this.HavokRestitution)) return true;
-                if (eval(this.QNAM)) return true;
+                if (eval(this.Dirtiness)) return true;
                 return false;
             }
             #endregion
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MaterialType = eval(this.MaterialType);
                 obj.HavokFriction = eval(this.HavokFriction);
                 obj.HavokRestitution = eval(this.HavokRestitution);
-                obj.QNAM = eval(this.QNAM);
+                obj.Dirtiness = eval(this.Dirtiness);
             }
             #endregion
 
@@ -268,9 +268,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(HavokRestitution, "HavokRestitution");
                     }
-                    if (printMask?.QNAM ?? true)
+                    if (printMask?.Dirtiness ?? true)
                     {
-                        sb.AppendItem(QNAM, "QNAM");
+                        sb.AppendItem(Dirtiness, "Dirtiness");
                     }
                 }
             }
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? MaterialType;
             public Exception? HavokFriction;
             public Exception? HavokRestitution;
-            public Exception? QNAM;
+            public Exception? Dirtiness;
             #endregion
 
             #region IErrorMask
@@ -304,8 +304,8 @@ namespace Mutagen.Bethesda.Starfield
                         return HavokFriction;
                     case LandscapeTexture_FieldIndex.HavokRestitution:
                         return HavokRestitution;
-                    case LandscapeTexture_FieldIndex.QNAM:
-                        return QNAM;
+                    case LandscapeTexture_FieldIndex.Dirtiness:
+                        return Dirtiness;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -328,8 +328,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LandscapeTexture_FieldIndex.HavokRestitution:
                         this.HavokRestitution = ex;
                         break;
-                    case LandscapeTexture_FieldIndex.QNAM:
-                        this.QNAM = ex;
+                    case LandscapeTexture_FieldIndex.Dirtiness:
+                        this.Dirtiness = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -354,8 +354,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LandscapeTexture_FieldIndex.HavokRestitution:
                         this.HavokRestitution = (Exception?)obj;
                         break;
-                    case LandscapeTexture_FieldIndex.QNAM:
-                        this.QNAM = (Exception?)obj;
+                    case LandscapeTexture_FieldIndex.Dirtiness:
+                        this.Dirtiness = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (MaterialType != null) return true;
                 if (HavokFriction != null) return true;
                 if (HavokRestitution != null) return true;
-                if (QNAM != null) return true;
+                if (Dirtiness != null) return true;
                 return false;
             }
             #endregion
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(HavokRestitution, "HavokRestitution");
                 }
                 {
-                    sb.AppendItem(QNAM, "QNAM");
+                    sb.AppendItem(Dirtiness, "Dirtiness");
                 }
             }
             #endregion
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MaterialType = this.MaterialType.Combine(rhs.MaterialType);
                 ret.HavokFriction = this.HavokFriction.Combine(rhs.HavokFriction);
                 ret.HavokRestitution = this.HavokRestitution.Combine(rhs.HavokRestitution);
-                ret.QNAM = this.QNAM.Combine(rhs.QNAM);
+                ret.Dirtiness = this.Dirtiness.Combine(rhs.Dirtiness);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool MaterialType;
             public bool HavokFriction;
             public bool HavokRestitution;
-            public bool QNAM;
+            public bool Dirtiness;
             #endregion
 
             #region Ctors
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaterialType = defaultOn;
                 this.HavokFriction = defaultOn;
                 this.HavokRestitution = defaultOn;
-                this.QNAM = defaultOn;
+                this.Dirtiness = defaultOn;
             }
 
             #endregion
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MaterialType, null));
                 ret.Add((HavokFriction, null));
                 ret.Add((HavokRestitution, null));
-                ret.Add((QNAM, null));
+                ret.Add((Dirtiness, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLink<IMaterialTypeGetter> MaterialType { get; set; }
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
-        new Single? QNAM { get; set; }
+        new Percent? Dirtiness { get; set; }
     }
 
     public partial interface ILandscapeTextureInternal :
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }
         Byte HavokRestitution { get; }
-        Single? QNAM { get; }
+        Percent? Dirtiness { get; }
 
     }
 
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Starfield
         MaterialType = 8,
         HavokFriction = 9,
         HavokRestitution = 10,
-        QNAM = 11,
+        Dirtiness = 11,
     }
     #endregion
 
@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MaterialType.Clear();
             item.HavokFriction = default(Byte);
             item.HavokRestitution = default(Byte);
-            item.QNAM = default;
+            item.Dirtiness = default;
             base.Clear(item);
         }
         
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.MaterialType = item.MaterialType.Equals(rhs.MaterialType);
             ret.HavokFriction = item.HavokFriction == rhs.HavokFriction;
             ret.HavokRestitution = item.HavokRestitution == rhs.HavokRestitution;
-            ret.QNAM = item.QNAM.EqualsWithin(rhs.QNAM);
+            ret.Dirtiness = item.Dirtiness.Equals(rhs.Dirtiness);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1119,10 +1119,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.HavokRestitution, "HavokRestitution");
             }
-            if ((printMask?.QNAM ?? true)
-                && item.QNAM is {} QNAMItem)
+            if ((printMask?.Dirtiness ?? true)
+                && item.Dirtiness is {} DirtinessItem)
             {
-                sb.AppendItem(QNAMItem, "QNAM");
+                sb.AppendItem(DirtinessItem, "Dirtiness");
             }
         }
         
@@ -1190,9 +1190,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.QNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Dirtiness) ?? true))
             {
-                if (!lhs.QNAM.EqualsWithin(rhs.QNAM)) return false;
+                if (!lhs.Dirtiness.Equals(rhs.Dirtiness)) return false;
             }
             return true;
         }
@@ -1229,9 +1229,9 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.MaterialType);
             hash.Add(item.HavokFriction);
             hash.Add(item.HavokRestitution);
-            if (item.QNAM is {} QNAMitem)
+            if (item.Dirtiness is {} Dirtinessitem)
             {
-                hash.Add(QNAMitem);
+                hash.Add(Dirtinessitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1366,9 +1366,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.HavokRestitution = rhs.HavokRestitution;
             }
-            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.QNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Dirtiness) ?? true))
             {
-                item.QNAM = rhs.QNAM;
+                item.Dirtiness = rhs.Dirtiness;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1553,9 +1553,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer.Write(item.HavokFriction);
                 writer.Write(item.HavokRestitution);
             }
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.QNAM,
+                item: item.Dirtiness,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
         }
 
@@ -1650,8 +1651,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LandscapeTexture_FieldIndex.QNAM;
+                    item.Dirtiness = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)LandscapeTexture_FieldIndex.Dirtiness;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1732,9 +1735,9 @@ namespace Mutagen.Bethesda.Starfield
         private bool _HavokRestitution_IsSet => _HNAMLocation.HasValue;
         public Byte HavokRestitution => _HavokRestitution_IsSet ? _recordData.Span[_HavokRestitutionLocation] : default;
         #endregion
-        #region QNAM
-        private int? _QNAMLocation;
-        public Single? QNAM => _QNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _QNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region Dirtiness
+        private int? _DirtinessLocation;
+        public Percent? Dirtiness => _DirtinessLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1822,8 +1825,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _QNAMLocation = (stream.Position - offset);
-                    return (int)LandscapeTexture_FieldIndex.QNAM;
+                    _DirtinessLocation = (stream.Position - offset);
+                    return (int)LandscapeTexture_FieldIndex.Dirtiness;
                 }
                 default:
                     return base.FillRecordType(

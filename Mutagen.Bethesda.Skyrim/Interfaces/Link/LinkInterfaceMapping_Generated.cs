@@ -481,17 +481,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IEmittance),
                 Getter: typeof(IEmittanceGetter)));
         dict[typeof(IEmittanceGetter)] = dict[typeof(IEmittance)] with { Setter = false };
-        dict[typeof(ILocationRecord)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                Location_Registration.Instance,
-                LocationReferenceType_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(ILocationRecord),
-                Getter: typeof(ILocationRecordGetter)));
-        dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
         dict[typeof(IKnowable)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -515,18 +504,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IEffectRecord),
                 Getter: typeof(IEffectRecordGetter)));
         dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
-        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                PlacedNpc_Registration.Instance,
-                PlacedObject_Registration.Instance,
-                APlacedTrap_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(ILinkedReference),
-                Getter: typeof(ILinkedReferenceGetter)));
-        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Starfield
         Byte? ILeveledPackInGetter.MaxCount => this.MaxCount;
         #endregion
         #region Flags
-        public LeveledItem.Flag Flags { get; set; } = default(LeveledItem.Flag);
+        public LeveledPackIn.Flag Flags { get; set; } = default(LeveledPackIn.Flag);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1220,6 +1220,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILeveledPackIn);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledPackInCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LeveledPackInSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LeveledPackInSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -1331,7 +1336,7 @@ namespace Mutagen.Bethesda.Starfield
         new UInt64? XALG { get; set; }
         new Single ChanceNone { get; set; }
         new Byte? MaxCount { get; set; }
-        new LeveledItem.Flag Flags { get; set; }
+        new LeveledPackIn.Flag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new IFormLinkNullable<IGlobalGetter> UseGlobal { get; set; }
         new ExtendedList<LeveledPackInEntry>? Entries { get; set; }
@@ -1340,6 +1345,10 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
+        #region Mutagen
+        new LeveledPackIn.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ILeveledPackInInternal :
@@ -1385,7 +1394,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt64? XALG { get; }
         Single ChanceNone { get; }
         Byte? MaxCount { get; }
-        LeveledItem.Flag Flags { get; }
+        LeveledPackIn.Flag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IFormLinkNullableGetter<IGlobalGetter> UseGlobal { get; }
         IReadOnlyList<ILeveledPackInEntryGetter>? Entries { get; }
@@ -1396,6 +1405,10 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? Model { get; }
         #endregion
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
+
+        #region Mutagen
+        LeveledPackIn.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1709,7 +1722,7 @@ namespace Mutagen.Bethesda.Starfield
             item.XALG = default;
             item.ChanceNone = default(Single);
             item.MaxCount = default;
-            item.Flags = default(LeveledItem.Flag);
+            item.Flags = default(LeveledPackIn.Flag);
             item.Conditions.Clear();
             item.UseGlobal.Clear();
             item.Entries = null;
@@ -2818,7 +2831,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.MaxCount,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLM));
-            EnumBinaryTranslation<LeveledItem.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<LeveledPackIn.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2,
@@ -3007,7 +3020,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<LeveledPackIn.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)LeveledPackIn_FieldIndex.Flags;
@@ -3134,6 +3147,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(ILeveledPackIn);
 
+        public LeveledPackIn.MajorFlag MajorFlags => (LeveledPackIn.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
         private int? _VirtualMachineAdapterLengthOverride;
@@ -3173,7 +3187,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledItem.Flag Flags => _FlagsLocation.HasValue ? (LeveledItem.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledItem.Flag);
+        public LeveledPackIn.Flag Flags => _FlagsLocation.HasValue ? (LeveledPackIn.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledPackIn.Flag);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region UseGlobal

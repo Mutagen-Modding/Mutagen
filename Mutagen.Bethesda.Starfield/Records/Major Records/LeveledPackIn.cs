@@ -4,6 +4,23 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Starfield;
 
+public partial class LeveledPackIn
+{
+    [Flags]
+    public enum MajorFlag
+    {
+        ApplyLrtToAllButPivot = 0x80
+    }
+
+    [Flags]
+    public enum Flag
+    {
+        CalculateForEachItemInCount = 0x02,
+        EvalAsStack = 0x20,
+        DoAllBeforeRepeating = 0x100,
+    }
+}
+
 partial class LeveledPackInBinaryCreateTranslation
 {
     public static partial void FillBinaryChanceNoneCustom(MutagenFrame frame, ILeveledPackInInternal item, PreviousParse lastParsed)

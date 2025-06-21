@@ -70,4 +70,18 @@ public class TryRetrieveInfoFromStringTests
             "Skyrim_zz.ILSTRINGS",
             out var _, out var _, out var _));
     }
+    
+    [Fact]
+    public void TryRetrieveInfoFromString_Multi_Underscore()
+    {
+        Assert.True(StringsUtility.TryRetrieveInfoFromString(
+            StringsLanguageFormat.FullName,
+            "Skyrim_Portuguese_Brazil.ILSTRINGS", 
+            out var source, 
+            out var language, 
+            out var modName));
+        Assert.Equal(StringsSource.IL, source);
+        Assert.Equal(Language.Portuguese_Brazil, language);
+        Assert.Equal("Skyrim", modName.ToString());
+    }
 }

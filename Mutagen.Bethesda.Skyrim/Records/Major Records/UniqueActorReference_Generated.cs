@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,12 +20,13 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
-using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
-using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -35,16 +35,16 @@ using System.Reactive.Linq;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class LocationCellUnique :
-        IEquatable<ILocationCellUniqueGetter>,
-        ILocationCellUnique,
-        ILoquiObjectSetter<LocationCellUnique>
+    public partial class UniqueActorReference :
+        IEquatable<IUniqueActorReferenceGetter>,
+        ILoquiObjectSetter<UniqueActorReference>,
+        IUniqueActorReference
     {
         #region Ctor
-        public LocationCellUnique()
+        public UniqueActorReference()
         {
             CustomCtor();
         }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _Actor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INpcGetter> ILocationCellUniqueGetter.Actor => this.Actor;
+        IFormLinkGetter<INpcGetter> IUniqueActorReferenceGetter.Actor => this.Actor;
         #endregion
         #region Ref
         private readonly IFormLink<IPlacedNpcGetter> _Ref = new FormLink<IPlacedNpcGetter>();
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _Ref.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedNpcGetter> ILocationCellUniqueGetter.Ref => this.Ref;
+        IFormLinkGetter<IPlacedNpcGetter> IUniqueActorReferenceGetter.Ref => this.Ref;
         #endregion
         #region Location
         private readonly IFormLink<ILocationGetter> _Location = new FormLink<ILocationGetter>();
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Fallout4
             set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILocationGetter> ILocationCellUniqueGetter.Location => this.Location;
+        IFormLinkGetter<ILocationGetter> IUniqueActorReferenceGetter.Location => this.Location;
         #endregion
 
         #region To String
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationCellUniqueMixIn.Print(
+            UniqueActorReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -99,16 +99,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationCellUniqueGetter rhs) return false;
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IUniqueActorReferenceGetter rhs) return false;
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationCellUniqueGetter? obj)
+        public bool Equals(IUniqueActorReferenceGetter? obj)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocationCellUnique.Mask<R>();
+                var ret = new UniqueActorReference.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -214,16 +214,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LocationCellUnique.Mask<bool>? printMask = null)
+            public string Print(UniqueActorReference.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LocationCellUnique.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, UniqueActorReference.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LocationCellUnique.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(UniqueActorReference.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Actor ?? true)
@@ -270,14 +270,14 @@ namespace Mutagen.Bethesda.Fallout4
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocationCellUnique_FieldIndex enu = (LocationCellUnique_FieldIndex)index;
+                UniqueActorReference_FieldIndex enu = (UniqueActorReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationCellUnique_FieldIndex.Actor:
+                    case UniqueActorReference_FieldIndex.Actor:
                         return Actor;
-                    case LocationCellUnique_FieldIndex.Ref:
+                    case UniqueActorReference_FieldIndex.Ref:
                         return Ref;
-                    case LocationCellUnique_FieldIndex.Location:
+                    case UniqueActorReference_FieldIndex.Location:
                         return Location;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -286,16 +286,16 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                LocationCellUnique_FieldIndex enu = (LocationCellUnique_FieldIndex)index;
+                UniqueActorReference_FieldIndex enu = (UniqueActorReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationCellUnique_FieldIndex.Actor:
+                    case UniqueActorReference_FieldIndex.Actor:
                         this.Actor = ex;
                         break;
-                    case LocationCellUnique_FieldIndex.Ref:
+                    case UniqueActorReference_FieldIndex.Ref:
                         this.Ref = ex;
                         break;
-                    case LocationCellUnique_FieldIndex.Location:
+                    case UniqueActorReference_FieldIndex.Location:
                         this.Location = ex;
                         break;
                     default:
@@ -305,16 +305,16 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                LocationCellUnique_FieldIndex enu = (LocationCellUnique_FieldIndex)index;
+                UniqueActorReference_FieldIndex enu = (UniqueActorReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationCellUnique_FieldIndex.Actor:
+                    case UniqueActorReference_FieldIndex.Actor:
                         this.Actor = (Exception?)obj;
                         break;
-                    case LocationCellUnique_FieldIndex.Ref:
+                    case UniqueActorReference_FieldIndex.Ref:
                         this.Ref = (Exception?)obj;
                         break;
-                    case LocationCellUnique_FieldIndex.Location:
+                    case UniqueActorReference_FieldIndex.Location:
                         this.Location = (Exception?)obj;
                         break;
                     default:
@@ -440,31 +440,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellUniqueCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => UniqueActorReferenceCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => UniqueActorReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => UniqueActorReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((UniqueActorReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static LocationCellUnique CreateFromBinary(
+        public static UniqueActorReference CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new LocationCellUnique();
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new UniqueActorReference();
+            ((UniqueActorReferenceSetterCommon)((IUniqueActorReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LocationCellUnique item,
+            out UniqueActorReference item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -490,33 +490,33 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)this).CommonSetterInstance()!).Clear(this);
+            ((UniqueActorReferenceSetterCommon)((IUniqueActorReferenceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocationCellUnique GetNew()
+        internal static UniqueActorReference GetNew()
         {
-            return new LocationCellUnique();
+            return new UniqueActorReference();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocationCellUnique :
+    public partial interface IUniqueActorReference :
         IFormLinkContainer,
-        ILocationCellUniqueGetter,
-        ILoquiObjectSetter<ILocationCellUnique>
+        ILoquiObjectSetter<IUniqueActorReference>,
+        IUniqueActorReferenceGetter
     {
         new IFormLink<INpcGetter> Actor { get; set; }
         new IFormLink<IPlacedNpcGetter> Ref { get; set; }
         new IFormLink<ILocationGetter> Location { get; set; }
     }
 
-    public partial interface ILocationCellUniqueGetter :
+    public partial interface IUniqueActorReferenceGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILocationCellUniqueGetter>
+        ILoquiObject<IUniqueActorReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => UniqueActorReference_Registration.Instance;
         IFormLinkGetter<INpcGetter> Actor { get; }
         IFormLinkGetter<IPlacedNpcGetter> Ref { get; }
         IFormLinkGetter<ILocationGetter> Location { get; }
@@ -534,42 +534,42 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common MixIn
-    public static partial class LocationCellUniqueMixIn
+    public static partial class UniqueActorReferenceMixIn
     {
-        public static void Clear(this ILocationCellUnique item)
+        public static void Clear(this IUniqueActorReference item)
         {
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((UniqueActorReferenceSetterCommon)((IUniqueActorReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocationCellUnique.Mask<bool> GetEqualsMask(
-            this ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
+        public static UniqueActorReference.Mask<bool> GetEqualsMask(
+            this IUniqueActorReferenceGetter item,
+            IUniqueActorReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILocationCellUniqueGetter item,
+            this IUniqueActorReferenceGetter item,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            UniqueActorReference.Mask<bool>? printMask = null)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Print(
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILocationCellUniqueGetter item,
+            this IUniqueActorReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            UniqueActorReference.Mask<bool>? printMask = null)
         {
-            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Print(
+            ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -577,21 +577,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
-            LocationCellUnique.TranslationMask? equalsMask = null)
+            this IUniqueActorReferenceGetter item,
+            IUniqueActorReferenceGetter rhs,
+            UniqueActorReference.TranslationMask? equalsMask = null)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Equals(
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs)
+            this IUniqueActorReference lhs,
+            IUniqueActorReferenceGetter rhs)
         {
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -600,11 +600,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs,
-            LocationCellUnique.TranslationMask? copyMask = null)
+            this IUniqueActorReference lhs,
+            IUniqueActorReferenceGetter rhs,
+            UniqueActorReference.TranslationMask? copyMask = null)
         {
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -613,28 +613,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs,
-            out LocationCellUnique.ErrorMask errorMask,
-            LocationCellUnique.TranslationMask? copyMask = null)
+            this IUniqueActorReference lhs,
+            IUniqueActorReferenceGetter rhs,
+            out UniqueActorReference.ErrorMask errorMask,
+            UniqueActorReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LocationCellUnique.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = UniqueActorReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs,
+            this IUniqueActorReference lhs,
+            IUniqueActorReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -642,32 +642,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static LocationCellUnique DeepCopy(
-            this ILocationCellUniqueGetter item,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public static UniqueActorReference DeepCopy(
+            this IUniqueActorReferenceGetter item,
+            UniqueActorReference.TranslationMask? copyMask = null)
         {
-            return ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocationCellUnique DeepCopy(
-            this ILocationCellUniqueGetter item,
-            out LocationCellUnique.ErrorMask errorMask,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public static UniqueActorReference DeepCopy(
+            this IUniqueActorReferenceGetter item,
+            out UniqueActorReference.ErrorMask errorMask,
+            UniqueActorReference.TranslationMask? copyMask = null)
         {
-            return ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocationCellUnique DeepCopy(
-            this ILocationCellUniqueGetter item,
+        public static UniqueActorReference DeepCopy(
+            this IUniqueActorReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -675,11 +675,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILocationCellUnique item,
+            this IUniqueActorReference item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((UniqueActorReferenceSetterCommon)((IUniqueActorReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -692,10 +692,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum LocationCellUnique_FieldIndex
+    internal enum UniqueActorReference_FieldIndex
     {
         Actor = 0,
         Ref = 1,
@@ -704,41 +704,41 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Registration
-    internal partial class LocationCellUnique_Registration : ILoquiRegistration
+    internal partial class UniqueActorReference_Registration : ILoquiRegistration
     {
-        public static readonly LocationCellUnique_Registration Instance = new LocationCellUnique_Registration();
+        public static readonly UniqueActorReference_Registration Instance = new UniqueActorReference_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(LocationCellUnique.Mask<>);
+        public static readonly Type MaskType = typeof(UniqueActorReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocationCellUnique.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(UniqueActorReference.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocationCellUnique);
+        public static readonly Type ClassType = typeof(UniqueActorReference);
 
-        public static readonly Type GetterType = typeof(ILocationCellUniqueGetter);
+        public static readonly Type GetterType = typeof(IUniqueActorReferenceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocationCellUnique);
+        public static readonly Type SetterType = typeof(IUniqueActorReference);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.LocationCellUnique";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.UniqueActorReference";
 
-        public const string Name = "LocationCellUnique";
+        public const string Name = "UniqueActorReference";
 
-        public const string Namespace = "Mutagen.Bethesda.Fallout4";
+        public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
         public const byte GenericCount = 0;
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(LocationCellUniqueBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(UniqueActorReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -769,13 +769,13 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class LocationCellUniqueSetterCommon
+    internal partial class UniqueActorReferenceSetterCommon
     {
-        public static readonly LocationCellUniqueSetterCommon Instance = new LocationCellUniqueSetterCommon();
+        public static readonly UniqueActorReferenceSetterCommon Instance = new UniqueActorReferenceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocationCellUnique item)
+        public void Clear(IUniqueActorReference item)
         {
             ClearPartial();
             item.Actor.Clear();
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public void RemapLinks(ILocationCellUnique obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IUniqueActorReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Actor.Relink(mapping);
             obj.Ref.Relink(mapping);
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILocationCellUnique item,
+            IUniqueActorReference item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -803,23 +803,23 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LocationCellUniqueBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: UniqueActorReferenceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class LocationCellUniqueCommon
+    internal partial class UniqueActorReferenceCommon
     {
-        public static readonly LocationCellUniqueCommon Instance = new LocationCellUniqueCommon();
+        public static readonly UniqueActorReferenceCommon Instance = new UniqueActorReferenceCommon();
 
-        public LocationCellUnique.Mask<bool> GetEqualsMask(
-            ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
+        public UniqueActorReference.Mask<bool> GetEqualsMask(
+            IUniqueActorReferenceGetter item,
+            IUniqueActorReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocationCellUnique.Mask<bool>(false);
-            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new UniqueActorReference.Mask<bool>(false);
+            ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -828,9 +828,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
-            LocationCellUnique.Mask<bool> ret,
+            IUniqueActorReferenceGetter item,
+            IUniqueActorReferenceGetter rhs,
+            UniqueActorReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Actor = item.Actor.Equals(rhs.Actor);
@@ -839,9 +839,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public string Print(
-            ILocationCellUniqueGetter item,
+            IUniqueActorReferenceGetter item,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            UniqueActorReference.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -853,18 +853,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            ILocationCellUniqueGetter item,
+            IUniqueActorReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            UniqueActorReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LocationCellUnique =>");
+                sb.AppendLine($"UniqueActorReference =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LocationCellUnique) =>");
+                sb.AppendLine($"{name} (UniqueActorReference) =>");
             }
             using (sb.Brace())
             {
@@ -876,9 +876,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ILocationCellUniqueGetter item,
+            IUniqueActorReferenceGetter item,
             StructuredStringBuilder sb,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            UniqueActorReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Actor ?? true)
             {
@@ -896,27 +896,27 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocationCellUniqueGetter? lhs,
-            ILocationCellUniqueGetter? rhs,
+            IUniqueActorReferenceGetter? lhs,
+            IUniqueActorReferenceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UniqueActorReference_FieldIndex.Actor) ?? true))
             {
                 if (!lhs.Actor.Equals(rhs.Actor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UniqueActorReference_FieldIndex.Ref) ?? true))
             {
                 if (!lhs.Ref.Equals(rhs.Ref)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UniqueActorReference_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ILocationCellUniqueGetter item)
+        public virtual int GetHashCode(IUniqueActorReferenceGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Actor);
@@ -930,11 +930,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return LocationCellUnique.GetNew();
+            return UniqueActorReference.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationCellUniqueGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IUniqueActorReferenceGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Actor);
             yield return FormLinkInformation.Factory(obj.Ref);
@@ -945,27 +945,27 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class LocationCellUniqueSetterTranslationCommon
+    internal partial class UniqueActorReferenceSetterTranslationCommon
     {
-        public static readonly LocationCellUniqueSetterTranslationCommon Instance = new LocationCellUniqueSetterTranslationCommon();
+        public static readonly UniqueActorReferenceSetterTranslationCommon Instance = new UniqueActorReferenceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILocationCellUnique item,
-            ILocationCellUniqueGetter rhs,
+            IUniqueActorReference item,
+            IUniqueActorReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)UniqueActorReference_FieldIndex.Actor) ?? true))
             {
                 item.Actor.SetTo(rhs.Actor.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)UniqueActorReference_FieldIndex.Ref) ?? true))
             {
                 item.Ref.SetTo(rhs.Ref.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)UniqueActorReference_FieldIndex.Location) ?? true))
             {
                 item.Location.SetTo(rhs.Location.FormKey);
             }
@@ -978,19 +978,19 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         partial void DeepCopyInCustom(
-            ILocationCellUnique item,
-            ILocationCellUniqueGetter rhs,
+            IUniqueActorReference item,
+            IUniqueActorReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public LocationCellUnique DeepCopy(
-            ILocationCellUniqueGetter item,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public UniqueActorReference DeepCopy(
+            IUniqueActorReferenceGetter item,
+            UniqueActorReference.TranslationMask? copyMask = null)
         {
-            LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            UniqueActorReference ret = (UniqueActorReference)((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).GetNew();
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -999,30 +999,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public LocationCellUnique DeepCopy(
-            ILocationCellUniqueGetter item,
-            out LocationCellUnique.ErrorMask errorMask,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public UniqueActorReference DeepCopy(
+            IUniqueActorReferenceGetter item,
+            out UniqueActorReference.ErrorMask errorMask,
+            UniqueActorReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            UniqueActorReference ret = (UniqueActorReference)((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).GetNew();
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LocationCellUnique.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = UniqueActorReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LocationCellUnique DeepCopy(
-            ILocationCellUniqueGetter item,
+        public UniqueActorReference DeepCopy(
+            IUniqueActorReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            UniqueActorReference ret = (UniqueActorReference)((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)item).CommonInstance()!).GetNew();
+            ((UniqueActorReferenceSetterTranslationCommon)((IUniqueActorReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1036,29 +1036,29 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellUnique
+    public partial class UniqueActorReference
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => UniqueActorReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => UniqueActorReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationCellUniqueCommon.Instance;
+        protected object CommonInstance() => UniqueActorReferenceCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocationCellUniqueSetterCommon.Instance;
+            return UniqueActorReferenceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationCellUniqueSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => UniqueActorReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonInstance() => this.CommonInstance();
+        object IUniqueActorReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IUniqueActorReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IUniqueActorReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1067,14 +1067,14 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellUniqueBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class UniqueActorReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationCellUniqueBinaryWriteTranslation Instance = new();
+        public static readonly UniqueActorReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ILocationCellUniqueGetter item,
+            IUniqueActorReferenceGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            ILocationCellUniqueGetter item,
+            IUniqueActorReferenceGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1104,19 +1104,19 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ILocationCellUniqueGetter)item,
+                item: (IUniqueActorReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LocationCellUniqueBinaryCreateTranslation
+    internal partial class UniqueActorReferenceBinaryCreateTranslation
     {
-        public static readonly LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
+        public static readonly UniqueActorReferenceBinaryCreateTranslation Instance = new UniqueActorReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ILocationCellUnique item,
+            IUniqueActorReference item,
             MutagenFrame frame)
         {
             item.Actor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1127,17 +1127,17 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class LocationCellUniqueBinaryTranslationMixIn
+    public static class UniqueActorReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocationCellUniqueGetter item,
+            this IUniqueActorReferenceGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationCellUniqueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((UniqueActorReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1148,41 +1148,41 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class LocationCellUniqueBinaryOverlay :
+    internal partial class UniqueActorReferenceBinaryOverlay :
         PluginBinaryOverlay,
-        ILocationCellUniqueGetter
+        IUniqueActorReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => UniqueActorReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => UniqueActorReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationCellUniqueCommon.Instance;
+        protected object CommonInstance() => UniqueActorReferenceCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationCellUniqueSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => UniqueActorReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonInstance() => this.CommonInstance();
+        object IUniqueActorReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocationCellUniqueGetter.CommonSetterInstance() => null;
+        object? IUniqueActorReferenceGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IUniqueActorReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellUniqueCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => UniqueActorReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => UniqueActorReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((UniqueActorReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected LocationCellUniqueBinaryOverlay(
+        protected UniqueActorReferenceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ILocationCellUniqueGetter LocationCellUniqueFactory(
+        public static IUniqueActorReferenceGetter UniqueActorReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
                 length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new LocationCellUniqueBinaryOverlay(
+            var ret = new UniqueActorReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0xC;
@@ -1230,12 +1230,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ILocationCellUniqueGetter LocationCellUniqueFactory(
+        public static IUniqueActorReferenceGetter UniqueActorReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return LocationCellUniqueFactory(
+            return UniqueActorReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationCellUniqueMixIn.Print(
+            UniqueActorReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1258,16 +1258,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationCellUniqueGetter rhs) return false;
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IUniqueActorReferenceGetter rhs) return false;
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationCellUniqueGetter? obj)
+        public bool Equals(IUniqueActorReferenceGetter? obj)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

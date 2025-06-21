@@ -20,22 +20,24 @@ public class ArchiveListingDetailsProviderTests
     {
         Substitute.For<ArchiveListingDetailsProviderTests>();
         loadOrderListingsProvider.SetTo("ModC.esm", "ModD.esp");
-        getArchiveIniListings.SetTo("ArchiveA.bsa", "ArchiveB.bsa");
+        getArchiveIniListings.SetTo("ArchiveA.bsa", "ArchiveA - Textures.bsa", "ArchiveB.bsa");
         var sut = lazySut.Value;
-        sut.Contains("ArchiveA.bsa").ShouldBeTrue();
+        sut.Contains("ArchiveA - Textures.bsa").ShouldBeTrue();
         sut.Contains("ArchiveB.bsa").ShouldBeTrue();
         sut.Contains("ModC.bsa").ShouldBeTrue();
         sut.Contains("ModD.bsa").ShouldBeTrue();
         var list = new FileName[]
         {
             "ArchiveA.bsa",
+            "ArchiveA - Textures.bsa",
             "ArchiveB.bsa",
             "ModC.bsa",
             "ModD.bsa",
         };
         list.Order(sut.GetComparerFor(null));
-        list.ShouldEqual(
+        list.ShouldEqualEnumerable(
             "ArchiveA.bsa",
+            "ArchiveA - Textures.bsa",
             "ArchiveB.bsa",
             "ModC.bsa",
             "ModD.bsa");

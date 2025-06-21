@@ -298,15 +298,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMessageGetter> IPlacedObjectGetter.TeleportMessageBox => this.TeleportMessageBox;
         #endregion
-        #region MultiboundReference
-        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
-        public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference
+        #region MultiBoundReference
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiBoundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference
         {
-            get => _MultiboundReference;
-            set => _MultiboundReference.SetTo(value);
+            get => _MultiBoundReference;
+            set => _MultiBoundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.MultiboundReference => this.MultiboundReference;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedObjectGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region XWCN
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -353,14 +353,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XCVL => this.XCVL;
         #endregion
         #region XCZR
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _XCZR = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> XCZR
+        private readonly IFormLinkNullable<IPlacedGetter> _XCZR = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> XCZR
         {
             get => _XCZR;
             set => _XCZR.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.XCZR => this.XCZR;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.XCZR => this.XCZR;
         #endregion
         #region XCZA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -514,14 +514,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(initialValue, new Alpha.Mask<TItem>(initialValue));
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
                 this.TeleportMessageBox = initialValue;
-                this.MultiboundReference = initialValue;
+                this.MultiBoundReference = initialValue;
                 this.XWCN = initialValue;
                 this.XWCS = initialValue;
                 this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(initialValue, new WaterVelocity.Mask<TItem>(initialValue));
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Alpha,
                 TItem TeleportDestination,
                 TItem TeleportMessageBox,
-                TItem MultiboundReference,
+                TItem MultiBoundReference,
                 TItem XWCN,
                 TItem XWCS,
                 TItem WaterVelocity,
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(Alpha, new Alpha.Mask<TItem>(Alpha));
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
                 this.TeleportMessageBox = TeleportMessageBox;
-                this.MultiboundReference = MultiboundReference;
+                this.MultiBoundReference = MultiBoundReference;
                 this.XWCN = XWCN;
                 this.XWCS = XWCS;
                 this.WaterVelocity = new MaskItem<TItem, WaterVelocity.Mask<TItem>?>(WaterVelocity, new WaterVelocity.Mask<TItem>(WaterVelocity));
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Alpha.Mask<TItem>?>? Alpha { get; set; }
             public MaskItem<TItem, TeleportDestination.Mask<TItem>?>? TeleportDestination { get; set; }
             public TItem TeleportMessageBox;
-            public TItem MultiboundReference;
+            public TItem MultiBoundReference;
             public TItem XWCN;
             public TItem XWCS;
             public MaskItem<TItem, WaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Alpha, rhs.Alpha)) return false;
                 if (!object.Equals(this.TeleportDestination, rhs.TeleportDestination)) return false;
                 if (!object.Equals(this.TeleportMessageBox, rhs.TeleportMessageBox)) return false;
-                if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
+                if (!object.Equals(this.MultiBoundReference, rhs.MultiBoundReference)) return false;
                 if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
                 if (!object.Equals(this.XWCS, rhs.XWCS)) return false;
                 if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Alpha);
                 hash.Add(this.TeleportDestination);
                 hash.Add(this.TeleportMessageBox);
-                hash.Add(this.MultiboundReference);
+                hash.Add(this.MultiBoundReference);
                 hash.Add(this.XWCN);
                 hash.Add(this.XWCS);
                 hash.Add(this.WaterVelocity);
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.TeleportDestination.Specific != null && !this.TeleportDestination.Specific.All(eval)) return false;
                 }
                 if (!eval(this.TeleportMessageBox)) return false;
-                if (!eval(this.MultiboundReference)) return false;
+                if (!eval(this.MultiBoundReference)) return false;
                 if (!eval(this.XWCN)) return false;
                 if (!eval(this.XWCS)) return false;
                 if (WaterVelocity != null)
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.TeleportDestination.Specific != null && this.TeleportDestination.Specific.Any(eval)) return true;
                 }
                 if (eval(this.TeleportMessageBox)) return true;
-                if (eval(this.MultiboundReference)) return true;
+                if (eval(this.MultiBoundReference)) return true;
                 if (eval(this.XWCN)) return true;
                 if (eval(this.XWCS)) return true;
                 if (WaterVelocity != null)
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Alpha = this.Alpha == null ? null : new MaskItem<R, Alpha.Mask<R>?>(eval(this.Alpha.Overall), this.Alpha.Specific?.Translate(eval));
                 obj.TeleportDestination = this.TeleportDestination == null ? null : new MaskItem<R, TeleportDestination.Mask<R>?>(eval(this.TeleportDestination.Overall), this.TeleportDestination.Specific?.Translate(eval));
                 obj.TeleportMessageBox = eval(this.TeleportMessageBox);
-                obj.MultiboundReference = eval(this.MultiboundReference);
+                obj.MultiBoundReference = eval(this.MultiBoundReference);
                 obj.XWCN = eval(this.XWCN);
                 obj.XWCS = eval(this.XWCS);
                 obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, WaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
@@ -1758,9 +1758,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(TeleportMessageBox, "TeleportMessageBox");
                     }
-                    if (printMask?.MultiboundReference ?? true)
+                    if (printMask?.MultiBoundReference ?? true)
                     {
-                        sb.AppendItem(MultiboundReference, "MultiboundReference");
+                        sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                     }
                     if (printMask?.XWCN ?? true)
                     {
@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Alpha.ErrorMask?>? Alpha;
             public MaskItem<Exception?, TeleportDestination.ErrorMask?>? TeleportDestination;
             public Exception? TeleportMessageBox;
-            public Exception? MultiboundReference;
+            public Exception? MultiBoundReference;
             public Exception? XWCN;
             public Exception? XWCS;
             public MaskItem<Exception?, WaterVelocity.ErrorMask?>? WaterVelocity;
@@ -2058,8 +2058,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return TeleportDestination;
                     case PlacedObject_FieldIndex.TeleportMessageBox:
                         return TeleportMessageBox;
-                    case PlacedObject_FieldIndex.MultiboundReference:
-                        return MultiboundReference;
+                    case PlacedObject_FieldIndex.MultiBoundReference:
+                        return MultiBoundReference;
                     case PlacedObject_FieldIndex.XWCN:
                         return XWCN;
                     case PlacedObject_FieldIndex.XWCS:
@@ -2209,8 +2209,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.TeleportMessageBox:
                         this.TeleportMessageBox = ex;
                         break;
-                    case PlacedObject_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = ex;
+                    case PlacedObject_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = ex;
                         break;
                     case PlacedObject_FieldIndex.XWCN:
                         this.XWCN = ex;
@@ -2397,8 +2397,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.TeleportMessageBox:
                         this.TeleportMessageBox = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = (Exception?)obj;
+                    case PlacedObject_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.XWCN:
                         this.XWCN = (Exception?)obj;
@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Alpha != null) return true;
                 if (TeleportDestination != null) return true;
                 if (TeleportMessageBox != null) return true;
-                if (MultiboundReference != null) return true;
+                if (MultiBoundReference != null) return true;
                 if (XWCN != null) return true;
                 if (XWCS != null) return true;
                 if (WaterVelocity != null) return true;
@@ -2719,7 +2719,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(TeleportMessageBox, "TeleportMessageBox");
                 }
                 {
-                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                    sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                 }
                 {
                     sb.AppendItem(XWCN, "XWCN");
@@ -2873,7 +2873,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Alpha = this.Alpha.Combine(rhs.Alpha, (l, r) => l.Combine(r));
                 ret.TeleportDestination = this.TeleportDestination.Combine(rhs.TeleportDestination, (l, r) => l.Combine(r));
                 ret.TeleportMessageBox = this.TeleportMessageBox.Combine(rhs.TeleportMessageBox);
-                ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
+                ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.XWCN = this.XWCN.Combine(rhs.XWCN);
                 ret.XWCS = this.XWCS.Combine(rhs.XWCS);
                 ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
@@ -2954,7 +2954,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Alpha.TranslationMask? Alpha;
             public TeleportDestination.TranslationMask? TeleportDestination;
             public bool TeleportMessageBox;
-            public bool MultiboundReference;
+            public bool MultiBoundReference;
             public bool XWCN;
             public bool XWCS;
             public WaterVelocity.TranslationMask? WaterVelocity;
@@ -3012,7 +3012,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LitWater = defaultOn;
                 this.Emittance = defaultOn;
                 this.TeleportMessageBox = defaultOn;
-                this.MultiboundReference = defaultOn;
+                this.MultiBoundReference = defaultOn;
                 this.XWCN = defaultOn;
                 this.XWCS = defaultOn;
                 this.XCVL = defaultOn;
@@ -3069,7 +3069,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Alpha != null ? Alpha.OnOverall : DefaultOn, Alpha?.GetCrystal()));
                 ret.Add((TeleportDestination != null ? TeleportDestination.OnOverall : DefaultOn, TeleportDestination?.GetCrystal()));
                 ret.Add((TeleportMessageBox, null));
-                ret.Add((MultiboundReference, null));
+                ret.Add((MultiBoundReference, null));
                 ret.Add((XWCN, null));
                 ret.Add((XWCS, null));
                 ret.Add((WaterVelocity != null ? WaterVelocity.OnOverall : DefaultOn, WaterVelocity?.GetCrystal()));
@@ -3255,7 +3255,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
-        ILinkedReference,
         ILoquiObjectSetter<IPlacedObjectInternal>,
         IPlaced,
         IPlacedObjectGetter,
@@ -3290,12 +3289,12 @@ namespace Mutagen.Bethesda.Skyrim
         new Alpha? Alpha { get; set; }
         new TeleportDestination? TeleportDestination { get; set; }
         new IFormLinkNullable<IMessageGetter> TeleportMessageBox { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
         new WaterVelocity? WaterVelocity { get; set; }
         new MemorySlice<Byte>? XCVL { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> XCZR { get; set; }
+        new IFormLinkNullable<IPlacedGetter> XCZR { get; set; }
         new MemorySlice<Byte>? XCZA { get; set; }
         new IFormLinkNullable<ICellGetter> XCZC { get; set; }
         new Single? Scale { get; set; }
@@ -3314,7 +3313,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32? FactionRank { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new EnableParent? EnableParent { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Patrol? Patrol { get; set; }
@@ -3343,7 +3342,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
-        ILinkedReferenceGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
@@ -3380,12 +3378,12 @@ namespace Mutagen.Bethesda.Skyrim
         IAlphaGetter? Alpha { get; }
         ITeleportDestinationGetter? TeleportDestination { get; }
         IFormLinkNullableGetter<IMessageGetter> TeleportMessageBox { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference { get; }
         ReadOnlyMemorySlice<Byte>? XWCN { get; }
         ReadOnlyMemorySlice<Byte>? XWCS { get; }
         IWaterVelocityGetter? WaterVelocity { get; }
         ReadOnlyMemorySlice<Byte>? XCVL { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> XCZR { get; }
+        IFormLinkNullableGetter<IPlacedGetter> XCZR { get; }
         ReadOnlyMemorySlice<Byte>? XCZA { get; }
         IFormLinkNullableGetter<ICellGetter> XCZC { get; }
         Single? Scale { get; }
@@ -3404,7 +3402,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? FactionRank { get; }
         Int32? ItemCount { get; }
         Single? Charge { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         IEnableParentGetter? EnableParent { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         IPatrolGetter? Patrol { get; }
@@ -3615,7 +3613,7 @@ namespace Mutagen.Bethesda.Skyrim
         Alpha = 27,
         TeleportDestination = 28,
         TeleportMessageBox = 29,
-        MultiboundReference = 30,
+        MultiBoundReference = 30,
         XWCN = 31,
         XWCS = 32,
         WaterVelocity = 33,
@@ -3823,7 +3821,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Alpha = null;
             item.TeleportDestination = null;
             item.TeleportMessageBox.Clear();
-            item.MultiboundReference.Clear();
+            item.MultiBoundReference.Clear();
             item.XWCN = default;
             item.XWCS = default;
             item.WaterVelocity = null;
@@ -3887,7 +3885,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Emittance.Relink(mapping);
             obj.TeleportDestination?.RemapLinks(mapping);
             obj.TeleportMessageBox.Relink(mapping);
-            obj.MultiboundReference.Relink(mapping);
+            obj.MultiBoundReference.Relink(mapping);
             obj.XCZR.Relink(mapping);
             obj.XCZC.Relink(mapping);
             obj.SpawnContainer.Relink(mapping);
@@ -4060,7 +4058,7 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.TeleportMessageBox = item.TeleportMessageBox.Equals(rhs.TeleportMessageBox);
-            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
+            ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
             ret.XWCN = MemorySliceExt.SequenceEqual(item.XWCN, rhs.XWCN);
             ret.XWCS = MemorySliceExt.SequenceEqual(item.XWCS, rhs.XWCS);
             ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
@@ -4328,9 +4326,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.TeleportMessageBox.FormKeyNullable, "TeleportMessageBox");
             }
-            if (printMask?.MultiboundReference ?? true)
+            if (printMask?.MultiBoundReference ?? true)
             {
-                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+                sb.AppendItem(item.MultiBoundReference.FormKeyNullable, "MultiBoundReference");
             }
             if ((printMask?.XWCN ?? true)
                 && item.XWCN is {} XWCNItem)
@@ -4685,9 +4683,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.TeleportMessageBox.Equals(rhs.TeleportMessageBox)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundReference) ?? true))
             {
-                if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+                if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
@@ -4948,7 +4946,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(TeleportDestinationitem);
             }
             hash.Add(item.TeleportMessageBox);
-            hash.Add(item.MultiboundReference);
+            hash.Add(item.MultiBoundReference);
             if (item.XWCN is {} XWCNItem)
             {
                 hash.Add(XWCNItem);
@@ -5132,9 +5130,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return TeleportMessageBoxInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
+            if (FormLinkInformation.TryFactory(obj.MultiBoundReference, out var MultiBoundReferenceInfo))
             {
-                yield return MultiboundReferenceInfo;
+                yield return MultiBoundReferenceInfo;
             }
             if (FormLinkInformation.TryFactory(obj.XCZR, out var XCZRInfo))
             {
@@ -5653,9 +5651,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.TeleportMessageBox.SetTo(rhs.TeleportMessageBox.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiboundReference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.MultiBoundReference) ?? true))
             {
-                item.MultiboundReference.SetTo(rhs.MultiboundReference.FormKeyNullable);
+                item.MultiBoundReference.SetTo(rhs.MultiBoundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XWCN) ?? true))
             {
@@ -6358,7 +6356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.XTNM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MultiboundReference,
+                item: item.MultiBoundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -6761,8 +6759,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlacedObject_FieldIndex.MultiboundReference;
+                    item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
                 {
@@ -7122,9 +7120,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _TeleportMessageBoxLocation;
         public IFormLinkNullableGetter<IMessageGetter> TeleportMessageBox => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _TeleportMessageBoxLocation);
         #endregion
-        #region MultiboundReference
-        private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiboundReferenceLocation);
+        #region MultiBoundReference
+        private int? _MultiBoundReferenceLocation;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region XWCN
         private int? _XWCNLocation;
@@ -7144,7 +7142,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region XCZR
         private int? _XCZRLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _XCZRLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> XCZR => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _XCZRLocation);
         #endregion
         #region XCZA
         private int? _XCZALocation;
@@ -7214,7 +7212,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -7461,8 +7459,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiboundReferenceLocation = (stream.Position - offset);
-                    return (int)PlacedObject_FieldIndex.MultiboundReference;
+                    _MultiBoundReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
                 {

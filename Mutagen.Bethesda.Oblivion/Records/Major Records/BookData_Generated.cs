@@ -54,7 +54,9 @@ namespace Mutagen.Bethesda.Oblivion
         public Book.BookFlag Flags { get; set; } = default(Book.BookFlag);
         #endregion
         #region Teaches
-        public Skill Teaches { get; set; } = default(Skill);
+        public Skill? Teaches { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IBookDataGetter.Teaches => this.Teaches;
         #endregion
         #region Value
         public Single Value { get; set; } = default(Single);
@@ -513,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IBookData>
     {
         new Book.BookFlag Flags { get; set; }
-        new Skill Teaches { get; set; }
+        new Skill? Teaches { get; set; }
         new Single Value { get; set; }
         new Single Weight { get; set; }
     }
@@ -531,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BookData_Registration.Instance;
         Book.BookFlag Flags { get; }
-        Skill Teaches { get; }
+        Skill? Teaches { get; }
         Single Value { get; }
         Single Weight { get; }
 
@@ -793,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             ClearPartial();
             item.Flags = default(Book.BookFlag);
-            item.Teaches = default(Skill);
+            item.Teaches = default;
             item.Value = default(Single);
             item.Weight = default(Single);
         }
@@ -901,9 +903,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Teaches ?? true)
+            if ((printMask?.Teaches ?? true)
+                && item.Teaches is {} TeachesItem)
             {
-                sb.AppendItem(item.Teaches, "Teaches");
+                sb.AppendItem(TeachesItem, "Teaches");
             }
             if (printMask?.Value ?? true)
             {
@@ -945,7 +948,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var hash = new HashCode();
             hash.Add(item.Flags);
-            hash.Add(item.Teaches);
+            if (item.Teaches is {} Teachesitem)
+            {
+                hash.Add(Teachesitem);
+            }
             hash.Add(item.Value);
             hash.Add(item.Weight);
             return hash.ToHashCode();
@@ -1110,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
                 length: 1);
             EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.Teaches,
+                ((int?)item.Teaches) ?? -1,
                 length: 1);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1161,6 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.Flags = EnumBinaryTranslation<Book.BookFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);
+            if (frame.Complete) return;
             item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);
@@ -1232,7 +1239,17 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public Book.BookFlag Flags => (Book.BookFlag)_structData.Span.Slice(0x0, 0x1)[0];
-        public Skill Teaches => (Skill)_structData.Span.Slice(0x1, 0x1)[0];
+        #region Teaches
+        public Skill? Teaches
+        {
+            get
+            {
+                var val = (Skill)_structData.Span.Slice(0x1, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         public Single Value => _structData.Slice(0x2, 0x4).Float();
         public Single Weight => _structData.Slice(0x6, 0x4).Float();
         partial void CustomFactoryEnd(

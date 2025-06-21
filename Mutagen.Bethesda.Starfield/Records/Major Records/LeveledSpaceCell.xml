@@ -4,7 +4,8 @@
     <Fields>
       <Float name="ChanceNone" recordType="LVLD" nullable="False" binary="Custom" />
       <UInt8 name="MaxCount" recordType="LVLM" nullable="False" />
-      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="2" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledSpaceCell.Flag" byteLength="2" />
+      <RefList name="Conditions" refName="Condition" />
       <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledNpcEntry" counterLength="1" />
     </Fields>

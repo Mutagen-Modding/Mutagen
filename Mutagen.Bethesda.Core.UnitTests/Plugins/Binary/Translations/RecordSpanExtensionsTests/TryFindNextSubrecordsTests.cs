@@ -79,9 +79,9 @@ public class TryFindNextSubrecordsTests : RecordSpanExtensionTests
             out var lenParsed, false, TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
         result.ShouldHaveCount(3);
         lenParsed.ShouldBe(0x26);
-        result.Select(x => x?.RecordType).ShouldEqual(TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
-        result.Select(x => x?.Location).ShouldEqual(0x0, 0x14, 0x1C);
-        result.Select(x => x?.ContentLength).ShouldEqual(0x4, 2, 4);
+        result.Select(x => x?.RecordType).ShouldEqualEnumerable(TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
+        result.Select(x => x?.Location).ShouldEqualEnumerable(0x0, 0x14, 0x1C);
+        result.Select(x => x?.ContentLength).ShouldEqualEnumerable(0x4, 2, 4);
         result[0]!.Value.AsInt32().ShouldEqual(0x04030201);
         result[1]!.Value.AsInt16().ShouldEqual(0x0809);
         result[2]!.Value.AsInt32().ShouldEqual(0x44332211);

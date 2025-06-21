@@ -6,6 +6,8 @@ partial class Location
     public enum MajorFlag
     {
         InteriorCellUseRefLocationForWorldMapPlayerMarker = 0x0800,
-        PartialForm = 0x4000,
+        OffLimits = 0x0002_0000,
+        CannotWait = 0x0008_0000,
+        PublicArea = 0x0010_0000,
     }
 }

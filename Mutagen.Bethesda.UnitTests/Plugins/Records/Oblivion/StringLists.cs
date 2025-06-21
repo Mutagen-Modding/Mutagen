@@ -14,7 +14,7 @@ public class StringLists : ASpecificCaseTest<Creature, ICreatureGetter>
     
     public override void TestItem(ICreatureGetter item)
     {
-        item.Models.ShouldEqual(
+        item.Models.ShouldEqualEnumerable(
             "NDAyleid.NIF",
             "NDAyleidLegs.NIF",
             "NDMinionHead.NIF");
@@ -29,7 +29,7 @@ public class MalformedStringLists : ASpecificCaseTest<Creature, ICreatureGetter>
     
     public override void TestItem(ICreatureGetter item)
     {
-        item.Models.ShouldEqual(
+        item.Models.ShouldEqualEnumerable(
             "NDAyleid.NIF",
             "NDAyleidLegs.NIF",
             "NDMinionHead.NIF");

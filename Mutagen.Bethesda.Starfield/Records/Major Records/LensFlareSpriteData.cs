@@ -7,5 +7,6 @@ partial class LensFlareSpriteData
     {
         Rotates = 0x01,
         ShrinksWhenOccluded = 0x02,
+        GlareFlare = 0x04,
     }
 }

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 namespace Mutagen.Bethesda.Fallout4;
 
 public partial class TalkingActivator
@@ -9,4 +11,7 @@ public partial class TalkingActivator
         RandomAnimStart = 0x0001_0000,
         RadioStation = 0x0002_0000,
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }

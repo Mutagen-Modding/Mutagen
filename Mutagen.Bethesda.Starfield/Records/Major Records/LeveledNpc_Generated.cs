@@ -1252,6 +1252,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILeveledNpc);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledNpcCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LeveledNpcSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LeveledNpcSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -1372,6 +1377,10 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        #region Mutagen
+        new LeveledNpc.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ILeveledNpcInternal :
@@ -1427,6 +1436,10 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
+        #endregion
+
+        #region Mutagen
+        LeveledNpc.MajorFlag MajorFlags { get; }
         #endregion
 
     }
@@ -1682,6 +1695,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LVLG,
                 RecordTypes.LVLO,
                 RecordTypes.LLCT,
+                RecordTypes.COED,
                 RecordTypes.LLKC,
                 RecordTypes.ONAM,
                 RecordTypes.MODL,
@@ -3207,6 +3221,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(ILeveledNpc);
 
+        public LeveledNpc.MajorFlag MajorFlags => (LeveledNpc.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
         private int? _VirtualMachineAdapterLengthOverride;

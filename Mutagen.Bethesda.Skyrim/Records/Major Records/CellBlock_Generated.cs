@@ -1358,13 +1358,6 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IPlaced":
                 case "IPlacedGetter":
                     foreach (var subItem in obj.SubBlocks)

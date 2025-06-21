@@ -9,11 +9,22 @@ namespace Mutagen.Bethesda.Starfield;
 partial class LeveledNpc
 {
     [Flags]
+    public enum MajorFlag
+    {
+        CalculateAll = 0x8000
+    }
+    
+    [Flags]
     public enum Flag
     {
         CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
         CalculateForEachItemInCount = 0x02,
-        CalculateAll = 0x04
+        CalculateAll = 0x04,
+        DisableIfDoesNotResolve1 = 0x08,
+        DisableIfDoesNotResolve2 = 0x10,
+        EvalAsStack = 0x20,
+        AllowShiftUp = 0x40,
+        DoAllBeforeRepeating = 0x100,
     }
 }
 

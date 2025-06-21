@@ -22,6 +22,5 @@ public enum Skill
     Mercantile = 17,
     Security = 18,
     Sneak = 19,
-    Speechraft = 20,
-    None = 255,
+    Speechraft = 20
 }

@@ -1460,7 +1460,10 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.MODL,
                 RecordTypes.SNDD,
                 RecordTypes.ONAM,
-                RecordTypes.BSMP);
+                RecordTypes.BSMP,
+                RecordTypes.BSMB,
+                RecordTypes.BSMS,
+                RecordTypes.BMMP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -2467,15 +2470,6 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public new static readonly ArmorAddonBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IArmorAddonGetter item,
-            MutagenWriter writer)
-        {
-            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IArmorAddonGetter item,
             MutagenWriter writer,
@@ -2667,15 +2661,6 @@ namespace Mutagen.Bethesda.Fallout4
         public new static readonly ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMA;
-        public static void FillBinaryStructs(
-            IArmorAddonInternal item,
-            MutagenFrame frame)
-        {
-            Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IArmorAddonInternal item,
             MutagenFrame frame,

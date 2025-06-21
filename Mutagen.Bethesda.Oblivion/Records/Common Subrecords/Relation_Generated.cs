@@ -51,15 +51,15 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Faction
-        private readonly IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
-        public IFormLink<IFactionGetter> Faction
+        #region Target
+        private readonly IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
+        public IFormLink<IRelatableGetter> Target
         {
-            get => _Faction;
-            set => _Faction.SetTo(value);
+            get => _Target;
+            set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
+        IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default(Int32);
@@ -103,15 +103,15 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Faction = initialValue;
+                this.Target = initialValue;
                 this.Modifier = initialValue;
             }
 
             public Mask(
-                TItem Faction,
+                TItem Target,
                 TItem Modifier)
             {
-                this.Faction = Faction;
+                this.Target = Target;
                 this.Modifier = Modifier;
             }
 
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem Faction;
+            public TItem Target;
             public TItem Modifier;
             #endregion
 
@@ -138,14 +138,14 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Faction, rhs.Faction)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
                 if (!object.Equals(this.Modifier, rhs.Modifier)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Faction);
+                hash.Add(this.Target);
                 hash.Add(this.Modifier);
                 return hash.ToHashCode();
             }
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Faction)) return false;
+                if (!eval(this.Target)) return false;
                 if (!eval(this.Modifier)) return false;
                 return true;
             }
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Faction)) return true;
+                if (eval(this.Target)) return true;
                 if (eval(this.Modifier)) return true;
                 return false;
             }
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Faction = eval(this.Faction);
+                obj.Target = eval(this.Target);
                 obj.Modifier = eval(this.Modifier);
             }
             #endregion
@@ -200,9 +200,9 @@ namespace Mutagen.Bethesda.Oblivion
                 sb.AppendLine($"{nameof(Relation.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Faction ?? true)
+                    if (printMask?.Target ?? true)
                     {
-                        sb.AppendItem(Faction, "Faction");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.Modifier ?? true)
                     {
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public Exception? Faction;
+            public Exception? Target;
             public Exception? Modifier;
             #endregion
 
@@ -242,8 +242,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Relation_FieldIndex enu = (Relation_FieldIndex)index;
                 switch (enu)
                 {
-                    case Relation_FieldIndex.Faction:
-                        return Faction;
+                    case Relation_FieldIndex.Target:
+                        return Target;
                     case Relation_FieldIndex.Modifier:
                         return Modifier;
                     default:
@@ -256,8 +256,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Relation_FieldIndex enu = (Relation_FieldIndex)index;
                 switch (enu)
                 {
-                    case Relation_FieldIndex.Faction:
-                        this.Faction = ex;
+                    case Relation_FieldIndex.Target:
+                        this.Target = ex;
                         break;
                     case Relation_FieldIndex.Modifier:
                         this.Modifier = ex;
@@ -272,8 +272,8 @@ namespace Mutagen.Bethesda.Oblivion
                 Relation_FieldIndex enu = (Relation_FieldIndex)index;
                 switch (enu)
                 {
-                    case Relation_FieldIndex.Faction:
-                        this.Faction = (Exception?)obj;
+                    case Relation_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
                         break;
                     case Relation_FieldIndex.Modifier:
                         this.Modifier = (Exception?)obj;
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Faction != null) return true;
+                if (Target != null) return true;
                 if (Modifier != null) return true;
                 return false;
             }
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Faction, "Faction");
+                    sb.AppendItem(Target, "Target");
                 }
                 {
                     sb.AppendItem(Modifier, "Modifier");
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Faction = this.Faction.Combine(rhs.Faction);
+                ret.Target = this.Target.Combine(rhs.Target);
                 ret.Modifier = this.Modifier.Combine(rhs.Modifier);
                 return ret;
             }
@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Faction;
+            public bool Target;
             public bool Modifier;
             #endregion
 
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Faction = defaultOn;
+                this.Target = defaultOn;
                 this.Modifier = defaultOn;
             }
 
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Faction, null));
+                ret.Add((Target, null));
                 ret.Add((Modifier, null));
             }
 
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelation>,
         IRelationGetter
     {
-        new IFormLink<IFactionGetter> Faction { get; set; }
+        new IFormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
     }
 
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
-        IFormLinkGetter<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IRelatableGetter> Target { get; }
         Int32 Modifier { get; }
 
     }
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum Relation_FieldIndex
     {
-        Faction = 0,
+        Target = 0,
         Modifier = 1,
     }
     #endregion
@@ -735,14 +735,14 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction.Clear();
+            item.Target.Clear();
             item.Modifier = default(Int32);
         }
         
         #region Mutagen
         public void RemapLinks(IRelation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Faction.Relink(mapping);
+            obj.Target.Relink(mapping);
         }
         
         #endregion
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion
             Relation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Faction = item.Faction.Equals(rhs.Faction);
+            ret.Target = item.Target.Equals(rhs.Target);
             ret.Modifier = item.Modifier == rhs.Modifier;
         }
         
@@ -837,9 +837,9 @@ namespace Mutagen.Bethesda.Oblivion
             StructuredStringBuilder sb,
             Relation.Mask<bool>? printMask = null)
         {
-            if (printMask?.Faction ?? true)
+            if (printMask?.Target ?? true)
             {
-                sb.AppendItem(item.Faction.FormKey, "Faction");
+                sb.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Modifier ?? true)
             {
@@ -854,9 +854,9 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+                if (!lhs.Target.Equals(rhs.Target)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual int GetHashCode(IRelationGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Faction);
+            hash.Add(item.Target);
             hash.Add(item.Modifier);
             return hash.ToHashCode();
         }
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRelationGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.Faction);
+            yield return FormLinkInformation.Factory(obj.Target);
             yield break;
         }
         
@@ -903,9 +903,9 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Faction.SetTo(rhs.Faction.FormKey);
+                item.Target.SetTo(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Faction);
+                item: item.Target);
             writer.Write(item.Modifier);
         }
 
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion
             IRelation item,
             MutagenFrame frame)
         {
-            item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Modifier = frame.ReadInt32();
         }
 
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.OverlayFactory<IFactionGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IRelatableGetter> Target => FormLinkBinaryTranslation.Instance.OverlayFactory<IRelatableGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

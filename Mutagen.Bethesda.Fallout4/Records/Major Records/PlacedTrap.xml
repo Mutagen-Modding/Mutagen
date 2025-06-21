@@ -29,9 +29,7 @@
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />
       </List>
-      <FormLink name="LocationReference" recordType="XLRL">
-        <Interface>ILocationRecord</Interface>
-      </FormLink>
+      <FormLink name="LocationReference" refName="Location" recordType="XLRL" />
       <Float name="Scale" recordType="XSCL" />
       <List name="DistantLodData" recordType="XLOD">
         <Float />
@@ -46,7 +44,6 @@
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>
   <Object name="PlacedArrow" recordType="PARW" baseClass="APlacedTrap" objType="Record">

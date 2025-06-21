@@ -5,12 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Oblivion mods.</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -687,13 +687,7 @@
     <Compile Include="Records\Major Records\RaceStats_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FacePart_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BodyData_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyPart_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\FaceGenData_Generated.cs">
@@ -901,6 +895,13 @@
     </Compile>
     <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
+    <Compile Include="Records\Major Records\FacePartItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPartItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

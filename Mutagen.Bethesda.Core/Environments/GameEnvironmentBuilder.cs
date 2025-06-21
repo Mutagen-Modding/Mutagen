@@ -13,9 +13,12 @@ using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
+
+internal record GameEnvironmentBuilderProcessorParameters();
 
 public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
@@ -29,17 +32,20 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     internal IFileSystem? FileSystem { get; init; }
     internal Func<Type, object?>? Resolver { get; init; }
 
-    private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+    private Func<GameEnvironmentBuilderProcessorParameters, ILoadOrderListingGetter[]>? HardcodedListings { get; init; }
 
-    private ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
 
     private ImmutableList<TMod> MutableMods { get; init; }
+    private StringsReadParameters? StringsReadParameters { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
         Release = new GameReleaseInjection(release);
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<TMod>.Empty;
     }
 
@@ -55,8 +61,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         ListingsProvider = listingsProvider;
         PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<TMod>.Empty;
     }
 
@@ -72,7 +78,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrderListings(Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>> transformer)
     {
-        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add(transformer) };
+        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -90,9 +96,14 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// </summary>
     /// <param name="listings">Listings to set the load order to</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(params ILoadOrderListingGetter[] listings)
+    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder<T>(params T[] listings)
+        where T : ILoadOrderListingGetter
     {
-        return TransformLoadOrderListings(_ => listings);
+        return this with
+        {
+            HardcodedListings = _ => listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
+            LoadOrderListingProcessors = []
+        };
     }
 
     /// <summary>
@@ -112,7 +123,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder<TMod, TModGetter> TransformModListings(Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>> transformer)
     {
-        return this with { ModListingProcessors = ModListingProcessors.Add(transformer) };
+        return this with { ModListingProcessors = ModListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -148,6 +159,19 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     public GameEnvironmentBuilder<TMod, TModGetter> WithFileSystem(IFileSystem fileSystem)
     {
         return this with { FileSystem = fileSystem };
+    }
+
+    /// <summary>
+    /// Sets the string parameters to be used when creating mods
+    /// </summary>
+    /// <param name="stringParameters">String parameters to use</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithStringParameters(StringsReadParameters stringParameters)
+    {
+        return this with
+        {
+            StringsReadParameters = stringParameters
+        };
     }
 
     public GameEnvironmentBuilder<TMod, TModGetter> WithResolver(Func<Type, object?> resolver)
@@ -211,52 +235,67 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             },
             CccListingsPathProvider);
 
-        var listingsProv = Resolve<ILoadOrderListingsProvider>(
-            () =>
-            {
-                var pluginRawListingsReader = new PluginRawListingsReader(
-                    fs,
-                    new PluginListingsParser(
-                        new PluginListingCommentTrimmer(),
-                        new LoadOrderListingParser(
-                            new HasEnabledMarkersProvider(
-                                Release))));
+        var param = new GameEnvironmentBuilderProcessorParameters();
 
-                return new LoadOrderListingsProvider(
-                    new OrderListings(),
-                    new ImplicitListingsProvider(
-                        fs,
-                        dataDirectory,
-                        new ImplicitListingModKeyProvider(
-                            Release)),
-                    new PluginListingsProvider(
-                        Release,
-                        new TimestampedPluginListingsProvider(
-                            fs,
-                            new TimestampAligner(fs),
-                            new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                            pluginRawListingsReader,
-                            dataDirectory,
-                            pluginPathProvider),
-                        new EnabledPluginListingsProvider(
-                            fs,
-                            pluginRawListingsReader,
-                            pluginPathProvider)),
-                    new CreationClubListingsProvider(
-                        fs,
-                        dataDirectory,
-                        cccPath,
-                        new CreationClubRawListingsReader()));
-            },
-            ListingsProvider);
+        ILoadOrderListingGetter[] listingsToUse;
 
-        var filteredListings = listingsProv.Get();
-        foreach (var filter in LoadOrderListingProcessors)
+        if (HardcodedListings != null)
         {
-            filteredListings = filter(filteredListings);
+            listingsToUse = HardcodedListings(param);
+        }
+        else
+        {
+            var listingsProv = Resolve<ILoadOrderListingsProvider>(
+                () =>
+                {
+                    var pluginRawListingsReader = new PluginRawListingsReader(
+                        fs,
+                        new PluginListingsParser(
+                            new PluginListingCommentTrimmer(),
+                            new LoadOrderListingParser(
+                                new HasEnabledMarkersProvider(
+                                    Release))));
+
+                    return new LoadOrderListingsProvider(
+                        new OrderListings(),
+                        new ImplicitListingsProvider(
+                            fs,
+                            dataDirectory,
+                            new ImplicitListingModKeyProvider(
+                                Release)),
+                        new PluginListingsProvider(
+                            Release,
+                            new TimestampedPluginListingsProvider(
+                                fs,
+                                new TimestampAligner(fs),
+                                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                                pluginRawListingsReader,
+                                dataDirectory,
+                                pluginPathProvider),
+                            new EnabledPluginListingsProvider(
+                                fs,
+                                pluginRawListingsReader,
+                                pluginPathProvider)),
+                        new CreationClubListingsProvider(
+                            fs,
+                            dataDirectory,
+                            cccPath,
+                            new CreationClubRawListingsReader()));
+                },
+                ListingsProvider);
+            
+            listingsToUse = listingsProv.Get().ToArray();
         }
 
-        var loListings = new LoadOrderListingsInjection(filteredListings);
+        IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
+        foreach (var filter in LoadOrderListingProcessors)
+        {
+            filteredListings = filter(param, filteredListings);
+        }
+            
+        listingsToUse = filteredListings.ToArray();
+
+        var loListings = new LoadOrderListingsInjection(listingsToUse);
         var loGetter = new LoadOrderImporter<TModGetter>(
             fs,
             dataDirectory,
@@ -269,10 +308,14 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                 fs,
                 dataDirectory));
 
-        ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
+        ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import(new BinaryReadParameters()
+        {
+            FileSystem = fs,
+            StringsParam = StringsReadParameters
+        });
         foreach (var filter in ModListingProcessors)
         {
-            lo = filter(lo.ListedOrder).ToLoadOrder();
+            lo = filter(param, lo.ListedOrder).ToLoadOrder();
         }
 
         var linkCache = lo.ToMutableLinkCache(MutableMods.ToArray());
@@ -304,8 +347,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         return new GameEnvironmentState<TMod, TModGetter>(
             Release.Release,
             dataFolderPath: dataDirectory.Path,
-            loadOrderFilePath: pluginPathProvider.Path,
-            creationClubListingsFilePath: cccPath.Path,
+            pluginListingsPathContext: pluginPathProvider,
+            creationClubListingsFilePathProvider: cccPath,
             loadOrder: lo,
             linkCache: linkCache,
             assetProvider: assetProvider);
@@ -322,17 +365,20 @@ public sealed record GameEnvironmentBuilder
     internal IFileSystem? FileSystem { get; init; }
     internal Func<Type, object?>? Resolver { get; init; }
 
-    private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
-    private ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
+
+    private Func<GameEnvironmentBuilderProcessorParameters, ILoadOrderListingGetter[]>? HardcodedListings { get; init; }
 
     private ImmutableList<IMod> MutableMods { get; init; }
+    private StringsReadParameters? StringsReadParameters { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
         Release = new GameReleaseInjection(release);
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<IMod>.Empty;
     }
 
@@ -348,8 +394,8 @@ public sealed record GameEnvironmentBuilder
         ListingsProvider = listingsProvider;
         PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<IMod>.Empty;
     }
 
@@ -365,7 +411,7 @@ public sealed record GameEnvironmentBuilder
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder TransformLoadOrderListings(Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>> transformer)
     {
-        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add(transformer) };
+        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -383,9 +429,14 @@ public sealed record GameEnvironmentBuilder
     /// </summary>
     /// <param name="listings">Listings to set the load order to</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder WithLoadOrder(params ILoadOrderListingGetter[] listings)
+    public GameEnvironmentBuilder WithLoadOrder<T>(params T[] listings)
+        where T : ILoadOrderListingGetter
     {
-        return TransformLoadOrderListings(_ => listings);
+        return this with
+        {
+            HardcodedListings = _ => listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
+            LoadOrderListingProcessors = []
+        };
     }
 
     /// <summary>
@@ -395,7 +446,7 @@ public sealed record GameEnvironmentBuilder
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder TransformModListings(Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>> transformer)
     {
-        return this with { ModListingProcessors = ModListingProcessors.Add(transformer) };
+        return this with { ModListingProcessors = ModListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -431,6 +482,19 @@ public sealed record GameEnvironmentBuilder
     public GameEnvironmentBuilder WithFileSystem(IFileSystem fileSystem)
     {
         return this with { FileSystem = fileSystem };
+    }
+
+    /// <summary>
+    /// Sets the string parameters to be used when creating mods
+    /// </summary>
+    /// <param name="stringParameters">String parameters to use</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder WithStringParameters(StringsReadParameters stringParameters)
+    {
+        return this with
+        {
+            StringsReadParameters = stringParameters
+        };
     }
 
     public GameEnvironmentBuilder WithResolver(Func<Type, object?> resolver)
@@ -493,53 +557,68 @@ public sealed record GameEnvironmentBuilder
                         GameLocatorLookupCache.Instance));
             },
             CccListingsPathProvider);
+        
+        var param = new GameEnvironmentBuilderProcessorParameters();
 
-        var listingsProv = Resolve<ILoadOrderListingsProvider>(
-            () =>
-            {
-                var pluginRawListingsReader = new PluginRawListingsReader(
-                    fs,
-                    new PluginListingsParser(
-                        new PluginListingCommentTrimmer(),
-                        new LoadOrderListingParser(
-                            new HasEnabledMarkersProvider(
-                                Release))));
+        ILoadOrderListingGetter[] listingsToUse;
 
-                return new LoadOrderListingsProvider(
-                    new OrderListings(),
-                    new ImplicitListingsProvider(
-                        fs,
-                        dataDirectory,
-                        new ImplicitListingModKeyProvider(
-                            Release)),
-                    new PluginListingsProvider(
-                        Release,
-                        new TimestampedPluginListingsProvider(
-                            fs,
-                            new TimestampAligner(fs),
-                            new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                            pluginRawListingsReader,
-                            dataDirectory,
-                            pluginPathProvider),
-                        new EnabledPluginListingsProvider(
-                            fs,
-                            pluginRawListingsReader,
-                            pluginPathProvider)),
-                    new CreationClubListingsProvider(
-                        fs,
-                        dataDirectory,
-                        cccPath,
-                        new CreationClubRawListingsReader()));
-            },
-            ListingsProvider);
-
-        var filteredListings = listingsProv.Get();
-        foreach (var filter in LoadOrderListingProcessors)
+        if (HardcodedListings != null)
         {
-            filteredListings = filter(filteredListings);
+            listingsToUse = HardcodedListings(param);
+        }
+        else
+        {
+            var listingsProv = Resolve<ILoadOrderListingsProvider>(
+                () =>
+                {
+                    var pluginRawListingsReader = new PluginRawListingsReader(
+                        fs,
+                        new PluginListingsParser(
+                            new PluginListingCommentTrimmer(),
+                            new LoadOrderListingParser(
+                                new HasEnabledMarkersProvider(
+                                    Release))));
+
+                    return new LoadOrderListingsProvider(
+                        new OrderListings(),
+                        new ImplicitListingsProvider(
+                            fs,
+                            dataDirectory,
+                            new ImplicitListingModKeyProvider(
+                                Release)),
+                        new PluginListingsProvider(
+                            Release,
+                            new TimestampedPluginListingsProvider(
+                                fs,
+                                new TimestampAligner(fs),
+                                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                                pluginRawListingsReader,
+                                dataDirectory,
+                                pluginPathProvider),
+                            new EnabledPluginListingsProvider(
+                                fs,
+                                pluginRawListingsReader,
+                                pluginPathProvider)),
+                        new CreationClubListingsProvider(
+                            fs,
+                            dataDirectory,
+                            cccPath,
+                            new CreationClubRawListingsReader()));
+                },
+                ListingsProvider);
+            
+            listingsToUse = listingsProv.Get().ToArray();
         }
 
-        var loListings = new LoadOrderListingsInjection(filteredListings);
+        IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
+        foreach (var filter in LoadOrderListingProcessors)
+        {
+            filteredListings = filter(param, filteredListings);
+        }
+            
+        listingsToUse = filteredListings.ToArray();
+        
+        var loListings = new LoadOrderListingsInjection(listingsToUse);
         var loGetter = new LoadOrderImporter(
             fs,
             Release,
@@ -554,11 +633,12 @@ public sealed record GameEnvironmentBuilder
 
         ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import(new BinaryReadParameters()
         {
-            FileSystem = fs
+            FileSystem = fs,
+            StringsParam = StringsReadParameters
         });
         foreach (var filter in ModListingProcessors)
         {
-            lo = filter(lo.ListedOrder).ToLoadOrder();
+            lo = filter(param, lo.ListedOrder).ToLoadOrder();
         }
 
         var linkCache = lo.ToUntypedMutableLinkCache(Release.Release.ToCategory(), MutableMods.ToArray());

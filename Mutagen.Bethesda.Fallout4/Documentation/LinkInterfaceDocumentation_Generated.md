@@ -138,13 +138,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Keyword
 - PlacedNpc
 - PlacedObject
-### ILinkedReference
-- APlacedTrap
-- PlacedNpc
-- PlacedObject
-### ILocationRecord
-- Location
-- LocationReferenceType
 ### ILockList
 - FormList
 - Npc
@@ -344,7 +337,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IReferenceableObject
 ### APlacedTrap
 - IKeywordLinkedReference
-- ILinkedReference
 - IPlaced
 - IPlacedThing
 ### Armor
@@ -521,10 +513,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
-### Location
-- ILocationRecord
-### LocationReferenceType
-- ILocationRecord
 ### MiscItem
 - IConstructible
 - IConstructibleObjectTarget
@@ -559,13 +547,11 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IFurnitureAssociation
 ### PlacedNpc
 - IKeywordLinkedReference
-- ILinkedReference
 - IPlaced
 - IPlacedSimple
 ### PlacedObject
 - IExplodeSpawn
 - IKeywordLinkedReference
-- ILinkedReference
 - IPlaced
 - IPlacedSimple
 - IPlacedThing

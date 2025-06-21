@@ -749,14 +749,14 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XNSE => this.XNSE;
         #endregion
         #region AttachRef
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _AttachRef = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> AttachRef
+        private readonly IFormLinkNullable<IPlacedGetter> _AttachRef = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> AttachRef
         {
             get => _AttachRef;
             set => _AttachRef.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
+        IFormLinkNullableGetter<IPlacedGetter> IPlacedObjectGetter.AttachRef => this.AttachRef;
         #endregion
         #region RagdollBipedRotation
         public P3Float? RagdollBipedRotation { get; set; }
@@ -4671,7 +4671,6 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
-        ILinkedReference,
         ILoquiObjectSetter<IPlacedObjectInternal>,
         IPlaced,
         IPlacedObjectGetter,
@@ -4755,7 +4754,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single? HeadTrackingWeight { get; set; }
         new PlacedObjectSpline? Spline { get; set; }
         new MemorySlice<Byte>? XNSE { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> AttachRef { get; set; }
+        new IFormLinkNullable<IPlacedGetter> AttachRef { get; set; }
         new P3Float? RagdollBipedRotation { get; set; }
         new Percent? HealthPercent { get; set; }
         new IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay { get; set; }
@@ -4788,7 +4787,6 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
-        ILinkedReferenceGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
@@ -4874,7 +4872,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? HeadTrackingWeight { get; }
         IPlacedObjectSplineGetter? Spline { get; }
         ReadOnlyMemorySlice<Byte>? XNSE { get; }
-        IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef { get; }
+        IFormLinkNullableGetter<IPlacedGetter> AttachRef { get; }
         P3Float? RagdollBipedRotation { get; }
         Percent? HealthPercent { get; }
         IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay { get; }
@@ -10230,7 +10228,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AttachRef
         private int? _AttachRefLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _AttachRefLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
         #region RagdollBipedRotation
         private int? _RagdollBipedRotationLocation;

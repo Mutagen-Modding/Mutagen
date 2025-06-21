@@ -65,14 +65,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IKeywordLinkedReferenceGetter> ILinkedReferencesGetter.KeywordOrReference => this.KeywordOrReference;
         #endregion
         #region Reference
-        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILinkedReferencesGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> ILinkedReferencesGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new LinkedReferences.VersioningBreaks Versioning { get; set; }
         new IFormLink<IKeywordLinkedReferenceGetter> KeywordOrReference { get; set; }
-        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
     }
 
     public partial interface ILinkedReferencesGetter :
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         LinkedReferences.VersioningBreaks Versioning { get; }
         IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference { get; }
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
 
     }
 
@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public LinkedReferences.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordLinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => _structData.Length <= 0x4 ? FormLink<ILinkedReferenceGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => _structData.Length <= 0x4 ? FormLink<IPlacedGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

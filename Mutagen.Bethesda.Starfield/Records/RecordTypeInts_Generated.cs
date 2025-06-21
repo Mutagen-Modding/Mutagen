@@ -561,6 +561,8 @@ public partial class RecordTypeInts
     public const int LLCT = 0x54434C4C;
     public const int LLKC = 0x434B4C4C;
     public const int LLLD = 0x444C4C4C;
+    public const int LLRB = 0x42524C4C;
+    public const int LLRV = 0x56524C4C;
     public const int LLSH = 0x48534C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNA2 = 0x32414E4C;
@@ -590,6 +592,7 @@ public partial class RecordTypeInts
     public const int LVLO = 0x4F4C564C;
     public const int LVLP = 0x504C564C;
     public const int LVSC = 0x4353564C;
+    public const int LVSG = 0x4753564C;
     public const int LWBS = 0x5342574C;
     public const int MAAM = 0x4D41414D;
     public const int MAGF = 0x4647414D;

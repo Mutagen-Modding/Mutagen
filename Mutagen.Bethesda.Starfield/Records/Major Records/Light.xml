@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" nullable="False" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
@@ -23,8 +23,8 @@
           <Float name="Radius" />
           <Color name="Color" binaryType="Alpha" />
           <Enum name="Flags" enumName="Light.Flag" byteLength="4" />
-          <Float name="FalloffExponent" />
-          <Float name="FOV" />
+          <Float name="FalloffExponent" default="1" />
+          <Float name="FOV" default="90" />
           <Float name="NearClip" />
           <Float name="FlickerPeriod" />
           <Float name="FlickerIntensityAmplitude" />

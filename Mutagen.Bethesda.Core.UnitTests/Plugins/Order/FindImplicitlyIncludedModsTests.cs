@@ -149,7 +149,7 @@ public class FindImplicitlyIncludedModsTests
         var found = sut.Find(list)
             .ToList();
         found.ShouldHaveCount(2);
-        found.ShouldEqual(
+        found.ShouldEqualEnumerable(
             ModC,
             ModD);
     }
@@ -178,7 +178,7 @@ public class FindImplicitlyIncludedModsTests
         var found = sut.Find(list)
             .ToArray();
         found.ShouldHaveCount(2);
-        found.ShouldEqual(
+        found.ShouldEqualEnumerable(
             ModC,
             ModD);
     }
@@ -265,6 +265,6 @@ public class FindImplicitlyIncludedModsTests
             
         var found = sut.Find(list, skipMissingMods: true)
             .ToArray();
-        found.ShouldEqual(ModD);
+        found.ShouldEqualEnumerable(ModD);
     }
 }

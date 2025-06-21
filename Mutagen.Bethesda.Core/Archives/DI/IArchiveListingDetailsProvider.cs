@@ -59,8 +59,7 @@ public class CachedArchiveListingDetailsProvider : IArchiveListingDetailsProvide
 
     public bool Contains(FileName fileName)
     {
-        var strippedFileName = BsaWithoutSuffix(fileName, out _);
-        return _payload.Value.AllSet.Contains(strippedFileName);
+        return _payload.Value.AllSet.Contains(fileName);
     }
     
     public bool IsIni(FileName fileName)

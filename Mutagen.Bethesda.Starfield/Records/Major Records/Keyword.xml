@@ -7,7 +7,7 @@
       <String name="Notes" recordType="DNAM" />
       <Enum name="Type" enumName="Keyword.TypeEnum" byteLength="4" recordType="TNAM" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
-      <String name="ENAM" recordType="ENAM" unknown="true" />
+      <String name="FlashLinkageName" recordType="ENAM" />
       <FormLink name="AttractionRule" refName="AttractionRule" recordType="DATA" />
       <String name="Name" recordType="FULL" translated="Normal" />
     </Fields>

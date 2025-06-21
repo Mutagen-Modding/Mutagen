@@ -41,10 +41,11 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class InstanceNamingRule :
-        IEquatable<IInstanceNamingRuleGetter>,
-        IInstanceNamingRule,
-        ILoquiObjectSetter<InstanceNamingRule>
+    public partial class InstanceNamingRule<T> :
+        IEquatable<IInstanceNamingRuleGetter<T>>,
+        IInstanceNamingRule<T>,
+        ILoquiObjectSetter<InstanceNamingRule<T>>
+        where T : struct, Enum
     {
         #region Ctor
         public InstanceNamingRule()
@@ -54,41 +55,10 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        /// <summary>
-        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
-        /// </summary>
-        public TranslatedString? Name { get; set; }
+        #region Text
+        public TranslatedString? Text { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IInstanceNamingRuleGetter.Name => this.Name;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamedGetter.Name => this.Name?.String;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamed.Name
-        {
-            get => this.Name?.String;
-            set => this.Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name?.String ?? string.Empty;
-            set => this.Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        #endregion
+        ITranslatedStringGetter? IInstanceNamingRuleGetter<T>.Text => this.Text;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -103,7 +73,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IInstanceNamingRuleGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IInstanceNamingRuleGetter<T>.Keywords => _Keywords;
         #endregion
 
         #region Aspects
@@ -111,21 +81,21 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
-        #region Properties
+        #region Property
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private InstanceNamingRuleProperties? _Properties;
-        public InstanceNamingRuleProperties? Properties
+        private InstanceNamingRuleProperty<T>? _Property;
+        public InstanceNamingRuleProperty<T>? Property
         {
-            get => _Properties;
-            set => _Properties = value;
+            get => _Property;
+            set => _Property = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IInstanceNamingRulePropertiesGetter? IInstanceNamingRuleGetter.Properties => this.Properties;
+        IInstanceNamingRulePropertyGetter<T>? IInstanceNamingRuleGetter<T>.Property => this.Property;
         #endregion
         #region Index
         public UInt16? Index { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IInstanceNamingRuleGetter.Index => this.Index;
+        UInt16? IInstanceNamingRuleGetter<T>.Index => this.Index;
         #endregion
 
         #region To String
@@ -145,451 +115,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IInstanceNamingRuleGetter rhs) return false;
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IInstanceNamingRuleGetter<T> rhs) return false;
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IInstanceNamingRuleGetter? obj)
+        public bool Equals(IInstanceNamingRuleGetter<T>? obj)
         {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
-        #endregion
-
-        #region Mask
-        public class Mask<TItem> :
-            IEquatable<Mask<TItem>>,
-            IMask<TItem>
-        {
-            #region Ctors
-            public Mask(TItem initialValue)
-            {
-                this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>(initialValue, new InstanceNamingRuleProperties.Mask<TItem>(initialValue));
-                this.Index = initialValue;
-            }
-
-            public Mask(
-                TItem Name,
-                TItem Keywords,
-                TItem Properties,
-                TItem Index)
-            {
-                this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>(Properties, new InstanceNamingRuleProperties.Mask<TItem>(Properties));
-                this.Index = Index;
-            }
-
-            #pragma warning disable CS8618
-            protected Mask()
-            {
-            }
-            #pragma warning restore CS8618
-
-            #endregion
-
-            #region Members
-            public TItem Name;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>? Properties { get; set; }
-            public TItem Index;
-            #endregion
-
-            #region Equals
-            public override bool Equals(object? obj)
-            {
-                if (!(obj is Mask<TItem> rhs)) return false;
-                return Equals(rhs);
-            }
-
-            public bool Equals(Mask<TItem>? rhs)
-            {
-                if (rhs == null) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Properties, rhs.Properties)) return false;
-                if (!object.Equals(this.Index, rhs.Index)) return false;
-                return true;
-            }
-            public override int GetHashCode()
-            {
-                var hash = new HashCode();
-                hash.Add(this.Name);
-                hash.Add(this.Keywords);
-                hash.Add(this.Properties);
-                hash.Add(this.Index);
-                return hash.ToHashCode();
-            }
-
-            #endregion
-
-            #region All
-            public bool All(Func<TItem, bool> eval)
-            {
-                if (!eval(this.Name)) return false;
-                if (this.Keywords != null)
-                {
-                    if (!eval(this.Keywords.Overall)) return false;
-                    if (this.Keywords.Specific != null)
-                    {
-                        foreach (var item in this.Keywords.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (Properties != null)
-                {
-                    if (!eval(this.Properties.Overall)) return false;
-                    if (this.Properties.Specific != null && !this.Properties.Specific.All(eval)) return false;
-                }
-                if (!eval(this.Index)) return false;
-                return true;
-            }
-            #endregion
-
-            #region Any
-            public bool Any(Func<TItem, bool> eval)
-            {
-                if (eval(this.Name)) return true;
-                if (this.Keywords != null)
-                {
-                    if (eval(this.Keywords.Overall)) return true;
-                    if (this.Keywords.Specific != null)
-                    {
-                        foreach (var item in this.Keywords.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (Properties != null)
-                {
-                    if (eval(this.Properties.Overall)) return true;
-                    if (this.Properties.Specific != null && this.Properties.Specific.Any(eval)) return true;
-                }
-                if (eval(this.Index)) return true;
-                return false;
-            }
-            #endregion
-
-            #region Translate
-            public Mask<R> Translate<R>(Func<TItem, R> eval)
-            {
-                var ret = new InstanceNamingRule.Mask<R>();
-                this.Translate_InternalFill(ret, eval);
-                return ret;
-            }
-
-            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
-            {
-                obj.Name = eval(this.Name);
-                if (Keywords != null)
-                {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (Keywords.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
-                obj.Properties = this.Properties == null ? null : new MaskItem<R, InstanceNamingRuleProperties.Mask<R>?>(eval(this.Properties.Overall), this.Properties.Specific?.Translate(eval));
-                obj.Index = eval(this.Index);
-            }
-            #endregion
-
-            #region To String
-            public override string ToString() => this.Print();
-
-            public string Print(InstanceNamingRule.Mask<bool>? printMask = null)
-            {
-                var sb = new StructuredStringBuilder();
-                Print(sb, printMask);
-                return sb.ToString();
-            }
-
-            public void Print(StructuredStringBuilder sb, InstanceNamingRule.Mask<bool>? printMask = null)
-            {
-                sb.AppendLine($"{nameof(InstanceNamingRule.Mask<TItem>)} =>");
-                using (sb.Brace())
-                {
-                    if (printMask?.Name ?? true)
-                    {
-                        sb.AppendItem(Name, "Name");
-                    }
-                    if ((printMask?.Keywords?.Overall ?? true)
-                        && Keywords is {} KeywordsItem)
-                    {
-                        sb.AppendLine("Keywords =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(KeywordsItem.Overall);
-                            if (KeywordsItem.Specific != null)
-                            {
-                                foreach (var subItem in KeywordsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (printMask?.Properties?.Overall ?? true)
-                    {
-                        Properties?.Print(sb);
-                    }
-                    if (printMask?.Index ?? true)
-                    {
-                        sb.AppendItem(Index, "Index");
-                    }
-                }
-            }
-            #endregion
-
-        }
-
-        public class ErrorMask :
-            IErrorMask,
-            IErrorMask<ErrorMask>
-        {
-            #region Members
-            public Exception? Overall { get; set; }
-            private List<string>? _warnings;
-            public List<string> Warnings
-            {
-                get
-                {
-                    if (_warnings == null)
-                    {
-                        _warnings = new List<string>();
-                    }
-                    return _warnings;
-                }
-            }
-            public Exception? Name;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, InstanceNamingRuleProperties.ErrorMask?>? Properties;
-            public Exception? Index;
-            #endregion
-
-            #region IErrorMask
-            public object? GetNthMask(int index)
-            {
-                InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
-                switch (enu)
-                {
-                    case InstanceNamingRule_FieldIndex.Name:
-                        return Name;
-                    case InstanceNamingRule_FieldIndex.Keywords:
-                        return Keywords;
-                    case InstanceNamingRule_FieldIndex.Properties:
-                        return Properties;
-                    case InstanceNamingRule_FieldIndex.Index:
-                        return Index;
-                    default:
-                        throw new ArgumentException($"Index is out of range: {index}");
-                }
-            }
-
-            public void SetNthException(int index, Exception ex)
-            {
-                InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
-                switch (enu)
-                {
-                    case InstanceNamingRule_FieldIndex.Name:
-                        this.Name = ex;
-                        break;
-                    case InstanceNamingRule_FieldIndex.Keywords:
-                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                        break;
-                    case InstanceNamingRule_FieldIndex.Properties:
-                        this.Properties = new MaskItem<Exception?, InstanceNamingRuleProperties.ErrorMask?>(ex, null);
-                        break;
-                    case InstanceNamingRule_FieldIndex.Index:
-                        this.Index = ex;
-                        break;
-                    default:
-                        throw new ArgumentException($"Index is out of range: {index}");
-                }
-            }
-
-            public void SetNthMask(int index, object obj)
-            {
-                InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
-                switch (enu)
-                {
-                    case InstanceNamingRule_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
-                        break;
-                    case InstanceNamingRule_FieldIndex.Keywords:
-                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                        break;
-                    case InstanceNamingRule_FieldIndex.Properties:
-                        this.Properties = (MaskItem<Exception?, InstanceNamingRuleProperties.ErrorMask?>?)obj;
-                        break;
-                    case InstanceNamingRule_FieldIndex.Index:
-                        this.Index = (Exception?)obj;
-                        break;
-                    default:
-                        throw new ArgumentException($"Index is out of range: {index}");
-                }
-            }
-
-            public bool IsInError()
-            {
-                if (Overall != null) return true;
-                if (Name != null) return true;
-                if (Keywords != null) return true;
-                if (Properties != null) return true;
-                if (Index != null) return true;
-                return false;
-            }
-            #endregion
-
-            #region To String
-            public override string ToString() => this.Print();
-
-            public void Print(StructuredStringBuilder sb, string? name = null)
-            {
-                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
-                using (sb.Brace())
-                {
-                    if (this.Overall != null)
-                    {
-                        sb.AppendLine("Overall =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendLine($"{this.Overall}");
-                        }
-                    }
-                    PrintFillInternal(sb);
-                }
-            }
-            protected void PrintFillInternal(StructuredStringBuilder sb)
-            {
-                {
-                    sb.AppendItem(Name, "Name");
-                }
-                if (Keywords is {} KeywordsItem)
-                {
-                    sb.AppendLine("Keywords =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(KeywordsItem.Overall);
-                        if (KeywordsItem.Specific != null)
-                        {
-                            foreach (var subItem in KeywordsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Properties?.Print(sb);
-                {
-                    sb.AppendItem(Index, "Index");
-                }
-            }
-            #endregion
-
-            #region Combine
-            public ErrorMask Combine(ErrorMask? rhs)
-            {
-                if (rhs == null) return this;
-                var ret = new ErrorMask();
-                ret.Name = this.Name.Combine(rhs.Name);
-                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Properties = this.Properties.Combine(rhs.Properties, (l, r) => l.Combine(r));
-                ret.Index = this.Index.Combine(rhs.Index);
-                return ret;
-            }
-            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
-            {
-                if (lhs != null && rhs != null) return lhs.Combine(rhs);
-                return lhs ?? rhs;
-            }
-            #endregion
-
-            #region Factory
-            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
-            {
-                return new ErrorMask();
-            }
-            #endregion
-
-        }
-        public class TranslationMask : ITranslationMask
-        {
-            #region Members
-            private TranslationCrystal? _crystal;
-            public readonly bool DefaultOn;
-            public bool OnOverall;
-            public bool Name;
-            public bool Keywords;
-            public InstanceNamingRuleProperties.TranslationMask? Properties;
-            public bool Index;
-            #endregion
-
-            #region Ctors
-            public TranslationMask(
-                bool defaultOn,
-                bool onOverall = true)
-            {
-                this.DefaultOn = defaultOn;
-                this.OnOverall = onOverall;
-                this.Name = defaultOn;
-                this.Keywords = defaultOn;
-                this.Index = defaultOn;
-            }
-
-            #endregion
-
-            public TranslationCrystal GetCrystal()
-            {
-                if (_crystal != null) return _crystal;
-                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
-                GetCrystal(ret);
-                _crystal = new TranslationCrystal(ret.ToArray());
-                return _crystal;
-            }
-
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                ret.Add((Name, null));
-                ret.Add((Keywords, null));
-                ret.Add((Properties != null ? Properties.OnOverall : DefaultOn, Properties?.GetCrystal()));
-                ret.Add((Index, null));
-            }
-
-            public static implicit operator TranslationMask(bool defaultOn)
-            {
-                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
-            }
-
-        }
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRuleSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon<T>.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRuleSetterCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -607,12 +148,12 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static InstanceNamingRule CreateFromBinary(
+        public static InstanceNamingRule<T> CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new InstanceNamingRule();
-            ((InstanceNamingRuleSetterCommon)((IInstanceNamingRuleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new InstanceNamingRule<T>();
+            ((InstanceNamingRuleSetterCommon<T>)((IInstanceNamingRuleGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -623,7 +164,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out InstanceNamingRule item,
+            out InstanceNamingRule<T> item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -638,71 +179,57 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((InstanceNamingRuleSetterCommon)((IInstanceNamingRuleGetter)this).CommonSetterInstance()!).Clear(this);
+            ((InstanceNamingRuleSetterCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonSetterInstance(typeof(T))!).Clear(this);
         }
 
-        internal static InstanceNamingRule GetNew()
+        internal static InstanceNamingRule<T> GetNew()
         {
-            return new InstanceNamingRule();
+            return new InstanceNamingRule<T>();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IInstanceNamingRule :
+    public partial interface IInstanceNamingRule<T> :
         IFormLinkContainer,
-        IInstanceNamingRuleGetter,
+        IInstanceNamingRuleGetter<T>,
         IKeyworded<IKeywordGetter>,
-        ILoquiObjectSetter<IInstanceNamingRule>,
-        INamed,
-        INamedRequired,
-        ITranslatedNamed,
-        ITranslatedNamedRequired
+        ILoquiObjectSetter<IInstanceNamingRule<T>>
+        where T : struct, Enum
     {
-        /// <summary>
-        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
-        /// </summary>
-        new TranslatedString? Name { get; set; }
+        new TranslatedString? Text { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new InstanceNamingRuleProperties? Properties { get; set; }
+        new InstanceNamingRuleProperty<T>? Property { get; set; }
         new UInt16? Index { get; set; }
     }
 
-    public partial interface IInstanceNamingRuleGetter :
+    public partial interface IInstanceNamingRuleGetter<out T> :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
-        ILoquiObject<IInstanceNamingRuleGetter>,
-        INamedGetter,
-        INamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ITranslatedNamedRequiredGetter
+        ILoquiObject<IInstanceNamingRuleGetter<T>>
+        where T : struct, Enum
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object CommonInstance();
+        object CommonInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        object? CommonSetterInstance();
+        object? CommonSetterInstance(Type type0);
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
-        #region Name
-        /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
-        /// </summary>
-        ITranslatedStringGetter? Name { get; }
-        #endregion
+        ITranslatedStringGetter? Text { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        IInstanceNamingRulePropertiesGetter? Properties { get; }
+        IInstanceNamingRulePropertyGetter<T>? Property { get; }
         UInt16? Index { get; }
 
     }
@@ -712,62 +239,79 @@ namespace Mutagen.Bethesda.Starfield
     #region Common MixIn
     public static partial class InstanceNamingRuleMixIn
     {
-        public static void Clear(this IInstanceNamingRule item)
+        public static void Clear<T>(this IInstanceNamingRule<T> item)
+            where T : struct, Enum
         {
-            ((InstanceNamingRuleSetterCommon)((IInstanceNamingRuleGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((InstanceNamingRuleSetterCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonSetterInstance(typeof(T))!).Clear(item: item);
         }
 
-        public static InstanceNamingRule.Mask<bool> GetEqualsMask(
-            this IInstanceNamingRuleGetter item,
-            IInstanceNamingRuleGetter rhs,
+        public static InstanceNamingRule.Mask<bool> GetEqualsMask<T>(
+            this IInstanceNamingRuleGetter<T> item,
+            IInstanceNamingRuleGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
+            where T : struct, Enum
         {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
-        public static string Print(
-            this IInstanceNamingRuleGetter item,
+        public static string Print<T>(
+            this IInstanceNamingRuleGetter<T> item,
             string? name = null,
             InstanceNamingRule.Mask<bool>? printMask = null)
+            where T : struct, Enum
         {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).Print(
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void Print(
-            this IInstanceNamingRuleGetter item,
+        public static void Print<T>(
+            this IInstanceNamingRuleGetter<T> item,
             StructuredStringBuilder sb,
             string? name = null,
             InstanceNamingRule.Mask<bool>? printMask = null)
+            where T : struct, Enum
         {
-            ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).Print(
+            ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 sb: sb,
                 name: name,
                 printMask: printMask);
         }
 
-        public static bool Equals(
-            this IInstanceNamingRuleGetter item,
-            IInstanceNamingRuleGetter rhs,
-            InstanceNamingRule.TranslationMask? equalsMask = null)
+        public static bool Equals<T>(
+            this IInstanceNamingRuleGetter<T> item,
+            IInstanceNamingRuleGetter<T> rhs)
+            where T : struct, Enum
         {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).Equals(
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
                 rhs: rhs,
-                equalsMask: equalsMask?.GetCrystal());
+                equalsMask: null);
         }
 
-        public static void DeepCopyIn(
-            this IInstanceNamingRule lhs,
-            IInstanceNamingRuleGetter rhs)
+        public static bool Equals<T>(
+            this IInstanceNamingRuleGetter<T> item,
+            IInstanceNamingRuleGetter<T> rhs,
+            InstanceNamingRule.TranslationMask equalsMask)
+            where T : struct, Enum
         {
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+                lhs: item,
+                rhs: rhs,
+                equalsMask: equalsMask.GetCrystal());
+        }
+
+        public static void DeepCopyIn<T>(
+            this IInstanceNamingRule<T> lhs,
+            IInstanceNamingRuleGetter<T> rhs)
+            where T : struct, Enum
+        {
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -775,12 +319,13 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static void DeepCopyIn(
-            this IInstanceNamingRule lhs,
-            IInstanceNamingRuleGetter rhs,
+        public static void DeepCopyIn<T>(
+            this IInstanceNamingRule<T> lhs,
+            IInstanceNamingRuleGetter<T> rhs,
             InstanceNamingRule.TranslationMask? copyMask = null)
+            where T : struct, Enum
         {
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -788,14 +333,15 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static void DeepCopyIn(
-            this IInstanceNamingRule lhs,
-            IInstanceNamingRuleGetter rhs,
+        public static void DeepCopyIn<T>(
+            this IInstanceNamingRule<T> lhs,
+            IInstanceNamingRuleGetter<T> rhs,
             out InstanceNamingRule.ErrorMask errorMask,
             InstanceNamingRule.TranslationMask? copyMask = null)
+            where T : struct, Enum
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
@@ -804,13 +350,14 @@ namespace Mutagen.Bethesda.Starfield
             errorMask = InstanceNamingRule.ErrorMask.Factory(errorMaskBuilder);
         }
 
-        public static void DeepCopyIn(
-            this IInstanceNamingRule lhs,
-            IInstanceNamingRuleGetter rhs,
+        public static void DeepCopyIn<T>(
+            this IInstanceNamingRule<T> lhs,
+            IInstanceNamingRuleGetter<T> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
+            where T : struct, Enum
         {
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -818,44 +365,48 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static InstanceNamingRule DeepCopy(
-            this IInstanceNamingRuleGetter item,
+        public static InstanceNamingRule<T> DeepCopy<T>(
+            this IInstanceNamingRuleGetter<T> item,
             InstanceNamingRule.TranslationMask? copyMask = null)
+            where T : struct, Enum
         {
-            return ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)item).CommonSetterTranslationInstance()!).DeepCopy<T>(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static InstanceNamingRule DeepCopy(
-            this IInstanceNamingRuleGetter item,
+        public static InstanceNamingRule<T> DeepCopy<T>(
+            this IInstanceNamingRuleGetter<T> item,
             out InstanceNamingRule.ErrorMask errorMask,
             InstanceNamingRule.TranslationMask? copyMask = null)
+            where T : struct, Enum
         {
-            return ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)item).CommonSetterTranslationInstance()!).DeepCopy<T>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static InstanceNamingRule DeepCopy(
-            this IInstanceNamingRuleGetter item,
+        public static InstanceNamingRule<T> DeepCopy<T>(
+            this IInstanceNamingRuleGetter<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
+            where T : struct, Enum
         {
-            return ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)item).CommonSetterTranslationInstance()!).DeepCopy<T>(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Binary Translation
-        public static void CopyInFromBinary(
-            this IInstanceNamingRule item,
+        public static void CopyInFromBinary<T>(
+            this IInstanceNamingRule<T> item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
+            where T : struct, Enum
         {
-            ((InstanceNamingRuleSetterCommon)((IInstanceNamingRuleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((InstanceNamingRuleSetterCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -873,9 +424,9 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum InstanceNamingRule_FieldIndex
     {
-        Name = 0,
+        Text = 0,
         Keywords = 1,
-        Properties = 2,
+        Property = 2,
         Index = 3,
     }
     #endregion
@@ -895,13 +446,13 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type ErrorMaskType = typeof(InstanceNamingRule.ErrorMask);
 
-        public static readonly Type ClassType = typeof(InstanceNamingRule);
+        public static readonly Type ClassType = typeof(InstanceNamingRule<>);
 
-        public static readonly Type GetterType = typeof(IInstanceNamingRuleGetter);
+        public static readonly Type GetterType = typeof(IInstanceNamingRuleGetter<>);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IInstanceNamingRule);
+        public static readonly Type SetterType = typeof(IInstanceNamingRule<>);
 
         public static readonly Type? InternalSetterType = null;
 
@@ -911,9 +462,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
-        public const byte GenericCount = 0;
+        public const byte GenericCount = 1;
 
-        public static readonly Type? GenericRegistrationType = null;
+        public static readonly Type? GenericRegistrationType = typeof(InstanceNamingRule_Registration<>);
 
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
@@ -954,26 +505,34 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
     }
+
+    internal class InstanceNamingRule_Registration<T> : InstanceNamingRule_Registration
+        where T : struct, Enum
+    {
+        public static readonly InstanceNamingRule_Registration<T> GenericInstance = new InstanceNamingRule_Registration<T>();
+
+    }
     #endregion
 
     #region Common
-    internal partial class InstanceNamingRuleSetterCommon
+    internal partial class InstanceNamingRuleSetterCommon<T>
+        where T : struct, Enum
     {
-        public static readonly InstanceNamingRuleSetterCommon Instance = new InstanceNamingRuleSetterCommon();
+        public static readonly InstanceNamingRuleSetterCommon<T> Instance = new InstanceNamingRuleSetterCommon<T>();
 
         partial void ClearPartial();
         
-        public void Clear(IInstanceNamingRule item)
+        public void Clear(IInstanceNamingRule<T> item)
         {
             ClearPartial();
-            item.Name = default;
+            item.Text = default;
             item.Keywords = null;
-            item.Properties = null;
+            item.Property = null;
             item.Index = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IInstanceNamingRule obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IInstanceNamingRule<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Keywords?.RemapLinks(mapping);
         }
@@ -982,7 +541,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IInstanceNamingRule item,
+            IInstanceNamingRule<T> item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -990,23 +549,24 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: InstanceNamingRuleBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: InstanceNamingRuleBinaryCreateTranslation<T>.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class InstanceNamingRuleCommon
+    internal partial class InstanceNamingRuleCommon<T>
+        where T : struct, Enum
     {
-        public static readonly InstanceNamingRuleCommon Instance = new InstanceNamingRuleCommon();
+        public static readonly InstanceNamingRuleCommon<T> Instance = new InstanceNamingRuleCommon<T>();
 
         public InstanceNamingRule.Mask<bool> GetEqualsMask(
-            IInstanceNamingRuleGetter item,
-            IInstanceNamingRuleGetter rhs,
+            IInstanceNamingRuleGetter<T> item,
+            IInstanceNamingRuleGetter<T> rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new InstanceNamingRule.Mask<bool>(false);
-            ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).FillEqualsMask(
+            ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1015,26 +575,26 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IInstanceNamingRuleGetter item,
-            IInstanceNamingRuleGetter rhs,
+            IInstanceNamingRuleGetter<T> item,
+            IInstanceNamingRuleGetter<T> rhs,
             InstanceNamingRule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Text = object.Equals(item.Text, rhs.Text);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Properties = EqualsMaskHelper.EqualsHelper(
-                item.Properties,
-                rhs.Properties,
+            ret.Property = EqualsMaskHelper.EqualsHelper(
+                item.Property,
+                rhs.Property,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Index = item.Index == rhs.Index;
         }
         
         public string Print(
-            IInstanceNamingRuleGetter item,
+            IInstanceNamingRuleGetter<T> item,
             string? name = null,
             InstanceNamingRule.Mask<bool>? printMask = null)
         {
@@ -1048,18 +608,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IInstanceNamingRuleGetter item,
+            IInstanceNamingRuleGetter<T> item,
             StructuredStringBuilder sb,
             string? name = null,
             InstanceNamingRule.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"InstanceNamingRule =>");
+                sb.AppendLine($"InstanceNamingRule<{typeof(T).Name}> =>");
             }
             else
             {
-                sb.AppendLine($"{name} (InstanceNamingRule) =>");
+                sb.AppendLine($"{name} (InstanceNamingRule<{typeof(T).Name}>) =>");
             }
             using (sb.Brace())
             {
@@ -1071,14 +631,14 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IInstanceNamingRuleGetter item,
+            IInstanceNamingRuleGetter<T> item,
             StructuredStringBuilder sb,
             InstanceNamingRule.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
+            if ((printMask?.Text ?? true)
+                && item.Text is {} TextItem)
             {
-                sb.AppendItem(NameItem, "Name");
+                sb.AppendItem(TextItem, "Text");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
@@ -1095,10 +655,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.Properties?.Overall ?? true)
-                && item.Properties is {} PropertiesItem)
+            if ((printMask?.Property?.Overall ?? true)
+                && item.Property is {} PropertyItem)
             {
-                PropertiesItem?.Print(sb, "Properties");
+                PropertyItem?.Print(sb, "Property");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
@@ -1109,26 +669,26 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IInstanceNamingRuleGetter? lhs,
-            IInstanceNamingRuleGetter? rhs,
+            IInstanceNamingRuleGetter<T>? lhs,
+            IInstanceNamingRuleGetter<T>? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Text) ?? true))
             {
-                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Property) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Properties, rhs.Properties, out var lhsProperties, out var rhsProperties, out var isPropertiesEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.Property, rhs.Property, out var lhsProperty, out var rhsProperty, out var isPropertyEqual))
                 {
-                    if (!((InstanceNamingRulePropertiesCommon)((IInstanceNamingRulePropertiesGetter)lhsProperties).CommonInstance()!).Equals(lhsProperties, rhsProperties, equalsMask?.GetSubCrystal((int)InstanceNamingRule_FieldIndex.Properties))) return false;
+                    if (!object.Equals(lhsProperty, rhsProperty)) return false;
                 }
-                else if (!isPropertiesEqual) return false;
+                else if (!isPropertyEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Index) ?? true))
             {
@@ -1137,17 +697,17 @@ namespace Mutagen.Bethesda.Starfield
             return true;
         }
         
-        public virtual int GetHashCode(IInstanceNamingRuleGetter item)
+        public virtual int GetHashCode(IInstanceNamingRuleGetter<T> item)
         {
             var hash = new HashCode();
-            if (item.Name is {} Nameitem)
+            if (item.Text is {} Textitem)
             {
-                hash.Add(Nameitem);
+                hash.Add(Textitem);
             }
             hash.Add(item.Keywords);
-            if (item.Properties is {} Propertiesitem)
+            if (item.Property is {} Propertyitem)
             {
-                hash.Add(Propertiesitem);
+                hash.Add(Propertyitem);
             }
             if (item.Index is {} Indexitem)
             {
@@ -1159,13 +719,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
         
-        public object GetNew()
+        public object GetNew<T_Setter>()
+            where T_Setter : struct, Enum
         {
-            return InstanceNamingRule.GetNew();
+            return InstanceNamingRule<T_Setter>.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleGetter<T> obj)
         {
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -1185,16 +746,17 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly InstanceNamingRuleSetterTranslationCommon Instance = new InstanceNamingRuleSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
-            IInstanceNamingRule item,
-            IInstanceNamingRuleGetter rhs,
+        public void DeepCopyIn<T>(
+            IInstanceNamingRule<T> item,
+            IInstanceNamingRuleGetter<T> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
+            where T : struct, Enum
         {
-            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Text) ?? true))
             {
-                item.Name = rhs.Name?.DeepCopy();
+                item.Text = rhs.Text?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Keywords) ?? true))
             {
@@ -1223,20 +785,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Properties) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRule_FieldIndex.Property) ?? true))
             {
-                errorMask?.PushIndex((int)InstanceNamingRule_FieldIndex.Properties);
+                errorMask?.PushIndex((int)InstanceNamingRule_FieldIndex.Property);
                 try
                 {
-                    if(rhs.Properties is {} rhsProperties)
+                    if(rhs.Property is {} rhsProperty)
                     {
-                        item.Properties = rhsProperties.DeepCopy(
+                        item.Property = rhsProperty.DeepCopy<T>(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)InstanceNamingRule_FieldIndex.Properties));
+                            copyMask?.GetSubCrystal((int)InstanceNamingRule_FieldIndex.Property));
                     }
                     else
                     {
-                        item.Properties = default;
+                        item.Property = default;
                     }
                 }
                 catch (Exception ex)
@@ -1253,7 +815,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Index = rhs.Index;
             }
-            DeepCopyInCustom(
+            DeepCopyInCustom<T>(
                 item: item,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1261,20 +823,22 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
         }
         
-        partial void DeepCopyInCustom(
-            IInstanceNamingRule item,
-            IInstanceNamingRuleGetter rhs,
+        partial void DeepCopyInCustom<T>(
+            IInstanceNamingRule<T> item,
+            IInstanceNamingRuleGetter<T> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
-            bool deepCopy);
+            bool deepCopy)
+            where T : struct, Enum;
         #endregion
         
-        public InstanceNamingRule DeepCopy(
-            IInstanceNamingRuleGetter item,
+        public InstanceNamingRule<T> DeepCopy<T>(
+            IInstanceNamingRuleGetter<T> item,
             InstanceNamingRule.TranslationMask? copyMask = null)
+            where T : struct, Enum
         {
-            InstanceNamingRule ret = (InstanceNamingRule)((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).GetNew();
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRule<T> ret = (InstanceNamingRule<T>)((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1283,14 +847,15 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public InstanceNamingRule DeepCopy(
-            IInstanceNamingRuleGetter item,
+        public InstanceNamingRule<T> DeepCopy<T>(
+            IInstanceNamingRuleGetter<T> item,
             out InstanceNamingRule.ErrorMask errorMask,
             InstanceNamingRule.TranslationMask? copyMask = null)
+            where T : struct, Enum
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            InstanceNamingRule ret = (InstanceNamingRule)((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).GetNew();
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRule<T> ret = (InstanceNamingRule<T>)((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
@@ -1300,13 +865,14 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public InstanceNamingRule DeepCopy(
-            IInstanceNamingRuleGetter item,
+        public InstanceNamingRule<T> DeepCopy<T>(
+            IInstanceNamingRuleGetter<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
+            where T : struct, Enum
         {
-            InstanceNamingRule ret = (InstanceNamingRule)((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)item).CommonInstance()!).GetNew();
-            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            InstanceNamingRule<T> ret = (InstanceNamingRule<T>)((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)item).CommonInstance(typeof(T))!).GetNew<T>();
+            ((InstanceNamingRuleSetterTranslationCommon)((IInstanceNamingRuleGetter<T>)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1322,27 +888,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class InstanceNamingRule
+    public partial class InstanceNamingRule<T>
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InstanceNamingRule_Registration.Instance;
         public static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => InstanceNamingRuleCommon.Instance;
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(InstanceNamingRuleCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected object CommonSetterInstance(Type type0)
         {
-            return InstanceNamingRuleSetterCommon.Instance;
+            return GenericCommonInstanceGetter.Get(InstanceNamingRuleSetterCommon<T>.Instance, typeof(T), type0);
         }
         [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => InstanceNamingRuleSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IInstanceNamingRuleGetter.CommonInstance() => this.CommonInstance();
+        object IInstanceNamingRuleGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object IInstanceNamingRuleGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IInstanceNamingRuleGetter<T>.CommonSetterInstance(Type type0) => this.CommonSetterInstance(type0);
         [DebuggerStepThrough]
-        object IInstanceNamingRuleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IInstanceNamingRuleGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1357,14 +923,15 @@ namespace Mutagen.Bethesda.Starfield
     {
         public static readonly InstanceNamingRuleBinaryWriteTranslation Instance = new();
 
-        public static void WriteRecordTypes(
-            IInstanceNamingRuleGetter item,
+        public static void WriteRecordTypes<T>(
+            IInstanceNamingRuleGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
+            where T : struct, Enum
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Name,
+                item: item.Text,
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
@@ -1380,10 +947,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.Properties is {} PropertiesItem)
+            if (item.Property is {} PropertyItem)
             {
-                ((InstanceNamingRulePropertiesBinaryWriteTranslation)((IBinaryItem)PropertiesItem).BinaryWriteTranslator).Write(
-                    item: PropertiesItem,
+                ((InstanceNamingRulePropertyBinaryWriteTranslation)((IBinaryItem)PropertyItem).BinaryWriteTranslator).Write<T>(
+                    item: PropertyItem,
                     writer: writer,
                     translationParams: translationParams);
             }
@@ -1393,10 +960,11 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.YNAM));
         }
 
-        public void Write(
+        public void Write<T>(
             MutagenWriter writer,
-            IInstanceNamingRuleGetter item,
+            IInstanceNamingRuleGetter<T> item,
             TypedWriteParams translationParams)
+            where T : struct, Enum
         {
             WriteRecordTypes(
                 item: item,
@@ -1409,20 +977,18 @@ namespace Mutagen.Bethesda.Starfield
             object item,
             TypedWriteParams translationParams = default)
         {
-            Write(
-                item: (IInstanceNamingRuleGetter)item,
-                writer: writer,
-                translationParams: translationParams);
+            throw new NotImplementedException();
         }
 
     }
 
-    internal partial class InstanceNamingRuleBinaryCreateTranslation
+    internal partial class InstanceNamingRuleBinaryCreateTranslation<T>
+        where T : struct, Enum
     {
-        public static readonly InstanceNamingRuleBinaryCreateTranslation Instance = new InstanceNamingRuleBinaryCreateTranslation();
+        public static readonly InstanceNamingRuleBinaryCreateTranslation<T> Instance = new InstanceNamingRuleBinaryCreateTranslation<T>();
 
         public static ParseResult FillBinaryRecordTypes(
-            IInstanceNamingRule item,
+            IInstanceNamingRule<T> item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1435,15 +1001,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Name, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Text, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
+                    item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)InstanceNamingRule_FieldIndex.Name;
+                    return (int)InstanceNamingRule_FieldIndex.Text;
                 }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
@@ -1461,9 +1027,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Properties, translationParams)) return ParseResult.Stop;
-                    item.Properties = Mutagen.Bethesda.Starfield.InstanceNamingRuleProperties.CreateFromBinary(frame: frame);
-                    return (int)InstanceNamingRule_FieldIndex.Properties;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Property, translationParams)) return ParseResult.Stop;
+                    item.Property = Mutagen.Bethesda.Starfield.InstanceNamingRuleProperty<T>.CreateFromBinary(frame: frame);
+                    return (int)InstanceNamingRule_FieldIndex.Property;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -1485,10 +1051,11 @@ namespace Mutagen.Bethesda.Starfield
     #region Binary Write Mixins
     public static class InstanceNamingRuleBinaryTranslationMixIn
     {
-        public static void WriteToBinary(
-            this IInstanceNamingRuleGetter item,
+        public static void WriteToBinary<T>(
+            this IInstanceNamingRuleGetter<T> item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
+            where T : struct, Enum
         {
             ((InstanceNamingRuleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1503,30 +1070,31 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class InstanceNamingRuleBinaryOverlay :
+    internal partial class InstanceNamingRuleBinaryOverlay<T> :
         PluginBinaryOverlay,
-        IInstanceNamingRuleGetter
+        IInstanceNamingRuleGetter<T>
+        where T : struct, Enum
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InstanceNamingRule_Registration.Instance;
         public static ILoquiRegistration StaticRegistration => InstanceNamingRule_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => InstanceNamingRuleCommon.Instance;
+        protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(InstanceNamingRuleCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
         protected object CommonSetterTranslationInstance() => InstanceNamingRuleSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IInstanceNamingRuleGetter.CommonInstance() => this.CommonInstance();
+        object IInstanceNamingRuleGetter<T>.CommonInstance(Type type0) => this.CommonInstance(type0);
         [DebuggerStepThrough]
-        object? IInstanceNamingRuleGetter.CommonSetterInstance() => null;
+        object? IInstanceNamingRuleGetter<T>.CommonSetterInstance(Type type0) => null;
         [DebuggerStepThrough]
-        object IInstanceNamingRuleGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IInstanceNamingRuleGetter<T>.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon<T>.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => InstanceNamingRuleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1541,25 +1109,17 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region Name
-        private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamedGetter.Name => this.Name?.String;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        #endregion
+        #region Text
+        private int? _TextLocation;
+        public ITranslatedStringGetter? Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        #region Properties
-        private RangeInt32? _PropertiesLocation;
-        public IInstanceNamingRulePropertiesGetter? Properties => _PropertiesLocation.HasValue ? InstanceNamingRulePropertiesBinaryOverlay.InstanceNamingRulePropertiesFactory(_recordData.Slice(_PropertiesLocation!.Value.Min), _package) : default;
+        #region Property
+        private RangeInt32? _PropertyLocation;
+        public IInstanceNamingRulePropertyGetter<T>? Property => _PropertyLocation.HasValue ? InstanceNamingRulePropertyBinaryOverlay<T>.InstanceNamingRulePropertyFactory(_recordData.Slice(_PropertyLocation!.Value.Min), _package) : default;
         #endregion
         #region Index
         private int? _IndexLocation;
@@ -1581,7 +1141,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IInstanceNamingRuleGetter InstanceNamingRuleFactory(
+        public static IInstanceNamingRuleGetter<T> InstanceNamingRuleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1593,7 +1153,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new InstanceNamingRuleBinaryOverlay(
+            var ret = new InstanceNamingRuleBinaryOverlay<T>(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1605,7 +1165,7 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IInstanceNamingRuleGetter InstanceNamingRuleFactory(
+        public static IInstanceNamingRuleGetter<T> InstanceNamingRuleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1630,9 +1190,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Name, translationParams)) return ParseResult.Stop;
-                    _NameLocation = (stream.Position - offset);
-                    return (int)InstanceNamingRule_FieldIndex.Name;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Text, translationParams)) return ParseResult.Stop;
+                    _TextLocation = (stream.Position - offset);
+                    return (int)InstanceNamingRule_FieldIndex.Text;
                 }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
@@ -1650,9 +1210,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Properties, translationParams)) return ParseResult.Stop;
-                    _PropertiesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)InstanceNamingRule_FieldIndex.Properties;
+                    if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Property, translationParams)) return ParseResult.Stop;
+                    _PropertyLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)InstanceNamingRule_FieldIndex.Property;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -1681,16 +1241,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IInstanceNamingRuleGetter rhs) return false;
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IInstanceNamingRuleGetter<T> rhs) return false;
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IInstanceNamingRuleGetter? obj)
+        public bool Equals(IInstanceNamingRuleGetter<T>? obj)
         {
-            return ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((InstanceNamingRuleCommon)((IInstanceNamingRuleGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((InstanceNamingRuleCommon<T>)((IInstanceNamingRuleGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
 
         #endregion
 
@@ -1701,3 +1261,435 @@ namespace Mutagen.Bethesda.Starfield
 
 #endregion
 
+namespace Mutagen.Bethesda.Starfield
+{
+    public static class InstanceNamingRule
+    {
+        public class Mask<TItem> :
+            IEquatable<Mask<TItem>>,
+            IMask<TItem>
+        {
+            #region Ctors
+            public Mask(TItem initialValue)
+            {
+                this.Text = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Property = new MaskItem<TItem, InstanceNamingRuleProperty.Mask<TItem>?>(initialValue, new InstanceNamingRuleProperty.Mask<TItem>(initialValue));
+                this.Index = initialValue;
+            }
+        
+            public Mask(
+                TItem Text,
+                TItem Keywords,
+                TItem Property,
+                TItem Index)
+            {
+                this.Text = Text;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Property = new MaskItem<TItem, InstanceNamingRuleProperty.Mask<TItem>?>(Property, new InstanceNamingRuleProperty.Mask<TItem>(Property));
+                this.Index = Index;
+            }
+        
+            #pragma warning disable CS8618
+            protected Mask()
+            {
+            }
+            #pragma warning restore CS8618
+        
+            #endregion
+        
+            #region Members
+            public TItem Text;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, InstanceNamingRuleProperty.Mask<TItem>?>? Property { get; set; }
+            public TItem Index;
+            #endregion
+        
+            #region Equals
+            public override bool Equals(object? obj)
+            {
+                if (!(obj is Mask<TItem> rhs)) return false;
+                return Equals(rhs);
+            }
+        
+            public bool Equals(Mask<TItem>? rhs)
+            {
+                if (rhs == null) return false;
+                if (!object.Equals(this.Text, rhs.Text)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Property, rhs.Property)) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                return true;
+            }
+            public override int GetHashCode()
+            {
+                var hash = new HashCode();
+                hash.Add(this.Text);
+                hash.Add(this.Keywords);
+                hash.Add(this.Property);
+                hash.Add(this.Index);
+                return hash.ToHashCode();
+            }
+        
+            #endregion
+        
+            #region All
+            public bool All(Func<TItem, bool> eval)
+            {
+                if (!eval(this.Text)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Property != null)
+                {
+                    if (!eval(this.Property.Overall)) return false;
+                    if (this.Property.Specific != null && !this.Property.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Index)) return false;
+                return true;
+            }
+            #endregion
+        
+            #region Any
+            public bool Any(Func<TItem, bool> eval)
+            {
+                if (eval(this.Text)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Property != null)
+                {
+                    if (eval(this.Property.Overall)) return true;
+                    if (this.Property.Specific != null && this.Property.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Index)) return true;
+                return false;
+            }
+            #endregion
+        
+            #region Translate
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
+            {
+                var ret = new InstanceNamingRule.Mask<R>();
+                this.Translate_InternalFill(ret, eval);
+                return ret;
+            }
+        
+            protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
+            {
+                obj.Text = eval(this.Text);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Property = this.Property == null ? null : new MaskItem<R, InstanceNamingRuleProperty.Mask<R>?>(eval(this.Property.Overall), this.Property.Specific?.Translate(eval));
+                obj.Index = eval(this.Index);
+            }
+            #endregion
+        
+            #region To String
+            public override string ToString() => this.Print();
+        
+            public string Print(InstanceNamingRule.Mask<bool>? printMask = null)
+            {
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
+            }
+        
+            public void Print(StructuredStringBuilder sb, InstanceNamingRule.Mask<bool>? printMask = null)
+            {
+                sb.AppendLine($"{nameof(InstanceNamingRule.Mask<TItem>)} =>");
+                using (sb.Brace())
+                {
+                    if (printMask?.Text ?? true)
+                    {
+                        sb.AppendItem(Text, "Text");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Property?.Overall ?? true)
+                    {
+                        Property?.Print(sb);
+                    }
+                    if (printMask?.Index ?? true)
+                    {
+                        sb.AppendItem(Index, "Index");
+                    }
+                }
+            }
+            #endregion
+        
+        }
+        
+        public class ErrorMask :
+            IErrorMask,
+            IErrorMask<ErrorMask>
+        {
+            #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public Exception? Text;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, InstanceNamingRuleProperty.ErrorMask?>? Property;
+            public Exception? Index;
+            #endregion
+        
+            #region IErrorMask
+            public object? GetNthMask(int index)
+            {
+                InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
+                switch (enu)
+                {
+                    case InstanceNamingRule_FieldIndex.Text:
+                        return Text;
+                    case InstanceNamingRule_FieldIndex.Keywords:
+                        return Keywords;
+                    case InstanceNamingRule_FieldIndex.Property:
+                        return Property;
+                    case InstanceNamingRule_FieldIndex.Index:
+                        return Index;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+        
+            public void SetNthException(int index, Exception ex)
+            {
+                InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
+                switch (enu)
+                {
+                    case InstanceNamingRule_FieldIndex.Text:
+                        this.Text = ex;
+                        break;
+                    case InstanceNamingRule_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case InstanceNamingRule_FieldIndex.Property:
+                        this.Property = new MaskItem<Exception?, InstanceNamingRuleProperty.ErrorMask?>(ex, null);
+                        break;
+                    case InstanceNamingRule_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+        
+            public void SetNthMask(int index, object obj)
+            {
+                InstanceNamingRule_FieldIndex enu = (InstanceNamingRule_FieldIndex)index;
+                switch (enu)
+                {
+                    case InstanceNamingRule_FieldIndex.Text:
+                        this.Text = (Exception?)obj;
+                        break;
+                    case InstanceNamingRule_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case InstanceNamingRule_FieldIndex.Property:
+                        this.Property = (MaskItem<Exception?, InstanceNamingRuleProperty.ErrorMask?>?)obj;
+                        break;
+                    case InstanceNamingRule_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+        
+            public bool IsInError()
+            {
+                if (Overall != null) return true;
+                if (Text != null) return true;
+                if (Keywords != null) return true;
+                if (Property != null) return true;
+                if (Index != null) return true;
+                return false;
+            }
+            #endregion
+        
+            #region To String
+            public override string ToString() => this.Print();
+        
+            public void Print(StructuredStringBuilder sb, string? name = null)
+            {
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
+                {
+                    if (this.Overall != null)
+                    {
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendLine($"{this.Overall}");
+                        }
+                    }
+                    PrintFillInternal(sb);
+                }
+            }
+            protected void PrintFillInternal(StructuredStringBuilder sb)
+            {
+                {
+                    sb.AppendItem(Text, "Text");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Property?.Print(sb);
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+            }
+            #endregion
+        
+            #region Combine
+            public ErrorMask Combine(ErrorMask? rhs)
+            {
+                if (rhs == null) return this;
+                var ret = new ErrorMask();
+                ret.Text = this.Text.Combine(rhs.Text);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Property = this.Property.Combine(rhs.Property, (l, r) => l.Combine(r));
+                ret.Index = this.Index.Combine(rhs.Index);
+                return ret;
+            }
+            public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
+            {
+                if (lhs != null && rhs != null) return lhs.Combine(rhs);
+                return lhs ?? rhs;
+            }
+            #endregion
+        
+            #region Factory
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
+            {
+                return new ErrorMask();
+            }
+            #endregion
+        
+        }
+        public class TranslationMask : ITranslationMask
+        {
+            #region Members
+            private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
+            public bool OnOverall;
+            public bool Text;
+            public bool Keywords;
+            public InstanceNamingRuleProperty.TranslationMask? Property;
+            public bool Index;
+            #endregion
+        
+            #region Ctors
+            public TranslationMask(
+                bool defaultOn,
+                bool onOverall = true)
+            {
+                this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
+                this.Text = defaultOn;
+                this.Keywords = defaultOn;
+                this.Index = defaultOn;
+            }
+        
+            #endregion
+        
+            public TranslationCrystal GetCrystal()
+            {
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+        
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Text, null));
+                ret.Add((Keywords, null));
+                ret.Add((Property != null ? Property.OnOverall : DefaultOn, Property?.GetCrystal()));
+                ret.Add((Index, null));
+            }
+        
+            public static implicit operator TranslationMask(bool defaultOn)
+            {
+                return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
+            }
+        
+        }
+    }
+}

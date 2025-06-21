@@ -21,7 +21,7 @@ public class EnumerateAssetLinkTests
             Name = scriptName
         };
         entry.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 new AssetLink<SkyrimScriptCompiledAssetType>(Path.Combine("Scripts", $"{scriptName}.pex")),
                     new AssetLink<SkyrimScriptSourceAssetType>(Path.Combine("Scripts", "Source", $"{scriptName}.psc")));
     }
@@ -43,7 +43,7 @@ public class EnumerateAssetLinkTests
             }
         };
         quest.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 new AssetLink<SkyrimScriptCompiledAssetType>(Path.Combine("Scripts", $"{scriptName}.pex")),
                 new AssetLink<SkyrimScriptSourceAssetType>(Path.Combine("Scripts", "Source", $"{scriptName}.psc")));
     }

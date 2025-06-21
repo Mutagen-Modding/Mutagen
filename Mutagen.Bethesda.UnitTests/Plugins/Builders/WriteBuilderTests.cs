@@ -64,7 +64,7 @@ public class WriteBuilderTests
             .WithFileSystem(fileSystem)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(masterModKey, extraMasterKey);
+            .ShouldEqualEnumerable(masterModKey, extraMasterKey);
     }
     
     [Theory, MutagenAutoData]
@@ -94,7 +94,7 @@ public class WriteBuilderTests
             .WithFileSystem(fileSystem)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(masterModKey, overrideMasterKey);
+            .ShouldEqualEnumerable(masterModKey, overrideMasterKey);
     }
     
     [Theory, MutagenAutoData]
@@ -144,7 +144,7 @@ public class WriteBuilderTests
             .WithFileSystem(fileSystem)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(transientMasterModKey, masterModKey);
+            .ShouldEqualEnumerable(transientMasterModKey, masterModKey);
     }
     
     [Theory, MutagenAutoData]
@@ -185,7 +185,7 @@ public class WriteBuilderTests
             .WithDataFolder(existingDataDir)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(transientMasterModKey, masterModKey);
+            .ShouldEqualEnumerable(transientMasterModKey, masterModKey);
     }
     
     [Theory, MutagenAutoData]
@@ -230,6 +230,6 @@ public class WriteBuilderTests
             .WithDataFolder(existingDataDir)
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(transientMasterModKey, masterModKey);
+            .ShouldEqualEnumerable(transientMasterModKey, masterModKey);
     }
 }

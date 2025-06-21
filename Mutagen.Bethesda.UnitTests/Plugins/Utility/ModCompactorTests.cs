@@ -41,7 +41,7 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeTrue();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, n2.FormKey);
+            .ShouldEqualEnumerable(n.FormKey, n2.FormKey);
         ret.ResultingStyle.ShouldBe(MasterStyle.Small);
         ret.RemappedFormKeys.ShouldBeEmpty();
     }
@@ -63,10 +63,10 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeTrue();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
+            .ShouldEqualEnumerable(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
         ret.ResultingStyle.ShouldBe(MasterStyle.Small);
         ret.RemappedFormKeys
-            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData]
@@ -100,7 +100,7 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, n2.FormKey);
+            .ShouldEqualEnumerable(n.FormKey, n2.FormKey);
         ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
         ret.RemappedFormKeys.ShouldBeEmpty();
     }
@@ -122,10 +122,10 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
+            .ShouldEqualEnumerable(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
         ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
         ret.RemappedFormKeys
-            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -159,7 +159,7 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, n2.FormKey);
+            .ShouldEqualEnumerable(n.FormKey, n2.FormKey);
         ret.ResultingStyle.ShouldBe(MasterStyle.Full);
         ret.RemappedFormKeys.ShouldBeEmpty();
     }
@@ -178,10 +178,10 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId));
+            .ShouldEqualEnumerable(n.FormKey, new FormKey(n.FormKey.ModKey, nextId));
         ret.ResultingStyle.ShouldBe(MasterStyle.Full);
         ret.RemappedFormKeys
-            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData]
@@ -200,10 +200,10 @@ public class ModCompactorTests
         mod.IsSmallMaster.ShouldBeTrue();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
+            .ShouldEqualEnumerable(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
         ret.ResultingStyle.ShouldBe(MasterStyle.Small);
         ret.RemappedFormKeys
-            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -227,7 +227,7 @@ public class ModCompactorTests
         mod.Npcs.Records.Count().ShouldBe(4099);
         ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
         ret.RemappedFormKeys
-            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, 1801)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, 0x1801)));
     }
     
     [Theory, MutagenModAutoData]
@@ -251,6 +251,6 @@ public class ModCompactorTests
         mod.Npcs.Records.Count().ShouldBe(4099);
         ret.ResultingStyle.ShouldBe(MasterStyle.Full);
         ret.RemappedFormKeys
-            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, 1801)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n3.FormKey, new FormKey(n.FormKey.ModKey, 0x1801)));
     }
 }

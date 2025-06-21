@@ -34,15 +34,15 @@ public class EnumerateContextsTests
         var linkCache = mod.ToImmutableLinkCache();
         mod.EnumerateMajorRecordContexts()
             .Select(x => x.Record.FormKey)
-            .ShouldEqual(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqualEnumerable(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
         mod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache)
             .Select(x => x.Record.FormKey)
-            .ShouldEqual(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqualEnumerable(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
         mod.EnumerateMajorRecordContexts(linkCache, typeof(Cell))
             .Select(x => x.Record.FormKey)
-            .ShouldEqual(cell1.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqualEnumerable(cell1.FormKey, cell2.FormKey, cell3.FormKey);
         mod.EnumerateMajorRecordContexts<ICell, ICellGetter>(linkCache)
             .Select(x => x.Record.FormKey)
-            .ShouldEqual(cell1.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqualEnumerable(cell1.FormKey, cell2.FormKey, cell3.FormKey);
     }
 }

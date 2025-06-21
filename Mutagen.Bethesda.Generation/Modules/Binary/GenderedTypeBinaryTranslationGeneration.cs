@@ -212,10 +212,15 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
 
         var allowDirectWrite = subTransl.AllowDirectWrite(objGen, gendered.SubTypeGeneration);
         var loqui = gendered.SubTypeGeneration as LoquiType;
+        if (loqui == null && gendered.SubTypeGeneration is ListType list 
+            && list.SubTypeGeneration is LoquiType loquiList)
+        {
+            loqui = loquiList;
+        }
         bool needsMasters = gendered.SubTypeGeneration is FormLinkType ||
                             (loqui != null && loqui.GetFieldData().HasTrigger);
         var typeName = gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-        if (loqui != null)
+        if (loqui != null && gendered.SubTypeGeneration is LoquiType)
         {
             typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
         }
@@ -557,6 +562,26 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             {
                                 args.Add($"translationParams: {converterAccessor}");
                             }
+                        }
+                        else if (gendered.SubTypeGeneration is ListType loquiList
+                                 && subTransl is PluginListBinaryTranslationGeneration pluginListBinaryTranslationGeneration2
+                                 && loquiList.SubTypeGeneration is LoquiType listLoqui) 
+                        {
+                            args.AddPassArg("stream");
+                            await args.Add(async subFg =>
+                            {
+                                subFg.AppendLine("creator: (s, p, t) => ");
+                                using (subFg.CurlyBrace())
+                                {
+                                    await pluginListBinaryTranslationGeneration2.GenerateWrapperRecordTypeParseGeneral(
+                                        subFg, objGen, loquiList,
+                                        streamAccessor: "s",
+                                        locationAccessor: null,
+                                        packageAccessor: "p",
+                                        retAccessor: "return ",
+                                        converterAccessor: "t");
+                                }
+                            });
                         }
                         else if (gendered.SubTypeGeneration is ListType list
                                  && subTransl is PluginListBinaryTranslationGeneration pluginListBinaryTranslationGeneration)

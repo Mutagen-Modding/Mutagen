@@ -28,7 +28,7 @@ public class AssociatedFilesLocatorTests
         AssociatedFilesLocator sut)
     {
         sut.GetAssociatedFiles(existingModPath)
-            .ShouldEqual(existingModPath);
+            .ShouldEqualEnumerable(existingModPath);
         sut.GetAssociatedFiles(existingModPath, 
                 AssociatedModFileCategory.Archives 
                 | AssociatedModFileCategory.RawStrings)
@@ -73,7 +73,7 @@ public class AssociatedFilesLocatorTests
         sut.GetAssociatedFiles(existingModPath, 
                 AssociatedModFileCategory.Plugin 
                 | AssociatedModFileCategory.Archives)
-            .ShouldEqual(existingModPath);
+            .ShouldEqualEnumerable(existingModPath);
     }
     
     [Theory, MutagenAutoData]
@@ -107,6 +107,6 @@ public class AssociatedFilesLocatorTests
                 AssociatedModFileCategory.Plugin 
                 | AssociatedModFileCategory.RawStrings)
             .Select(x => (ModPath)x)
-            .ShouldEqual(existingModPath);
+            .ShouldEqualEnumerable(existingModPath);
     }
 }

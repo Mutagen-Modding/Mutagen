@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledNpc" recordType="LVLN" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LeveledNpc" recordType="LVLN" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -36,6 +36,7 @@
           <Int8 name="Unused2" />
         </Fields>
       </Data>
+      <RefDirect name="Data" refName="ExtraData" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>

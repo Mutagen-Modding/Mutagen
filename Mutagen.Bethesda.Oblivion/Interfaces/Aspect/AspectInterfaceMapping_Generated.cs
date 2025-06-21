@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
                     Container_Registration.Instance,
                     Creature_Registration.Instance,
                     Door_Registration.Instance,
-                    FacePart_Registration.Instance,
+                    FacePartItem_Registration.Instance,
                     Flora_Registration.Instance,
                     Furniture_Registration.Instance,
                     Grass_Registration.Instance,

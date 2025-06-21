@@ -48,6 +48,7 @@ This step downloads (clones) the fork you just made to your local computer.
 This is the documentation system Mutagen uses, so you have to install it, along with the GLightbox plugin, so it can display the docs as you edit them.
 
 [Installing Material for MkDocs](https://squidfunk.github.io/mkdocs-material/getting-started/)
+
 [Installing MkDocs GLightbox](https://blueswen.github.io/mkdocs-glightbox/)
 
 TLDR: `pip install mkdocs-material mkdocs-glightbox` in a command line

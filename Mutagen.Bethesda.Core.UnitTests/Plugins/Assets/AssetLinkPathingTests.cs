@@ -21,6 +21,16 @@ public class AssetLinkPathingTests
     }
 
     [Fact]
+    public void AbsolutePathWithoutDataDirectory()
+    {
+        var path = @$"{absPrefix}{Path.Combine("MyMod", "Meshes", "Clutter", "MyMesh.nif")}";
+        Assert.Throws<AssetPathMisalignedException>(() =>
+        {
+            new AssetLink<TestAssetType>(path);
+        });
+    }
+
+    [Fact]
     public void DataRelativePath()
     {
         var path = Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif");

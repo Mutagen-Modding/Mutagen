@@ -16,7 +16,7 @@
   <Object name="BookData" recordType="DATA" objType="Subrecord">
     <Fields>
       <Enum name="Flags" enumName="Book.BookFlag" byteLength="1" />
-      <Enum name="Teaches" enumName="Skill" byteLength="1" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
       <Float name="Value" />
       <Float name="Weight" />
     </Fields>

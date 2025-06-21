@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Reference
-        private readonly IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> IPackageTargetSpecificReferenceGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IPackageTargetSpecificReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IPackageTargetSpecificReference>,
         IPackageTargetSpecificReferenceGetter
     {
-        new IFormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
     }
 
     public partial interface IPackageTargetSpecificReferenceGetter :
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IPackageTargetSpecificReferenceGetter>
     {
         static new ILoquiRegistration StaticRegistration => PackageTargetSpecificReference_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
 
     }
 
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

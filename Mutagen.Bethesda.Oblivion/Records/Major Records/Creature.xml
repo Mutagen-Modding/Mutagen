@@ -63,7 +63,7 @@
       <UInt8 name="EnergyLevel" />
       <UInt8 name="Responsibility" />
       <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
-      <Enum name="Teaches" enumName="Skill" byteLength="1" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
       <UInt8 name="MaximumTrainingLevel" />
       <Zero byteLength="2" />
     </Fields>

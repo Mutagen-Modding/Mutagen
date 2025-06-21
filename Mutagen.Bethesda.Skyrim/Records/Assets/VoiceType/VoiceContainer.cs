@@ -6,9 +6,10 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 {
     /// <summary>
-    /// Voice type names mapped to form keys of npcs using that voice type 
+    /// Voice type names mapped to form keys of npcs or talking activators using that voice type 
     /// </summary>
     private readonly Dictionary<string, HashSet<FormKey>> _voices = new();
+    public IReadOnlyDictionary<string, HashSet<FormKey>> Voices => _voices;
     public bool IsDefault { get; private set; }
 
     #region Constructors
@@ -81,8 +82,22 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     #region BinaryOperators
     public void IntersectWith(VoiceContainer other)
     {
-        if (IsDefault && other.IsDefault) return;
+        // If the other is default, we can stay as we are
+        if (other.IsDefault) return;
 
+        // If we are default, but the other is not, we become non-default and take over all voices
+        if (IsDefault)
+        {
+            //If other is not default, we become non-default and take over all voices
+            IsDefault = false;
+            foreach (var (voiceType, npcs) in other.Voices)
+            {
+                _voices.Add(voiceType, npcs);
+            }
+            return;
+        }
+
+        // If both are non-default, we need to intersect the voice types and their NPCs
         var removeVoiceTypes = new HashSet<string>();
 
         foreach (var (voiceType, npcs) in _voices)
@@ -119,7 +134,12 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public void Insert(VoiceContainer other)
     {
-        if (IsDefault && other.IsDefault) return;
+        if (IsDefault || other.IsDefault)
+        {
+            IsDefault = true;
+            _voices.Clear();
+            return;
+        }
 
         foreach (var (voiceType, npcs) in other._voices)
         {
@@ -190,19 +210,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
 
         IsDefault = false;
-    }
-
-    public void Merge(VoiceContainer newVoices)
-    {
-        if (newVoices.IsDefault) return;
-
-        if (IsDefault)
-        {
-            Insert(newVoices);
-        } else
-        {
-            IntersectWith(newVoices);
-        }
     }
     #endregion
 

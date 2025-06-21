@@ -6,7 +6,7 @@
         <Interface>IKeywordLinkedReference</Interface>
       </FormLink>
       <FormLink name="Reference">
-        <Interface>ILinkedReference</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
     </Fields>
   </Object>

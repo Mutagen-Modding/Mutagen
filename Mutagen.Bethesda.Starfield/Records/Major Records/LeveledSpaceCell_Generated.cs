@@ -61,7 +61,21 @@ namespace Mutagen.Bethesda.Starfield
         public Byte MaxCount { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public LeveledNpc.Flag Flags { get; set; } = default(LeveledNpc.Flag);
+        public LeveledSpaceCell.Flag Flags { get; set; } = default(LeveledSpaceCell.Flag);
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> ILeveledSpaceCellGetter.Conditions => _Conditions;
+        #endregion
+
         #endregion
         #region UseGlobal
         private readonly IFormLinkNullable<IGlobalGetter> _UseGlobal = new FormLinkNullable<IGlobalGetter>();
@@ -115,6 +129,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChanceNone = initialValue;
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.UseGlobal = initialValue;
                 this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>());
             }
@@ -130,6 +145,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ChanceNone,
                 TItem MaxCount,
                 TItem Flags,
+                TItem Conditions,
                 TItem UseGlobal,
                 TItem Entries)
             : base(
@@ -144,6 +160,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChanceNone = ChanceNone;
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.UseGlobal = UseGlobal;
                 this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>());
             }
@@ -160,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ChanceNone;
             public TItem MaxCount;
             public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem UseGlobal;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>? Entries;
             #endregion
@@ -178,6 +196,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
                 if (!object.Equals(this.MaxCount, rhs.MaxCount)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.UseGlobal, rhs.UseGlobal)) return false;
                 if (!object.Equals(this.Entries, rhs.Entries)) return false;
                 return true;
@@ -188,6 +207,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ChanceNone);
                 hash.Add(this.MaxCount);
                 hash.Add(this.Flags);
+                hash.Add(this.Conditions);
                 hash.Add(this.UseGlobal);
                 hash.Add(this.Entries);
                 hash.Add(base.GetHashCode());
@@ -203,6 +223,18 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.ChanceNone)) return false;
                 if (!eval(this.MaxCount)) return false;
                 if (!eval(this.Flags)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.UseGlobal)) return false;
                 if (this.Entries != null)
                 {
@@ -227,6 +259,18 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.ChanceNone)) return true;
                 if (eval(this.MaxCount)) return true;
                 if (eval(this.Flags)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.UseGlobal)) return true;
                 if (this.Entries != null)
                 {
@@ -258,6 +302,21 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ChanceNone = eval(this.ChanceNone);
                 obj.MaxCount = eval(this.MaxCount);
                 obj.Flags = eval(this.Flags);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.UseGlobal = eval(this.UseGlobal);
                 if (Entries != null)
                 {
@@ -304,6 +363,25 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.UseGlobal ?? true)
                     {
                         sb.AppendItem(UseGlobal, "UseGlobal");
@@ -341,6 +419,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ChanceNone;
             public Exception? MaxCount;
             public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? UseGlobal;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledNpcEntry.ErrorMask?>>?>? Entries;
             #endregion
@@ -357,6 +436,8 @@ namespace Mutagen.Bethesda.Starfield
                         return MaxCount;
                     case LeveledSpaceCell_FieldIndex.Flags:
                         return Flags;
+                    case LeveledSpaceCell_FieldIndex.Conditions:
+                        return Conditions;
                     case LeveledSpaceCell_FieldIndex.UseGlobal:
                         return UseGlobal;
                     case LeveledSpaceCell_FieldIndex.Entries:
@@ -379,6 +460,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case LeveledSpaceCell_FieldIndex.Flags:
                         this.Flags = ex;
+                        break;
+                    case LeveledSpaceCell_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
                     case LeveledSpaceCell_FieldIndex.UseGlobal:
                         this.UseGlobal = ex;
@@ -406,6 +490,9 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledSpaceCell_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
+                    case LeveledSpaceCell_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
                     case LeveledSpaceCell_FieldIndex.UseGlobal:
                         this.UseGlobal = (Exception?)obj;
                         break;
@@ -424,6 +511,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ChanceNone != null) return true;
                 if (MaxCount != null) return true;
                 if (Flags != null) return true;
+                if (Conditions != null) return true;
                 if (UseGlobal != null) return true;
                 if (Entries != null) return true;
                 return false;
@@ -461,6 +549,24 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(UseGlobal, "UseGlobal");
                 }
@@ -493,6 +599,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.UseGlobal = this.UseGlobal.Combine(rhs.UseGlobal);
                 ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledNpcEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 return ret;
@@ -520,6 +627,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool ChanceNone;
             public bool MaxCount;
             public bool Flags;
+            public Condition.TranslationMask? Conditions;
             public bool UseGlobal;
             public LeveledNpcEntry.TranslationMask? Entries;
             #endregion
@@ -544,6 +652,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ChanceNone, null));
                 ret.Add((MaxCount, null));
                 ret.Add((Flags, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((UseGlobal, null));
                 ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
             }
@@ -696,7 +805,8 @@ namespace Mutagen.Bethesda.Starfield
     {
         new Single ChanceNone { get; set; }
         new Byte MaxCount { get; set; }
-        new LeveledNpc.Flag Flags { get; set; }
+        new LeveledSpaceCell.Flag Flags { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         new IFormLinkNullable<IGlobalGetter> UseGlobal { get; set; }
         new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
     }
@@ -720,7 +830,8 @@ namespace Mutagen.Bethesda.Starfield
         static new ILoquiRegistration StaticRegistration => LeveledSpaceCell_Registration.Instance;
         Single ChanceNone { get; }
         Byte MaxCount { get; }
-        LeveledNpc.Flag Flags { get; }
+        LeveledSpaceCell.Flag Flags { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
         IFormLinkNullableGetter<IGlobalGetter> UseGlobal { get; }
         IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; }
 
@@ -902,8 +1013,9 @@ namespace Mutagen.Bethesda.Starfield
         ChanceNone = 7,
         MaxCount = 8,
         Flags = 9,
-        UseGlobal = 10,
-        Entries = 11,
+        Conditions = 10,
+        UseGlobal = 11,
+        Entries = 12,
     }
     #endregion
 
@@ -914,9 +1026,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(LeveledSpaceCell.Mask<>);
 
@@ -952,13 +1064,14 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LVLD,
                 RecordTypes.LVLM,
                 RecordTypes.LVLF,
-                RecordTypes.LVLG,
-                RecordTypes.LVLO,
-                RecordTypes.LLCT,
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.LVLG,
+                RecordTypes.LVLO,
+                RecordTypes.LLCT,
+                RecordTypes.COED);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1005,7 +1118,8 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ChanceNone = default(Single);
             item.MaxCount = default(Byte);
-            item.Flags = default(LeveledNpc.Flag);
+            item.Flags = default(LeveledSpaceCell.Flag);
+            item.Conditions.Clear();
             item.UseGlobal.Clear();
             item.Entries = null;
             base.Clear(item);
@@ -1025,6 +1139,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILeveledSpaceCell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Conditions.RemapLinks(mapping);
             obj.UseGlobal.Relink(mapping);
             obj.Entries?.RemapLinks(mapping);
         }
@@ -1097,6 +1212,10 @@ namespace Mutagen.Bethesda.Starfield
             ret.ChanceNone = item.ChanceNone.EqualsWithin(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.UseGlobal = item.UseGlobal.Equals(rhs.UseGlobal);
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
@@ -1162,6 +1281,20 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if (printMask?.UseGlobal ?? true)
             {
@@ -1244,6 +1377,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledSpaceCell_FieldIndex.Conditions)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.UseGlobal) ?? true))
             {
                 if (!lhs.UseGlobal.Equals(rhs.UseGlobal)) return false;
@@ -1283,6 +1420,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ChanceNone);
             hash.Add(item.MaxCount);
             hash.Add(item.Flags);
+            hash.Add(item.Conditions);
             hash.Add(item.UseGlobal);
             hash.Add(item.Entries);
             hash.Add(base.GetHashCode());
@@ -1313,6 +1451,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             if (FormLinkInformation.TryFactory(obj.UseGlobal, out var UseGlobalInfo))
             {
@@ -1410,6 +1552,30 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledSpaceCell_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.UseGlobal) ?? true))
             {
@@ -1623,11 +1789,22 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.MaxCount,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLM));
-            EnumBinaryTranslation<LeveledNpc.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<LeveledSpaceCell.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLF));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UseGlobal,
@@ -1743,10 +1920,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledNpc.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<LeveledSpaceCell.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)LeveledSpaceCell_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)LeveledSpaceCell_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.LVLG:
                 {
@@ -1846,8 +2033,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledNpc.Flag Flags => _FlagsLocation.HasValue ? (LeveledNpc.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledNpc.Flag);
+        public LeveledSpaceCell.Flag Flags => _FlagsLocation.HasValue ? (LeveledSpaceCell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledSpaceCell.Flag);
         #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region UseGlobal
         private int? _UseGlobalLocation;
         public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseGlobalLocation);
@@ -1939,6 +2127,21 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return (int)LeveledSpaceCell_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)LeveledSpaceCell_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.LVLG:
                 {

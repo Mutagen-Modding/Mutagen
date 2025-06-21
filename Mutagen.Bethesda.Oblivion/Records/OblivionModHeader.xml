@@ -17,7 +17,7 @@
     <Fields>
       <Float name="Version" default="1.0f" />
       <UInt32 name="NumRecords" />
-      <UInt32 name="NextFormID" default="0xD62" />
+      <UInt32 name="NextFormID" default="0x800" />
     </Fields>
   </Object>
 </Loqui>

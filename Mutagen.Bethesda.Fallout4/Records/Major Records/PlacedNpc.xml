@@ -20,9 +20,7 @@
       <FormLink name="Layer" recordType="XLYR" refName="Layer" />
       <FormLink name="MaterialSwap" recordType="XMSP" refName="MaterialSwap" />
       <FormLink name="PersistentLocation" recordType="XLCN" refName="Location" />
-      <FormLink name="LocationReference" recordType="XLRL">
-        <Interface>ILocationRecord</Interface>
-      </FormLink>
+      <FormLink name="LocationReference" refName="Location" recordType="XLRL" />
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />
       </List>
@@ -36,8 +34,8 @@
       <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>
-      <FormLink name="MultiboundReference" recordType="XMBR">
-        <Interface>ILinkedReference</Interface>
+      <FormLink name="MultiBoundReference" recordType="XMBR">
+        <Interface>IPlaced</Interface>
       </FormLink>
       <!-- Possibly unneeded.  Never seen, just listed in xEdit -->
       <Bool name="IsIgnoredBySandbox2" boolAsMarker="XIBS" />
@@ -52,7 +50,6 @@
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
-    <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>
 </Loqui>

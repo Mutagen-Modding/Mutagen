@@ -163,7 +163,7 @@ public class ReadBuilderTests
             .Mutable()
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(masterMod);
+            .ShouldEqualEnumerable(masterMod);
     }
     
     [Theory, MutagenAutoData]
@@ -236,7 +236,7 @@ public class ReadBuilderTests
             .Mutable()
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(masterMod);
+            .ShouldEqualEnumerable(masterMod);
     }
 
     [Theory, MutagenAutoData]
@@ -279,7 +279,7 @@ public class ReadBuilderTests
             .Mutable()
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(masterMod, masterMod2);
+            .ShouldEqualEnumerable(masterMod, masterMod2);
     }
 
     [Theory, MutagenAutoData]
@@ -314,6 +314,6 @@ public class ReadBuilderTests
             .Mutable()
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
-            .ShouldEqual(masterMod, masterMod2);
+            .ShouldEqualEnumerable(masterMod, masterMod2);
     }
 }

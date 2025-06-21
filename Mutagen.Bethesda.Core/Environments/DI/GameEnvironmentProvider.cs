@@ -140,8 +140,8 @@ public sealed class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvir
         return new GameEnvironmentState<TModSetter, TModGetter>(
             gameRelease: _gameReleaseContext.Release,
             dataFolderPath: _dataDirectoryProvider.Path,
-            loadOrderFilePath: _pluginListingsPathContext.Path,
-            creationClubListingsFilePath: _cccPath.Path,
+            pluginListingsPathContext: _pluginListingsPathContext,
+            creationClubListingsFilePathProvider: _cccPath,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
             assetProvider: _assetProvider,

@@ -5,6 +5,7 @@ using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -114,6 +115,9 @@ public partial class Npc
     public ANpcLevel Level { get; set; } = new NpcLevel();
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IANpcLevelGetter INpcGetter.Level => Level;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }
 
 partial class NpcBinaryCreateTranslation

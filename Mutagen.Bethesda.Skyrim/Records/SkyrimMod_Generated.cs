@@ -8898,11 +8898,6 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ILocationRecord":
-                case "ILocationRecordGetter":
-                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IKnowable":
                 case "IKnowableGetter":
                     Remove(obj, keys, typeof(IMagicEffectGetter), throwIfUnknown: throwIfUnknown);
@@ -8913,15 +8908,6 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IEffectRecordGetter":
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
                     break;
                 case "IPlaced":
                 case "IPlacedGetter":

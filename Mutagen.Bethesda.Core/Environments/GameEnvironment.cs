@@ -320,9 +320,11 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     public DirectoryPath DataFolderPath { get; }
 
     public GameRelease GameRelease { get; }
-    public FilePath LoadOrderFilePath { get; }
+    public FilePath LoadOrderFilePath => _pluginListingsPathContext.Path;
+    private readonly IPluginListingsPathContext _pluginListingsPathContext;
 
-    public FilePath? CreationClubListingsFilePath { get; }
+    public FilePath? CreationClubListingsFilePath => _creationClubListingsFilePathProvider.Path;
+    private readonly ICreationClubListingsPathProvider _creationClubListingsFilePathProvider;
 
     /// <summary>
     /// Load Order object containing all the mods present in the environment.
@@ -342,17 +344,17 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     public GameEnvironmentState(
         GameRelease gameRelease,
         DirectoryPath dataFolderPath,
-        FilePath loadOrderFilePath,
-        FilePath? creationClubListingsFilePath,
+        IPluginListingsPathContext pluginListingsPathContext,
+        ICreationClubListingsPathProvider creationClubListingsFilePathProvider,
         ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder,
         ILinkCache<TModSetter, TModGetter> linkCache,
         IAssetProvider assetProvider,
         bool dispose = true)
     {
         GameRelease = gameRelease;
-        LoadOrderFilePath = loadOrderFilePath;
+        _pluginListingsPathContext = pluginListingsPathContext;
         DataFolderPath = dataFolderPath;
-        CreationClubListingsFilePath = creationClubListingsFilePath;
+        _creationClubListingsFilePathProvider = creationClubListingsFilePathProvider;
         LoadOrder = loadOrder;
         LinkCache = linkCache;
         AssetProvider = assetProvider;

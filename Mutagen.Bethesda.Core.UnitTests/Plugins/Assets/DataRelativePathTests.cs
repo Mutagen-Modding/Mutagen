@@ -125,4 +125,12 @@ public class DataRelativePathTests
         var link = new DataRelativePath(path);
         link.Path.ShouldBe(Path.Combine("AnimTextData", "Clutter", "MyMesh.nif"));
     }
+
+    [Fact]
+    public void PathEndsWithData()
+    {
+        var path = Path.Combine("Meshes", "Actors", "Character", "FaceGenData");
+        var link = new DataRelativePath(path);
+        link.Path.ShouldBe(Path.Combine("Meshes", "Actors", "Character", "FaceGenData"));
+    }
 }

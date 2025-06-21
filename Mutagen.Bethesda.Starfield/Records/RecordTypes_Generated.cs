@@ -563,6 +563,8 @@ public partial class RecordTypes
     public static readonly RecordType LLCT = new(0x54434C4C);
     public static readonly RecordType LLKC = new(0x434B4C4C);
     public static readonly RecordType LLLD = new(0x444C4C4C);
+    public static readonly RecordType LLRB = new(0x42524C4C);
+    public static readonly RecordType LLRV = new(0x56524C4C);
     public static readonly RecordType LLSH = new(0x48534C4C);
     public static readonly RecordType LMSW = new(0x57534D4C);
     public static readonly RecordType LNA2 = new(0x32414E4C);
@@ -592,6 +594,7 @@ public partial class RecordTypes
     public static readonly RecordType LVLO = new(0x4F4C564C);
     public static readonly RecordType LVLP = new(0x504C564C);
     public static readonly RecordType LVSC = new(0x4353564C);
+    public static readonly RecordType LVSG = new(0x4753564C);
     public static readonly RecordType LWBS = new(0x5342574C);
     public static readonly RecordType MAAM = new(0x4D41414D);
     public static readonly RecordType MAGF = new(0x4647414D);

@@ -54,24 +54,16 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Target
-        public InstanceNamingRules.RuleTarget? Target { get; set; }
+        #region Rules
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        InstanceNamingRules.RuleTarget? IInstanceNamingRulesGetter.Target => this.Target;
-        #endregion
-        #region RuleSets
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<InstanceNamingRuleSet> _RuleSets = new ExtendedList<InstanceNamingRuleSet>();
-        public ExtendedList<InstanceNamingRuleSet> RuleSets
+        private AInstanceNamingRules? _Rules;
+        public AInstanceNamingRules? Rules
         {
-            get => this._RuleSets;
-            init => this._RuleSets = value;
+            get => _Rules;
+            set => _Rules = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IInstanceNamingRuleSetGetter> IInstanceNamingRulesGetter.RuleSets => _RuleSets;
-        #endregion
-
+        IAInstanceNamingRulesGetter? IInstanceNamingRulesGetter.Rules => this.Rules;
         #endregion
 
         #region To String
@@ -98,8 +90,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Target = initialValue;
-                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
+                this.Rules = new MaskItem<TItem, AInstanceNamingRules.Mask<TItem>?>(initialValue, new AInstanceNamingRules.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -110,8 +101,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Target,
-                TItem RuleSets)
+                TItem Rules)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -121,8 +111,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Target = Target;
-                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(RuleSets, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
+                this.Rules = new MaskItem<TItem, AInstanceNamingRules.Mask<TItem>?>(Rules, new AInstanceNamingRules.Mask<TItem>(Rules));
             }
 
             #pragma warning disable CS8618
@@ -134,8 +123,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Target;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>? RuleSets;
+            public MaskItem<TItem, AInstanceNamingRules.Mask<TItem>?>? Rules { get; set; }
             #endregion
 
             #region Equals
@@ -149,15 +137,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Target, rhs.Target)) return false;
-                if (!object.Equals(this.RuleSets, rhs.RuleSets)) return false;
+                if (!object.Equals(this.Rules, rhs.Rules)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Target);
-                hash.Add(this.RuleSets);
+                hash.Add(this.Rules);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -168,18 +154,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Target)) return false;
-                if (this.RuleSets != null)
+                if (Rules != null)
                 {
-                    if (!eval(this.RuleSets.Overall)) return false;
-                    if (this.RuleSets.Specific != null)
-                    {
-                        foreach (var item in this.RuleSets.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (!eval(this.Rules.Overall)) return false;
+                    if (this.Rules.Specific != null && !this.Rules.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -189,18 +167,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Target)) return true;
-                if (this.RuleSets != null)
+                if (Rules != null)
                 {
-                    if (eval(this.RuleSets.Overall)) return true;
-                    if (this.RuleSets.Specific != null)
-                    {
-                        foreach (var item in this.RuleSets.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (eval(this.Rules.Overall)) return true;
+                    if (this.Rules.Specific != null && this.Rules.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -217,22 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Target = eval(this.Target);
-                if (RuleSets != null)
-                {
-                    obj.RuleSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>?>(eval(this.RuleSets.Overall), Enumerable.Empty<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>());
-                    if (RuleSets.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>();
-                        obj.RuleSets.Specific = l;
-                        foreach (var item in RuleSets.Specific)
-                        {
-                            MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.Rules = this.Rules == null ? null : new MaskItem<R, AInstanceNamingRules.Mask<R>?>(eval(this.Rules.Overall), this.Rules.Specific?.Translate(eval));
             }
             #endregion
 
@@ -251,28 +206,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(InstanceNamingRules.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Target ?? true)
+                    if (printMask?.Rules?.Overall ?? true)
                     {
-                        sb.AppendItem(Target, "Target");
-                    }
-                    if ((printMask?.RuleSets?.Overall ?? true)
-                        && RuleSets is {} RuleSetsItem)
-                    {
-                        sb.AppendLine("RuleSets =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(RuleSetsItem.Overall);
-                            if (RuleSetsItem.Specific != null)
-                            {
-                                foreach (var subItem in RuleSetsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
+                        Rules?.Print(sb);
                     }
                 }
             }
@@ -285,8 +221,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Target;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>? RuleSets;
+            public MaskItem<Exception?, AInstanceNamingRules.ErrorMask?>? Rules;
             #endregion
 
             #region IErrorMask
@@ -295,10 +230,8 @@ namespace Mutagen.Bethesda.Starfield
                 InstanceNamingRules_FieldIndex enu = (InstanceNamingRules_FieldIndex)index;
                 switch (enu)
                 {
-                    case InstanceNamingRules_FieldIndex.Target:
-                        return Target;
-                    case InstanceNamingRules_FieldIndex.RuleSets:
-                        return RuleSets;
+                    case InstanceNamingRules_FieldIndex.Rules:
+                        return Rules;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -309,11 +242,8 @@ namespace Mutagen.Bethesda.Starfield
                 InstanceNamingRules_FieldIndex enu = (InstanceNamingRules_FieldIndex)index;
                 switch (enu)
                 {
-                    case InstanceNamingRules_FieldIndex.Target:
-                        this.Target = ex;
-                        break;
-                    case InstanceNamingRules_FieldIndex.RuleSets:
-                        this.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(ex, null);
+                    case InstanceNamingRules_FieldIndex.Rules:
+                        this.Rules = new MaskItem<Exception?, AInstanceNamingRules.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -326,11 +256,8 @@ namespace Mutagen.Bethesda.Starfield
                 InstanceNamingRules_FieldIndex enu = (InstanceNamingRules_FieldIndex)index;
                 switch (enu)
                 {
-                    case InstanceNamingRules_FieldIndex.Target:
-                        this.Target = (Exception?)obj;
-                        break;
-                    case InstanceNamingRules_FieldIndex.RuleSets:
-                        this.RuleSets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>)obj;
+                    case InstanceNamingRules_FieldIndex.Rules:
+                        this.Rules = (MaskItem<Exception?, AInstanceNamingRules.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -341,8 +268,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Target != null) return true;
-                if (RuleSets != null) return true;
+                if (Rules != null) return true;
                 return false;
             }
             #endregion
@@ -369,27 +295,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(Target, "Target");
-                }
-                if (RuleSets is {} RuleSetsItem)
-                {
-                    sb.AppendLine("RuleSets =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(RuleSetsItem.Overall);
-                        if (RuleSetsItem.Specific != null)
-                        {
-                            foreach (var subItem in RuleSetsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
+                Rules?.Print(sb);
             }
             #endregion
 
@@ -398,8 +304,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Target = this.Target.Combine(rhs.Target);
-                ret.RuleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, InstanceNamingRuleSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RuleSets?.Overall, rhs.RuleSets?.Overall), Noggog.ExceptionExt.Combine(this.RuleSets?.Specific, rhs.RuleSets?.Specific));
+                ret.Rules = this.Rules.Combine(rhs.Rules, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -422,8 +327,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool Target;
-            public InstanceNamingRuleSet.TranslationMask? RuleSets;
+            public AInstanceNamingRules.TranslationMask? Rules;
             #endregion
 
             #region Ctors
@@ -432,7 +336,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Target = defaultOn;
             }
 
             #endregion
@@ -440,8 +343,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Target, null));
-                ret.Add((RuleSets == null ? DefaultOn : !RuleSets.GetCrystal().CopyNothing, RuleSets?.GetCrystal()));
+                ret.Add((Rules != null ? Rules.OnOverall : DefaultOn, Rules?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -589,8 +491,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IInstanceNamingRulesInternal>,
         IStarfieldMajorRecordInternal
     {
-        new InstanceNamingRules.RuleTarget? Target { get; set; }
-        new ExtendedList<InstanceNamingRuleSet> RuleSets { get; }
+        new AInstanceNamingRules? Rules { get; set; }
     }
 
     public partial interface IInstanceNamingRulesInternal :
@@ -609,8 +510,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IInstanceNamingRulesGetter>
     {
         static new ILoquiRegistration StaticRegistration => InstanceNamingRules_Registration.Instance;
-        InstanceNamingRules.RuleTarget? Target { get; }
-        IReadOnlyList<IInstanceNamingRuleSetGetter> RuleSets { get; }
+        IAInstanceNamingRulesGetter? Rules { get; }
 
     }
 
@@ -787,8 +687,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Target = 7,
-        RuleSets = 8,
+        Rules = 7,
     }
     #endregion
 
@@ -799,9 +698,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(InstanceNamingRules.Mask<>);
 
@@ -835,12 +734,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.INNR,
                 RecordTypes.UNAM,
-                RecordTypes.VNAM,
-                RecordTypes.WNAM,
-                RecordTypes.KSIZ,
-                RecordTypes.KWDA,
-                RecordTypes.XNAM,
-                RecordTypes.YNAM);
+                RecordTypes.VNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -885,8 +779,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IInstanceNamingRulesInternal item)
         {
             ClearPartial();
-            item.Target = default;
-            item.RuleSets.Clear();
+            item.Rules = null;
             base.Clear(item);
         }
         
@@ -904,7 +797,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IInstanceNamingRules obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.RuleSets.RemapLinks(mapping);
+            obj.Rules?.RemapLinks(mapping);
         }
         
         #endregion
@@ -972,10 +865,10 @@ namespace Mutagen.Bethesda.Starfield
             InstanceNamingRules.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Target = item.Target == rhs.Target;
-            ret.RuleSets = item.RuleSets.CollectionEqualsHelper(
-                rhs.RuleSets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+            ret.Rules = EqualsMaskHelper.EqualsHelper(
+                item.Rules,
+                rhs.Rules,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1026,24 +919,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Target ?? true)
-                && item.Target is {} TargetItem)
+            if ((printMask?.Rules?.Overall ?? true)
+                && item.Rules is {} RulesItem)
             {
-                sb.AppendItem(TargetItem, "Target");
-            }
-            if (printMask?.RuleSets?.Overall ?? true)
-            {
-                sb.AppendLine("RuleSets =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.RuleSets)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
+                RulesItem?.Print(sb, "Rules");
             }
         }
         
@@ -1095,13 +974,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Target) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Rules) ?? true))
             {
-                if (lhs.Target != rhs.Target) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.RuleSets) ?? true))
-            {
-                if (!lhs.RuleSets.SequenceEqual(rhs.RuleSets, (l, r) => ((InstanceNamingRuleSetCommon)((IInstanceNamingRuleSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)InstanceNamingRules_FieldIndex.RuleSets)))) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Rules, rhs.Rules, out var lhsRules, out var rhsRules, out var isRulesEqual))
+                {
+                    if (!((AInstanceNamingRulesCommon)((IAInstanceNamingRulesGetter)lhsRules).CommonInstance()!).Equals(lhsRules, rhsRules, equalsMask?.GetSubCrystal((int)InstanceNamingRules_FieldIndex.Rules))) return false;
+                }
+                else if (!isRulesEqual) return false;
             }
             return true;
         }
@@ -1131,11 +1010,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IInstanceNamingRulesGetter item)
         {
             var hash = new HashCode();
-            if (item.Target is {} Targetitem)
+            if (item.Rules is {} Rulesitem)
             {
-                hash.Add(Targetitem);
+                hash.Add(Rulesitem);
             }
-            hash.Add(item.RuleSets);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1165,9 +1043,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.RuleSets.SelectMany(f => f.EnumerateFormLinks()))
+            if (obj.Rules is IFormLinkContainerGetter RuleslinkCont)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in RuleslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1243,23 +1124,21 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Target) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.Rules) ?? true))
             {
-                item.Target = rhs.Target;
-            }
-            if ((copyMask?.GetShouldTranslate((int)InstanceNamingRules_FieldIndex.RuleSets) ?? true))
-            {
-                errorMask?.PushIndex((int)InstanceNamingRules_FieldIndex.RuleSets);
+                errorMask?.PushIndex((int)InstanceNamingRules_FieldIndex.Rules);
                 try
                 {
-                    item.RuleSets.SetTo(
-                        rhs.RuleSets
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if(rhs.Rules is {} rhsRules)
+                    {
+                        item.Rules = rhsRules.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)InstanceNamingRules_FieldIndex.Rules));
+                    }
+                    else
+                    {
+                        item.Rules = default;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1440,22 +1319,22 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            EnumBinaryTranslation<InstanceNamingRules.RuleTarget, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer,
-                item.Target,
-                length: 4,
-                header: translationParams.ConvertToCustom(RecordTypes.UNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IInstanceNamingRuleSetGetter>.Instance.Write(
+            InstanceNamingRulesBinaryWriteTranslation.WriteBinaryRuleSetParser(
                 writer: writer,
-                items: item.RuleSets,
-                transl: (MutagenWriter subWriter, IInstanceNamingRuleSetGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((InstanceNamingRuleSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                item: item);
+        }
+
+        public static partial void WriteBinaryRuleSetParserCustom(
+            MutagenWriter writer,
+            IInstanceNamingRulesGetter item);
+
+        public static void WriteBinaryRuleSetParser(
+            MutagenWriter writer,
+            IInstanceNamingRulesGetter item)
+        {
+            WriteBinaryRuleSetParserCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1526,21 +1405,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.UNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Target = EnumBinaryTranslation<InstanceNamingRules.RuleTarget, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)InstanceNamingRules_FieldIndex.Target;
-                }
-                case RecordTypeInts.VNAM:
-                {
-                    item.RuleSets.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<InstanceNamingRuleSet>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: InstanceNamingRuleSet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: InstanceNamingRuleSet.TryCreateFromBinary));
-                    return (int)InstanceNamingRules_FieldIndex.RuleSets;
+                    return InstanceNamingRulesBinaryCreateTranslation.FillBinaryRuleSetParserCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1553,6 +1421,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial ParseResult FillBinaryRuleSetParserCustom(
+            MutagenFrame frame,
+            IInstanceNamingRulesInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1601,11 +1474,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IInstanceNamingRules);
 
 
-        #region Target
-        private int? _TargetLocation;
-        public InstanceNamingRules.RuleTarget? Target => _TargetLocation.HasValue ? (InstanceNamingRules.RuleTarget)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TargetLocation!.Value, _package.MetaData.Constants)) : default(InstanceNamingRules.RuleTarget?);
+        #region RuleSetParser
+        public partial ParseResult RuleSetParserCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IInstanceNamingRuleSetGetter> RuleSets { get; private set; } = Array.Empty<IInstanceNamingRuleSetGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1677,17 +1551,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.UNAM:
                 {
-                    _TargetLocation = (stream.Position - offset);
-                    return (int)InstanceNamingRules_FieldIndex.Target;
-                }
-                case RecordTypeInts.VNAM:
-                {
-                    this.RuleSets = this.ParseRepeatedTypelessSubrecord<IInstanceNamingRuleSetGetter>(
-                        stream: stream,
-                        translationParams: translationParams,
-                        trigger: InstanceNamingRuleSet_Registration.TriggerSpecs,
-                        factory: InstanceNamingRuleSetBinaryOverlay.InstanceNamingRuleSetFactory);
-                    return (int)InstanceNamingRules_FieldIndex.RuleSets;
+                    return RuleSetParserCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

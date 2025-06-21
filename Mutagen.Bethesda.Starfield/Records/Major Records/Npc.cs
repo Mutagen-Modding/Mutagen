@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Binary;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -132,6 +133,9 @@ public partial class Npc
     public ANpcLevel Level { get; set; } = new NpcLevel();
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IANpcLevelGetter INpcGetter.Level => Level;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }
 
 partial class NpcBinaryCreateTranslation

@@ -66,7 +66,9 @@ namespace Mutagen.Bethesda.Oblivion
         public Npc.BuySellServiceFlag BuySellServices { get; set; } = default(Npc.BuySellServiceFlag);
         #endregion
         #region Teaches
-        public Skill Teaches { get; set; } = default(Skill);
+        public Skill? Teaches { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? ICreatureAIDataGetter.Teaches => this.Teaches;
         #endregion
         #region MaximumTrainingLevel
         public Byte MaximumTrainingLevel { get; set; } = default(Byte);
@@ -616,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte EnergyLevel { get; set; }
         new Byte Responsibility { get; set; }
         new Npc.BuySellServiceFlag BuySellServices { get; set; }
-        new Skill Teaches { get; set; }
+        new Skill? Teaches { get; set; }
         new Byte MaximumTrainingLevel { get; set; }
     }
 
@@ -637,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte EnergyLevel { get; }
         Byte Responsibility { get; }
         Npc.BuySellServiceFlag BuySellServices { get; }
-        Skill Teaches { get; }
+        Skill? Teaches { get; }
         Byte MaximumTrainingLevel { get; }
 
     }
@@ -905,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.EnergyLevel = default(Byte);
             item.Responsibility = default(Byte);
             item.BuySellServices = default(Npc.BuySellServiceFlag);
-            item.Teaches = default(Skill);
+            item.Teaches = default;
             item.MaximumTrainingLevel = default(Byte);
         }
         
@@ -1031,9 +1033,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendItem(item.BuySellServices, "BuySellServices");
             }
-            if (printMask?.Teaches ?? true)
+            if ((printMask?.Teaches ?? true)
+                && item.Teaches is {} TeachesItem)
             {
-                sb.AppendItem(item.Teaches, "Teaches");
+                sb.AppendItem(TeachesItem, "Teaches");
             }
             if (printMask?.MaximumTrainingLevel ?? true)
             {
@@ -1087,7 +1090,10 @@ namespace Mutagen.Bethesda.Oblivion
             hash.Add(item.EnergyLevel);
             hash.Add(item.Responsibility);
             hash.Add(item.BuySellServices);
-            hash.Add(item.Teaches);
+            if (item.Teaches is {} Teachesitem)
+            {
+                hash.Add(Teachesitem);
+            }
             hash.Add(item.MaximumTrainingLevel);
             return hash.ToHashCode();
         }
@@ -1267,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
                 length: 4);
             EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.Teaches,
+                ((int?)item.Teaches) ?? -1,
                 length: 1);
             writer.Write(item.MaximumTrainingLevel);
             writer.WriteZeros(2);
@@ -1318,6 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
+            if (frame.Complete) return;
             item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);
@@ -1393,7 +1400,17 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte EnergyLevel => _structData.Span[0x2];
         public Byte Responsibility => _structData.Span[0x3];
         public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
-        public Skill Teaches => (Skill)_structData.Span.Slice(0x8, 0x1)[0];
+        #region Teaches
+        public Skill? Teaches
+        {
+            get
+            {
+                var val = (Skill)_structData.Span.Slice(0x8, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         public Byte MaximumTrainingLevel => _structData.Span[0x9];
         partial void CustomFactoryEnd(
             OverlayStream stream,

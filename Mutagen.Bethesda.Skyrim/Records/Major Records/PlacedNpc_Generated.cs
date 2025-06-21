@@ -207,14 +207,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
         #endregion
         #region IsIgnoredBySandbox
         public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
@@ -289,15 +289,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEmittanceGetter> IPlacedNpcGetter.Emittance => this.Emittance;
         #endregion
-        #region MultiboundReference
-        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
-        public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference
+        #region MultiBoundReference
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiBoundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference
         {
-            get => _MultiboundReference;
-            set => _MultiboundReference.SetTo(value);
+            get => _MultiBoundReference;
+            set => _MultiBoundReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MultiBoundReference => this.MultiBoundReference;
         #endregion
         #region IsIgnoredBySandbox2
         public Boolean IsIgnoredBySandbox2 { get; set; } = default(Boolean);
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Owner = initialValue;
                 this.FactionRank = initialValue;
                 this.Emittance = initialValue;
-                this.MultiboundReference = initialValue;
+                this.MultiBoundReference = initialValue;
                 this.IsIgnoredBySandbox2 = initialValue;
                 this.Scale = initialValue;
                 this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Owner,
                 TItem FactionRank,
                 TItem Emittance,
-                TItem MultiboundReference,
+                TItem MultiBoundReference,
                 TItem IsIgnoredBySandbox2,
                 TItem Scale,
                 TItem Placement)
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Owner = Owner;
                 this.FactionRank = FactionRank;
                 this.Emittance = Emittance;
-                this.MultiboundReference = MultiboundReference;
+                this.MultiBoundReference = MultiBoundReference;
                 this.IsIgnoredBySandbox2 = IsIgnoredBySandbox2;
                 this.Scale = Scale;
                 this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(Placement, new Placement.Mask<TItem>(Placement));
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Owner;
             public TItem FactionRank;
             public TItem Emittance;
-            public TItem MultiboundReference;
+            public TItem MultiBoundReference;
             public TItem IsIgnoredBySandbox2;
             public TItem Scale;
             public MaskItem<TItem, Placement.Mask<TItem>?>? Placement { get; set; }
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Owner, rhs.Owner)) return false;
                 if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
-                if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
+                if (!object.Equals(this.MultiBoundReference, rhs.MultiBoundReference)) return false;
                 if (!object.Equals(this.IsIgnoredBySandbox2, rhs.IsIgnoredBySandbox2)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.Placement, rhs.Placement)) return false;
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Owner);
                 hash.Add(this.FactionRank);
                 hash.Add(this.Emittance);
-                hash.Add(this.MultiboundReference);
+                hash.Add(this.MultiBoundReference);
                 hash.Add(this.IsIgnoredBySandbox2);
                 hash.Add(this.Scale);
                 hash.Add(this.Placement);
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Owner)) return false;
                 if (!eval(this.FactionRank)) return false;
                 if (!eval(this.Emittance)) return false;
-                if (!eval(this.MultiboundReference)) return false;
+                if (!eval(this.MultiBoundReference)) return false;
                 if (!eval(this.IsIgnoredBySandbox2)) return false;
                 if (!eval(this.Scale)) return false;
                 if (Placement != null)
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Owner)) return true;
                 if (eval(this.FactionRank)) return true;
                 if (eval(this.Emittance)) return true;
-                if (eval(this.MultiboundReference)) return true;
+                if (eval(this.MultiBoundReference)) return true;
                 if (eval(this.IsIgnoredBySandbox2)) return true;
                 if (eval(this.Scale)) return true;
                 if (Placement != null)
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Owner = eval(this.Owner);
                 obj.FactionRank = eval(this.FactionRank);
                 obj.Emittance = eval(this.Emittance);
-                obj.MultiboundReference = eval(this.MultiboundReference);
+                obj.MultiBoundReference = eval(this.MultiBoundReference);
                 obj.IsIgnoredBySandbox2 = eval(this.IsIgnoredBySandbox2);
                 obj.Scale = eval(this.Scale);
                 obj.Placement = this.Placement == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.Placement.Overall), this.Placement.Specific?.Translate(eval));
@@ -952,9 +952,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Emittance, "Emittance");
                     }
-                    if (printMask?.MultiboundReference ?? true)
+                    if (printMask?.MultiBoundReference ?? true)
                     {
-                        sb.AppendItem(MultiboundReference, "MultiboundReference");
+                        sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                     }
                     if (printMask?.IsIgnoredBySandbox2 ?? true)
                     {
@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Owner;
             public Exception? FactionRank;
             public Exception? Emittance;
-            public Exception? MultiboundReference;
+            public Exception? MultiBoundReference;
             public Exception? IsIgnoredBySandbox2;
             public Exception? Scale;
             public MaskItem<Exception?, Placement.ErrorMask?>? Placement;
@@ -1066,8 +1066,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return FactionRank;
                     case PlacedNpc_FieldIndex.Emittance:
                         return Emittance;
-                    case PlacedNpc_FieldIndex.MultiboundReference:
-                        return MultiboundReference;
+                    case PlacedNpc_FieldIndex.MultiBoundReference:
+                        return MultiBoundReference;
                     case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
                         return IsIgnoredBySandbox2;
                     case PlacedNpc_FieldIndex.Scale:
@@ -1159,8 +1159,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = ex;
                         break;
-                    case PlacedNpc_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = ex;
+                    case PlacedNpc_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = ex;
                         break;
                     case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
                         this.IsIgnoredBySandbox2 = ex;
@@ -1257,8 +1257,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.MultiboundReference:
-                        this.MultiboundReference = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.MultiBoundReference:
+                        this.MultiBoundReference = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
                         this.IsIgnoredBySandbox2 = (Exception?)obj;
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Owner != null) return true;
                 if (FactionRank != null) return true;
                 if (Emittance != null) return true;
-                if (MultiboundReference != null) return true;
+                if (MultiBoundReference != null) return true;
                 if (IsIgnoredBySandbox2 != null) return true;
                 if (Scale != null) return true;
                 if (Placement != null) return true;
@@ -1431,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Emittance, "Emittance");
                 }
                 {
-                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                    sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                 }
                 {
                     sb.AppendItem(IsIgnoredBySandbox2, "IsIgnoredBySandbox2");
@@ -1473,7 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
-                ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
+                ret.MultiBoundReference = this.MultiBoundReference.Combine(rhs.MultiBoundReference);
                 ret.IsIgnoredBySandbox2 = this.IsIgnoredBySandbox2.Combine(rhs.IsIgnoredBySandbox2);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.Placement = this.Placement.Combine(rhs.Placement, (l, r) => l.Combine(r));
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Owner;
             public bool FactionRank;
             public bool Emittance;
-            public bool MultiboundReference;
+            public bool MultiBoundReference;
             public bool IsIgnoredBySandbox2;
             public bool Scale;
             public Placement.TranslationMask? Placement;
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Owner = defaultOn;
                 this.FactionRank = defaultOn;
                 this.Emittance = defaultOn;
-                this.MultiboundReference = defaultOn;
+                this.MultiBoundReference = defaultOn;
                 this.IsIgnoredBySandbox2 = defaultOn;
                 this.Scale = defaultOn;
             }
@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((Emittance, null));
-                ret.Add((MultiboundReference, null));
+                ret.Add((MultiBoundReference, null));
                 ret.Add((IsIgnoredBySandbox2, null));
                 ret.Add((Scale, null));
                 ret.Add((Placement != null ? Placement.OnOverall : DefaultOn, Placement?.GetCrystal()));
@@ -1749,7 +1749,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
-        ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
         IPlaced,
         IPlacedNpcGetter,
@@ -1775,7 +1774,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
         new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
@@ -1785,7 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
-        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; set; }
         new Boolean IsIgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }
@@ -1810,7 +1809,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
-        ILinkedReferenceGetter,
         ILoquiObject<IPlacedNpcGetter>,
         IMapsToGetter<IPlacedNpcGetter>,
         IPlacedGetter,
@@ -1838,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim
         IActivateParentsGetter? ActivateParents { get; }
         ILinkedReferenceColorGetter? LinkedReferenceColor { get; }
         IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         Boolean IsIgnoredBySandbox { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Single? HeadTrackingWeight { get; }
@@ -1848,7 +1846,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference { get; }
         Boolean IsIgnoredBySandbox2 { get; }
         Single? Scale { get; }
         IPlacementGetter? Placement { get; }
@@ -2057,7 +2055,7 @@ namespace Mutagen.Bethesda.Skyrim
         Owner = 29,
         FactionRank = 30,
         Emittance = 31,
-        MultiboundReference = 32,
+        MultiBoundReference = 32,
         IsIgnoredBySandbox2 = 33,
         Scale = 34,
         Placement = 35,
@@ -2205,7 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Owner.Clear();
             item.FactionRank = default;
             item.Emittance.Clear();
-            item.MultiboundReference.Clear();
+            item.MultiBoundReference.Clear();
             item.IsIgnoredBySandbox2 = default(Boolean);
             item.Scale = default;
             item.Placement = null;
@@ -2240,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.EnableParent?.RemapLinks(mapping);
             obj.Owner.Relink(mapping);
             obj.Emittance.Relink(mapping);
-            obj.MultiboundReference.Relink(mapping);
+            obj.MultiBoundReference.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlacedNpc obj)
@@ -2385,7 +2383,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
-            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
+            ret.MultiBoundReference = item.MultiBoundReference.Equals(rhs.MultiBoundReference);
             ret.IsIgnoredBySandbox2 = item.IsIgnoredBySandbox2 == rhs.IsIgnoredBySandbox2;
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Placement = EqualsMaskHelper.EqualsHelper(
@@ -2577,9 +2575,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
-            if (printMask?.MultiboundReference ?? true)
+            if (printMask?.MultiBoundReference ?? true)
             {
-                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+                sb.AppendItem(item.MultiBoundReference.FormKeyNullable, "MultiBoundReference");
             }
             if (printMask?.IsIgnoredBySandbox2 ?? true)
             {
@@ -2765,9 +2763,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiBoundReference) ?? true))
             {
-                if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+                if (!lhs.MultiBoundReference.Equals(rhs.MultiBoundReference)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2) ?? true))
             {
@@ -2880,7 +2878,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.Emittance);
-            hash.Add(item.MultiboundReference);
+            hash.Add(item.MultiBoundReference);
             hash.Add(item.IsIgnoredBySandbox2);
             if (item.Scale is {} Scaleitem)
             {
@@ -2990,9 +2988,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return EmittanceInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
+            if (FormLinkInformation.TryFactory(obj.MultiBoundReference, out var MultiBoundReferenceInfo))
             {
-                yield return MultiboundReferenceInfo;
+                yield return MultiBoundReferenceInfo;
             }
             yield break;
         }
@@ -3351,9 +3349,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Emittance.SetTo(rhs.Emittance.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiBoundReference) ?? true))
             {
-                item.MultiboundReference.SetTo(rhs.MultiboundReference.FormKeyNullable);
+                item.MultiBoundReference.SetTo(rhs.MultiBoundReference.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2) ?? true))
             {
@@ -3689,7 +3687,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.XEMI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MultiboundReference,
+                item: item.MultiBoundReference,
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
@@ -3937,8 +3935,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)PlacedNpc_FieldIndex.MultiboundReference;
+                    item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XIBS:
                 {
@@ -4077,7 +4075,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
@@ -4112,9 +4110,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _EmittanceLocation;
         public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
-        #region MultiboundReference
-        private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiboundReferenceLocation);
+        #region MultiBoundReference
+        private int? _MultiBoundReferenceLocation;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiBoundReferenceLocation);
         #endregion
         #region IsIgnoredBySandbox2
         private int? _IsIgnoredBySandbox2Location;
@@ -4350,8 +4348,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiboundReferenceLocation = (stream.Position - offset);
-                    return (int)PlacedNpc_FieldIndex.MultiboundReference;
+                    _MultiBoundReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XIBS:
                 {

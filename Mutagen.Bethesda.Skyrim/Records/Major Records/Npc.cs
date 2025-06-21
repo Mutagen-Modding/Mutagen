@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -16,6 +18,9 @@ public partial class Npc
     {
         BleedoutOverride = 0x2000_0000
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }
 
 partial class NpcSetterCommon

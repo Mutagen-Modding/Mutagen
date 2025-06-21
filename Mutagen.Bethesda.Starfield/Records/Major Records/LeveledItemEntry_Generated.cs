@@ -77,6 +77,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Unused2
         public SByte Unused2 { get; set; } = default(SByte);
         #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtraData? _Data;
+        public ExtraData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IExtraDataGetter? ILeveledItemEntryGetter.Data => this.Data;
+        #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
@@ -136,6 +147,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Count = initialValue;
                 this.ChanceNone = initialValue;
                 this.Unused2 = initialValue;
+                this.Data = new MaskItem<TItem, ExtraData.Mask<TItem>?>(initialValue, new ExtraData.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -146,6 +158,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Count,
                 TItem ChanceNone,
                 TItem Unused2,
+                TItem Data,
                 TItem Conditions)
             {
                 this.Level = Level;
@@ -154,6 +167,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Count = Count;
                 this.ChanceNone = ChanceNone;
                 this.Unused2 = Unused2;
+                this.Data = new MaskItem<TItem, ExtraData.Mask<TItem>?>(Data, new ExtraData.Mask<TItem>(Data));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -172,6 +186,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Count;
             public TItem ChanceNone;
             public TItem Unused2;
+            public MaskItem<TItem, ExtraData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
@@ -191,6 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Count, rhs.Count)) return false;
                 if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
                 if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 return true;
             }
@@ -203,6 +219,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Count);
                 hash.Add(this.ChanceNone);
                 hash.Add(this.Unused2);
+                hash.Add(this.Data);
                 hash.Add(this.Conditions);
                 return hash.ToHashCode();
             }
@@ -218,6 +235,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Count)) return false;
                 if (!eval(this.ChanceNone)) return false;
                 if (!eval(this.Unused2)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -243,6 +265,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Count)) return true;
                 if (eval(this.ChanceNone)) return true;
                 if (eval(this.Unused2)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -275,6 +302,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Count = eval(this.Count);
                 obj.ChanceNone = eval(this.ChanceNone);
                 obj.Unused2 = eval(this.Unused2);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ExtraData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -332,6 +360,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Unused2, "Unused2");
                     }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
@@ -381,6 +413,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Count;
             public Exception? ChanceNone;
             public Exception? Unused2;
+            public MaskItem<Exception?, ExtraData.ErrorMask?>? Data;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             #endregion
 
@@ -402,6 +435,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ChanceNone;
                     case LeveledItemEntry_FieldIndex.Unused2:
                         return Unused2;
+                    case LeveledItemEntry_FieldIndex.Data:
+                        return Data;
                     case LeveledItemEntry_FieldIndex.Conditions:
                         return Conditions;
                     default:
@@ -431,6 +466,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case LeveledItemEntry_FieldIndex.Unused2:
                         this.Unused2 = ex;
+                        break;
+                    case LeveledItemEntry_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ExtraData.ErrorMask?>(ex, null);
                         break;
                     case LeveledItemEntry_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -463,6 +501,9 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledItemEntry_FieldIndex.Unused2:
                         this.Unused2 = (Exception?)obj;
                         break;
+                    case LeveledItemEntry_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ExtraData.ErrorMask?>?)obj;
+                        break;
                     case LeveledItemEntry_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
@@ -480,6 +521,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Count != null) return true;
                 if (ChanceNone != null) return true;
                 if (Unused2 != null) return true;
+                if (Data != null) return true;
                 if (Conditions != null) return true;
                 return false;
             }
@@ -524,6 +566,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Unused2, "Unused2");
                 }
+                Data?.Print(sb);
                 if (Conditions is {} ConditionsItem)
                 {
                     sb.AppendLine("Conditions =>");
@@ -556,6 +599,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Count = this.Count.Combine(rhs.Count);
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
@@ -586,6 +630,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Count;
             public bool ChanceNone;
             public bool Unused2;
+            public ExtraData.TranslationMask? Data;
             public Condition.TranslationMask? Conditions;
             #endregion
 
@@ -623,6 +668,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Count, null));
                 ret.Add((ChanceNone, null));
                 ret.Add((Unused2, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
@@ -708,6 +754,7 @@ namespace Mutagen.Bethesda.Starfield
         new Int16 Count { get; set; }
         new Percent ChanceNone { get; set; }
         new SByte Unused2 { get; set; }
+        new ExtraData? Data { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
 
@@ -730,6 +777,7 @@ namespace Mutagen.Bethesda.Starfield
         Int16 Count { get; }
         Percent ChanceNone { get; }
         SByte Unused2 { get; }
+        IExtraDataGetter? Data { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
@@ -906,7 +954,8 @@ namespace Mutagen.Bethesda.Starfield
         Count = 3,
         ChanceNone = 4,
         Unused2 = 5,
-        Conditions = 6,
+        Data = 6,
+        Conditions = 7,
     }
     #endregion
 
@@ -917,9 +966,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(LeveledItemEntry.Mask<>);
 
@@ -952,6 +1001,7 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LVLO);
             var all = RecordCollection.Factory(
                 RecordTypes.LVLO,
+                RecordTypes.COED,
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
@@ -1006,6 +1056,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Count = default(Int16);
             item.ChanceNone = default(Percent);
             item.Unused2 = default(SByte);
+            item.Data = null;
             item.Conditions.Clear();
         }
         
@@ -1013,6 +1064,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILeveledItemEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Reference.Relink(mapping);
+            obj.Data?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         
@@ -1064,6 +1116,11 @@ namespace Mutagen.Bethesda.Starfield
             ret.Count = item.Count == rhs.Count;
             ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
             ret.Unused2 = item.Unused2 == rhs.Unused2;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1136,6 +1193,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Unused2, "Unused2");
             }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
+            {
+                DataItem?.Print(sb, "Data");
+            }
             if (printMask?.Conditions?.Overall ?? true)
             {
                 sb.AppendLine("Conditions =>");
@@ -1183,6 +1245,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Unused2 != rhs.Unused2) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntry_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((ExtraDataCommon)((IExtraDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)LeveledItemEntry_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItemEntry_FieldIndex.Conditions) ?? true))
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItemEntry_FieldIndex.Conditions)))) return false;
@@ -1199,6 +1269,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Count);
             hash.Add(item.ChanceNone);
             hash.Add(item.Unused2);
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(item.Conditions);
             return hash.ToHashCode();
         }
@@ -1215,6 +1289,13 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledItemEntryGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Reference);
+            if (obj.Data is IFormLinkContainerGetter DatalinkCont)
+            {
+                foreach (var item in DatalinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1260,6 +1341,32 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntry_FieldIndex.Unused2) ?? true))
             {
                 item.Unused2 = rhs.Unused2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItemEntry_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItemEntry_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledItemEntry_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItemEntry_FieldIndex.Conditions) ?? true))
             {
@@ -1408,6 +1515,13 @@ namespace Mutagen.Bethesda.Starfield
                     integerType: FloatIntegerType.ByteHundred);
                 writer.Write(item.Unused2);
             }
+            if (item.Data is {} DataItem)
+            {
+                ((ExtraDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
@@ -1481,6 +1595,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 1) return null;
                     item.Unused2 = dataFrame.ReadInt8();
                     return (int)LeveledItemEntry_FieldIndex.Unused2;
+                }
+                case RecordTypeInts.COED:
+                {
+                    item.Data = Mutagen.Bethesda.Starfield.ExtraData.CreateFromBinary(frame: frame);
+                    return (int)LeveledItemEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -1592,6 +1711,10 @@ namespace Mutagen.Bethesda.Starfield
         private bool _Unused2_IsSet => _LVLOLocation.HasValue;
         public SByte Unused2 => _Unused2_IsSet ? (sbyte)_recordData.Slice(_Unused2Location, 1)[0] : default(SByte);
         #endregion
+        #region Data
+        private RangeInt32? _DataLocation;
+        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1661,6 +1784,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)LeveledItemEntry_FieldIndex.Unused2, translationParams)) return ParseResult.Stop;
                     _LVLOLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)LeveledItemEntry_FieldIndex.Unused2;
+                }
+                case RecordTypeInts.COED:
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LeveledItemEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 {

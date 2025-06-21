@@ -12643,6 +12643,11 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "ILocationOwner":
+                case "ILocationOwnerGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IObjectId":
                 case "IObjectIdGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
@@ -12739,15 +12744,6 @@ namespace Mutagen.Bethesda.Starfield
                     break;
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "ILinkedReference":
-                case "ILinkedReferenceGetter":
                     obj.Cells.Remove(
                         type: type,
                         keys: keys);
@@ -13076,8 +13072,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.LeveledBaseForms is IAssetLinkContainer LeveledBaseFormslinkCont)
             {
-                foreach (var item in obj.LeveledBaseForms.EnumerateListedAssetLinks())
+                foreach (var item in LeveledBaseFormslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -13185,13 +13182,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.ArmorAddons is IAssetLinkContainer ArmorAddonslinkCont)
             {
                 foreach (var item in ArmorAddonslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Locations is IAssetLinkContainer LocationslinkCont)
-            {
-                foreach (var item in LocationslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -13335,8 +13325,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.LegendaryItems is IAssetLinkContainer LegendaryItemslinkCont)
             {
-                foreach (var item in obj.LegendaryItems.EnumerateListedAssetLinks())
+                foreach (var item in LegendaryItemslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -13432,7 +13423,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.MaterialTypes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Impacts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.Locations.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ReferenceGroups.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Layers.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -17774,9 +17764,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.InstanceNamingRules.EnumerateFormLinks())
+            if (obj.InstanceNamingRules is IFormLinkContainerGetter InstanceNamingRuleslinkCont)
             {
-                yield return item;
+                foreach (var item in InstanceNamingRuleslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.SoundKeywordMappings.EnumerateFormLinks())
             {
@@ -25018,9 +25011,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            foreach (var item in obj.LeveledBaseForms.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            if (obj.LeveledBaseForms is IAssetLinkContainerGetter LeveledBaseFormslinkCont)
             {
-                yield return item;
+                foreach (var item in LeveledBaseFormslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
@@ -25115,13 +25111,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.ArmorAddons is IAssetLinkContainerGetter ArmorAddonslinkCont)
             {
                 foreach (var item in ArmorAddonslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Locations is IAssetLinkContainerGetter LocationslinkCont)
-            {
-                foreach (var item in LocationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -25263,9 +25252,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            foreach (var item in obj.LegendaryItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            if (obj.LegendaryItems is IAssetLinkContainerGetter LegendaryItemslinkCont)
             {
-                yield return item;
+                foreach (var item in LegendaryItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             if (obj.TimeOfDays is IAssetLinkContainerGetter TimeOfDayslinkCont)
             {

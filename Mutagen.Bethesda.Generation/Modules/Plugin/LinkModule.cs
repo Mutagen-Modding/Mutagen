@@ -27,8 +27,8 @@ public class LinkModule : GenerationModule
         {
             foreach (var target in specifications.Specifications.Values)
             {
-                if (!ObjectNamedKey.TryFactory(target, out var key)) continue;
-                var specObj = loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[key];
+                if (!ObjectNamedKey.TryFactory(target, out var key)
+                    || !loqui.ObjectGen.ProtoGen.Gen.ObjectGenerationsByObjectNameKey.TryGetValue(key, out var specObj)) continue;
                 return await HasLinks(specObj, includeBaseClass);
             }
         }

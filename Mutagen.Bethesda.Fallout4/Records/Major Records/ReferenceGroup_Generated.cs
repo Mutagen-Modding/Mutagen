@@ -74,14 +74,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Reference
-        private readonly IFormLinkNullable<ILinkedReferenceGetter> _Reference = new FormLinkNullable<ILinkedReferenceGetter>();
-        public IFormLinkNullable<ILinkedReferenceGetter> Reference
+        private readonly IFormLinkNullable<IPlacedGetter> _Reference = new FormLinkNullable<IPlacedGetter>();
+        public IFormLinkNullable<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILinkedReferenceGetter> IReferenceGroupGetter.Reference => this.Reference;
+        IFormLinkNullableGetter<IPlacedGetter> IReferenceGroupGetter.Reference => this.Reference;
         #endregion
         #region PNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLinkNullable<IPlacedGetter> Reference { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
     }
 
@@ -609,7 +609,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         String? Name { get; }
         #endregion
-        IFormLinkNullableGetter<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkNullableGetter<IPlacedGetter> Reference { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
 
     }
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<ILinkedReferenceGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILinkedReferenceGetter>(_package, _recordData, _ReferenceLocation);
+        public IFormLinkNullableGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         #region PNAM
         private int? _PNAMLocation;

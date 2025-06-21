@@ -89,7 +89,7 @@ public class LoadOrderIntegrationTests
             .ToList();
         results.ShouldHaveCount(7);
         results.Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 new LoadOrderListing(TestConstants.LightModKey, enabled: true),
                 new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
                 new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
@@ -132,7 +132,7 @@ public class LoadOrderIntegrationTests
                 fileSystem: fileSystem)
             .ToList();
         results.ShouldHaveCount(6);
-        results.ShouldEqual(
+        results.ShouldEqualEnumerable(
             new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
             new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
             new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
@@ -165,7 +165,7 @@ public class LoadOrderIntegrationTests
                 fileSystem: fileSystem)
             .ToList();
         results.ShouldHaveCount(2);
-        results.ShouldEqual(
+        results.ShouldEqualEnumerable(
             new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
             new LoadOrderListing(TestConstants.PluginModKey, enabled: true));
     }
@@ -219,7 +219,7 @@ public class LoadOrderIntegrationTests
         results.ShouldHaveCount(8);
         results
             .Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
-            .ShouldEqual(
+            .ShouldEqualEnumerable(
                 new LoadOrderListing(TestConstants.LightModKey2, enabled: true),
                 new LoadOrderListing(TestConstants.LightModKey, enabled: true),
                 new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
@@ -312,7 +312,7 @@ public class LoadOrderIntegrationTests
                     esm2
                 ],
                 selector: m => m)
-            .ShouldEqual(ccEsm3, ccEsm2, ccEsm, esm, esm2);
+            .ShouldEqualEnumerable(ccEsm3, ccEsm2, ccEsm, esm, esm2);
     }
 
     [Theory, MutagenAutoData]

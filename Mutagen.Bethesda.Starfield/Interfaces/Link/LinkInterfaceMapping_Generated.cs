@@ -268,6 +268,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IOwner),
                 Getter: typeof(IOwnerGetter)));
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+        dict[typeof(ILocationOwner)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Faction_Registration.Instance,
+                Npc_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(ILocationOwner),
+                Getter: typeof(ILocationOwnerGetter)));
+        dict[typeof(ILocationOwnerGetter)] = dict[typeof(ILocationOwner)] with { Setter = false };
         dict[typeof(IObjectId)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -458,18 +469,6 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IPlacedSimple),
                 Getter: typeof(IPlacedSimpleGetter)));
         dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
-        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                PlacedNpc_Registration.Instance,
-                PlacedObject_Registration.Instance,
-                APlacedTrap_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(ILinkedReference),
-                Getter: typeof(ILinkedReferenceGetter)));
-        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(IPlacedThing)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

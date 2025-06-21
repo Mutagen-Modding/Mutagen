@@ -76,6 +76,17 @@ internal class OblivionLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IOwner),
                 Getter: typeof(IOwnerGetter)));
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+        dict[typeof(IRelatable)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Faction_Registration.Instance,
+                Race_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IRelatable),
+                Getter: typeof(IRelatableGetter)));
+        dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

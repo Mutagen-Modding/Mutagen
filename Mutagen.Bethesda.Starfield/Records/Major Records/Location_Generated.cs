@@ -7,11 +7,9 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
-using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -59,20 +57,6 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Components
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
-        public ExtendedList<AComponent> Components
-        {
-            get => this._Components;
-            init => this._Components = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAComponentGetter> ILocationGetter.Components => _Components;
-        #endregion
-
-        #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<ObjectProperty>? _Properties;
@@ -396,16 +380,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region Faction
+        #region Owner
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LocationFaction? _Faction;
-        public LocationFaction? Faction
+        private LocationOwnerData? _Owner;
+        public LocationOwnerData? Owner
         {
-            get => _Faction;
-            set => _Faction = value;
+            get => _Owner;
+            set => _Owner = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILocationFactionGetter? ILocationGetter.Faction => this.Faction;
+        ILocationOwnerDataGetter? ILocationGetter.Owner => this.Owner;
         #endregion
         #region ParentLocation
         private readonly IFormLinkNullable<ILocationGetter> _ParentLocation = new FormLinkNullable<ILocationGetter>();
@@ -417,15 +401,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
-        #region NAM1
-        private readonly IFormLinkNullable<IMusicTypeGetter> _NAM1 = new FormLinkNullable<IMusicTypeGetter>();
-        public IFormLinkNullable<IMusicTypeGetter> NAM1
+        #region MusicType
+        private readonly IFormLinkNullable<IMusicTypeGetter> _MusicType = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> MusicType
         {
-            get => _NAM1;
-            set => _NAM1.SetTo(value);
+            get => _MusicType;
+            set => _MusicType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.NAM1 => this.NAM1;
+        IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.MusicType => this.MusicType;
         #endregion
         #region UnreportedCrimeFaction
         private readonly IFormLinkNullable<IFactionGetter> _UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>();
@@ -457,10 +441,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ILocationGetter.ActorFadeMult => this.ActorFadeMult;
         #endregion
-        #region TNAM
-        public Single? TNAM { get; set; }
+        #region RandomConversionTimer
+        public Single? RandomConversionTimer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILocationGetter.TNAM => this.TNAM;
+        Single? ILocationGetter.RandomConversionTimer => this.RandomConversionTimer;
         #endregion
         #region Color
         public Color? Color { get; set; }
@@ -502,7 +486,6 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
@@ -524,14 +507,14 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.Faction = new MaskItem<TItem, LocationFaction.Mask<TItem>?>(initialValue, new LocationFaction.Mask<TItem>(initialValue));
+                this.Owner = new MaskItem<TItem, LocationOwnerData.Mask<TItem>?>(initialValue, new LocationOwnerData.Mask<TItem>(initialValue));
                 this.ParentLocation = initialValue;
-                this.NAM1 = initialValue;
+                this.MusicType = initialValue;
                 this.UnreportedCrimeFaction = initialValue;
                 this.WorldLocationMarkerRef = initialValue;
                 this.WorldLocationRadius = initialValue;
                 this.ActorFadeMult = initialValue;
-                this.TNAM = initialValue;
+                this.RandomConversionTimer = initialValue;
                 this.Color = initialValue;
                 this.StarID = initialValue;
                 this.PlanetID = initialValue;
@@ -545,7 +528,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Components,
                 TItem Properties,
                 TItem AddedPersistLocationReferences,
                 TItem MasterPersistLocationReferences,
@@ -567,14 +549,14 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Name,
                 TItem Keywords,
                 TItem Properties2,
-                TItem Faction,
+                TItem Owner,
                 TItem ParentLocation,
-                TItem NAM1,
+                TItem MusicType,
                 TItem UnreportedCrimeFaction,
                 TItem WorldLocationMarkerRef,
                 TItem WorldLocationRadius,
                 TItem ActorFadeMult,
-                TItem TNAM,
+                TItem RandomConversionTimer,
                 TItem Color,
                 TItem StarID,
                 TItem PlanetID)
@@ -587,7 +569,6 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(AddedPersistLocationReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
                 this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(MasterPersistLocationReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
@@ -609,14 +590,14 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties2, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.Faction = new MaskItem<TItem, LocationFaction.Mask<TItem>?>(Faction, new LocationFaction.Mask<TItem>(Faction));
+                this.Owner = new MaskItem<TItem, LocationOwnerData.Mask<TItem>?>(Owner, new LocationOwnerData.Mask<TItem>(Owner));
                 this.ParentLocation = ParentLocation;
-                this.NAM1 = NAM1;
+                this.MusicType = MusicType;
                 this.UnreportedCrimeFaction = UnreportedCrimeFaction;
                 this.WorldLocationMarkerRef = WorldLocationMarkerRef;
                 this.WorldLocationRadius = WorldLocationRadius;
                 this.ActorFadeMult = ActorFadeMult;
-                this.TNAM = TNAM;
+                this.RandomConversionTimer = RandomConversionTimer;
                 this.Color = Color;
                 this.StarID = StarID;
                 this.PlanetID = PlanetID;
@@ -631,7 +612,6 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? AddedPersistLocationReferences;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? MasterPersistLocationReferences;
@@ -653,14 +633,14 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties2;
-            public MaskItem<TItem, LocationFaction.Mask<TItem>?>? Faction { get; set; }
+            public MaskItem<TItem, LocationOwnerData.Mask<TItem>?>? Owner { get; set; }
             public TItem ParentLocation;
-            public TItem NAM1;
+            public TItem MusicType;
             public TItem UnreportedCrimeFaction;
             public TItem WorldLocationMarkerRef;
             public TItem WorldLocationRadius;
             public TItem ActorFadeMult;
-            public TItem TNAM;
+            public TItem RandomConversionTimer;
             public TItem Color;
             public TItem StarID;
             public TItem PlanetID;
@@ -677,7 +657,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.AddedPersistLocationReferences, rhs.AddedPersistLocationReferences)) return false;
                 if (!object.Equals(this.MasterPersistLocationReferences, rhs.MasterPersistLocationReferences)) return false;
@@ -699,14 +678,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Properties2, rhs.Properties2)) return false;
-                if (!object.Equals(this.Faction, rhs.Faction)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
                 if (!object.Equals(this.ParentLocation, rhs.ParentLocation)) return false;
-                if (!object.Equals(this.NAM1, rhs.NAM1)) return false;
+                if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
                 if (!object.Equals(this.UnreportedCrimeFaction, rhs.UnreportedCrimeFaction)) return false;
                 if (!object.Equals(this.WorldLocationMarkerRef, rhs.WorldLocationMarkerRef)) return false;
                 if (!object.Equals(this.WorldLocationRadius, rhs.WorldLocationRadius)) return false;
                 if (!object.Equals(this.ActorFadeMult, rhs.ActorFadeMult)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
+                if (!object.Equals(this.RandomConversionTimer, rhs.RandomConversionTimer)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
                 if (!object.Equals(this.StarID, rhs.StarID)) return false;
                 if (!object.Equals(this.PlanetID, rhs.PlanetID)) return false;
@@ -715,7 +694,6 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Components);
                 hash.Add(this.Properties);
                 hash.Add(this.AddedPersistLocationReferences);
                 hash.Add(this.MasterPersistLocationReferences);
@@ -737,14 +715,14 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
                 hash.Add(this.Properties2);
-                hash.Add(this.Faction);
+                hash.Add(this.Owner);
                 hash.Add(this.ParentLocation);
-                hash.Add(this.NAM1);
+                hash.Add(this.MusicType);
                 hash.Add(this.UnreportedCrimeFaction);
                 hash.Add(this.WorldLocationMarkerRef);
                 hash.Add(this.WorldLocationRadius);
                 hash.Add(this.ActorFadeMult);
-                hash.Add(this.TNAM);
+                hash.Add(this.RandomConversionTimer);
                 hash.Add(this.Color);
                 hash.Add(this.StarID);
                 hash.Add(this.PlanetID);
@@ -758,18 +736,6 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (this.Components != null)
-                {
-                    if (!eval(this.Components.Overall)) return false;
-                    if (this.Components.Specific != null)
-                    {
-                        foreach (var item in this.Components.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
                 if (this.Properties != null)
                 {
                     if (!eval(this.Properties.Overall)) return false;
@@ -1004,18 +970,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (Faction != null)
+                if (Owner != null)
                 {
-                    if (!eval(this.Faction.Overall)) return false;
-                    if (this.Faction.Specific != null && !this.Faction.Specific.All(eval)) return false;
+                    if (!eval(this.Owner.Overall)) return false;
+                    if (this.Owner.Specific != null && !this.Owner.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ParentLocation)) return false;
-                if (!eval(this.NAM1)) return false;
+                if (!eval(this.MusicType)) return false;
                 if (!eval(this.UnreportedCrimeFaction)) return false;
                 if (!eval(this.WorldLocationMarkerRef)) return false;
                 if (!eval(this.WorldLocationRadius)) return false;
                 if (!eval(this.ActorFadeMult)) return false;
-                if (!eval(this.TNAM)) return false;
+                if (!eval(this.RandomConversionTimer)) return false;
                 if (!eval(this.Color)) return false;
                 if (!eval(this.StarID)) return false;
                 if (!eval(this.PlanetID)) return false;
@@ -1027,18 +993,6 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (this.Components != null)
-                {
-                    if (eval(this.Components.Overall)) return true;
-                    if (this.Components.Specific != null)
-                    {
-                        foreach (var item in this.Components.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
                 if (this.Properties != null)
                 {
                     if (eval(this.Properties.Overall)) return true;
@@ -1273,18 +1227,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (Faction != null)
+                if (Owner != null)
                 {
-                    if (eval(this.Faction.Overall)) return true;
-                    if (this.Faction.Specific != null && this.Faction.Specific.Any(eval)) return true;
+                    if (eval(this.Owner.Overall)) return true;
+                    if (this.Owner.Specific != null && this.Owner.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ParentLocation)) return true;
-                if (eval(this.NAM1)) return true;
+                if (eval(this.MusicType)) return true;
                 if (eval(this.UnreportedCrimeFaction)) return true;
                 if (eval(this.WorldLocationMarkerRef)) return true;
                 if (eval(this.WorldLocationRadius)) return true;
                 if (eval(this.ActorFadeMult)) return true;
-                if (eval(this.TNAM)) return true;
+                if (eval(this.RandomConversionTimer)) return true;
                 if (eval(this.Color)) return true;
                 if (eval(this.StarID)) return true;
                 if (eval(this.PlanetID)) return true;
@@ -1303,21 +1257,6 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                if (Components != null)
-                {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
-                    if (Components.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
-                        obj.Components.Specific = l;
-                        foreach (var item in Components.Specific)
-                        {
-                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
                 if (Properties != null)
                 {
                     obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
@@ -1612,14 +1551,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.Faction = this.Faction == null ? null : new MaskItem<R, LocationFaction.Mask<R>?>(eval(this.Faction.Overall), this.Faction.Specific?.Translate(eval));
+                obj.Owner = this.Owner == null ? null : new MaskItem<R, LocationOwnerData.Mask<R>?>(eval(this.Owner.Overall), this.Owner.Specific?.Translate(eval));
                 obj.ParentLocation = eval(this.ParentLocation);
-                obj.NAM1 = eval(this.NAM1);
+                obj.MusicType = eval(this.MusicType);
                 obj.UnreportedCrimeFaction = eval(this.UnreportedCrimeFaction);
                 obj.WorldLocationMarkerRef = eval(this.WorldLocationMarkerRef);
                 obj.WorldLocationRadius = eval(this.WorldLocationRadius);
                 obj.ActorFadeMult = eval(this.ActorFadeMult);
-                obj.TNAM = eval(this.TNAM);
+                obj.RandomConversionTimer = eval(this.RandomConversionTimer);
                 obj.Color = eval(this.Color);
                 obj.StarID = eval(this.StarID);
                 obj.PlanetID = eval(this.PlanetID);
@@ -1641,25 +1580,6 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.Components?.Overall ?? true)
-                        && Components is {} ComponentsItem)
-                    {
-                        sb.AppendLine("Components =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(ComponentsItem.Overall);
-                            if (ComponentsItem.Specific != null)
-                            {
-                                foreach (var subItem in ComponentsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
-                    }
                     if ((printMask?.Properties?.Overall ?? true)
                         && Properties is {} PropertiesItem)
                     {
@@ -2058,17 +1978,17 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.Faction?.Overall ?? true)
+                    if (printMask?.Owner?.Overall ?? true)
                     {
-                        Faction?.Print(sb);
+                        Owner?.Print(sb);
                     }
                     if (printMask?.ParentLocation ?? true)
                     {
                         sb.AppendItem(ParentLocation, "ParentLocation");
                     }
-                    if (printMask?.NAM1 ?? true)
+                    if (printMask?.MusicType ?? true)
                     {
-                        sb.AppendItem(NAM1, "NAM1");
+                        sb.AppendItem(MusicType, "MusicType");
                     }
                     if (printMask?.UnreportedCrimeFaction ?? true)
                     {
@@ -2086,9 +2006,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ActorFadeMult, "ActorFadeMult");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.RandomConversionTimer ?? true)
                     {
-                        sb.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(RandomConversionTimer, "RandomConversionTimer");
                     }
                     if (printMask?.Color ?? true)
                     {
@@ -2113,7 +2033,6 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? AddedPersistLocationReferences;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? MasterPersistLocationReferences;
@@ -2135,14 +2054,14 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties2;
-            public MaskItem<Exception?, LocationFaction.ErrorMask?>? Faction;
+            public MaskItem<Exception?, LocationOwnerData.ErrorMask?>? Owner;
             public Exception? ParentLocation;
-            public Exception? NAM1;
+            public Exception? MusicType;
             public Exception? UnreportedCrimeFaction;
             public Exception? WorldLocationMarkerRef;
             public Exception? WorldLocationRadius;
             public Exception? ActorFadeMult;
-            public Exception? TNAM;
+            public Exception? RandomConversionTimer;
             public Exception? Color;
             public Exception? StarID;
             public Exception? PlanetID;
@@ -2154,8 +2073,6 @@ namespace Mutagen.Bethesda.Starfield
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case Location_FieldIndex.Components:
-                        return Components;
                     case Location_FieldIndex.Properties:
                         return Properties;
                     case Location_FieldIndex.AddedPersistLocationReferences:
@@ -2198,12 +2115,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Keywords;
                     case Location_FieldIndex.Properties2:
                         return Properties2;
-                    case Location_FieldIndex.Faction:
-                        return Faction;
+                    case Location_FieldIndex.Owner:
+                        return Owner;
                     case Location_FieldIndex.ParentLocation:
                         return ParentLocation;
-                    case Location_FieldIndex.NAM1:
-                        return NAM1;
+                    case Location_FieldIndex.MusicType:
+                        return MusicType;
                     case Location_FieldIndex.UnreportedCrimeFaction:
                         return UnreportedCrimeFaction;
                     case Location_FieldIndex.WorldLocationMarkerRef:
@@ -2212,8 +2129,8 @@ namespace Mutagen.Bethesda.Starfield
                         return WorldLocationRadius;
                     case Location_FieldIndex.ActorFadeMult:
                         return ActorFadeMult;
-                    case Location_FieldIndex.TNAM:
-                        return TNAM;
+                    case Location_FieldIndex.RandomConversionTimer:
+                        return RandomConversionTimer;
                     case Location_FieldIndex.Color:
                         return Color;
                     case Location_FieldIndex.StarID:
@@ -2230,9 +2147,6 @@ namespace Mutagen.Bethesda.Starfield
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case Location_FieldIndex.Components:
-                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
-                        break;
                     case Location_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
@@ -2296,14 +2210,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Location_FieldIndex.Properties2:
                         this.Properties2 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.Faction:
-                        this.Faction = new MaskItem<Exception?, LocationFaction.ErrorMask?>(ex, null);
+                    case Location_FieldIndex.Owner:
+                        this.Owner = new MaskItem<Exception?, LocationOwnerData.ErrorMask?>(ex, null);
                         break;
                     case Location_FieldIndex.ParentLocation:
                         this.ParentLocation = ex;
                         break;
-                    case Location_FieldIndex.NAM1:
-                        this.NAM1 = ex;
+                    case Location_FieldIndex.MusicType:
+                        this.MusicType = ex;
                         break;
                     case Location_FieldIndex.UnreportedCrimeFaction:
                         this.UnreportedCrimeFaction = ex;
@@ -2317,8 +2231,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Location_FieldIndex.ActorFadeMult:
                         this.ActorFadeMult = ex;
                         break;
-                    case Location_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case Location_FieldIndex.RandomConversionTimer:
+                        this.RandomConversionTimer = ex;
                         break;
                     case Location_FieldIndex.Color:
                         this.Color = ex;
@@ -2340,9 +2254,6 @@ namespace Mutagen.Bethesda.Starfield
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case Location_FieldIndex.Components:
-                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
-                        break;
                     case Location_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
@@ -2406,14 +2317,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Location_FieldIndex.Properties2:
                         this.Properties2 = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.Faction:
-                        this.Faction = (MaskItem<Exception?, LocationFaction.ErrorMask?>?)obj;
+                    case Location_FieldIndex.Owner:
+                        this.Owner = (MaskItem<Exception?, LocationOwnerData.ErrorMask?>?)obj;
                         break;
                     case Location_FieldIndex.ParentLocation:
                         this.ParentLocation = (Exception?)obj;
                         break;
-                    case Location_FieldIndex.NAM1:
-                        this.NAM1 = (Exception?)obj;
+                    case Location_FieldIndex.MusicType:
+                        this.MusicType = (Exception?)obj;
                         break;
                     case Location_FieldIndex.UnreportedCrimeFaction:
                         this.UnreportedCrimeFaction = (Exception?)obj;
@@ -2427,8 +2338,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Location_FieldIndex.ActorFadeMult:
                         this.ActorFadeMult = (Exception?)obj;
                         break;
-                    case Location_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case Location_FieldIndex.RandomConversionTimer:
+                        this.RandomConversionTimer = (Exception?)obj;
                         break;
                     case Location_FieldIndex.Color:
                         this.Color = (Exception?)obj;
@@ -2448,7 +2359,6 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Components != null) return true;
                 if (Properties != null) return true;
                 if (AddedPersistLocationReferences != null) return true;
                 if (MasterPersistLocationReferences != null) return true;
@@ -2470,14 +2380,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (Name != null) return true;
                 if (Keywords != null) return true;
                 if (Properties2 != null) return true;
-                if (Faction != null) return true;
+                if (Owner != null) return true;
                 if (ParentLocation != null) return true;
-                if (NAM1 != null) return true;
+                if (MusicType != null) return true;
                 if (UnreportedCrimeFaction != null) return true;
                 if (WorldLocationMarkerRef != null) return true;
                 if (WorldLocationRadius != null) return true;
                 if (ActorFadeMult != null) return true;
-                if (TNAM != null) return true;
+                if (RandomConversionTimer != null) return true;
                 if (Color != null) return true;
                 if (StarID != null) return true;
                 if (PlanetID != null) return true;
@@ -2507,24 +2417,6 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                if (Components is {} ComponentsItem)
-                {
-                    sb.AppendLine("Components =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(ComponentsItem.Overall);
-                        if (ComponentsItem.Specific != null)
-                        {
-                            foreach (var subItem in ComponentsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
                 if (Properties is {} PropertiesItem)
                 {
                     sb.AppendLine("Properties =>");
@@ -2902,12 +2794,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                Faction?.Print(sb);
+                Owner?.Print(sb);
                 {
                     sb.AppendItem(ParentLocation, "ParentLocation");
                 }
                 {
-                    sb.AppendItem(NAM1, "NAM1");
+                    sb.AppendItem(MusicType, "MusicType");
                 }
                 {
                     sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
@@ -2922,7 +2814,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ActorFadeMult, "ActorFadeMult");
                 }
                 {
-                    sb.AppendItem(TNAM, "TNAM");
+                    sb.AppendItem(RandomConversionTimer, "RandomConversionTimer");
                 }
                 {
                     sb.AppendItem(Color, "Color");
@@ -2941,7 +2833,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.AddedPersistLocationReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AddedPersistLocationReferences?.Overall, rhs.AddedPersistLocationReferences?.Overall), Noggog.ExceptionExt.Combine(this.AddedPersistLocationReferences?.Specific, rhs.AddedPersistLocationReferences?.Specific));
                 ret.MasterPersistLocationReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterPersistLocationReferences?.Overall, rhs.MasterPersistLocationReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterPersistLocationReferences?.Specific, rhs.MasterPersistLocationReferences?.Specific));
@@ -2963,14 +2854,14 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Properties2 = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties2?.Overall, rhs.Properties2?.Overall), Noggog.ExceptionExt.Combine(this.Properties2?.Specific, rhs.Properties2?.Specific));
-                ret.Faction = this.Faction.Combine(rhs.Faction, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner, (l, r) => l.Combine(r));
                 ret.ParentLocation = this.ParentLocation.Combine(rhs.ParentLocation);
-                ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
+                ret.MusicType = this.MusicType.Combine(rhs.MusicType);
                 ret.UnreportedCrimeFaction = this.UnreportedCrimeFaction.Combine(rhs.UnreportedCrimeFaction);
                 ret.WorldLocationMarkerRef = this.WorldLocationMarkerRef.Combine(rhs.WorldLocationMarkerRef);
                 ret.WorldLocationRadius = this.WorldLocationRadius.Combine(rhs.WorldLocationRadius);
                 ret.ActorFadeMult = this.ActorFadeMult.Combine(rhs.ActorFadeMult);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
+                ret.RandomConversionTimer = this.RandomConversionTimer.Combine(rhs.RandomConversionTimer);
                 ret.Color = this.Color.Combine(rhs.Color);
                 ret.StarID = this.StarID.Combine(rhs.StarID);
                 ret.PlanetID = this.PlanetID.Combine(rhs.PlanetID);
@@ -2996,7 +2887,6 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public AComponent.TranslationMask? Components;
             public ObjectProperty.TranslationMask? Properties;
             public LocationReference.TranslationMask? AddedPersistLocationReferences;
             public LocationReference.TranslationMask? MasterPersistLocationReferences;
@@ -3018,14 +2908,14 @@ namespace Mutagen.Bethesda.Starfield
             public bool Name;
             public bool Keywords;
             public ObjectProperty.TranslationMask? Properties2;
-            public LocationFaction.TranslationMask? Faction;
+            public LocationOwnerData.TranslationMask? Owner;
             public bool ParentLocation;
-            public bool NAM1;
+            public bool MusicType;
             public bool UnreportedCrimeFaction;
             public bool WorldLocationMarkerRef;
             public bool WorldLocationRadius;
             public bool ActorFadeMult;
-            public bool TNAM;
+            public bool RandomConversionTimer;
             public bool Color;
             public bool StarID;
             public bool PlanetID;
@@ -3046,12 +2936,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.ParentLocation = defaultOn;
-                this.NAM1 = defaultOn;
+                this.MusicType = defaultOn;
                 this.UnreportedCrimeFaction = defaultOn;
                 this.WorldLocationMarkerRef = defaultOn;
                 this.WorldLocationRadius = defaultOn;
                 this.ActorFadeMult = defaultOn;
-                this.TNAM = defaultOn;
+                this.RandomConversionTimer = defaultOn;
                 this.Color = defaultOn;
                 this.StarID = defaultOn;
                 this.PlanetID = defaultOn;
@@ -3062,7 +2952,6 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((AddedPersistLocationReferences == null ? DefaultOn : !AddedPersistLocationReferences.GetCrystal().CopyNothing, AddedPersistLocationReferences?.GetCrystal()));
                 ret.Add((MasterPersistLocationReferences == null ? DefaultOn : !MasterPersistLocationReferences.GetCrystal().CopyNothing, MasterPersistLocationReferences?.GetCrystal()));
@@ -3084,14 +2973,14 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((Properties2 == null ? DefaultOn : !Properties2.GetCrystal().CopyNothing, Properties2?.GetCrystal()));
-                ret.Add((Faction != null ? Faction.OnOverall : DefaultOn, Faction?.GetCrystal()));
+                ret.Add((Owner != null ? Owner.OnOverall : DefaultOn, Owner?.GetCrystal()));
                 ret.Add((ParentLocation, null));
-                ret.Add((NAM1, null));
+                ret.Add((MusicType, null));
                 ret.Add((UnreportedCrimeFaction, null));
                 ret.Add((WorldLocationMarkerRef, null));
                 ret.Add((WorldLocationRadius, null));
                 ret.Add((ActorFadeMult, null));
-                ret.Add((TNAM, null));
+                ret.Add((RandomConversionTimer, null));
                 ret.Add((Color, null));
                 ret.Add((StarID, null));
                 ret.Add((PlanetID, null));
@@ -3163,10 +3052,6 @@ namespace Mutagen.Bethesda.Starfield
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LocationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LocationSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LocationSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LocationSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3246,7 +3131,6 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILocation :
-        IAssetLinkContainer,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILocationGetter,
@@ -3257,7 +3141,6 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
-        new ExtendedList<AComponent> Components { get; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<LocationReference>? AddedPersistLocationReferences { get; set; }
         new ExtendedList<LocationReference>? MasterPersistLocationReferences { get; set; }
@@ -3285,14 +3168,14 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ObjectProperty>? Properties2 { get; set; }
-        new LocationFaction? Faction { get; set; }
+        new LocationOwnerData? Owner { get; set; }
         new IFormLinkNullable<ILocationGetter> ParentLocation { get; set; }
-        new IFormLinkNullable<IMusicTypeGetter> NAM1 { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> MusicType { get; set; }
         new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
         new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
         new Single? WorldLocationRadius { get; set; }
         new Single? ActorFadeMult { get; set; }
-        new Single? TNAM { get; set; }
+        new Single? RandomConversionTimer { get; set; }
         new Color? Color { get; set; }
         new Int32? StarID { get; set; }
         new Int32? PlanetID { get; set; }
@@ -3312,7 +3195,6 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LCTN)]
     public partial interface ILocationGetter :
         IStarfieldMajorRecordGetter,
-        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -3324,7 +3206,6 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Location_Registration.Instance;
-        IReadOnlyList<IAComponentGetter> Components { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<ILocationReferenceGetter>? AddedPersistLocationReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? MasterPersistLocationReferences { get; }
@@ -3356,14 +3237,14 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties2 { get; }
-        ILocationFactionGetter? Faction { get; }
+        ILocationOwnerDataGetter? Owner { get; }
         IFormLinkNullableGetter<ILocationGetter> ParentLocation { get; }
-        IFormLinkNullableGetter<IMusicTypeGetter> NAM1 { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> MusicType { get; }
         IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction { get; }
         IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         Single? WorldLocationRadius { get; }
         Single? ActorFadeMult { get; }
-        Single? TNAM { get; }
+        Single? RandomConversionTimer { get; }
         Color? Color { get; }
         Int32? StarID { get; }
         Int32? PlanetID { get; }
@@ -3547,39 +3428,38 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Components = 7,
-        Properties = 8,
-        AddedPersistLocationReferences = 9,
-        MasterPersistLocationReferences = 10,
-        RemovedPersistLocationReferences = 11,
-        AddedUniqueBaseForms = 12,
-        LocationCellUniqueReferences = 13,
-        RemovedUniqueBaseForms = 14,
-        AddedUniqueNpcs = 15,
-        MasterUniqueNpcs = 16,
-        RemovedUniqueNpcs = 17,
-        AddedSpecialReferences = 18,
-        MasterSpecialReferences = 19,
-        RemovedSpecialReferences = 20,
-        MasterWorldspaceCells = 21,
-        AddedInitiallyDisabledReferences = 22,
-        MasterInitiallyDisabledReferences = 23,
-        AddedEnablePointReferences = 24,
-        MasterEnablePointReferences = 25,
-        Name = 26,
-        Keywords = 27,
-        Properties2 = 28,
-        Faction = 29,
-        ParentLocation = 30,
-        NAM1 = 31,
-        UnreportedCrimeFaction = 32,
-        WorldLocationMarkerRef = 33,
-        WorldLocationRadius = 34,
-        ActorFadeMult = 35,
-        TNAM = 36,
-        Color = 37,
-        StarID = 38,
-        PlanetID = 39,
+        Properties = 7,
+        AddedPersistLocationReferences = 8,
+        MasterPersistLocationReferences = 9,
+        RemovedPersistLocationReferences = 10,
+        AddedUniqueBaseForms = 11,
+        LocationCellUniqueReferences = 12,
+        RemovedUniqueBaseForms = 13,
+        AddedUniqueNpcs = 14,
+        MasterUniqueNpcs = 15,
+        RemovedUniqueNpcs = 16,
+        AddedSpecialReferences = 17,
+        MasterSpecialReferences = 18,
+        RemovedSpecialReferences = 19,
+        MasterWorldspaceCells = 20,
+        AddedInitiallyDisabledReferences = 21,
+        MasterInitiallyDisabledReferences = 22,
+        AddedEnablePointReferences = 23,
+        MasterEnablePointReferences = 24,
+        Name = 25,
+        Keywords = 26,
+        Properties2 = 27,
+        Owner = 28,
+        ParentLocation = 29,
+        MusicType = 30,
+        UnreportedCrimeFaction = 31,
+        WorldLocationMarkerRef = 32,
+        WorldLocationRadius = 33,
+        ActorFadeMult = 34,
+        RandomConversionTimer = 35,
+        Color = 36,
+        StarID = 37,
+        PlanetID = 38,
     }
     #endregion
 
@@ -3590,9 +3470,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 33;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 40;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Location.Mask<>);
 
@@ -3625,8 +3505,6 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LCTN);
             var all = RecordCollection.Factory(
                 RecordTypes.LCTN,
-                RecordTypes.BFCB,
-                RecordTypes.BFCE,
                 RecordTypes.PRPS,
                 RecordTypes.ACPR,
                 RecordTypes.LCPR,
@@ -3702,7 +3580,6 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILocationInternal item)
         {
             ClearPartial();
-            item.Components.Clear();
             item.Properties = null;
             item.AddedPersistLocationReferences = null;
             item.MasterPersistLocationReferences = null;
@@ -3724,14 +3601,14 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Keywords = null;
             item.Properties2 = null;
-            item.Faction = null;
+            item.Owner = null;
             item.ParentLocation.Clear();
-            item.NAM1.Clear();
+            item.MusicType.Clear();
             item.UnreportedCrimeFaction.Clear();
             item.WorldLocationMarkerRef.Clear();
             item.WorldLocationRadius = default;
             item.ActorFadeMult = default;
-            item.TNAM = default;
+            item.RandomConversionTimer = default;
             item.Color = default;
             item.StarID = default;
             item.PlanetID = default;
@@ -3752,7 +3629,6 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Components.RemapLinks(mapping);
             obj.Properties?.RemapLinks(mapping);
             obj.AddedPersistLocationReferences?.RemapLinks(mapping);
             obj.MasterPersistLocationReferences?.RemapLinks(mapping);
@@ -3773,35 +3649,11 @@ namespace Mutagen.Bethesda.Starfield
             obj.MasterEnablePointReferences?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Properties2?.RemapLinks(mapping);
-            obj.Faction?.RemapLinks(mapping);
+            obj.Owner?.RemapLinks(mapping);
             obj.ParentLocation.Relink(mapping);
-            obj.NAM1.Relink(mapping);
+            obj.MusicType.Relink(mapping);
             obj.UnreportedCrimeFaction.Relink(mapping);
             obj.WorldLocationMarkerRef.Relink(mapping);
-        }
-        
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILocation obj)
-        {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks()))
-            {
-                yield return item;
-            }
-            yield break;
-        }
-        
-        public void RemapAssetLinks(
-            ILocation obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories)
-        {
-            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -3869,10 +3721,6 @@ namespace Mutagen.Bethesda.Starfield
             Location.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Components = item.Components.CollectionEqualsHelper(
-                rhs.Components,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3954,18 +3802,18 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Properties2,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Faction = EqualsMaskHelper.EqualsHelper(
-                item.Faction,
-                rhs.Faction,
+            ret.Owner = EqualsMaskHelper.EqualsHelper(
+                item.Owner,
+                rhs.Owner,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ParentLocation = item.ParentLocation.Equals(rhs.ParentLocation);
-            ret.NAM1 = item.NAM1.Equals(rhs.NAM1);
+            ret.MusicType = item.MusicType.Equals(rhs.MusicType);
             ret.UnreportedCrimeFaction = item.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction);
             ret.WorldLocationMarkerRef = item.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef);
             ret.WorldLocationRadius = item.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius);
             ret.ActorFadeMult = item.ActorFadeMult.EqualsWithin(rhs.ActorFadeMult);
-            ret.TNAM = item.TNAM.EqualsWithin(rhs.TNAM);
+            ret.RandomConversionTimer = item.RandomConversionTimer.EqualsWithin(rhs.RandomConversionTimer);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.StarID = item.StarID == rhs.StarID;
             ret.PlanetID = item.PlanetID == rhs.PlanetID;
@@ -4018,20 +3866,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Components?.Overall ?? true)
-            {
-                sb.AppendLine("Components =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.Components)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
-            }
             if ((printMask?.Properties?.Overall ?? true)
                 && item.Properties is {} PropertiesItem)
             {
@@ -4336,18 +4170,18 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.Faction?.Overall ?? true)
-                && item.Faction is {} FactionItem)
+            if ((printMask?.Owner?.Overall ?? true)
+                && item.Owner is {} OwnerItem)
             {
-                FactionItem?.Print(sb, "Faction");
+                OwnerItem?.Print(sb, "Owner");
             }
             if (printMask?.ParentLocation ?? true)
             {
                 sb.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
             }
-            if (printMask?.NAM1 ?? true)
+            if (printMask?.MusicType ?? true)
             {
-                sb.AppendItem(item.NAM1.FormKeyNullable, "NAM1");
+                sb.AppendItem(item.MusicType.FormKeyNullable, "MusicType");
             }
             if (printMask?.UnreportedCrimeFaction ?? true)
             {
@@ -4367,10 +4201,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ActorFadeMultItem, "ActorFadeMult");
             }
-            if ((printMask?.TNAM ?? true)
-                && item.TNAM is {} TNAMItem)
+            if ((printMask?.RandomConversionTimer ?? true)
+                && item.RandomConversionTimer is {} RandomConversionTimerItem)
             {
-                sb.AppendItem(TNAMItem, "TNAM");
+                sb.AppendItem(RandomConversionTimerItem, "RandomConversionTimer");
             }
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
@@ -4437,10 +4271,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Components) ?? true))
-            {
-                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.Components)))) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Properties) ?? true))
             {
                 if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.Properties)))) return false;
@@ -4525,21 +4355,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Properties2.SequenceEqualNullable(rhs.Properties2, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.Properties2)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Faction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Faction, rhs.Faction, out var lhsFaction, out var rhsFaction, out var isFactionEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.Owner, rhs.Owner, out var lhsOwner, out var rhsOwner, out var isOwnerEqual))
                 {
-                    if (!((LocationFactionCommon)((ILocationFactionGetter)lhsFaction).CommonInstance()!).Equals(lhsFaction, rhsFaction, equalsMask?.GetSubCrystal((int)Location_FieldIndex.Faction))) return false;
+                    if (!((LocationOwnerDataCommon)((ILocationOwnerDataGetter)lhsOwner).CommonInstance()!).Equals(lhsOwner, rhsOwner, equalsMask?.GetSubCrystal((int)Location_FieldIndex.Owner))) return false;
                 }
-                else if (!isFactionEqual) return false;
+                else if (!isOwnerEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
                 if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.NAM1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.MusicType) ?? true))
             {
-                if (!lhs.NAM1.Equals(rhs.NAM1)) return false;
+                if (!lhs.MusicType.Equals(rhs.MusicType)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
@@ -4557,9 +4387,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ActorFadeMult.EqualsWithin(rhs.ActorFadeMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.TNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.RandomConversionTimer) ?? true))
             {
-                if (!lhs.TNAM.EqualsWithin(rhs.TNAM)) return false;
+                if (!lhs.RandomConversionTimer.EqualsWithin(rhs.RandomConversionTimer)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
@@ -4601,7 +4431,6 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILocationGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Components);
             hash.Add(item.Properties);
             hash.Add(item.AddedPersistLocationReferences);
             hash.Add(item.MasterPersistLocationReferences);
@@ -4626,12 +4455,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Keywords);
             hash.Add(item.Properties2);
-            if (item.Faction is {} Factionitem)
+            if (item.Owner is {} Owneritem)
             {
-                hash.Add(Factionitem);
+                hash.Add(Owneritem);
             }
             hash.Add(item.ParentLocation);
-            hash.Add(item.NAM1);
+            hash.Add(item.MusicType);
             hash.Add(item.UnreportedCrimeFaction);
             hash.Add(item.WorldLocationMarkerRef);
             if (item.WorldLocationRadius is {} WorldLocationRadiusitem)
@@ -4642,9 +4471,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ActorFadeMultitem);
             }
-            if (item.TNAM is {} TNAMitem)
+            if (item.RandomConversionTimer is {} RandomConversionTimeritem)
             {
-                hash.Add(TNAMitem);
+                hash.Add(RandomConversionTimeritem);
             }
             if (item.Color is {} Coloritem)
             {
@@ -4686,11 +4515,6 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
-            }
-            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
-            {
-                yield return FormLinkInformation.Factory(item);
             }
             if (obj.Properties is {} PropertiesItem)
             {
@@ -4829,9 +4653,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Faction is {} FactionItems)
+            if (obj.Owner is {} OwnerItems)
             {
-                foreach (var item in FactionItems.EnumerateFormLinks())
+                foreach (var item in OwnerItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -4840,9 +4664,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ParentLocationInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.NAM1, out var NAM1Info))
+            if (FormLinkInformation.TryFactory(obj.MusicType, out var MusicTypeInfo))
             {
-                yield return NAM1Info;
+                yield return MusicTypeInfo;
             }
             if (FormLinkInformation.TryFactory(obj.UnreportedCrimeFaction, out var UnreportedCrimeFactionInfo))
             {
@@ -4851,20 +4675,6 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.WorldLocationMarkerRef, out var WorldLocationMarkerRefInfo))
             {
                 yield return WorldLocationMarkerRefInfo;
-            }
-            yield break;
-        }
-        
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILocationGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
-        {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-            {
-                yield return item;
             }
             yield break;
         }
@@ -4940,30 +4750,6 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Components) ?? true))
-            {
-                errorMask?.PushIndex((int)Location_FieldIndex.Components);
-                try
-                {
-                    item.Components.SetTo(
-                        rhs.Components
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Properties) ?? true))
             {
                 errorMask?.PushIndex((int)Location_FieldIndex.Properties);
@@ -5565,20 +5351,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Faction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.Faction);
+                errorMask?.PushIndex((int)Location_FieldIndex.Owner);
                 try
                 {
-                    if(rhs.Faction is {} rhsFaction)
+                    if(rhs.Owner is {} rhsOwner)
                     {
-                        item.Faction = rhsFaction.DeepCopy(
+                        item.Owner = rhsOwner.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Location_FieldIndex.Faction));
+                            copyMask?.GetSubCrystal((int)Location_FieldIndex.Owner));
                     }
                     else
                     {
-                        item.Faction = default;
+                        item.Owner = default;
                     }
                 }
                 catch (Exception ex)
@@ -5595,9 +5381,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ParentLocation.SetTo(rhs.ParentLocation.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.NAM1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.MusicType) ?? true))
             {
-                item.NAM1.SetTo(rhs.NAM1.FormKeyNullable);
+                item.MusicType.SetTo(rhs.MusicType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
@@ -5615,9 +5401,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ActorFadeMult = rhs.ActorFadeMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.RandomConversionTimer) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                item.RandomConversionTimer = rhs.RandomConversionTimer;
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
@@ -5800,17 +5586,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
-                writer: writer,
-                items: item.Components,
-                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
                 writer: writer,
                 items: item.Properties,
@@ -6047,10 +5822,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            if (item.Faction is {} FactionItem)
+            if (item.Owner is {} OwnerItem)
             {
-                ((LocationFactionBinaryWriteTranslation)((IBinaryItem)FactionItem).BinaryWriteTranslator).Write(
-                    item: FactionItem,
+                ((LocationOwnerDataBinaryWriteTranslation)((IBinaryItem)OwnerItem).BinaryWriteTranslator).Write(
+                    item: OwnerItem,
                     writer: writer,
                     translationParams: translationParams);
             }
@@ -6060,7 +5835,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM1,
+                item: item.MusicType,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6080,7 +5855,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.TNAM,
+                item: item.RandomConversionTimer,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6162,20 +5937,10 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.BFCB:
-                {
-                    item.Components.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: AComponent_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: AComponent.TryCreateFromBinary));
-                    return (int)Location_FieldIndex.Components;
-                }
                 case RecordTypeInts.PRPS:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.Components)
+                        || lastParsed.ParsedIndex.Value <= (int)MajorRecord_FieldIndex.EditorID)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.Properties = 
@@ -6445,8 +6210,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    item.Faction = Mutagen.Bethesda.Starfield.LocationFaction.CreateFromBinary(frame: frame);
-                    return (int)Location_FieldIndex.Faction;
+                    item.Owner = Mutagen.Bethesda.Starfield.LocationOwnerData.CreateFromBinary(frame: frame);
+                    return (int)Location_FieldIndex.Owner;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -6457,8 +6222,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Location_FieldIndex.NAM1;
+                    item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Location_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -6487,8 +6252,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Location_FieldIndex.TNAM;
+                    item.RandomConversionTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Location_FieldIndex.RandomConversionTimer;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -6553,7 +6318,6 @@ namespace Mutagen.Bethesda.Starfield
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LocationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -6569,7 +6333,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public Location.MajorFlag MajorFlags => (Location.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? AddedPersistLocationReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? MasterPersistLocationReferences { get; private set; }
@@ -6605,17 +6368,17 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties2 { get; private set; }
-        #region Faction
-        private RangeInt32? _FactionLocation;
-        public ILocationFactionGetter? Faction => _FactionLocation.HasValue ? LocationFactionBinaryOverlay.LocationFactionFactory(_recordData.Slice(_FactionLocation!.Value.Min), _package) : default;
+        #region Owner
+        private RangeInt32? _OwnerLocation;
+        public ILocationOwnerDataGetter? Owner => _OwnerLocation.HasValue ? LocationOwnerDataBinaryOverlay.LocationOwnerDataFactory(_recordData.Slice(_OwnerLocation!.Value.Min), _package) : default;
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
         public IFormLinkNullableGetter<ILocationGetter> ParentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _ParentLocationLocation);
         #endregion
-        #region NAM1
-        private int? _NAM1Location;
-        public IFormLinkNullableGetter<IMusicTypeGetter> NAM1 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _NAM1Location);
+        #region MusicType
+        private int? _MusicTypeLocation;
+        public IFormLinkNullableGetter<IMusicTypeGetter> MusicType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicTypeLocation);
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
@@ -6633,9 +6396,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ActorFadeMultLocation;
         public Single? ActorFadeMult => _ActorFadeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorFadeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public Single? TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region RandomConversionTimer
+        private int? _RandomConversionTimerLocation;
+        public Single? RandomConversionTimer => _RandomConversionTimerLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RandomConversionTimerLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Color
         private int? _ColorLocation;
@@ -6718,19 +6481,10 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.BFCB:
-                {
-                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
-                        stream: stream,
-                        translationParams: translationParams,
-                        trigger: AComponent_Registration.TriggerSpecs,
-                        factory: AComponentBinaryOverlay.AComponentFactory);
-                    return (int)Location_FieldIndex.Components;
-                }
                 case RecordTypeInts.PRPS:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.Components)
+                        || lastParsed.ParsedIndex.Value <= (int)MajorRecord_FieldIndex.EditorID)
                     {
                         this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
                             stream: stream,
@@ -7001,8 +6755,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _FactionLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Location_FieldIndex.Faction;
+                    _OwnerLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Location_FieldIndex.Owner;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -7011,8 +6765,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _NAM1Location = (stream.Position - offset);
-                    return (int)Location_FieldIndex.NAM1;
+                    _MusicTypeLocation = (stream.Position - offset);
+                    return (int)Location_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -7036,8 +6790,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)Location_FieldIndex.TNAM;
+                    _RandomConversionTimerLocation = (stream.Position - offset);
+                    return (int)Location_FieldIndex.RandomConversionTimer;
                 }
                 case RecordTypeInts.CNAM:
                 {

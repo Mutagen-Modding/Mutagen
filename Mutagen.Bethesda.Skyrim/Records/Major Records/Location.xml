@@ -2,46 +2,46 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Location" objType="Record" recordType="LCTN" baseClass="SkyrimMajorRecord">
     <Fields>
-      <RefList name="ActorCellPersistentReferences" refName="LocationReference" recordType="ACPR" />
-      <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />
-      <List name="ReferenceCellPersistentReferences" recordType="RCPR">
+      <RefList name="PersistentActorReferencesAdded" refName="PersistentActorReference" recordType="ACPR" />
+      <RefList name="PersistentActorReferencesStatic" refName="PersistentActorReference" recordType="LCPR" />
+      <List name="PersistentActorReferencesRemoved" recordType="RCPR">
         <FormLink>
           <Interface>IPlacedSimple</Interface>
         </FormLink>
       </List>
-      <RefList name="ActorCellUniques" refName="LocationCellUnique" recordType="ACUN" />
-      <RefList name="LocationCellUniques" refName="LocationCellUnique" recordType="LCUN" />
-      <List name="ReferenceCellUnique" recordType="RCUN">
+      <RefList name="UniqueActorReferencesAdded" refName="UniqueActorReference" recordType="ACUN" />
+      <RefList name="UniqueActorReferencesStatic" refName="UniqueActorReference" recordType="LCUN" />
+      <List name="UniqueActorReferencesRemoved" recordType="RCUN">
         <FormLink refName="Npc" />
       </List>
-      <RefList name="ActorCellStaticReferences" refName="LocationCellStaticReference" recordType="ACSR" />
-      <RefList name="LocationCellStaticReferences" refName="LocationCellStaticReference" recordType="LCSR" />
-      <List name="ReferenceCellStaticReferences" recordType="RCSR">
+      <RefList name="LocationRefTypeReferencesAdded" refName="LocationRefTypeReference" recordType="ACSR" />
+      <RefList name="LocationRefTypeReferencesStatic" refName="LocationRefTypeReference" recordType="LCSR" />
+      <List name="LocationRefTypeReferencesRemoved" recordType="RCSR">
         <FormLink>
           <Interface>IPlacedSimple</Interface>
         </FormLink>
       </List>
-      <List name="ActorCellEncounterCell">
+      <List name="WorldspaceCellsAdded">
         <RefDirect refName="LocationCoordinate" recordType="ACEC" />
       </List>
-      <List name="LocationCellEncounterCell">
+      <List name="WorldspaceCellsStatic">
         <RefDirect refName="LocationCoordinate" recordType="LCEC" />
       </List>
-      <List name="ReferenceCellEncounterCell">
+      <List name="WorldspaceCellsRemoved">
         <RefDirect refName="LocationCoordinate" recordType="RCEC" />
       </List>
-      <List name="ActorCellMarkerReference" recordType="ACID">
+      <List name="InitiallyDisabledReferencesAdded" recordType="ACID">
         <FormLink>
           <Interface>IPlaced</Interface>
         </FormLink>
       </List>
-      <List name="LocationCellMarkerReference" recordType="LCID">
+      <List name="InitiallyDisabledReferencesStatic" recordType="LCID">
         <FormLink>
           <Interface>IPlaced</Interface>
         </FormLink>
       </List>
-      <RefList name="ActorCellEnablePoint" refName="LocationCellEnablePoint" recordType="ACEP" />
-      <RefList name="LocationCellEnablePoint" refName="LocationCellEnablePoint" recordType="LCEP" />
+      <RefList name="EnableParentReferencesAdded" refName="EnableParentReference" recordType="ACEP" />
+      <RefList name="EnableParentReferencesStatic" refName="EnableParentReference" recordType="LCEP" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
@@ -56,31 +56,28 @@
       <FormLink name="HorseMarkerRef" recordType="NAM0" refName="PlacedObject" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
-    <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
-  <Object name="LocationReference" objType="Subrecord">
+  <Object name="PersistentActorReference" objType="Subrecord">
     <Fields>
-      <FormLink name="Actor">
-        <Interface>ILinkedReference</Interface>
-      </FormLink>
+      <FormLink name="Actor" refName="PlacedNpc" />
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>
       </FormLink>
       <P2Int16 name="Grid" swapCoords="true" />
     </Fields>
   </Object>
-  <Object name="LocationCellUnique" objType="Subrecord">
+  <Object name="UniqueActorReference" objType="Subrecord">
     <Fields>
       <FormLink name="Actor" refName="Npc" />
       <FormLink name="Ref" refName="PlacedNpc" />
       <FormLink name="Location" refName="Location" />
     </Fields>
   </Object>
-  <Object name="LocationCellStaticReference" objType="Subrecord">
+  <Object name="LocationRefTypeReference" objType="Subrecord">
     <Fields>
       <FormLink name="LocationRefType" refName="LocationReferenceType" />
-      <FormLink name="Marker">
-        <Interface>ILinkedReference</Interface>
+      <FormLink name="Ref">
+        <Interface>IPlaced</Interface>
       </FormLink>
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>
@@ -98,7 +95,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="LocationCellEnablePoint" objType="Subrecord">
+  <Object name="EnableParentReference" objType="Subrecord">
     <Fields>
       <FormLink name="Actor">
         <Interface>IPlaced</Interface>

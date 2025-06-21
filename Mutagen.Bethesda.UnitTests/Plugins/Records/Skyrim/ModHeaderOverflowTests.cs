@@ -16,7 +16,7 @@ public abstract class AModHeaderOverflowTests
     {
         var race = Get(new ModPath(ModKey.Null, TestDataPathing.HeaderOverflow));
         race.ModHeader.MasterReferences.Select(x => x.Master.ToString())
-            .ShouldEqual("Dawnguard.esm");
+            .ShouldEqualEnumerable("Dawnguard.esm");
     }
 }
 

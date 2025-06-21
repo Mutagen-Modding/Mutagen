@@ -41,6 +41,8 @@ namespace Mutagen.Bethesda.Starfield
                     DestructibleObjectComponent_Registration.Instance,
                     Flora_Registration.Instance,
                     Furniture_Registration.Instance,
+                    Ingestible_Registration.Instance,
+                    Key_Registration.Instance,
                     Light_Registration.Instance,
                     MiscItem_Registration.Instance,
                     MoveableStatic_Registration.Instance,
@@ -50,6 +52,16 @@ namespace Mutagen.Bethesda.Starfield
                     Setter: typeof(IHasDestructible),
                     Getter: typeof(IHasDestructibleGetter)));
             dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
+            dict[typeof(IHasVoiceType)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Npc_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasVoiceType),
+                    Getter: typeof(IHasVoiceTypeGetter)));
+            dict[typeof(IHasVoiceTypeGetter)] = dict[typeof(IHasVoiceType)] with { Setter = false };
             dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
@@ -264,7 +276,6 @@ namespace Mutagen.Bethesda.Starfield
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
                     Ingestible_Registration.Instance,
-                    InstanceNamingRule_Registration.Instance,
                     Key_Registration.Instance,
                     Keyword_Registration.Instance,
                     Light_Registration.Instance,
@@ -368,7 +379,6 @@ namespace Mutagen.Bethesda.Starfield
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
                     Ingestible_Registration.Instance,
-                    InstanceNamingRule_Registration.Instance,
                     Key_Registration.Instance,
                     Keyword_Registration.Instance,
                     Light_Registration.Instance,
@@ -487,7 +497,6 @@ namespace Mutagen.Bethesda.Starfield
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
                     Ingestible_Registration.Instance,
-                    InstanceNamingRule_Registration.Instance,
                     Key_Registration.Instance,
                     Keyword_Registration.Instance,
                     Light_Registration.Instance,
@@ -564,7 +573,6 @@ namespace Mutagen.Bethesda.Starfield
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
                     Ingestible_Registration.Instance,
-                    InstanceNamingRule_Registration.Instance,
                     Key_Registration.Instance,
                     Keyword_Registration.Instance,
                     Light_Registration.Instance,

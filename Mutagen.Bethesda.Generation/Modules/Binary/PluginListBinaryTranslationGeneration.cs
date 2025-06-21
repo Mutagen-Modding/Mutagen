@@ -1396,8 +1396,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         bool inline)
     {
         var list = typeGen as ListType;
-        string typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
-        sb.AppendLine($"{outItemAccessor} = new ExtendedList<{typeName}>();");
+        if (list.SubTypeGeneration is not LoquiType)
+        {
+            string typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
+            sb.AppendLine($"{outItemAccessor} = new ExtendedList<{typeName}>();");
+        }
         await GenerateCopyIn(sb, objGen, typeGen,
             nodeAccessor: nodeAccessor, 
             itemAccessor: outItemAccessor,

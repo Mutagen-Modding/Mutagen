@@ -174,7 +174,7 @@ public class CreationClubLiveListingsFileReaderTests
         reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable().And(listingB));
         fileChanges.MarkChanged(path);
         list.Items.ShouldHaveCount(2);
-        list.Items.ShouldEqual(
+        list.Items.ShouldEqualEnumerable(
             listingA,
             listingB);
         stateTest = scheduler.Start(() => state);

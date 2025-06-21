@@ -5,12 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Skyrim mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -94,6 +94,7 @@
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
+    <Compile Include="Extensions\LocationExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Extensions\PlacedContextExt.cs" />
     <Compile Include="Extensions\WorldspaceExt.cs" />
@@ -113,6 +114,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IHasVoiceType.cs" />
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -1487,6 +1489,9 @@
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Flora.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -2658,19 +2663,7 @@
     <Compile Include="Records\Major Records\Location_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LocationReference_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocationCellUnique_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocationCellStaticReference_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\LocationCoordinate_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocationCellEnablePoint_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
@@ -3385,7 +3378,6 @@
     <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\IEmittance_Generated.cs" />
-    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\ILinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
@@ -4737,6 +4729,18 @@
     </Compile>
     <Compile Include="Records\Major Records\AlphaLayerData_Generated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\UniqueActorReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationRefTypeReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnableParentReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PersistentActorReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
