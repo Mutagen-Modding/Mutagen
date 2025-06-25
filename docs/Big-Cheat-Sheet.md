@@ -43,7 +43,7 @@ If you're just copy pasting code, often it will not compile because some require
 ``` cs
 using var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE);
 
-var outgoingPatch = new SkyrimMod(ModKey.FromFileName("MyPatch.esp"), SkyrimRelease.SkyrimSE);
+var outgoingPatch = new SkyrimMod("MyPatch.esp", SkyrimRelease.SkyrimSE);
 
 foreach (var readonlyNpc in env.LoadOrder.PriorityOrder.Npc().WinningContextOverrides())
 {
