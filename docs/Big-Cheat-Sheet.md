@@ -62,7 +62,11 @@ outgoingPatch.BeginWrite
     .Write();
 ```
 
-[:octicons-arrow-right-24: Mod Retrieval](loadorder/index.md#accessing-specific-listings)
+[:octicons-arrow-right-24: Environments](environment/index.md)
+
+[:octicons-arrow-right-24: Winning Overrides](loadorder/Winning-Overrides.md)
+
+[:octicons-arrow-right-24: Readonly Best Practice](best-practices/Read-Only.md)
 
 ## Construct a ModKey
 === "FromFileName"
