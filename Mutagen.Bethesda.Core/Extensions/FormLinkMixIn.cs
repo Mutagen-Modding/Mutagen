@@ -90,7 +90,7 @@ public static class FormLinkMixIn
     public static IFormLinkGetter<TGetter> AsLinkGetter<TGetter>(this TGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return new FormLink<TGetter>(rec.FormKey);
+        return new FormLinkGetter<TGetter>(rec.FormKey);
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public static class FormLinkMixIn
     public static IFormLinkGetter<TGetter> ToLinkGetter<TGetter>(this TGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return new FormLink<TGetter>(rec.FormKey);
+        return new FormLinkGetter<TGetter>(rec.FormKey);
     }
 
     /// <summary>
@@ -242,7 +242,7 @@ public static class FormLinkMixIn
     public static IFormLinkNullableGetter<TGetter> AsNullableLinkGetter<TGetter>(this TGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return new FormLinkNullable<TGetter>(rec.FormKey);
+        return new FormLinkNullableGetter<TGetter>(rec.FormKey);
     }
 
     /// <summary>
@@ -253,7 +253,7 @@ public static class FormLinkMixIn
     public static IFormLinkNullableGetter<TGetter> ToNullableLinkGetter<TGetter>(this TGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return new FormLinkNullable<TGetter>(rec.FormKey);
+        return new FormLinkNullableGetter<TGetter>(rec.FormKey);
     }
 
     /// <summary>
