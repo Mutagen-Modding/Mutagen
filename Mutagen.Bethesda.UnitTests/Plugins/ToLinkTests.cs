@@ -25,8 +25,8 @@ public class ToLinkTests
         n.ToLinkGetter().ShouldBeOfType<FormLinkGetter<Npc>>();
         n.AsLinkGetter().ShouldBeOfType<FormLinkGetter<Npc>>();
         IMajorRecordGetter maj = n;
-        maj.ToLinkGetter().ShouldBeOfType<FormLinkGetter<IMajorRecordGetter>>();
-        maj.AsLinkGetter().ShouldBeOfType<FormLinkGetter<IMajorRecordGetter>>();
+        maj.ToLinkGetter().ShouldBeOfType<FormLinkGetter<INpcGetter>>();
+        maj.AsLinkGetter().ShouldBeOfType<FormLinkGetter<INpcGetter>>();
     }
     
     [Theory, MutagenModAutoData]
@@ -45,7 +45,7 @@ public class ToLinkTests
         n.ToNullableLinkGetter().ShouldBeOfType<FormLinkNullableGetter<Npc>>();
         n.AsNullableLinkGetter().ShouldBeOfType<FormLinkNullableGetter<Npc>>();
         IMajorRecordGetter maj = n;
-        maj.ToNullableLinkGetter().ShouldBeOfType<FormLinkNullableGetter<IMajorRecordGetter>>();
-        maj.AsNullableLinkGetter().ShouldBeOfType<FormLinkNullableGetter<IMajorRecordGetter>>();
+        maj.ToNullableLinkGetter().ShouldBeOfType<FormLinkNullableGetter<INpcGetter>>();
+        maj.AsNullableLinkGetter().ShouldBeOfType<FormLinkNullableGetter<INpcGetter>>();
     }
 }
