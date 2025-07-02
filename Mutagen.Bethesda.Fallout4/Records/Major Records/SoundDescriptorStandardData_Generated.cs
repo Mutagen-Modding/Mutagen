@@ -53,10 +53,10 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region PercentFrequencyShift
-        public Percent PercentFrequencyShift { get; set; } = default(Percent);
+        public SByte PercentFrequencyShift { get; set; } = default(SByte);
         #endregion
         #region PercentFrequencyVariance
-        public Percent PercentFrequencyVariance { get; set; } = default(Percent);
+        public SByte PercentFrequencyVariance { get; set; } = default(SByte);
         #endregion
         #region Priority
         public SByte Priority { get; set; } = default(SByte);
@@ -534,8 +534,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ISoundDescriptorStandardData>,
         ISoundDescriptorStandardDataGetter
     {
-        new Percent PercentFrequencyShift { get; set; }
-        new Percent PercentFrequencyVariance { get; set; }
+        new SByte PercentFrequencyShift { get; set; }
+        new SByte PercentFrequencyVariance { get; set; }
         new SByte Priority { get; set; }
         new SByte Variance { get; set; }
         new Single StaticAttenuation { get; set; }
@@ -547,8 +547,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ISoundDescriptorStandardDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => SoundDescriptorStandardData_Registration.Instance;
-        Percent PercentFrequencyShift { get; }
-        Percent PercentFrequencyVariance { get; }
+        SByte PercentFrequencyShift { get; }
+        SByte PercentFrequencyVariance { get; }
         SByte Priority { get; }
         SByte Variance { get; }
         Single StaticAttenuation { get; }
@@ -779,8 +779,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(ISoundDescriptorStandardData item)
         {
             ClearPartial();
-            item.PercentFrequencyShift = default(Percent);
-            item.PercentFrequencyVariance = default(Percent);
+            item.PercentFrequencyShift = default(SByte);
+            item.PercentFrequencyVariance = default(SByte);
             item.Priority = default(SByte);
             item.Variance = default(SByte);
             item.StaticAttenuation = default(Single);
@@ -851,8 +851,8 @@ namespace Mutagen.Bethesda.Fallout4
             SoundDescriptorStandardData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.PercentFrequencyShift = item.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift);
-            ret.PercentFrequencyVariance = item.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance);
+            ret.PercentFrequencyShift = item.PercentFrequencyShift == rhs.PercentFrequencyShift;
+            ret.PercentFrequencyVariance = item.PercentFrequencyVariance == rhs.PercentFrequencyVariance;
             ret.Priority = item.Priority == rhs.Priority;
             ret.Variance = item.Variance == rhs.Variance;
             ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
@@ -946,11 +946,11 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IASoundDescriptorGetter)lhs, (IASoundDescriptorGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.PercentFrequencyShift) ?? true))
             {
-                if (!lhs.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift)) return false;
+                if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.PercentFrequencyVariance) ?? true))
             {
-                if (!lhs.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance)) return false;
+                if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptorStandardData_FieldIndex.Priority) ?? true))
             {
@@ -1174,14 +1174,8 @@ namespace Mutagen.Bethesda.Fallout4
             ISoundDescriptorStandardDataGetter item,
             MutagenWriter writer)
         {
-            PercentBinaryTranslation.Write(
-                writer: writer,
-                item: item.PercentFrequencyShift,
-                integerType: FloatIntegerType.Byte);
-            PercentBinaryTranslation.Write(
-                writer: writer,
-                item: item.PercentFrequencyVariance,
-                integerType: FloatIntegerType.Byte);
+            writer.Write(item.PercentFrequencyShift);
+            writer.Write(item.PercentFrequencyVariance);
             writer.Write(item.Priority);
             writer.Write(item.Variance);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1234,12 +1228,8 @@ namespace Mutagen.Bethesda.Fallout4
             ISoundDescriptorStandardData item,
             MutagenFrame frame)
         {
-            item.PercentFrequencyShift = PercentBinaryTranslation.Parse(
-                reader: frame,
-                integerType: FloatIntegerType.Byte);
-            item.PercentFrequencyVariance = PercentBinaryTranslation.Parse(
-                reader: frame,
-                integerType: FloatIntegerType.Byte);
+            item.PercentFrequencyShift = frame.ReadInt8();
+            item.PercentFrequencyVariance = frame.ReadInt8();
             item.Priority = frame.ReadInt8();
             item.Variance = frame.ReadInt8();
             item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -1293,8 +1283,8 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public Percent PercentFrequencyShift => PercentBinaryTranslation.GetPercent(_structData.Slice(0x0, 0x1), FloatIntegerType.Byte);
-        public Percent PercentFrequencyVariance => PercentBinaryTranslation.GetPercent(_structData.Slice(0x1, 0x1), FloatIntegerType.Byte);
+        public SByte PercentFrequencyShift => (sbyte)_structData.Slice(0x0, 0x1)[0];
+        public SByte PercentFrequencyVariance => (sbyte)_structData.Slice(0x1, 0x1)[0];
         public SByte Priority => (sbyte)_structData.Slice(0x2, 0x1)[0];
         public SByte Variance => (sbyte)_structData.Slice(0x3, 0x1)[0];
         public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x4, 0x2), FloatIntegerType.UShort, multiplier: null, divisor: 100f);

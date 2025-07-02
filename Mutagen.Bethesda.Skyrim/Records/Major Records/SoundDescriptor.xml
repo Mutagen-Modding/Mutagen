@@ -14,8 +14,8 @@
       <RefDirect name="LoopAndRumble" refName="SoundLoopAndRumble" />
       <Data recordType="BNAM">
         <Fields>
-          <Percent name="PercentFrequencyShift" integerType="Byte" />
-          <Percent name="PercentFrequencyVariance" integerType="Byte" />
+          <Int8 name="PercentFrequencyShift" />
+          <Int8 name="PercentFrequencyVariance" />
           <Int8 name="Priority" />
           <Int8 name="Variance" />
           <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
