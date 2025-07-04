@@ -98,6 +98,7 @@
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Extensions\PlacedContextExt.cs" />
     <Compile Include="Extensions\WorldspaceExt.cs" />
+    <Compile Include="Interfaces\Aspect\IHasEffects.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -1528,6 +1529,12 @@
     <Compile Include="Records\Major Records\SceneScriptFragments.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Scroll.cs">
+      <DependentUpon>Scroll.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Spell.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\StoryManagerEventNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
@@ -1545,9 +1552,6 @@
     </Compile>
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AlphaLayer.cs">
-      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>

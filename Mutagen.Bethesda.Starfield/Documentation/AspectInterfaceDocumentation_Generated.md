@@ -19,6 +19,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MoveableStatic
 - Projectile
+### IHasEffects
+- Ingestible
+- ObjectEffect
+- Spell
 ### IHasVoiceType
 - Npc
 ### IHaveVirtualMachineAdapter
@@ -596,6 +600,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### Ingestible
 - IHasDestructible
+- IHasEffects
 - IKeyworded
 - IModeled
 - INamed
@@ -708,6 +713,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - INamed
 ### ObjectEffect
+- IHasEffects
 - INamed
 - IObjectBounded
 ### ObjectModification
@@ -885,6 +891,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### SpeechChallenge
 - IKeyworded
 ### Spell
+- IHasEffects
 - IKeyworded
 - INamed
 - IObjectBounded

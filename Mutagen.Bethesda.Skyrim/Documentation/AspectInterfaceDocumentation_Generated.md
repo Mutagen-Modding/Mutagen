@@ -31,6 +31,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SoulGem
 - TalkingActivator
 - Weapon
+### IHasEffects
+- Ingestible
+- Ingredient
+- ObjectEffect
+- Scroll
+- Spell
 ### IHasIcons
 - AlchemicalApparatus
 - Ammunition
@@ -468,6 +474,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### Ingestible
 - IHasDestructible
+- IHasEffects
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -476,6 +483,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IWeightValue
 ### Ingredient
 - IHasDestructible
+- IHasEffects
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -556,6 +564,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 ### ObjectEffect
+- IHasEffects
 - INamed
 - IObjectBounded
 ### Package
@@ -673,6 +682,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Scroll
 - IHasDestructible
+- IHasEffects
 - IKeyworded
 - IModeled
 - INamed
@@ -693,6 +703,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### SoundMarker
 - IObjectBounded
 ### Spell
+- IHasEffects
 - IKeyworded
 - INamed
 - IObjectBounded
