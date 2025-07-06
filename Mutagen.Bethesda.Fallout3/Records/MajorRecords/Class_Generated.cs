@@ -2243,7 +2243,7 @@ namespace Mutagen.Bethesda.Fallout3
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         private RangeInt32? _DATALocation;
-        public ReadOnlyMemorySlice<ActorValue> TagSkills => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_structData.Slice(_DATALocation!.Value.Min), amount: 4, enumLength: 4);
+        public ReadOnlyMemorySlice<ActorValue> TagSkills => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_recordData.Slice(_DATALocation!.Value.Min), amount: 4, enumLength: 4);
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Flags_IsSet => _DATALocation.HasValue;
