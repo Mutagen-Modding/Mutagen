@@ -144,10 +144,10 @@ namespace Mutagen.Bethesda.Skyrim
         public SByte PercentFrequencyVariance { get; set; } = default(SByte);
         #endregion
         #region Priority
-        public SByte Priority { get; set; } = default(SByte);
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Variance
-        public SByte Variance { get; set; } = default(SByte);
+        public Byte Variance { get; set; } = default(Byte);
         #endregion
         #region StaticAttenuation
         public Single StaticAttenuation { get; set; } = default(Single);
@@ -1086,8 +1086,8 @@ namespace Mutagen.Bethesda.Skyrim
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
         new SByte PercentFrequencyShift { get; set; }
         new SByte PercentFrequencyVariance { get; set; }
-        new SByte Priority { get; set; }
-        new SByte Variance { get; set; }
+        new Byte Priority { get; set; }
+        new Byte Variance { get; set; }
         new Single StaticAttenuation { get; set; }
     }
 
@@ -1119,8 +1119,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundLoopAndRumbleGetter? LoopAndRumble { get; }
         SByte PercentFrequencyShift { get; }
         SByte PercentFrequencyVariance { get; }
-        SByte Priority { get; }
-        SByte Variance { get; }
+        Byte Priority { get; }
+        Byte Variance { get; }
         Single StaticAttenuation { get; }
 
     }
@@ -1421,8 +1421,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.LoopAndRumble = null;
             item.PercentFrequencyShift = default(SByte);
             item.PercentFrequencyVariance = default(SByte);
-            item.Priority = default(SByte);
-            item.Variance = default(SByte);
+            item.Priority = default(Byte);
+            item.Variance = default(Byte);
             item.StaticAttenuation = default(Single);
             base.Clear(item);
         }
@@ -2459,9 +2459,9 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 1) return null;
                     item.PercentFrequencyVariance = dataFrame.ReadInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.Priority = dataFrame.ReadInt8();
+                    item.Priority = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.Variance = dataFrame.ReadInt8();
+                    item.Variance = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 2) return null;
                     item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
@@ -2570,12 +2570,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Priority
         private int _PriorityLocation => _BNAMLocation!.Value.Min + 0x2;
         private bool _Priority_IsSet => _BNAMLocation.HasValue;
-        public SByte Priority => _Priority_IsSet ? (sbyte)_recordData.Slice(_PriorityLocation, 1)[0] : default(SByte);
+        public Byte Priority => _Priority_IsSet ? _recordData.Span[_PriorityLocation] : default;
         #endregion
         #region Variance
         private int _VarianceLocation => _BNAMLocation!.Value.Min + 0x3;
         private bool _Variance_IsSet => _BNAMLocation.HasValue;
-        public SByte Variance => _Variance_IsSet ? (sbyte)_recordData.Slice(_VarianceLocation, 1)[0] : default(SByte);
+        public Byte Variance => _Variance_IsSet ? _recordData.Span[_VarianceLocation] : default;
         #endregion
         #region StaticAttenuation
         private int _StaticAttenuationLocation => _BNAMLocation!.Value.Min + 0x4;
