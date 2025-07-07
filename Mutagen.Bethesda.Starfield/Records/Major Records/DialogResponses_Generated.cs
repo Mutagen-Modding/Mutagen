@@ -3463,7 +3463,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SubtitlePriority
         private int? _SubtitlePriorityLocation;
-        public DialogResponses.SubtitlePriorityLevel? SubtitlePriority => _SubtitlePriorityLocation.HasValue ? (DialogResponses.SubtitlePriorityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtitlePriorityLocation!.Value, _package.MetaData.Constants)) : default(DialogResponses.SubtitlePriorityLevel?);
+        public DialogResponses.SubtitlePriorityLevel? SubtitlePriority => EnumBinaryTranslation<DialogResponses.SubtitlePriorityLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SubtitlePriorityLocation, _recordData, _package, 4);
         #endregion
         #region COCT
         private int? _COCTLocation;

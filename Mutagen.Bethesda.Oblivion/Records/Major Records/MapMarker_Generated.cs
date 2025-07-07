@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Flags
         private int? _FlagsLocation;
-        public MapMarker.Flag? Flags => _FlagsLocation.HasValue ? (MapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(MapMarker.Flag?);
+        public MapMarker.Flag? Flags => EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Name
         private int? _NameLocation;

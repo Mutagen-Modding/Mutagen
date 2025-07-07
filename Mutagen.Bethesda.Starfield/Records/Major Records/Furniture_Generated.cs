@@ -5341,7 +5341,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Furniture.Flag? Flags => _FlagsLocation.HasValue ? (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Furniture.Flag?);
+        public Furniture.Flag? Flags => EnumBinaryTranslation<Furniture.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
         #region ActivationAngleForPlayer
         private int? _ActivationAngleForPlayerLocation;
@@ -5354,7 +5354,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IContainerEntryGetter>? ContainerItems { get; private set; }
         #region MarkerFlags
         private int? _MarkerFlagsLocation;
-        public FurnitureMarkerFlags? MarkerFlags => _MarkerFlagsLocation.HasValue ? (FurnitureMarkerFlags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerFlagsLocation!.Value, _package.MetaData.Constants)) : default(FurnitureMarkerFlags?);
+        public FurnitureMarkerFlags? MarkerFlags => EnumBinaryTranslation<FurnitureMarkerFlags, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MarkerFlagsLocation, _recordData, _package, 4);
         #endregion
         #region ActivationAngleForSittingActor
         private int? _ActivationAngleForSittingActorLocation;
@@ -5362,7 +5362,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BenchType
         private int? _BenchTypeLocation;
-        public Furniture.BenchTypes? BenchType => _BenchTypeLocation.HasValue ? (Furniture.BenchTypes)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BenchTypeLocation!.Value, _package.MetaData.Constants)[0] : default(Furniture.BenchTypes?);
+        public Furniture.BenchTypes? BenchType => EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_BenchTypeLocation, _recordData, _package, 1);
         #endregion
         #region AssociatedForm
         private int? _AssociatedFormLocation;

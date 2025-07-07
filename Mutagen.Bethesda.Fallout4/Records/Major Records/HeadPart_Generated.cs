@@ -2549,11 +2549,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IModelGetter? Model { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public HeadPart.Flag Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(HeadPart.Flag);
+        public HeadPart.Flag Flags => EnumBinaryTranslation<HeadPart.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
+        public HeadPart.TypeEnum? Type => EnumBinaryTranslation<HeadPart.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = [];
         public IReadOnlyList<IPartGetter> Parts { get; private set; } = [];

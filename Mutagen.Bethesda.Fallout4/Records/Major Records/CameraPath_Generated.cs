@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = [];
         #region Zoom
         private int? _ZoomLocation;
-        public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
+        public CameraPath.Flags Zoom => EnumBinaryTranslation<CameraPath.Flags, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ZoomLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = [];
         partial void CustomFactoryEnd(

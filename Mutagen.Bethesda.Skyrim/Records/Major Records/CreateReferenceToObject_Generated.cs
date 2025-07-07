@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Level
         private int? _LevelLocation;
-        public Level Level => _LevelLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelLocation!.Value, _package.MetaData.Constants)) : default(Level);
+        public Level Level => EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_LevelLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = [];
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Faction.FactionFlag?);
+        public Faction.FactionFlag? Flags => EnumBinaryTranslation<Faction.FactionFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region CrimeGoldMultiplier
         private int? _CrimeGoldMultiplierLocation;

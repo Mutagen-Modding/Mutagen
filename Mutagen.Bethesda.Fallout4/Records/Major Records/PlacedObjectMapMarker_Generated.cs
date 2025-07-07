@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public PlacedObjectMapMarker.Flag Flags => _FlagsLocation.HasValue ? (PlacedObjectMapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(PlacedObjectMapMarker.Flag);
+        public PlacedObjectMapMarker.Flag Flags => EnumBinaryTranslation<PlacedObjectMapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Name
         private int? _NameLocation;

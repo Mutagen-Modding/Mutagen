@@ -2444,7 +2444,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Type
         private int? _TypeLocation;
-        public SceneAction.TypeEnum Type => _TypeLocation.HasValue ? (SceneAction.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.TypeEnum);
+        public SceneAction.TypeEnum Type => EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 2);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -2468,7 +2468,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneAction.Flag? Flags => _FlagsLocation.HasValue ? (SceneAction.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.Flag?);
+        public SceneAction.Flag? Flags => EnumBinaryTranslation<SceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region StartPhase
         private int? _StartPhaseLocation;
@@ -2501,7 +2501,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Emotion
         private int? _EmotionLocation;
-        public Emotion? Emotion => _EmotionLocation.HasValue ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmotionLocation!.Value, _package.MetaData.Constants)) : default(Emotion?);
+        public Emotion? Emotion => EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EmotionLocation, _recordData, _package, 4);
         #endregion
         #region EmotionValue
         private int? _EmotionValueLocation;

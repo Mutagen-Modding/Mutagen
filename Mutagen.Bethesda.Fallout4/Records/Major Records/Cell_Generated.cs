@@ -6553,7 +6553,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Cell.Flag Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag);
+        public Cell.Flag Flags => EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 2);
         #endregion
         #region PreVisFilesTimestamp
         private int? _PreVisFilesTimestampLocation;

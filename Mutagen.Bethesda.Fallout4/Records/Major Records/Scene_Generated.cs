@@ -3551,7 +3551,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
+        public Scene.Flag? Flags => EnumBinaryTranslation<Scene.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = [];
         public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = [];

@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
-        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
+        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_AnimationGroupSectionLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
         partial void CustomFactoryEnd(

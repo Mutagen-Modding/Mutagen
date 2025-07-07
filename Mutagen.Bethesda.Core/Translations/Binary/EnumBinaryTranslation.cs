@@ -1,3 +1,6 @@
+using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Translations.Binary;
@@ -193,5 +196,46 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
             default:
                 throw new NotImplementedException();
         }
+    }
+
+    internal TEnum ParseRecord(int? location, ReadOnlyMemorySlice<byte> data, BinaryOverlayFactoryPackage package, byte enumLength)
+    {
+        if (!location.HasValue) return default(TEnum);
+        var slice = HeaderTranslation.ExtractSubrecordMemory(data, location.Value, package.MetaData.Constants);
+        return Parse(location, slice, package, enumLength);
+    }
+
+    internal TEnum? ParseRecordNullable(int? location, ReadOnlyMemorySlice<byte> data, BinaryOverlayFactoryPackage package, byte enumLength)
+    {
+        if (!location.HasValue) return default(TEnum?);
+        return ParseRecord(location, data, package, enumLength);
+    }
+
+    internal TEnum Parse(int? location, ReadOnlyMemorySlice<byte> data, BinaryOverlayFactoryPackage package, int enumLength)
+    {
+        if (!location.HasValue) return default(TEnum);
+        long val;
+        if (data.Length < enumLength)
+        {
+            enumLength = data.Length;
+        }
+        switch (enumLength)
+        {
+            case 1:
+                val = data[0];
+                break;
+            case 2:
+                val = BinaryPrimitives.ReadInt16LittleEndian(data);
+                break;
+            case 4:
+                val = BinaryPrimitives.ReadInt32LittleEndian(data);
+                break;
+            case 8:
+                val = BinaryPrimitives.ReadInt64LittleEndian(data);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        return Enums<TEnum>.Convert(val);
     }
 }

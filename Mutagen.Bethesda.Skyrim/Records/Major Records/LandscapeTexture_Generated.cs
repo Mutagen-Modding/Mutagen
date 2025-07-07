@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = [];
         #region Flags
         private int? _FlagsLocation;
-        public LandscapeTexture.Flag? Flags => _FlagsLocation.HasValue ? (LandscapeTexture.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LandscapeTexture.Flag?);
+        public LandscapeTexture.Flag? Flags => EnumBinaryTranslation<LandscapeTexture.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Type
         private int? _TypeLocation;
-        public SoundOutputModel.TypeEnum? Type => _TypeLocation.HasValue ? (SoundOutputModel.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundOutputModel.TypeEnum?);
+        public SoundOutputModel.TypeEnum? Type => EnumBinaryTranslation<SoundOutputModel.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region CNAM
         private int? _CNAMLocation;

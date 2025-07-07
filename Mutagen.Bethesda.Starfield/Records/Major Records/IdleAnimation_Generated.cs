@@ -2101,7 +2101,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public IdleAnimation.Flag? Flags => _FlagsLocation.HasValue ? (IdleAnimation.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.Flag?);
+        public IdleAnimation.Flag? Flags => EnumBinaryTranslation<IdleAnimation.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region AnimationFile
         private int? _AnimationFileLocation;

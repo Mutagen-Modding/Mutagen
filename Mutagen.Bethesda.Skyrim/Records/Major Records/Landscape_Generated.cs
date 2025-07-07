@@ -2291,7 +2291,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Flags
         private int? _FlagsLocation;
-        public Landscape.Flag? Flags => _FlagsLocation.HasValue ? (Landscape.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Landscape.Flag?);
+        public Landscape.Flag? Flags => EnumBinaryTranslation<Landscape.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyArray2d<P3UInt8>? VertexNormals { get; private set; }
         #region VertexHeightMap

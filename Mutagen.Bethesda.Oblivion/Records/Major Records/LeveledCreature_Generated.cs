@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledFlag? Flags => _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
+        public LeveledFlag? Flags => EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = [];
         #region Script

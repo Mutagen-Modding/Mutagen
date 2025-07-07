@@ -4132,7 +4132,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public AQuestAlias.Flag? Flags => _FlagsLocation.HasValue ? (AQuestAlias.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AQuestAlias.Flag?);
+        public AQuestAlias.Flag? Flags => EnumBinaryTranslation<AQuestAlias.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region AliasIDToForceIntoWhenFilled
         private int? _AliasIDToForceIntoWhenFilledLocation;

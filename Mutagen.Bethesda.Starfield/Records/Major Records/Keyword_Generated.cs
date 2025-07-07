@@ -2175,7 +2175,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Type
         private int? _TypeLocation;
-        public Keyword.TypeEnum? Type => _TypeLocation.HasValue ? (Keyword.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Keyword.TypeEnum?);
+        public Keyword.TypeEnum? Type => EnumBinaryTranslation<Keyword.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region FNAM
         private int? _FNAMLocation;

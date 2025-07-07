@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public WorldspaceParent.Flag Flags => _FlagsLocation.HasValue ? (WorldspaceParent.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(WorldspaceParent.Flag);
+        public WorldspaceParent.Flag Flags => EnumBinaryTranslation<WorldspaceParent.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 2);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

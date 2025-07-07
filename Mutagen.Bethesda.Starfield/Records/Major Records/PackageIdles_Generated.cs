@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Type
         private int? _TypeLocation;
-        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
+        public PackageIdles.Types Type => EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 1);
         #endregion
         #region TimerSetting
         partial void TimerSettingCustomParse(

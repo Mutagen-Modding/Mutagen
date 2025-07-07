@@ -2137,7 +2137,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ReverbClass
         private int? _ReverbClassLocation;
-        public ReverbClass ReverbClass => _ReverbClassLocation.HasValue ? (ReverbClass)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReverbClassLocation!.Value, _package.MetaData.Constants)) : default(ReverbClass);
+        public ReverbClass ReverbClass => EnumBinaryTranslation<ReverbClass, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ReverbClassLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

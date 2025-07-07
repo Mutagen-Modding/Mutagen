@@ -3275,7 +3275,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledItem.Flag Flags => _FlagsLocation.HasValue ? (LeveledItem.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledItem.Flag);
+        public LeveledItem.Flag Flags => EnumBinaryTranslation<LeveledItem.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 2);
         #endregion
         #region UseGlobal
         private int? _UseGlobalLocation;

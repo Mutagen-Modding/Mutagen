@@ -6425,7 +6425,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
+        public SoundLevel SoundLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_SoundLevelLocation, _recordData, _package, 4);
         #endregion
         public IANpcSoundDefinitionGetter? Sound { get; private set; }
         #region DefaultOutfit

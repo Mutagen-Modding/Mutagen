@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DialogType
         private int? _DialogTypeLocation;
-        public DialogType? DialogType => _DialogTypeLocation.HasValue ? (DialogType)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogTypeLocation!.Value, _package.MetaData.Constants)[0] : default(DialogType?);
+        public DialogType? DialogType => EnumBinaryTranslation<DialogType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_DialogTypeLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

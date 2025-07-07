@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Type
         private int? _TypeLocation;
-        public ActorValueModulation.GroupType Type => _TypeLocation.HasValue ? (ActorValueModulation.GroupType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueModulation.GroupType);
+        public ActorValueModulation.GroupType Type => EnumBinaryTranslation<ActorValueModulation.GroupType, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region YNAM
         private int? _YNAMLocation;
@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IActorValueModulationEntryGetter>? Entries { get; private set; }
         #region TextureType
         private int? _TextureTypeLocation;
-        public ActorValueModulation.TextureTypeEnum? TextureType => _TextureTypeLocation.HasValue ? (ActorValueModulation.TextureTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureTypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueModulation.TextureTypeEnum?);
+        public ActorValueModulation.TextureTypeEnum? TextureType => EnumBinaryTranslation<ActorValueModulation.TextureTypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TextureTypeLocation, _recordData, _package, 4);
         #endregion
         #region Parent
         private int? _ParentLocation;

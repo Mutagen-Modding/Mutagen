@@ -4040,7 +4040,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConstructibleObjectComponentGetter>? RepairComponents { get; private set; }
         #region LearnMethod
         private int? _LearnMethodLocation;
-        public ConstructibleObject.LearnMethodEnum? LearnMethod => _LearnMethodLocation.HasValue ? (ConstructibleObject.LearnMethodEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _LearnMethodLocation!.Value, _package.MetaData.Constants)[0] : default(ConstructibleObject.LearnMethodEnum?);
+        public ConstructibleObject.LearnMethodEnum? LearnMethod => EnumBinaryTranslation<ConstructibleObject.LearnMethodEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_LearnMethodLocation, _recordData, _package, 1);
         #endregion
         #region Value
         private int? _ValueLocation;
@@ -4073,7 +4073,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public ConstructibleObject.Flag? Flags => _FlagsLocation.HasValue ? (ConstructibleObject.Flag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ConstructibleObject.Flag?);
+        public ConstructibleObject.Flag? Flags => EnumBinaryTranslation<ConstructibleObject.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 8);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

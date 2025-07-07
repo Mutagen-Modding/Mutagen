@@ -8581,7 +8581,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
-        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
+        public Level? LevelModifier => EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_LevelModifierLocation, _recordData, _package, 4);
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
@@ -8637,7 +8637,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IPatrolGetter? Patrol { get; private set; }
         #region Action
         private int? _ActionLocation;
-        public PlacedObject.ActionFlag? Action => _ActionLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
+        public PlacedObject.ActionFlag? Action => EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ActionLocation, _recordData, _package, 4);
         #endregion
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;

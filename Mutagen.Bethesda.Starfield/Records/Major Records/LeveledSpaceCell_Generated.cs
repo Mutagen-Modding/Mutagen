@@ -2033,7 +2033,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledSpaceCell.Flag Flags => _FlagsLocation.HasValue ? (LeveledSpaceCell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledSpaceCell.Flag);
+        public LeveledSpaceCell.Flag Flags => EnumBinaryTranslation<LeveledSpaceCell.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 2);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region UseGlobal

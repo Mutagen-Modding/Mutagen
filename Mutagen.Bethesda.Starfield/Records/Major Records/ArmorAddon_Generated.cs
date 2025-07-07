@@ -3762,7 +3762,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region FirstPersonFlags
         private int? _FirstPersonFlagsLocation;
-        public FirstPersonFlag? FirstPersonFlags => _FirstPersonFlagsLocation.HasValue ? (FirstPersonFlag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FirstPersonFlagsLocation!.Value, _package.MetaData.Constants)) : default(FirstPersonFlag?);
+        public FirstPersonFlag? FirstPersonFlags => EnumBinaryTranslation<FirstPersonFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FirstPersonFlagsLocation, _recordData, _package, 8);
         #endregion
         #region Race
         private int? _RaceLocation;
@@ -3835,7 +3835,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ActorValueModulationGroupType
         private int? _ActorValueModulationGroupTypeLocation;
-        public ActorValueModulation.GroupType ActorValueModulationGroupType => _ActorValueModulationGroupTypeLocation.HasValue ? (ActorValueModulation.GroupType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueModulationGroupTypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueModulation.GroupType);
+        public ActorValueModulation.GroupType ActorValueModulationGroupType => EnumBinaryTranslation<ActorValueModulation.GroupType, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ActorValueModulationGroupTypeLocation, _recordData, _package, 4);
         #endregion
         #region ActorValueModulationEntryType
         private int? _ActorValueModulationEntryTypeLocation;

@@ -1697,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Hair.HairFlag? Flags => _FlagsLocation.HasValue ? (Hair.HairFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Hair.HairFlag?);
+        public Hair.HairFlag? Flags => EnumBinaryTranslation<Hair.HairFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

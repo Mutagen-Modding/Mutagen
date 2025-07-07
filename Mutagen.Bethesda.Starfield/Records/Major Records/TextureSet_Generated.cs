@@ -2305,7 +2305,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public TextureSet.Flag Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TextureSet.Flag);
+        public TextureSet.Flag Flags => EnumBinaryTranslation<TextureSet.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 2);
         #endregion
         #region Material
         private int? _MaterialLocation;

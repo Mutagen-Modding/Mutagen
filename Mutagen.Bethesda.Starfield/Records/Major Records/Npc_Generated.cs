@@ -10537,7 +10537,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Pronoun
         private int? _PronounLocation;
-        public Pronoun? Pronoun => _PronounLocation.HasValue ? (Pronoun)HeaderTranslation.ExtractSubrecordMemory(_recordData, _PronounLocation!.Value, _package.MetaData.Constants)[0] : default(Pronoun?);
+        public Pronoun? Pronoun => EnumBinaryTranslation<Pronoun, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_PronounLocation, _recordData, _package, 1);
         #endregion
         #region ONA2
         private int? _ONA2Location;

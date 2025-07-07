@@ -1544,7 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;
-        public TintAssets.TintMaskType? MaskType => _MaskTypeLocation.HasValue ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaskTypeLocation!.Value, _package.MetaData.Constants)) : default(TintAssets.TintMaskType?);
+        public TintAssets.TintMaskType? MaskType => EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MaskTypeLocation, _recordData, _package, 2);
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;

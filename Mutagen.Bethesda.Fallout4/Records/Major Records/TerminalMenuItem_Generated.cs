@@ -1715,7 +1715,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Type
         private int? _TypeLocation;
-        public TerminalMenuItem.Types Type => _TypeLocation.HasValue ? (TerminalMenuItem.Types)HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(TerminalMenuItem.Types);
+        public TerminalMenuItem.Types Type => EnumBinaryTranslation<TerminalMenuItem.Types, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 1);
         #endregion
         #region ItemId
         private int? _ItemIdLocation;

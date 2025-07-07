@@ -4778,7 +4778,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Type
         private int? _TypeLocation;
-        public Biome.TypeEnum Type => _TypeLocation.HasValue ? (Biome.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Biome.TypeEnum);
+        public Biome.TypeEnum Type => EnumBinaryTranslation<Biome.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IBiomeMarkerTypeGetter> MarkerObjectKeywords { get; private set; } = [];
         public IReadOnlyList<IBiomeTerrainGetter> Terrain { get; private set; } = [];

@@ -2110,7 +2110,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Flags
         private int? _FlagsLocation;
-        public AffinityEvent.Flag Flags => _FlagsLocation.HasValue ? (AffinityEvent.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AffinityEvent.Flag);
+        public AffinityEvent.Flag Flags => EnumBinaryTranslation<AffinityEvent.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region ContextNotes
         private int? _ContextNotesLocation;

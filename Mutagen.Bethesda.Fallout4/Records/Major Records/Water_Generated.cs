@@ -4723,7 +4723,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Water.Flag Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag);
+        public Water.Flag Flags => EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Material
         private int? _MaterialLocation;

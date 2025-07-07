@@ -5043,7 +5043,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FirstPersonFlags
         private int? _FirstPersonFlagsLocation;
-        public FirstPersonFlag? FirstPersonFlags => _FirstPersonFlagsLocation.HasValue ? (FirstPersonFlag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FirstPersonFlagsLocation!.Value, _package.MetaData.Constants)) : default(FirstPersonFlag?);
+        public FirstPersonFlag? FirstPersonFlags => EnumBinaryTranslation<FirstPersonFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FirstPersonFlagsLocation, _recordData, _package, 8);
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }
         public ISoundReferenceGetter? PickupSound { get; private set; }

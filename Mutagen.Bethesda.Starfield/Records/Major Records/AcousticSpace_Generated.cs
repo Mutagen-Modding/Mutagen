@@ -2551,11 +2551,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SoundDetectionLevel
         private int? _SoundDetectionLevelLocation;
-        public SoundLevel? SoundDetectionLevel => _SoundDetectionLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundDetectionLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
+        public SoundLevel? SoundDetectionLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SoundDetectionLevelLocation, _recordData, _package, 4);
         #endregion
         #region DisableFlags
         private int? _DisableFlagsLocation;
-        public SoundLevel? DisableFlags => _DisableFlagsLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisableFlagsLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
+        public SoundLevel? DisableFlags => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_DisableFlagsLocation, _recordData, _package, 8);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

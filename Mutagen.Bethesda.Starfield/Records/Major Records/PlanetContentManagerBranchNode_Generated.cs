@@ -2681,7 +2681,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region NodeType
         private int? _NodeTypeLocation;
-        public PlanetContentManagerBranchNode.NodeTypeOption? NodeType => _NodeTypeLocation.HasValue ? (PlanetContentManagerBranchNode.NodeTypeOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeTypeLocation!.Value, _package.MetaData.Constants)) : default(PlanetContentManagerBranchNode.NodeTypeOption?);
+        public PlanetContentManagerBranchNode.NodeTypeOption? NodeType => EnumBinaryTranslation<PlanetContentManagerBranchNode.NodeTypeOption, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_NodeTypeLocation, _recordData, _package, 4);
         #endregion
         #region ChildSelection
         private int? _ChildSelectionLocation;

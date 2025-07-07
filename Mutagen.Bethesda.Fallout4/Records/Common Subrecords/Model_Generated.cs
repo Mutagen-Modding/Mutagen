@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public Model.Flag? Flags => _FlagsLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
+        public Model.Flag? Flags => EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

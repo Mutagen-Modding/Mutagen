@@ -4827,7 +4827,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneAction.Flag? Flags => _FlagsLocation.HasValue ? (SceneAction.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.Flag?);
+        public SceneAction.Flag? Flags => EnumBinaryTranslation<SceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region StartPhase
         private int? _StartPhaseLocation;
@@ -4948,7 +4948,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Emotion
         private int? _EmotionLocation;
-        public Emotion? Emotion => _EmotionLocation.HasValue ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmotionLocation!.Value, _package.MetaData.Constants)) : default(Emotion?);
+        public Emotion? Emotion => EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EmotionLocation, _recordData, _package, 4);
         #endregion
         #region EmotionValue
         private int? _EmotionValueLocation;

@@ -2696,7 +2696,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Quality
         private int? _QualityLocation;
-        public QualityLevel? Quality => _QualityLocation.HasValue ? (QualityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QualityLocation!.Value, _package.MetaData.Constants)) : default(QualityLevel?);
+        public QualityLevel? Quality => EnumBinaryTranslation<QualityLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_QualityLocation, _recordData, _package, 4);
         #endregion
         #region Description
         private int? _DescriptionLocation;

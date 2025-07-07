@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region SoundType
         private int? _SoundTypeLocation;
-        public CreatureSound.CreatureSoundType? SoundType => _SoundTypeLocation.HasValue ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundTypeLocation!.Value, _package.MetaData.Constants)) : default(CreatureSound.CreatureSoundType?);
+        public CreatureSound.CreatureSoundType? SoundType => EnumBinaryTranslation<CreatureSound.CreatureSoundType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SoundTypeLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<ISoundItemGetter> Sounds { get; private set; } = [];
         partial void CustomFactoryEnd(

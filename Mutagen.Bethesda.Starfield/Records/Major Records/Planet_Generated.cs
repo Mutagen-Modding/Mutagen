@@ -3725,7 +3725,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BodyType
         private int? _BodyTypeLocation;
-        public Planet.BodyTypeEnum BodyType => _BodyTypeLocation.HasValue ? (Planet.BodyTypeEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyTypeLocation!.Value, _package.MetaData.Constants)[0] : default(Planet.BodyTypeEnum);
+        public Planet.BodyTypeEnum BodyType => EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_BodyTypeLocation, _recordData, _package, 1);
         #endregion
         #region SpaceCell
         private RangeInt32? _SpaceCellLocation;
@@ -3758,7 +3758,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PlayerKnowledge
         private int? _PlayerKnowledgeLocation;
-        public Planet.PlayerKnowledgeFlag? PlayerKnowledge => _PlayerKnowledgeLocation.HasValue ? (Planet.PlayerKnowledgeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerKnowledgeLocation!.Value, _package.MetaData.Constants)) : default(Planet.PlayerKnowledgeFlag?);
+        public Planet.PlayerKnowledgeFlag? PlayerKnowledge => EnumBinaryTranslation<Planet.PlayerKnowledgeFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_PlayerKnowledgeLocation, _recordData, _package, 4);
         #endregion
         #region Temperature
         private int? _TemperatureLocation;

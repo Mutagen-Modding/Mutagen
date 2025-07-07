@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public ScenePhase.Flag? Flags => _FlagsLocation.HasValue ? (ScenePhase.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ScenePhase.Flag?);
+        public ScenePhase.Flag? Flags => EnumBinaryTranslation<ScenePhase.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
         #region PhaseSetParentQuestStage
         private RangeInt32? _PhaseSetParentQuestStageLocation;

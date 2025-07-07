@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public MaterialType.Flag? Flags => _FlagsLocation.HasValue ? (MaterialType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MaterialType.Flag?);
+        public MaterialType.Flag? Flags => EnumBinaryTranslation<MaterialType.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region HavokImpactDataSet
         private int? _HavokImpactDataSetLocation;

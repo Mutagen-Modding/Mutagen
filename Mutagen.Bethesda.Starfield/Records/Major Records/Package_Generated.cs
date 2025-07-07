@@ -3920,7 +3920,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PackageGroup
         private int? _PackageGroupLocation;
-        public Package.Group PackageGroup => _PackageGroupLocation.HasValue ? (Package.Group)HeaderTranslation.ExtractSubrecordMemory(_recordData, _PackageGroupLocation!.Value, _package.MetaData.Constants)[0] : default(Package.Group);
+        public Package.Group PackageGroup => EnumBinaryTranslation<Package.Group, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_PackageGroupLocation, _recordData, _package, 1);
         #endregion
         #region ProcedureTree
         partial void ProcedureTreeCustomParse(

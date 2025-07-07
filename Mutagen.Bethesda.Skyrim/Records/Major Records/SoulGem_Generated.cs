@@ -2843,11 +2843,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public SoulGem.Level ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulGem.Level);
+        public SoulGem.Level ContainedSoul => EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ContainedSoulLocation, _recordData, _package, 1);
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
-        public SoulGem.Level MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulGem.Level);
+        public SoulGem.Level MaximumCapacity => EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_MaximumCapacityLocation, _recordData, _package, 1);
         #endregion
         #region LinkedTo
         private int? _LinkedToLocation;

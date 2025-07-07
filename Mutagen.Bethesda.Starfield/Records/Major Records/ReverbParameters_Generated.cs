@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ReverbClass
         private int? _ReverbClassLocation;
-        public ReverbParameters.Class ReverbClass => _ReverbClassLocation.HasValue ? (ReverbParameters.Class)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReverbClassLocation!.Value, _package.MetaData.Constants)) : default(ReverbParameters.Class);
+        public ReverbParameters.Class ReverbClass => EnumBinaryTranslation<ReverbParameters.Class, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ReverbClassLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

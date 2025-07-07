@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Message.Flag Flags => _FlagsLocation.HasValue ? (Message.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Message.Flag);
+        public Message.Flag Flags => EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region DisplayTime
         private int? _DisplayTimeLocation;

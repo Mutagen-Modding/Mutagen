@@ -9988,7 +9988,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
+        public SoundLevel SoundLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_SoundLevelLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<INpcSoundGetter>? Sounds { get; private set; }
         #region SoundsFinalize

@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Type
         private int? _TypeLocation;
-        public ActionRecord.TypeEnum? Type => _TypeLocation.HasValue ? (ActionRecord.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActionRecord.TypeEnum?);
+        public ActionRecord.TypeEnum? Type => EnumBinaryTranslation<ActionRecord.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region AttractionRule
         private int? _AttractionRuleLocation;

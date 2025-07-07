@@ -2595,7 +2595,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Rarity
         private int? _RarityLocation;
-        public Resource.RarityEnum? Rarity => _RarityLocation.HasValue ? (Resource.RarityEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RarityLocation!.Value, _package.MetaData.Constants)) : default(Resource.RarityEnum?);
+        public Resource.RarityEnum? Rarity => EnumBinaryTranslation<Resource.RarityEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_RarityLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IResourceGetter>> NextRarities { get; private set; } = [];
         #region SurfaceColor

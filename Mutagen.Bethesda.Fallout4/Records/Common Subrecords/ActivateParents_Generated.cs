@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public ActivateParents.Flag Flags => _FlagsLocation.HasValue ? (ActivateParents.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(ActivateParents.Flag);
+        public ActivateParents.Flag Flags => EnumBinaryTranslation<ActivateParents.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = [];
         partial void CustomFactoryEnd(

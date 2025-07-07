@@ -4176,7 +4176,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? LoopSound { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public Door.Flag Flags => _FlagsLocation.HasValue ? (Door.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.Flag);
+        public Door.Flag Flags => EnumBinaryTranslation<Door.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region AlternateTextOpen
         private int? _AlternateTextOpenLocation;
@@ -4188,11 +4188,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel? SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
+        public SoundLevel? SoundLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SoundLevelLocation, _recordData, _package, 4);
         #endregion
         #region FacingAxisOverride
         private int? _FacingAxisOverrideLocation;
-        public Door.FacingAxisOverrideEnum? FacingAxisOverride => _FacingAxisOverrideLocation.HasValue ? (Door.FacingAxisOverrideEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacingAxisOverrideLocation!.Value, _package.MetaData.Constants)) : default(Door.FacingAxisOverrideEnum?);
+        public Door.FacingAxisOverrideEnum? FacingAxisOverride => EnumBinaryTranslation<Door.FacingAxisOverrideEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FacingAxisOverrideLocation, _recordData, _package, 4);
         #endregion
         #region NavmeshGeometry
         private int? _NavmeshGeometryLengthOverride;

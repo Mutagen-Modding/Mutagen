@@ -7080,7 +7080,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FirstPersonFlags
         private int? _FirstPersonFlagsLocation;
-        public FirstPersonFlag? FirstPersonFlags => _FirstPersonFlagsLocation.HasValue ? (FirstPersonFlag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FirstPersonFlagsLocation!.Value, _package.MetaData.Constants)) : default(FirstPersonFlag?);
+        public FirstPersonFlag? FirstPersonFlags => EnumBinaryTranslation<FirstPersonFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FirstPersonFlagsLocation, _recordData, _package, 8);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -7256,7 +7256,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = [];
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => EnumBinaryTranslation<EquipTypeFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EquipmentFlagsLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = [];
         #region UnarmedWeapon

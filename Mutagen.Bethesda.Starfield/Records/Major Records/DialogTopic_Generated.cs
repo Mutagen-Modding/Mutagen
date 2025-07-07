@@ -3900,7 +3900,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SubtypeName
         private int? _SubtypeNameLocation;
-        public DialogTopic.SubtypeNameEnum SubtypeName => _SubtypeNameLocation.HasValue ? (DialogTopic.SubtypeNameEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation!.Value, _package.MetaData.Constants)) : default(DialogTopic.SubtypeNameEnum);
+        public DialogTopic.SubtypeNameEnum SubtypeName => EnumBinaryTranslation<DialogTopic.SubtypeNameEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_SubtypeNameLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; private set; }
         #region InfoListCount

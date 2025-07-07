@@ -3125,7 +3125,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FavorLevel
         private int? _FavorLevelLocation;
-        public FavorLevel? FavorLevel => _FavorLevelLocation.HasValue ? (FavorLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FavorLevelLocation!.Value, _package.MetaData.Constants)[0] : default(FavorLevel?);
+        public FavorLevel? FavorLevel => EnumBinaryTranslation<FavorLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FavorLevelLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkTo { get; private set; } = [];
         #region ResponseData

@@ -2889,7 +2889,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Activator.Flag? Flags => _FlagsLocation.HasValue ? (Activator.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Activator.Flag?);
+        public Activator.Flag? Flags => EnumBinaryTranslation<Activator.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;

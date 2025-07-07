@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public PackageBranch.Flag? Flags => _FlagsLocation.HasValue ? (PackageBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PackageBranch.Flag?);
+        public PackageBranch.Flag? Flags => EnumBinaryTranslation<PackageBranch.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<Byte> DataInputIndices { get; private set; } = [];
         #region FlagsOverride

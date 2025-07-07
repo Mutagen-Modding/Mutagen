@@ -8607,7 +8607,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = [];
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => EnumBinaryTranslation<EquipTypeFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EquipmentFlagsLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = [];
         #region UnarmedEquipSlot
