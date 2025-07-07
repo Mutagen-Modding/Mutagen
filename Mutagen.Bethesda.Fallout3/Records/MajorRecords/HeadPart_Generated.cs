@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _PlayableLocation;
         public Boolean Playable => _PlayableLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayableLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

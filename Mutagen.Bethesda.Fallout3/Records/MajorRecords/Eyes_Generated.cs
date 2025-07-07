@@ -1624,7 +1624,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Eyes.Flag Flags => _FlagsLocation.HasValue ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Eyes.Flag);
+        public Eyes.Flag Flags => EnumBinaryTranslation<Eyes.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

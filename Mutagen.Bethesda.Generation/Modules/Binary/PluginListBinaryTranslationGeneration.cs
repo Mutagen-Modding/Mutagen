@@ -1333,7 +1333,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 using (sb.IncreaseDepth())
                 {
                     a(sb);
-                    if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
+                    if (list is ArrayType)
+                    {
+                        sb.AppendLine(".ToArray();");
+                    }
+                    else if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
                         && (bool)val)
                     {
 

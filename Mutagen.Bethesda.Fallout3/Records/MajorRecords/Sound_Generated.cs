@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Fallout3
                             reader: frame,
                             amount: 5,
                             transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
-                        .CastExtendedList<Int16>();
+                        .ToArray();
                     return (int)Sound_FieldIndex.AttenuationCurve;
                 }
                 case RecordTypeInts.GNAM:

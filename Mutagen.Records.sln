@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Starfield.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Fallout3", "Mutagen.Bethesda.Fallout3\Mutagen.Bethesda.Fallout3.csproj", "{FD8627E7-0BD3-4BE9-A078-9F744BE15810}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Fallout3.Generator", "Mutagen.Bethesda.Fallout3.Generator\Mutagen.Bethesda.Fallout3.Generator.csproj", "{6B772F08-61E5-44DA-9E73-98B5ED8E6B94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -189,6 +191,10 @@ Global
 		{FD8627E7-0BD3-4BE9-A078-9F744BE15810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD8627E7-0BD3-4BE9-A078-9F744BE15810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD8627E7-0BD3-4BE9-A078-9F744BE15810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B772F08-61E5-44DA-9E73-98B5ED8E6B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B772F08-61E5-44DA-9E73-98B5ED8E6B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B772F08-61E5-44DA-9E73-98B5ED8E6B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B772F08-61E5-44DA-9E73-98B5ED8E6B94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +226,7 @@ Global
 		{470374D2-B508-4A3D-8A87-B0FE31FFA82E} = {181455C8-DDBD-40BE-8891-0950A3F62101}
 		{13571737-2117-4708-9106-A2409678C655} = {89AC8733-A707-495A-88B1-8F9570CDA329}
 		{FD8627E7-0BD3-4BE9-A078-9F744BE15810} = {181455C8-DDBD-40BE-8891-0950A3F62101}
+		{6B772F08-61E5-44DA-9E73-98B5ED8E6B94} = {89AC8733-A707-495A-88B1-8F9570CDA329}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}

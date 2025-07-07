@@ -1943,16 +1943,16 @@ namespace Mutagen.Bethesda.Fallout3
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = [];
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
+        public Faction.FactionFlag Flags => EnumBinaryTranslation<Faction.FactionFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region CrimeGoldMultiplier
         private int? _CrimeGoldMultiplierLocation;
         public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
