@@ -2892,7 +2892,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Door.Flag Flags => _FlagsLocation.HasValue ? (Door.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.Flag);
+        public Door.Flag Flags => EnumBinaryTranslation<Door.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region AlternateTextOpen
         private int? _AlternateTextOpenLocation;

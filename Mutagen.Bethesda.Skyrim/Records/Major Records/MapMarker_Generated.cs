@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Flags
         private int? _FlagsLocation;
-        public MapMarker.Flag Flags => _FlagsLocation.HasValue ? (MapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(MapMarker.Flag);
+        public MapMarker.Flag Flags => EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Type
         private int? _TypeLocation;
-        public MapMarker.MarkerType Type => _TypeLocation.HasValue ? (MapMarker.MarkerType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MapMarker.MarkerType);
+        public MapMarker.MarkerType Type => EnumBinaryTranslation<MapMarker.MarkerType, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 2);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region PartType
         private int? _PartTypeLocation;
-        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PartTypeLocation!.Value, _package.MetaData.Constants)) : default(Part.PartTypeEnum?);
+        public Part.PartTypeEnum? PartType => EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_PartTypeLocation, _recordData, _package, 4);
         #endregion
         #region FileName
         private int? _FileNameLocation;

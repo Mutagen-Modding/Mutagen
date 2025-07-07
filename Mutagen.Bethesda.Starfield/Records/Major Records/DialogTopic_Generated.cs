@@ -3849,7 +3849,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public DialogTopic.MajorFlag MajorFlags => (DialogTopic.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -3900,7 +3900,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SubtypeName
         private int? _SubtypeNameLocation;
-        public DialogTopic.SubtypeNameEnum SubtypeName => _SubtypeNameLocation.HasValue ? (DialogTopic.SubtypeNameEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation!.Value, _package.MetaData.Constants)) : default(DialogTopic.SubtypeNameEnum);
+        public DialogTopic.SubtypeNameEnum SubtypeName => EnumBinaryTranslation<DialogTopic.SubtypeNameEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_SubtypeNameLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; private set; }
         #region InfoListCount

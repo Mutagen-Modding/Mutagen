@@ -1393,8 +1393,8 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IRaceHeadPartGetter> HeadParts { get; private set; } = Array.Empty<IRaceHeadPartGetter>();
-        public IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>> BoneModifiers { get; private set; } = Array.Empty<IFormLinkGetter<IBoneModifierGetter>>();
+        public IReadOnlyList<IRaceHeadPartGetter> HeadParts { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>> BoneModifiers { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

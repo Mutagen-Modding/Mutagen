@@ -2682,7 +2682,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         private RangeInt32? _DATALocation;
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;

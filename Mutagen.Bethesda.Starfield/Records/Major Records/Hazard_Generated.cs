@@ -3249,7 +3249,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XALGLocation;
         public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -3339,7 +3339,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
         public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

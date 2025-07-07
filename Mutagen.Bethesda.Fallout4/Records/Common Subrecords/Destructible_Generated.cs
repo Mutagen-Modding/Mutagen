@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IResistanceDestructibleGetter>? Resistances { get; private set; }
-        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<IDestructionStageGetter>();
+        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

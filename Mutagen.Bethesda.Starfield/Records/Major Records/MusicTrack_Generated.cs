@@ -2329,7 +2329,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Type
         private int? _TypeLocation;
-        public MusicTrack.TypeEnum Type => _TypeLocation.HasValue ? (MusicTrack.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MusicTrack.TypeEnum);
+        public MusicTrack.TypeEnum Type => EnumBinaryTranslation<MusicTrack.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region Duration
         private int? _DurationLocation;

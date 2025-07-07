@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; private set; } = Array.Empty<IDamageTypeItemGetter>();
+        public IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

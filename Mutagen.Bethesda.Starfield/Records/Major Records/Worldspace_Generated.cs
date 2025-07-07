@@ -6371,8 +6371,8 @@ namespace Mutagen.Bethesda.Starfield
 
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = Array.Empty<IWorldspaceGridReferenceGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
+        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -6443,7 +6443,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
+        public Worldspace.Flag Flags => EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -6483,7 +6483,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _GNAMLocation;
         public Single? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = Array.Empty<IFormLinkGetter<ILandscapeTextureGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = [];
         public IReadOnlyList<P2Int16>? CellWaterHeightLocations { get; private set; }
         public IReadOnlyList<Single>? WaterHeights { get; private set; }
         #region HNAM

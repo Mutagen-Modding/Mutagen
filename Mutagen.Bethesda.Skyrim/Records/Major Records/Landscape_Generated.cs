@@ -2291,7 +2291,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Flags
         private int? _FlagsLocation;
-        public Landscape.Flag? Flags => _FlagsLocation.HasValue ? (Landscape.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Landscape.Flag?);
+        public Landscape.Flag? Flags => EnumBinaryTranslation<Landscape.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyArray2d<P3UInt8>? VertexNormals { get; private set; }
         #region VertexHeightMap
@@ -2299,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ILandscapeVertexHeightMapGetter? VertexHeightMap => _VertexHeightMapLocation.HasValue ? LandscapeVertexHeightMapBinaryOverlay.LandscapeVertexHeightMapFactory(_recordData.Slice(_VertexHeightMapLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyArray2d<P3UInt8>? VertexColors { get; private set; }
-        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<IBaseLayerGetter>();
+        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,

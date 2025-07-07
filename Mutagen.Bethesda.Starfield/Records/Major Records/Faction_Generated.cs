@@ -3462,7 +3462,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFaction);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -3475,14 +3475,14 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = [];
         #region Keyword
         private int? _KeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
+        public Faction.FactionFlag Flags => EnumBinaryTranslation<Faction.FactionFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
@@ -3493,7 +3493,7 @@ namespace Mutagen.Bethesda.Starfield
         public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(_recordData.Slice(_CrimeValuesLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IFactionPrisonsGetter>? Prisons { get; private set; }
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = [];
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _VendorBuySellListLocation);

@@ -1929,8 +1929,8 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _QuestLocation;
         public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; private set; } = Array.Empty<IFormLinkGetter<IDialogBranchGetter>>();
-        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; private set; } = [];
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; private set; } = [];
         #region ENAM
         private int? _ENAMLocation;
         public ReadOnlyMemorySlice<Byte>? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);

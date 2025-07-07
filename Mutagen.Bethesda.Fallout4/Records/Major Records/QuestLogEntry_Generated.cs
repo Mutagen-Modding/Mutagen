@@ -1514,9 +1514,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public QuestLogEntry.Flag? Flags => _FlagsLocation.HasValue ? (QuestLogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(QuestLogEntry.Flag?);
+        public QuestLogEntry.Flag? Flags => EnumBinaryTranslation<QuestLogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Note
         private int? _NoteLocation;
         public String? Note => _NoteLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoteLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

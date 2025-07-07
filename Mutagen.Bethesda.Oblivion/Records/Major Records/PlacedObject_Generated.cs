@@ -3548,7 +3548,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ActionFlags
         private int? _ActionFlagsLocation;
-        public PlacedObject.ActionFlag? ActionFlags => _ActionFlagsLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionFlagsLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
+        public PlacedObject.ActionFlag? ActionFlags => EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ActionFlagsLocation, _recordData, _package, 4);
         #endregion
         #region Count
         private int? _CountLocation;
@@ -3573,7 +3573,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContainedSoulLocation!.Value, _package.MetaData.Constants)) : default(SoulLevel?);
+        public SoulLevel? ContainedSoul => EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ContainedSoulLocation, _recordData, _package, 4);
         #endregion
         public ILocationGetter? Location { get; private set; }
         #region XAAG

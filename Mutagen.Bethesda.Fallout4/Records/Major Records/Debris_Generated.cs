@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IDebris);
 
 
-        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<IDebrisModelGetter>();
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

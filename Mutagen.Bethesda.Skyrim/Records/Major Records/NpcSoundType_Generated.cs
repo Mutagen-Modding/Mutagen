@@ -1280,9 +1280,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Type
         private int? _TypeLocation;
-        public NpcSoundType.SoundType? Type => _TypeLocation.HasValue ? (NpcSoundType.SoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(NpcSoundType.SoundType?);
+        public NpcSoundType.SoundType? Type => EnumBinaryTranslation<NpcSoundType.SoundType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
-        public IReadOnlyList<INpcSoundGetter> Sounds { get; private set; } = Array.Empty<INpcSoundGetter>();
+        public IReadOnlyList<INpcSoundGetter> Sounds { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

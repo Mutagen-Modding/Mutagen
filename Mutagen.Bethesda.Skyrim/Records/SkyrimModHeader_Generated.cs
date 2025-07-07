@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; private set; }
         #region INTV
         private int? _INTVLocation;

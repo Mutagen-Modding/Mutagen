@@ -4090,8 +4090,8 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FavorCostLocation;
         public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = Array.Empty<IWaterReflectionGetter>();
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = [];
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region UnknownReference
         private int? _UnknownReferenceLocation;

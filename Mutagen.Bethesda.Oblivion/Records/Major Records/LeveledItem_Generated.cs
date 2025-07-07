@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion
         public partial LeveledFlag? GetFlagsCustom();
         public LeveledFlag? Flags => GetFlagsCustom();
         #endregion
-        public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledItemEntryGetter>();
+        public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = [];
         #region Vestigial
         public partial ParseResult VestigialCustomParse(
             OverlayStream stream,

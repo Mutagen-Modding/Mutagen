@@ -4016,14 +4016,14 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Menu
         private int? _MenuLocation;
         public IFormLinkNullableGetter<ITerminalMenuGetter> Menu => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalMenuGetter>(_package, _recordData, _MenuLocation);
         #endregion
         #region Background
         private int? _BackgroundLocation;
-        public Terminal.BackgroundType? Background => _BackgroundLocation.HasValue ? (Terminal.BackgroundType)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BackgroundLocation!.Value, _package.MetaData.Constants)[0] : default(Terminal.BackgroundType?);
+        public Terminal.BackgroundType? Background => EnumBinaryTranslation<Terminal.BackgroundType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_BackgroundLocation, _recordData, _package, 1);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -4058,7 +4058,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MarkerFlags
         private int? _MarkerFlagsLocation;
-        public FurnitureMarkerFlags? MarkerFlags => _MarkerFlagsLocation.HasValue ? (FurnitureMarkerFlags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerFlagsLocation!.Value, _package.MetaData.Constants)) : default(FurnitureMarkerFlags?);
+        public FurnitureMarkerFlags? MarkerFlags => EnumBinaryTranslation<FurnitureMarkerFlags, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MarkerFlagsLocation, _recordData, _package, 4);
         #endregion
         #region GNAM
         private int? _GNAMLocation;

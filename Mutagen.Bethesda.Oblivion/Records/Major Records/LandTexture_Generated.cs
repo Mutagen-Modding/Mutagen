@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _TextureSpecularExponentLocation;
         public Byte? TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGrassGetter>> PotentialGrass { get; private set; } = Array.Empty<IFormLinkGetter<IGrassGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGrassGetter>> PotentialGrass { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

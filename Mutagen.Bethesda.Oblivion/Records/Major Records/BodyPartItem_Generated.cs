@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Index
         private int? _IndexLocation;
-        public Race.BodyPart? Index => _IndexLocation.HasValue ? (Race.BodyPart)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyPart?);
+        public Race.BodyPart? Index => EnumBinaryTranslation<Race.BodyPart, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_IndexLocation, _recordData, _package, 4);
         #endregion
         #region Icon
         private int? _IconLocation;

@@ -218,7 +218,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (typeGen.CanBeNullable(getter: true))
             {
-                sb.AppendLine($"public {eType.TypeName(getter: true)}{(nullable ? "?" : null)} {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}{(nullable ? "?" : null)});");
+                sb.AppendLine($"public {eType.TypeName(getter: true)}{(nullable ? "?" : null)} {eType.Name} => {NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse{(data.RecordType.HasValue ? "Record" : null)}{(nullable ? "Nullable" : null)}(_{typeGen.Name}Location, _recordData, _package, {eType.ByteLength});");
             }
             else
             {

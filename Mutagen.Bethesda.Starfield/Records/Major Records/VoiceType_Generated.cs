@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Flags
         private int? _FlagsLocation;
-        public VoiceType.Flag Flags => _FlagsLocation.HasValue ? (VoiceType.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(VoiceType.Flag);
+        public VoiceType.Flag Flags => EnumBinaryTranslation<VoiceType.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region AnimationFaceArchetype
         private int? _AnimationFaceArchetypeLocation;

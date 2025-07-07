@@ -3830,7 +3830,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Key.Flag? Flags => _FlagsLocation.HasValue ? (Key.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Key.Flag?);
+        public Key.Flag? Flags => EnumBinaryTranslation<Key.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region ShortName
         private int? _ShortNameLocation;

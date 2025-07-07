@@ -2013,9 +2013,9 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IGroundCover);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        public IReadOnlyList<IGroundCoverGrassGetter> Grasses { get; private set; } = Array.Empty<IGroundCoverGrassGetter>();
-        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = Array.Empty<IFormLinkGetter<ILandscapeTextureGetter>>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
+        public IReadOnlyList<IGroundCoverGrassGetter> Grasses { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = [];
         #region PaintedMaterialThreshold
         private int? _PaintedMaterialThresholdLocation;
         public Single? PaintedMaterialThreshold => _PaintedMaterialThresholdLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PaintedMaterialThresholdLocation.Value, _package.MetaData.Constants).Float() : default(Single?);

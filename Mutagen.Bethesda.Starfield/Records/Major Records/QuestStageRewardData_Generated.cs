@@ -1560,8 +1560,8 @@ namespace Mutagen.Bethesda.Starfield
         private int? _BonusCreditsLocation;
         public IFormLinkNullableGetter<IGlobalGetter> BonusCredits => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BonusCreditsLocation);
         #endregion
-        public IReadOnlyList<IQuestStageRewardGetter> Rewards { get; private set; } = Array.Empty<IQuestStageRewardGetter>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IQuestStageRewardGetter> Rewards { get; private set; } = [];
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

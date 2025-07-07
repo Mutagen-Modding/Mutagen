@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

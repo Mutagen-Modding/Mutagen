@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IFormLinkGetter<IGameplayOptionGetter>> GameplayOptions { get; private set; } = Array.Empty<IFormLinkGetter<IGameplayOptionGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGameplayOptionGetter>> GameplayOptions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

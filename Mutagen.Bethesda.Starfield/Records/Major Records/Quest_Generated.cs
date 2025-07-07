@@ -6737,7 +6737,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Data
         private RangeInt32? _DataLocation;
         public IQuestDataGetter? Data => _DataLocation.HasValue ? QuestDataBinaryOverlay.QuestDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
@@ -6767,7 +6767,7 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkNullableGetter<IQuestGetter> SourceQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _SourceQuestLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? QDUPs { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = [];
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -6790,8 +6790,8 @@ namespace Mutagen.Bethesda.Starfield
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = [];
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = [];
         #region AliasParse
         public partial ParseResult AliasParseCustomParse(
             OverlayStream stream,
@@ -6814,7 +6814,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MissionBoardDescriptionLocation;
         public ITranslatedStringGetter? MissionBoardDescription => _MissionBoardDescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionBoardDescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IQuestMissionBoardPanelGetter> MissionBoardInfoPanels { get; private set; } = Array.Empty<IQuestMissionBoardPanelGetter>();
+        public IReadOnlyList<IQuestMissionBoardPanelGetter> MissionBoardInfoPanels { get; private set; } = [];
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;

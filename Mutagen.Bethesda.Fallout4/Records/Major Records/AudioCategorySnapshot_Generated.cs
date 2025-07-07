@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _PriorityLocation;
         public UInt16? Priority => _PriorityLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
-        public IReadOnlyList<IAudioCategoryMultiplierGetter> Multipliers { get; private set; } = Array.Empty<IAudioCategoryMultiplierGetter>();
+        public IReadOnlyList<IAudioCategoryMultiplierGetter> Multipliers { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = Array.Empty<IStartSceneGetter>();
+        public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = [];
         #region HTID
         private int? _HTIDLocation;
         public Boolean HTID => _HTIDLocation.HasValue ? true : default(Boolean);

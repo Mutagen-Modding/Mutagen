@@ -5048,7 +5048,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XALGLocation;
         public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -5242,7 +5242,7 @@ namespace Mutagen.Bethesda.Starfield
         public ISoundReferenceGetter? DisableSound { get; private set; }
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel? SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
+        public SoundLevel? SoundLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SoundLevelLocation, _recordData, _package, 4);
         #endregion
         #region CurveTable
         private int? _CurveTableLocation;

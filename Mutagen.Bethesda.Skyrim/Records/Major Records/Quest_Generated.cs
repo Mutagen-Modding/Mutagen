@@ -3467,7 +3467,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _EventLocation;
         public RecordType? Event => _EventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = [];
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -3486,13 +3486,13 @@ namespace Mutagen.Bethesda.Skyrim
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = [];
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = [];
         #region NextAliasID
         private int? _NextAliasIDLocation;
         public UInt32? NextAliasID => _NextAliasIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextAliasIDLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestAliasGetter>();
+        public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = [];
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);

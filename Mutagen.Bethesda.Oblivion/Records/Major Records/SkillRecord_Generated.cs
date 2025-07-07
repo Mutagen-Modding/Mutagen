@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Skill
         private int? _SkillLocation;
-        public ActorValue? Skill => _SkillLocation.HasValue ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkillLocation!.Value, _package.MetaData.Constants)) : default(ActorValue?);
+        public ActorValue? Skill => EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SkillLocation, _recordData, _package, 4);
         #endregion
         #region Description
         private int? _DescriptionLocation;

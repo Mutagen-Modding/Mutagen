@@ -3820,7 +3820,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default(Int32);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;

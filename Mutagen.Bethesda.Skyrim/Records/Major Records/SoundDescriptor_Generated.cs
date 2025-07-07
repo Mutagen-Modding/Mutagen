@@ -2532,7 +2532,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Type
         private int? _TypeLocation;
-        public SoundDescriptor.DescriptorType? Type => _TypeLocation.HasValue ? (SoundDescriptor.DescriptorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundDescriptor.DescriptorType?);
+        public SoundDescriptor.DescriptorType? Type => EnumBinaryTranslation<SoundDescriptor.DescriptorType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region Category
         private int? _CategoryLocation;
@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AlternateSoundForLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AlternateSoundForLocation);
         #endregion
-        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = Array.Empty<IAssetLinkGetter<SkyrimSoundAssetType>>();
+        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = [];
         #region OutputModel
         private int? _OutputModelLocation;
         public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _OutputModelLocation);
@@ -2551,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _StringLocation;
         public ITranslatedStringGetter? String => _StringLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StringLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region LoopAndRumble
         private RangeInt32? _LoopAndRumbleLocation;
         public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(_recordData.Slice(_LoopAndRumbleLocation!.Value.Min), _package) : default;

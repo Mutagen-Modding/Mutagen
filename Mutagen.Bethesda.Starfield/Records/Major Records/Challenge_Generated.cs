@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IChallenge);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -4484,7 +4484,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _InstanceNamingLocation;
         public IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IInstanceNamingRulesGetter>(_package, _recordData, _InstanceNamingLocation);
         #endregion
-        public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = Array.Empty<IArmorAddonModelGetter>();
+        public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = [];
         private RangeInt32? _DATALocation;
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;

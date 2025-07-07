@@ -2824,13 +2824,13 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _ObjectPaletteDefaultsLocation;
         public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region MarkerType
         private int? _MarkerTypeLocation;
         public IFormLinkGetter<IKeywordGetter> MarkerType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _MarkerTypeLocation);

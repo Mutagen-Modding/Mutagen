@@ -1768,8 +1768,8 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISnapTemplateBehavior);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        public IReadOnlyList<ISnapTemplateBehaviorItemGetter> Items { get; private set; } = Array.Empty<ISnapTemplateBehaviorItemGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
+        public IReadOnlyList<ISnapTemplateBehaviorItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

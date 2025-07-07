@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IImpactDataSet);
 
 
-        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<IImpactDataGetter>();
+        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = [];
         #region Parent
         private int? _ParentLocation;
         public IFormLinkNullableGetter<IImpactDataSetGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImpactDataSetGetter>(_package, _recordData, _ParentLocation);

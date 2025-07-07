@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _BranchTypeLocation;
         public String BranchType => _BranchTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BranchTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IPackageRootGetter? Root { get; private set; }
         #region ProcedureType
         private int? _ProcedureTypeLocation;
@@ -2121,9 +2121,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public PackageBranch.Flag? Flags => _FlagsLocation.HasValue ? (PackageBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PackageBranch.Flag?);
+        public PackageBranch.Flag? Flags => EnumBinaryTranslation<PackageBranch.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
-        public IReadOnlyList<Byte> DataInputIndices { get; private set; } = Array.Empty<Byte>();
+        public IReadOnlyList<Byte> DataInputIndices { get; private set; } = [];
         #region FlagsOverride
         partial void FlagsOverrideCustomParse(
             OverlayStream stream,
@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Fallout4
         public partial IPackageFlagsOverrideGetter? GetFlagsOverrideCustom();
         public IPackageFlagsOverrideGetter? FlagsOverride => GetFlagsOverrideCustom();
         #endregion
-        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> Unknown { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> Unknown { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

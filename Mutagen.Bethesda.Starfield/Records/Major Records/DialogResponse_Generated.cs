@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _EmotionOut_IsSet => _TRDALocation.HasValue;
         public Single EmotionOut => _EmotionOut_IsSet ? _recordData.Slice(_EmotionOutLocation, 4).Float() : default(Single);
         #endregion
-        public IReadOnlyList<IDialogResponseTROTGetter> TROTs { get; private set; } = Array.Empty<IDialogResponseTROTGetter>();
+        public IReadOnlyList<IDialogResponseTROTGetter> TROTs { get; private set; } = [];
         #region ResponseText
         private int? _ResponseTextLocation;
         public ITranslatedStringGetter ResponseText => _ResponseTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResponseTextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;

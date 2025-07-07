@@ -5738,7 +5738,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = Array.Empty<IWorldspaceGridReferenceGetter>();
+        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = [];
         #region MaxHeight
         private int? _MaxHeightLengthOverride;
         private RangeInt32? _MaxHeightLocation;
@@ -5819,7 +5819,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
+        public Worldspace.Flag Flags => EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         private RangeInt32? _NAM0Location;
         #region ObjectBoundsMin

@@ -6610,7 +6610,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Cell.MajorFlag MajorFlags => (Cell.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -6625,7 +6625,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag?);
+        public Cell.Flag? Flags => EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region Grid
         private RangeInt32? _GridLocation;
@@ -6651,7 +6651,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XILSLocation;
         public Single? XILS => _XILSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XILSLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<ICellXCLAItemGetter> XCLAs { get; private set; } = Array.Empty<ICellXCLAItemGetter>();
+        public IReadOnlyList<ICellXCLAItemGetter> XCLAs { get; private set; } = [];
         #region WaterData
         private int? _WaterDataLocation;
         public ReadOnlyMemorySlice<Byte>? WaterData => _WaterDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -6710,7 +6710,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _TimeOfDayLocation;
         public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITimeOfDayRecordGetter>(_package, _recordData, _TimeOfDayLocation);
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
         public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);

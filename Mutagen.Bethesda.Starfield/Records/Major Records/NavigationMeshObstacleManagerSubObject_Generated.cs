@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _IndexLocation;
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DATAs { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DATAs { get; private set; } = [];
         #region INTV
         private int? _INTVLocation;
         public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);

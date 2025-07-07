@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = Array.Empty<IBodyPartGetter>();
+        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1947,10 +1947,10 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _TextureSpecularExponentLocation;
         public Byte TextureSpecularExponent => _TextureSpecularExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSpecularExponentLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = Array.Empty<IFormLinkGetter<IGrassGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; private set; } = [];
         #region Flags
         private int? _FlagsLocation;
-        public LandscapeTexture.Flag? Flags => _FlagsLocation.HasValue ? (LandscapeTexture.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LandscapeTexture.Flag?);
+        public LandscapeTexture.Flag? Flags => EnumBinaryTranslation<LandscapeTexture.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Index
         private int? _IndexLocation;
-        public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(BodyData.PartIndex?);
+        public BodyData.PartIndex? Index => EnumBinaryTranslation<BodyData.PartIndex, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_IndexLocation, _recordData, _package, 4);
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(

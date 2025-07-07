@@ -2337,15 +2337,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ShowBodyText
         private int? _ShowBodyTextLocation;
-        public TerminalMenu.ShowBodyTextOption? ShowBodyText => _ShowBodyTextLocation.HasValue ? (TerminalMenu.ShowBodyTextOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShowBodyTextLocation!.Value, _package.MetaData.Constants)) : default(TerminalMenu.ShowBodyTextOption?);
+        public TerminalMenu.ShowBodyTextOption? ShowBodyText => EnumBinaryTranslation<TerminalMenu.ShowBodyTextOption, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ShowBodyTextLocation, _recordData, _package, 4);
         #endregion
         #region MenuButtonStyle
         private int? _MenuButtonStyleLocation;
-        public TerminalMenu.MenuButtonStyleOption? MenuButtonStyle => _MenuButtonStyleLocation.HasValue ? (TerminalMenu.MenuButtonStyleOption)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuButtonStyleLocation!.Value, _package.MetaData.Constants)[0] : default(TerminalMenu.MenuButtonStyleOption?);
+        public TerminalMenu.MenuButtonStyleOption? MenuButtonStyle => EnumBinaryTranslation<TerminalMenu.MenuButtonStyleOption, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MenuButtonStyleLocation, _recordData, _package, 1);
         #endregion
         #region Style
         private int? _StyleLocation;
-        public TerminalMenu.StyleOption? Style => _StyleLocation.HasValue ? (TerminalMenu.StyleOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StyleLocation!.Value, _package.MetaData.Constants)) : default(TerminalMenu.StyleOption?);
+        public TerminalMenu.StyleOption? Style => EnumBinaryTranslation<TerminalMenu.StyleOption, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_StyleLocation, _recordData, _package, 4);
         #endregion
         #region INAM
         private int? _INAMLocation;

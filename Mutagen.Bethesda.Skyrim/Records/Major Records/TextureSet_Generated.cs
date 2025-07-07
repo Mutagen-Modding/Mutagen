@@ -2326,7 +2326,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public TextureSet.Flag? Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TextureSet.Flag?);
+        public TextureSet.Flag? Flags => EnumBinaryTranslation<TextureSet.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

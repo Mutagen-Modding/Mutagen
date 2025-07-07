@@ -3937,7 +3937,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default(Int32);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Unknown4
         private int? _Unknown4Location;
         public Int32? Unknown4 => _Unknown4Location.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _Unknown4Location.Value, _package.MetaData.Constants)) : default(Int32?);

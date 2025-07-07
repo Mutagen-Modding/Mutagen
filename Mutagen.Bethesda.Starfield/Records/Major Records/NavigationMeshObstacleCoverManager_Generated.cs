@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(INavigationMeshObstacleCoverManager);
 
 
-        public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = Array.Empty<INavigationMeshObstacleManagerSubObjectGetter>();
+        public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1635,7 +1635,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
-        public IReadOnlyList<IProgressionEvaluatorArgumentGetter> ProgressionEvalutor { get; private set; } = Array.Empty<IProgressionEvaluatorArgumentGetter>();
+        public IReadOnlyList<IProgressionEvaluatorArgumentGetter> ProgressionEvalutor { get; private set; } = [];
         #region ANAM
         private int? _ANAMLocation;
         public String ANAM => _ANAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;

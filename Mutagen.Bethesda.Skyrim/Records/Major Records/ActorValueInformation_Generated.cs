@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _SkillLocation;
         public IActorValueSkillGetter? Skill => _SkillLocation.HasValue ? ActorValueSkillBinaryOverlay.ActorValueSkillFactory(_recordData.Slice(_SkillLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IActorValuePerkNodeGetter> PerkTree { get; private set; } = Array.Empty<IActorValuePerkNodeGetter>();
+        public IReadOnlyList<IActorValuePerkNodeGetter> PerkTree { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

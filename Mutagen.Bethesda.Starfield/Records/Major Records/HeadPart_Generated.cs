@@ -2751,7 +2751,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public HeadPart.MajorFlag MajorFlags => (HeadPart.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -2767,13 +2767,13 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Model { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public HeadPart.Flag Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(HeadPart.Flag);
+        public HeadPart.Flag Flags => EnumBinaryTranslation<HeadPart.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
+        public HeadPart.TypeEnum? Type => EnumBinaryTranslation<HeadPart.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = [];
         #region ColorMapping
         private int? _ColorMappingLocation;
         public String? ColorMapping => _ColorMappingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorMappingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2794,7 +2794,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MorphLocation;
         public IFormLinkNullableGetter<IMorphableObjectGetter> Morph => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _MorphLocation);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

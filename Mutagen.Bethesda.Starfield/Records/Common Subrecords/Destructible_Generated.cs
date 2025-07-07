@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DSDLLocation;
         public ReadOnlyMemorySlice<Byte>? DSDL => _DSDLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DSDLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = Array.Empty<IDestructionStageGetter>();
+        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

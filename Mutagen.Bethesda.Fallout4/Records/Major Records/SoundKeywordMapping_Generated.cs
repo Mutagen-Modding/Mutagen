@@ -2037,10 +2037,10 @@ namespace Mutagen.Bethesda.Fallout4
         public Single? VatsThreshold => _VatsThresholdLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VatsThresholdLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = [];
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        public IReadOnlyList<IMappingSoundGetter> Sounds { get; private set; } = Array.Empty<IMappingSoundGetter>();
+        public IReadOnlyList<IMappingSoundGetter> Sounds { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

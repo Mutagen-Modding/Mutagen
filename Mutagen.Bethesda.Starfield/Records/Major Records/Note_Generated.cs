@@ -2860,7 +2860,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Transforms
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;

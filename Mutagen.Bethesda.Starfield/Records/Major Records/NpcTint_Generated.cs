@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region TintType
         private int? _TintTypeLocation;
-        public TintType TintType => _TintTypeLocation.HasValue ? (TintType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintTypeLocation!.Value, _package.MetaData.Constants)) : default(TintType);
+        public TintType TintType => EnumBinaryTranslation<TintType, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TintTypeLocation, _recordData, _package, 4);
         #endregion
         #region TintGroup
         private int? _TintGroupLocation;

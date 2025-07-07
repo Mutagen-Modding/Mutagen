@@ -1937,9 +1937,9 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IBodyPartData);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = Array.Empty<IBodyPartGetter>();
+        public IReadOnlyList<IBodyPartGetter> Parts { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

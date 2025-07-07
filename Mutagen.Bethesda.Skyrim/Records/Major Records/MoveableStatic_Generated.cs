@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IDestructibleGetter? Destructible { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public MoveableStatic.Flag Flags => _FlagsLocation.HasValue ? (MoveableStatic.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(MoveableStatic.Flag);
+        public MoveableStatic.Flag Flags => EnumBinaryTranslation<MoveableStatic.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;

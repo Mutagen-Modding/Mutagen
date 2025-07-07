@@ -4695,7 +4695,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
+        public CombatStyle.Flag? Flags => EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

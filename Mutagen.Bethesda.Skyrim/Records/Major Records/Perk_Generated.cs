@@ -2652,7 +2652,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         private RangeInt32? _DATALocation;
         #region Trait
         private int _TraitLocation => _DATALocation!.Value.Min;

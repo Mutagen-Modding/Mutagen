@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MapColorLocation;
         public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<IRegionAreaGetter>();
+        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = [];
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,

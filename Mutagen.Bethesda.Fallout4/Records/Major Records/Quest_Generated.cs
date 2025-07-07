@@ -5082,7 +5082,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _QuestCompletionXpLocation;
         public IFormLinkNullableGetter<IGlobalGetter> QuestCompletionXp => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _QuestCompletionXpLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = [];
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -5101,8 +5101,8 @@ namespace Mutagen.Bethesda.Fallout4
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = [];
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = [];
         #region AliasParse
         public partial ParseResult AliasParseCustomParse(
             OverlayStream stream,

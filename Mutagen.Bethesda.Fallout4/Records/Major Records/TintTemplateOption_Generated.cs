@@ -2063,13 +2063,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public TintTemplateOption.Flag? Flags => _FlagsLocation.HasValue ? (TintTemplateOption.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TintTemplateOption.Flag?);
+        public TintTemplateOption.Flag? Flags => EnumBinaryTranslation<TintTemplateOption.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        public IReadOnlyList<String> Textures { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IReadOnlyList<String> Textures { get; private set; } = [];
         #region BlendOperation
         private int? _BlendOperationLocation;
-        public BlendOperation? BlendOperation => _BlendOperationLocation.HasValue ? (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlendOperationLocation!.Value, _package.MetaData.Constants)) : default(BlendOperation?);
+        public BlendOperation? BlendOperation => EnumBinaryTranslation<BlendOperation, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_BlendOperationLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<ITintTemplateColorGetter>? TemplateColors { get; private set; }
         #region Default

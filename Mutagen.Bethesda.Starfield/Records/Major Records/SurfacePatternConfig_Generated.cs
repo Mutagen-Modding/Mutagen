@@ -1779,8 +1779,8 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SurfacePatternStyleLocation;
         public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
-        public IReadOnlyList<ISurfacePatternStyleConfigGetter> Items { get; private set; } = Array.Empty<ISurfacePatternStyleConfigGetter>();
-        public IReadOnlyList<ISurfacePatternRarityConfigGetter> Rarity { get; private set; } = Array.Empty<ISurfacePatternRarityConfigGetter>();
+        public IReadOnlyList<ISurfacePatternStyleConfigGetter> Items { get; private set; } = [];
+        public IReadOnlyList<ISurfacePatternRarityConfigGetter> Rarity { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

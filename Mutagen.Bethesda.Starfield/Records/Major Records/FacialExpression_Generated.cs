@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IFacialExpressionMorphGetter> Morphs { get; private set; } = Array.Empty<IFacialExpressionMorphGetter>();
+        public IReadOnlyList<IFacialExpressionMorphGetter> Morphs { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

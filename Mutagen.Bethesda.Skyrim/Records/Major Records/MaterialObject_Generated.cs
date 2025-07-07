@@ -2364,7 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = [];
         private RangeInt32? _DATALocation;
         public MaterialObject.DATADataType DATADataTypeState { get; private set; }
         #region FalloffScale

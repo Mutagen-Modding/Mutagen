@@ -2787,13 +2787,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Tier
         private int? _TierLocation;
-        public ResearchProject.TierEnum Tier => _TierLocation.HasValue ? (ResearchProject.TierEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _TierLocation!.Value, _package.MetaData.Constants)[0] : default(ResearchProject.TierEnum);
+        public ResearchProject.TierEnum Tier => EnumBinaryTranslation<ResearchProject.TierEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TierLocation, _recordData, _package, 1);
         #endregion
         #region CategoryKeyword
         private int? _CategoryKeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _CategoryKeywordLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; private set; } = Array.Empty<IFormLinkGetter<IResearchProjectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

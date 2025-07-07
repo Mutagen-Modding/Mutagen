@@ -2333,16 +2333,16 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<IHeadPartReferenceGetter>();
+        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = [];
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = Array.Empty<IFormLinkGetter<IColorRecordGetter>>();
-        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = [];
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _DefaultFaceTextureLocation);
         #endregion
-        public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = Array.Empty<ITintAssetsGetter>();
+        public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,

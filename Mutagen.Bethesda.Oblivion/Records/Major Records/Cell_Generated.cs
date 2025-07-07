@@ -4873,7 +4873,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Cell.Flag?);
+        public Cell.Flag? Flags => EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Grid
         private int? _GridLocation;
@@ -4886,7 +4886,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region MusicType
         private int? _MusicTypeLocation;
-        public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicTypeLocation!.Value, _package.MetaData.Constants)[0] : default(MusicType?);
+        public MusicType? MusicType => EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MusicTypeLocation, _recordData, _package, 1);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;

@@ -1915,7 +1915,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ICameraPath);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         private RangeInt32? _ANAMLocation;
         #region Parent
         private int _ParentLocation => _ANAMLocation!.Value.Min;
@@ -1929,9 +1929,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Zoom
         private int? _ZoomLocation;
-        public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
+        public CameraPath.Flags Zoom => EnumBinaryTranslation<CameraPath.Flags, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ZoomLocation, _recordData, _package, 1);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = Array.Empty<IFormLinkGetter<ICameraShotGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

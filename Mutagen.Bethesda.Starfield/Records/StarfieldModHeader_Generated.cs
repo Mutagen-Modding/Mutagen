@@ -2690,13 +2690,13 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
         private int? _ScreenshotLocation;
         public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = Array.Empty<ITransientTypeGetter>();
+        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = [];
         #region Branch
         private int? _BranchLocation;
         public String? Branch => _BranchLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BranchLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

@@ -10008,7 +10008,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XALGLocation;
         public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Base
         private int? _BaseLocation;
         public IFormLinkGetter<IPlaceableObjectGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlaceableObjectGetter>(_package, _recordData, _BaseLocation);
@@ -10039,17 +10039,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
-        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
+        public Level? LevelModifier => EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_LevelModifierLocation, _recordData, _package, 4);
         #endregion
         #region Action
         private int? _ActionLocation;
-        public PlacedObject.ActionFlag? Action => _ActionLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
+        public PlacedObject.ActionFlag? Action => EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ActionLocation, _recordData, _package, 4);
         #endregion
         #region Primitive
         private RangeInt32? _PrimitiveLocation;
         public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(_recordData.Slice(_PrimitiveLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IPlacedObjectXCZRXCZAGetter> PlacedObjectXCZRXCZA { get; private set; } = Array.Empty<IPlacedObjectXCZRXCZAGetter>();
+        public IReadOnlyList<IPlacedObjectXCZRXCZAGetter> PlacedObjectXCZRXCZA { get; private set; } = [];
         #region VolumeReflectionProbeOffsetIntensity
         private RangeInt32? _VolumeReflectionProbeOffsetIntensityLocation;
         public IVolumeReflectionProbeOffsetIntensityGetter? VolumeReflectionProbeOffsetIntensity => _VolumeReflectionProbeOffsetIntensityLocation.HasValue ? VolumeReflectionProbeOffsetIntensityBinaryOverlay.VolumeReflectionProbeOffsetIntensityFactory(_recordData.Slice(_VolumeReflectionProbeOffsetIntensityLocation!.Value.Min), _package) : default;
@@ -10126,7 +10126,7 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _CollisionLocation;
         public IPlacedObjectCollisionGetter? Collision => _CollisionLocation.HasValue ? PlacedObjectCollisionBinaryOverlay.PlacedObjectCollisionFactory(_recordData.Slice(_CollisionLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IPowerLinkGetter> PowerLinks { get; private set; } = Array.Empty<IPowerLinkGetter>();
+        public IReadOnlyList<IPowerLinkGetter> PowerLinks { get; private set; } = [];
         #region Count
         private int? _CountLocation;
         public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -10187,7 +10187,7 @@ namespace Mutagen.Bethesda.Starfield
         public UInt32? XTRI => _XTRILocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XTRILocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         public ILightRoundnessGetter? LightRoundedness { get; private set; }
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
         public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);

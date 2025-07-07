@@ -2771,7 +2771,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IEffectShader);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region EffectSequence
         private int? _EffectSequenceLocation;
         public IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectSequenceGetter>(_package, _recordData, _EffectSequenceLocation);

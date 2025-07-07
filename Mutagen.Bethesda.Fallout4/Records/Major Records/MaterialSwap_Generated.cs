@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Fallout4
         public partial String? GetTreeFolderCustom();
         public String? TreeFolder => GetTreeFolderCustom();
         #endregion
-        public IReadOnlyList<IMaterialSubstitutionGetter> Substitutions { get; private set; } = Array.Empty<IMaterialSubstitutionGetter>();
+        public IReadOnlyList<IMaterialSubstitutionGetter> Substitutions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

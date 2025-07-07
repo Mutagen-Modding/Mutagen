@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Global.MajorFlag MajorFlags => (Global.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Data
         private int? _DataLocation;
         public Single? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);

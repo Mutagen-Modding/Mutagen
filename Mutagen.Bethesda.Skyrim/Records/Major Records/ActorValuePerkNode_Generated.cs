@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AssociatedSkillLocation;
         public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _AssociatedSkillLocation);
         #endregion
-        public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = Array.Empty<UInt32>();
+        public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = [];
         #region Index
         private int? _IndexLocation;
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);

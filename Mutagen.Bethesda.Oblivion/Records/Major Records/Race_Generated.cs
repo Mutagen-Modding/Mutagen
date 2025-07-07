@@ -3357,8 +3357,8 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
-        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = Array.Empty<IRaceRelationGetter>();
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = [];
+        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = [];
         #region Data
         private RangeInt32? _DataLocation;
         public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
@@ -3417,7 +3417,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         #endregion
-        public IReadOnlyList<IFacePartItemGetter> FaceData { get; private set; } = Array.Empty<IFacePartItemGetter>();
+        public IReadOnlyList<IFacePartItemGetter> FaceData { get; private set; } = [];
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;

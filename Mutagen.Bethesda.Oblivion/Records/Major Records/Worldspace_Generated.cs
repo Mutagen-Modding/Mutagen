@@ -3981,7 +3981,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Worldspace.Flag? Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag?);
+        public Worldspace.Flag? Flags => EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region ObjectBoundsMin
         private int? _ObjectBoundsMinLocation;
@@ -3993,7 +3993,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Music
         private int? _MusicLocation;
-        public MusicType? Music => _MusicLocation.HasValue ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation!.Value, _package.MetaData.Constants)) : default(MusicType?);
+        public MusicType? Music => EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MusicLocation, _recordData, _package, 4);
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;

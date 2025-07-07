@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public ASceneAction.Flag? Flags => _FlagsLocation.HasValue ? (ASceneAction.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ASceneAction.Flag?);
+        public ASceneAction.Flag? Flags => EnumBinaryTranslation<ASceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region StartPhase
         private int? _StartPhaseLocation;

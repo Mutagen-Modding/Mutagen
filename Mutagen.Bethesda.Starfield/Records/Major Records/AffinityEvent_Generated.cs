@@ -2110,13 +2110,13 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Flags
         private int? _FlagsLocation;
-        public AffinityEvent.Flag Flags => _FlagsLocation.HasValue ? (AffinityEvent.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AffinityEvent.Flag);
+        public AffinityEvent.Flag Flags => EnumBinaryTranslation<AffinityEvent.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region ContextNotes
         private int? _ContextNotesLocation;
         public String? ContextNotes => _ContextNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
+        public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = [];
         #region ActorValue
         private int? _ActorValueLocation;
         public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);

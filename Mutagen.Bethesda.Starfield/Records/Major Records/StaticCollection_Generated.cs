@@ -2393,7 +2393,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SnapTemplateLocation;
         public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
         #region Name
         private int? _NameLocation;
@@ -2411,7 +2411,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IStaticPartGetter> Parts { get; private set; } = Array.Empty<IStaticPartGetter>();
+        public IReadOnlyList<IStaticPartGetter> Parts { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

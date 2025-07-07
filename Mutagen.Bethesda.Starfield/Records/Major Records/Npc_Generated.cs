@@ -10248,7 +10248,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SnapTemplateLocation;
         public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         private RangeInt32? _ACBSLocation;
         #region Flags
         private int _FlagsLocation => _ACBSLocation!.Value.Min;
@@ -10280,7 +10280,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _UseTemplateActors_IsSet => _ACBSLocation.HasValue;
         public Npc.TemplateActorType UseTemplateActors => _UseTemplateActors_IsSet ? (Npc.TemplateActorType)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_UseTemplateActorsLocation, 0x2)) : default;
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = [];
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _DeathItemLocation);
@@ -10309,7 +10309,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _RaceLocation;
         public IFormLinkGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; private set; } = [];
         #region Skin
         private int? _SkinLocation;
         public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
@@ -10370,7 +10370,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _UnknownAIDT_IsSet => _AIDTLocation.HasValue;
         public Byte UnknownAIDT => _UnknownAIDT_IsSet ? _recordData.Span[_UnknownAIDTLocation] : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = [];
         #region FLEE
         private RangeInt32? _FLEELocation;
         public INpcFLEEGetter? FLEE => _FLEELocation.HasValue ? NpcFLEEBinaryOverlay.NpcFLEEFactory(_recordData.Slice(_FLEELocation!.Value.Min), _package) : default;
@@ -10440,7 +10440,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _BCLRLocation;
         public Int32? BCLR => _BCLRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BCLRLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = [];
         #region CombatStyle
         private int? _CombatStyleLocation;
         public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
@@ -10496,9 +10496,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IReadOnlyList<INpcTintGetter>? Tints { get; private set; }
         public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }
-        public IReadOnlyList<INpcFaceDialPositionGetter> FaceDialPositions { get; private set; } = Array.Empty<INpcFaceDialPositionGetter>();
-        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<INpcFaceMorphGetter>();
-        public IReadOnlyList<INpcMorphBlendGetter> MorphBlends { get; private set; } = Array.Empty<INpcMorphBlendGetter>();
+        public IReadOnlyList<INpcFaceDialPositionGetter> FaceDialPositions { get; private set; } = [];
+        public IReadOnlyList<INpcFaceMorphGetter> FaceMorphs { get; private set; } = [];
+        public IReadOnlyList<INpcMorphBlendGetter> MorphBlends { get; private set; } = [];
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
         public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -10537,7 +10537,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Pronoun
         private int? _PronounLocation;
-        public Pronoun? Pronoun => _PronounLocation.HasValue ? (Pronoun)HeaderTranslation.ExtractSubrecordMemory(_recordData, _PronounLocation!.Value, _package.MetaData.Constants)[0] : default(Pronoun?);
+        public Pronoun? Pronoun => EnumBinaryTranslation<Pronoun, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_PronounLocation, _recordData, _package, 1);
         #endregion
         #region ONA2
         private int? _ONA2Location;

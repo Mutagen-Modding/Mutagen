@@ -2064,7 +2064,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
         public IFormLinkGetter<IStaticObjectGetter> LoadingScreenNif => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticObjectGetter>(_package, _recordData, _LoadingScreenNifLocation);

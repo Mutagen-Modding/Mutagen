@@ -1857,10 +1857,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public ISoundReferenceGetter? WED0 { get; private set; }
         #region Keywords
-        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = [];
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        public IReadOnlyList<ISoundKeywordMappingItemGetter> Items { get; private set; } = Array.Empty<ISoundKeywordMappingItemGetter>();
+        public IReadOnlyList<ISoundKeywordMappingItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

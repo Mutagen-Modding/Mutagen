@@ -2315,7 +2315,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledItem.Flag Flags => _FlagsLocation.HasValue ? (LeveledItem.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledItem.Flag);
+        public LeveledItem.Flag Flags => EnumBinaryTranslation<LeveledItem.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Global
         private int? _GlobalLocation;
