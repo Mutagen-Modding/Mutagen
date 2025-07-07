@@ -4799,7 +4799,7 @@ namespace Mutagen.Bethesda.Starfield
         public Int32? ReferenceCollectionAliasID => _ReferenceCollectionAliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceCollectionAliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         public ICreateObjectTemplateGetter? CreateObjectTemplate { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -4834,9 +4834,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ForcedVoiceLocation;
         public IFormLinkNullableGetter<IVoiceTypeGetter> ForcedVoice => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _ForcedVoiceLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = Array.Empty<IFormLinkGetter<IFactionGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = [];
         #region ScriptComment
         private int? _ScriptCommentLocation;
         public String? ScriptComment => _ScriptCommentLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptCommentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -4845,7 +4845,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _VoiceTypesLocation;
         public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAliasVoiceTypeGetter>(_package, _recordData, _VoiceTypesLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ITerminalGetter>> TerminalMenus { get; private set; } = Array.Empty<IFormLinkGetter<ITerminalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ITerminalGetter>> TerminalMenus { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

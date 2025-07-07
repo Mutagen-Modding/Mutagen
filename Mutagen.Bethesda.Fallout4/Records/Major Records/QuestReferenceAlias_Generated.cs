@@ -4155,7 +4155,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ClosestToAliasLocation;
         public Int32? ClosestToAlias => _ClosestToAliasLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClosestToAliasLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -4190,9 +4190,9 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = Array.Empty<IFormLinkGetter<IFactionGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = [];
         #region VoiceTypes
         private int? _VoiceTypesLocation;
         public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAliasVoiceTypeGetter>(_package, _recordData, _VoiceTypesLocation);

@@ -2635,17 +2635,17 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public INeckFatAdjustmentsScaleGetter? NeckFatAdjustmentsScale { get; private set; }
-        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<IHeadPartReferenceGetter>();
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = Array.Empty<IFormLinkGetter<IColorRecordGetter>>();
-        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
+        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = [];
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _DefaultFaceTextureLocation);
         #endregion
-        public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = Array.Empty<ITintGroupGetter>();
-        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<IMorphGroupGetter>();
-        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<IFaceMorphGetter>();
+        public IReadOnlyList<ITintGroupGetter> TintLayers { get; private set; } = [];
+        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = [];
+        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = [];
         #region MaleWrinkleMapPath
         private int? _MaleWrinkleMapPathLocation;
         public String? MaleWrinkleMapPath => _MaleWrinkleMapPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaleWrinkleMapPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

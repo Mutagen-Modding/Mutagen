@@ -2419,8 +2419,8 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _TypeLocation;
         public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
-        public IReadOnlyList<IPartGetter> Parts { get; private set; } = Array.Empty<IPartGetter>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = [];
+        public IReadOnlyList<IPartGetter> Parts { get; private set; } = [];
         #region TextureSet
         private int? _TextureSetLocation;
         public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);

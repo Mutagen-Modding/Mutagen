@@ -8332,8 +8332,8 @@ namespace Mutagen.Bethesda.Fallout4
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
-        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = [];
         private RangeInt32? _IMSPLocation;
         public Weather.IMSPDataType IMSPDataTypeState { get; private set; }
         #region ImageSpaceSunrise

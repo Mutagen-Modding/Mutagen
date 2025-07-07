@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReferenceAliasLocationGetter? ReferenceAliasLocation { get; private set; }
         public IExternalAliasLocationGetter? ExternalAliasLocation { get; private set; }
         public IFindMatchingRefFromEventGetter? FindMatchingRefFromEvent { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IQuestLocationAliasALPSGetter? ALPS { get; private set; }
         #region ClosestToAlias
         private int? _ClosestToAliasLocation;

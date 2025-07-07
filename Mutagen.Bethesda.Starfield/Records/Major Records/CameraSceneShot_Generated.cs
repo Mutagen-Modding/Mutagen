@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _VNAMLocation;
         public Boolean VNAM => _VNAMLocation.HasValue ? true : default(Boolean);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

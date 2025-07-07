@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _PreviousSiblingLocation;
         public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAStoryManagerNodeGetter>(_package, _recordData, _PreviousSiblingLocation);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

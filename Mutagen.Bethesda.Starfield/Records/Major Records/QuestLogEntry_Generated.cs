@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FlagsLocation;
         public QuestLogEntry.Flag? Flags => _FlagsLocation.HasValue ? (QuestLogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(QuestLogEntry.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Note
         private int? _NoteLocation;
         public String? Note => _NoteLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoteLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _EntryLocation;
         public ITranslatedStringGetter? Entry => _EntryLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EntryLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IQuestStageCompleteDataGetter> StageCompleteDatas { get; private set; } = Array.Empty<IQuestStageCompleteDataGetter>();
+        public IReadOnlyList<IQuestStageCompleteDataGetter> StageCompleteDatas { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

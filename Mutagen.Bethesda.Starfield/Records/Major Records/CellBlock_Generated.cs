@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Starfield
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = Array.Empty<ICellSubBlockGetter>();
+        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

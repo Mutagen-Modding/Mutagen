@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _BNAMLocation;
         public Int32? BNAM => _BNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IBiomeObjectGetter> Objects { get; private set; } = Array.Empty<IBiomeObjectGetter>();
+        public IReadOnlyList<IBiomeObjectGetter> Objects { get; private set; } = [];
         #region Footprints
         private RangeInt32? _FootprintsLocation;
         private IBiomeFootprintsGetter? _Footprints => _FootprintsLocation.HasValue ? BiomeFootprintsBinaryOverlay.BiomeFootprintsFactory(_recordData.Slice(_FootprintsLocation!.Value.Min), _package) : default;

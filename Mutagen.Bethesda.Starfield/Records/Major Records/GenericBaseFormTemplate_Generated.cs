@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IGenericBaseFormTemplate);
 
 
-        public IReadOnlyList<String> Components { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> Components { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

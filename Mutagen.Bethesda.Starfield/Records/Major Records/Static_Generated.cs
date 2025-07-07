@@ -3710,7 +3710,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DefaultLayerLocation;
         public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _DefaultLayerLocation);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }

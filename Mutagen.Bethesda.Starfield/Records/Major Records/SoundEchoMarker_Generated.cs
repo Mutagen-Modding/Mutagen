@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IEchoMarkerGetter> Markers { get; private set; } = Array.Empty<IEchoMarkerGetter>();
+        public IReadOnlyList<IEchoMarkerGetter> Markers { get; private set; } = [];
         public IEchoMarkerGetter? DefaultStartMarker { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,

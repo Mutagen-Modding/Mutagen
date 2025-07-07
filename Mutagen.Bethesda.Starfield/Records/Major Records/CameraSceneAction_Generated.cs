@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<ICameraSceneShotGetter> CameraShots { get; private set; } = Array.Empty<ICameraSceneShotGetter>();
+        public IReadOnlyList<ICameraSceneShotGetter> CameraShots { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

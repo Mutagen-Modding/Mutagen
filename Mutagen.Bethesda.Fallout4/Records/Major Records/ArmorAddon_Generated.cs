@@ -2920,7 +2920,7 @@ namespace Mutagen.Bethesda.Fallout4
         private IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? _TextureSwapListOverlay;
         public IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList => _TextureSwapListOverlay;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = Array.Empty<IFormLinkGetter<IRaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = [];
         #region FootstepSound
         private int? _FootstepSoundLocation;
         public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFootstepSetGetter>(_package, _recordData, _FootstepSoundLocation);

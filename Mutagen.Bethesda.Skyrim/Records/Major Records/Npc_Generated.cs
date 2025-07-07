@@ -6308,7 +6308,7 @@ namespace Mutagen.Bethesda.Skyrim
         private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(_recordData.Slice(_ConfigurationLocation!.Value.Min), _package) : default;
         public INpcConfigurationGetter Configuration => _Configuration ?? new NpcConfiguration();
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = [];
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _DeathItemLocation);
@@ -6339,7 +6339,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = [];
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SpectatorOverridePackageListLocation);
@@ -6363,7 +6363,7 @@ namespace Mutagen.Bethesda.Skyrim
         private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(_recordData.Slice(_AIDataLocation!.Value.Min), _package) : default;
         public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = [];
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -6398,7 +6398,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _PlayerSkillsLocation;
         public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(_recordData.Slice(_PlayerSkillsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = [];
         #region HairColor
         private int? _HairColorLocation;
         public IFormLinkNullableGetter<IColorRecordGetter> HairColor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _HairColorLocation);
@@ -6460,7 +6460,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _FacePartsLocation;
         public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(_recordData.Slice(_FacePartsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = Array.Empty<ITintLayerGetter>();
+        public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

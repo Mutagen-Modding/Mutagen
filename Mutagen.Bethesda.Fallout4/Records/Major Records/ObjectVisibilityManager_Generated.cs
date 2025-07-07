@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IObjectVisibilityManager);
 
 
-        public IReadOnlyList<IObjectVisibilityManagerItemGetter> Objects { get; private set; } = Array.Empty<IObjectVisibilityManagerItemGetter>();
+        public IReadOnlyList<IObjectVisibilityManagerItemGetter> Objects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

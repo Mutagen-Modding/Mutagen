@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _RunOnTabIndexLocation;
         public Byte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

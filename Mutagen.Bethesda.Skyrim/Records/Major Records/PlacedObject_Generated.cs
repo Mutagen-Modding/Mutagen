@@ -7098,8 +7098,8 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _RadiusLocation;
         public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = Array.Empty<IWaterReflectionGetter>();
-        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
+        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = [];
         #region Emittance
         private int? _EmittanceLocation;
         public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
@@ -7218,7 +7218,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         public IPatrolGetter? Patrol { get; private set; }
         #region Action
         private int? _ActionLocation;

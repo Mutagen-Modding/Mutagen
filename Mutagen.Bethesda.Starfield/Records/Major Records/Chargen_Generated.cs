@@ -1848,10 +1848,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _NNAMLocation;
         public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
-        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<IMorphGroupGetter>();
-        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<IFaceMorphGetter>();
-        public IReadOnlyList<IFaceDialGetter> FaceDials { get; private set; } = Array.Empty<IFaceDialGetter>();
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = [];
+        public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = [];
+        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = [];
+        public IReadOnlyList<IFaceDialGetter> FaceDials { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

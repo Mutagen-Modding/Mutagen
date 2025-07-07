@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _IndexLocation;
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<UInt64> DATAs { get; private set; } = Array.Empty<UInt64>();
+        public IReadOnlyList<UInt64> DATAs { get; private set; } = [];
         #region INTV
         private int? _INTVLocation;
         public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);

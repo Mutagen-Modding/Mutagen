@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IInstanceNamingRuleSetGetter<NoInstanceNamingRules.Target>> Rules { get; private set; } = Array.Empty<IInstanceNamingRuleSetGetter<NoInstanceNamingRules.Target>>();
+        public IReadOnlyList<IInstanceNamingRuleSetGetter<NoInstanceNamingRules.Target>> Rules { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

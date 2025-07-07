@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _DataLocation;
         public IEffectDataGetter? Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Magnitude
         private int? _MagnitudeLocation;
         public IFormLinkNullableGetter<IGlobalGetter> Magnitude => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _MagnitudeLocation);

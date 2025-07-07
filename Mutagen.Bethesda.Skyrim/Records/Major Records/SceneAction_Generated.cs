@@ -2482,7 +2482,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _TimerSecondsLocation;
         public Single? TimerSeconds => _TimerSecondsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TimerSecondsLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = [];
         #region Topic
         private int? _TopicLocation;
         public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);

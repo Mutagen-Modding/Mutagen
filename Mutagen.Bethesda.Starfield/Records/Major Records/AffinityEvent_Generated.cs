@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ContextNotesLocation;
         public String? ContextNotes => _ContextNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
+        public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = [];
         #region ActorValue
         private int? _ActorValueLocation;
         public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);

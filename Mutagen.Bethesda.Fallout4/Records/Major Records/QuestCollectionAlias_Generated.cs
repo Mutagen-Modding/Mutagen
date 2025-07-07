@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<ICollectionAliasGetter> Collection { get; private set; } = Array.Empty<ICollectionAliasGetter>();
+        public IReadOnlyList<ICollectionAliasGetter> Collection { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

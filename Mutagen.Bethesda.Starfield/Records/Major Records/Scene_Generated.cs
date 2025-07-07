@@ -4647,8 +4647,8 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FlagsLocation;
         public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
         #endregion
-        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<IScenePhaseGetter>();
-        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<ISceneActorGetter>();
+        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = [];
+        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = [];
         #region Actions
         partial void ActionsCustomParse(
             OverlayStream stream,
@@ -4669,7 +4669,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _VNAMLocation;
         public ReadOnlyMemorySlice<Byte>? VNAM => _VNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region SetParentQuestStage
         private RangeInt32? _SetParentQuestStageLocation;
         public ISceneSetParentQuestStageGetter? SetParentQuestStage => _SetParentQuestStageLocation.HasValue ? SceneSetParentQuestStageBinaryOverlay.SceneSetParentQuestStageFactory(_recordData.Slice(_SetParentQuestStageLocation!.Value.Min), _package) : default;

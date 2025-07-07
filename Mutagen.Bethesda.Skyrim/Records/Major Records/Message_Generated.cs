@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _DisplayTimeLocation;
         public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<IMessageButtonGetter>();
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

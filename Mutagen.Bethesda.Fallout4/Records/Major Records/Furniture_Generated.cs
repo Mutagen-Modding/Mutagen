@@ -4908,7 +4908,7 @@ namespace Mutagen.Bethesda.Fallout4
         public partial Furniture.EntryPointType? GetEnabledEntryPointsCustom();
         public Furniture.EntryPointType? EnabledEntryPoints => GetEnabledEntryPointsCustom();
         #endregion
-        public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = Array.Empty<IFurnitureMarkerEntryPointsGetter>();
+        public IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; private set; } = [];
         #region MarkerModel
         private int? _MarkerModelLocation;
         public String? MarkerModel => _MarkerModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

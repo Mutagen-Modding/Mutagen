@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IAnimationSoundTagSet);
 
 
-        public IReadOnlyList<IAnimationSoundTagGetter> Tags { get; private set; } = Array.Empty<IAnimationSoundTagGetter>();
+        public IReadOnlyList<IAnimationSoundTagGetter> Tags { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

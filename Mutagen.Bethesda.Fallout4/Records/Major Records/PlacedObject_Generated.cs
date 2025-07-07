@@ -8505,7 +8505,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _LightingLocation;
         public IPlacedObjectLightingGetter? Lighting => _LightingLocation.HasValue ? PlacedObjectLightingBinaryOverlay.PlacedObjectLightingFactory(_recordData.Slice(_LightingLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = [];
         #region Alpha
         private RangeInt32? _AlphaLocation;
         public IAlphaGetter? Alpha => _AlphaLocation.HasValue ? AlphaBinaryOverlay.AlphaFactory(_recordData.Slice(_AlphaLocation!.Value.Min), _package) : default;
@@ -8633,7 +8633,7 @@ namespace Mutagen.Bethesda.Fallout4
         private RangeInt32? _EnableParentLocation;
         public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         public IPatrolGetter? Patrol { get; private set; }
         #region Action
         private int? _ActionLocation;
@@ -8656,7 +8656,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttachRefLocation;
         public IFormLinkNullableGetter<IPlacedGetter> AttachRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _AttachRefLocation);
         #endregion
-        public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = Array.Empty<ISplineLinkGetter>();
+        public IReadOnlyList<ISplineLinkGetter> SplineConnections { get; private set; } = [];
         #region PowerGridConnections
         private ImmutableManyListWrapper<IPowerGridConnectionGetter>? _additivePowerGridConnections;
         public IReadOnlyList<IPowerGridConnectionGetter>? PowerGridConnections => _additivePowerGridConnections;

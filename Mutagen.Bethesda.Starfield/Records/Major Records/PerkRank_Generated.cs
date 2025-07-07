@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Starfield
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IReadOnlyList<IActivityGetter>? Activities { get; private set; }
         #region Description
         private int? _DescriptionLocation;

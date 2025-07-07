@@ -8504,7 +8504,7 @@ namespace Mutagen.Bethesda.Skyrim
         private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
         public IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel => _SkeletalModelOverlay;
         #endregion
-        public IReadOnlyList<String> MovementTypeNames { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> MovementTypeNames { get; private set; } = [];
         #region Voices
         private int? _VoicesLocation;
         public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices
@@ -8563,7 +8563,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = [];
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?> BodyData => _BodyDataOverlay ?? new GenderedItem<IBodyDataGetter?>(default, default);
@@ -8604,12 +8604,12 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _CloseLootSoundLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _CloseLootSoundLocation);
         #endregion
-        public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = Array.Empty<IRaceMovementTypeGetter>();
+        public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = [];
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
         public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IEquipTypeGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = [];
         #region UnarmedEquipSlot
         private int? _UnarmedEquipSlotLocation;
         public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _UnarmedEquipSlotLocation);

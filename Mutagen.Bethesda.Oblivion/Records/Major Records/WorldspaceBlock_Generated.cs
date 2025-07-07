@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = Array.Empty<IWorldspaceSubBlockGetter>();
+        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

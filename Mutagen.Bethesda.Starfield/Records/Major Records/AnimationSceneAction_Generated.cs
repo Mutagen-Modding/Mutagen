@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IAnimationGetter> Animations { get; private set; } = Array.Empty<IAnimationGetter>();
+        public IReadOnlyList<IAnimationGetter> Animations { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

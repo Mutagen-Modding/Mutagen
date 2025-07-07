@@ -5112,7 +5112,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
         public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _recordData.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default(Single);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = Array.Empty<IFormLinkGetter<IMagicEffectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = [];
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;

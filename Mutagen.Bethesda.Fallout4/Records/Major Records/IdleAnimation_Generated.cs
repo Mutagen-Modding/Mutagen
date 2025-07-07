@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IIdleAnimation);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region BehaviorGraph
         private int? _BehaviorGraphLocation;
         public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2222,7 +2222,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AnimationEventLocation;
         public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = Array.Empty<IFormLinkGetter<IIdleRelationGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = [];
         private RangeInt32? _DATALocation;
         #region LoopingSecondsMin
         private int _LoopingSecondsMinLocation => _DATALocation!.Value.Min;

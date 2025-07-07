@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DisplayTextLocation;
         public ITranslatedStringGetter? DisplayText => _DisplayTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = Array.Empty<IQuestObjectiveTargetGetter>();
+        public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

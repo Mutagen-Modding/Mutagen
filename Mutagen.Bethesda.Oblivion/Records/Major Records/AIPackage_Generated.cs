@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _TargetLocation;
         public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(_recordData.Slice(_TargetLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

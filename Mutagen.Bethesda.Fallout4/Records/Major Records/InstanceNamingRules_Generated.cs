@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _TargetLocation;
         public InstanceNamingRules.RuleTarget? Target => _TargetLocation.HasValue ? (InstanceNamingRules.RuleTarget)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TargetLocation!.Value, _package.MetaData.Constants)) : default(InstanceNamingRules.RuleTarget?);
         #endregion
-        public IReadOnlyList<IInstanceNamingRuleSetGetter> RuleSets { get; private set; } = Array.Empty<IInstanceNamingRuleSetGetter>();
+        public IReadOnlyList<IInstanceNamingRuleSetGetter> RuleSets { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

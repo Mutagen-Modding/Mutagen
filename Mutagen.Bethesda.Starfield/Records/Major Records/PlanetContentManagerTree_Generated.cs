@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _NAM5Location;
         public ReadOnlyMemorySlice<Byte> NAM5 => _NAM5Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPlanetContentManagerBranchNodeGetter>> Nodes { get; private set; } = Array.Empty<IFormLinkGetter<IPlanetContentManagerBranchNodeGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlanetContentManagerBranchNodeGetter>> Nodes { get; private set; } = [];
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,

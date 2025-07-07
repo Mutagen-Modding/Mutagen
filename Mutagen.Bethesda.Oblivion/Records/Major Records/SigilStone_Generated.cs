@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         #region Data
         private RangeInt32? _DataLocation;
         public ISigilStoneDataGetter? Data => _DataLocation.HasValue ? SigilStoneDataBinaryOverlay.SigilStoneDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;

@@ -1408,7 +1408,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _CDNSLocation;
         public ReadOnlyMemorySlice<Byte>? CDNS => _CDNSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CDNSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<ICrowdComponentItemGetter> Items { get; private set; } = Array.Empty<ICrowdComponentItemGetter>();
+        public IReadOnlyList<ICrowdComponentItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

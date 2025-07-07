@@ -3264,7 +3264,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XALGLocation;
         public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region ChanceNone
         private int? _ChanceNoneLocation;
         public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default(Single);
@@ -3281,7 +3281,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _UseGlobalLocation;
         public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseGlobalLocation);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IReadOnlyList<ILeveledBaseFormEntryGetter>? Entries { get; private set; }
         public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
         public IModelGetter? Model { get; private set; }

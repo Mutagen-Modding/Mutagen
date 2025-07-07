@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _FlagsLocation;
         public LeveledFlag? Flags => _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledSpellEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledSpellEntryGetter>();
+        public IReadOnlyList<ILeveledSpellEntryGetter> Entries { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

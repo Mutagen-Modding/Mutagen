@@ -2793,7 +2793,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _CategoryKeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _CategoryKeywordLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; private set; } = Array.Empty<IFormLinkGetter<IResearchProjectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

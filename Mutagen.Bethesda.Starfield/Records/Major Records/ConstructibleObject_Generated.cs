@@ -4006,7 +4006,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public ConstructibleObject.MajorFlag MajorFlags => (ConstructibleObject.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -4015,7 +4015,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _WorkbenchKeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructableComponents { get; private set; }
         public IReadOnlyList<IConstructibleRequiredPerkGetter>? RequiredPerks { get; private set; }
         #region CreatedObject

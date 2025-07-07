@@ -2332,7 +2332,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _WorldspaceLocation;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _WorldspaceLocation);
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<IRegionAreaGetter>();
+        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = [];
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,

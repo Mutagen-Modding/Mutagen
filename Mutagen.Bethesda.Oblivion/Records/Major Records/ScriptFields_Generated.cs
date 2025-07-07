@@ -1698,8 +1698,8 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _SourceCodeLocation;
         public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourceCodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = Array.Empty<ILocalVariableGetter>();
-        public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = Array.Empty<IAScriptReferenceGetter>();
+        public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = [];
+        public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

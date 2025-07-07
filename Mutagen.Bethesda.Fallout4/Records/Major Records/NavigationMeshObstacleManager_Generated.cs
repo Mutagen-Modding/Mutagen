@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(INavigationMeshObstacleManager);
 
 
-        public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = Array.Empty<INavigationMeshObstacleManagerSubObjectGetter>();
+        public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

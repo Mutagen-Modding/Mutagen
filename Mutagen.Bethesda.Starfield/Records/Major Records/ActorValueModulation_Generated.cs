@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IActorValueModulation);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Type
         private int? _TypeLocation;
         public ActorValueModulation.GroupType Type => _TypeLocation.HasValue ? (ActorValueModulation.GroupType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueModulation.GroupType);

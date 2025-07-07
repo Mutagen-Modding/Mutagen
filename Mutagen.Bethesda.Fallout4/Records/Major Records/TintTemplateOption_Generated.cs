@@ -2065,8 +2065,8 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _FlagsLocation;
         public TintTemplateOption.Flag? Flags => _FlagsLocation.HasValue ? (TintTemplateOption.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TintTemplateOption.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        public IReadOnlyList<String> Textures { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IReadOnlyList<String> Textures { get; private set; } = [];
         #region BlendOperation
         private int? _BlendOperationLocation;
         public BlendOperation? BlendOperation => _BlendOperationLocation.HasValue ? (BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlendOperationLocation!.Value, _package.MetaData.Constants)) : default(BlendOperation?);

@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Layer.MajorFlag MajorFlags => (Layer.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Parent
         private int? _ParentLocation;
         public IFormLinkNullableGetter<ILayerGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _ParentLocation);

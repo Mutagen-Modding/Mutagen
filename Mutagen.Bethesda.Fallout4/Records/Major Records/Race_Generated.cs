@@ -9612,7 +9612,7 @@ namespace Mutagen.Bethesda.Fallout4
         private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
         public IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel => _SkeletalModelOverlay;
         #endregion
-        public IReadOnlyList<String> MovementTypeNames { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> MovementTypeNames { get; private set; } = [];
         #region Voices
         private int? _VoicesLocation;
         public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices
@@ -9657,7 +9657,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = [];
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?> BodyData => _BodyDataOverlay ?? new GenderedItem<IBodyDataGetter?>(default, default);
@@ -9704,12 +9704,12 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _SoundCloseCorpseLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundCloseCorpse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _SoundCloseCorpseLocation);
         #endregion
-        public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = Array.Empty<IMovementDataOverrideGetter>();
+        public IReadOnlyList<IMovementDataOverrideGetter> MovementDataOverrides { get; private set; } = [];
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
         public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
-        public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
+        public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = [];
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
         public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeaponGetter>(_package, _recordData, _UnarmedWeaponLocation);
@@ -9762,7 +9762,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _SubgraphAdditiveRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> SubgraphAdditiveRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _SubgraphAdditiveRaceLocation);
         #endregion
-        public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
+        public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = [];
         #region IdleChatterTimeMin
         private int? _IdleChatterTimeMinLocation;
         public Single? IdleChatterTimeMin => _IdleChatterTimeMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleChatterTimeMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);

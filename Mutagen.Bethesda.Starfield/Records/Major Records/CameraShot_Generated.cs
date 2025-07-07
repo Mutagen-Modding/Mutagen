@@ -2981,7 +2981,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ContextNotesLocation;
         public String? ContextNotes => _ContextNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         private RangeInt32? _DATALocation;
         #region Action
         private int _ActionLocation => _DATALocation!.Value.Min;

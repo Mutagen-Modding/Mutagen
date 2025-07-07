@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _PresetDefaultLocation;
         public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _PresetDefaultLocation);
         #endregion
-        public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = Array.Empty<ITintPresetGetter>();
+        public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

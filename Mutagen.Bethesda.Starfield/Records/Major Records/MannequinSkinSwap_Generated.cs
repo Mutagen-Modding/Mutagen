@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MSSSLocation;
         public ReadOnlyMemorySlice<Byte>? MSSS => _MSSSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSSSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IMannequinSkinSwapItemGetter> Items { get; private set; } = Array.Empty<IMannequinSkinSwapItemGetter>();
+        public IReadOnlyList<IMannequinSkinSwapItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

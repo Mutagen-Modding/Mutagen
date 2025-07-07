@@ -1957,13 +1957,13 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(ICameraPath);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = [];
         #region Zoom
         private int? _ZoomLocation;
         public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = Array.Empty<IFormLinkGetter<ICameraShotGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

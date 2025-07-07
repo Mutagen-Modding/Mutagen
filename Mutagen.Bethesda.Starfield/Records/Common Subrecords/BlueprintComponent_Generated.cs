@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public IReadOnlyList<IBlueprintComponentItemGetter>? Items { get; private set; }
-        public IReadOnlyList<IBlueprintComponentBODSRowGetter> BODSRows { get; private set; } = Array.Empty<IBlueprintComponentBODSRowGetter>();
+        public IReadOnlyList<IBlueprintComponentBODSRowGetter> BODSRows { get; private set; } = [];
         #region BLUF
         private int? _BLUFLocation;
         public Byte? BLUF => _BLUFLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BLUFLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);

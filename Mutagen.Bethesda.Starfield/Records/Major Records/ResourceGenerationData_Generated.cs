@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IResourceGenerationData);
 
 
-        public IReadOnlyList<IResourceGenerationDataItemGetter> Items { get; private set; } = Array.Empty<IResourceGenerationDataItemGetter>();
+        public IReadOnlyList<IResourceGenerationDataItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

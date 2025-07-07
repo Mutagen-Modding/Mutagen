@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _NoteLocation;
         public String? Note => _NoteLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoteLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IPackageRootGetter? Root { get; private set; }
         #region ProcedureType
         private int? _ProcedureTypeLocation;
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FlagsLocation;
         public PackageBranch.Flag? Flags => _FlagsLocation.HasValue ? (PackageBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PackageBranch.Flag?);
         #endregion
-        public IReadOnlyList<Byte> DataInputIndices { get; private set; } = Array.Empty<Byte>();
+        public IReadOnlyList<Byte> DataInputIndices { get; private set; } = [];
         #region FlagsOverride
         partial void FlagsOverrideCustomParse(
             OverlayStream stream,

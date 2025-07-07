@@ -2831,9 +2831,9 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FlagsLocation;
         public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
         #endregion
-        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<IScenePhaseGetter>();
-        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<ISceneActorGetter>();
-        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = Array.Empty<ISceneActionGetter>();
+        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = [];
+        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = [];
+        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = [];
         public IScenePhaseUnusedDataGetter? Unused { get; private set; }
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
@@ -2848,7 +2848,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _VNAMLocation;
         public ReadOnlyMemorySlice<Byte>? VNAM => _VNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

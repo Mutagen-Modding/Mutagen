@@ -2648,8 +2648,8 @@ namespace Mutagen.Bethesda.Starfield
         private int? _TrainingLocation;
         public IFormLinkNullableGetter<IPerkGetter> Training => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _TrainingLocation);
         #endregion
-        public IReadOnlyList<IPerkRankGetter> Ranks { get; private set; } = Array.Empty<IPerkRankGetter>();
-        public IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; private set; } = Array.Empty<IFormLinkGetter<IPerkGetter>>();
+        public IReadOnlyList<IPerkRankGetter> Ranks { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

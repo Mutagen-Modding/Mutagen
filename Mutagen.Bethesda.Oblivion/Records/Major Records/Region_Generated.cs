@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _WorldspaceLocation;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _WorldspaceLocation);
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = Array.Empty<IRegionAreaGetter>();
+        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = [];
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,

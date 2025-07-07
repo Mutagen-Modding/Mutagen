@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IBoneModifier);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Data
         partial void DataCustomParse(
             OverlayStream stream,

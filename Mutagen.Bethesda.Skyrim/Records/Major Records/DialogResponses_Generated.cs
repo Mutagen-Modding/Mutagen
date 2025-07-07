@@ -3127,14 +3127,14 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FavorLevelLocation;
         public FavorLevel? FavorLevel => _FavorLevelLocation.HasValue ? (FavorLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FavorLevelLocation!.Value, _package.MetaData.Constants)[0] : default(FavorLevel?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkTo { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkTo { get; private set; } = [];
         #region ResponseData
         private int? _ResponseDataLocation;
         public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _ResponseDataLocation);
         #endregion
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = Array.Empty<IDialogResponsesUnknownDataGetter>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = [];
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IReadOnlyList<IDialogResponsesUnknownDataGetter> UnknownData { get; private set; } = [];
         #region Prompt
         private int? _PromptLocation;
         public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);

@@ -3065,7 +3065,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = [];
         #region Flags
         private int? _FlagsLocation;
         public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
@@ -3098,7 +3098,7 @@ namespace Mutagen.Bethesda.Skyrim
         private RangeInt32? _CrimeValuesLocation;
         public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(_recordData.Slice(_CrimeValuesLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = [];
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _VendorBuySellListLocation);

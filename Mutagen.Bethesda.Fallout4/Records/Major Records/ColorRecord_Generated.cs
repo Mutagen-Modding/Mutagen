@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Fallout4
         public partial ColorRecord.Flag GetFlagsCustom();
         public ColorRecord.Flag Flags => GetFlagsCustom();
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

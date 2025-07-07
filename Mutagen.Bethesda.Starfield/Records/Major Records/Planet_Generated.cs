@@ -3703,10 +3703,10 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IPlanet);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IReadOnlyList<IMasterWorldspaceGetter>? MasterWorldspaces { get; private set; }
         public IReadOnlyList<IAddedWorldspaceGetter>? AddedWorldspaces { get; private set; }
-        public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
+        public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = [];
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
         public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceTreeGetter>(_package, _recordData, _SurfaceTreeLocation);

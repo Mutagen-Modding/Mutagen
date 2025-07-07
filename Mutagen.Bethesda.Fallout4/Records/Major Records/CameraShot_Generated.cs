@@ -2676,7 +2676,7 @@ namespace Mutagen.Bethesda.Fallout4
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         private RangeInt32? _DATALocation;
         public CameraShot.DATADataType DATADataTypeState { get; private set; }
         #region Action

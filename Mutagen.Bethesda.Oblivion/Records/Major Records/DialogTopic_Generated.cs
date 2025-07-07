@@ -2505,7 +2505,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override Type LinkType => typeof(IDialogTopic);
 
 
-        public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = Array.Empty<IFormLinkGetter<IQuestGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

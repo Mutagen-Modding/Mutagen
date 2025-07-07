@@ -5344,9 +5344,9 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesAdded { get; private set; }
         public IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesStatic { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; private set; }
-        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsAdded { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
-        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsStatic { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
-        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsRemoved { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsAdded { get; private set; } = [];
+        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsStatic { get; private set; } = [];
+        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsRemoved { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesAdded { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesStatic { get; private set; }
         public IReadOnlyList<IEnableParentReferenceGetter>? EnableParentReferencesAdded { get; private set; }

@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IDamageType);
 
 
-        public IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; private set; } = Array.Empty<IDamageTypeItemGetter>();
+        public IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

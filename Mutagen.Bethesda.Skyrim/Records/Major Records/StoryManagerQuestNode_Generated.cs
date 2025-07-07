@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _MaxNumQuestsToRunLocation;
         public UInt32? MaxNumQuestsToRun => _MaxNumQuestsToRunLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxNumQuestsToRunLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = Array.Empty<IStoryManagerQuestGetter>();
+        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

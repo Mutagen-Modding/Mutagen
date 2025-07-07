@@ -1716,7 +1716,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _NavMeshVersionLocation;
         public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = Array.Empty<INavigationMapInfoGetter>();
+        public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = [];
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
         public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(_recordData.Slice(_PreferredPathingLocation!.Value.Min), _package) : default;

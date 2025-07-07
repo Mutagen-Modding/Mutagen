@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override Type LinkType => typeof(IImpactDataSet);
 
 
-        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = Array.Empty<IImpactDataGetter>();
+        public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

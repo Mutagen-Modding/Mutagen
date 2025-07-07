@@ -2161,7 +2161,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _UnknownENIT_IsSet => _ENITLocation.HasValue;
         public ReadOnlyMemorySlice<Byte> UnknownENIT => _UnknownENIT_IsSet ? _recordData.Span.Slice(_UnknownENITLocation, 27).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

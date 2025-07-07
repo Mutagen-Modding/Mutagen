@@ -4063,7 +4063,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _HealthLocation;
         public Single? Health => _HealthLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HealthLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region LinkedReferenceColor
         private RangeInt32? _LinkedReferenceColorLocation;

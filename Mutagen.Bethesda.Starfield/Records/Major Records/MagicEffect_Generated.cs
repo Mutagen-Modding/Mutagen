@@ -4482,12 +4482,12 @@ namespace Mutagen.Bethesda.Starfield
         private bool _Unknown2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
         public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 6).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        public IReadOnlyList<IMagicEffectSoundGetter> Sounds { get; private set; } = Array.Empty<IMagicEffectSoundGetter>();
+        public IReadOnlyList<IMagicEffectSoundGetter> Sounds { get; private set; } = [];
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

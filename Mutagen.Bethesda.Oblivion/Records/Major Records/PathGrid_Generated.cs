@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion
             PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; private set; }
-        public IReadOnlyList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = Array.Empty<IPointToReferenceMappingGetter>();
+        public IReadOnlyList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

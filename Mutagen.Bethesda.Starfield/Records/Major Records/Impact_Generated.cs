@@ -3209,7 +3209,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IImpact);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _DATALocation;
         #region Duration

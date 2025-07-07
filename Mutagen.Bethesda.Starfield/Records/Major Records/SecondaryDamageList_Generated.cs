@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISecondaryDamageList);
 
 
-        public IReadOnlyList<ISecondaryDamageItemGetter> Damages { get; private set; } = Array.Empty<ISecondaryDamageItemGetter>();
+        public IReadOnlyList<ISecondaryDamageItemGetter> Damages { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

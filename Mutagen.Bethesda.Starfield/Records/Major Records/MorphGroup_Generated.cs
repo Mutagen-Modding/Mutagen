@@ -1284,7 +1284,7 @@ namespace Mutagen.Bethesda.Starfield
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<String> Morphs { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> Morphs { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

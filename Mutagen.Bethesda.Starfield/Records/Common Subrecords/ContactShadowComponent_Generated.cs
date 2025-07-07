@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IContactShadowComponentItemGetter> Items { get; private set; } = Array.Empty<IContactShadowComponentItemGetter>();
+        public IReadOnlyList<IContactShadowComponentItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

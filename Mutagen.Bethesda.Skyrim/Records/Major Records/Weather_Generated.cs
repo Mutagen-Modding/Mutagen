@@ -6889,8 +6889,8 @@ namespace Mutagen.Bethesda.Skyrim
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
-        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = [];
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(_recordData.Slice(_ImageSpacesLocation!.Value.Min), _package) : default;

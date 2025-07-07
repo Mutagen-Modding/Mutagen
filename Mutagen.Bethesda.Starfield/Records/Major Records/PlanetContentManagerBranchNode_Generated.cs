@@ -2678,7 +2678,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IPlanetContentManagerBranchNode);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region NodeType
         private int? _NodeTypeLocation;
         public PlanetContentManagerBranchNode.NodeTypeOption? NodeType => _NodeTypeLocation.HasValue ? (PlanetContentManagerBranchNode.NodeTypeOption)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeTypeLocation!.Value, _package.MetaData.Constants)) : default(PlanetContentManagerBranchNode.NodeTypeOption?);
@@ -2699,7 +2699,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ConsumeRequestEvenOnFailureLocation;
         public Boolean? ConsumeRequestEvenOnFailure => _ConsumeRequestEvenOnFailureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ConsumeRequestEvenOnFailureLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPlanetNodeGetter>> Nodes { get; private set; } = Array.Empty<IFormLinkGetter<IPlanetNodeGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlanetNodeGetter>> Nodes { get; private set; } = [];
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }

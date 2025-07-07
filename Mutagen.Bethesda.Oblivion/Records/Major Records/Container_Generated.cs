@@ -2078,7 +2078,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
-        public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = Array.Empty<IContainerItemGetter>();
+        public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = [];
         #region Data
         private RangeInt32? _DataLocation;
         public IContainerDataGetter? Data => _DataLocation.HasValue ? ContainerDataBinaryOverlay.ContainerDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;

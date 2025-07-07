@@ -5738,7 +5738,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = Array.Empty<IWorldspaceGridReferenceGetter>();
+        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = [];
         #region MaxHeight
         private int? _MaxHeightLengthOverride;
         private RangeInt32? _MaxHeightLocation;

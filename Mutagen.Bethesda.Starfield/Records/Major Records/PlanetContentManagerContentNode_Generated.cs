@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IPlanetContentManagerContentNode);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Content
         private int? _ContentLocation;
         public IFormLinkNullableGetter<IPlanetContentTargetGetter> Content => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlanetContentTargetGetter>(_package, _recordData, _ContentLocation);

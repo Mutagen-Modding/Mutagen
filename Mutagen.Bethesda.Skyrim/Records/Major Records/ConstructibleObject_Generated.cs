@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region CreatedObject
         private int? _CreatedObjectLocation;
         public IFormLinkNullableGetter<IConstructibleGetter> CreatedObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IConstructibleGetter>(_package, _recordData, _CreatedObjectLocation);

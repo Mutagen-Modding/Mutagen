@@ -2035,7 +2035,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FlagsLocation;
         public LeveledSpaceCell.Flag Flags => _FlagsLocation.HasValue ? (LeveledSpaceCell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledSpaceCell.Flag);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region UseGlobal
         private int? _UseGlobalLocation;
         public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseGlobalLocation);
