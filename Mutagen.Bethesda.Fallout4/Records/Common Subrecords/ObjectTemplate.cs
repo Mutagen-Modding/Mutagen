@@ -271,14 +271,14 @@ partial class ObjectTemplateBinaryOverlay<T>
         return (int)ObjectTemplate_FieldIndex.Properties;
     }
 
-    public byte LevelMin => _recordData[_obtsLoc!.Value + 8];
-    public byte LevelMax => _recordData[_obtsLoc!.Value + 10];
-    public short AddonIndex => BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_obtsLoc!.Value + 12));
-    public bool Default => _recordData[_obtsLoc!.Value + 14] > 0;
-    public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = null!;
+    public byte LevelMin => _obtsLoc.HasValue ? _recordData[_obtsLoc.Value + 8] : default;
+    public byte LevelMax => _obtsLoc.HasValue ? _recordData[_obtsLoc.Value + 10] : default;
+    public short AddonIndex => _obtsLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_obtsLoc.Value + 12)) : default;
+    public bool Default => _obtsLoc.HasValue ? (_recordData[_obtsLoc.Value + 14] > 0) : default;
+    public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; private set; } = [];
     IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => Keywords;
-    public byte MinLevelForRanks => _recordData[_postKeywordLoc!.Value];
-    public byte AltLevelsPerTier => _recordData[_postKeywordLoc!.Value + 1];
-    public IReadOnlyList<IObjectTemplateIncludeGetter> Includes { get; private set; } = null!;
-    public IReadOnlyList<IAObjectModPropertyGetter<T>> Properties { get; private set; } = null!;
+    public byte MinLevelForRanks => _postKeywordLoc.HasValue ? _recordData[_postKeywordLoc.Value] : default;
+    public byte AltLevelsPerTier => _postKeywordLoc.HasValue ? _recordData[_postKeywordLoc.Value + 1] : default;
+    public IReadOnlyList<IObjectTemplateIncludeGetter> Includes { get; private set; } = [];
+    public IReadOnlyList<IAObjectModPropertyGetter<T>> Properties { get; private set; } = [];
 }
