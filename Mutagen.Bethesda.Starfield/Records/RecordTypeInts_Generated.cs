@@ -1335,6 +1335,7 @@ public partial class RecordTypeInts
     public const int XPRM = 0x4D525058;
     public const int XPWR = 0x52575058;
     public const int XRDS = 0x53445258;
+    public const int XRFE = 0x45465258;
     public const int XRFG = 0x47465258;
     public const int XRGB = 0x42475258;
     public const int XRGD = 0x44475258;
