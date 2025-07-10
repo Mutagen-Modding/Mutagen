@@ -1,5 +1,7 @@
 ﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog.Testing.Extensions;
@@ -16,18 +18,18 @@ public class ImmutableLoadOrderLinkUsageCacheTests
     {
         var linkCache = mod.ToImmutableLinkCache();
         
-        void TestUnypedResult(Func<ImmutableLoadOrderLinkUsageCache, IReadOnlyCollection<FormKey>> referencedCall)
+        void TestUnypedResult(Func<ImmutableLoadOrderLinkUsageCache, ILinkUsageResults<IMajorRecordGetter>> referencedCall)
         {
             var cache = new ImmutableLoadOrderLinkUsageCache(linkCache);
             var referenced = referencedCall(cache);
-            referenced.ShouldBeEmpty();
+            referenced.UsageLinks.ShouldBeEmpty();
         }
         
-        void TestTypedResult(Func<ImmutableLoadOrderLinkUsageCache, IReadOnlyCollection<IFormLinkGetter<INpcGetter>>> referencedCall)
+        void TestTypedResult(Func<ImmutableLoadOrderLinkUsageCache, ILinkUsageResults<Npc>> referencedCall)
         {
             var cache = new ImmutableLoadOrderLinkUsageCache(linkCache);
             var referenced = referencedCall(cache);
-            referenced.ShouldBeEmpty();
+            referenced.UsageLinks.ShouldBeEmpty();
         }
         
         TestUnypedResult(c => c.GetUsagesOf(r.FormKey));
@@ -49,22 +51,34 @@ public class ImmutableLoadOrderLinkUsageCacheTests
         n.Race.SetTo(r);
         var linkCache = mod.ToImmutableLinkCache();
 
-        void TestUntypedResult(Func<ImmutableLoadOrderLinkUsageCache, IReadOnlyCollection<FormKey>> referencedCall)
+        void TestUntypedResult(Func<ImmutableLoadOrderLinkUsageCache, ILinkUsageResults<IMajorRecordGetter>> referencedCall)
         {
             var cache = new ImmutableLoadOrderLinkUsageCache(linkCache);
             var referenced = referencedCall(cache);
-            referenced.ShouldHaveCount(1);
-            referenced.ShouldEqualEnumerable(n.FormKey);
+            referenced.UsageLinks.ShouldHaveCount(1);
+            referenced.UsageLinks.ShouldEqualEnumerable(n.FormKey);
+            referenced.Contains(n).ShouldBeTrue();
+            referenced.Contains(n.FormKey).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLink<INpcGetter>(n.FormKey)).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLink<IMajorRecordGetter>(n.FormKey)).ShouldBeTrue();
         }
 
         TestUntypedResult(c => c.GetUsagesOf(r.FormKey));
 
-        void TestTypedResult(Func<ImmutableLoadOrderLinkUsageCache, IReadOnlyCollection<IFormLinkGetter<INpcGetter>>> npcReferencedCall)
+        void TestTypedResult(Func<ImmutableLoadOrderLinkUsageCache, ILinkUsageResults<INpcGetter>> npcReferencedCall)
         {
             var cache = new ImmutableLoadOrderLinkUsageCache(linkCache);
             var npcReferenced = npcReferencedCall(cache);
-            npcReferenced.ShouldHaveCount(1);
-            npcReferenced.ShouldEqualEnumerable(n.ToLink<INpcGetter>());
+            npcReferenced.UsageLinks.ShouldHaveCount(1);
+            npcReferenced.UsageLinks.ShouldEqualEnumerable(n.ToLink<INpcGetter>());
+            npcReferenced.Contains(n).ShouldBeTrue();
+            npcReferenced.Contains(n.FormKey).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLink<INpcGetter>(n.FormKey)).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLink<IMajorRecordGetter>(n.FormKey)).ShouldBeTrue();
         }
 
         TestTypedResult(c => c.GetUsagesOf<INpcGetter>(r));
@@ -92,24 +106,52 @@ public class ImmutableLoadOrderLinkUsageCacheTests
         var linkCache = new[] { mod, mod2 }.ToImmutableLinkCache();
         var cache = new ImmutableLoadOrderLinkUsageCache(linkCache);
 
-        void TestUntypedResult(Func<ImmutableLoadOrderLinkUsageCache, IReadOnlyCollection<FormKey>> referencedCall)
+        void TestUntypedResult(Func<ImmutableLoadOrderLinkUsageCache, ILinkUsageResults<IMajorRecordGetter>> referencedCall)
         {
             var referenced = referencedCall(cache);
-            referenced.ShouldHaveCount(2);
-            referenced.ShouldBeSubsetOf([n12.FormKey, n22.FormKey]);
+            referenced.UsageLinks.ShouldHaveCount(2);
+            referenced.UsageLinks.ShouldBeSubsetOf(
+            [
+                n12.ToLink<IMajorRecordGetter>(),
+                n22.ToLink<IMajorRecordGetter>()
+            ]);
+            referenced.Contains(n12).ShouldBeTrue();
+            referenced.Contains(n12.FormKey).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n12.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLink<INpcGetter>(n12.FormKey)).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n12.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLink<IMajorRecordGetter>(n12.FormKey)).ShouldBeTrue();
+            referenced.Contains(n22).ShouldBeTrue();
+            referenced.Contains(n22.FormKey).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n22.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLink<INpcGetter>(n22.FormKey)).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n22.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLink<IMajorRecordGetter>(n22.FormKey)).ShouldBeTrue();
         }
         
         TestUntypedResult(c => c.GetUsagesOf(r.FormKey));
 
-        void TestTypedResult(Func<ImmutableLoadOrderLinkUsageCache, IReadOnlyCollection<IFormLinkGetter<INpcGetter>>> npcReferencedCall)
+        void TestTypedResult(Func<ImmutableLoadOrderLinkUsageCache, ILinkUsageResults<INpcGetter>> npcReferencedCall)
         {
             var npcReferenced = npcReferencedCall(cache);
-            npcReferenced.ShouldHaveCount(2);
-            npcReferenced.ShouldBeSubsetOf(
+            npcReferenced.UsageLinks.ShouldHaveCount(2);
+            npcReferenced.UsageLinks.ShouldBeSubsetOf(
             [
                 n12.ToLink<INpcGetter>(),
                 n22.ToLink<INpcGetter>()
             ]);
+            npcReferenced.Contains(n12).ShouldBeTrue();
+            npcReferenced.Contains(n12.FormKey).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n12.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLink<INpcGetter>(n12.FormKey)).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n12.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLink<IMajorRecordGetter>(n12.FormKey)).ShouldBeTrue();
+            npcReferenced.Contains(n22).ShouldBeTrue();
+            npcReferenced.Contains(n22.FormKey).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n22.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLink<INpcGetter>(n22.FormKey)).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n22.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLink<IMajorRecordGetter>(n22.FormKey)).ShouldBeTrue();
         }
 
         TestTypedResult(c => c.GetUsagesOf<INpcGetter>(r));

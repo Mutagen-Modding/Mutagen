@@ -10,13 +10,14 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         Type UserRecordType);
     
     private record CacheItem(
-        IReadOnlyCollection<FormKey> FormKeys,
-        object? FormLinks);
+        Lazy<ILinkUsageResults<IMajorRecordGetter>> Untyped,
+        object? Typed);
     
     private readonly ILinkCache _linkCache;
     private readonly Dictionary<CacheKey, CacheItem> _cache = new();
     private readonly object _untypedReferencesCacheLock = new();
     private Dictionary<FormKey, HashSet<FormKey>>? _untypedReferencesCache;
+    private static HashSet<FormKey> _emptySet = new();
     
     public ImmutableLoadOrderLinkUsageCache(
         ILinkCache linkCache)
@@ -24,29 +25,29 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         _linkCache = linkCache;
     }
     
-    public IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> GetUsagesOf<TUserRecordScope>(
+    public ILinkUsageResults<TUserRecordScope> GetUsagesOf<TUserRecordScope>(
         IMajorRecordGetter majorRecord) 
         where TUserRecordScope : class, IMajorRecordGetter
     {
         return GetUsagesOf<TUserRecordScope>(majorRecord.ToStandardizedIdentifier());
     }
     
-    public IReadOnlyCollection<FormKey> GetUsagesOf(IMajorRecordGetter majorRecord)
+    public ILinkUsageResults<IMajorRecordGetter> GetUsagesOf(IMajorRecordGetter majorRecord)
     {
         return GetUsagesOf(majorRecord.ToStandardizedIdentifier());
     }
 
-    public IReadOnlyCollection<FormKey> GetUsagesOf(IFormLinkIdentifier identifier)
+    public ILinkUsageResults<IMajorRecordGetter> GetUsagesOf(IFormLinkIdentifier identifier)
     {
         var key = new CacheKey(identifier.FormKey, 
             UserRecordType: typeof(IMajorRecordGetter));
         
         lock (_cache)
         {
-            if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys;
+            if (_cache.TryGetValue(key, out var cached)) return cached.Untyped.Value;
         }
         
-        return GetUsagesOfGeneric<IMajorRecordGetter>(identifier).FormKeys;
+        return GetUsagesOfGeneric<IMajorRecordGetter>(identifier).Untyped.Value;
     }
     
     private Dictionary<FormKey, HashSet<FormKey>> GetUntypedReferencesCache()
@@ -70,44 +71,39 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         }
     }
 
-    public IReadOnlyCollection<FormKey> GetUsagesOf(FormKey formKey)
+    public ILinkUsageResults<IMajorRecordGetter> GetUsagesOf(FormKey formKey)
     {
         var key = new CacheKey(formKey, 
             UserRecordType: typeof(IMajorRecordGetter));
         
         lock (_cache)
         {
-            if (_cache.TryGetValue(key, out var cached)) return cached.FormKeys;
+            if (_cache.TryGetValue(key, out var cached)) return cached.Untyped.Value;
         }
         
         var untypedReferencesCache = GetUntypedReferencesCache();
 
-        IReadOnlyCollection<FormKey> result;
-        if (untypedReferencesCache.TryGetValue(formKey, out var set))
-        {
-            result = set;
-        }
-        else
-        {
-            result = [];
-        }
+        var formKeys = untypedReferencesCache.GetValueOrDefault(formKey, _emptySet);
+        var result = new Results<IMajorRecordGetter>(
+            new HashSet<IFormLinkGetter<IMajorRecordGetter>>(
+                formKeys.Select(fk => new FormLink<IMajorRecordGetter>(fk))));
         
         lock (_cache)
         {
             _cache[key] = new CacheItem(
-                FormKeys: result,
-                FormLinks: null);
+                Untyped: new Lazy<ILinkUsageResults<IMajorRecordGetter>>(result),
+                Typed: null);
         }
 
         return result;
     }
     
-    public IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> GetUsagesOf<TUserRecordScope>(
+    public ILinkUsageResults<TUserRecordScope> GetUsagesOf<TUserRecordScope>(
         IFormLinkIdentifier identifier)
         where TUserRecordScope : class, IMajorRecordGetter
     {
         var cacheItem = GetUsagesOfGeneric<TUserRecordScope>(identifier);
-        if (cacheItem.FormLinks is IReadOnlyCollection<IFormLinkGetter<TUserRecordScope>> links) return links;
+        if (cacheItem.Typed is ILinkUsageResults<TUserRecordScope> links) return links;
         throw new ArgumentException($"Could not get cached formlinks for {identifier} referenced by {typeof(TUserRecordScope)}");
     }
     
@@ -127,22 +123,27 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             }
         }
         
-        HashSet<IFormLinkGetter<TUserRecordScope>> formLinks = new();
-        HashSet<FormKey> formKeys = new();
+        HashSet<IFormLinkGetter<TUserRecordScope>> links = new();
         foreach (var record in _linkCache.PriorityOrder.WinningOverrides<TUserRecordScope>()) 
         {
             // ToDo
             // Upgrade EnumerateFormLinks to query on type so we're not looping all links unnecessarily
             if (record.EnumerateFormLinks().Any(reference => reference.FormKey == identifier.FormKey)) 
             {
-                formLinks.Add(record.ToLink());
-                formKeys.Add(record.FormKey);
+                links.Add(record.ToLink());
             }
         }
 
+        var untyped = new Lazy<ILinkUsageResults<IMajorRecordGetter>>(() =>
+        {
+            return new Results<IMajorRecordGetter>(
+                links.Select<IFormLinkGetter<TUserRecordScope>, IFormLinkGetter<IMajorRecordGetter>>(x => x)
+                    .ToHashSet());
+        });
+        
         var ret = new CacheItem(
-            FormKeys: formKeys,
-            FormLinks: formLinks);
+            Untyped: untyped,
+            Typed: new Results<TUserRecordScope>(links));
         
         lock (_cache)
         {
@@ -150,5 +151,53 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         }
 
         return ret;
+    }
+    
+    private class Results<TScope> : ILinkUsageResults<TScope>
+        where TScope : class, IMajorRecordGetter
+    {
+        private readonly Lazy<IReadOnlySet<FormKey>> _formKeys;
+        private readonly Lazy<IReadOnlySet<IFormLinkIdentifier>> _identifiers;
+
+        public IReadOnlySet<IFormLinkGetter<TScope>> UsageLinks { get; }
+
+        public Results(IReadOnlySet<IFormLinkGetter<TScope>> links)
+        {
+            UsageLinks = links;
+            _formKeys = new Lazy<IReadOnlySet<FormKey>>(() =>
+            {
+                return links
+                    .Select(l => l.FormKey)
+                    .ToHashSet();
+            });
+            _identifiers = new Lazy<IReadOnlySet<IFormLinkIdentifier>>(() =>
+            {
+                return links
+                    .Select(l => new FormLinkInformation(l.FormKey, l.Type))
+                    .ToHashSet(IFormLinkExt.FormLinkInformationEqualityComparerWithDualInheritanceConsideration);
+            });
+        }
+        
+        public bool Contains(FormKey formKey)
+        {
+            return _formKeys.Value.Contains(formKey);
+        }
+        
+        public bool Contains(IFormLinkIdentifier identifier)
+        {
+            List<int> l;
+            IReadOnlyCollection<IFormLinkIdentifier> set = _identifiers.Value;
+            return set.Contains(identifier);
+        }
+        
+        public bool Contains(IFormLinkGetter<TScope> link)
+        {
+            return UsageLinks.Contains(link);
+        }
+        
+        public bool Contains(TScope record)
+        {
+            return UsageLinks.Contains(record.ToLink<TScope>());
+        }
     }
 }

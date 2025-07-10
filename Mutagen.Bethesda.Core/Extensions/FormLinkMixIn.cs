@@ -106,7 +106,7 @@ public static class FormLinkMixIn
     public static IFormLinkGetter<TGetter> ToLinkGetter<TGetter>(this TGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return ToLinkGetterPrivate<TGetter>(rec);
+        return ToLinkGetterPrivate<TGetter>(rec.FormKey, rec.GetType());
     }
     
     /// <summary>
@@ -114,17 +114,17 @@ public static class FormLinkMixIn
     /// available.  This particular extension function shouldn't need an explicitly defined generic
     /// when calling it.
     /// </summary>
-    private static IFormLinkGetter<TGetter> ToLinkGetterPrivate<TGetter>(IMajorRecordGetter rec)
+    private static IFormLinkGetter<TGetter> ToLinkGetterPrivate<TGetter>(FormKey formKey, Type type)
         where TGetter : class, IMajorRecordGetter
     {
         if (_getterLinkFactoryCache.TryGetValue(typeof(TGetter), out var getter))
         {
-            return (IFormLinkGetter<TGetter>)getter(rec.FormKey);
+            return (IFormLinkGetter<TGetter>)getter(formKey);
         }
 
-        if (!GetterTypeMapping.Instance.TryGetGetterType(rec.GetType(), out var getterType))
+        if (!GetterTypeMapping.Instance.TryGetGetterType(type, out var getterType))
         {
-            throw new ArgumentException($"Could not find getter type for {rec.GetType()}");
+            throw new ArgumentException($"Could not find getter type for {type}");
         }
 
         Func<FormKey, IFormLinkGetter> factory;
@@ -155,7 +155,7 @@ public static class FormLinkMixIn
         }
 
         _getterLinkFactoryCache[typeof(TGetter)] = factory;
-        var ret = factory(rec.FormKey);
+        var ret = factory(formKey);
         return (IFormLinkGetter<TGetter>)ret;
     }
 
@@ -212,7 +212,12 @@ public static class FormLinkMixIn
     public static IFormLinkGetter<TGetter> ToLinkGetter<TGetter>(this IMajorRecordGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return ToLinkGetterPrivate<TGetter>(rec);
+        return ToLinkGetterPrivate<TGetter>(rec.FormKey, rec.GetType());
+    }
+    
+    public static IFormLinkGetter ToLinkGetter(this IFormLinkIdentifier identifier)
+    {
+        return ToLinkGetterPrivate<IMajorRecordGetter>(identifier.FormKey, identifier.Type);
     }
 
     /// <summary>
@@ -308,7 +313,7 @@ public static class FormLinkMixIn
     public static IFormLinkNullableGetter<TGetter> ToNullableLinkGetter<TGetter>(this TGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return ToNullableLinkGetterPrivate<TGetter>(rec);
+        return ToNullableLinkGetterPrivate<TGetter>(rec.FormKey, rec.GetType());
     }
 
     private static ConcurrentDictionary<Type, Func<FormKey, IFormLinkGetter>> _nullableGetterLinkFactoryCache = new();
@@ -318,17 +323,17 @@ public static class FormLinkMixIn
     /// available.  This particular extension function shouldn't need an explicitly defined generic
     /// when calling it.  It only works with non-abstract class types, though.
     /// </summary>
-    private static IFormLinkNullableGetter<TGetter> ToNullableLinkGetterPrivate<TGetter>(IMajorRecordGetter rec)
+    private static IFormLinkNullableGetter<TGetter> ToNullableLinkGetterPrivate<TGetter>(FormKey formKey, Type type)
         where TGetter : class, IMajorRecordGetter
     {
         if (_nullableGetterLinkFactoryCache.TryGetValue(typeof(TGetter), out var getter))
         {
-            return (IFormLinkNullableGetter<TGetter>)getter(rec.FormKey);
+            return (IFormLinkNullableGetter<TGetter>)getter(formKey);
         }
 
-        if (!GetterTypeMapping.Instance.TryGetGetterType(rec.GetType(), out var getterType))
+        if (!GetterTypeMapping.Instance.TryGetGetterType(type, out var getterType))
         {
-            throw new ArgumentException($"Could not find getter type for {rec.GetType()}");
+            throw new ArgumentException($"Could not find getter type for {type}");
         }
 
         Func<FormKey, IFormLinkGetter> factory;
@@ -359,7 +364,7 @@ public static class FormLinkMixIn
         }
 
         _nullableGetterLinkFactoryCache[typeof(TGetter)] = factory;
-        var ret = factory(rec.FormKey);
+        var ret = factory(formKey);
         return (IFormLinkNullableGetter<TGetter>)ret;
     }
 
@@ -406,7 +411,7 @@ public static class FormLinkMixIn
     public static IFormLinkNullableGetter<TGetter> ToNullableLinkGetter<TGetter>(this IMajorRecordGetter rec)
         where TGetter : class, IMajorRecordGetter
     {
-        return ToNullableLinkGetterPrivate<TGetter>(rec);
+        return ToNullableLinkGetterPrivate<TGetter>(rec.FormKey, rec.GetType());
     }
 
     public static IFormLinkGetter<TGetter> AsGetter<TGetter>(this IFormLink<TGetter> link)

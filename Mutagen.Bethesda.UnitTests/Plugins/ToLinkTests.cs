@@ -27,6 +27,8 @@ public class ToLinkTests
         IMajorRecordGetter maj = n;
         maj.ToLinkGetter().ShouldBeOfType<FormLinkGetter<INpcGetter>>();
         maj.AsLinkGetter().ShouldBeOfType<FormLinkGetter<INpcGetter>>();
+        IFormLinkIdentifier ident = n;
+        ident.ToLinkGetter().ShouldBeOfType<FormLinkGetter<INpcGetter>>();
     }
     
     [Theory, MutagenModAutoData]
