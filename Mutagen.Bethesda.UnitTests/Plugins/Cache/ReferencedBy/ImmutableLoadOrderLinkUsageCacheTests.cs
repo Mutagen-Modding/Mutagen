@@ -56,7 +56,7 @@ public class ImmutableLoadOrderLinkUsageCacheTests
             var cache = new ImmutableLoadOrderLinkUsageCache(linkCache);
             var referenced = referencedCall(cache);
             referenced.UsageLinks.ShouldHaveCount(1);
-            referenced.UsageLinks.ShouldEqualEnumerable(n.FormKey);
+            referenced.UsageLinks.ShouldEqualEnumerable(n.ToLinkGetter());
             referenced.Contains(n).ShouldBeTrue();
             referenced.Contains(n.FormKey).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n.FormKey, typeof(INpcGetter))).ShouldBeTrue();

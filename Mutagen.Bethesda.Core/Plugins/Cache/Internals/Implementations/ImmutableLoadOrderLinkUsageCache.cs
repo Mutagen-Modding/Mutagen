@@ -130,7 +130,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             // Upgrade EnumerateFormLinks to query on type so we're not looping all links unnecessarily
             if (record.EnumerateFormLinks().Any(reference => reference.FormKey == identifier.FormKey)) 
             {
-                links.Add(record.ToLink());
+                links.Add(record.ToLinkGetter());
             }
         }
 
@@ -156,21 +156,21 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     private class Results<TScope> : ILinkUsageResults<TScope>
         where TScope : class, IMajorRecordGetter
     {
-        private readonly Lazy<IReadOnlySet<FormKey>> _formKeys;
-        private readonly Lazy<IReadOnlySet<IFormLinkIdentifier>> _identifiers;
+        private readonly Lazy<IReadOnlyCollection<FormKey>> _formKeys;
+        private readonly Lazy<IReadOnlyCollection<IFormLinkIdentifier>> _identifiers;
 
         public IReadOnlySet<IFormLinkGetter<TScope>> UsageLinks { get; }
 
         public Results(IReadOnlySet<IFormLinkGetter<TScope>> links)
         {
             UsageLinks = links;
-            _formKeys = new Lazy<IReadOnlySet<FormKey>>(() =>
+            _formKeys = new Lazy<IReadOnlyCollection<FormKey>>(() =>
             {
                 return links
                     .Select(l => l.FormKey)
                     .ToHashSet();
             });
-            _identifiers = new Lazy<IReadOnlySet<IFormLinkIdentifier>>(() =>
+            _identifiers = new Lazy<IReadOnlyCollection<IFormLinkIdentifier>>(() =>
             {
                 return links
                     .Select(l => new FormLinkInformation(l.FormKey, l.Type))
@@ -185,9 +185,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         
         public bool Contains(IFormLinkIdentifier identifier)
         {
-            List<int> l;
-            IReadOnlyCollection<IFormLinkIdentifier> set = _identifiers.Value;
-            return set.Contains(identifier);
+            return _identifiers.Value.Contains(identifier);
         }
         
         public bool Contains(IFormLinkGetter<TScope> link)
@@ -197,7 +195,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         
         public bool Contains(TScope record)
         {
-            return UsageLinks.Contains(record.ToLink<TScope>());
+            return UsageLinks.Contains(record.ToLinkGetter<TScope>());
         }
     }
 }
