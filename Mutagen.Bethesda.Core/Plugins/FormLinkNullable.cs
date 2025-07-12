@@ -43,6 +43,15 @@ public class FormLinkNullableGetter<TMajorGetter> :
     /// </summary>
     public bool IsNull => _formKey?.IsNull ?? true;
 
+    public FormLinkNullableGetter()
+    {
+    }
+
+    public FormLinkNullableGetter(FormKey? formKey)
+    {
+        _formKey = formKey;
+    }
+
     /// <summary>
     /// Default Equality
     /// </summary>
@@ -184,6 +193,7 @@ public sealed class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMaj
     }
 
     public FormLinkNullable()
+        : base (null)
     {
     }
 
@@ -191,16 +201,16 @@ public sealed class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMaj
     /// Default constructor that creates a link to the target FormKey
     /// </summary>
     public FormLinkNullable(FormKey? formKey)
+        : base(formKey)
     {
-        _formKey = formKey;
     }
 
     /// <summary>
     /// Default constructor that creates a link to the target record
     /// </summary>
     public FormLinkNullable(TMajorGetter? record)
+        : base(record?.FormKey)
     {
-        _formKey = record?.FormKey;
     }
 
     /// <summary>
