@@ -14,6 +14,7 @@
       <Group name="Eyes" refName="Eyes" />
       <Group name="Races" refName="Race" />
       <Group name="Sounds" refName="Sound" />
+      <Group name="AcousticSpaces" refName="AcousticSpace" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

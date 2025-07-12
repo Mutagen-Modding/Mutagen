@@ -99,6 +99,16 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(ITranslatedNamedRequired),
                     Getter: typeof(ITranslatedNamedRequiredGetter)));
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
+            dict[typeof(IObjectBounded)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    AcousticSpace_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IObjectBounded),
+                    Getter: typeof(IObjectBoundedGetter)));
+            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

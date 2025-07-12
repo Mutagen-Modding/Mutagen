@@ -9,6 +9,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
     public static void Register()
     {
         LoquiRegistration.Register(
+            AcousticSpace_Registration.Instance,
             AlternateTexture_Registration.Instance,
             BodyData_Registration.Instance,
             BodyPartItem_Registration.Instance,
@@ -50,6 +51,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             RaceData_Registration.Instance,
             RaceRelation_Registration.Instance,
             Rank_Registration.Instance,
+            Region_Registration.Instance,
             Relation_Registration.Instance,
             SkillBoost_Registration.Instance,
             Sound_Registration.Instance,

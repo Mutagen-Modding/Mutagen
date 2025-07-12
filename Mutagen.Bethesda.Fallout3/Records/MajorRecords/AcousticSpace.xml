@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="LoopingSound" refName="Sound" recordType="SNAM" />
+      <FormLink name="UseSoundFromRegion" refName="Region" recordType="RDAT" />
+      <Enum name="EnvironmentType" enumName="AcousticSpace.EnvironmentTypeEnum" recordType="ANAM" />
+    </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

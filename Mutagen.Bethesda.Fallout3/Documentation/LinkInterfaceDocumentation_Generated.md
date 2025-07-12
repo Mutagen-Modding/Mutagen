@@ -5,12 +5,22 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
+### IExplodeSpawn
+- AcousticSpace
+### IPlaceableObject
+- AcousticSpace
 ### IPlaced
 - PlacedObject
+### IReferenceableObject
+- AcousticSpace
 ### IRelatable
 - Faction
 - Race
 ## Concrete Classes to Interfaces
+### AcousticSpace
+- IExplodeSpawn
+- IPlaceableObject
+- IReferenceableObject
 ### Faction
 - IRelatable
 ### PlacedObject

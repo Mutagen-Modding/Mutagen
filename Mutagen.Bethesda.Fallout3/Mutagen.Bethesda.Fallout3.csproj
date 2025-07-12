@@ -75,6 +75,9 @@
     <Compile Include="Records\Fallout3ListGroup.cs">
       <DependentUpon>Fallout3Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\AcousticSpace.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
@@ -128,6 +131,9 @@
     </Compile>
     <Compile Include="Records\MajorRecords\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Region_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\SoundData.cs">
       <DependentUpon>Sound.xml</DependentUpon>
@@ -274,5 +280,11 @@
     <Compile Include="Records\MajorRecords\VoiceType_Generated.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\AcousticSpace_Generated.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
   </ItemGroup>
 </Project>

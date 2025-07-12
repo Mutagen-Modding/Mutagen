@@ -3,6 +3,7 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 public partial class RecordTypeInts
 {
     public const int ANAM = 0x4D414E41;
+    public const int ASPC = 0x43505341;
     public const int ATTR = 0x52545441;
     public const int CELL = 0x4C4C4543;
     public const int CLAS = 0x53414C43;
@@ -53,6 +54,7 @@ public partial class RecordTypeInts
     public const int ONAM = 0x4D414E4F;
     public const int PNAM = 0x4D414E50;
     public const int RACE = 0x45434152;
+    public const int RDAT = 0x54414452;
     public const int REFR = 0x52464552;
     public const int RNAM = 0x4D414E52;
     public const int SNAM = 0x4D414E53;

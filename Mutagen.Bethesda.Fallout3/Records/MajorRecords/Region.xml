@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Region" baseClass="Fallout3MajorRecord" objType="Record" recordType="EYES">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

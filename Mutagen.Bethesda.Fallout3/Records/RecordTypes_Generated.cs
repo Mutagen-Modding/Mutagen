@@ -5,6 +5,7 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 public partial class RecordTypes
 {
     public static readonly RecordType ANAM = new(0x4D414E41);
+    public static readonly RecordType ASPC = new(0x43505341);
     public static readonly RecordType ATTR = new(0x52545441);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CLAS = new(0x53414C43);
@@ -55,6 +56,7 @@ public partial class RecordTypes
     public static readonly RecordType ONAM = new(0x4D414E4F);
     public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType RACE = new(0x45434152);
+    public static readonly RecordType RDAT = new(0x54414452);
     public static readonly RecordType REFR = new(0x52464552);
     public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType SNAM = new(0x4D414E53);

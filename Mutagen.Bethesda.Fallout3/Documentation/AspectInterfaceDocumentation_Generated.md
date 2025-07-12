@@ -22,9 +22,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Race
 ### IObjectBounded
+- AcousticSpace
 - Sound
 - TextureSet
 ## Concrete Classes to Interfaces
+### AcousticSpace
+- IObjectBounded
 ### AlternateTexture
 - INamed
 ### BodyData

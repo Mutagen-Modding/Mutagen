@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Cell, Class, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MenuIcon, Npc, PlacedObject, Race, Sound, TextureSet, VoiceType]
+    /// Implemented by: [AcousticSpace, Cell, Class, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MenuIcon, Npc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Cell, Class, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MenuIcon, Npc, PlacedObject, Race, Sound, TextureSet, VoiceType]
+    /// Implemented by: [AcousticSpace, Cell, Class, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MenuIcon, Npc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [Cell, Class, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MenuIcon, Npc, PlacedObject, Race, Sound, TextureSet, VoiceType]
+    /// Implemented by: [AcousticSpace, Cell, Class, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MenuIcon, Npc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,

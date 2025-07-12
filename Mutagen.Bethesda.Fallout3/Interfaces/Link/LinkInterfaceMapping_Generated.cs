@@ -19,6 +19,36 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
     public Fallout3LinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                AcousticSpace_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlaceableObject),
+                Getter: typeof(IPlaceableObjectGetter)));
+        dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
+        dict[typeof(IReferenceableObject)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                AcousticSpace_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IReferenceableObject),
+                Getter: typeof(IReferenceableObjectGetter)));
+        dict[typeof(IReferenceableObjectGetter)] = dict[typeof(IReferenceableObject)] with { Setter = false };
+        dict[typeof(IExplodeSpawn)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                AcousticSpace_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IExplodeSpawn),
+                Getter: typeof(IExplodeSpawnGetter)));
+        dict[typeof(IExplodeSpawnGetter)] = dict[typeof(IExplodeSpawn)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
