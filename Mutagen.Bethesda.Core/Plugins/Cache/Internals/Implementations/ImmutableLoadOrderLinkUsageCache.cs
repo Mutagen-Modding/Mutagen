@@ -156,7 +156,6 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     private class Results<TScope> : ILinkUsageResults<TScope>
         where TScope : class, IMajorRecordGetter
     {
-        private readonly Lazy<IReadOnlyCollection<FormKey>> _formKeys;
         private readonly Lazy<IReadOnlyCollection<IFormLinkIdentifier>> _identifiers;
 
         public IReadOnlySet<IFormLinkGetter<TScope>> UsageLinks { get; }
@@ -164,12 +163,6 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         public Results(IReadOnlySet<IFormLinkGetter<TScope>> links)
         {
             UsageLinks = links;
-            _formKeys = new Lazy<IReadOnlyCollection<FormKey>>(() =>
-            {
-                return links
-                    .Select(l => l.FormKey)
-                    .ToHashSet();
-            });
             _identifiers = new Lazy<IReadOnlyCollection<IFormLinkIdentifier>>(() =>
             {
                 return links
@@ -180,7 +173,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         
         public bool Contains(FormKey formKey)
         {
-            return _formKeys.Value.Contains(formKey);
+            return _identifiers.Value.Contains(new FormLinkInformation(formKey, typeof(IMajorRecordGetter)));
         }
         
         public bool Contains(IFormLinkIdentifier identifier)
