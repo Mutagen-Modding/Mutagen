@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Plugins.Records;
-using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 
@@ -40,7 +39,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     public ILinkUsageResults<IMajorRecordGetter> GetUsagesOf(IFormLinkIdentifier identifier)
     {
         var key = new CacheKey(identifier.FormKey, 
-            UserRecordType: typeof(IMajorRecordGetter));
+            UserRecordType: identifier.Type);
         
         lock (_cache)
         {
@@ -50,52 +49,9 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         return GetUsagesOfGeneric<IMajorRecordGetter>(identifier).Untyped.Value;
     }
     
-    private Dictionary<FormKey, HashSet<FormKey>> GetUntypedReferencesCache()
-    {
-        lock (_untypedReferencesCacheLock)
-        {
-            if (_untypedReferencesCache is not null) return _untypedReferencesCache;
-            _untypedReferencesCache = new();
-            foreach (var record in _linkCache.PriorityOrder.WinningOverrides<IMajorRecordGetter>())
-            {
-                foreach (var fk in record.EnumerateFormLinks()
-                             .Select(x => x.FormKey)
-                             .Where(x => !x.IsNull))
-                {
-                    _untypedReferencesCache
-                        .GetOrAdd(fk)
-                        .Add(record.FormKey);
-                }
-            }
-            return _untypedReferencesCache;
-        }
-    }
-
     public ILinkUsageResults<IMajorRecordGetter> GetUsagesOf(FormKey formKey)
     {
-        var key = new CacheKey(formKey, 
-            UserRecordType: typeof(IMajorRecordGetter));
-        
-        lock (_cache)
-        {
-            if (_cache.TryGetValue(key, out var cached)) return cached.Untyped.Value;
-        }
-        
-        var untypedReferencesCache = GetUntypedReferencesCache();
-
-        var formKeys = untypedReferencesCache.GetValueOrDefault(formKey, _emptySet);
-        var result = new Results<IMajorRecordGetter>(
-            new HashSet<IFormLinkGetter<IMajorRecordGetter>>(
-                formKeys.Select(fk => new FormLink<IMajorRecordGetter>(fk))));
-        
-        lock (_cache)
-        {
-            _cache[key] = new CacheItem(
-                Untyped: new Lazy<ILinkUsageResults<IMajorRecordGetter>>(result),
-                Typed: null);
-        }
-
-        return result;
+        return GetUsagesOf(new FormLinkInformation(formKey, typeof(IMajorRecordGetter)));
     }
     
     public ILinkUsageResults<TUserRecordScope> GetUsagesOf<TUserRecordScope>(
