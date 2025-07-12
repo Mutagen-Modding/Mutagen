@@ -6,6 +6,7 @@
       <Float name="MODB" recordType="MODB" />
       <ByteArray name="Hashes" recordType="MODT" nullable="True" />
       <RefList name="AlternateTextures" refName="AlternateTexture" counterLength="4" recordType="MODS" />
+      <Enum name="FaceGenFlags" enumName="Model.FaceGenFlag" recordType="MODD" byteLength="1" />
     </Fields>
   </Object>
   <Object name="AlternateTexture" objType="Subrecord">

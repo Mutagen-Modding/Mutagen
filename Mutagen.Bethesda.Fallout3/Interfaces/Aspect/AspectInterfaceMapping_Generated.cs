@@ -24,6 +24,8 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    BodyPartItem_Registration.Instance,
+                    HeadPartItem_Registration.Instance,
                     MenuIcon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
@@ -34,8 +36,11 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    BodyData_Registration.Instance,
+                    BodyPartItem_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    HeadPartItem_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IModeled),
@@ -48,6 +53,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamed),
@@ -63,6 +69,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),
@@ -73,6 +80,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     HeadPart_Registration.Instance,
+                    Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(ITranslatedNamed),
@@ -85,11 +93,22 @@ namespace Mutagen.Bethesda.Fallout3
                     Class_Registration.Instance,
                     Eyes_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(ITranslatedNamedRequired),
                     Getter: typeof(ITranslatedNamedRequiredGetter)));
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
+            dict[typeof(IObjectBounded)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Sound_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IObjectBounded),
+                    Getter: typeof(IObjectBoundedGetter)));
+            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

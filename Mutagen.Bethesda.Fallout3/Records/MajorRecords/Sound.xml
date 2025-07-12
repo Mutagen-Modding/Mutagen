@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Sound" objType="Record" baseClass="Fallout3MajorRecord" recordType="SOUN">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="File" recordType="FNAM" />
       <RefDirect name="Data" refName="SoundData" />
       <Array name="AttenuationCurve" fixedSize="5" recordType="ANAM" >

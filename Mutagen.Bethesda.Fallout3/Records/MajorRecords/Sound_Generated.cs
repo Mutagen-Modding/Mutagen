@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -53,6 +54,26 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ISoundGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
         #region File
         public String? File { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,6 +139,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.File = initialValue;
                 this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(initialValue, new SoundData.Mask<TItem>(initialValue));
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -133,6 +155,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
                 TItem File,
                 TItem Data,
                 TItem AttenuationCurve,
@@ -147,6 +170,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.File = File;
                 this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(Data, new SoundData.Mask<TItem>(Data));
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, Enumerable.Empty<(int Index, TItem Value)>());
@@ -163,6 +187,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem File;
             public MaskItem<TItem, SoundData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttenuationCurve;
@@ -181,6 +206,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.File, rhs.File)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.AttenuationCurve, rhs.AttenuationCurve)) return false;
@@ -191,6 +217,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
                 hash.Add(this.File);
                 hash.Add(this.Data);
                 hash.Add(this.AttenuationCurve);
@@ -206,6 +233,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
                 if (!eval(this.File)) return false;
                 if (Data != null)
                 {
@@ -233,6 +265,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
                 if (eval(this.File)) return true;
                 if (Data != null)
                 {
@@ -267,6 +304,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.File = eval(this.File);
                 obj.Data = this.Data == null ? null : new MaskItem<R, SoundData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (AttenuationCurve != null)
@@ -303,6 +341,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Sound.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
                     if (printMask?.File ?? true)
                     {
                         sb.AppendItem(File, "File");
@@ -351,6 +393,7 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? File;
             public MaskItem<Exception?, SoundData.ErrorMask?>? Data;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttenuationCurve;
@@ -364,6 +407,8 @@ namespace Mutagen.Bethesda.Fallout3
                 Sound_FieldIndex enu = (Sound_FieldIndex)index;
                 switch (enu)
                 {
+                    case Sound_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
                     case Sound_FieldIndex.File:
                         return File;
                     case Sound_FieldIndex.Data:
@@ -384,6 +429,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Sound_FieldIndex enu = (Sound_FieldIndex)index;
                 switch (enu)
                 {
+                    case Sound_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
                     case Sound_FieldIndex.File:
                         this.File = ex;
                         break;
@@ -410,6 +458,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Sound_FieldIndex enu = (Sound_FieldIndex)index;
                 switch (enu)
                 {
+                    case Sound_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
                     case Sound_FieldIndex.File:
                         this.File = (Exception?)obj;
                         break;
@@ -434,6 +485,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
                 if (File != null) return true;
                 if (Data != null) return true;
                 if (AttenuationCurve != null) return true;
@@ -465,6 +517,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(File, "File");
                 }
@@ -503,6 +556,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.File = this.File.Combine(rhs.File);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.AttenuationCurve = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Overall, rhs.AttenuationCurve?.Overall), Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Specific, rhs.AttenuationCurve?.Specific));
@@ -530,6 +584,7 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool File;
             public SoundData.TranslationMask? Data;
             public bool AttenuationCurve;
@@ -554,6 +609,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((File, null));
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((AttenuationCurve, null));
@@ -690,8 +746,13 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ISound :
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<ISoundInternal>,
+        IObjectBounded,
         ISoundGetter
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
         new String? File { get; set; }
         new SoundData? Data { get; set; }
         new Int16[]? AttenuationCurve { get; set; }
@@ -711,9 +772,16 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ISoundGetter>,
-        IMapsToGetter<ISoundGetter>
+        IMapsToGetter<ISoundGetter>,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => Sound_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         String? File { get; }
         ISoundDataInternalGetter? Data { get; }
         ReadOnlyMemorySlice<Int16>? AttenuationCurve { get; }
@@ -895,11 +963,12 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        File = 7,
-        Data = 8,
-        AttenuationCurve = 9,
-        ReverbAttenuationControl = 10,
-        Priority = 11,
+        ObjectBounds = 7,
+        File = 8,
+        Data = 9,
+        AttenuationCurve = 10,
+        ReverbAttenuationControl = 11,
+        Priority = 12,
     }
     #endregion
 
@@ -910,9 +979,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Sound.Mask<>);
 
@@ -945,6 +1014,7 @@ namespace Mutagen.Bethesda.Fallout3
             var triggers = RecordCollection.Factory(RecordTypes.SOUN);
             var all = RecordCollection.Factory(
                 RecordTypes.SOUN,
+                RecordTypes.OBND,
                 RecordTypes.FNAM,
                 RecordTypes.SNDX,
                 RecordTypes.SNDD,
@@ -995,6 +1065,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ISoundInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
             item.File = default;
             item.Data = null;
             item.AttenuationCurve = null;
@@ -1084,6 +1155,7 @@ namespace Mutagen.Bethesda.Fallout3
             Sound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.File = string.Equals(item.File, rhs.File);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -1146,6 +1218,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
             if ((printMask?.File ?? true)
                 && item.File is {} FileItem)
             {
@@ -1231,6 +1307,14 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Sound_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Sound_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
             {
                 if (!string.Equals(lhs.File, rhs.File)) return false;
@@ -1284,6 +1368,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ISoundGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
             if (item.File is {} Fileitem)
             {
                 hash.Add(Fileitem);
@@ -1404,6 +1489,28 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Sound_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Sound_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
             {
                 item.File = rhs.File;
@@ -1615,6 +1722,11 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
@@ -1708,6 +1820,11 @@ namespace Mutagen.Bethesda.Fallout3
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Sound_FieldIndex.ObjectBounds;
+                }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1808,6 +1925,11 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(ISound);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
         #region File
         private int? _FileLocation;
         public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1913,6 +2035,11 @@ namespace Mutagen.Bethesda.Fallout3
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Sound_FieldIndex.ObjectBounds;
+                }
                 case RecordTypeInts.FNAM:
                 {
                     _FileLocation = (stream.Position - offset);

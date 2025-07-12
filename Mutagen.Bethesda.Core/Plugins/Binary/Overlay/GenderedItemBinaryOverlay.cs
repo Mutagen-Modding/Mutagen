@@ -231,6 +231,27 @@ internal static class GenderedItemBinaryOverlay
         RecordType female,
         RecordType marker,
         Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+        TypedParseParams translationParams)
+        where T : class
+    {
+        return FactorySkipMarkersPreRead<T>(
+            stream,
+            package,
+            male,
+            female,
+            marker,
+            creator,
+            recordTypeConverter: translationParams.RecordTypeConverter,
+            femaleRecordConverter: translationParams.RecordTypeConverter);
+    }
+
+    internal static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        RecordType male,
+        RecordType female,
+        RecordType marker,
+        Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
         RecordTypeConverter? recordTypeConverter = null,
         RecordTypeConverter? femaleRecordConverter = null)
         where T : class

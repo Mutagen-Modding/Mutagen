@@ -85,6 +85,11 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
+        #region FaceGenFlags
+        public Model.FaceGenFlag? FaceGenFlags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Model.FaceGenFlag? IModelGetter.FaceGenFlags => this.FaceGenFlags;
+        #endregion
 
         #region To String
 
@@ -128,18 +133,21 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MODB = initialValue;
                 this.Hashes = initialValue;
                 this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
+                this.FaceGenFlags = initialValue;
             }
 
             public Mask(
                 TItem File,
                 TItem MODB,
                 TItem Hashes,
-                TItem AlternateTextures)
+                TItem AlternateTextures,
+                TItem FaceGenFlags)
             {
                 this.File = File;
                 this.MODB = MODB;
                 this.Hashes = Hashes;
                 this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(AlternateTextures, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
+                this.FaceGenFlags = FaceGenFlags;
             }
 
             #pragma warning disable CS8618
@@ -155,6 +163,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem MODB;
             public TItem Hashes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>? AlternateTextures;
+            public TItem FaceGenFlags;
             #endregion
 
             #region Equals
@@ -171,6 +180,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MODB, rhs.MODB)) return false;
                 if (!object.Equals(this.Hashes, rhs.Hashes)) return false;
                 if (!object.Equals(this.AlternateTextures, rhs.AlternateTextures)) return false;
+                if (!object.Equals(this.FaceGenFlags, rhs.FaceGenFlags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -180,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MODB);
                 hash.Add(this.Hashes);
                 hash.Add(this.AlternateTextures);
+                hash.Add(this.FaceGenFlags);
                 return hash.ToHashCode();
             }
 
@@ -203,6 +214,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (!eval(this.FaceGenFlags)) return false;
                 return true;
             }
             #endregion
@@ -225,6 +237,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (eval(this.FaceGenFlags)) return true;
                 return false;
             }
             #endregion
@@ -257,6 +270,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                obj.FaceGenFlags = eval(this.FaceGenFlags);
             }
             #endregion
 
@@ -306,6 +320,10 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
+                    if (printMask?.FaceGenFlags ?? true)
+                    {
+                        sb.AppendItem(FaceGenFlags, "FaceGenFlags");
+                    }
                 }
             }
             #endregion
@@ -334,6 +352,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? MODB;
             public Exception? Hashes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>? AlternateTextures;
+            public Exception? FaceGenFlags;
             #endregion
 
             #region IErrorMask
@@ -350,6 +369,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Hashes;
                     case Model_FieldIndex.AlternateTextures:
                         return AlternateTextures;
+                    case Model_FieldIndex.FaceGenFlags:
+                        return FaceGenFlags;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -371,6 +392,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Model_FieldIndex.AlternateTextures:
                         this.AlternateTextures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Model_FieldIndex.FaceGenFlags:
+                        this.FaceGenFlags = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -394,6 +418,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Model_FieldIndex.AlternateTextures:
                         this.AlternateTextures = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>)obj;
                         break;
+                    case Model_FieldIndex.FaceGenFlags:
+                        this.FaceGenFlags = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -406,6 +433,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MODB != null) return true;
                 if (Hashes != null) return true;
                 if (AlternateTextures != null) return true;
+                if (FaceGenFlags != null) return true;
                 return false;
             }
             #endregion
@@ -458,6 +486,9 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                {
+                    sb.AppendItem(FaceGenFlags, "FaceGenFlags");
+                }
             }
             #endregion
 
@@ -470,6 +501,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MODB = this.MODB.Combine(rhs.MODB);
                 ret.Hashes = this.Hashes.Combine(rhs.Hashes);
                 ret.AlternateTextures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlternateTexture.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AlternateTextures?.Overall, rhs.AlternateTextures?.Overall), Noggog.ExceptionExt.Combine(this.AlternateTextures?.Specific, rhs.AlternateTextures?.Specific));
+                ret.FaceGenFlags = this.FaceGenFlags.Combine(rhs.FaceGenFlags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -497,6 +529,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool MODB;
             public bool Hashes;
             public AlternateTexture.TranslationMask? AlternateTextures;
+            public bool FaceGenFlags;
             #endregion
 
             #region Ctors
@@ -509,6 +542,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.File = defaultOn;
                 this.MODB = defaultOn;
                 this.Hashes = defaultOn;
+                this.FaceGenFlags = defaultOn;
             }
 
             #endregion
@@ -528,6 +562,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MODB, null));
                 ret.Add((Hashes, null));
                 ret.Add((AlternateTextures == null ? DefaultOn : !AlternateTextures.GetCrystal().CopyNothing, AlternateTextures?.GetCrystal()));
+                ret.Add((FaceGenFlags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -610,6 +645,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Single? MODB { get; set; }
         new MemorySlice<Byte>? Hashes { get; set; }
         new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
+        new Model.FaceGenFlag? FaceGenFlags { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -629,6 +665,7 @@ namespace Mutagen.Bethesda.Fallout3
         Single? MODB { get; }
         ReadOnlyMemorySlice<Byte>? Hashes { get; }
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
+        Model.FaceGenFlag? FaceGenFlags { get; }
 
     }
 
@@ -802,6 +839,7 @@ namespace Mutagen.Bethesda.Fallout3
         MODB = 1,
         Hashes = 2,
         AlternateTextures = 3,
+        FaceGenFlags = 4,
     }
     #endregion
 
@@ -812,9 +850,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(Model.Mask<>);
 
@@ -849,7 +887,8 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.MODL,
                 RecordTypes.MODB,
                 RecordTypes.MODT,
-                RecordTypes.MODS);
+                RecordTypes.MODS,
+                RecordTypes.MODD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -898,6 +937,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.MODB = default;
             item.Hashes = default;
             item.AlternateTextures = null;
+            item.FaceGenFlags = default;
         }
         
         #region Mutagen
@@ -955,6 +995,7 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.AlternateTextures,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.FaceGenFlags = item.FaceGenFlags == rhs.FaceGenFlags;
         }
         
         public string Print(
@@ -1028,6 +1069,11 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
+            if ((printMask?.FaceGenFlags ?? true)
+                && item.FaceGenFlags is {} FaceGenFlagsItem)
+            {
+                sb.AppendItem(FaceGenFlagsItem, "FaceGenFlags");
+            }
         }
         
         #region Equals and Hash
@@ -1053,6 +1099,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.AlternateTextures.SequenceEqualNullable(rhs.AlternateTextures, (l, r) => ((AlternateTextureCommon)((IAlternateTextureGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Model_FieldIndex.AlternateTextures)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.FaceGenFlags) ?? true))
+            {
+                if (lhs.FaceGenFlags != rhs.FaceGenFlags) return false;
+            }
             return true;
         }
         
@@ -1069,6 +1119,10 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(HashesItem);
             }
             hash.Add(item.AlternateTextures);
+            if (item.FaceGenFlags is {} FaceGenFlagsitem)
+            {
+                hash.Add(FaceGenFlagsitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1158,6 +1212,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.FaceGenFlags) ?? true))
+            {
+                item.FaceGenFlags = rhs.FaceGenFlags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1294,6 +1352,11 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
+            EnumBinaryTranslation<Model.FaceGenFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.FaceGenFlags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.MODD));
         }
 
         public void Write(
@@ -1368,6 +1431,14 @@ namespace Mutagen.Bethesda.Fallout3
                             transl: AlternateTexture.TryCreateFromBinary)
                         .CastExtendedList<AlternateTexture>();
                     return (int)Model_FieldIndex.AlternateTextures;
+                }
+                case RecordTypeInts.MODD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FaceGenFlags = EnumBinaryTranslation<Model.FaceGenFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Model_FieldIndex.FaceGenFlags;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1451,6 +1522,10 @@ namespace Mutagen.Bethesda.Fallout3
         public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; private set; }
+        #region FaceGenFlags
+        private int? _FaceGenFlagsLocation;
+        public Model.FaceGenFlag? FaceGenFlags => EnumBinaryTranslation<Model.FaceGenFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FaceGenFlagsLocation, _recordData, _package, 1);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1540,6 +1615,11 @@ namespace Mutagen.Bethesda.Fallout3
                         count: count,
                         getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(s, p));
                     return (int)Model_FieldIndex.AlternateTextures;
+                }
+                case RecordTypeInts.MODD:
+                {
+                    _FaceGenFlagsLocation = (stream.Position - offset);
+                    return (int)Model_FieldIndex.FaceGenFlags;
                 }
                 default:
                     return ParseResult.Stop;

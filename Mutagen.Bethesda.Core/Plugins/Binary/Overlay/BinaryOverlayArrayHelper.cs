@@ -48,6 +48,6 @@ internal static class BinaryOverlayArrayHelper
         ReadOnlyMemorySlice<byte> mem,
         int amount)
     {
-        return mem.Span.Slice(0, amount * 4).AsInt16Span().ToArray();
+        return mem.Span.Slice(0, amount * 2).AsInt16Span().ToArray();
     }
 }

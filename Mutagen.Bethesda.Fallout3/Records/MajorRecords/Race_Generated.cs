@@ -7,14 +7,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -22,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +58,152 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IRaceGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IRaceGetter.Description => this.Description;
+        #endregion
+        #region Relations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
+        public ExtendedList<RaceRelation> Relations
+        {
+            get => this._Relations;
+            init => this._Relations = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRaceRelationGetter> IRaceGetter.Relations => _Relations;
+        #endregion
+
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RaceData? _Data;
+        public RaceData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRaceDataGetter? IRaceGetter.Data => this.Data;
+        #endregion
+        #region Older
+        private readonly IFormLinkNullable<IRaceGetter> _Older = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> Older
+        {
+            get => _Older;
+            set => _Older.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.Older => this.Older;
+        #endregion
+        #region Younger
+        private readonly IFormLinkNullable<IRaceGetter> _Younger = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> Younger
+        {
+            get => _Younger;
+            set => _Younger.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IRaceGetter.Younger => this.Younger;
+        #endregion
+        #region Voices
+        public IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; } = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
+        IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> IRaceGetter.Voices => this.Voices;
+        #endregion
+        #region DefaultHairStyles
+        public IGenderedItem<IFormLinkGetter<IHairGetter>>? DefaultHairStyles { get; set; }
+        IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? IRaceGetter.DefaultHairStyles => this.DefaultHairStyles;
+        #endregion
+        #region DefaultHairColors
+        public IGenderedItem<Race.HairColor> DefaultHairColors { get; set; } = new GenderedItem<Race.HairColor>(default(Race.HairColor), default(Race.HairColor));
+        IGenderedItemGetter<Race.HairColor> IRaceGetter.DefaultHairColors => this.DefaultHairColors;
+        #endregion
+        #region FacegenMainClamp
+        public Single FacegenMainClamp { get; set; } = default(Single);
+        #endregion
+        #region FacegenFaceClamp
+        public Single FacegenFaceClamp { get; set; } = default(Single);
+        #endregion
+        #region UnusedATTR
+        public UInt16 UnusedATTR { get; set; } = default(UInt16);
+        #endregion
+        #region HeadData
+        public IGenderedItem<HeadData?>? HeadData { get; set; }
+        IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
+        #endregion
+        #region BodyData
+        public IGenderedItem<BodyData?>? BodyData { get; set; }
+        IGenderedItemGetter<IBodyDataGetter?>? IRaceGetter.BodyData => this.BodyData;
+        #endregion
+        #region Hairs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IHairGetter>>? _Hairs;
+        public ExtendedList<IFormLinkGetter<IHairGetter>>? Hairs
+        {
+            get => this._Hairs;
+            set => this._Hairs = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IHairGetter>>? IRaceGetter.Hairs => _Hairs;
+        #endregion
+
+        #endregion
+        #region Eyes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IEyeGetter>>? _Eyes;
+        public ExtendedList<IFormLinkGetter<IEyeGetter>>? Eyes
+        {
+            get => this._Eyes;
+            set => this._Eyes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IEyeGetter>>? IRaceGetter.Eyes => _Eyes;
+        #endregion
+
+        #endregion
+        #region FaceGenData
+        public IGenderedItem<FaceGenData?>? FaceGenData { get; set; }
+        IGenderedItemGetter<IFaceGenDataGetter?>? IRaceGetter.FaceGenData => this.FaceGenData;
+        #endregion
 
         #region To String
 
@@ -78,6 +229,23 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(initialValue, new RaceData.Mask<TItem>(initialValue));
+                this.Older = initialValue;
+                this.Younger = initialValue;
+                this.Voices = new GenderedItem<TItem>(initialValue, initialValue);
+                this.DefaultHairStyles = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.DefaultHairColors = new GenderedItem<TItem>(initialValue, initialValue);
+                this.FacegenMainClamp = initialValue;
+                this.FacegenFaceClamp = initialValue;
+                this.UnusedATTR = initialValue;
+                this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(initialValue, default);
+                this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FaceGenData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, FaceGenData.Mask<TItem>?>?>?>(initialValue, default);
             }
 
             public Mask(
@@ -87,7 +255,24 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Name,
+                TItem Description,
+                TItem Relations,
+                TItem Data,
+                TItem Older,
+                TItem Younger,
+                TItem Voices,
+                TItem DefaultHairStyles,
+                TItem DefaultHairColors,
+                TItem FacegenMainClamp,
+                TItem FacegenFaceClamp,
+                TItem UnusedATTR,
+                TItem HeadData,
+                TItem BodyData,
+                TItem Hairs,
+                TItem Eyes,
+                TItem FaceGenData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +282,23 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Name = Name;
+                this.Description = Description;
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(Data, new RaceData.Mask<TItem>(Data));
+                this.Older = Older;
+                this.Younger = Younger;
+                this.Voices = new GenderedItem<TItem>(Voices, Voices);
+                this.DefaultHairStyles = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHairStyles, default);
+                this.DefaultHairColors = new GenderedItem<TItem>(DefaultHairColors, DefaultHairColors);
+                this.FacegenMainClamp = FacegenMainClamp;
+                this.FacegenFaceClamp = FacegenFaceClamp;
+                this.UnusedATTR = UnusedATTR;
+                this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(HeadData, default);
+                this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FaceGenData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, FaceGenData.Mask<TItem>?>?>?>(FaceGenData, default);
             }
 
             #pragma warning disable CS8618
@@ -105,6 +307,26 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>? Relations;
+            public MaskItem<TItem, RaceData.Mask<TItem>?>? Data { get; set; }
+            public TItem Older;
+            public TItem Younger;
+            public GenderedItem<TItem> Voices;
+            public MaskItem<TItem, GenderedItem<TItem>?>? DefaultHairStyles;
+            public GenderedItem<TItem> DefaultHairColors;
+            public TItem FacegenMainClamp;
+            public TItem FacegenFaceClamp;
+            public TItem UnusedATTR;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>? HeadData;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>? BodyData;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Hairs;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Eyes;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, FaceGenData.Mask<TItem>?>?>?>? FaceGenData;
             #endregion
 
             #region Equals
@@ -118,11 +340,45 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Relations, rhs.Relations)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Older, rhs.Older)) return false;
+                if (!object.Equals(this.Younger, rhs.Younger)) return false;
+                if (!object.Equals(this.Voices, rhs.Voices)) return false;
+                if (!object.Equals(this.DefaultHairStyles, rhs.DefaultHairStyles)) return false;
+                if (!object.Equals(this.DefaultHairColors, rhs.DefaultHairColors)) return false;
+                if (!object.Equals(this.FacegenMainClamp, rhs.FacegenMainClamp)) return false;
+                if (!object.Equals(this.FacegenFaceClamp, rhs.FacegenFaceClamp)) return false;
+                if (!object.Equals(this.UnusedATTR, rhs.UnusedATTR)) return false;
+                if (!object.Equals(this.HeadData, rhs.HeadData)) return false;
+                if (!object.Equals(this.BodyData, rhs.BodyData)) return false;
+                if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
+                if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+                if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Relations);
+                hash.Add(this.Data);
+                hash.Add(this.Older);
+                hash.Add(this.Younger);
+                hash.Add(this.Voices);
+                hash.Add(this.DefaultHairStyles);
+                hash.Add(this.DefaultHairColors);
+                hash.Add(this.FacegenMainClamp);
+                hash.Add(this.FacegenFaceClamp);
+                hash.Add(this.UnusedATTR);
+                hash.Add(this.HeadData);
+                hash.Add(this.BodyData);
+                hash.Add(this.Hairs);
+                hash.Add(this.Eyes);
+                hash.Add(this.FaceGenData);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +389,66 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (this.Relations != null)
+                {
+                    if (!eval(this.Relations.Overall)) return false;
+                    if (this.Relations.Specific != null)
+                    {
+                        foreach (var item in this.Relations.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Older)) return false;
+                if (!eval(this.Younger)) return false;
+                if (!eval(this.Voices.Male) || !eval(this.Voices.Female)) return false;
+                if (!GenderedItem.All(
+                    this.DefaultHairStyles,
+                    eval: eval)) return false;
+                if (!eval(this.DefaultHairColors.Male) || !eval(this.DefaultHairColors.Female)) return false;
+                if (!eval(this.FacegenMainClamp)) return false;
+                if (!eval(this.FacegenFaceClamp)) return false;
+                if (!eval(this.UnusedATTR)) return false;
+                if (!GenderedItem.AllMask(
+                    this.HeadData,
+                    eval: eval)) return false;
+                if (!GenderedItem.AllMask(
+                    this.BodyData,
+                    eval: eval)) return false;
+                if (this.Hairs != null)
+                {
+                    if (!eval(this.Hairs.Overall)) return false;
+                    if (this.Hairs.Specific != null)
+                    {
+                        foreach (var item in this.Hairs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Eyes != null)
+                {
+                    if (!eval(this.Eyes.Overall)) return false;
+                    if (this.Eyes.Specific != null)
+                    {
+                        foreach (var item in this.Eyes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!GenderedItem.AllMask(
+                    this.FaceGenData,
+                    eval: eval)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +457,66 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (this.Relations != null)
+                {
+                    if (eval(this.Relations.Overall)) return true;
+                    if (this.Relations.Specific != null)
+                    {
+                        foreach (var item in this.Relations.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Older)) return true;
+                if (eval(this.Younger)) return true;
+                if (eval(this.Voices.Male) || eval(this.Voices.Female)) return true;
+                if (GenderedItem.Any(
+                    this.DefaultHairStyles,
+                    eval: eval)) return true;
+                if (eval(this.DefaultHairColors.Male) || eval(this.DefaultHairColors.Female)) return true;
+                if (eval(this.FacegenMainClamp)) return true;
+                if (eval(this.FacegenFaceClamp)) return true;
+                if (eval(this.UnusedATTR)) return true;
+                if (GenderedItem.AnyMask(
+                    this.HeadData,
+                    eval: eval)) return true;
+                if (GenderedItem.AnyMask(
+                    this.BodyData,
+                    eval: eval)) return true;
+                if (this.Hairs != null)
+                {
+                    if (eval(this.Hairs.Overall)) return true;
+                    if (this.Hairs.Specific != null)
+                    {
+                        foreach (var item in this.Hairs.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Eyes != null)
+                {
+                    if (eval(this.Eyes.Overall)) return true;
+                    if (this.Eyes.Specific != null)
+                    {
+                        foreach (var item in this.Eyes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (GenderedItem.AnyMask(
+                    this.FaceGenData,
+                    eval: eval)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +532,78 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                if (Relations != null)
+                {
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, RaceRelation.Mask<R>?>>());
+                    if (Relations.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RaceRelation.Mask<R>?>>();
+                        obj.Relations.Specific = l;
+                        foreach (var item in Relations.Specific)
+                        {
+                            MaskItemIndexed<R, RaceRelation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RaceRelation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Data = this.Data == null ? null : new MaskItem<R, RaceData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Older = eval(this.Older);
+                obj.Younger = eval(this.Younger);
+                obj.Voices = new GenderedItem<R>(
+                    eval(this.Voices.Male),
+                    eval(this.Voices.Female));
+                obj.DefaultHairStyles = GenderedItem.TranslateHelper(
+                    this.DefaultHairStyles,
+                    eval);
+                obj.DefaultHairColors = new GenderedItem<R>(
+                    eval(this.DefaultHairColors.Male),
+                    eval(this.DefaultHairColors.Female));
+                obj.FacegenMainClamp = eval(this.FacegenMainClamp);
+                obj.FacegenFaceClamp = eval(this.FacegenFaceClamp);
+                obj.UnusedATTR = eval(this.UnusedATTR);
+                obj.HeadData = GenderedItem.TranslateHelper(
+                    this.HeadData,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.BodyData = GenderedItem.TranslateHelper(
+                    this.BodyData,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                if (Hairs != null)
+                {
+                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Hairs.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Hairs.Specific = l;
+                        foreach (var item in Hairs.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Eyes != null)
+                {
+                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Eyes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Eyes.Specific = l;
+                        foreach (var item in Eyes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.FaceGenData = GenderedItem.TranslateHelper(
+                    this.FaceGenData,
+                    eval,
+                    (m, e) => m?.Translate(e));
             }
             #endregion
 
@@ -174,6 +622,127 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if ((printMask?.Relations?.Overall ?? true)
+                        && Relations is {} RelationsItem)
+                    {
+                        sb.AppendLine("Relations =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RelationsItem.Overall);
+                            if (RelationsItem.Specific != null)
+                            {
+                                foreach (var subItem in RelationsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
+                    if (printMask?.Older ?? true)
+                    {
+                        sb.AppendItem(Older, "Older");
+                    }
+                    if (printMask?.Younger ?? true)
+                    {
+                        sb.AppendItem(Younger, "Younger");
+                    }
+                    if ((true))
+                    {
+                        sb.AppendLine($"Voices => {Voices}");
+                    }
+                    if (DefaultHairStyles != null
+                        && (printMask?.DefaultHairStyles?.Overall ?? true))
+                    {
+                        sb.AppendLine($"DefaultHairStyles => {DefaultHairStyles}");
+                    }
+                    if ((true))
+                    {
+                        sb.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                    }
+                    if (printMask?.FacegenMainClamp ?? true)
+                    {
+                        sb.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                    }
+                    if (printMask?.FacegenFaceClamp ?? true)
+                    {
+                        sb.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                    }
+                    if (printMask?.UnusedATTR ?? true)
+                    {
+                        sb.AppendItem(UnusedATTR, "UnusedATTR");
+                    }
+                    if (HeadData != null
+                        && (printMask?.HeadData?.Overall ?? true))
+                    {
+                        sb.AppendLine($"HeadData => {HeadData}");
+                    }
+                    if (BodyData != null
+                        && (printMask?.BodyData?.Overall ?? true))
+                    {
+                        sb.AppendLine($"BodyData => {BodyData}");
+                    }
+                    if ((printMask?.Hairs?.Overall ?? true)
+                        && Hairs is {} HairsItem)
+                    {
+                        sb.AppendLine("Hairs =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(HairsItem.Overall);
+                            if (HairsItem.Specific != null)
+                            {
+                                foreach (var subItem in HairsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Eyes?.Overall ?? true)
+                        && Eyes is {} EyesItem)
+                    {
+                        sb.AppendLine("Eyes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(EyesItem.Overall);
+                            if (EyesItem.Specific != null)
+                            {
+                                foreach (var subItem in EyesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (FaceGenData != null
+                        && (printMask?.FaceGenData?.Overall ?? true))
+                    {
+                        sb.AppendLine($"FaceGenData => {FaceGenData}");
+                    }
                 }
             }
             #endregion
@@ -184,12 +753,66 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>? Relations;
+            public MaskItem<Exception?, RaceData.ErrorMask?>? Data;
+            public Exception? Older;
+            public Exception? Younger;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultHairStyles;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultHairColors;
+            public Exception? FacegenMainClamp;
+            public Exception? FacegenFaceClamp;
+            public Exception? UnusedATTR;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? HeadData;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? BodyData;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Hairs;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Eyes;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? FaceGenData;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
+                    case Race_FieldIndex.Name:
+                        return Name;
+                    case Race_FieldIndex.Description:
+                        return Description;
+                    case Race_FieldIndex.Relations:
+                        return Relations;
+                    case Race_FieldIndex.Data:
+                        return Data;
+                    case Race_FieldIndex.Older:
+                        return Older;
+                    case Race_FieldIndex.Younger:
+                        return Younger;
+                    case Race_FieldIndex.Voices:
+                        return Voices;
+                    case Race_FieldIndex.DefaultHairStyles:
+                        return DefaultHairStyles;
+                    case Race_FieldIndex.DefaultHairColors:
+                        return DefaultHairColors;
+                    case Race_FieldIndex.FacegenMainClamp:
+                        return FacegenMainClamp;
+                    case Race_FieldIndex.FacegenFaceClamp:
+                        return FacegenFaceClamp;
+                    case Race_FieldIndex.UnusedATTR:
+                        return UnusedATTR;
+                    case Race_FieldIndex.HeadData:
+                        return HeadData;
+                    case Race_FieldIndex.BodyData:
+                        return BodyData;
+                    case Race_FieldIndex.Hairs:
+                        return Hairs;
+                    case Race_FieldIndex.Eyes:
+                        return Eyes;
+                    case Race_FieldIndex.FaceGenData:
+                        return FaceGenData;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +823,57 @@ namespace Mutagen.Bethesda.Fallout3
                 Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
+                    case Race_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Race_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Race_FieldIndex.Relations:
+                        this.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, RaceData.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Older:
+                        this.Older = ex;
+                        break;
+                    case Race_FieldIndex.Younger:
+                        this.Younger = ex;
+                        break;
+                    case Race_FieldIndex.Voices:
+                        this.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.DefaultHairStyles:
+                        this.DefaultHairStyles = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.DefaultHairColors:
+                        this.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.FacegenMainClamp:
+                        this.FacegenMainClamp = ex;
+                        break;
+                    case Race_FieldIndex.FacegenFaceClamp:
+                        this.FacegenFaceClamp = ex;
+                        break;
+                    case Race_FieldIndex.UnusedATTR:
+                        this.UnusedATTR = ex;
+                        break;
+                    case Race_FieldIndex.HeadData:
+                        this.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.BodyData:
+                        this.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Hairs:
+                        this.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Eyes:
+                        this.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.FaceGenData:
+                        this.FaceGenData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +885,57 @@ namespace Mutagen.Bethesda.Fallout3
                 Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
+                    case Race_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Relations:
+                        this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, RaceData.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.Older:
+                        this.Older = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Younger:
+                        this.Younger = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Voices:
+                        this.Voices = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.DefaultHairStyles:
+                        this.DefaultHairStyles = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.DefaultHairColors:
+                        this.DefaultHairColors = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.FacegenMainClamp:
+                        this.FacegenMainClamp = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.FacegenFaceClamp:
+                        this.FacegenFaceClamp = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.UnusedATTR:
+                        this.UnusedATTR = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.HeadData:
+                        this.HeadData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.BodyData:
+                        this.BodyData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.Hairs:
+                        this.Hairs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Race_FieldIndex.Eyes:
+                        this.Eyes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Race_FieldIndex.FaceGenData:
+                        this.FaceGenData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +945,23 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Relations != null) return true;
+                if (Data != null) return true;
+                if (Older != null) return true;
+                if (Younger != null) return true;
+                if (Voices != null) return true;
+                if (DefaultHairStyles != null) return true;
+                if (DefaultHairColors != null) return true;
+                if (FacegenMainClamp != null) return true;
+                if (FacegenFaceClamp != null) return true;
+                if (UnusedATTR != null) return true;
+                if (HeadData != null) return true;
+                if (BodyData != null) return true;
+                if (Hairs != null) return true;
+                if (Eyes != null) return true;
+                if (FaceGenData != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +988,108 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                if (Relations is {} RelationsItem)
+                {
+                    sb.AppendLine("Relations =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RelationsItem.Overall);
+                        if (RelationsItem.Specific != null)
+                        {
+                            foreach (var subItem in RelationsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(Older, "Older");
+                }
+                {
+                    sb.AppendItem(Younger, "Younger");
+                }
+                {
+                    sb.AppendLine($"Voices => {Voices}");
+                }
+                if (DefaultHairStyles != null)
+                {
+                    sb.AppendLine($"DefaultHairStyles => {DefaultHairStyles}");
+                }
+                {
+                    sb.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                }
+                {
+                    sb.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                }
+                {
+                    sb.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                }
+                {
+                    sb.AppendItem(UnusedATTR, "UnusedATTR");
+                }
+                if (HeadData != null)
+                {
+                    sb.AppendLine($"HeadData => {HeadData}");
+                }
+                if (BodyData != null)
+                {
+                    sb.AppendLine($"BodyData => {BodyData}");
+                }
+                if (Hairs is {} HairsItem)
+                {
+                    sb.AppendLine("Hairs =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(HairsItem.Overall);
+                        if (HairsItem.Specific != null)
+                        {
+                            foreach (var subItem in HairsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Eyes is {} EyesItem)
+                {
+                    sb.AppendLine("Eyes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(EyesItem.Overall);
+                        if (EyesItem.Specific != null)
+                        {
+                            foreach (var subItem in EyesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (FaceGenData != null)
+                {
+                    sb.AppendLine($"FaceGenData => {FaceGenData}");
+                }
             }
             #endregion
 
@@ -254,6 +1098,23 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), Noggog.ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Older = this.Older.Combine(rhs.Older);
+                ret.Younger = this.Younger.Combine(rhs.Younger);
+                ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
+                ret.DefaultHairStyles = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.DefaultHairStyles?.Overall, rhs.DefaultHairStyles?.Overall), GenderedItem.Combine(this.DefaultHairStyles?.Specific, rhs.DefaultHairStyles?.Specific));
+                ret.DefaultHairColors = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.DefaultHairColors?.Overall, rhs.DefaultHairColors?.Overall), GenderedItem.Combine(this.DefaultHairColors?.Specific, rhs.DefaultHairColors?.Specific));
+                ret.FacegenMainClamp = this.FacegenMainClamp.Combine(rhs.FacegenMainClamp);
+                ret.FacegenFaceClamp = this.FacegenFaceClamp.Combine(rhs.FacegenFaceClamp);
+                ret.UnusedATTR = this.UnusedATTR.Combine(rhs.UnusedATTR);
+                ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.BodyData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BodyData?.Overall, rhs.BodyData?.Overall), GenderedItem.Combine(this.BodyData?.Specific, rhs.BodyData?.Specific));
+                ret.Hairs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Hairs?.Overall, rhs.Hairs?.Overall), Noggog.ExceptionExt.Combine(this.Hairs?.Specific, rhs.Hairs?.Specific));
+                ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), Noggog.ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
+                ret.FaceGenData = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.FaceGenData?.Overall, rhs.FaceGenData?.Overall), GenderedItem.Combine(this.FaceGenData?.Specific, rhs.FaceGenData?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +1136,66 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Description;
+            public RaceRelation.TranslationMask? Relations;
+            public RaceData.TranslationMask? Data;
+            public bool Older;
+            public bool Younger;
+            public GenderedItem<bool>? Voices;
+            public GenderedItem<bool>? DefaultHairStyles;
+            public GenderedItem<bool>? DefaultHairColors;
+            public bool FacegenMainClamp;
+            public bool FacegenFaceClamp;
+            public bool UnusedATTR;
+            public GenderedItem<HeadData.TranslationMask>? HeadData;
+            public GenderedItem<BodyData.TranslationMask>? BodyData;
+            public bool Hairs;
+            public bool Eyes;
+            public GenderedItem<FaceGenData.TranslationMask>? FaceGenData;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Older = defaultOn;
+                this.Younger = defaultOn;
+                this.FacegenMainClamp = defaultOn;
+                this.FacegenFaceClamp = defaultOn;
+                this.UnusedATTR = defaultOn;
+                this.Hairs = defaultOn;
+                this.Eyes = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Relations == null ? DefaultOn : !Relations.GetCrystal().CopyNothing, Relations?.GetCrystal()));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Older, null));
+                ret.Add((Younger, null));
+                ret.Add((Voices != null || DefaultOn, null));
+                ret.Add((DefaultHairStyles != null || DefaultOn, null));
+                ret.Add((DefaultHairColors != null || DefaultOn, null));
+                ret.Add((FacegenMainClamp, null));
+                ret.Add((FacegenFaceClamp, null));
+                ret.Add((UnusedATTR, null));
+                ret.Add((HeadData != null || DefaultOn, null));
+                ret.Add((BodyData != null || DefaultOn, null));
+                ret.Add((Hairs, null));
+                ret.Add((Eyes, null));
+                ret.Add((FaceGenData != null || DefaultOn, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1207,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Race(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -333,6 +1247,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IRace);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -412,11 +1330,37 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IRace :
+        IAssetLinkContainer,
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRaceInternal>,
+        INamed,
+        INamedRequired,
         IRaceGetter,
-        IRelatable
+        IRelatable,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new TranslatedString Description { get; set; }
+        new ExtendedList<RaceRelation> Relations { get; }
+        new RaceData? Data { get; set; }
+        new IFormLinkNullable<IRaceGetter> Older { get; set; }
+        new IFormLinkNullable<IRaceGetter> Younger { get; set; }
+        new IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; }
+        new IGenderedItem<IFormLinkGetter<IHairGetter>>? DefaultHairStyles { get; set; }
+        new IGenderedItem<Race.HairColor> DefaultHairColors { get; set; }
+        new Single FacegenMainClamp { get; set; }
+        new Single FacegenFaceClamp { get; set; }
+        new UInt16 UnusedATTR { get; set; }
+        new IGenderedItem<HeadData?>? HeadData { get; set; }
+        new IGenderedItem<BodyData?>? BodyData { get; set; }
+        new ExtendedList<IFormLinkGetter<IHairGetter>>? Hairs { get; set; }
+        new ExtendedList<IFormLinkGetter<IEyeGetter>>? Eyes { get; set; }
+        new IGenderedItem<FaceGenData?>? FaceGenData { get; set; }
     }
 
     public partial interface IRaceInternal :
@@ -424,17 +1368,51 @@ namespace Mutagen.Bethesda.Fallout3
         IRace,
         IRaceGetter
     {
+        new IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; }
+        new IGenderedItem<IFormLinkGetter<IHairGetter>>? DefaultHairStyles { get; set; }
+        new IGenderedItem<Race.HairColor> DefaultHairColors { get; set; }
+        new IGenderedItem<HeadData?>? HeadData { get; set; }
+        new IGenderedItem<BodyData?>? BodyData { get; set; }
+        new IGenderedItem<FaceGenData?>? FaceGenData { get; set; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.RACE)]
     public partial interface IRaceGetter :
         IFallout3MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IRaceGetter>,
         IMapsToGetter<IRaceGetter>,
-        IRelatableGetter
+        INamedGetter,
+        INamedRequiredGetter,
+        IRelatableGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        ITranslatedStringGetter Description { get; }
+        IReadOnlyList<IRaceRelationGetter> Relations { get; }
+        IRaceDataGetter? Data { get; }
+        IFormLinkNullableGetter<IRaceGetter> Older { get; }
+        IFormLinkNullableGetter<IRaceGetter> Younger { get; }
+        IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; }
+        IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? DefaultHairStyles { get; }
+        IGenderedItemGetter<Race.HairColor> DefaultHairColors { get; }
+        Single FacegenMainClamp { get; }
+        Single FacegenFaceClamp { get; }
+        UInt16 UnusedATTR { get; }
+        IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; }
+        IGenderedItemGetter<IBodyDataGetter?>? BodyData { get; }
+        IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; }
+        IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
+        IGenderedItemGetter<IFaceGenDataGetter?>? FaceGenData { get; }
 
     }
 
@@ -611,6 +1589,23 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Name = 7,
+        Description = 8,
+        Relations = 9,
+        Data = 10,
+        Older = 11,
+        Younger = 12,
+        Voices = 13,
+        DefaultHairStyles = 14,
+        DefaultHairColors = 15,
+        FacegenMainClamp = 16,
+        FacegenFaceClamp = 17,
+        UnusedATTR = 18,
+        HeadData = 19,
+        BodyData = 20,
+        Hairs = 21,
+        Eyes = 22,
+        FaceGenData = 23,
     }
     #endregion
 
@@ -621,9 +1616,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -653,8 +1648,31 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.RACE);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(
+                RecordTypes.RACE,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.XNAM,
+                RecordTypes.DATA,
+                RecordTypes.ONAM,
+                RecordTypes.YNAM,
+                RecordTypes.NAM2,
+                RecordTypes.VTCK,
+                RecordTypes.DNAM,
+                RecordTypes.CNAM,
+                RecordTypes.PNAM,
+                RecordTypes.UNAM,
+                RecordTypes.ATTR,
+                RecordTypes.NAM0,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.NAM1,
+                RecordTypes.HNAM,
+                RecordTypes.ENAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
@@ -696,6 +1714,25 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IRaceInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Description.Clear();
+            item.Relations.Clear();
+            item.Data = null;
+            item.Older.Clear();
+            item.Younger.Clear();
+            item.Voices.Male = FormLink<IVoiceTypeGetter>.Null;
+            item.Voices.Female = FormLink<IVoiceTypeGetter>.Null;
+            item.DefaultHairStyles = null;
+            item.DefaultHairColors.Male = default(Race.HairColor);
+            item.DefaultHairColors.Female = default(Race.HairColor);
+            item.FacegenMainClamp = default(Single);
+            item.FacegenFaceClamp = default(Single);
+            item.UnusedATTR = default(UInt16);
+            item.HeadData = null;
+            item.BodyData = null;
+            item.Hairs = null;
+            item.Eyes = null;
+            item.FaceGenData = null;
             base.Clear(item);
         }
         
@@ -713,6 +1750,49 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Relations.RemapLinks(mapping);
+            obj.Older.Relink(mapping);
+            obj.Younger.Relink(mapping);
+            obj.Voices.RemapLinks(mapping);
+            obj.DefaultHairStyles?.RemapLinks(mapping);
+            obj.HeadData?.RemapLinks(mapping);
+            obj.BodyData?.RemapLinks(mapping);
+            obj.Hairs?.RemapLinks(mapping);
+            obj.Eyes?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRace obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BodyData is {} BodyDataItem)
+            {
+                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IRace obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.HeadData?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.BodyData?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -780,6 +1860,56 @@ namespace Mutagen.Bethesda.Fallout3
             Race.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Relations = item.Relations.CollectionEqualsHelper(
+                rhs.Relations,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Older = item.Older.Equals(rhs.Older);
+            ret.Younger = item.Younger.Equals(rhs.Younger);
+            ret.Voices = new GenderedItem<bool>(
+                male: object.Equals(item.Voices.Male, rhs.Voices.Male),
+                female: object.Equals(item.Voices.Female, rhs.Voices.Female));
+            ret.DefaultHairStyles = GenderedItem.EqualityMaskHelper(
+                lhs: item.DefaultHairStyles,
+                rhs: rhs.DefaultHairStyles,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkGetter<IHairGetter>>.Default.Equals(l, r),
+                include: include);
+            ret.DefaultHairColors = new GenderedItem<bool>(
+                male: item.DefaultHairColors.Male == rhs.DefaultHairColors.Male,
+                female: item.DefaultHairColors.Female == rhs.DefaultHairColors.Female);
+            ret.FacegenMainClamp = item.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp);
+            ret.FacegenFaceClamp = item.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp);
+            ret.UnusedATTR = item.UnusedATTR == rhs.UnusedATTR;
+            ret.HeadData = GenderedItem.EqualityMaskHelper(
+                lhs: item.HeadData,
+                rhs: rhs.HeadData,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.BodyData = GenderedItem.EqualityMaskHelper(
+                lhs: item.BodyData,
+                rhs: rhs.BodyData,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.Hairs = item.Hairs.CollectionEqualsHelper(
+                rhs.Hairs,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Eyes = item.Eyes.CollectionEqualsHelper(
+                rhs.Eyes,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.FaceGenData = GenderedItem.EqualityMaskHelper(
+                lhs: item.FaceGenData,
+                rhs: rhs.FaceGenData,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1959,112 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Description ?? true)
+            {
+                sb.AppendItem(item.Description, "Description");
+            }
+            if (printMask?.Relations?.Overall ?? true)
+            {
+                sb.AppendLine("Relations =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Relations)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
+            {
+                DataItem?.Print(sb, "Data");
+            }
+            if (printMask?.Older ?? true)
+            {
+                sb.AppendItem(item.Older.FormKeyNullable, "Older");
+            }
+            if (printMask?.Younger ?? true)
+            {
+                sb.AppendItem(item.Younger.FormKeyNullable, "Younger");
+            }
+            if (true)
+            {
+                item.Voices.Print(sb, "Voices");
+            }
+            if ((printMask?.DefaultHairStyles?.Overall ?? true)
+                && item.DefaultHairStyles is {} DefaultHairStylesItem)
+            {
+                DefaultHairStylesItem?.Print(sb, "DefaultHairStyles");
+            }
+            if (true)
+            {
+                item.DefaultHairColors.Print(sb, "DefaultHairColors");
+            }
+            if (printMask?.FacegenMainClamp ?? true)
+            {
+                sb.AppendItem(item.FacegenMainClamp, "FacegenMainClamp");
+            }
+            if (printMask?.FacegenFaceClamp ?? true)
+            {
+                sb.AppendItem(item.FacegenFaceClamp, "FacegenFaceClamp");
+            }
+            if (printMask?.UnusedATTR ?? true)
+            {
+                sb.AppendItem(item.UnusedATTR, "UnusedATTR");
+            }
+            if ((printMask?.HeadData?.Overall ?? true)
+                && item.HeadData is {} HeadDataItem)
+            {
+                HeadDataItem?.Print(sb, "HeadData");
+            }
+            if ((printMask?.BodyData?.Overall ?? true)
+                && item.BodyData is {} BodyDataItem)
+            {
+                BodyDataItem?.Print(sb, "BodyData");
+            }
+            if ((printMask?.Hairs?.Overall ?? true)
+                && item.Hairs is {} HairsItem)
+            {
+                sb.AppendLine("Hairs =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in HairsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Eyes?.Overall ?? true)
+                && item.Eyes is {} EyesItem)
+            {
+                sb.AppendLine("Eyes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in EyesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.FaceGenData?.Overall ?? true)
+                && item.FaceGenData is {} FaceGenDataItem)
+            {
+                FaceGenDataItem?.Print(sb, "FaceGenData");
+            }
         }
         
         public static Race_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +2115,78 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
+            {
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RaceRelationCommon)((IRaceRelationGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Relations)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((RaceDataCommon)((IRaceDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Older) ?? true))
+            {
+                if (!lhs.Older.Equals(rhs.Older)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Younger) ?? true))
+            {
+                if (!lhs.Younger.Equals(rhs.Younger)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            {
+                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairStyles) ?? true))
+            {
+                if (!Equals(lhs.DefaultHairStyles, rhs.DefaultHairStyles)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            {
+                if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            {
+                if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            {
+                if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.UnusedATTR) ?? true))
+            {
+                if (lhs.UnusedATTR != rhs.UnusedATTR) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            {
+                if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            {
+                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
+            {
+                if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
+            {
+                if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
+            {
+                if (!Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
+            }
             return true;
         }
         
@@ -907,6 +2215,41 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IRaceGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Description);
+            hash.Add(item.Relations);
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
+            hash.Add(item.Older);
+            hash.Add(item.Younger);
+            hash.Add(HashCode.Combine(item.Voices.Male, item.Voices.Female));
+            if (item.DefaultHairStyles is {} DefaultHairStylesitem)
+            {
+                hash.Add(HashCode.Combine(DefaultHairStylesitem.Male, DefaultHairStylesitem.Female));
+            }
+            hash.Add(HashCode.Combine(item.DefaultHairColors.Male, item.DefaultHairColors.Female));
+            hash.Add(item.FacegenMainClamp);
+            hash.Add(item.FacegenFaceClamp);
+            hash.Add(item.UnusedATTR);
+            if (item.HeadData is {} HeadDataitem)
+            {
+                hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
+            }
+            if (item.BodyData is {} BodyDataitem)
+            {
+                hash.Add(HashCode.Combine(BodyDataitem.Male, BodyDataitem.Female));
+            }
+            hash.Add(item.Hairs);
+            hash.Add(item.Eyes);
+            if (item.FaceGenData is {} FaceGenDataitem)
+            {
+                hash.Add(HashCode.Combine(FaceGenDataitem.Male, FaceGenDataitem.Female));
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -935,6 +2278,80 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Older, out var OlderInfo))
+            {
+                yield return OlderInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Younger, out var YoungerInfo))
+            {
+                yield return YoungerInfo;
+            }
+            foreach (var item in obj.Voices)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.DefaultHairStyles is {} DefaultHairStylesItem)
+            {
+                foreach (var item in DefaultHairStylesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.BodyData is {} BodyDataItem)
+            {
+                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Hairs is {} HairsItem)
+            {
+                foreach (var item in HairsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Eyes is {} EyesItem)
+            {
+                foreach (var item in EyesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BodyData is {} BodyDataItem)
+            {
+                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1010,6 +2427,196 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Relations);
+                try
+                {
+                    item.Relations.SetTo(
+                        rhs.Relations
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Race_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Older) ?? true))
+            {
+                item.Older.SetTo(rhs.Older.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Younger) ?? true))
+            {
+                item.Younger.SetTo(rhs.Younger.FormKeyNullable);
+            }
+            item.Voices = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
+                male: new FormLink<IVoiceTypeGetter>(rhs.Voices.Male.FormKey),
+                female: new FormLink<IVoiceTypeGetter>(rhs.Voices.Female.FormKey));
+            if (rhs.DefaultHairStyles is not {} rhsDefaultHairStylesitem)
+            {
+                item.DefaultHairStyles = null;
+            }
+            else
+            {
+                item.DefaultHairStyles = new GenderedItem<IFormLinkGetter<IHairGetter>>(
+                    male: new FormLink<IHairGetter>(rhsDefaultHairStylesitem.Male.FormKey),
+                    female: new FormLink<IHairGetter>(rhsDefaultHairStylesitem.Female.FormKey));
+            }
+            item.DefaultHairColors = new GenderedItem<Race.HairColor>(
+                male: rhs.DefaultHairColors.Male,
+                female: rhs.DefaultHairColors.Female);
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            {
+                item.FacegenMainClamp = rhs.FacegenMainClamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            {
+                item.FacegenFaceClamp = rhs.FacegenFaceClamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnusedATTR) ?? true))
+            {
+                item.UnusedATTR = rhs.UnusedATTR;
+            }
+            if (rhs.HeadData is not {} rhsHeadDataitem)
+            {
+                item.HeadData = null;
+            }
+            else
+            {
+                item.HeadData = new GenderedItem<HeadData?>(
+                    male: rhsHeadDataitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsHeadDataitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if (rhs.BodyData is not {} rhsBodyDataitem)
+            {
+                item.BodyData = null;
+            }
+            else
+            {
+                item.BodyData = new GenderedItem<BodyData?>(
+                    male: rhsBodyDataitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsBodyDataitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Hairs);
+                try
+                {
+                    if ((rhs.Hairs != null))
+                    {
+                        item.Hairs = 
+                            rhs.Hairs
+                                .Select(b => (IFormLinkGetter<IHairGetter>)new FormLink<IHairGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IHairGetter>>();
+                    }
+                    else
+                    {
+                        item.Hairs = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
+                try
+                {
+                    if ((rhs.Eyes != null))
+                    {
+                        item.Eyes = 
+                            rhs.Eyes
+                                .Select(b => (IFormLinkGetter<IEyeGetter>)new FormLink<IEyeGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IEyeGetter>>();
+                    }
+                    else
+                    {
+                        item.Eyes = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if (rhs.FaceGenData is not {} rhsFaceGenDataitem)
+            {
+                item.FaceGenData = null;
+            }
+            else
+            {
+                item.FaceGenData = new GenderedItem<FaceGenData?>(
+                    male: rhsFaceGenDataitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsFaceGenDataitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +2777,169 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly RaceBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IRaceGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRaceRelationGetter>.Instance.Write(
+                writer: writer,
+                items: item.Relations,
+                transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RaceRelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Data is {} DataItem)
+            {
+                ((RaceDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Older,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Younger,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+            using (HeaderExport.Subrecord(writer, RecordTypes.NAM2)) { }
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.Voices,
+                recordType: RecordTypes.VTCK,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.DefaultHairStyles,
+                recordType: RecordTypes.DNAM,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.DefaultHairColors,
+                recordType: RecordTypes.CNAM,
+                transl: (MutagenWriter subWriter, Race.HairColor subItem) =>
+                {
+                    EnumBinaryTranslation<Race.HairColor, MutagenFrame, MutagenWriter>.Instance.Write(
+                        subWriter,
+                        subItem,
+                        length: 1);
+                });
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FacegenMainClamp,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FacegenFaceClamp,
+                header: translationParams.ConvertToCustom(RecordTypes.UNAM));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.UnusedATTR,
+                header: translationParams.ConvertToCustom(RecordTypes.ATTR));
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.HeadData,
+                markerType: RecordTypes.NAM0,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((HeadDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.BodyData,
+                markerType: RecordTypes.NAM1,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((BodyDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Hairs,
+                recordType: translationParams.ConvertToCustom(RecordTypes.HNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Eyes,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ENAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.FaceGenData,
+                maleMarker: RecordTypes.MNAM,
+                femaleMarker: RecordTypes.FNAM,
+                markerWrap: false,
+                transl: (MutagenWriter subWriter, IFaceGenDataGetter? subItem, TypedWriteParams conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((FaceGenDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IRaceGetter item,
@@ -1224,6 +2994,181 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RACE;
+        public static ParseResult FillBinaryRecordTypes(
+            IRaceInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Race_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Race_FieldIndex.Description;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    item.Relations.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RaceRelation>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RaceRelation_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: RaceRelation.TryCreateFromBinary));
+                    return (int)Race_FieldIndex.Relations;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    item.Data = Mutagen.Bethesda.Fallout3.RaceData.CreateFromBinary(frame: frame);
+                    return (int)Race_FieldIndex.Data;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Older.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.Older;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Younger.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Race_FieldIndex.Younger;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.ReadSubrecord();
+                    return default(int?);
+                }
+                case RecordTypeInts.VTCK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IVoiceTypeGetter>>(
+                        frame: frame,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return (int)Race_FieldIndex.Voices;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultHairStyles = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IHairGetter>>(
+                        frame: frame,
+                        transl: FormLinkBinaryTranslation.Instance.Parse);
+                    return (int)Race_FieldIndex.DefaultHairStyles;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultHairColors = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Race.HairColor>(
+                        frame: frame,
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out Race.HairColor genSubItem) =>
+                        {
+                            return EnumBinaryTranslation<Race.HairColor, MutagenFrame, MutagenWriter>.Instance.Parse(
+                                reader: r.SpawnWithLength(1),
+                                item: out genSubItem);
+                        });
+                    return (int)Race_FieldIndex.DefaultHairColors;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Race_FieldIndex.FacegenMainClamp;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Race_FieldIndex.FacegenFaceClamp;
+                }
+                case RecordTypeInts.ATTR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UnusedATTR = frame.ReadUInt16();
+                    return (int)Race_FieldIndex.UnusedATTR;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<HeadData>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        transl: HeadData.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.BodyData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<BodyData>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        transl: BodyData.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.BodyData;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Hairs = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IHairGetter>>();
+                    return (int)Race_FieldIndex.Hairs;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Eyes = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IEyeGetter>>();
+                    return (int)Race_FieldIndex.Eyes;
+                }
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                {
+                    item.FaceGenData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<FaceGenData>(
+                        frame: frame,
+                        maleMarker: RecordTypes.MNAM,
+                        femaleMarker: RecordTypes.FNAM,
+                        transl: FaceGenData.TryCreateFromBinary);
+                    return (int)Race_FieldIndex.FaceGenData;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +3201,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1270,6 +3217,103 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IRace);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
+        #endregion
+        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = [];
+        #region Data
+        private RangeInt32? _DataLocation;
+        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Older
+        private int? _OlderLocation;
+        public IFormLinkNullableGetter<IRaceGetter> Older => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _OlderLocation);
+        #endregion
+        #region Younger
+        private int? _YoungerLocation;
+        public IFormLinkNullableGetter<IRaceGetter> Younger => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _YoungerLocation);
+        #endregion
+        #region Voices
+        private int? _VoicesLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices
+        {
+            get
+            {
+                if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
+                return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data.Slice(4)));
+            }
+        }
+        #endregion
+        #region DefaultHairStyles
+        private int? _DefaultHairStylesLocation;
+        public IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? DefaultHairStyles
+        {
+            get
+            {
+                if (!_DefaultHairStylesLocation.HasValue) return default;
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairStylesLocation.Value, _package.MetaData.Constants);
+                return new GenderedItem<IFormLinkGetter<IHairGetter>>(
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(_package, data.Slice(4)));
+            }
+        }
+        #endregion
+        #region DefaultHairColors
+        private int? _DefaultHairColorsLocation;
+        public IGenderedItemGetter<Race.HairColor> DefaultHairColors
+        {
+            get
+            {
+                if (!_DefaultHairColorsLocation.HasValue) return new GenderedItem<Race.HairColor>(default(Race.HairColor), default(Race.HairColor));
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
+                return new GenderedItem<Race.HairColor>(
+                    (Race.HairColor)data[0],
+                    (Race.HairColor)data.Slice(1)[0]);
+            }
+        }
+        #endregion
+        #region FacegenMainClamp
+        private int? _FacegenMainClampLocation;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
+        #endregion
+        #region FacegenFaceClamp
+        private int? _FacegenFaceClampLocation;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default(Single);
+        #endregion
+        #region UnusedATTR
+        private int? _UnusedATTRLocation;
+        public UInt16 UnusedATTR => _UnusedATTRLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnusedATTRLocation.Value, _package.MetaData.Constants)) : default(UInt16);
+        #endregion
+        #region HeadData
+        private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
+        public IGenderedItemGetter<IHeadDataGetter?>? HeadData => _HeadDataOverlay;
+        #endregion
+        #region BodyData
+        private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
+        public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
+        #region FaceGenData
+        private IGenderedItemGetter<IFaceGenDataGetter?>? _FaceGenDataOverlay;
+        public IGenderedItemGetter<IFaceGenDataGetter?>? FaceGenData => _FaceGenDataOverlay;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +3371,160 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.Description;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    this.Relations = BinaryOverlayList.FactoryByArray<IRaceRelationGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => RaceRelationBinaryOverlay.RaceRelationFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: RaceRelation_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Race_FieldIndex.Relations;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Race_FieldIndex.Data;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _OlderLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.Older;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    _YoungerLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.Younger;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    stream.ReadSubrecord();
+                    return default(int?);
+                }
+                case RecordTypeInts.VTCK:
+                {
+                    _VoicesLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.Voices;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DefaultHairStylesLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.DefaultHairStyles;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _DefaultHairColorsLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.DefaultHairColors;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _FacegenMainClampLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.FacegenMainClamp;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    _FacegenFaceClampLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.FacegenFaceClamp;
+                }
+                case RecordTypeInts.ATTR:
+                {
+                    _UnusedATTRLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.UnusedATTR;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    _HeadDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadDataGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        stream: stream,
+                        creator: static (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
+                        translationParams: translationParams);
+                    return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    _BodyDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IBodyDataGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        stream: stream,
+                        creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        translationParams: translationParams);
+                    return (int)Race_FieldIndex.BodyData;
+                }
+                case RecordTypeInts.HNAM:
+                {
+                    this.Hairs = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IHairGetter>>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 4,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IHairGetter>(p, s));
+                    return (int)Race_FieldIndex.Hairs;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEyeGetter>>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 4,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IEyeGetter>(p, s));
+                    return (int)Race_FieldIndex.Eyes;
+                }
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                {
+                    _FaceGenDataOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IFaceGenDataGetter>(
+                        package: _package,
+                        male: RecordTypes.MNAM,
+                        female: RecordTypes.FNAM,
+                        stream: stream,
+                        creator: static (s, p, r) => FaceGenDataBinaryOverlay.FaceGenDataFactory(s, p, r),
+                        translationParams: translationParams);
+                    return (int)Race_FieldIndex.FaceGenData;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

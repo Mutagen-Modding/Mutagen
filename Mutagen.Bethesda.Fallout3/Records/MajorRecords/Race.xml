@@ -2,7 +2,122 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" baseClass="Fallout3MajorRecord" objType="Record" recordType="RACE">
     <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <RefList name="Relations" refName="RaceRelation" />
+      <RefDirect name="Data" refName="RaceData" />
+      <FormLink name="Older" refName="Race" recordType="ONAM" />
+      <FormLink name="Younger" refName="Race" recordType="YNAM" />
+      <Marker name="NAM2" recordType="NAM2" />
+      <Gendered name="Voices" recordType="VTCK" nullable="False">
+        <Fields>
+          <FormLink refName="VoiceType" />
+        </Fields>
+      </Gendered>
+      <Gendered name="DefaultHairStyles" recordType="DNAM">
+        <Fields>
+          <FormLink refName="Hair" />
+        </Fields>
+      </Gendered>
+      <Gendered name="DefaultHairColors" recordType="CNAM" nullable="False">
+        <Fields>
+          <Enum enumName="Race.HairColor" byteLength="1" />
+        </Fields>
+      </Gendered>
+      <Float name="FacegenMainClamp" recordType="PNAM" nullable="False" />
+      <Float name="FacegenFaceClamp" recordType="UNAM" nullable="False" />
+      <UInt16 name="UnusedATTR" recordType="ATTR" nullable="False" />
+      <Gendered name="HeadData" markerType="NAM0" maleMarker="MNAM" femaleMarker="FNAM" >
+        <Fields>
+          <RefDirect refName="HeadData" />
+        </Fields>
+      </Gendered>
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
+        <Fields>
+          <RefDirect refName="BodyData" />
+        </Fields>
+      </Gendered>
+      <List name="Hairs" recordType="HNAM">
+        <FormLink refName="Hair" />
+      </List>
+      <List name="Eyes" recordType="ENAM">
+        <FormLink refName="Eye" />
+      </List>
+      <Gendered name="FaceGenData" maleMarker="MNAM" femaleMarker="FNAM">
+        <Fields>
+          <RefDirect refName="FaceGenData" />
+        </Fields>
+      </Gendered>
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
+  </Object>
+  <Object name="RaceData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <RefDirect name="SkillBoost0" refName="SkillBoost" />
+      <RefDirect name="SkillBoost1" refName="SkillBoost" />
+      <RefDirect name="SkillBoost2" refName="SkillBoost" />
+      <RefDirect name="SkillBoost3" refName="SkillBoost" />
+      <RefDirect name="SkillBoost4" refName="SkillBoost" />
+      <RefDirect name="SkillBoost5" refName="SkillBoost" />
+      <RefDirect name="SkillBoost6" refName="SkillBoost" />
+      <Int32 name="Unused" />
+      <Gendered name="Height">
+        <Fields>
+          <Float />
+        </Fields>
+      </Gendered>
+      <Gendered name="Weight">
+        <Fields>
+          <Float />
+        </Fields>
+      </Gendered>
+      <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="RaceRelation" objType="Subrecord" recordType="XNAM">
+    <Fields>
+      <FormLink name="Race" refName="Race" />
+      <Int32 name="Modifier" />
+    </Fields>
+  </Object>
+  <Object name="SkillBoost" objType="Subrecord">
+    <Fields>
+      <Enum name="Skill" enumName="ActorValue" byteLength="1" />
+      <Int8 name="Boost" />
+    </Fields>
+  </Object>
+  <Object name="HeadData" objType="Subrecord">
+    <Fields>
+      <RefList name="HeadParts" refName="HeadPartItem" />
+    </Fields>
+  </Object>
+  <Object name="HeadPartItem" objType="Subrecord">
+    <Fields>
+      <Enum name="HeadPartNumber" recordType="INDX" enumName="Race.HeadPart" byteLength="4" />
+      <FormLink name="Head" refName="HeadPart" recordType="HEAD" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+    </Fields>
+  </Object>
+  <Object name="BodyData" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="BodyParts" refName="BodyPartItem" />
+    </Fields>
+  </Object>
+  <Object name="BodyPartItem" objType="Subrecord">
+    <Fields>
+      <Enum name="BodyPartNumber" recordType="INDX" enumName="Race.BodyPart" byteLength="4" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+    </Fields>
+  </Object>
+  <Object name="FaceGenData" objType="Subrecord" >
+    <Fields>
+      <ByteArray name="SymmetricGeometry" recordType="FGGS" />
+      <ByteArray name="AsymmetricGeometry" recordType="FGGA" />
+      <ByteArray name="SymmetricTexture" recordType="FGTS" />
+      <Int16 name="SNAM" recordType="SNAM" unknown="true" nullable="False" />
+    </Fields>
   </Object>
 </Loqui>

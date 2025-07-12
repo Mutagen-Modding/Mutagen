@@ -48,6 +48,9 @@
     <Compile Include="Records\Common Subrecords\Icons_Generated.cs">
       <DependentUpon>Icons.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Model.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
       <DependentUpon>ObjectBounds.xml</DependentUpon>
     </Compile>
@@ -122,6 +125,9 @@
     </Compile>
     <Compile Include="Records\MajorRecords\MenuIcon.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Race.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\SoundData.cs">
       <DependentUpon>Sound.xml</DependentUpon>
@@ -237,6 +243,36 @@
     </Compile>
     <Compile Include="Records\MajorRecords\SoundDataExtended_Generated.cs">
       <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Eye_Generated.cs">
+      <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\RaceData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\RaceRelation_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\SkillBoost_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\HeadData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\HeadPartItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\BodyData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\BodyPartItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\FaceGenData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\VoiceType_Generated.cs">
+      <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

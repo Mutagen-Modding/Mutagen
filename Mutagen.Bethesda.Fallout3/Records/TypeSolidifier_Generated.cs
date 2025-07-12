@@ -56,6 +56,30 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
+        /// Scope a load order query to Eye
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on Eye</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEye, IEyeGetter> Eye(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEye, IEyeGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IEyeGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEye, IEyeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to Eye
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on Eye</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEye, IEyeGetter> Eye(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEye, IEyeGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IEyeGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEye, IEyeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to Eyes
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -300,9 +324,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Race</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -312,9 +336,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Race</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRace, IRaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -365,6 +389,30 @@ namespace Mutagen.Bethesda.Fallout3
             return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ITextureSet, ITextureSetGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ITextureSetGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ITextureSet, ITextureSetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to VoiceType
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on VoiceType</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IVoiceType, IVoiceTypeGetter> VoiceType(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IVoiceType, IVoiceTypeGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IVoiceType, IVoiceTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to VoiceType
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on VoiceType</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IVoiceType, IVoiceTypeGetter> VoiceType(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IVoiceType, IVoiceTypeGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IVoiceType, IVoiceTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         #endregion

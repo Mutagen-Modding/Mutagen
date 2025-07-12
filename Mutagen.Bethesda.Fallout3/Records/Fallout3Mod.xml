@@ -12,6 +12,7 @@
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="Hairs" refName="Hair" />
       <Group name="Eyes" refName="Eyes" />
+      <Group name="Races" refName="Race" />
       <Group name="Sounds" refName="Sound" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
