@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Sound" objType="Record" baseClass="Fallout3MajorRecord" recordType="SOUN">
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <String name="File" recordType="FNAM" />
       <RefDirect name="Data" refName="SoundData" />
       <Array name="AttenuationCurve" fixedSize="5" recordType="ANAM" >
@@ -17,7 +17,7 @@
       <UInt16 name="MinimumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
       <UInt16 name="MaximumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
       <Int8 name="FrequencyAdjustment" />
-      <Buffer name="Marker" byteLength="1" static="false" />
+      <Int8 name="Unknown" byteLength="1" />
       <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />
       <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
       <Float name="StopTime" binary="Custom" min="0" max="1434.375" byteLength="1" />
@@ -31,7 +31,7 @@
       </Array>
       <Int16 name="ReverbAttenuationControl" />
       <Int32 name="Priority" />
-      <Int64 name="Unknown" />
+      <Int64 name="Unknown2" />
     </Fields>
   </Object>
 </Loqui>

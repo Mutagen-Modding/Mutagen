@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region Priority
         public Int32 Priority { get; set; } = default(Int32);
         #endregion
-        #region Unknown
-        public Int64 Unknown { get; set; } = default(Int64);
+        #region Unknown2
+        public Int64 Unknown2 { get; set; } = default(Int64);
         #endregion
 
         #region To String
@@ -119,13 +119,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ReverbAttenuationControl = initialValue;
                 this.Priority = initialValue;
-                this.Unknown = initialValue;
+                this.Unknown2 = initialValue;
             }
 
             public Mask(
                 TItem MinimumAttenuationDistance,
                 TItem MaximumAttenuationDistance,
                 TItem FrequencyAdjustment,
+                TItem Unknown,
                 TItem Flags,
                 TItem StaticAttenuation,
                 TItem StopTime,
@@ -133,11 +134,12 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem AttenuationCurve,
                 TItem ReverbAttenuationControl,
                 TItem Priority,
-                TItem Unknown)
+                TItem Unknown2)
             : base(
                 MinimumAttenuationDistance: MinimumAttenuationDistance,
                 MaximumAttenuationDistance: MaximumAttenuationDistance,
                 FrequencyAdjustment: FrequencyAdjustment,
+                Unknown: Unknown,
                 Flags: Flags,
                 StaticAttenuation: StaticAttenuation,
                 StopTime: StopTime,
@@ -146,7 +148,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ReverbAttenuationControl = ReverbAttenuationControl;
                 this.Priority = Priority;
-                this.Unknown = Unknown;
+                this.Unknown2 = Unknown2;
             }
 
             #pragma warning disable CS8618
@@ -161,7 +163,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttenuationCurve;
             public TItem ReverbAttenuationControl;
             public TItem Priority;
-            public TItem Unknown;
+            public TItem Unknown2;
             #endregion
 
             #region Equals
@@ -178,7 +180,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.AttenuationCurve, rhs.AttenuationCurve)) return false;
                 if (!object.Equals(this.ReverbAttenuationControl, rhs.ReverbAttenuationControl)) return false;
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -187,7 +189,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.AttenuationCurve);
                 hash.Add(this.ReverbAttenuationControl);
                 hash.Add(this.Priority);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unknown2);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -211,7 +213,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (!eval(this.ReverbAttenuationControl)) return false;
                 if (!eval(this.Priority)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unknown2)) return false;
                 return true;
             }
             #endregion
@@ -233,7 +235,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (eval(this.ReverbAttenuationControl)) return true;
                 if (eval(this.Priority)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unknown2)) return true;
                 return false;
             }
             #endregion
@@ -265,7 +267,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 obj.ReverbAttenuationControl = eval(this.ReverbAttenuationControl);
                 obj.Priority = eval(this.Priority);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unknown2 = eval(this.Unknown2);
             }
             #endregion
 
@@ -313,9 +315,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Priority, "Priority");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unknown2 ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
             }
@@ -331,7 +333,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttenuationCurve;
             public Exception? ReverbAttenuationControl;
             public Exception? Priority;
-            public Exception? Unknown;
+            public Exception? Unknown2;
             #endregion
 
             #region IErrorMask
@@ -346,8 +348,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return ReverbAttenuationControl;
                     case SoundDataExtended_FieldIndex.Priority:
                         return Priority;
-                    case SoundDataExtended_FieldIndex.Unknown:
-                        return Unknown;
+                    case SoundDataExtended_FieldIndex.Unknown2:
+                        return Unknown2;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -367,8 +369,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case SoundDataExtended_FieldIndex.Priority:
                         this.Priority = ex;
                         break;
-                    case SoundDataExtended_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case SoundDataExtended_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -390,8 +392,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case SoundDataExtended_FieldIndex.Priority:
                         this.Priority = (Exception?)obj;
                         break;
-                    case SoundDataExtended_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case SoundDataExtended_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -405,7 +407,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (AttenuationCurve != null) return true;
                 if (ReverbAttenuationControl != null) return true;
                 if (Priority != null) return true;
-                if (Unknown != null) return true;
+                if (Unknown2 != null) return true;
                 return false;
             }
             #endregion
@@ -459,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Priority, "Priority");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unknown2, "Unknown2");
                 }
             }
             #endregion
@@ -472,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.AttenuationCurve = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Overall, rhs.AttenuationCurve?.Overall), Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Specific, rhs.AttenuationCurve?.Specific));
                 ret.ReverbAttenuationControl = this.ReverbAttenuationControl.Combine(rhs.ReverbAttenuationControl);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -498,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool AttenuationCurve;
             public bool ReverbAttenuationControl;
             public bool Priority;
-            public bool Unknown;
+            public bool Unknown2;
             #endregion
 
             #region Ctors
@@ -510,7 +512,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AttenuationCurve = defaultOn;
                 this.ReverbAttenuationControl = defaultOn;
                 this.Priority = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unknown2 = defaultOn;
             }
 
             #endregion
@@ -521,7 +523,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((AttenuationCurve, null));
                 ret.Add((ReverbAttenuationControl, null));
                 ret.Add((Priority, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unknown2, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -596,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Int16[] AttenuationCurve { get; }
         new Int16 ReverbAttenuationControl { get; set; }
         new Int32 Priority { get; set; }
-        new Int64 Unknown { get; set; }
+        new Int64 Unknown2 { get; set; }
     }
 
     public partial interface ISoundDataExtendedInternal :
@@ -615,7 +617,7 @@ namespace Mutagen.Bethesda.Fallout3
         ReadOnlyMemorySlice<Int16> AttenuationCurve { get; }
         Int16 ReverbAttenuationControl { get; }
         Int32 Priority { get; }
-        Int64 Unknown { get; }
+        Int64 Unknown2 { get; }
 
     }
 
@@ -770,14 +772,15 @@ namespace Mutagen.Bethesda.Fallout3
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
         FrequencyAdjustment = 2,
-        Flags = 3,
-        StaticAttenuation = 4,
-        StopTime = 5,
-        StartTime = 6,
-        AttenuationCurve = 7,
-        ReverbAttenuationControl = 8,
-        Priority = 9,
-        Unknown = 10,
+        Unknown = 3,
+        Flags = 4,
+        StaticAttenuation = 5,
+        StopTime = 6,
+        StartTime = 7,
+        AttenuationCurve = 8,
+        ReverbAttenuationControl = 9,
+        Priority = 10,
+        Unknown2 = 11,
     }
     #endregion
 
@@ -790,7 +793,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SoundDataExtended.Mask<>);
 
@@ -866,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.AttenuationCurve.Reset();
             item.ReverbAttenuationControl = default(Int16);
             item.Priority = default(Int32);
-            item.Unknown = default(Int64);
+            item.Unknown2 = default(Int64);
             base.Clear(item);
         }
         
@@ -944,7 +947,7 @@ namespace Mutagen.Bethesda.Fallout3
                 include);
             ret.ReverbAttenuationControl = item.ReverbAttenuationControl == rhs.ReverbAttenuationControl;
             ret.Priority = item.Priority == rhs.Priority;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1016,9 +1019,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Priority, "Priority");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unknown2 ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1031,6 +1034,8 @@ namespace Mutagen.Bethesda.Fallout3
                 case SoundData_FieldIndex.MaximumAttenuationDistance:
                     return (SoundDataExtended_FieldIndex)((int)index);
                 case SoundData_FieldIndex.FrequencyAdjustment:
+                    return (SoundDataExtended_FieldIndex)((int)index);
+                case SoundData_FieldIndex.Unknown:
                     return (SoundDataExtended_FieldIndex)((int)index);
                 case SoundData_FieldIndex.Flags:
                     return (SoundDataExtended_FieldIndex)((int)index);
@@ -1065,9 +1070,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.Unknown2) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
             return true;
         }
@@ -1089,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.AttenuationCurve);
             hash.Add(item.ReverbAttenuationControl);
             hash.Add(item.Priority);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unknown2);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1161,9 +1166,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Priority = rhs.Priority;
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.Unknown2 = rhs.Unknown2;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1308,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout3
                 transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             writer.Write(item.ReverbAttenuationControl);
             writer.Write(item.Priority);
-            writer.Write(item.Unknown);
+            writer.Write(item.Unknown2);
         }
 
         public void Write(
@@ -1370,7 +1375,7 @@ namespace Mutagen.Bethesda.Fallout3
                     transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.ReverbAttenuationControl = frame.ReadInt16();
             item.Priority = frame.ReadInt32();
-            item.Unknown = frame.ReadInt64();
+            item.Unknown2 = frame.ReadInt64();
         }
 
     }
@@ -1420,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout3
         public ReadOnlyMemorySlice<Int16> AttenuationCurve => BinaryOverlayArrayHelper.Int16SliceFromFixedSize(_structData.Slice(0xC), amount: 5);
         public Int16 ReverbAttenuationControl => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x16, 0x2));
         public Int32 Priority => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
-        public Int64 Unknown => BinaryPrimitives.ReadInt64LittleEndian(_structData.Slice(0x1C, 0x8));
+        public Int64 Unknown2 => BinaryPrimitives.ReadInt64LittleEndian(_structData.Slice(0x1C, 0x8));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

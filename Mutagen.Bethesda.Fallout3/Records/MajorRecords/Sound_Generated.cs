@@ -55,21 +55,19 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedOptional
         /// </summary>
-        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ISoundGetter.ObjectBounds => ObjectBounds;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        public ObjectBounds? ObjectBounds
         {
-            get => this.ObjectBounds;
-            set => this.ObjectBounds = value ?? new ObjectBounds();
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        IObjectBoundsGetter? ISoundGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
@@ -746,13 +744,13 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ISound :
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<ISoundInternal>,
-        IObjectBounded,
+        IObjectBoundedOptional,
         ISoundGetter
     {
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedOptional
         /// </summary>
-        new ObjectBounds ObjectBounds { get; set; }
+        new ObjectBounds? ObjectBounds { get; set; }
         new String? File { get; set; }
         new SoundData? Data { get; set; }
         new Int16[]? AttenuationCurve { get; set; }
@@ -773,14 +771,14 @@ namespace Mutagen.Bethesda.Fallout3
         IBinaryItem,
         ILoquiObject<ISoundGetter>,
         IMapsToGetter<ISoundGetter>,
-        IObjectBoundedGetter
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => Sound_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter
+        /// Aspects: IObjectBoundedOptionalGetter
         /// </summary>
-        IObjectBoundsGetter ObjectBounds { get; }
+        IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         String? File { get; }
         ISoundDataInternalGetter? Data { get; }
@@ -1065,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ISoundInternal item)
         {
             ClearPartial();
-            item.ObjectBounds.Clear();
+            item.ObjectBounds = null;
             item.File = default;
             item.Data = null;
             item.AttenuationCurve = null;
@@ -1155,7 +1153,11 @@ namespace Mutagen.Bethesda.Fallout3
             Sound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.File = string.Equals(item.File, rhs.File);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -1218,9 +1220,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.ObjectBounds?.Overall ?? true)
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
             {
-                item.ObjectBounds?.Print(sb, "ObjectBounds");
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.File ?? true)
                 && item.File is {} FileItem)
@@ -1368,7 +1371,10 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ISoundGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ObjectBounds);
+            if (item.ObjectBounds is {} ObjectBoundsitem)
+            {
+                hash.Add(ObjectBoundsitem);
+            }
             if (item.File is {} Fileitem)
             {
                 hash.Add(Fileitem);
@@ -1494,11 +1500,15 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)Sound_FieldIndex.ObjectBounds);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.ObjectBounds) ?? true))
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
                     {
-                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Sound_FieldIndex.ObjectBounds),
-                            errorMask: errorMask);
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Sound_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
                     }
                 }
                 catch (Exception ex)
@@ -1722,11 +1732,13 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            var ObjectBoundsItem = item.ObjectBounds;
-            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                item: ObjectBoundsItem,
-                writer: writer,
-                translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
@@ -1927,8 +1939,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
-        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         #endregion
         #region File
         private int? _FileLocation;
