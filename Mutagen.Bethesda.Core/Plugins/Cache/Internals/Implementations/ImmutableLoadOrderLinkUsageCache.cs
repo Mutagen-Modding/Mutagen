@@ -14,9 +14,6 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     
     private readonly ILinkCache _linkCache;
     private readonly Dictionary<CacheKey, CacheItem> _cache = new();
-    private readonly object _untypedReferencesCacheLock = new();
-    private Dictionary<FormKey, HashSet<FormKey>>? _untypedReferencesCache;
-    private static HashSet<FormKey> _emptySet = new();
     
     public ImmutableLoadOrderLinkUsageCache(
         ILinkCache linkCache)
