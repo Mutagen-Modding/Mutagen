@@ -60,6 +60,7 @@ public class ImmutableLoadOrderLinkUsageCacheTests
             referenced.Contains(n).ShouldBeTrue();
             referenced.Contains(n.FormKey).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n.FormKey, typeof(IWeaponGetter))).ShouldBeFalse();
             referenced.Contains(new FormLink<INpcGetter>(n.FormKey)).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
             referenced.Contains(new FormLink<IMajorRecordGetter>(n.FormKey)).ShouldBeTrue();
@@ -76,6 +77,7 @@ public class ImmutableLoadOrderLinkUsageCacheTests
             npcReferenced.Contains(n).ShouldBeTrue();
             npcReferenced.Contains(n.FormKey).ShouldBeTrue();
             npcReferenced.Contains(new FormLinkInformation(n.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n.FormKey, typeof(IWeaponGetter))).ShouldBeFalse();
             npcReferenced.Contains(new FormLink<INpcGetter>(n.FormKey)).ShouldBeTrue();
             npcReferenced.Contains(new FormLinkInformation(n.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
             npcReferenced.Contains(new FormLink<IMajorRecordGetter>(n.FormKey)).ShouldBeTrue();
@@ -118,12 +120,14 @@ public class ImmutableLoadOrderLinkUsageCacheTests
             referenced.Contains(n12).ShouldBeTrue();
             referenced.Contains(n12.FormKey).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n12.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n12.FormKey, typeof(IWeaponGetter))).ShouldBeFalse();
             referenced.Contains(new FormLink<INpcGetter>(n12.FormKey)).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n12.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
             referenced.Contains(new FormLink<IMajorRecordGetter>(n12.FormKey)).ShouldBeTrue();
             referenced.Contains(n22).ShouldBeTrue();
             referenced.Contains(n22.FormKey).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n22.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            referenced.Contains(new FormLinkInformation(n22.FormKey, typeof(IWeaponGetter))).ShouldBeFalse();
             referenced.Contains(new FormLink<INpcGetter>(n22.FormKey)).ShouldBeTrue();
             referenced.Contains(new FormLinkInformation(n22.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
             referenced.Contains(new FormLink<IMajorRecordGetter>(n22.FormKey)).ShouldBeTrue();
@@ -143,12 +147,14 @@ public class ImmutableLoadOrderLinkUsageCacheTests
             npcReferenced.Contains(n12).ShouldBeTrue();
             npcReferenced.Contains(n12.FormKey).ShouldBeTrue();
             npcReferenced.Contains(new FormLinkInformation(n12.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n12.FormKey, typeof(IWeaponGetter))).ShouldBeFalse();
             npcReferenced.Contains(new FormLink<INpcGetter>(n12.FormKey)).ShouldBeTrue();
             npcReferenced.Contains(new FormLinkInformation(n12.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
             npcReferenced.Contains(new FormLink<IMajorRecordGetter>(n12.FormKey)).ShouldBeTrue();
             npcReferenced.Contains(n22).ShouldBeTrue();
             npcReferenced.Contains(n22.FormKey).ShouldBeTrue();
             npcReferenced.Contains(new FormLinkInformation(n22.FormKey, typeof(INpcGetter))).ShouldBeTrue();
+            npcReferenced.Contains(new FormLinkInformation(n22.FormKey, typeof(IWeaponGetter))).ShouldBeFalse();
             npcReferenced.Contains(new FormLink<INpcGetter>(n22.FormKey)).ShouldBeTrue();
             npcReferenced.Contains(new FormLinkInformation(n22.FormKey, typeof(IMajorRecordGetter))).ShouldBeTrue();
             npcReferenced.Contains(new FormLink<IMajorRecordGetter>(n22.FormKey)).ShouldBeTrue();
