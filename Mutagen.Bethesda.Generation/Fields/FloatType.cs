@@ -25,7 +25,7 @@ public class FloatType : Loqui.Generation.FloatType
         await base.Load(node, requireName);
         var data = this.GetFieldData();
         Multiplier = node.GetAttribute("multiplier", 1d);
-        if (node.TryGetAttribute("divisor", out double div))
+        if (node.TryGetAttribute("divisor", out double div, culture: CultureInfo.InvariantCulture))
         {
             Divisor = div;
         }
