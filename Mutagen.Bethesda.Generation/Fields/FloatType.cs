@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -14,15 +15,17 @@ public class FloatType : Loqui.Generation.FloatType
     public bool HasMultiplier => !Multiplier.EqualsWithin(1);
     public bool HasDivisor => !Divisor.EqualsWithin(1);
     public bool HasTransformations => HasMultiplier || HasDivisor;
-    public string MultiplierString => HasMultiplier ? $"{Multiplier}f" : "null";
-    public string DivisorString => HasDivisor ? $"{Divisor}f" : "null";
+    public string MultiplierString => HasMultiplier ? GetValueString(Multiplier) : "null";
+    public string MultiplierFloatString => HasMultiplier ? GetValueString((float)Multiplier) : "null";
+    public string DivisorString => HasDivisor ? GetValueString(Divisor) : "null";
+    public string DivisorFloatString => HasDivisor ? GetValueString((float)Divisor) : "null";
 
     public override async Task Load(XElement node, bool requireName = true)
     {
         await base.Load(node, requireName);
         var data = this.GetFieldData();
-        Multiplier = node.GetAttribute("multiplier", 1d);
-        if (node.TryGetAttribute("divisor", out double div))
+        Multiplier = node.GetAttribute("multiplier", 1d, culture: CultureInfo.InvariantCulture);
+        if (node.TryGetAttribute("divisor", out double div, culture: CultureInfo.InvariantCulture))
         {
             Divisor = div;
         }
@@ -40,22 +43,22 @@ public class FloatType : Loqui.Generation.FloatType
             {
                 case FloatIntegerType.UInt:
                     Min = "0";
-                    Max = $"{uint.MaxValue * Multiplier}f";
+                    Max = GetValueString(uint.MaxValue * Multiplier);
                     data.Length = 4;
                     break;
                 case FloatIntegerType.UShort:
                     Min = "0";
-                    Max = $"{ushort.MaxValue * Multiplier}f";
+                    Max = GetValueString(ushort.MaxValue * Multiplier);
                     data.Length = 2;
                     break;
                 case FloatIntegerType.Byte:
                     Min = "0";
-                    Max = $"{byte.MaxValue * Multiplier}f";
+                    Max = GetValueString(byte.MaxValue * Multiplier);
                     data.Length = 1;
                     break;
                 case FloatIntegerType.ByteHundred:
                     Min = "0";
-                    Max = $"{100 * Multiplier}f";
+                    Max = GetValueString(100 * Multiplier);
                     data.Length = 1;
                     break;
                 default:
@@ -63,4 +66,7 @@ public class FloatType : Loqui.Generation.FloatType
             }
         }
     }
+
+    private static string GetValueString(float value) => value.ToString(CultureInfo.InvariantCulture) + "f";
+    private static string GetValueString(double value) => value.ToString(CultureInfo.InvariantCulture) + "f";
 }

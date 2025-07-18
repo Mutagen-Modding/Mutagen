@@ -42,6 +42,7 @@
     <Compile Include="Extensions\GlobalGroupMixin.cs" />
     <Compile Include="Extensions\LocationExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IHasEffects.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -719,6 +720,9 @@
     </Compile>
     <Compile Include="Records\Major Records\SoundOutputModel.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Spell.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\StateVariableFilterAudioEffect.cs">
       <DependentUpon>AudioEffectChain.xml</DependentUpon>

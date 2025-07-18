@@ -148,6 +148,7 @@
     <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Enums\TintType.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IHasEffects.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -2350,6 +2351,9 @@
     </Compile>
     <Compile Include="Records\Major Records\NpcRaceOverrideGeneral.cs">
       <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectEffect.cs">
+      <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ObjectModification.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>

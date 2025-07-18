@@ -1,4 +1,5 @@
-﻿namespace Mutagen.Bethesda.Starfield;
+﻿using System.Diagnostics;
+namespace Mutagen.Bethesda.Starfield;
 
 public partial class Spell
 {
@@ -24,4 +25,7 @@ public partial class Spell
         Addiction = 10,
         Voice = 11,
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IReadOnlyList<IEffectGetter> IHasEffectsGetter.Effects => Effects;
 }
