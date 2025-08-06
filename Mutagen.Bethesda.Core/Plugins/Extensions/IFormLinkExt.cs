@@ -734,6 +734,35 @@ public static class IFormLinkExt
         }
     }
 
+    internal class FormLinkInformationEqualityComparerWithDualInheritanceConsiderationComparer : IEqualityComparer<IFormLinkIdentifier>
+    {
+        public bool Equals(IFormLinkIdentifier? x, IFormLinkIdentifier? y)
+        {
+            if (x is null && y is null)
+            {
+                return true;
+            }
+            if (x is null || y is null)
+            {
+                return false;
+            }
+            if (y.Type.IsAssignableFrom(x.Type)
+                || x.Type.IsAssignableFrom(y.Type))
+            {
+                return x.FormKey == y.FormKey;
+            }
+            
+            return false;
+        }
+
+        public int GetHashCode(IFormLinkIdentifier obj)
+        {
+            return obj.FormKey.GetHashCode();
+        }
+    }
+
+    internal static IEqualityComparer<IFormLinkIdentifier> FormLinkInformationEqualityComparerWithDualInheritanceConsideration { get; } = new FormLinkInformationEqualityComparerWithDualInheritanceConsiderationComparer();
+
     public static void SetTo<TMajorLhs, TMajorRhs>(this IFormLink<TMajorLhs> link, TMajorRhs? record)
         where TMajorLhs : class, IMajorRecordGetter
         where TMajorRhs : class, TMajorLhs

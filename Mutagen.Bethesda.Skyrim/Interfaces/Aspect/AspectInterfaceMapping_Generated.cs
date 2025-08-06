@@ -72,6 +72,20 @@ namespace Mutagen.Bethesda.Skyrim
                     Setter: typeof(IHasDestructible),
                     Getter: typeof(IHasDestructibleGetter)));
             dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
+            dict[typeof(IHasEffects)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Ingestible_Registration.Instance,
+                    Ingredient_Registration.Instance,
+                    ObjectEffect_Registration.Instance,
+                    Scroll_Registration.Instance,
+                    Spell_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasEffects),
+                    Getter: typeof(IHasEffectsGetter)));
+            dict[typeof(IHasEffectsGetter)] = dict[typeof(IHasEffects)] with { Setter = false };
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

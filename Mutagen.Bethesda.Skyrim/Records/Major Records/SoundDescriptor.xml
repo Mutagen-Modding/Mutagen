@@ -16,8 +16,8 @@
         <Fields>
           <Int8 name="PercentFrequencyShift" />
           <Int8 name="PercentFrequencyVariance" />
-          <Int8 name="Priority" />
-          <Int8 name="Variance" />
+          <UInt8 name="Priority" />
+          <UInt8 name="Variance" />
           <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
         </Fields>
       </Data>

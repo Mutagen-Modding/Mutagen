@@ -31,7 +31,7 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, IReadOnlyCollection<ModKey>, IEnumerable<IModMasterStyledGetter>>? _loadOrderSetter { get; init; }
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
-    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>(); 
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = []; 
 }
 
 /// <summary>

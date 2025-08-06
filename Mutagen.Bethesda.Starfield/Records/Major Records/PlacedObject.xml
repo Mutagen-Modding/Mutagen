@@ -61,6 +61,7 @@
       <Bool name="LightLayerData" recordType="XLLD" byteLength="4" />
       <Bool name="LightStaticShadowMap" recordType="XLSM" byteLength="4" />
       <Float name="LightVolumetricData" recordType="XLVD" />
+      <Float name="LightRadiusFalloutExponent" recordType="XRFE" />
       <RefDirect name="Ownership" refName="Ownership"/>
       <RefList name="LightColors" refName="PlacedObjectLightColor" additive="true" />
       <RefDirect name="GroupedPackIn" refName="GroupedPackIn" />

@@ -59,10 +59,10 @@ namespace Mutagen.Bethesda.Fallout4
         public SByte PercentFrequencyVariance { get; set; } = default(SByte);
         #endregion
         #region Priority
-        public SByte Priority { get; set; } = default(SByte);
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Variance
-        public SByte Variance { get; set; } = default(SByte);
+        public Byte Variance { get; set; } = default(Byte);
         #endregion
         #region StaticAttenuation
         public Single StaticAttenuation { get; set; } = default(Single);
@@ -536,8 +536,8 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new SByte PercentFrequencyShift { get; set; }
         new SByte PercentFrequencyVariance { get; set; }
-        new SByte Priority { get; set; }
-        new SByte Variance { get; set; }
+        new Byte Priority { get; set; }
+        new Byte Variance { get; set; }
         new Single StaticAttenuation { get; set; }
     }
 
@@ -549,8 +549,8 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => SoundDescriptorStandardData_Registration.Instance;
         SByte PercentFrequencyShift { get; }
         SByte PercentFrequencyVariance { get; }
-        SByte Priority { get; }
-        SByte Variance { get; }
+        Byte Priority { get; }
+        Byte Variance { get; }
         Single StaticAttenuation { get; }
 
     }
@@ -781,8 +781,8 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.PercentFrequencyShift = default(SByte);
             item.PercentFrequencyVariance = default(SByte);
-            item.Priority = default(SByte);
-            item.Variance = default(SByte);
+            item.Priority = default(Byte);
+            item.Variance = default(Byte);
             item.StaticAttenuation = default(Single);
             base.Clear(item);
         }
@@ -1230,8 +1230,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             item.PercentFrequencyShift = frame.ReadInt8();
             item.PercentFrequencyVariance = frame.ReadInt8();
-            item.Priority = frame.ReadInt8();
-            item.Variance = frame.ReadInt8();
+            item.Priority = frame.ReadUInt8();
+            item.Variance = frame.ReadUInt8();
             item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
@@ -1285,8 +1285,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public SByte PercentFrequencyShift => (sbyte)_structData.Slice(0x0, 0x1)[0];
         public SByte PercentFrequencyVariance => (sbyte)_structData.Slice(0x1, 0x1)[0];
-        public SByte Priority => (sbyte)_structData.Slice(0x2, 0x1)[0];
-        public SByte Variance => (sbyte)_structData.Slice(0x3, 0x1)[0];
+        public Byte Priority => _structData.Span[0x2];
+        public Byte Variance => _structData.Span[0x3];
         public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x4, 0x2), FloatIntegerType.UShort, multiplier: null, divisor: 100f);
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class Ingestible
@@ -16,4 +17,7 @@ public partial class Ingestible
         Medicine = 0x0001_0000,
         Poison = 0x0002_0000,
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IReadOnlyList<IEffectGetter> IHasEffectsGetter.Effects => Effects;
 }

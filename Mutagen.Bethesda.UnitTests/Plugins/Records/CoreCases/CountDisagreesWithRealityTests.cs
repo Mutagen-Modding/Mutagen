@@ -18,3 +18,15 @@ public class CountDisagreesWithRealityTests : ASpecificCaseTest<Npc, INpcGetter>
         item.Class.FormKey.ShouldBe(FormKey.Factory("123456:CountDisagreesWithReality.esp"));
     }
 }
+
+public class CountDisagreesSingleRecordContentEmptyTests : ASpecificCaseTest<Mutagen.Bethesda.Skyrim.MagicEffect, Mutagen.Bethesda.Skyrim.IMagicEffectGetter>
+{
+    public override ModPath Path => TestDataPathing.CountDisagreesSingleRecordContentEmptyTests;
+    public override GameRelease Release => GameRelease.SkyrimSE;
+    public override bool TestPassthrough => false;
+    
+    public override void TestItem(Mutagen.Bethesda.Skyrim.IMagicEffectGetter item)
+    {
+        item.Keywords.ShouldBeEmpty();
+    }
+}

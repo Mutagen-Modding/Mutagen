@@ -526,6 +526,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedObjectGetter.LightVolumetricData => this.LightVolumetricData;
         #endregion
+        #region LightRadiusFalloutExponent
+        public Single? LightRadiusFalloutExponent { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedObjectGetter.LightRadiusFalloutExponent => this.LightRadiusFalloutExponent;
+        #endregion
         #region Ownership
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Ownership? _Ownership;
@@ -911,6 +916,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightLayerData = initialValue;
                 this.LightStaticShadowMap = initialValue;
                 this.LightVolumetricData = initialValue;
+                this.LightRadiusFalloutExponent = initialValue;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.LightColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>());
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(initialValue, new GroupedPackIn.Mask<TItem>(initialValue));
@@ -1005,6 +1011,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LightLayerData,
                 TItem LightStaticShadowMap,
                 TItem LightVolumetricData,
+                TItem LightRadiusFalloutExponent,
                 TItem Ownership,
                 TItem LightColors,
                 TItem GroupedPackIn,
@@ -1098,6 +1105,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightLayerData = LightLayerData;
                 this.LightStaticShadowMap = LightStaticShadowMap;
                 this.LightVolumetricData = LightVolumetricData;
+                this.LightRadiusFalloutExponent = LightRadiusFalloutExponent;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.LightColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>?>(LightColors, Enumerable.Empty<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>());
                 this.GroupedPackIn = new MaskItem<TItem, GroupedPackIn.Mask<TItem>?>(GroupedPackIn, new GroupedPackIn.Mask<TItem>(GroupedPackIn));
@@ -1193,6 +1201,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem LightLayerData;
             public TItem LightStaticShadowMap;
             public TItem LightVolumetricData;
+            public TItem LightRadiusFalloutExponent;
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlacedObjectLightColor.Mask<TItem>?>>?>? LightColors;
             public MaskItem<TItem, GroupedPackIn.Mask<TItem>?>? GroupedPackIn { get; set; }
@@ -1290,6 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LightLayerData, rhs.LightLayerData)) return false;
                 if (!object.Equals(this.LightStaticShadowMap, rhs.LightStaticShadowMap)) return false;
                 if (!object.Equals(this.LightVolumetricData, rhs.LightVolumetricData)) return false;
+                if (!object.Equals(this.LightRadiusFalloutExponent, rhs.LightRadiusFalloutExponent)) return false;
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.LightColors, rhs.LightColors)) return false;
                 if (!object.Equals(this.GroupedPackIn, rhs.GroupedPackIn)) return false;
@@ -1379,6 +1389,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LightLayerData);
                 hash.Add(this.LightStaticShadowMap);
                 hash.Add(this.LightVolumetricData);
+                hash.Add(this.LightRadiusFalloutExponent);
                 hash.Add(this.Ownership);
                 hash.Add(this.LightColors);
                 hash.Add(this.GroupedPackIn);
@@ -1619,6 +1630,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.LightLayerData)) return false;
                 if (!eval(this.LightStaticShadowMap)) return false;
                 if (!eval(this.LightVolumetricData)) return false;
+                if (!eval(this.LightRadiusFalloutExponent)) return false;
                 if (Ownership != null)
                 {
                     if (!eval(this.Ownership.Overall)) return false;
@@ -1944,6 +1956,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.LightLayerData)) return true;
                 if (eval(this.LightStaticShadowMap)) return true;
                 if (eval(this.LightVolumetricData)) return true;
+                if (eval(this.LightRadiusFalloutExponent)) return true;
                 if (Ownership != null)
                 {
                     if (eval(this.Ownership.Overall)) return true;
@@ -2225,6 +2238,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LightLayerData = eval(this.LightLayerData);
                 obj.LightStaticShadowMap = eval(this.LightStaticShadowMap);
                 obj.LightVolumetricData = eval(this.LightVolumetricData);
+                obj.LightRadiusFalloutExponent = eval(this.LightRadiusFalloutExponent);
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 if (LightColors != null)
                 {
@@ -2649,6 +2663,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(LightVolumetricData, "LightVolumetricData");
                     }
+                    if (printMask?.LightRadiusFalloutExponent ?? true)
+                    {
+                        sb.AppendItem(LightRadiusFalloutExponent, "LightRadiusFalloutExponent");
+                    }
                     if (printMask?.Ownership?.Overall ?? true)
                     {
                         Ownership?.Print(sb);
@@ -2930,6 +2948,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? LightLayerData;
             public Exception? LightStaticShadowMap;
             public Exception? LightVolumetricData;
+            public Exception? LightRadiusFalloutExponent;
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectLightColor.ErrorMask?>>?>? LightColors;
             public MaskItem<Exception?, GroupedPackIn.ErrorMask?>? GroupedPackIn;
@@ -3069,6 +3088,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LightStaticShadowMap;
                     case PlacedObject_FieldIndex.LightVolumetricData:
                         return LightVolumetricData;
+                    case PlacedObject_FieldIndex.LightRadiusFalloutExponent:
+                        return LightRadiusFalloutExponent;
                     case PlacedObject_FieldIndex.Ownership:
                         return Ownership;
                     case PlacedObject_FieldIndex.LightColors:
@@ -3293,6 +3314,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedObject_FieldIndex.LightVolumetricData:
                         this.LightVolumetricData = ex;
+                        break;
+                    case PlacedObject_FieldIndex.LightRadiusFalloutExponent:
+                        this.LightRadiusFalloutExponent = ex;
                         break;
                     case PlacedObject_FieldIndex.Ownership:
                         this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
@@ -3557,6 +3581,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedObject_FieldIndex.LightVolumetricData:
                         this.LightVolumetricData = (Exception?)obj;
                         break;
+                    case PlacedObject_FieldIndex.LightRadiusFalloutExponent:
+                        this.LightRadiusFalloutExponent = (Exception?)obj;
+                        break;
                     case PlacedObject_FieldIndex.Ownership:
                         this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
                         break;
@@ -3724,6 +3751,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LightLayerData != null) return true;
                 if (LightStaticShadowMap != null) return true;
                 if (LightVolumetricData != null) return true;
+                if (LightRadiusFalloutExponent != null) return true;
                 if (Ownership != null) return true;
                 if (LightColors != null) return true;
                 if (GroupedPackIn != null) return true;
@@ -4003,6 +4031,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(LightVolumetricData, "LightVolumetricData");
                 }
+                {
+                    sb.AppendItem(LightRadiusFalloutExponent, "LightRadiusFalloutExponent");
+                }
                 Ownership?.Print(sb);
                 if (LightColors is {} LightColorsItem)
                 {
@@ -4228,6 +4259,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LightLayerData = this.LightLayerData.Combine(rhs.LightLayerData);
                 ret.LightStaticShadowMap = this.LightStaticShadowMap.Combine(rhs.LightStaticShadowMap);
                 ret.LightVolumetricData = this.LightVolumetricData.Combine(rhs.LightVolumetricData);
+                ret.LightRadiusFalloutExponent = this.LightRadiusFalloutExponent.Combine(rhs.LightRadiusFalloutExponent);
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.LightColors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlacedObjectLightColor.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LightColors?.Overall, rhs.LightColors?.Overall), Noggog.ExceptionExt.Combine(this.LightColors?.Specific, rhs.LightColors?.Specific));
                 ret.GroupedPackIn = this.GroupedPackIn.Combine(rhs.GroupedPackIn, (l, r) => l.Combine(r));
@@ -4334,6 +4366,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool LightLayerData;
             public bool LightStaticShadowMap;
             public bool LightVolumetricData;
+            public bool LightRadiusFalloutExponent;
             public Ownership.TranslationMask? Ownership;
             public PlacedObjectLightColor.TranslationMask? LightColors;
             public GroupedPackIn.TranslationMask? GroupedPackIn;
@@ -4404,6 +4437,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LightLayerData = defaultOn;
                 this.LightStaticShadowMap = defaultOn;
                 this.LightVolumetricData = defaultOn;
+                this.LightRadiusFalloutExponent = defaultOn;
                 this.BlueprintPartOrigin = defaultOn;
                 this.Layer = defaultOn;
                 this.BOLV = defaultOn;
@@ -4482,6 +4516,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LightLayerData, null));
                 ret.Add((LightStaticShadowMap, null));
                 ret.Add((LightVolumetricData, null));
+                ret.Add((LightRadiusFalloutExponent, null));
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((LightColors == null ? DefaultOn : !LightColors.GetCrystal().CopyNothing, LightColors?.GetCrystal()));
                 ret.Add((GroupedPackIn != null ? GroupedPackIn.OnOverall : DefaultOn, GroupedPackIn?.GetCrystal()));
@@ -4731,6 +4766,7 @@ namespace Mutagen.Bethesda.Starfield
         new Boolean? LightLayerData { get; set; }
         new Boolean? LightStaticShadowMap { get; set; }
         new Single? LightVolumetricData { get; set; }
+        new Single? LightRadiusFalloutExponent { get; set; }
         new Ownership? Ownership { get; set; }
         new ExtendedList<PlacedObjectLightColor> LightColors { get; }
         new GroupedPackIn? GroupedPackIn { get; set; }
@@ -4849,6 +4885,7 @@ namespace Mutagen.Bethesda.Starfield
         Boolean? LightLayerData { get; }
         Boolean? LightStaticShadowMap { get; }
         Single? LightVolumetricData { get; }
+        Single? LightRadiusFalloutExponent { get; }
         IOwnershipGetter? Ownership { get; }
         IReadOnlyList<IPlacedObjectLightColorGetter> LightColors { get; }
         IGroupedPackInGetter? GroupedPackIn { get; }
@@ -5109,43 +5146,44 @@ namespace Mutagen.Bethesda.Starfield
         LightLayerData = 51,
         LightStaticShadowMap = 52,
         LightVolumetricData = 53,
-        Ownership = 54,
-        LightColors = 55,
-        GroupedPackIn = 56,
-        BlueprintPartOrigin = 57,
-        Layer = 58,
-        BOLV = 59,
-        XWCN = 60,
-        XWCU = 61,
-        Location = 62,
-        XTRI = 63,
-        LightRoundedness = 64,
-        LinkedReferences = 65,
-        IsLinkedRefTransient = 66,
-        XLIB = 67,
-        SnapLinks = 68,
-        EncounterZone = 69,
-        GeometryDirtinessScale = 70,
-        Lock = 71,
-        Properties = 72,
-        ExternalEmittance = 73,
-        HeadTrackingWeight = 74,
-        Spline = 75,
-        XNSE = 76,
-        AttachRef = 77,
-        RagdollBipedRotation = 78,
-        HealthPercent = 79,
-        TimeOfDay = 80,
-        EnableParent = 81,
-        Traversals = 82,
-        NumTraversalFluffBytes = 83,
-        NavigationDoorLink = 84,
-        IsActivationPoint = 85,
-        Scale = 86,
-        OpenByDefault = 87,
-        Position = 88,
-        Rotation = 89,
-        Comments = 90,
+        LightRadiusFalloutExponent = 54,
+        Ownership = 55,
+        LightColors = 56,
+        GroupedPackIn = 57,
+        BlueprintPartOrigin = 58,
+        Layer = 59,
+        BOLV = 60,
+        XWCN = 61,
+        XWCU = 62,
+        Location = 63,
+        XTRI = 64,
+        LightRoundedness = 65,
+        LinkedReferences = 66,
+        IsLinkedRefTransient = 67,
+        XLIB = 68,
+        SnapLinks = 69,
+        EncounterZone = 70,
+        GeometryDirtinessScale = 71,
+        Lock = 72,
+        Properties = 73,
+        ExternalEmittance = 74,
+        HeadTrackingWeight = 75,
+        Spline = 76,
+        XNSE = 77,
+        AttachRef = 78,
+        RagdollBipedRotation = 79,
+        HealthPercent = 80,
+        TimeOfDay = 81,
+        EnableParent = 82,
+        Traversals = 83,
+        NumTraversalFluffBytes = 84,
+        NavigationDoorLink = 85,
+        IsActivationPoint = 86,
+        Scale = 87,
+        OpenByDefault = 88,
+        Position = 89,
+        Rotation = 90,
+        Comments = 91,
     }
     #endregion
 
@@ -5156,9 +5194,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 84;
+        public const ushort AdditionalFieldCount = 85;
 
-        public const ushort FieldCount = 91;
+        public const ushort FieldCount = 92;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -5242,6 +5280,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XLLD,
                 RecordTypes.XLSM,
                 RecordTypes.XLVD,
+                RecordTypes.XRFE,
                 RecordTypes.XOWN,
                 RecordTypes.XLCD,
                 RecordTypes.XWPK,
@@ -5368,6 +5407,7 @@ namespace Mutagen.Bethesda.Starfield
             item.LightLayerData = default;
             item.LightStaticShadowMap = default;
             item.LightVolumetricData = default;
+            item.LightRadiusFalloutExponent = default;
             item.Ownership = null;
             item.LightColors.Clear();
             item.GroupedPackIn = null;
@@ -5693,6 +5733,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.LightLayerData = item.LightLayerData == rhs.LightLayerData;
             ret.LightStaticShadowMap = item.LightStaticShadowMap == rhs.LightStaticShadowMap;
             ret.LightVolumetricData = item.LightVolumetricData.EqualsWithin(rhs.LightVolumetricData);
+            ret.LightRadiusFalloutExponent = item.LightRadiusFalloutExponent.EqualsWithin(rhs.LightRadiusFalloutExponent);
             ret.Ownership = EqualsMaskHelper.EqualsHelper(
                 item.Ownership,
                 rhs.Ownership,
@@ -6116,6 +6157,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.LightVolumetricData is {} LightVolumetricDataItem)
             {
                 sb.AppendItem(LightVolumetricDataItem, "LightVolumetricData");
+            }
+            if ((printMask?.LightRadiusFalloutExponent ?? true)
+                && item.LightRadiusFalloutExponent is {} LightRadiusFalloutExponentItem)
+            {
+                sb.AppendItem(LightRadiusFalloutExponentItem, "LightRadiusFalloutExponent");
             }
             if ((printMask?.Ownership?.Overall ?? true)
                 && item.Ownership is {} OwnershipItem)
@@ -6647,6 +6693,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.LightVolumetricData.EqualsWithin(rhs.LightVolumetricData)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightRadiusFalloutExponent) ?? true))
+            {
+                if (!lhs.LightRadiusFalloutExponent.EqualsWithin(rhs.LightRadiusFalloutExponent)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
@@ -6988,6 +7038,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.LightVolumetricData is {} LightVolumetricDataitem)
             {
                 hash.Add(LightVolumetricDataitem);
+            }
+            if (item.LightRadiusFalloutExponent is {} LightRadiusFalloutExponentitem)
+            {
+                hash.Add(LightRadiusFalloutExponentitem);
             }
             if (item.Ownership is {} Ownershipitem)
             {
@@ -8156,6 +8210,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LightVolumetricData = rhs.LightVolumetricData;
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightRadiusFalloutExponent) ?? true))
+            {
+                item.LightRadiusFalloutExponent = rhs.LightRadiusFalloutExponent;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
             {
                 errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ownership);
@@ -9093,6 +9151,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.LightVolumetricData,
                 header: translationParams.ConvertToCustom(RecordTypes.XLVD));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LightRadiusFalloutExponent,
+                header: translationParams.ConvertToCustom(RecordTypes.XRFE));
             if (item.Ownership is {} OwnershipItem)
             {
                 ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
@@ -9699,6 +9761,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.LightVolumetricData = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.LightVolumetricData;
                 }
+                case RecordTypeInts.XRFE:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LightRadiusFalloutExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.LightRadiusFalloutExponent;
+                }
                 case RecordTypeInts.XOWN:
                 {
                     item.Ownership = Mutagen.Bethesda.Starfield.Ownership.CreateFromBinary(frame: frame);
@@ -10151,6 +10219,10 @@ namespace Mutagen.Bethesda.Starfield
         #region LightVolumetricData
         private int? _LightVolumetricDataLocation;
         public Single? LightVolumetricData => _LightVolumetricDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightVolumetricDataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region LightRadiusFalloutExponent
+        private int? _LightRadiusFalloutExponentLocation;
+        public Single? LightRadiusFalloutExponent => _LightRadiusFalloutExponentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightRadiusFalloutExponentLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IOwnershipGetter? Ownership { get; private set; }
         #region LightColors
@@ -10650,6 +10722,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _LightVolumetricDataLocation = (stream.Position - offset);
                     return (int)PlacedObject_FieldIndex.LightVolumetricData;
+                }
+                case RecordTypeInts.XRFE:
+                {
+                    _LightRadiusFalloutExponentLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.LightRadiusFalloutExponent;
                 }
                 case RecordTypeInts.XOWN:
                 {
