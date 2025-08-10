@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -75,6 +77,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IMagicEffectGetter.Components => _Components;
+        #endregion
+
         #endregion
         #region Name
         /// <summary>
@@ -303,28 +319,28 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ActorValue3 => this.ActorValue3;
         #endregion
-        #region UnkownFloat1
-        public Single UnkownFloat1 { get; set; } = default(Single);
+        #region UnknownFloat1
+        public Single UnknownFloat1 { get; set; } = default(Single);
         #endregion
-        #region UnkownFloat2
-        public Single UnkownFloat2 { get; set; } = default(Single);
+        #region UnknownFloat2
+        public Single UnknownFloat2 { get; set; } = default(Single);
         #endregion
         #region Archetype
         public AMagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
-        #region UnkownFloat3
-        public Single UnkownFloat3 { get; set; } = default(Single);
+        #region UnknownFloat3
+        public Single UnknownFloat3 { get; set; } = default(Single);
         #endregion
-        #region UnkownInt1
-        public UInt32 UnkownInt1 { get; set; } = default(UInt32);
+        #region UnknownInt1
+        public UInt32 UnknownInt1 { get; set; } = default(UInt32);
         #endregion
-        #region UnkownFloat4
-        public Single UnkownFloat4 { get; set; } = default(Single);
+        #region UnknownFloat4
+        public Single UnknownFloat4 { get; set; } = default(Single);
         #endregion
-        #region UnkownInt2
-        public UInt32 UnkownInt2 { get; set; } = default(UInt32);
+        #region UnknownInt2
+        public UInt32 UnknownInt2 { get; set; } = default(UInt32);
         #endregion
         #region CastType
         public CastType CastType { get; set; } = default(CastType);
@@ -332,8 +348,8 @@ namespace Mutagen.Bethesda.Starfield
         #region TargetType
         public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
-        #region UnkownInt3
-        public UInt32 UnkownInt3 { get; set; } = default(UInt32);
+        #region UnknownInt3
+        public UInt32 UnknownInt3 { get; set; } = default(UInt32);
         #endregion
         #region Flags
         public MagicEffect.Flag Flags { get; set; } = default(MagicEffect.Flag);
@@ -422,6 +438,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ActorValue1 = initialValue;
@@ -441,16 +458,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.Projectile = initialValue;
                 this.ResistValue = initialValue;
                 this.ActorValue3 = initialValue;
-                this.UnkownFloat1 = initialValue;
-                this.UnkownFloat2 = initialValue;
+                this.UnknownFloat1 = initialValue;
+                this.UnknownFloat2 = initialValue;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(initialValue, new AMagicEffectArchetype.Mask<TItem>(initialValue));
-                this.UnkownFloat3 = initialValue;
-                this.UnkownInt1 = initialValue;
-                this.UnkownFloat4 = initialValue;
-                this.UnkownInt2 = initialValue;
+                this.UnknownFloat3 = initialValue;
+                this.UnknownInt1 = initialValue;
+                this.UnknownFloat4 = initialValue;
+                this.UnknownInt2 = initialValue;
                 this.CastType = initialValue;
                 this.TargetType = initialValue;
-                this.UnkownInt3 = initialValue;
+                this.UnknownInt3 = initialValue;
                 this.Flags = initialValue;
                 this.Unknown = initialValue;
                 this.Unknown2 = initialValue;
@@ -469,6 +486,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem VirtualMachineAdapter,
+                TItem Components,
                 TItem Name,
                 TItem Keywords,
                 TItem ActorValue1,
@@ -488,16 +506,16 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Projectile,
                 TItem ResistValue,
                 TItem ActorValue3,
-                TItem UnkownFloat1,
-                TItem UnkownFloat2,
+                TItem UnknownFloat1,
+                TItem UnknownFloat2,
                 TItem Archetype,
-                TItem UnkownFloat3,
-                TItem UnkownInt1,
-                TItem UnkownFloat4,
-                TItem UnkownInt2,
+                TItem UnknownFloat3,
+                TItem UnknownInt1,
+                TItem UnknownFloat4,
+                TItem UnknownInt2,
                 TItem CastType,
                 TItem TargetType,
-                TItem UnkownInt3,
+                TItem UnknownInt3,
                 TItem Flags,
                 TItem Unknown,
                 TItem Unknown2,
@@ -515,6 +533,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ActorValue1 = ActorValue1;
@@ -534,16 +553,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.Projectile = Projectile;
                 this.ResistValue = ResistValue;
                 this.ActorValue3 = ActorValue3;
-                this.UnkownFloat1 = UnkownFloat1;
-                this.UnkownFloat2 = UnkownFloat2;
+                this.UnknownFloat1 = UnknownFloat1;
+                this.UnknownFloat2 = UnknownFloat2;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(Archetype, new AMagicEffectArchetype.Mask<TItem>(Archetype));
-                this.UnkownFloat3 = UnkownFloat3;
-                this.UnkownInt1 = UnkownInt1;
-                this.UnkownFloat4 = UnkownFloat4;
-                this.UnkownInt2 = UnkownInt2;
+                this.UnknownFloat3 = UnknownFloat3;
+                this.UnknownInt1 = UnknownInt1;
+                this.UnknownFloat4 = UnknownFloat4;
+                this.UnknownInt2 = UnknownInt2;
                 this.CastType = CastType;
                 this.TargetType = TargetType;
-                this.UnkownInt3 = UnkownInt3;
+                this.UnknownInt3 = UnknownInt3;
                 this.Flags = Flags;
                 this.Unknown = Unknown;
                 this.Unknown2 = Unknown2;
@@ -563,6 +582,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public TItem ActorValue1;
@@ -582,16 +602,16 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Projectile;
             public TItem ResistValue;
             public TItem ActorValue3;
-            public TItem UnkownFloat1;
-            public TItem UnkownFloat2;
+            public TItem UnknownFloat1;
+            public TItem UnknownFloat2;
             public MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
-            public TItem UnkownFloat3;
-            public TItem UnkownInt1;
-            public TItem UnkownFloat4;
-            public TItem UnkownInt2;
+            public TItem UnknownFloat3;
+            public TItem UnknownInt1;
+            public TItem UnknownFloat4;
+            public TItem UnknownInt2;
             public TItem CastType;
             public TItem TargetType;
-            public TItem UnkownInt3;
+            public TItem UnknownInt3;
             public TItem Flags;
             public TItem Unknown;
             public TItem Unknown2;
@@ -613,6 +633,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.ActorValue1, rhs.ActorValue1)) return false;
@@ -632,16 +653,16 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
                 if (!object.Equals(this.ResistValue, rhs.ResistValue)) return false;
                 if (!object.Equals(this.ActorValue3, rhs.ActorValue3)) return false;
-                if (!object.Equals(this.UnkownFloat1, rhs.UnkownFloat1)) return false;
-                if (!object.Equals(this.UnkownFloat2, rhs.UnkownFloat2)) return false;
+                if (!object.Equals(this.UnknownFloat1, rhs.UnknownFloat1)) return false;
+                if (!object.Equals(this.UnknownFloat2, rhs.UnknownFloat2)) return false;
                 if (!object.Equals(this.Archetype, rhs.Archetype)) return false;
-                if (!object.Equals(this.UnkownFloat3, rhs.UnkownFloat3)) return false;
-                if (!object.Equals(this.UnkownInt1, rhs.UnkownInt1)) return false;
-                if (!object.Equals(this.UnkownFloat4, rhs.UnkownFloat4)) return false;
-                if (!object.Equals(this.UnkownInt2, rhs.UnkownInt2)) return false;
+                if (!object.Equals(this.UnknownFloat3, rhs.UnknownFloat3)) return false;
+                if (!object.Equals(this.UnknownInt1, rhs.UnknownInt1)) return false;
+                if (!object.Equals(this.UnknownFloat4, rhs.UnknownFloat4)) return false;
+                if (!object.Equals(this.UnknownInt2, rhs.UnknownInt2)) return false;
                 if (!object.Equals(this.CastType, rhs.CastType)) return false;
                 if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
-                if (!object.Equals(this.UnkownInt3, rhs.UnkownInt3)) return false;
+                if (!object.Equals(this.UnknownInt3, rhs.UnknownInt3)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
@@ -655,6 +676,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Components);
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
                 hash.Add(this.ActorValue1);
@@ -674,16 +696,16 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Projectile);
                 hash.Add(this.ResistValue);
                 hash.Add(this.ActorValue3);
-                hash.Add(this.UnkownFloat1);
-                hash.Add(this.UnkownFloat2);
+                hash.Add(this.UnknownFloat1);
+                hash.Add(this.UnknownFloat2);
                 hash.Add(this.Archetype);
-                hash.Add(this.UnkownFloat3);
-                hash.Add(this.UnkownInt1);
-                hash.Add(this.UnkownFloat4);
-                hash.Add(this.UnkownInt2);
+                hash.Add(this.UnknownFloat3);
+                hash.Add(this.UnknownInt1);
+                hash.Add(this.UnknownFloat4);
+                hash.Add(this.UnknownInt2);
                 hash.Add(this.CastType);
                 hash.Add(this.TargetType);
-                hash.Add(this.UnkownInt3);
+                hash.Add(this.UnknownInt3);
                 hash.Add(this.Flags);
                 hash.Add(this.Unknown);
                 hash.Add(this.Unknown2);
@@ -705,6 +727,18 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.VirtualMachineAdapter.Overall)) return false;
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
                 }
                 if (!eval(this.Name)) return false;
                 if (this.Keywords != null)
@@ -735,20 +769,20 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Projectile)) return false;
                 if (!eval(this.ResistValue)) return false;
                 if (!eval(this.ActorValue3)) return false;
-                if (!eval(this.UnkownFloat1)) return false;
-                if (!eval(this.UnkownFloat2)) return false;
+                if (!eval(this.UnknownFloat1)) return false;
+                if (!eval(this.UnknownFloat2)) return false;
                 if (Archetype != null)
                 {
                     if (!eval(this.Archetype.Overall)) return false;
                     if (this.Archetype.Specific != null && !this.Archetype.Specific.All(eval)) return false;
                 }
-                if (!eval(this.UnkownFloat3)) return false;
-                if (!eval(this.UnkownInt1)) return false;
-                if (!eval(this.UnkownFloat4)) return false;
-                if (!eval(this.UnkownInt2)) return false;
+                if (!eval(this.UnknownFloat3)) return false;
+                if (!eval(this.UnknownInt1)) return false;
+                if (!eval(this.UnknownFloat4)) return false;
+                if (!eval(this.UnknownInt2)) return false;
                 if (!eval(this.CastType)) return false;
                 if (!eval(this.TargetType)) return false;
-                if (!eval(this.UnkownInt3)) return false;
+                if (!eval(this.UnknownInt3)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Unknown2)) return false;
@@ -791,6 +825,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.VirtualMachineAdapter.Overall)) return true;
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.Name)) return true;
                 if (this.Keywords != null)
                 {
@@ -820,20 +866,20 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Projectile)) return true;
                 if (eval(this.ResistValue)) return true;
                 if (eval(this.ActorValue3)) return true;
-                if (eval(this.UnkownFloat1)) return true;
-                if (eval(this.UnkownFloat2)) return true;
+                if (eval(this.UnknownFloat1)) return true;
+                if (eval(this.UnknownFloat2)) return true;
                 if (Archetype != null)
                 {
                     if (eval(this.Archetype.Overall)) return true;
                     if (this.Archetype.Specific != null && this.Archetype.Specific.Any(eval)) return true;
                 }
-                if (eval(this.UnkownFloat3)) return true;
-                if (eval(this.UnkownInt1)) return true;
-                if (eval(this.UnkownFloat4)) return true;
-                if (eval(this.UnkownInt2)) return true;
+                if (eval(this.UnknownFloat3)) return true;
+                if (eval(this.UnknownInt1)) return true;
+                if (eval(this.UnknownFloat4)) return true;
+                if (eval(this.UnknownInt2)) return true;
                 if (eval(this.CastType)) return true;
                 if (eval(this.TargetType)) return true;
-                if (eval(this.UnkownInt3)) return true;
+                if (eval(this.UnknownInt3)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Unknown2)) return true;
@@ -879,6 +925,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
@@ -911,16 +972,16 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Projectile = eval(this.Projectile);
                 obj.ResistValue = eval(this.ResistValue);
                 obj.ActorValue3 = eval(this.ActorValue3);
-                obj.UnkownFloat1 = eval(this.UnkownFloat1);
-                obj.UnkownFloat2 = eval(this.UnkownFloat2);
+                obj.UnknownFloat1 = eval(this.UnknownFloat1);
+                obj.UnknownFloat2 = eval(this.UnknownFloat2);
                 obj.Archetype = this.Archetype == null ? null : new MaskItem<R, AMagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
-                obj.UnkownFloat3 = eval(this.UnkownFloat3);
-                obj.UnkownInt1 = eval(this.UnkownInt1);
-                obj.UnkownFloat4 = eval(this.UnkownFloat4);
-                obj.UnkownInt2 = eval(this.UnkownInt2);
+                obj.UnknownFloat3 = eval(this.UnknownFloat3);
+                obj.UnknownInt1 = eval(this.UnknownInt1);
+                obj.UnknownFloat4 = eval(this.UnknownFloat4);
+                obj.UnknownInt2 = eval(this.UnknownInt2);
                 obj.CastType = eval(this.CastType);
                 obj.TargetType = eval(this.TargetType);
-                obj.UnkownInt3 = eval(this.UnkownInt3);
+                obj.UnknownInt3 = eval(this.UnknownInt3);
                 obj.Flags = eval(this.Flags);
                 obj.Unknown = eval(this.Unknown);
                 obj.Unknown2 = eval(this.Unknown2);
@@ -977,6 +1038,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
                         VirtualMachineAdapter?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.Name ?? true)
                     {
@@ -1071,33 +1151,33 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ActorValue3, "ActorValue3");
                     }
-                    if (printMask?.UnkownFloat1 ?? true)
+                    if (printMask?.UnknownFloat1 ?? true)
                     {
-                        sb.AppendItem(UnkownFloat1, "UnkownFloat1");
+                        sb.AppendItem(UnknownFloat1, "UnknownFloat1");
                     }
-                    if (printMask?.UnkownFloat2 ?? true)
+                    if (printMask?.UnknownFloat2 ?? true)
                     {
-                        sb.AppendItem(UnkownFloat2, "UnkownFloat2");
+                        sb.AppendItem(UnknownFloat2, "UnknownFloat2");
                     }
                     if (printMask?.Archetype?.Overall ?? true)
                     {
                         Archetype?.Print(sb);
                     }
-                    if (printMask?.UnkownFloat3 ?? true)
+                    if (printMask?.UnknownFloat3 ?? true)
                     {
-                        sb.AppendItem(UnkownFloat3, "UnkownFloat3");
+                        sb.AppendItem(UnknownFloat3, "UnknownFloat3");
                     }
-                    if (printMask?.UnkownInt1 ?? true)
+                    if (printMask?.UnknownInt1 ?? true)
                     {
-                        sb.AppendItem(UnkownInt1, "UnkownInt1");
+                        sb.AppendItem(UnknownInt1, "UnknownInt1");
                     }
-                    if (printMask?.UnkownFloat4 ?? true)
+                    if (printMask?.UnknownFloat4 ?? true)
                     {
-                        sb.AppendItem(UnkownFloat4, "UnkownFloat4");
+                        sb.AppendItem(UnknownFloat4, "UnknownFloat4");
                     }
-                    if (printMask?.UnkownInt2 ?? true)
+                    if (printMask?.UnknownInt2 ?? true)
                     {
-                        sb.AppendItem(UnkownInt2, "UnkownInt2");
+                        sb.AppendItem(UnknownInt2, "UnknownInt2");
                     }
                     if (printMask?.CastType ?? true)
                     {
@@ -1107,9 +1187,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(TargetType, "TargetType");
                     }
-                    if (printMask?.UnkownInt3 ?? true)
+                    if (printMask?.UnknownInt3 ?? true)
                     {
-                        sb.AppendItem(UnkownInt3, "UnkownInt3");
+                        sb.AppendItem(UnknownInt3, "UnknownInt3");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -1181,6 +1261,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public Exception? ActorValue1;
@@ -1200,16 +1281,16 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Projectile;
             public Exception? ResistValue;
             public Exception? ActorValue3;
-            public Exception? UnkownFloat1;
-            public Exception? UnkownFloat2;
+            public Exception? UnknownFloat1;
+            public Exception? UnknownFloat2;
             public MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>? Archetype;
-            public Exception? UnkownFloat3;
-            public Exception? UnkownInt1;
-            public Exception? UnkownFloat4;
-            public Exception? UnkownInt2;
+            public Exception? UnknownFloat3;
+            public Exception? UnknownInt1;
+            public Exception? UnknownFloat4;
+            public Exception? UnknownInt2;
             public Exception? CastType;
             public Exception? TargetType;
-            public Exception? UnkownInt3;
+            public Exception? UnknownInt3;
             public Exception? Flags;
             public Exception? Unknown;
             public Exception? Unknown2;
@@ -1227,6 +1308,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MagicEffect_FieldIndex.VirtualMachineAdapter:
                         return VirtualMachineAdapter;
+                    case MagicEffect_FieldIndex.Components:
+                        return Components;
                     case MagicEffect_FieldIndex.Name:
                         return Name;
                     case MagicEffect_FieldIndex.Keywords:
@@ -1265,26 +1348,26 @@ namespace Mutagen.Bethesda.Starfield
                         return ResistValue;
                     case MagicEffect_FieldIndex.ActorValue3:
                         return ActorValue3;
-                    case MagicEffect_FieldIndex.UnkownFloat1:
-                        return UnkownFloat1;
-                    case MagicEffect_FieldIndex.UnkownFloat2:
-                        return UnkownFloat2;
+                    case MagicEffect_FieldIndex.UnknownFloat1:
+                        return UnknownFloat1;
+                    case MagicEffect_FieldIndex.UnknownFloat2:
+                        return UnknownFloat2;
                     case MagicEffect_FieldIndex.Archetype:
                         return Archetype;
-                    case MagicEffect_FieldIndex.UnkownFloat3:
-                        return UnkownFloat3;
-                    case MagicEffect_FieldIndex.UnkownInt1:
-                        return UnkownInt1;
-                    case MagicEffect_FieldIndex.UnkownFloat4:
-                        return UnkownFloat4;
-                    case MagicEffect_FieldIndex.UnkownInt2:
-                        return UnkownInt2;
+                    case MagicEffect_FieldIndex.UnknownFloat3:
+                        return UnknownFloat3;
+                    case MagicEffect_FieldIndex.UnknownInt1:
+                        return UnknownInt1;
+                    case MagicEffect_FieldIndex.UnknownFloat4:
+                        return UnknownFloat4;
+                    case MagicEffect_FieldIndex.UnknownInt2:
+                        return UnknownInt2;
                     case MagicEffect_FieldIndex.CastType:
                         return CastType;
                     case MagicEffect_FieldIndex.TargetType:
                         return TargetType;
-                    case MagicEffect_FieldIndex.UnkownInt3:
-                        return UnkownInt3;
+                    case MagicEffect_FieldIndex.UnknownInt3:
+                        return UnknownInt3;
                     case MagicEffect_FieldIndex.Flags:
                         return Flags;
                     case MagicEffect_FieldIndex.Unknown:
@@ -1311,6 +1394,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MagicEffect_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
                     case MagicEffect_FieldIndex.Name:
                         this.Name = ex;
@@ -1369,26 +1455,26 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.ActorValue3:
                         this.ActorValue3 = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat1:
-                        this.UnkownFloat1 = ex;
+                    case MagicEffect_FieldIndex.UnknownFloat1:
+                        this.UnknownFloat1 = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat2:
-                        this.UnkownFloat2 = ex;
+                    case MagicEffect_FieldIndex.UnknownFloat2:
+                        this.UnknownFloat2 = ex;
                         break;
                     case MagicEffect_FieldIndex.Archetype:
                         this.Archetype = new MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>(ex, null);
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat3:
-                        this.UnkownFloat3 = ex;
+                    case MagicEffect_FieldIndex.UnknownFloat3:
+                        this.UnknownFloat3 = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnkownInt1:
-                        this.UnkownInt1 = ex;
+                    case MagicEffect_FieldIndex.UnknownInt1:
+                        this.UnknownInt1 = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat4:
-                        this.UnkownFloat4 = ex;
+                    case MagicEffect_FieldIndex.UnknownFloat4:
+                        this.UnknownFloat4 = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnkownInt2:
-                        this.UnkownInt2 = ex;
+                    case MagicEffect_FieldIndex.UnknownInt2:
+                        this.UnknownInt2 = ex;
                         break;
                     case MagicEffect_FieldIndex.CastType:
                         this.CastType = ex;
@@ -1396,8 +1482,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.TargetType:
                         this.TargetType = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnkownInt3:
-                        this.UnkownInt3 = ex;
+                    case MagicEffect_FieldIndex.UnknownInt3:
+                        this.UnknownInt3 = ex;
                         break;
                     case MagicEffect_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1433,6 +1519,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MagicEffect_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
                     case MagicEffect_FieldIndex.Name:
                         this.Name = (Exception?)obj;
@@ -1491,26 +1580,26 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.ActorValue3:
                         this.ActorValue3 = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat1:
-                        this.UnkownFloat1 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownFloat1:
+                        this.UnknownFloat1 = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat2:
-                        this.UnkownFloat2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownFloat2:
+                        this.UnknownFloat2 = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Archetype:
                         this.Archetype = (MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat3:
-                        this.UnkownFloat3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownFloat3:
+                        this.UnknownFloat3 = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownInt1:
-                        this.UnkownInt1 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownInt1:
+                        this.UnknownInt1 = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownFloat4:
-                        this.UnkownFloat4 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownFloat4:
+                        this.UnknownFloat4 = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownInt2:
-                        this.UnkownInt2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownInt2:
+                        this.UnknownInt2 = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.CastType:
                         this.CastType = (Exception?)obj;
@@ -1518,8 +1607,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.TargetType:
                         this.TargetType = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnkownInt3:
-                        this.UnkownInt3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.UnknownInt3:
+                        this.UnknownInt3 = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -1552,6 +1641,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
+                if (Components != null) return true;
                 if (Name != null) return true;
                 if (Keywords != null) return true;
                 if (ActorValue1 != null) return true;
@@ -1571,16 +1661,16 @@ namespace Mutagen.Bethesda.Starfield
                 if (Projectile != null) return true;
                 if (ResistValue != null) return true;
                 if (ActorValue3 != null) return true;
-                if (UnkownFloat1 != null) return true;
-                if (UnkownFloat2 != null) return true;
+                if (UnknownFloat1 != null) return true;
+                if (UnknownFloat2 != null) return true;
                 if (Archetype != null) return true;
-                if (UnkownFloat3 != null) return true;
-                if (UnkownInt1 != null) return true;
-                if (UnkownFloat4 != null) return true;
-                if (UnkownInt2 != null) return true;
+                if (UnknownFloat3 != null) return true;
+                if (UnknownInt1 != null) return true;
+                if (UnknownFloat4 != null) return true;
+                if (UnknownInt2 != null) return true;
                 if (CastType != null) return true;
                 if (TargetType != null) return true;
-                if (UnkownInt3 != null) return true;
+                if (UnknownInt3 != null) return true;
                 if (Flags != null) return true;
                 if (Unknown != null) return true;
                 if (Unknown2 != null) return true;
@@ -1615,6 +1705,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 VirtualMachineAdapter?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(Name, "Name");
                 }
@@ -1690,23 +1798,23 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ActorValue3, "ActorValue3");
                 }
                 {
-                    sb.AppendItem(UnkownFloat1, "UnkownFloat1");
+                    sb.AppendItem(UnknownFloat1, "UnknownFloat1");
                 }
                 {
-                    sb.AppendItem(UnkownFloat2, "UnkownFloat2");
+                    sb.AppendItem(UnknownFloat2, "UnknownFloat2");
                 }
                 Archetype?.Print(sb);
                 {
-                    sb.AppendItem(UnkownFloat3, "UnkownFloat3");
+                    sb.AppendItem(UnknownFloat3, "UnknownFloat3");
                 }
                 {
-                    sb.AppendItem(UnkownInt1, "UnkownInt1");
+                    sb.AppendItem(UnknownInt1, "UnknownInt1");
                 }
                 {
-                    sb.AppendItem(UnkownFloat4, "UnkownFloat4");
+                    sb.AppendItem(UnknownFloat4, "UnknownFloat4");
                 }
                 {
-                    sb.AppendItem(UnkownInt2, "UnkownInt2");
+                    sb.AppendItem(UnknownInt2, "UnknownInt2");
                 }
                 {
                     sb.AppendItem(CastType, "CastType");
@@ -1715,7 +1823,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(TargetType, "TargetType");
                 }
                 {
-                    sb.AppendItem(UnkownInt3, "UnkownInt3");
+                    sb.AppendItem(UnknownInt3, "UnknownInt3");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
@@ -1777,6 +1885,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.ActorValue1 = this.ActorValue1.Combine(rhs.ActorValue1);
@@ -1796,16 +1905,16 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Projectile = this.Projectile.Combine(rhs.Projectile);
                 ret.ResistValue = this.ResistValue.Combine(rhs.ResistValue);
                 ret.ActorValue3 = this.ActorValue3.Combine(rhs.ActorValue3);
-                ret.UnkownFloat1 = this.UnkownFloat1.Combine(rhs.UnkownFloat1);
-                ret.UnkownFloat2 = this.UnkownFloat2.Combine(rhs.UnkownFloat2);
+                ret.UnknownFloat1 = this.UnknownFloat1.Combine(rhs.UnknownFloat1);
+                ret.UnknownFloat2 = this.UnknownFloat2.Combine(rhs.UnknownFloat2);
                 ret.Archetype = this.Archetype.Combine(rhs.Archetype, (l, r) => l.Combine(r));
-                ret.UnkownFloat3 = this.UnkownFloat3.Combine(rhs.UnkownFloat3);
-                ret.UnkownInt1 = this.UnkownInt1.Combine(rhs.UnkownInt1);
-                ret.UnkownFloat4 = this.UnkownFloat4.Combine(rhs.UnkownFloat4);
-                ret.UnkownInt2 = this.UnkownInt2.Combine(rhs.UnkownInt2);
+                ret.UnknownFloat3 = this.UnknownFloat3.Combine(rhs.UnknownFloat3);
+                ret.UnknownInt1 = this.UnknownInt1.Combine(rhs.UnknownInt1);
+                ret.UnknownFloat4 = this.UnknownFloat4.Combine(rhs.UnknownFloat4);
+                ret.UnknownInt2 = this.UnknownInt2.Combine(rhs.UnknownInt2);
                 ret.CastType = this.CastType.Combine(rhs.CastType);
                 ret.TargetType = this.TargetType.Combine(rhs.TargetType);
-                ret.UnkownInt3 = this.UnkownInt3.Combine(rhs.UnkownInt3);
+                ret.UnknownInt3 = this.UnknownInt3.Combine(rhs.UnknownInt3);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
@@ -1836,6 +1945,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public AComponent.TranslationMask? Components;
             public bool Name;
             public bool Keywords;
             public bool ActorValue1;
@@ -1855,16 +1965,16 @@ namespace Mutagen.Bethesda.Starfield
             public bool Projectile;
             public bool ResistValue;
             public bool ActorValue3;
-            public bool UnkownFloat1;
-            public bool UnkownFloat2;
+            public bool UnknownFloat1;
+            public bool UnknownFloat2;
             public AMagicEffectArchetype.TranslationMask? Archetype;
-            public bool UnkownFloat3;
-            public bool UnkownInt1;
-            public bool UnkownFloat4;
-            public bool UnkownInt2;
+            public bool UnknownFloat3;
+            public bool UnknownInt1;
+            public bool UnknownFloat4;
+            public bool UnknownInt2;
             public bool CastType;
             public bool TargetType;
-            public bool UnkownInt3;
+            public bool UnknownInt3;
             public bool Flags;
             public bool Unknown;
             public bool Unknown2;
@@ -1899,15 +2009,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.Projectile = defaultOn;
                 this.ResistValue = defaultOn;
                 this.ActorValue3 = defaultOn;
-                this.UnkownFloat1 = defaultOn;
-                this.UnkownFloat2 = defaultOn;
-                this.UnkownFloat3 = defaultOn;
-                this.UnkownInt1 = defaultOn;
-                this.UnkownFloat4 = defaultOn;
-                this.UnkownInt2 = defaultOn;
+                this.UnknownFloat1 = defaultOn;
+                this.UnknownFloat2 = defaultOn;
+                this.UnknownFloat3 = defaultOn;
+                this.UnknownInt1 = defaultOn;
+                this.UnknownFloat4 = defaultOn;
+                this.UnknownInt2 = defaultOn;
                 this.CastType = defaultOn;
                 this.TargetType = defaultOn;
-                this.UnkownInt3 = defaultOn;
+                this.UnknownInt3 = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown = defaultOn;
                 this.Unknown2 = defaultOn;
@@ -1921,6 +2031,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((ActorValue1, null));
@@ -1940,16 +2051,16 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Projectile, null));
                 ret.Add((ResistValue, null));
                 ret.Add((ActorValue3, null));
-                ret.Add((UnkownFloat1, null));
-                ret.Add((UnkownFloat2, null));
+                ret.Add((UnknownFloat1, null));
+                ret.Add((UnknownFloat2, null));
                 ret.Add((Archetype != null ? Archetype.OnOverall : DefaultOn, Archetype?.GetCrystal()));
-                ret.Add((UnkownFloat3, null));
-                ret.Add((UnkownInt1, null));
-                ret.Add((UnkownFloat4, null));
-                ret.Add((UnkownInt2, null));
+                ret.Add((UnknownFloat3, null));
+                ret.Add((UnknownInt1, null));
+                ret.Add((UnknownFloat4, null));
+                ret.Add((UnknownInt2, null));
                 ret.Add((CastType, null));
                 ret.Add((TargetType, null));
-                ret.Add((UnkownInt3, null));
+                ret.Add((UnknownInt3, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown, null));
                 ret.Add((Unknown2, null));
@@ -2025,6 +2136,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             Break0 = 1
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MagicEffectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MagicEffectSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MagicEffectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MagicEffectSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2104,6 +2219,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMagicEffect :
+        IAssetLinkContainer,
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
@@ -2120,6 +2236,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -2145,16 +2262,16 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLink<IProjectileGetter> Projectile { get; set; }
         new IFormLink<IActorValueInformationGetter> ResistValue { get; set; }
         new IFormLink<IActorValueInformationGetter> ActorValue3 { get; set; }
-        new Single UnkownFloat1 { get; set; }
-        new Single UnkownFloat2 { get; set; }
+        new Single UnknownFloat1 { get; set; }
+        new Single UnknownFloat2 { get; set; }
         new AMagicEffectArchetype Archetype { get; set; }
-        new Single UnkownFloat3 { get; set; }
-        new UInt32 UnkownInt1 { get; set; }
-        new Single UnkownFloat4 { get; set; }
-        new UInt32 UnkownInt2 { get; set; }
+        new Single UnknownFloat3 { get; set; }
+        new UInt32 UnknownInt1 { get; set; }
+        new Single UnknownFloat4 { get; set; }
+        new UInt32 UnknownInt2 { get; set; }
         new CastType CastType { get; set; }
         new TargetType TargetType { get; set; }
-        new UInt32 UnkownInt3 { get; set; }
+        new UInt32 UnknownInt3 { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
@@ -2174,6 +2291,7 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.MGEF)]
     public partial interface IMagicEffectGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
@@ -2193,6 +2311,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
+        IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -2222,16 +2341,16 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
         IFormLinkGetter<IActorValueInformationGetter> ResistValue { get; }
         IFormLinkGetter<IActorValueInformationGetter> ActorValue3 { get; }
-        Single UnkownFloat1 { get; }
-        Single UnkownFloat2 { get; }
+        Single UnknownFloat1 { get; }
+        Single UnknownFloat2 { get; }
         IAMagicEffectArchetypeGetter Archetype { get; }
-        Single UnkownFloat3 { get; }
-        UInt32 UnkownInt1 { get; }
-        Single UnkownFloat4 { get; }
-        UInt32 UnkownInt2 { get; }
+        Single UnknownFloat3 { get; }
+        UInt32 UnknownInt1 { get; }
+        Single UnknownFloat4 { get; }
+        UInt32 UnknownInt2 { get; }
         CastType CastType { get; }
         TargetType TargetType { get; }
-        UInt32 UnkownInt3 { get; }
+        UInt32 UnknownInt3 { get; }
         MagicEffect.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
         ReadOnlyMemorySlice<Byte> Unknown2 { get; }
@@ -2416,42 +2535,43 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         VirtualMachineAdapter = 7,
-        Name = 8,
-        Keywords = 9,
-        ActorValue1 = 10,
-        CastingArt = 11,
-        MovementType = 12,
-        HitShader = 13,
-        EnchantShader = 14,
-        EnchantArt = 15,
-        EquipAbility = 16,
-        Explosion = 17,
-        HitEffectArt = 18,
-        ImageSpaceModifier = 19,
-        ImpactData = 20,
-        CastingLight = 21,
-        PerkToApply = 22,
-        ActorValue2 = 23,
-        Projectile = 24,
-        ResistValue = 25,
-        ActorValue3 = 26,
-        UnkownFloat1 = 27,
-        UnkownFloat2 = 28,
-        Archetype = 29,
-        UnkownFloat3 = 30,
-        UnkownInt1 = 31,
-        UnkownFloat4 = 32,
-        UnkownInt2 = 33,
-        CastType = 34,
-        TargetType = 35,
-        UnkownInt3 = 36,
-        Flags = 37,
-        Unknown = 38,
-        Unknown2 = 39,
-        Sounds = 40,
-        Description = 41,
-        Conditions = 42,
-        DATADataTypeState = 43,
+        Components = 8,
+        Name = 9,
+        Keywords = 10,
+        ActorValue1 = 11,
+        CastingArt = 12,
+        MovementType = 13,
+        HitShader = 14,
+        EnchantShader = 15,
+        EnchantArt = 16,
+        EquipAbility = 17,
+        Explosion = 18,
+        HitEffectArt = 19,
+        ImageSpaceModifier = 20,
+        ImpactData = 21,
+        CastingLight = 22,
+        PerkToApply = 23,
+        ActorValue2 = 24,
+        Projectile = 25,
+        ResistValue = 26,
+        ActorValue3 = 27,
+        UnknownFloat1 = 28,
+        UnknownFloat2 = 29,
+        Archetype = 30,
+        UnknownFloat3 = 31,
+        UnknownInt1 = 32,
+        UnknownFloat4 = 33,
+        UnknownInt2 = 34,
+        CastType = 35,
+        TargetType = 36,
+        UnknownInt3 = 37,
+        Flags = 38,
+        Unknown = 39,
+        Unknown2 = 40,
+        Sounds = 41,
+        Description = 42,
+        Conditions = 43,
+        DATADataTypeState = 44,
     }
     #endregion
 
@@ -2462,9 +2582,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 37;
+        public const ushort AdditionalFieldCount = 38;
 
-        public const ushort FieldCount = 44;
+        public const ushort FieldCount = 45;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2499,6 +2619,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MGEF,
                 RecordTypes.VMAD,
                 RecordTypes.XXXX,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.FULL,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
@@ -2554,6 +2676,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
+            item.Components.Clear();
             item.Name = default;
             item.Keywords = null;
             item.ActorValue1.Clear();
@@ -2573,16 +2696,16 @@ namespace Mutagen.Bethesda.Starfield
             item.Projectile.Clear();
             item.ResistValue.Clear();
             item.ActorValue3.Clear();
-            item.UnkownFloat1 = default(Single);
-            item.UnkownFloat2 = default(Single);
+            item.UnknownFloat1 = default(Single);
+            item.UnknownFloat2 = default(Single);
             item.Archetype.Clear();
-            item.UnkownFloat3 = default(Single);
-            item.UnkownInt1 = default(UInt32);
-            item.UnkownFloat4 = default(Single);
-            item.UnkownInt2 = default(UInt32);
+            item.UnknownFloat3 = default(Single);
+            item.UnknownInt1 = default(UInt32);
+            item.UnknownFloat4 = default(Single);
+            item.UnknownInt2 = default(UInt32);
             item.CastType = default(CastType);
             item.TargetType = default(TargetType);
-            item.UnkownInt3 = default(UInt32);
+            item.UnknownInt3 = default(UInt32);
             item.Flags = default(MagicEffect.Flag);
             item.Unknown = new byte[22];
             item.Unknown2 = new byte[6];
@@ -2608,6 +2731,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.ActorValue1.Relink(mapping);
             obj.CastingArt.Relink(mapping);
@@ -2629,6 +2753,30 @@ namespace Mutagen.Bethesda.Starfield
             obj.Archetype.RemapLinks(mapping);
             obj.Sounds.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMagicEffect obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMagicEffect obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -2701,6 +2849,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
@@ -2723,16 +2875,16 @@ namespace Mutagen.Bethesda.Starfield
             ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             ret.ResistValue = item.ResistValue.Equals(rhs.ResistValue);
             ret.ActorValue3 = item.ActorValue3.Equals(rhs.ActorValue3);
-            ret.UnkownFloat1 = item.UnkownFloat1.EqualsWithin(rhs.UnkownFloat1);
-            ret.UnkownFloat2 = item.UnkownFloat2.EqualsWithin(rhs.UnkownFloat2);
+            ret.UnknownFloat1 = item.UnknownFloat1.EqualsWithin(rhs.UnknownFloat1);
+            ret.UnknownFloat2 = item.UnknownFloat2.EqualsWithin(rhs.UnknownFloat2);
             ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
-            ret.UnkownFloat3 = item.UnkownFloat3.EqualsWithin(rhs.UnkownFloat3);
-            ret.UnkownInt1 = item.UnkownInt1 == rhs.UnkownInt1;
-            ret.UnkownFloat4 = item.UnkownFloat4.EqualsWithin(rhs.UnkownFloat4);
-            ret.UnkownInt2 = item.UnkownInt2 == rhs.UnkownInt2;
+            ret.UnknownFloat3 = item.UnknownFloat3.EqualsWithin(rhs.UnknownFloat3);
+            ret.UnknownInt1 = item.UnknownInt1 == rhs.UnknownInt1;
+            ret.UnknownFloat4 = item.UnknownFloat4.EqualsWithin(rhs.UnknownFloat4);
+            ret.UnknownInt2 = item.UnknownInt2 == rhs.UnknownInt2;
             ret.CastType = item.CastType == rhs.CastType;
             ret.TargetType = item.TargetType == rhs.TargetType;
-            ret.UnkownInt3 = item.UnkownInt3 == rhs.UnkownInt3;
+            ret.UnknownInt3 = item.UnknownInt3 == rhs.UnknownInt3;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
@@ -2799,6 +2951,20 @@ namespace Mutagen.Bethesda.Starfield
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
                 VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -2888,33 +3054,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ActorValue3.FormKey, "ActorValue3");
             }
-            if (printMask?.UnkownFloat1 ?? true)
+            if (printMask?.UnknownFloat1 ?? true)
             {
-                sb.AppendItem(item.UnkownFloat1, "UnkownFloat1");
+                sb.AppendItem(item.UnknownFloat1, "UnknownFloat1");
             }
-            if (printMask?.UnkownFloat2 ?? true)
+            if (printMask?.UnknownFloat2 ?? true)
             {
-                sb.AppendItem(item.UnkownFloat2, "UnkownFloat2");
+                sb.AppendItem(item.UnknownFloat2, "UnknownFloat2");
             }
             if (printMask?.Archetype?.Overall ?? true)
             {
                 item.Archetype?.Print(sb, "Archetype");
             }
-            if (printMask?.UnkownFloat3 ?? true)
+            if (printMask?.UnknownFloat3 ?? true)
             {
-                sb.AppendItem(item.UnkownFloat3, "UnkownFloat3");
+                sb.AppendItem(item.UnknownFloat3, "UnknownFloat3");
             }
-            if (printMask?.UnkownInt1 ?? true)
+            if (printMask?.UnknownInt1 ?? true)
             {
-                sb.AppendItem(item.UnkownInt1, "UnkownInt1");
+                sb.AppendItem(item.UnknownInt1, "UnknownInt1");
             }
-            if (printMask?.UnkownFloat4 ?? true)
+            if (printMask?.UnknownFloat4 ?? true)
             {
-                sb.AppendItem(item.UnkownFloat4, "UnkownFloat4");
+                sb.AppendItem(item.UnknownFloat4, "UnknownFloat4");
             }
-            if (printMask?.UnkownInt2 ?? true)
+            if (printMask?.UnknownInt2 ?? true)
             {
-                sb.AppendItem(item.UnkownInt2, "UnkownInt2");
+                sb.AppendItem(item.UnknownInt2, "UnknownInt2");
             }
             if (printMask?.CastType ?? true)
             {
@@ -2924,9 +3090,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.TargetType, "TargetType");
             }
-            if (printMask?.UnkownInt3 ?? true)
+            if (printMask?.UnknownInt3 ?? true)
             {
-                sb.AppendItem(item.UnkownInt3, "UnkownInt3");
+                sb.AppendItem(item.UnknownInt3, "UnknownInt3");
             }
             if (printMask?.Flags ?? true)
             {
@@ -3035,6 +3201,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isVirtualMachineAdapterEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Components)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
@@ -3111,13 +3281,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ActorValue3.Equals(rhs.ActorValue3)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat1) ?? true))
             {
-                if (!lhs.UnkownFloat1.EqualsWithin(rhs.UnkownFloat1)) return false;
+                if (!lhs.UnknownFloat1.EqualsWithin(rhs.UnknownFloat1)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat2) ?? true))
             {
-                if (!lhs.UnkownFloat2.EqualsWithin(rhs.UnkownFloat2)) return false;
+                if (!lhs.UnknownFloat2.EqualsWithin(rhs.UnknownFloat2)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
@@ -3127,21 +3297,21 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isArchetypeEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat3) ?? true))
             {
-                if (!lhs.UnkownFloat3.EqualsWithin(rhs.UnkownFloat3)) return false;
+                if (!lhs.UnknownFloat3.EqualsWithin(rhs.UnknownFloat3)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownInt1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt1) ?? true))
             {
-                if (lhs.UnkownInt1 != rhs.UnkownInt1) return false;
+                if (lhs.UnknownInt1 != rhs.UnknownInt1) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat4) ?? true))
             {
-                if (!lhs.UnkownFloat4.EqualsWithin(rhs.UnkownFloat4)) return false;
+                if (!lhs.UnknownFloat4.EqualsWithin(rhs.UnknownFloat4)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownInt2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt2) ?? true))
             {
-                if (lhs.UnkownInt2 != rhs.UnkownInt2) return false;
+                if (lhs.UnknownInt2 != rhs.UnknownInt2) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -3151,9 +3321,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownInt3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt3) ?? true))
             {
-                if (lhs.UnkownInt3 != rhs.UnkownInt3) return false;
+                if (lhs.UnknownInt3 != rhs.UnknownInt3) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
@@ -3215,6 +3385,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
+            hash.Add(item.Components);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -3237,16 +3408,16 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Projectile);
             hash.Add(item.ResistValue);
             hash.Add(item.ActorValue3);
-            hash.Add(item.UnkownFloat1);
-            hash.Add(item.UnkownFloat2);
+            hash.Add(item.UnknownFloat1);
+            hash.Add(item.UnknownFloat2);
             hash.Add(item.Archetype);
-            hash.Add(item.UnkownFloat3);
-            hash.Add(item.UnkownInt1);
-            hash.Add(item.UnkownFloat4);
-            hash.Add(item.UnkownInt2);
+            hash.Add(item.UnknownFloat3);
+            hash.Add(item.UnknownInt1);
+            hash.Add(item.UnknownFloat4);
+            hash.Add(item.UnknownInt2);
             hash.Add(item.CastType);
             hash.Add(item.TargetType);
-            hash.Add(item.UnkownInt3);
+            hash.Add(item.UnknownInt3);
             hash.Add(item.Flags);
             hash.Add(item.Unknown);
             hash.Add(item.Unknown2);
@@ -3293,6 +3464,11 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
@@ -3331,6 +3507,20 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMagicEffectGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
             }
             yield break;
         }
@@ -3421,6 +3611,30 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         item.VirtualMachineAdapter = default;
                     }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3531,13 +3745,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ActorValue3.SetTo(rhs.ActorValue3.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat1) ?? true))
             {
-                item.UnkownFloat1 = rhs.UnkownFloat1;
+                item.UnknownFloat1 = rhs.UnknownFloat1;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat2) ?? true))
             {
-                item.UnkownFloat2 = rhs.UnkownFloat2;
+                item.UnknownFloat2 = rhs.UnknownFloat2;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
@@ -3561,21 +3775,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat3) ?? true))
             {
-                item.UnkownFloat3 = rhs.UnkownFloat3;
+                item.UnknownFloat3 = rhs.UnknownFloat3;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownInt1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt1) ?? true))
             {
-                item.UnkownInt1 = rhs.UnkownInt1;
+                item.UnknownInt1 = rhs.UnknownInt1;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownFloat4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat4) ?? true))
             {
-                item.UnkownFloat4 = rhs.UnkownFloat4;
+                item.UnknownFloat4 = rhs.UnknownFloat4;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownInt2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt2) ?? true))
             {
-                item.UnkownInt2 = rhs.UnkownInt2;
+                item.UnknownInt2 = rhs.UnknownInt2;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -3585,9 +3799,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.TargetType = rhs.TargetType;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnkownInt3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt3) ?? true))
             {
-                item.UnkownInt3 = rhs.UnkownInt3;
+                item.UnknownInt3 = rhs.UnknownInt3;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
@@ -3842,6 +4056,17 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams.With(RecordTypes.XXXX));
             }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -3918,21 +4143,21 @@ namespace Mutagen.Bethesda.Starfield
                     item: item.ActorValue3);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnkownFloat1);
+                    item: item.UnknownFloat1);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnkownFloat2);
+                    item: item.UnknownFloat2);
                 MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
                     writer: writer,
                     item: item);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnkownFloat3);
-                writer.Write(item.UnkownInt1);
+                    item: item.UnknownFloat3);
+                writer.Write(item.UnknownInt1);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnkownFloat4);
-                writer.Write(item.UnkownInt2);
+                    item: item.UnknownFloat4);
+                writer.Write(item.UnknownInt2);
                 EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.CastType,
@@ -3941,7 +4166,7 @@ namespace Mutagen.Bethesda.Starfield
                     writer,
                     item.TargetType,
                     length: 1);
-                writer.Write(item.UnkownInt3);
+                writer.Write(item.UnknownInt3);
                 EnumBinaryTranslation<MagicEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
@@ -4094,6 +4319,16 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
                     return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)MagicEffect_FieldIndex.Components;
+                }
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -4161,20 +4396,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 4) return null;
                     item.ActorValue3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.UnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.UnknownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.UnknownFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownInt1 = dataFrame.ReadUInt32();
+                    item.UnknownInt1 = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.UnknownFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownInt2 = dataFrame.ReadUInt32();
+                    item.UnknownInt2 = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 1) return null;
                     item.CastType = EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
@@ -4184,7 +4419,7 @@ namespace Mutagen.Bethesda.Starfield
                         reader: dataFrame,
                         length: 1);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnkownInt3 = dataFrame.ReadUInt32();
+                    item.UnknownInt3 = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 8) return null;
                     item.Flags = EnumBinaryTranslation<MagicEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
@@ -4287,6 +4522,7 @@ namespace Mutagen.Bethesda.Starfield
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MagicEffectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -4307,6 +4543,7 @@ namespace Mutagen.Bethesda.Starfield
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -4417,40 +4654,40 @@ namespace Mutagen.Bethesda.Starfield
         private bool _ActorValue3_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IActorValueInformationGetter> ActorValue3 => _ActorValue3_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue3Location, 0x4), isSet: _ActorValue3_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
-        #region UnkownFloat1
-        private int _UnkownFloat1Location => _DATALocation!.Value.Min + 0x48;
-        private bool _UnkownFloat1_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat1 => _UnkownFloat1_IsSet ? _recordData.Slice(_UnkownFloat1Location, 4).Float() : default(Single);
+        #region UnknownFloat1
+        private int _UnknownFloat1Location => _DATALocation!.Value.Min + 0x48;
+        private bool _UnknownFloat1_IsSet => _DATALocation.HasValue;
+        public Single UnknownFloat1 => _UnknownFloat1_IsSet ? _recordData.Slice(_UnknownFloat1Location, 4).Float() : default(Single);
         #endregion
-        #region UnkownFloat2
-        private int _UnkownFloat2Location => _DATALocation!.Value.Min + 0x4C;
-        private bool _UnkownFloat2_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat2 => _UnkownFloat2_IsSet ? _recordData.Slice(_UnkownFloat2Location, 4).Float() : default(Single);
+        #region UnknownFloat2
+        private int _UnknownFloat2Location => _DATALocation!.Value.Min + 0x4C;
+        private bool _UnknownFloat2_IsSet => _DATALocation.HasValue;
+        public Single UnknownFloat2 => _UnknownFloat2_IsSet ? _recordData.Slice(_UnknownFloat2Location, 4).Float() : default(Single);
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x50;
         public partial IAMagicEffectArchetypeGetter GetArchetypeCustom();
         public IAMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
-        #region UnkownFloat3
-        private int _UnkownFloat3Location => _DATALocation!.Value.Min + 0x54;
-        private bool _UnkownFloat3_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat3 => _UnkownFloat3_IsSet ? _recordData.Slice(_UnkownFloat3Location, 4).Float() : default(Single);
+        #region UnknownFloat3
+        private int _UnknownFloat3Location => _DATALocation!.Value.Min + 0x54;
+        private bool _UnknownFloat3_IsSet => _DATALocation.HasValue;
+        public Single UnknownFloat3 => _UnknownFloat3_IsSet ? _recordData.Slice(_UnknownFloat3Location, 4).Float() : default(Single);
         #endregion
-        #region UnkownInt1
-        private int _UnkownInt1Location => _DATALocation!.Value.Min + 0x58;
-        private bool _UnkownInt1_IsSet => _DATALocation.HasValue;
-        public UInt32 UnkownInt1 => _UnkownInt1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt1Location, 4)) : default(UInt32);
+        #region UnknownInt1
+        private int _UnknownInt1Location => _DATALocation!.Value.Min + 0x58;
+        private bool _UnknownInt1_IsSet => _DATALocation.HasValue;
+        public UInt32 UnknownInt1 => _UnknownInt1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownInt1Location, 4)) : default(UInt32);
         #endregion
-        #region UnkownFloat4
-        private int _UnkownFloat4Location => _DATALocation!.Value.Min + 0x5C;
-        private bool _UnkownFloat4_IsSet => _DATALocation.HasValue;
-        public Single UnkownFloat4 => _UnkownFloat4_IsSet ? _recordData.Slice(_UnkownFloat4Location, 4).Float() : default(Single);
+        #region UnknownFloat4
+        private int _UnknownFloat4Location => _DATALocation!.Value.Min + 0x5C;
+        private bool _UnknownFloat4_IsSet => _DATALocation.HasValue;
+        public Single UnknownFloat4 => _UnknownFloat4_IsSet ? _recordData.Slice(_UnknownFloat4Location, 4).Float() : default(Single);
         #endregion
-        #region UnkownInt2
-        private int _UnkownInt2Location => _DATALocation!.Value.Min + 0x60;
-        private bool _UnkownInt2_IsSet => _DATALocation.HasValue;
-        public UInt32 UnkownInt2 => _UnkownInt2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt2Location, 4)) : default(UInt32);
+        #region UnknownInt2
+        private int _UnknownInt2Location => _DATALocation!.Value.Min + 0x60;
+        private bool _UnknownInt2_IsSet => _DATALocation.HasValue;
+        public UInt32 UnknownInt2 => _UnknownInt2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownInt2Location, 4)) : default(UInt32);
         #endregion
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value.Min + 0x64;
@@ -4462,10 +4699,10 @@ namespace Mutagen.Bethesda.Starfield
         private bool _TargetType_IsSet => _DATALocation.HasValue;
         public TargetType TargetType => _TargetType_IsSet ? (TargetType)_recordData.Span.Slice(_TargetTypeLocation, 0x1)[0] : default;
         #endregion
-        #region UnkownInt3
-        private int _UnkownInt3Location => _DATALocation!.Value.Min + 0x66;
-        private bool _UnkownInt3_IsSet => _DATALocation.HasValue;
-        public UInt32 UnkownInt3 => _UnkownInt3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnkownInt3Location, 4)) : default(UInt32);
+        #region UnknownInt3
+        private int _UnknownInt3Location => _DATALocation!.Value.Min + 0x66;
+        private bool _UnknownInt3_IsSet => _DATALocation.HasValue;
+        public UInt32 UnknownInt3 => _UnknownInt3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownInt3Location, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x6A;
@@ -4566,6 +4803,15 @@ namespace Mutagen.Bethesda.Starfield
                         stream.Position += lastParsed.LengthOverride.Value;
                     }
                     return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)MagicEffect_FieldIndex.Components;
                 }
                 case RecordTypeInts.FULL:
                 {

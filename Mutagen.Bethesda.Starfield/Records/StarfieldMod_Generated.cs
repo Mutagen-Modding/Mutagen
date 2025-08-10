@@ -12852,6 +12852,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.MagicEffects is IAssetLinkContainer MagicEffectslinkCont)
+            {
+                foreach (var item in MagicEffectslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             {
                 foreach (var item in obj.LandscapeTextures.EnumerateListedAssetLinks())
                 {
@@ -13374,6 +13381,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Factions.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MagicEffects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ProjectedDecals.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -24795,6 +24803,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Races is IAssetLinkContainerGetter RaceslinkCont)
             {
                 foreach (var item in RaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MagicEffects is IAssetLinkContainerGetter MagicEffectslinkCont)
+            {
+                foreach (var item in MagicEffectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }

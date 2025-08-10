@@ -3,6 +3,7 @@
   <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
@@ -27,16 +28,16 @@
           <FormLink name="Projectile" refName="Projectile" />
           <FormLink name="ResistValue" refName="ActorValueInformation" />
           <FormLink name="ActorValue3" refName="ActorValueInformation" unknown="true" />
-          <Float name="UnkownFloat1" unknown="true" />
-          <Float name="UnkownFloat2" unknown="true" />
+          <Float name="UnknownFloat1" unknown="true" />
+          <Float name="UnknownFloat2" unknown="true" />
           <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="4" defaultType="MagicEffectArchetype" />
-          <Float name="UnkownFloat3" unknown="true" />
-          <UInt32 name="UnkownInt1" unknown="true" />
-          <Float name="UnkownFloat4" unknown="true" />
-          <UInt32 name="UnkownInt2" unknown="true" />
+          <Float name="UnknownFloat3" unknown="true" />
+          <UInt32 name="UnknownInt1" unknown="true" />
+          <Float name="UnknownFloat4" unknown="true" />
+          <UInt32 name="UnknownInt2" unknown="true" />
           <Enum name="CastType" enumName="CastType" byteLength="1" />
           <Enum name="TargetType" enumName="TargetType" byteLength="1" />
-          <UInt32 name="UnkownInt3" unknown="true" />
+          <UInt32 name="UnknownInt3" unknown="true" />
           <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="8" />
           <ByteArray name="Unknown" byteLength="22" nullable="false" unknown="true" />
           <Break />
