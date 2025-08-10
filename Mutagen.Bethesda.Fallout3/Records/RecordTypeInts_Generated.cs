@@ -14,7 +14,9 @@ public partial class RecordTypeInts
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
     public const int EDID = 0x44494445;
+    public const int EFSH = 0x48534645;
     public const int ENAM = 0x4D414E45;
+    public const int ESCE = 0x45435345;
     public const int EYES = 0x53455945;
     public const int FACT = 0x54434146;
     public const int FGGA = 0x41474746;
@@ -35,7 +37,9 @@ public partial class RecordTypeInts
     public const int ICON = 0x4E4F4349;
     public const int INAM = 0x4D414E49;
     public const int INDX = 0x58444E49;
+    public const int LIGH = 0x4847494C;
     public const int MAST = 0x5453414D;
+    public const int MGEF = 0x4645474D;
     public const int MICN = 0x4E43494D;
     public const int MICO = 0x4F43494D;
     public const int MNAM = 0x4D414E4D;

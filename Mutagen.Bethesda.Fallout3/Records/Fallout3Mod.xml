@@ -15,6 +15,7 @@
       <Group name="Races" refName="Race" />
       <Group name="Sounds" refName="Sound" />
       <Group name="AcousticSpaces" refName="AcousticSpace" />
+      <Group name="MagicEffects" refName="MagicEffect" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

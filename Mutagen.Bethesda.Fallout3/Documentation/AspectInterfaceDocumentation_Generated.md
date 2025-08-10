@@ -13,6 +13,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Hair
 - HeadPart
 - HeadPartItem
+- MagicEffect
 ### INamed
 - AlternateTexture
 - Class
@@ -20,6 +21,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Faction
 - Hair
 - HeadPart
+- MagicEffect
 - Race
 ### IObjectBounded
 - AcousticSpace
@@ -50,6 +52,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPartItem
 - IHasIcons
 - IModeled
+### MagicEffect
+- IModeled
+- INamed
 ### MenuIcon
 - IHasIcons
 ### Race

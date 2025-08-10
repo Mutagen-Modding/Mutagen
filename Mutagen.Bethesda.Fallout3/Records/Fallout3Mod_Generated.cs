@@ -73,6 +73,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Races_Object = new Fallout3Group<Race>(this);
             _Sounds_Object = new Fallout3Group<Sound>(this);
             _AcousticSpaces_Object = new Fallout3Group<AcousticSpace>(this);
+            _MagicEffects_Object = new Fallout3Group<MagicEffect>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -169,6 +170,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IAcousticSpaceGetter> IFallout3ModGetter.AcousticSpaces => _AcousticSpaces_Object;
         #endregion
+        #region MagicEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<MagicEffect> _MagicEffects_Object;
+        public Fallout3Group<MagicEffect> MagicEffects => _MagicEffects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IMagicEffectGetter> IFallout3ModGetter.MagicEffects => _MagicEffects_Object;
+        #endregion
 
         #region To String
 
@@ -221,6 +229,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Races = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Sounds = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.AcousticSpaces = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.MagicEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -236,7 +245,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Eyes,
                 TItem Races,
                 TItem Sounds,
-                TItem AcousticSpaces)
+                TItem AcousticSpaces,
+                TItem MagicEffects)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -251,6 +261,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Races = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Races, new Fallout3Group.Mask<TItem>(Races));
                 this.Sounds = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Sounds, new Fallout3Group.Mask<TItem>(Sounds));
                 this.AcousticSpaces = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(AcousticSpaces, new Fallout3Group.Mask<TItem>(AcousticSpaces));
+                this.MagicEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MagicEffects, new Fallout3Group.Mask<TItem>(MagicEffects));
             }
 
             #pragma warning disable CS8618
@@ -275,6 +286,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Sounds { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? AcousticSpaces { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MagicEffects { get; set; }
             #endregion
 
             #region Equals
@@ -300,6 +312,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.AcousticSpaces, rhs.AcousticSpaces)) return false;
+                if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -318,6 +331,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Races);
                 hash.Add(this.Sounds);
                 hash.Add(this.AcousticSpaces);
+                hash.Add(this.MagicEffects);
                 return hash.ToHashCode();
             }
 
@@ -391,6 +405,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.AcousticSpaces.Overall)) return false;
                     if (this.AcousticSpaces.Specific != null && !this.AcousticSpaces.Specific.All(eval)) return false;
                 }
+                if (MagicEffects != null)
+                {
+                    if (!eval(this.MagicEffects.Overall)) return false;
+                    if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -463,6 +482,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.AcousticSpaces.Overall)) return true;
                     if (this.AcousticSpaces.Specific != null && this.AcousticSpaces.Specific.Any(eval)) return true;
                 }
+                if (MagicEffects != null)
+                {
+                    if (eval(this.MagicEffects.Overall)) return true;
+                    if (this.MagicEffects.Specific != null && this.MagicEffects.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -490,6 +514,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Races = this.Races == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.Sounds = this.Sounds == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
                 obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
+                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
             }
             #endregion
 
@@ -560,6 +585,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         AcousticSpaces?.Print(sb);
                     }
+                    if (printMask?.MagicEffects?.Overall ?? true)
+                    {
+                        MagicEffects?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -597,6 +626,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Sound.ErrorMask>?>? Sounds;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
             #endregion
 
             #region IErrorMask
@@ -631,6 +661,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Sounds;
                     case Fallout3Mod_FieldIndex.AcousticSpaces:
                         return AcousticSpaces;
+                    case Fallout3Mod_FieldIndex.MagicEffects:
+                        return MagicEffects;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -679,6 +711,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.AcousticSpaces:
                         this.AcousticSpaces = new MaskItem<Exception?, Fallout3Group.ErrorMask<AcousticSpace.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.MagicEffects:
+                        this.MagicEffects = new MaskItem<Exception?, Fallout3Group.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -729,6 +764,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.AcousticSpaces:
                         this.AcousticSpaces = (MaskItem<Exception?, Fallout3Group.ErrorMask<AcousticSpace.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.MagicEffects:
+                        this.MagicEffects = (MaskItem<Exception?, Fallout3Group.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -750,6 +788,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Races != null) return true;
                 if (Sounds != null) return true;
                 if (AcousticSpaces != null) return true;
+                if (MagicEffects != null) return true;
                 return false;
             }
             #endregion
@@ -788,6 +827,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Races?.Print(sb);
                 Sounds?.Print(sb);
                 AcousticSpaces?.Print(sb);
+                MagicEffects?.Print(sb);
             }
             #endregion
 
@@ -809,6 +849,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
                 ret.AcousticSpaces = this.AcousticSpaces.Combine(rhs.AcousticSpaces, (l, r) => l.Combine(r));
+                ret.MagicEffects = this.MagicEffects.Combine(rhs.MagicEffects, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -845,6 +886,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Race.TranslationMask>? Races;
             public Fallout3Group.TranslationMask<Sound.TranslationMask>? Sounds;
             public Fallout3Group.TranslationMask<AcousticSpace.TranslationMask>? AcousticSpaces;
+            public Fallout3Group.TranslationMask<MagicEffect.TranslationMask>? MagicEffects;
             #endregion
 
             #region Ctors
@@ -882,6 +924,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
                 ret.Add((AcousticSpaces != null ? AcousticSpaces.OnOverall : DefaultOn, AcousticSpaces?.GetCrystal()));
+                ret.Add((MagicEffects != null ? MagicEffects.OnOverall : DefaultOn, MagicEffects?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -950,6 +993,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Races_Object = new Fallout3Group<Race>(this);
             _Sounds_Object = new Fallout3Group<Sound>(this);
             _AcousticSpaces_Object = new Fallout3Group<AcousticSpace>(this);
+            _MagicEffects_Object = new Fallout3Group<MagicEffect>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1003,6 +1047,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.AcousticSpaces ?? true)
             {
                 this.AcousticSpaces.RecordCache.Set(rhsMod.AcousticSpaces.RecordCache.Items);
+            }
+            if (mask?.MagicEffects ?? true)
+            {
+                this.MagicEffects.RecordCache.Set(rhsMod.MagicEffects.RecordCache.Items);
             }
         }
 
@@ -1277,6 +1325,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Race> Races { get; }
         new Fallout3Group<Sound> Sounds { get; }
         new Fallout3Group<AcousticSpace> AcousticSpaces { get; }
+        new Fallout3Group<MagicEffect> MagicEffects { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1309,6 +1358,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IRaceGetter> Races { get; }
         IFallout3GroupGetter<ISoundGetter> Sounds { get; }
         IFallout3GroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
+        IFallout3GroupGetter<IMagicEffectGetter> MagicEffects { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -1872,6 +1922,7 @@ namespace Mutagen.Bethesda.Fallout3
         Races = 10,
         Sounds = 11,
         AcousticSpaces = 12,
+        MagicEffects = 13,
     }
     #endregion
 
@@ -1882,9 +1933,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1963,6 +2014,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Races.Clear();
             item.Sounds.Clear();
             item.AcousticSpaces.Clear();
+            item.MagicEffects.Clear();
         }
         
         #region Mutagen
@@ -1973,6 +2025,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Hairs.RemapLinks(mapping);
             obj.Races.RemapLinks(mapping);
             obj.AcousticSpaces.RemapLinks(mapping);
+            obj.MagicEffects.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2019,6 +2072,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Races.Remove(keys);
             obj.Sounds.Remove(keys);
             obj.AcousticSpaces.Remove(keys);
+            obj.MagicEffects.Remove(keys);
         }
         
         public void Remove(
@@ -2162,6 +2216,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    obj.MagicEffects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -2288,6 +2350,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.Sounds = MaskItemExt.Factory(item.Sounds.GetEqualsMask(rhs.Sounds, include), include);
             ret.AcousticSpaces = MaskItemExt.Factory(item.AcousticSpaces.GetEqualsMask(rhs.AcousticSpaces, include), include);
+            ret.MagicEffects = MaskItemExt.Factory(item.MagicEffects.GetEqualsMask(rhs.MagicEffects, include), include);
         }
         
         public string Print(
@@ -2383,6 +2446,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.AcousticSpaces?.Overall ?? true)
             {
                 item.AcousticSpaces?.Print(sb, "AcousticSpaces");
+            }
+            if (printMask?.MagicEffects?.Overall ?? true)
+            {
+                item.MagicEffects?.Print(sb, "MagicEffects");
             }
         }
         
@@ -2497,6 +2564,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isAcousticSpacesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MagicEffects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MagicEffects, rhs.MagicEffects, out var lhsMagicEffects, out var rhsMagicEffects, out var isMagicEffectsEqual))
+                {
+                    if (!object.Equals(lhsMagicEffects, rhsMagicEffects)) return false;
+                }
+                else if (!isMagicEffectsEqual) return false;
+            }
             return true;
         }
         
@@ -2516,6 +2591,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Races);
             hash.Add(item.Sounds);
             hash.Add(item.AcousticSpaces);
+            hash.Add(item.MagicEffects);
             return hash.ToHashCode();
         }
         
@@ -2594,6 +2670,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
                     return obj.AcousticSpaces;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    return obj.MagicEffects;
                 default:
                     return null;
             }
@@ -2611,7 +2692,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[12];
+            Stream[] outputStreams = new Stream[13];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -2625,6 +2706,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Races, 9, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Sounds, 10, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, 11, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 12, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -2682,6 +2764,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Sounds.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -2707,6 +2790,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.AcousticSpaces.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MagicEffects.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -2760,6 +2847,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MagicEffects.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2906,6 +2997,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -3035,6 +3135,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.AcousticSpaces,
                 groupGetter: (m) => m.AcousticSpaces))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MagicEffect, IMagicEffectGetter>(
+                srcGroup: obj.MagicEffects,
+                type: typeof(IMagicEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MagicEffects,
+                groupGetter: (m) => m.MagicEffects))
             {
                 yield return item;
             }
@@ -3233,6 +3342,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.AcousticSpaces,
                         groupGetter: (m) => m.AcousticSpaces))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MagicEffect, IMagicEffectGetter>(
+                        srcGroup: obj.MagicEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MagicEffects,
+                        groupGetter: (m) => m.MagicEffects))
                     {
                         yield return item;
                     }
@@ -3558,6 +3681,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MagicEffects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.MagicEffects);
+                try
+                {
+                    item.MagicEffects.DeepCopyIn(
+                        rhs: rhs.MagicEffects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.MagicEffects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -3673,6 +3816,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Races;
         public bool Sounds;
         public bool AcousticSpaces;
+        public bool MagicEffects;
         public GroupMask()
         {
         }
@@ -3690,6 +3834,7 @@ namespace Mutagen.Bethesda.Fallout3
             Races = defaultValue;
             Sounds = defaultValue;
             AcousticSpaces = defaultValue;
+            MagicEffects = defaultValue;
         }
     }
 
@@ -3880,6 +4025,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)AcousticSpacesItem).BinaryWriteTranslator).Write<IAcousticSpaceGetter>(
                         item: AcousticSpacesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MagicEffects ?? true)
+            {
+                var MagicEffectsItem = item.MagicEffects;
+                if (MagicEffectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
+                        item: MagicEffectsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4122,6 +4278,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.AcousticSpaces;
                 }
+                case RecordTypeInts.MGEF:
+                {
+                    if (importMask?.MagicEffects ?? true)
+                    {
+                        item.MagicEffects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.MagicEffects;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -4346,6 +4516,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? Fallout3GroupBinaryOverlay<IAcousticSpaceGetter>.Fallout3GroupFactory(_stream, _AcousticSpacesLocations, _package) : default;
         public IFallout3GroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new Fallout3Group<AcousticSpace>(this);
         #endregion
+        #region MagicEffects
+        private List<RangeInt64>? _MagicEffectsLocations;
+        private IFallout3GroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? Fallout3GroupBinaryOverlay<IMagicEffectGetter>.Fallout3GroupFactory(_stream, _MagicEffectsLocations, _package) : default;
+        public IFallout3GroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new Fallout3Group<MagicEffect>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -4491,6 +4666,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _AcousticSpacesLocations ??= new();
                     _AcousticSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.AcousticSpaces;
+                }
+                case RecordTypeInts.MGEF:
+                {
+                    _MagicEffectsLocations ??= new();
+                    _MagicEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.MagicEffects;
                 }
                 default:
                     return default(int?);

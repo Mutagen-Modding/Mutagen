@@ -16,7 +16,9 @@ public partial class RecordTypes
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType EDID = new(0x44494445);
+    public static readonly RecordType EFSH = new(0x48534645);
     public static readonly RecordType ENAM = new(0x4D414E45);
+    public static readonly RecordType ESCE = new(0x45435345);
     public static readonly RecordType EYES = new(0x53455945);
     public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FGGA = new(0x41474746);
@@ -37,7 +39,9 @@ public partial class RecordTypes
     public static readonly RecordType ICON = new(0x4E4F4349);
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INDX = new(0x58444E49);
+    public static readonly RecordType LIGH = new(0x4847494C);
     public static readonly RecordType MAST = new(0x5453414D);
+    public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MICN = new(0x4E43494D);
     public static readonly RecordType MICO = new(0x4F43494D);
     public static readonly RecordType MNAM = new(0x4D414E4D);

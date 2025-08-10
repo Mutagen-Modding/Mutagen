@@ -126,6 +126,9 @@
     <Compile Include="Records\MajorRecords\Hair.cs">
       <DependentUpon>Hair.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffect.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\MenuIcon.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
     </Compile>
@@ -286,5 +289,17 @@
     <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
+    <Compile Include="Records\MajorRecords\EffectShader_Generated.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Light_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffect_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectData_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

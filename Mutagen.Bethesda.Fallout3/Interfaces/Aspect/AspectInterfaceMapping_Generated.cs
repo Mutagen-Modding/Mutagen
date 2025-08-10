@@ -41,6 +41,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
                     HeadPartItem_Registration.Instance,
+                    MagicEffect_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IModeled),
@@ -53,6 +54,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    MagicEffect_Registration.Instance,
                     Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
@@ -69,6 +71,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    MagicEffect_Registration.Instance,
                     Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
