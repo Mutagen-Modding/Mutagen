@@ -92,7 +92,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
             IsDefault = false;
             foreach (var (voiceType, npcs) in other.Voices)
             {
-                _voices.Add(voiceType, npcs);
+                _voices.Add(voiceType, [..npcs]);
             }
             return;
         }
