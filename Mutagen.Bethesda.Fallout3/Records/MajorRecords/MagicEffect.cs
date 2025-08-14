@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Binary.Streams;
+﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Fallout3;
@@ -28,37 +29,88 @@ public partial class MagicEffect
         NoHitEffect = 0x08000000,
         NoDeathDispel = 0x10000000,
     }
+}
 
-    public enum ArchetypeEnum
+partial class MagicEffectBinaryCreateTranslation
+{
+    public static partial void FillBinaryAssociatedItemCustom(MutagenFrame frame, IMagicEffectInternal item)
     {
-        ValueModifier = 0,
-        Script = 1,
-        Dispel = 2,
-        CureDisease = 3,
-        Invisibility = 11,
-        Chameleon = 12,
-        Light = 13,
-        Lock = 16,
-        Open = 17,
-        BoundItem = 18,
-        SummonCreature = 19,
-        Paralysis = 24,
-        CureParalysis = 30,
-        CureAddiction = 31,
-        CurePoison = 32,
-        Concussion = 33,
-        ValueAndParts = 34,
-        LimbCondition = 35,
-        Turbo = 36,
+        // Skip for now.  Will be parsed by Archetype.
+        frame.Position += 4;
+    }
+
+    public static AMagicEffectArchetype ReadArchetype(MutagenFrame frame)
+    {
+        // Jump back and read in association FormKey
+        var curPos = frame.Position;
+        frame.Position -= 56;
+        FormKey associatedItemKey = FormKeyBinaryTranslation.Instance.Parse(frame);
+        frame.Position = curPos;
+
+        // Finish reading archetype
+        MagicEffectArchetype.TypeEnum archetypeEnum = (MagicEffectArchetype.TypeEnum)frame.ReadInt32();
+        AMagicEffectArchetype archetype;
+        switch (archetypeEnum)
+        {
+            case MagicEffectArchetype.TypeEnum.SummonCreature:
+                archetype = new MagicEffectSummonCreatureArchetype()
+                {
+                    Association = associatedItemKey.ToLink<ICreatureGetter>()
+                };
+                break;
+            case MagicEffectArchetype.TypeEnum.BoundItem:
+                archetype = new MagicEffectBoundItemArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IBoundItemGetter>()
+                };
+                break;
+            case MagicEffectArchetype.TypeEnum.Script:
+                archetype = new MagicEffectScriptArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IScriptGetter>()
+                };
+                break;
+            default:
+                archetype = new MagicEffectArchetype(archetypeEnum)
+                {
+                    ActorValue = ActorValue.None,
+                    Association = associatedItemKey.ToLink<IFallout3MajorRecordGetter>()
+                };
+                break;
+        }
+        archetype.ActorValue = (ActorValue)frame.ReadInt32();
+        return archetype;
+    }
+
+    public static partial void FillBinaryArchetypeCustom(MutagenFrame frame, IMagicEffectInternal item)
+    {
+        item.Archetype = ReadArchetype(frame);
     }
 }
 
-partial class MagicEffectDataBinaryWriteTranslation
+partial class MagicEffectBinaryWriteTranslation
 {
-    public static partial void WriteBinaryAssociatedItemCustom(
-        MutagenWriter writer,
-        IMagicEffectDataGetter item)
+    public static partial void WriteBinaryArchetypeCustom(MutagenWriter writer, IMagicEffectGetter item)
     {
-         FormKeyBinaryTranslation.Instance.Write(writer, item.Archetype.AssociationKey);
+        writer.Write((int)item.Archetype.Type);
+        writer.Write((int)item.Archetype.ActorValue);
+    }
+
+    public static partial void WriteBinaryAssociatedItemCustom(MutagenWriter writer, IMagicEffectGetter item)
+    {
+        FormKeyBinaryTranslation.Instance.Write(writer, item.Archetype.AssociationKey);
+    }
+}
+
+partial class MagicEffectBinaryOverlay
+{
+    public partial IAMagicEffectArchetypeGetter GetArchetypeCustom()
+    {
+        if (!_DATALocation.HasValue) return new MagicEffectArchetype();
+        var frame = new MutagenFrame(new MutagenMemoryReadStream(_recordData, _package.MetaData))
+        {
+            Position = _ArchetypeLocation
+        };
+        return MagicEffectBinaryCreateTranslation.ReadArchetype(frame);
     }
 }

@@ -3,11 +3,13 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 public partial class RecordTypeInts
 {
     public const int ANAM = 0x4D414E41;
+    public const int ARMO = 0x4F4D5241;
     public const int ASPC = 0x43505341;
     public const int ATTR = 0x52545441;
     public const int CELL = 0x4C4C4543;
     public const int CLAS = 0x53414C43;
     public const int CNAM = 0x4D414E43;
+    public const int CREA = 0x41455243;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
     public const int DESC = 0x43534544;
@@ -61,6 +63,7 @@ public partial class RecordTypeInts
     public const int RDAT = 0x54414452;
     public const int REFR = 0x52464552;
     public const int RNAM = 0x4D414E52;
+    public const int SCRI = 0x49524353;
     public const int SNAM = 0x4D414E53;
     public const int SNDD = 0x44444E53;
     public const int SNDX = 0x58444E53;
@@ -76,6 +79,7 @@ public partial class RecordTypeInts
     public const int UNAM = 0x4D414E55;
     public const int VTCK = 0x4B435456;
     public const int VTYP = 0x50595456;
+    public const int WEAP = 0x50414557;
     public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;
     public const int YNAM = 0x4D414E59;

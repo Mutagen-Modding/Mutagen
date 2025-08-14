@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Armor" baseClass="Fallout3MajorRecord" objType="Record" recordType="ARMO">
+    <Fields>
+    </Fields>
+    <LinkInterface>IBoundItem</LinkInterface>
+  </Object>
+</Loqui>

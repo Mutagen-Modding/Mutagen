@@ -11,12 +11,15 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
         LoquiRegistration.Register(
             AcousticSpace_Registration.Instance,
             AlternateTexture_Registration.Instance,
+            AMagicEffectArchetype_Registration.Instance,
+            Armor_Registration.Instance,
             BodyData_Registration.Instance,
             BodyPartItem_Registration.Instance,
             Cell_Registration.Instance,
             CellBlock_Registration.Instance,
             CellSubBlock_Registration.Instance,
             Class_Registration.Instance,
+            Creature_Registration.Instance,
             Decal_Registration.Instance,
             EffectShader_Registration.Instance,
             Eye_Registration.Instance,
@@ -44,7 +47,10 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Icons_Registration.Instance,
             Light_Registration.Instance,
             MagicEffect_Registration.Instance,
-            MagicEffectData_Registration.Instance,
+            MagicEffectArchetype_Registration.Instance,
+            MagicEffectBoundItemArchetype_Registration.Instance,
+            MagicEffectScriptArchetype_Registration.Instance,
+            MagicEffectSummonCreatureArchetype_Registration.Instance,
             MenuIcon_Registration.Instance,
             Model_Registration.Instance,
             ModStats_Registration.Instance,
@@ -57,12 +63,14 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Rank_Registration.Instance,
             Region_Registration.Instance,
             Relation_Registration.Instance,
+            Script_Registration.Instance,
             SkillBoost_Registration.Instance,
             Sound_Registration.Instance,
             SoundData_Registration.Instance,
             SoundDataExtended_Registration.Instance,
             TextureSet_Registration.Instance,
-            VoiceType_Registration.Instance
+            VoiceType_Registration.Instance,
+            Weapon_Registration.Instance
         );
     }
 }

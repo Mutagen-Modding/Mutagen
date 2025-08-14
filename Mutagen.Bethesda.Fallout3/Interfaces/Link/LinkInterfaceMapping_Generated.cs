@@ -49,6 +49,28 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IExplodeSpawn),
                 Getter: typeof(IExplodeSpawnGetter)));
         dict[typeof(IExplodeSpawnGetter)] = dict[typeof(IExplodeSpawn)] with { Setter = false };
+        dict[typeof(IBoundItem)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Armor_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IBoundItem),
+                Getter: typeof(IBoundItemGetter)));
+        dict[typeof(IBoundItemGetter)] = dict[typeof(IBoundItem)] with { Setter = false };
+        dict[typeof(MagicEffectItemReference)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Creature_Registration.Instance,
+                Script_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(MagicEffectItemReference),
+                Getter: typeof(MagicEffectItemReferenceGetter)));
+        dict[typeof(MagicEffectItemReferenceGetter)] = dict[typeof(MagicEffectItemReference)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

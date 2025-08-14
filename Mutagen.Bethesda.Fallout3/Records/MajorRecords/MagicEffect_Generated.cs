@@ -101,16 +101,108 @@ namespace Mutagen.Bethesda.Fallout3
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MagicEffectData? _Data;
-        public MagicEffectData? Data
+        #region Flags
+        public MagicEffect.MagicFlag Flags { get; set; } = default(MagicEffect.MagicFlag);
+        #endregion
+        #region BaseCost
+        public Single BaseCost { get; set; } = default(Single);
+        #endregion
+        #region Unused
+        public Int32 Unused { get; set; } = default(Int32);
+        #endregion
+        #region Resistance
+        public ActorValue Resistance { get; set; } = default(ActorValue);
+        #endregion
+        #region CounterEffectCount
+        public UInt32 CounterEffectCount { get; set; } = default(UInt32);
+        #endregion
+        #region Light
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
         {
-            get => _Data;
-            set => _Data = value;
+            get => _Light;
+            set => _Light.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IMagicEffectDataGetter? IMagicEffectGetter.Data => this.Data;
+        IFormLinkGetter<ILightGetter> IMagicEffectGetter.Light => this.Light;
+        #endregion
+        #region ProjectileSpeed
+        public Single ProjectileSpeed { get; set; } = default(Single);
+        #endregion
+        #region EffectShader
+        private readonly IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> EffectShader
+        {
+            get => _EffectShader;
+            set => _EffectShader.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EffectShader => this.EffectShader;
+        #endregion
+        #region ObjectDisplayShader
+        private readonly IFormLink<IEffectShaderGetter> _ObjectDisplayShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> ObjectDisplayShader
+        {
+            get => _ObjectDisplayShader;
+            set => _ObjectDisplayShader.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.ObjectDisplayShader => this.ObjectDisplayShader;
+        #endregion
+        #region EffectSound
+        private readonly IFormLink<ISoundGetter> _EffectSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> EffectSound
+        {
+            get => _EffectSound;
+            set => _EffectSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IMagicEffectGetter.EffectSound => this.EffectSound;
+        #endregion
+        #region BoltSound
+        private readonly IFormLink<ISoundGetter> _BoltSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> BoltSound
+        {
+            get => _BoltSound;
+            set => _BoltSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IMagicEffectGetter.BoltSound => this.BoltSound;
+        #endregion
+        #region HitSound
+        private readonly IFormLink<ISoundGetter> _HitSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> HitSound
+        {
+            get => _HitSound;
+            set => _HitSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IMagicEffectGetter.HitSound => this.HitSound;
+        #endregion
+        #region AreaSound
+        private readonly IFormLink<ISoundGetter> _AreaSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> AreaSound
+        {
+            get => _AreaSound;
+            set => _AreaSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IMagicEffectGetter.AreaSound => this.AreaSound;
+        #endregion
+        #region ConstantEffectEnchantmentFactor
+        public Single ConstantEffectEnchantmentFactor { get; set; } = default(Single);
+        #endregion
+        #region ConstantEffectBarterFactor
+        public Single ConstantEffectBarterFactor { get; set; } = default(Single);
+        #endregion
+        #region Archetype
+        public AMagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
+        #endregion
+        #region ActorValue
+        public static readonly ActorValue ActorValueDefault = ActorValue.None;
+        public ActorValue ActorValue { get; set; } = ActorValueDefault;
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -155,7 +247,23 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Description = initialValue;
                 this.Icon = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Data = new MaskItem<TItem, MagicEffectData.Mask<TItem>?>(initialValue, new MagicEffectData.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.BaseCost = initialValue;
+                this.Unused = initialValue;
+                this.Resistance = initialValue;
+                this.CounterEffectCount = initialValue;
+                this.Light = initialValue;
+                this.ProjectileSpeed = initialValue;
+                this.EffectShader = initialValue;
+                this.ObjectDisplayShader = initialValue;
+                this.EffectSound = initialValue;
+                this.BoltSound = initialValue;
+                this.HitSound = initialValue;
+                this.AreaSound = initialValue;
+                this.ConstantEffectEnchantmentFactor = initialValue;
+                this.ConstantEffectBarterFactor = initialValue;
+                this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(initialValue, new AMagicEffectArchetype.Mask<TItem>(initialValue));
+                this.ActorValue = initialValue;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -171,7 +279,23 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Description,
                 TItem Icon,
                 TItem Model,
-                TItem Data,
+                TItem Flags,
+                TItem BaseCost,
+                TItem Unused,
+                TItem Resistance,
+                TItem CounterEffectCount,
+                TItem Light,
+                TItem ProjectileSpeed,
+                TItem EffectShader,
+                TItem ObjectDisplayShader,
+                TItem EffectSound,
+                TItem BoltSound,
+                TItem HitSound,
+                TItem AreaSound,
+                TItem ConstantEffectEnchantmentFactor,
+                TItem ConstantEffectBarterFactor,
+                TItem Archetype,
+                TItem ActorValue,
                 TItem CounterEffects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -186,7 +310,23 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Description = Description;
                 this.Icon = Icon;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Data = new MaskItem<TItem, MagicEffectData.Mask<TItem>?>(Data, new MagicEffectData.Mask<TItem>(Data));
+                this.Flags = Flags;
+                this.BaseCost = BaseCost;
+                this.Unused = Unused;
+                this.Resistance = Resistance;
+                this.CounterEffectCount = CounterEffectCount;
+                this.Light = Light;
+                this.ProjectileSpeed = ProjectileSpeed;
+                this.EffectShader = EffectShader;
+                this.ObjectDisplayShader = ObjectDisplayShader;
+                this.EffectSound = EffectSound;
+                this.BoltSound = BoltSound;
+                this.HitSound = HitSound;
+                this.AreaSound = AreaSound;
+                this.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactor;
+                this.ConstantEffectBarterFactor = ConstantEffectBarterFactor;
+                this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(Archetype, new AMagicEffectArchetype.Mask<TItem>(Archetype));
+                this.ActorValue = ActorValue;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -203,7 +343,23 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Description;
             public TItem Icon;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public MaskItem<TItem, MagicEffectData.Mask<TItem>?>? Data { get; set; }
+            public TItem Flags;
+            public TItem BaseCost;
+            public TItem Unused;
+            public TItem Resistance;
+            public TItem CounterEffectCount;
+            public TItem Light;
+            public TItem ProjectileSpeed;
+            public TItem EffectShader;
+            public TItem ObjectDisplayShader;
+            public TItem EffectSound;
+            public TItem BoltSound;
+            public TItem HitSound;
+            public TItem AreaSound;
+            public TItem ConstantEffectEnchantmentFactor;
+            public TItem ConstantEffectBarterFactor;
+            public MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
+            public TItem ActorValue;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CounterEffects;
             #endregion
 
@@ -222,7 +378,23 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.Resistance, rhs.Resistance)) return false;
+                if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.ProjectileSpeed, rhs.ProjectileSpeed)) return false;
+                if (!object.Equals(this.EffectShader, rhs.EffectShader)) return false;
+                if (!object.Equals(this.ObjectDisplayShader, rhs.ObjectDisplayShader)) return false;
+                if (!object.Equals(this.EffectSound, rhs.EffectSound)) return false;
+                if (!object.Equals(this.BoltSound, rhs.BoltSound)) return false;
+                if (!object.Equals(this.HitSound, rhs.HitSound)) return false;
+                if (!object.Equals(this.AreaSound, rhs.AreaSound)) return false;
+                if (!object.Equals(this.ConstantEffectEnchantmentFactor, rhs.ConstantEffectEnchantmentFactor)) return false;
+                if (!object.Equals(this.ConstantEffectBarterFactor, rhs.ConstantEffectBarterFactor)) return false;
+                if (!object.Equals(this.Archetype, rhs.Archetype)) return false;
+                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
                 if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
                 return true;
             }
@@ -233,7 +405,23 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Description);
                 hash.Add(this.Icon);
                 hash.Add(this.Model);
-                hash.Add(this.Data);
+                hash.Add(this.Flags);
+                hash.Add(this.BaseCost);
+                hash.Add(this.Unused);
+                hash.Add(this.Resistance);
+                hash.Add(this.CounterEffectCount);
+                hash.Add(this.Light);
+                hash.Add(this.ProjectileSpeed);
+                hash.Add(this.EffectShader);
+                hash.Add(this.ObjectDisplayShader);
+                hash.Add(this.EffectSound);
+                hash.Add(this.BoltSound);
+                hash.Add(this.HitSound);
+                hash.Add(this.AreaSound);
+                hash.Add(this.ConstantEffectEnchantmentFactor);
+                hash.Add(this.ConstantEffectBarterFactor);
+                hash.Add(this.Archetype);
+                hash.Add(this.ActorValue);
                 hash.Add(this.CounterEffects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -253,11 +441,27 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (Data != null)
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.BaseCost)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.Resistance)) return false;
+                if (!eval(this.CounterEffectCount)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.ProjectileSpeed)) return false;
+                if (!eval(this.EffectShader)) return false;
+                if (!eval(this.ObjectDisplayShader)) return false;
+                if (!eval(this.EffectSound)) return false;
+                if (!eval(this.BoltSound)) return false;
+                if (!eval(this.HitSound)) return false;
+                if (!eval(this.AreaSound)) return false;
+                if (!eval(this.ConstantEffectEnchantmentFactor)) return false;
+                if (!eval(this.ConstantEffectBarterFactor)) return false;
+                if (Archetype != null)
                 {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                    if (!eval(this.Archetype.Overall)) return false;
+                    if (this.Archetype.Specific != null && !this.Archetype.Specific.All(eval)) return false;
                 }
+                if (!eval(this.ActorValue)) return false;
                 if (this.CounterEffects != null)
                 {
                     if (!eval(this.CounterEffects.Overall)) return false;
@@ -285,11 +489,27 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (Data != null)
+                if (eval(this.Flags)) return true;
+                if (eval(this.BaseCost)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.Resistance)) return true;
+                if (eval(this.CounterEffectCount)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.ProjectileSpeed)) return true;
+                if (eval(this.EffectShader)) return true;
+                if (eval(this.ObjectDisplayShader)) return true;
+                if (eval(this.EffectSound)) return true;
+                if (eval(this.BoltSound)) return true;
+                if (eval(this.HitSound)) return true;
+                if (eval(this.AreaSound)) return true;
+                if (eval(this.ConstantEffectEnchantmentFactor)) return true;
+                if (eval(this.ConstantEffectBarterFactor)) return true;
+                if (Archetype != null)
                 {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                    if (eval(this.Archetype.Overall)) return true;
+                    if (this.Archetype.Specific != null && this.Archetype.Specific.Any(eval)) return true;
                 }
+                if (eval(this.ActorValue)) return true;
                 if (this.CounterEffects != null)
                 {
                     if (eval(this.CounterEffects.Overall)) return true;
@@ -320,7 +540,23 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Description = eval(this.Description);
                 obj.Icon = eval(this.Icon);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.Data = this.Data == null ? null : new MaskItem<R, MagicEffectData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.BaseCost = eval(this.BaseCost);
+                obj.Unused = eval(this.Unused);
+                obj.Resistance = eval(this.Resistance);
+                obj.CounterEffectCount = eval(this.CounterEffectCount);
+                obj.Light = eval(this.Light);
+                obj.ProjectileSpeed = eval(this.ProjectileSpeed);
+                obj.EffectShader = eval(this.EffectShader);
+                obj.ObjectDisplayShader = eval(this.ObjectDisplayShader);
+                obj.EffectSound = eval(this.EffectSound);
+                obj.BoltSound = eval(this.BoltSound);
+                obj.HitSound = eval(this.HitSound);
+                obj.AreaSound = eval(this.AreaSound);
+                obj.ConstantEffectEnchantmentFactor = eval(this.ConstantEffectEnchantmentFactor);
+                obj.ConstantEffectBarterFactor = eval(this.ConstantEffectBarterFactor);
+                obj.Archetype = this.Archetype == null ? null : new MaskItem<R, AMagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
+                obj.ActorValue = eval(this.ActorValue);
                 if (CounterEffects != null)
                 {
                     obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -369,9 +605,73 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        Data?.Print(sb);
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.BaseCost ?? true)
+                    {
+                        sb.AppendItem(BaseCost, "BaseCost");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.Resistance ?? true)
+                    {
+                        sb.AppendItem(Resistance, "Resistance");
+                    }
+                    if (printMask?.CounterEffectCount ?? true)
+                    {
+                        sb.AppendItem(CounterEffectCount, "CounterEffectCount");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        sb.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.ProjectileSpeed ?? true)
+                    {
+                        sb.AppendItem(ProjectileSpeed, "ProjectileSpeed");
+                    }
+                    if (printMask?.EffectShader ?? true)
+                    {
+                        sb.AppendItem(EffectShader, "EffectShader");
+                    }
+                    if (printMask?.ObjectDisplayShader ?? true)
+                    {
+                        sb.AppendItem(ObjectDisplayShader, "ObjectDisplayShader");
+                    }
+                    if (printMask?.EffectSound ?? true)
+                    {
+                        sb.AppendItem(EffectSound, "EffectSound");
+                    }
+                    if (printMask?.BoltSound ?? true)
+                    {
+                        sb.AppendItem(BoltSound, "BoltSound");
+                    }
+                    if (printMask?.HitSound ?? true)
+                    {
+                        sb.AppendItem(HitSound, "HitSound");
+                    }
+                    if (printMask?.AreaSound ?? true)
+                    {
+                        sb.AppendItem(AreaSound, "AreaSound");
+                    }
+                    if (printMask?.ConstantEffectEnchantmentFactor ?? true)
+                    {
+                        sb.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                    }
+                    if (printMask?.ConstantEffectBarterFactor ?? true)
+                    {
+                        sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                    }
+                    if (printMask?.Archetype?.Overall ?? true)
+                    {
+                        Archetype?.Print(sb);
+                    }
+                    if (printMask?.ActorValue ?? true)
+                    {
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
                     if ((printMask?.CounterEffects?.Overall ?? true)
                         && CounterEffects is {} CounterEffectsItem)
@@ -409,7 +709,23 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Description;
             public Exception? Icon;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public MaskItem<Exception?, MagicEffectData.ErrorMask?>? Data;
+            public Exception? Flags;
+            public Exception? BaseCost;
+            public Exception? Unused;
+            public Exception? Resistance;
+            public Exception? CounterEffectCount;
+            public Exception? Light;
+            public Exception? ProjectileSpeed;
+            public Exception? EffectShader;
+            public Exception? ObjectDisplayShader;
+            public Exception? EffectSound;
+            public Exception? BoltSound;
+            public Exception? HitSound;
+            public Exception? AreaSound;
+            public Exception? ConstantEffectEnchantmentFactor;
+            public Exception? ConstantEffectBarterFactor;
+            public MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>? Archetype;
+            public Exception? ActorValue;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
             #endregion
 
@@ -427,8 +743,40 @@ namespace Mutagen.Bethesda.Fallout3
                         return Icon;
                     case MagicEffect_FieldIndex.Model:
                         return Model;
-                    case MagicEffect_FieldIndex.Data:
-                        return Data;
+                    case MagicEffect_FieldIndex.Flags:
+                        return Flags;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        return BaseCost;
+                    case MagicEffect_FieldIndex.Unused:
+                        return Unused;
+                    case MagicEffect_FieldIndex.Resistance:
+                        return Resistance;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        return CounterEffectCount;
+                    case MagicEffect_FieldIndex.Light:
+                        return Light;
+                    case MagicEffect_FieldIndex.ProjectileSpeed:
+                        return ProjectileSpeed;
+                    case MagicEffect_FieldIndex.EffectShader:
+                        return EffectShader;
+                    case MagicEffect_FieldIndex.ObjectDisplayShader:
+                        return ObjectDisplayShader;
+                    case MagicEffect_FieldIndex.EffectSound:
+                        return EffectSound;
+                    case MagicEffect_FieldIndex.BoltSound:
+                        return BoltSound;
+                    case MagicEffect_FieldIndex.HitSound:
+                        return HitSound;
+                    case MagicEffect_FieldIndex.AreaSound:
+                        return AreaSound;
+                    case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
+                        return ConstantEffectEnchantmentFactor;
+                    case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                        return ConstantEffectBarterFactor;
+                    case MagicEffect_FieldIndex.Archetype:
+                        return Archetype;
+                    case MagicEffect_FieldIndex.ActorValue:
+                        return ActorValue;
                     case MagicEffect_FieldIndex.CounterEffects:
                         return CounterEffects;
                     default:
@@ -453,8 +801,56 @@ namespace Mutagen.Bethesda.Fallout3
                     case MagicEffect_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case MagicEffect_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, MagicEffectData.ErrorMask?>(ex, null);
+                    case MagicEffect_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Resistance:
+                        this.Resistance = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        this.CounterEffectCount = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ProjectileSpeed:
+                        this.ProjectileSpeed = ex;
+                        break;
+                    case MagicEffect_FieldIndex.EffectShader:
+                        this.EffectShader = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ObjectDisplayShader:
+                        this.ObjectDisplayShader = ex;
+                        break;
+                    case MagicEffect_FieldIndex.EffectSound:
+                        this.EffectSound = ex;
+                        break;
+                    case MagicEffect_FieldIndex.BoltSound:
+                        this.BoltSound = ex;
+                        break;
+                    case MagicEffect_FieldIndex.HitSound:
+                        this.HitSound = ex;
+                        break;
+                    case MagicEffect_FieldIndex.AreaSound:
+                        this.AreaSound = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
+                        this.ConstantEffectEnchantmentFactor = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                        this.ConstantEffectBarterFactor = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Archetype:
+                        this.Archetype = new MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.ActorValue:
+                        this.ActorValue = ex;
                         break;
                     case MagicEffect_FieldIndex.CounterEffects:
                         this.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -482,8 +878,56 @@ namespace Mutagen.Bethesda.Fallout3
                     case MagicEffect_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case MagicEffect_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, MagicEffectData.ErrorMask?>?)obj;
+                    case MagicEffect_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Resistance:
+                        this.Resistance = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        this.CounterEffectCount = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ProjectileSpeed:
+                        this.ProjectileSpeed = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.EffectShader:
+                        this.EffectShader = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ObjectDisplayShader:
+                        this.ObjectDisplayShader = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.EffectSound:
+                        this.EffectSound = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.BoltSound:
+                        this.BoltSound = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.HitSound:
+                        this.HitSound = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.AreaSound:
+                        this.AreaSound = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
+                        this.ConstantEffectEnchantmentFactor = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                        this.ConstantEffectBarterFactor = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Archetype:
+                        this.Archetype = (MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ActorValue:
+                        this.ActorValue = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.CounterEffects:
                         this.CounterEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -501,7 +945,23 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Description != null) return true;
                 if (Icon != null) return true;
                 if (Model != null) return true;
-                if (Data != null) return true;
+                if (Flags != null) return true;
+                if (BaseCost != null) return true;
+                if (Unused != null) return true;
+                if (Resistance != null) return true;
+                if (CounterEffectCount != null) return true;
+                if (Light != null) return true;
+                if (ProjectileSpeed != null) return true;
+                if (EffectShader != null) return true;
+                if (ObjectDisplayShader != null) return true;
+                if (EffectSound != null) return true;
+                if (BoltSound != null) return true;
+                if (HitSound != null) return true;
+                if (AreaSound != null) return true;
+                if (ConstantEffectEnchantmentFactor != null) return true;
+                if (ConstantEffectBarterFactor != null) return true;
+                if (Archetype != null) return true;
+                if (ActorValue != null) return true;
                 if (CounterEffects != null) return true;
                 return false;
             }
@@ -539,7 +999,55 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Icon, "Icon");
                 }
                 Model?.Print(sb);
-                Data?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(BaseCost, "BaseCost");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Resistance, "Resistance");
+                }
+                {
+                    sb.AppendItem(CounterEffectCount, "CounterEffectCount");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(ProjectileSpeed, "ProjectileSpeed");
+                }
+                {
+                    sb.AppendItem(EffectShader, "EffectShader");
+                }
+                {
+                    sb.AppendItem(ObjectDisplayShader, "ObjectDisplayShader");
+                }
+                {
+                    sb.AppendItem(EffectSound, "EffectSound");
+                }
+                {
+                    sb.AppendItem(BoltSound, "BoltSound");
+                }
+                {
+                    sb.AppendItem(HitSound, "HitSound");
+                }
+                {
+                    sb.AppendItem(AreaSound, "AreaSound");
+                }
+                {
+                    sb.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                }
+                {
+                    sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                }
+                Archetype?.Print(sb);
+                {
+                    sb.AppendItem(ActorValue, "ActorValue");
+                }
                 if (CounterEffects is {} CounterEffectsItem)
                 {
                     sb.AppendLine("CounterEffects =>");
@@ -572,7 +1080,23 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.Resistance = this.Resistance.Combine(rhs.Resistance);
+                ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.ProjectileSpeed = this.ProjectileSpeed.Combine(rhs.ProjectileSpeed);
+                ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
+                ret.ObjectDisplayShader = this.ObjectDisplayShader.Combine(rhs.ObjectDisplayShader);
+                ret.EffectSound = this.EffectSound.Combine(rhs.EffectSound);
+                ret.BoltSound = this.BoltSound.Combine(rhs.BoltSound);
+                ret.HitSound = this.HitSound.Combine(rhs.HitSound);
+                ret.AreaSound = this.AreaSound.Combine(rhs.AreaSound);
+                ret.ConstantEffectEnchantmentFactor = this.ConstantEffectEnchantmentFactor.Combine(rhs.ConstantEffectEnchantmentFactor);
+                ret.ConstantEffectBarterFactor = this.ConstantEffectBarterFactor.Combine(rhs.ConstantEffectBarterFactor);
+                ret.Archetype = this.Archetype.Combine(rhs.Archetype, (l, r) => l.Combine(r));
+                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
                 ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), Noggog.ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
                 return ret;
             }
@@ -600,7 +1124,23 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Description;
             public bool Icon;
             public Model.TranslationMask? Model;
-            public MagicEffectData.TranslationMask? Data;
+            public bool Flags;
+            public bool BaseCost;
+            public bool Unused;
+            public bool Resistance;
+            public bool CounterEffectCount;
+            public bool Light;
+            public bool ProjectileSpeed;
+            public bool EffectShader;
+            public bool ObjectDisplayShader;
+            public bool EffectSound;
+            public bool BoltSound;
+            public bool HitSound;
+            public bool AreaSound;
+            public bool ConstantEffectEnchantmentFactor;
+            public bool ConstantEffectBarterFactor;
+            public AMagicEffectArchetype.TranslationMask? Archetype;
+            public bool ActorValue;
             public bool CounterEffects;
             #endregion
 
@@ -613,6 +1153,22 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Icon = defaultOn;
+                this.Flags = defaultOn;
+                this.BaseCost = defaultOn;
+                this.Unused = defaultOn;
+                this.Resistance = defaultOn;
+                this.CounterEffectCount = defaultOn;
+                this.Light = defaultOn;
+                this.ProjectileSpeed = defaultOn;
+                this.EffectShader = defaultOn;
+                this.ObjectDisplayShader = defaultOn;
+                this.EffectSound = defaultOn;
+                this.BoltSound = defaultOn;
+                this.HitSound = defaultOn;
+                this.AreaSound = defaultOn;
+                this.ConstantEffectEnchantmentFactor = defaultOn;
+                this.ConstantEffectBarterFactor = defaultOn;
+                this.ActorValue = defaultOn;
                 this.CounterEffects = defaultOn;
             }
 
@@ -625,7 +1181,23 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Description, null));
                 ret.Add((Icon, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((BaseCost, null));
+                ret.Add((Unused, null));
+                ret.Add((Resistance, null));
+                ret.Add((CounterEffectCount, null));
+                ret.Add((Light, null));
+                ret.Add((ProjectileSpeed, null));
+                ret.Add((EffectShader, null));
+                ret.Add((ObjectDisplayShader, null));
+                ret.Add((EffectSound, null));
+                ret.Add((BoltSound, null));
+                ret.Add((HitSound, null));
+                ret.Add((AreaSound, null));
+                ret.Add((ConstantEffectEnchantmentFactor, null));
+                ret.Add((ConstantEffectBarterFactor, null));
+                ret.Add((Archetype != null ? Archetype.OnOverall : DefaultOn, Archetype?.GetCrystal()));
+                ret.Add((ActorValue, null));
                 ret.Add((CounterEffects, null));
             }
 
@@ -776,7 +1348,23 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new MagicEffectData? Data { get; set; }
+        new MagicEffect.MagicFlag Flags { get; set; }
+        new Single BaseCost { get; set; }
+        new Int32 Unused { get; set; }
+        new ActorValue Resistance { get; set; }
+        new UInt32 CounterEffectCount { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new Single ProjectileSpeed { get; set; }
+        new IFormLink<IEffectShaderGetter> EffectShader { get; set; }
+        new IFormLink<IEffectShaderGetter> ObjectDisplayShader { get; set; }
+        new IFormLink<ISoundGetter> EffectSound { get; set; }
+        new IFormLink<ISoundGetter> BoltSound { get; set; }
+        new IFormLink<ISoundGetter> HitSound { get; set; }
+        new IFormLink<ISoundGetter> AreaSound { get; set; }
+        new Single ConstantEffectEnchantmentFactor { get; set; }
+        new Single ConstantEffectBarterFactor { get; set; }
+        new AMagicEffectArchetype Archetype { get; set; }
+        new ActorValue ActorValue { get; set; }
         new ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; set; }
     }
 
@@ -813,7 +1401,23 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        IMagicEffectDataGetter? Data { get; }
+        MagicEffect.MagicFlag Flags { get; }
+        Single BaseCost { get; }
+        Int32 Unused { get; }
+        ActorValue Resistance { get; }
+        UInt32 CounterEffectCount { get; }
+        IFormLinkGetter<ILightGetter> Light { get; }
+        Single ProjectileSpeed { get; }
+        IFormLinkGetter<IEffectShaderGetter> EffectShader { get; }
+        IFormLinkGetter<IEffectShaderGetter> ObjectDisplayShader { get; }
+        IFormLinkGetter<ISoundGetter> EffectSound { get; }
+        IFormLinkGetter<ISoundGetter> BoltSound { get; }
+        IFormLinkGetter<ISoundGetter> HitSound { get; }
+        IFormLinkGetter<ISoundGetter> AreaSound { get; }
+        Single ConstantEffectEnchantmentFactor { get; }
+        Single ConstantEffectBarterFactor { get; }
+        IAMagicEffectArchetypeGetter Archetype { get; }
+        ActorValue ActorValue { get; }
         IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
 
     }
@@ -995,8 +1599,24 @@ namespace Mutagen.Bethesda.Fallout3
         Description = 8,
         Icon = 9,
         Model = 10,
-        Data = 11,
-        CounterEffects = 12,
+        Flags = 11,
+        BaseCost = 12,
+        Unused = 13,
+        Resistance = 14,
+        CounterEffectCount = 15,
+        Light = 16,
+        ProjectileSpeed = 17,
+        EffectShader = 18,
+        ObjectDisplayShader = 19,
+        EffectSound = 20,
+        BoltSound = 21,
+        HitSound = 22,
+        AreaSound = 23,
+        ConstantEffectEnchantmentFactor = 24,
+        ConstantEffectBarterFactor = 25,
+        Archetype = 26,
+        ActorValue = 27,
+        CounterEffects = 28,
     }
     #endregion
 
@@ -1007,9 +1627,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 22;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -1096,7 +1716,23 @@ namespace Mutagen.Bethesda.Fallout3
             item.Description = default;
             item.Icon = default;
             item.Model = null;
-            item.Data = null;
+            item.Flags = default(MagicEffect.MagicFlag);
+            item.BaseCost = default(Single);
+            item.Unused = default(Int32);
+            item.Resistance = default(ActorValue);
+            item.CounterEffectCount = default(UInt32);
+            item.Light.Clear();
+            item.ProjectileSpeed = default(Single);
+            item.EffectShader.Clear();
+            item.ObjectDisplayShader.Clear();
+            item.EffectSound.Clear();
+            item.BoltSound.Clear();
+            item.HitSound.Clear();
+            item.AreaSound.Clear();
+            item.ConstantEffectEnchantmentFactor = default(Single);
+            item.ConstantEffectBarterFactor = default(Single);
+            item.Archetype.Clear();
+            item.ActorValue = MagicEffect.ActorValueDefault;
             item.CounterEffects = null;
             base.Clear(item);
         }
@@ -1116,7 +1752,14 @@ namespace Mutagen.Bethesda.Fallout3
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Data?.RemapLinks(mapping);
+            obj.Light.Relink(mapping);
+            obj.EffectShader.Relink(mapping);
+            obj.ObjectDisplayShader.Relink(mapping);
+            obj.EffectSound.Relink(mapping);
+            obj.BoltSound.Relink(mapping);
+            obj.HitSound.Relink(mapping);
+            obj.AreaSound.Relink(mapping);
+            obj.Archetype.RemapLinks(mapping);
         }
         
         #endregion
@@ -1192,11 +1835,23 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.Resistance = item.Resistance == rhs.Resistance;
+            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.ProjectileSpeed = item.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed);
+            ret.EffectShader = item.EffectShader.Equals(rhs.EffectShader);
+            ret.ObjectDisplayShader = item.ObjectDisplayShader.Equals(rhs.ObjectDisplayShader);
+            ret.EffectSound = item.EffectSound.Equals(rhs.EffectSound);
+            ret.BoltSound = item.BoltSound.Equals(rhs.BoltSound);
+            ret.HitSound = item.HitSound.Equals(rhs.HitSound);
+            ret.AreaSound = item.AreaSound.Equals(rhs.AreaSound);
+            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor);
+            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor);
+            ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
+            ret.ActorValue = item.ActorValue == rhs.ActorValue;
             ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
                 rhs.CounterEffects,
                 (l, r) => object.Equals(l, r),
@@ -1270,10 +1925,73 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data is {} DataItem)
+            if (printMask?.Flags ?? true)
             {
-                DataItem?.Print(sb, "Data");
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.BaseCost ?? true)
+            {
+                sb.AppendItem(item.BaseCost, "BaseCost");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendItem(item.Unused, "Unused");
+            }
+            if (printMask?.Resistance ?? true)
+            {
+                sb.AppendItem(item.Resistance, "Resistance");
+            }
+            if (printMask?.CounterEffectCount ?? true)
+            {
+                sb.AppendItem(item.CounterEffectCount, "CounterEffectCount");
+            }
+            if (printMask?.Light ?? true)
+            {
+                sb.AppendItem(item.Light.FormKey, "Light");
+            }
+            if (printMask?.ProjectileSpeed ?? true)
+            {
+                sb.AppendItem(item.ProjectileSpeed, "ProjectileSpeed");
+            }
+            if (printMask?.EffectShader ?? true)
+            {
+                sb.AppendItem(item.EffectShader.FormKey, "EffectShader");
+            }
+            if (printMask?.ObjectDisplayShader ?? true)
+            {
+                sb.AppendItem(item.ObjectDisplayShader.FormKey, "ObjectDisplayShader");
+            }
+            if (printMask?.EffectSound ?? true)
+            {
+                sb.AppendItem(item.EffectSound.FormKey, "EffectSound");
+            }
+            if (printMask?.BoltSound ?? true)
+            {
+                sb.AppendItem(item.BoltSound.FormKey, "BoltSound");
+            }
+            if (printMask?.HitSound ?? true)
+            {
+                sb.AppendItem(item.HitSound.FormKey, "HitSound");
+            }
+            if (printMask?.AreaSound ?? true)
+            {
+                sb.AppendItem(item.AreaSound.FormKey, "AreaSound");
+            }
+            if (printMask?.ConstantEffectEnchantmentFactor ?? true)
+            {
+                sb.AppendItem(item.ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+            }
+            if (printMask?.ConstantEffectBarterFactor ?? true)
+            {
+                sb.AppendItem(item.ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+            }
+            if (printMask?.Archetype?.Overall ?? true)
+            {
+                item.Archetype?.Print(sb, "Archetype");
+            }
+            if (printMask?.ActorValue ?? true)
+            {
+                sb.AppendItem(item.ActorValue, "ActorValue");
             }
             if ((printMask?.CounterEffects?.Overall ?? true)
                 && item.CounterEffects is {} CounterEffectsItem)
@@ -1360,13 +2078,77 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+            {
+                if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Resistance) ?? true))
+            {
+                if (lhs.Resistance != rhs.Resistance) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
+            {
+                if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ProjectileSpeed) ?? true))
+            {
+                if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectShader) ?? true))
+            {
+                if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ObjectDisplayShader) ?? true))
+            {
+                if (!lhs.ObjectDisplayShader.Equals(rhs.ObjectDisplayShader)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectSound) ?? true))
+            {
+                if (!lhs.EffectSound.Equals(rhs.EffectSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BoltSound) ?? true))
+            {
+                if (!lhs.BoltSound.Equals(rhs.BoltSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitSound) ?? true))
+            {
+                if (!lhs.HitSound.Equals(rhs.HitSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.AreaSound) ?? true))
+            {
+                if (!lhs.AreaSound.Equals(rhs.AreaSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor) ?? true))
+            {
+                if (!lhs.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ConstantEffectBarterFactor) ?? true))
+            {
+                if (!lhs.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Archetype, rhs.Archetype, out var lhsArchetype, out var rhsArchetype, out var isArchetypeEqual))
                 {
-                    if (!((MagicEffectDataCommon)((IMagicEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data))) return false;
+                    if (!((AMagicEffectArchetypeCommon)((IAMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, equalsMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
                 }
-                else if (!isDataEqual) return false;
+                else if (!isArchetypeEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue) ?? true))
+            {
+                if (lhs.ActorValue != rhs.ActorValue) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
@@ -1416,10 +2198,23 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Modelitem);
             }
-            if (item.Data is {} Dataitem)
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Flags);
+            hash.Add(item.BaseCost);
+            hash.Add(item.Unused);
+            hash.Add(item.Resistance);
+            hash.Add(item.CounterEffectCount);
+            hash.Add(item.Light);
+            hash.Add(item.ProjectileSpeed);
+            hash.Add(item.EffectShader);
+            hash.Add(item.ObjectDisplayShader);
+            hash.Add(item.EffectSound);
+            hash.Add(item.BoltSound);
+            hash.Add(item.HitSound);
+            hash.Add(item.AreaSound);
+            hash.Add(item.ConstantEffectEnchantmentFactor);
+            hash.Add(item.ConstantEffectBarterFactor);
+            hash.Add(item.Archetype);
+            hash.Add(item.ActorValue);
             hash.Add(item.CounterEffects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1457,9 +2252,16 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
-            if (obj.Data is {} DataItems)
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.EffectShader);
+            yield return FormLinkInformation.Factory(obj.ObjectDisplayShader);
+            yield return FormLinkInformation.Factory(obj.EffectSound);
+            yield return FormLinkInformation.Factory(obj.BoltSound);
+            yield return FormLinkInformation.Factory(obj.HitSound);
+            yield return FormLinkInformation.Factory(obj.AreaSound);
+            if (obj.Archetype is IFormLinkContainerGetter ArchetypelinkCont)
             {
-                foreach (var item in DataItems.EnumerateFormLinks())
+                foreach (var item in ArchetypelinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1576,20 +2378,76 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Data);
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+            {
+                item.BaseCost = rhs.BaseCost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Resistance) ?? true))
+            {
+                item.Resistance = rhs.Resistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
+            {
+                item.CounterEffectCount = rhs.CounterEffectCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Light) ?? true))
+            {
+                item.Light.SetTo(rhs.Light.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ProjectileSpeed) ?? true))
+            {
+                item.ProjectileSpeed = rhs.ProjectileSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectShader) ?? true))
+            {
+                item.EffectShader.SetTo(rhs.EffectShader.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ObjectDisplayShader) ?? true))
+            {
+                item.ObjectDisplayShader.SetTo(rhs.ObjectDisplayShader.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EffectSound) ?? true))
+            {
+                item.EffectSound.SetTo(rhs.EffectSound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BoltSound) ?? true))
+            {
+                item.BoltSound.SetTo(rhs.BoltSound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitSound) ?? true))
+            {
+                item.HitSound.SetTo(rhs.HitSound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.AreaSound) ?? true))
+            {
+                item.AreaSound.SetTo(rhs.AreaSound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor) ?? true))
+            {
+                item.ConstantEffectEnchantmentFactor = rhs.ConstantEffectEnchantmentFactor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ConstantEffectBarterFactor) ?? true))
+            {
+                item.ConstantEffectBarterFactor = rhs.ConstantEffectBarterFactor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
+            {
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Archetype);
                 try
                 {
-                    if(rhs.Data is {} rhsData)
+                    if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Archetype = rhs.Archetype.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1601,6 +2459,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue) ?? true))
+            {
+                item.ActorValue = rhs.ActorValue;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
@@ -1820,12 +2682,61 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.Data is {} DataItem)
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
-                ((MagicEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
+                EnumBinaryTranslation<MagicEffect.MagicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    translationParams: translationParams);
+                    item: item.BaseCost);
+                MagicEffectBinaryWriteTranslation.WriteBinaryAssociatedItem(
+                    writer: writer,
+                    item: item);
+                writer.Write(item.Unused);
+                EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Resistance,
+                    length: 4);
+                writer.Write(item.CounterEffectCount);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Light);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ProjectileSpeed);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EffectShader);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ObjectDisplayShader);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EffectSound);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BoltSound);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.HitSound);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AreaSound);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConstantEffectEnchantmentFactor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConstantEffectBarterFactor);
+                MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
+                    writer: writer,
+                    item: item);
+                EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.ActorValue,
+                    length: 4);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
@@ -1837,6 +2748,32 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         item: subItem);
                 });
+        }
+
+        public static partial void WriteBinaryAssociatedItemCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryAssociatedItem(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryAssociatedItemCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryArchetypeCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryArchetype(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryArchetypeCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1941,8 +2878,54 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    item.Data = Mutagen.Bethesda.Fallout3.MagicEffectData.CreateFromBinary(frame: frame);
-                    return (int)MagicEffect_FieldIndex.Data;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BaseCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unused = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Resistance = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CounterEffectCount = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ProjectileSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EffectShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ObjectDisplayShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.EffectSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BoltSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HitSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AreaSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ConstantEffectEnchantmentFactor = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ConstantEffectBarterFactor = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ActorValue = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)MagicEffect_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -1965,6 +2948,14 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryAssociatedItemCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
+
+        public static partial void FillBinaryArchetypeCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
 
     }
 
@@ -2030,9 +3021,98 @@ namespace Mutagen.Bethesda.Fallout3
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        private RangeInt32? _DATALocation;
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public MagicEffect.MagicFlag Flags => _Flags_IsSet ? (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region BaseCost
+        private int _BaseCostLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _BaseCost_IsSet => _DATALocation.HasValue;
+        public Single BaseCost => _BaseCost_IsSet ? _recordData.Slice(_BaseCostLocation, 4).Float() : default(Single);
+        #endregion
+        #region AssociatedItem
+        private int _AssociatedItemLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _AssociatedItem_IsSet => _DATALocation.HasValue;
+        partial void AssociatedItemCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Unused_IsSet => _DATALocation.HasValue;
+        public Int32 Unused => _Unused_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnusedLocation, 4)) : default(Int32);
+        #endregion
+        #region Resistance
+        private int _ResistanceLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _Resistance_IsSet => _DATALocation.HasValue;
+        public ActorValue Resistance => _Resistance_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ResistanceLocation, 0x4)) : default;
+        #endregion
+        #region CounterEffectCount
+        private int _CounterEffectCountLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
+        public UInt32 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_CounterEffectCountLocation, 4)) : default(UInt32);
+        #endregion
+        #region Light
+        private int _LightLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _Light_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region ProjectileSpeed
+        private int _ProjectileSpeedLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _ProjectileSpeed_IsSet => _DATALocation.HasValue;
+        public Single ProjectileSpeed => _ProjectileSpeed_IsSet ? _recordData.Slice(_ProjectileSpeedLocation, 4).Float() : default(Single);
+        #endregion
+        #region EffectShader
+        private int _EffectShaderLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _EffectShader_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IEffectShaderGetter> EffectShader => _EffectShader_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_EffectShaderLocation, 0x4), isSet: _EffectShader_IsSet) : FormLink<IEffectShaderGetter>.Null;
+        #endregion
+        #region ObjectDisplayShader
+        private int _ObjectDisplayShaderLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _ObjectDisplayShader_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IEffectShaderGetter> ObjectDisplayShader => _ObjectDisplayShader_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_ObjectDisplayShaderLocation, 0x4), isSet: _ObjectDisplayShader_IsSet) : FormLink<IEffectShaderGetter>.Null;
+        #endregion
+        #region EffectSound
+        private int _EffectSoundLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _EffectSound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> EffectSound => _EffectSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_EffectSoundLocation, 0x4), isSet: _EffectSound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region BoltSound
+        private int _BoltSoundLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _BoltSound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> BoltSound => _BoltSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_BoltSoundLocation, 0x4), isSet: _BoltSound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region HitSound
+        private int _HitSoundLocation => _DATALocation!.Value.Min + 0x30;
+        private bool _HitSound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> HitSound => _HitSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_HitSoundLocation, 0x4), isSet: _HitSound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region AreaSound
+        private int _AreaSoundLocation => _DATALocation!.Value.Min + 0x34;
+        private bool _AreaSound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> AreaSound => _AreaSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AreaSoundLocation, 0x4), isSet: _AreaSound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region ConstantEffectEnchantmentFactor
+        private int _ConstantEffectEnchantmentFactorLocation => _DATALocation!.Value.Min + 0x38;
+        private bool _ConstantEffectEnchantmentFactor_IsSet => _DATALocation.HasValue;
+        public Single ConstantEffectEnchantmentFactor => _ConstantEffectEnchantmentFactor_IsSet ? _recordData.Slice(_ConstantEffectEnchantmentFactorLocation, 4).Float() : default(Single);
+        #endregion
+        #region ConstantEffectBarterFactor
+        private int _ConstantEffectBarterFactorLocation => _DATALocation!.Value.Min + 0x3C;
+        private bool _ConstantEffectBarterFactor_IsSet => _DATALocation.HasValue;
+        public Single ConstantEffectBarterFactor => _ConstantEffectBarterFactor_IsSet ? _recordData.Slice(_ConstantEffectBarterFactorLocation, 4).Float() : default(Single);
+        #endregion
+        #region Archetype
+        private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x40;
+        public partial IAMagicEffectArchetypeGetter GetArchetypeCustom();
+        public IAMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
+        #endregion
+        #region ActorValue
+        private int _ActorValueLocation => _DATALocation!.Value.Min + 0x44;
+        private bool _ActorValue_IsSet => _DATALocation.HasValue;
+        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ActorValueLocation, 0x4)) : default;
         #endregion
         public IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         partial void CustomFactoryEnd(
@@ -2129,8 +3209,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)MagicEffect_FieldIndex.Data;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)MagicEffect_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.ESCE:
                 {

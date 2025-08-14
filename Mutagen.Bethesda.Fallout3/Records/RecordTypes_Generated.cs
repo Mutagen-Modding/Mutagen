@@ -5,11 +5,13 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 public partial class RecordTypes
 {
     public static readonly RecordType ANAM = new(0x4D414E41);
+    public static readonly RecordType ARMO = new(0x4F4D5241);
     public static readonly RecordType ASPC = new(0x43505341);
     public static readonly RecordType ATTR = new(0x52545441);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CLAS = new(0x53414C43);
     public static readonly RecordType CNAM = new(0x4D414E43);
+    public static readonly RecordType CREA = new(0x41455243);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DESC = new(0x43534544);
@@ -63,6 +65,7 @@ public partial class RecordTypes
     public static readonly RecordType RDAT = new(0x54414452);
     public static readonly RecordType REFR = new(0x52464552);
     public static readonly RecordType RNAM = new(0x4D414E52);
+    public static readonly RecordType SCRI = new(0x49524353);
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType SNDD = new(0x44444E53);
     public static readonly RecordType SNDX = new(0x58444E53);
@@ -78,6 +81,7 @@ public partial class RecordTypes
     public static readonly RecordType UNAM = new(0x4D414E55);
     public static readonly RecordType VTCK = new(0x4B435456);
     public static readonly RecordType VTYP = new(0x50595456);
+    public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);
     public static readonly RecordType YNAM = new(0x4D414E59);

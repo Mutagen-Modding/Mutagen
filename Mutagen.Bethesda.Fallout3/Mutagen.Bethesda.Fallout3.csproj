@@ -78,6 +78,12 @@
     <Compile Include="Records\MajorRecords\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\AMagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Armor_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
@@ -86,6 +92,9 @@
     </Compile>
     <Compile Include="Records\MajorRecords\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Creature_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\Eyes.cs">
       <DependentUpon>Eyes.xml</DependentUpon>
@@ -129,6 +138,18 @@
     <Compile Include="Records\MajorRecords\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectBoundItemArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectCreatureArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectScriptArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\MenuIcon.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
     </Compile>
@@ -138,8 +159,14 @@
     <Compile Include="Records\MajorRecords\Region_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Script_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\SoundData.cs">
       <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Weapon_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
@@ -298,8 +325,22 @@
     <Compile Include="Records\MajorRecords\MagicEffect_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\MajorRecords\MagicEffectData_Generated.cs">
+    <Compile Include="Interfaces\Link\MagicEffectItemReference_Generated.cs" />
+    <Compile Include="Records\MajorRecords\AMagicEffectArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectScriptArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectBoundItemArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MagicEffectSummonCreatureArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IBoundItem_Generated.cs" />
   </ItemGroup>
 </Project>

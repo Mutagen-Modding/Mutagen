@@ -6,32 +6,59 @@
       <String name="Description" recordType="DESC" nullable="True" />
       <String name="Icon" recordType="ICON" nullable="True" />
       <RefDirect name="Model" refName="Model" />
-      <RefDirect name="Data" refName="MagicEffectData" />
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
+          <Float name="BaseCost" />
+          <CustomLogic name="AssociatedItem" byteLength="4" />
+          <Int32 name="Unused" />
+          <Enum name="Resistance" enumName="ActorValue" byteLength="4" />
+          <UInt32 name="CounterEffectCount" />
+          <FormLink name="Light" refName="Light" />
+          <Float name="ProjectileSpeed" />
+          <FormLink name="EffectShader" refName="EffectShader" />
+          <FormLink name="ObjectDisplayShader" refName="EffectShader" />
+          <FormLink name="EffectSound" refName="Sound" />
+          <FormLink name="BoltSound" refName="Sound" />
+          <FormLink name="HitSound" refName="Sound" />
+          <FormLink name="AreaSound" refName="Sound" />
+          <Float name="ConstantEffectEnchantmentFactor" />
+          <Float name="ConstantEffectBarterFactor" />
+          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="4" defaultType="MagicEffectArchetype" />
+          <Enum name="ActorValue" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
+        </Fields>
+      </Data>
       <List name="CounterEffects" recordType="ESCE">
         <FormLink refName="MagicEffect" type="EDIDChars" />
       </List>
     </Fields>
   </Object>
-  <Object name="MagicEffectData" objType="Subrecord" recordType="DATA">
+  <Object name="AMagicEffectArchetype" abstract="true" objType="Subrecord">
     <Fields>
-      <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
-      <Float name="BaseCost" />
-      <CustomLogic name="AssociatedItem" byteLength="4" />
-      <Int32 name="Unused" />
-      <Enum name="Resistance" enumName="ActorValue" byteLength="4" />
-      <UInt32 name="CounterEffectCount" />
-      <FormLink name="Light" refName="Light" />
-      <Float name="ProjectileSpeed" />
-      <FormLink name="EffectShader" refName="EffectShader" />
-      <FormLink name="ObjectDisplayShader" refName="EffectShader" />
-      <FormLink name="EffectSound" refName="Sound" />
-      <FormLink name="BoltSound" refName="Sound" />
-      <FormLink name="HitSound" refName="Sound" />
-      <FormLink name="AreaSound" refName="Sound" />
-      <Float name="ConstantEffectEnchantmentFactor" />
-      <Float name="ConstantEffectBarterFactor" />
-      <Enum name="Archetype" enumName="MagicEffect.ArchetypeEnum" byteLength="4" />
-      <Enum name="ActorValue" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
+      <Enum name="ActorValue" enumName="ActorValue" generateClassMembers="false" binary="NoGeneration" default="ActorValue.None" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" />
+      <FormLink name="Association" binary="NoGeneration" refName="Fallout3MajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectScriptArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Script" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectBoundItemArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" >
+        <Interface>IBoundItem</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Creature" />
     </Fields>
   </Object>
 </Loqui>
