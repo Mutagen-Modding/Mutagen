@@ -70,7 +70,6 @@ public partial class Package
 
     public enum DayOfWeek
     {
-        Any = -1,
         Sunday = 0,
         Monday = 1,
         Tuesday = 2,
@@ -82,6 +81,7 @@ public partial class Package
         Weekends = 8,
         MondayWednesdayFriday = 9,
         TuesdayThursday = 10,
+        Any = 255,
     }
 
     public enum TargetDataType
