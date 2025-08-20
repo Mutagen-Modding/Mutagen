@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Records;
+﻿using System.Collections.Concurrent;
+using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
@@ -19,13 +20,16 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     }
     
     private readonly ILinkCache _linkCache;
+    private readonly int? _threadLimit;
     private readonly Dictionary<CacheKey, CacheItem> _cache = new();
     private readonly HashSet<Type> _searchedTypes = new();
     
     public ImmutableLoadOrderLinkUsageCache(
-        ILinkCache linkCache)
+        ILinkCache linkCache,
+        int? threadLimit = null)
     {
         _linkCache = linkCache;
+        _threadLimit = threadLimit;
     }
     
     public ILinkUsageResults<TUserRecordScope> GetUsagesOf<TUserRecordScope>(
@@ -89,19 +93,25 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             }
         }
 
-        Dictionary<FormKey, HashSet<IFormLinkGetter<TUserRecordScope>>> accumulation = new();
-        foreach (var record in _linkCache.PriorityOrder.WinningOverrides<TUserRecordScope>())
-        {
-            var recordLinks = record.EnumerateFormLinks()
-                .Where(link => !link.IsNull)
-                .ToArray();
-            if (recordLinks.Length == 0) continue;
-            var recordLink = record.ToLinkGetter();
-            foreach (var link in recordLinks)
+        ConcurrentDictionary<FormKey, ConcurrentBag<IFormLinkGetter<TUserRecordScope>>> accumulation = new();
+        Parallel.ForEach(
+            _linkCache.PriorityOrder.WinningOverrides<TUserRecordScope>(),
+            new ParallelOptions()
             {
-                accumulation.GetOrAdd(link.FormKey).Add(recordLink);
-            }
-        }
+                MaxDegreeOfParallelism = _threadLimit ?? -1
+            },
+            record =>
+            {
+                var recordLinks = record.EnumerateFormLinks()
+                    .Where(link => !link.IsNull)
+                    .ToArray();
+                if (recordLinks.Length == 0) return;
+                var recordLink = record.ToLinkGetter();
+                foreach (var link in recordLinks)
+                {
+                    accumulation.GetOrAdd(link.FormKey).Add(recordLink);
+                }
+            });
 
         var cacheItems = new List<KeyValuePair<CacheKey, CacheItem>>();
         foreach (var item in accumulation)
@@ -115,7 +125,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         
             var cacheItem = new CacheItem(
                 Untyped: untyped,
-                Typed: new Results<TUserRecordScope>(item.Value));
+                Typed: new Results<TUserRecordScope>(item.Value.ToHashSet()));
             cacheItems.Add(
                 new KeyValuePair<CacheKey, CacheItem>(
                     new CacheKey(item.Key, scopeType),
