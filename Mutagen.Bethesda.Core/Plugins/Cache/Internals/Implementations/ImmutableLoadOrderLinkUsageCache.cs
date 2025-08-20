@@ -21,8 +21,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
     
     private readonly ILinkCache _linkCache;
     private readonly int? _threadLimit;
-    private readonly Dictionary<CacheKey, CacheItem> _cache = new();
-    private readonly HashSet<Type> _searchedTypes = new();
+    private readonly Dictionary<Type, Lazy<Dictionary<CacheKey, CacheItem>>> _cache = new();
     
     public ImmutableLoadOrderLinkUsageCache(
         ILinkCache linkCache,
@@ -46,14 +45,6 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
 
     public ILinkUsageResults<IMajorRecordGetter> GetUsagesOf(IFormLinkIdentifier identifier)
     {
-        var key = new CacheKey(identifier.FormKey, 
-            UserRecordType: identifier.Type);
-        
-        lock (_cache)
-        {
-            if (_cache.TryGetValue(key, out var cached)) return cached.Untyped.Value;
-        }
-        
         return GetUsagesOfGeneric<IMajorRecordGetter>(identifier).Untyped.Value;
     }
     
@@ -70,29 +61,11 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
         if (cacheItem.Typed is ILinkUsageResults<TUserRecordScope> links) return links;
         return Results<TUserRecordScope>.Empty;
     }
-    
-    private CacheItem GetUsagesOfGeneric<TUserRecordScope>(
-        IFormLinkIdentifier identifier)
+
+    private Dictionary<CacheKey, CacheItem> ConstructCacheFor<TUserRecordScope>()
         where TUserRecordScope : class, IMajorRecordGetter
     {
         var scopeType = typeof(TUserRecordScope);
-        var key = new CacheKey(
-            identifier.FormKey,
-            UserRecordType: scopeType);
-
-        lock (_cache)
-        {
-            if (_cache.TryGetValue(key, out var cached))
-            {
-                return cached;
-            }
-
-            if (_searchedTypes.Contains(scopeType))
-            {
-                return CacheItem.Empty;
-            }
-        }
-
         ConcurrentDictionary<FormKey, ConcurrentBag<IFormLinkGetter<TUserRecordScope>>> accumulation = new();
         Parallel.ForEach(
             _linkCache.PriorityOrder.WinningOverrides<TUserRecordScope>(),
@@ -131,23 +104,40 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
                     new CacheKey(item.Key, scopeType),
                     cacheItem));
         }
-        
-        
+
+        var ret = new Dictionary<CacheKey, CacheItem>();
+        foreach (var item in cacheItems)
+        {
+            ret[item.Key] = item.Value;
+        }
+
+        return ret;
+    }
+    
+    private CacheItem GetUsagesOfGeneric<TUserRecordScope>(
+        IFormLinkIdentifier identifier)
+        where TUserRecordScope : class, IMajorRecordGetter
+    {
+        var scopeType = typeof(TUserRecordScope);
+        var key = new CacheKey(
+            identifier.FormKey,
+            UserRecordType: scopeType);
+
+        Lazy<Dictionary<CacheKey, CacheItem>>? typedCache;
         lock (_cache)
         {
-            foreach (var item in cacheItems)
+            if (!_cache.TryGetValue(scopeType, out typedCache))
             {
-                _cache[item.Key] = item.Value;
+                typedCache = new Lazy<Dictionary<CacheKey, CacheItem>>(ConstructCacheFor<TUserRecordScope>);
             }
-
-            _searchedTypes.Add(scopeType);
-            if (_cache.TryGetValue(key, out var cached))
-            {
-                return cached;
-            }
-            
-            return CacheItem.Empty;
         }
+
+        if (typedCache.Value.TryGetValue(key, out var cache))
+        {
+            return cache;
+        }
+        
+        return CacheItem.Empty;
     }
 
     private class Results<TScope> : ILinkUsageResults<TScope>
