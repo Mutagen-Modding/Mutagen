@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -129,6 +129,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             if (!_cache.TryGetValue(scopeType, out typedCache))
             {
                 typedCache = new Lazy<Dictionary<CacheKey, CacheItem>>(ConstructCacheFor<TUserRecordScope>);
+                _cache[scopeType] = typedCache;
             }
         }
 
