@@ -3464,6 +3464,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellInternal obj)
+        {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -3475,8 +3480,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -3484,7 +3489,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -4601,6 +4617,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellGetter obj)
+        {
             if ((obj.Landscape != null))
             {
                 if (obj.Landscape is {} Landscapeitem)
@@ -4635,11 +4656,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -4651,14 +4683,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

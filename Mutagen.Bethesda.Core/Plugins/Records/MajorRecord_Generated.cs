@@ -1126,6 +1126,11 @@ namespace Mutagen.Bethesda.Plugins.Records
         
         public virtual IEnumerable<IMajorRecord> EnumerateMajorRecords(IMajorRecordInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public virtual IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IMajorRecordInternal obj)
+        {
             foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1137,8 +1142,8 @@ namespace Mutagen.Bethesda.Plugins.Records
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return MajorRecordCommon.Instance.EnumerateMajorRecords(obj);
+            return MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1146,7 +1151,18 @@ namespace Mutagen.Bethesda.Plugins.Records
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IMajorRecordInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in MajorRecordCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1362,6 +1378,11 @@ namespace Mutagen.Bethesda.Plugins.Records
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IMajorRecordGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IMajorRecordGetter obj)
+        {
             yield break;
         }
         
@@ -1370,11 +1391,22 @@ namespace Mutagen.Bethesda.Plugins.Records
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return MajorRecordCommon.Instance.EnumerateMajorRecords(obj);
+            return MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IMajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IMajorRecordGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1384,13 +1416,13 @@ namespace Mutagen.Bethesda.Plugins.Records
                 case "IMajorRecord":
                 case "MajorRecord":
                     if (!MajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

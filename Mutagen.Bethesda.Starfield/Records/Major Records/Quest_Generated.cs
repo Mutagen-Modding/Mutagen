@@ -3654,6 +3654,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IQuestInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IQuestInternal obj)
+        {
             foreach (var item in QuestCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -3665,8 +3670,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return QuestCommon.Instance.EnumerateMajorRecords(obj);
+            return QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -3674,7 +3679,18 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IQuestInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in QuestCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -4872,6 +4888,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IQuestGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IQuestGetter obj)
+        {
             foreach (var subItem in obj.DialogBranches)
             {
                 yield return subItem;
@@ -4903,11 +4924,22 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return QuestCommon.Instance.EnumerateMajorRecords(obj);
+            return QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IQuestGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IQuestGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -4919,14 +4951,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!Quest_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

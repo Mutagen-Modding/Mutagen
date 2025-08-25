@@ -811,6 +811,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ISkyrimListGroup<T> obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ISkyrimListGroup<T> obj)
+        {
             foreach (var item in SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -822,8 +827,8 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecords(obj);
+            return SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -831,7 +836,18 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ISkyrimListGroup<T> obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1071,6 +1087,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ISkyrimListGroupGetter<T> obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ISkyrimListGroupGetter<T> obj)
+        {
             foreach (var subItem in obj.Records)
             {
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1085,11 +1106,22 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecords(obj);
+            return SkyrimListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ISkyrimListGroupGetter<T> obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ISkyrimListGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown)
@@ -1101,14 +1133,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                     if (!SkyrimListGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "ISkyrimMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
