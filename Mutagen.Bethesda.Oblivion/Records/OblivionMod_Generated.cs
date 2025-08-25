@@ -4303,6 +4303,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IOblivionMod obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IOblivionMod obj)
+        {
             foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -4314,8 +4319,8 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return OblivionModCommon.Instance.EnumerateMajorRecords(obj);
+            return OblivionModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -4323,7 +4328,18 @@ namespace Mutagen.Bethesda.Oblivion
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IOblivionMod obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -6616,6 +6632,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IOblivionModGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IOblivionModGetter obj)
+        {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
             {
                 yield return item;
@@ -6847,11 +6868,22 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return OblivionModCommon.Instance.EnumerateMajorRecords(obj);
+            return OblivionModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IOblivionModGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IOblivionModGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -6863,14 +6895,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
                     if (!OblivionMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IOblivionMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

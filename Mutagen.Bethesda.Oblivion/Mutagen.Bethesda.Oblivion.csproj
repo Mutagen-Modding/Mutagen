@@ -66,8 +66,12 @@
     <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Ingredient.cs" />
-    <Compile Include="Records\Major Records\Potion.cs" />
+    <Compile Include="Records\Major Records\Ingredient.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Potion.cs">
+      <DependentUpon>Potion.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RegionGrasses.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
@@ -83,7 +87,9 @@
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SigilStone.cs" />
+    <Compile Include="Records\Major Records\SigilStone.cs">
+      <DependentUpon>SigilStone.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>

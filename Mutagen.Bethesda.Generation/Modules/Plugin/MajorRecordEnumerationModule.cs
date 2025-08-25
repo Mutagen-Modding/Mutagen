@@ -271,6 +271,20 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
+            using (var f = sb.Call("return EnumerateMajorRecordsLoopLogic"))
+            {
+                f.AddPassArg("obj");
+            }
+        }
+        sb.AppendLine();
+        
+        using (var args = sb.Function(
+                   $"public{overrideStr}IEnumerable<{nameof(IMajorRecord)}{(getter ? "Getter" : null)}> EnumerateMajorRecordsLoopLogic"))
+        {
+            args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
+        }
+        using (sb.CurlyBrace())
+        {
             if (setter)
             {
                 sb.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj))");
@@ -287,7 +301,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                 {
                     if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                     {
-                        sb.AppendLine("foreach (var item in base.EnumerateMajorRecords(obj))");
+                        sb.AppendLine("foreach (var item in base.EnumerateMajorRecordsLoopLogic(obj))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return item;");
@@ -444,8 +458,8 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("if (type == null) return EnumerateMajorRecords(obj);");
-            sb.AppendLine("return EnumerateMajorRecords(obj, type, throwIfUnknown);");
+            sb.AppendLine($"if (type == null) return {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj);");
+            sb.AppendLine($"return {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);");
         }
         sb.AppendLine();
 
@@ -458,9 +472,27 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
+            using (var f = sb.Call("return EnumerateMajorRecordsLoopLogic"))
+            {
+                f.AddPassArg("obj");
+                f.AddPassArg("type");
+                f.AddPassArg("throwIfUnknown");
+            }
+        }
+        sb.AppendLine();
+
+        using (var args = sb.Function(
+                   $"public{overrideStr}IEnumerable<{nameof(IMajorRecordGetter)}> EnumerateMajorRecordsLoopLogic"))
+        {
+            args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
+            args.Add($"Type type");
+            args.Add($"bool throwIfUnknown");
+        }
+        using (sb.CurlyBrace())
+        {
             if (setter)
             {
-                sb.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))");
+                sb.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
                     sb.AppendLine("yield return item;");
@@ -474,7 +506,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                 {
                     if (await MajorRecordModule.HasMajorRecords(baseClass, includeBaseClass: true, includeSelf: true) != Case.No)
                     {
-                        sb.AppendLine("foreach (var item in base.EnumerateMajorRecords<TMajor>(obj))");
+                        sb.AppendLine("foreach (var item in base.EnumerateMajorRecordsLoopLogic<TMajor>(obj))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return item;");
@@ -497,7 +529,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                     using (sb.IncreaseDepth())
                     {
                         sb.AppendLine($"if (!{obj.RegistrationName}.SetterType.IsAssignableFrom(obj.GetType())) yield break;");
-                        sb.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
+                        sb.AppendLine("foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return item;");
@@ -511,7 +543,7 @@ public class MajorRecordEnumerationModule : GenerationModule
                     }
                     using (sb.IncreaseDepth())
                     {
-                        sb.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
+                        sb.AppendLine("foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return item;");

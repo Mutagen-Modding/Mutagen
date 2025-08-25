@@ -1602,6 +1602,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IDialogTopicInternal obj)
+        {
             foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1613,8 +1618,8 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return DialogTopicCommon.Instance.EnumerateMajorRecords(obj);
+            return DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1622,7 +1627,18 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IDialogTopicInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -2061,6 +2077,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IDialogTopicGetter obj)
+        {
             foreach (var subItem in obj.Responses)
             {
                 yield return subItem;
@@ -2076,11 +2097,22 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return DialogTopicCommon.Instance.EnumerateMajorRecords(obj);
+            return DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IDialogTopicGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -2092,14 +2124,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                     if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "ISkyrimMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

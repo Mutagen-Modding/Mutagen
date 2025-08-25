@@ -1081,6 +1081,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public virtual IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4MajorRecordInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public virtual IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IFallout4MajorRecordInternal obj)
+        {
             foreach (var item in Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1092,8 +1097,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj);
+            return Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1101,7 +1106,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IFallout4MajorRecordInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in Fallout4MajorRecordCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1366,6 +1382,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout4MajorRecordGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IFallout4MajorRecordGetter obj)
+        {
             yield break;
         }
         
@@ -1374,11 +1395,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj);
+            return Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout4MajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IFallout4MajorRecordGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1390,14 +1422,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!Fallout4MajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
