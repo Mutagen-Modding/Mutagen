@@ -18,13 +18,13 @@ internal static class InterfaceEnumerationHelper
         var mapping = LinkInterfaceMapping.Instance.InterfaceToObjectTypes(category);
         if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
         {
-            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            interfaces = [];
             return false;
         }
 
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
         {
-            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            interfaces = [];
             return true;
         }
         
@@ -42,13 +42,13 @@ internal static class InterfaceEnumerationHelper
         var mapping = AspectInterfaceMapping.Instance.InterfaceToObjectTypes(category);
         if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
         {
-            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            interfaces = [];
             return false;
         }
 
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
         {
-            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            interfaces = [];
             return true;
         }
         
@@ -65,13 +65,13 @@ internal static class InterfaceEnumerationHelper
     {
         if (!MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(category, linkInterface, out var inheritingTypes))
         {
-            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            interfaces = [];
             return false;
         }
 
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
         {
-            interfaces = Enumerable.Empty<IMajorRecordGetter>();
+            interfaces = [];
             return true;
         }
         
@@ -92,13 +92,13 @@ internal static class InterfaceEnumerationHelper
         var mapping = LinkInterfaceMapping.Instance.InterfaceToObjectTypes(category);
         if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
         {
-            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            interfaces = [];
             return false;
         }
     
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
         {
-            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            interfaces = [];
             return true;
         }
 
@@ -121,13 +121,13 @@ internal static class InterfaceEnumerationHelper
         var mapping = AspectInterfaceMapping.Instance.InterfaceToObjectTypes(category);
         if (!mapping.TryGetValue(linkInterface, out var inheritingTypes))
         {
-            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            interfaces = [];
             return false;
         }
     
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
         {
-            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            interfaces = [];
             return true;
         }
         
@@ -156,13 +156,13 @@ internal static class InterfaceEnumerationHelper
     {
         if (!MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(category, linkInterface, out var inheritingTypes))
         {
-            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            interfaces = [];
             return false;
         }
     
         if (inheritingTypes.Setter && !obj.Registration.SetterType.IsAssignableFrom(obj.GetType()))
         {
-            interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            interfaces = [];
             return true;
         }
         
