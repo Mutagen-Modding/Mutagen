@@ -1,8 +1,8 @@
 ﻿using Noggog;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Oblivion;
 
-public interface IHasEffects : ISkyrimMajorRecordInternal, IHasEffectsGetter
+public interface IHasEffects : IOblivionMajorRecordInternal, IHasEffectsGetter
 {
     new ExtendedList<Effect> Effects { get; init; }
 }
@@ -10,7 +10,7 @@ public interface IHasEffects : ISkyrimMajorRecordInternal, IHasEffectsGetter
 /// <summary>
 /// Common interface for records that have effects.
 /// </summary>
-public interface IHasEffectsGetter : ISkyrimMajorRecordGetter
+public interface IHasEffectsGetter : IOblivionMajorRecordGetter
 {
     IReadOnlyList<IEffectGetter> Effects { get; }
 }

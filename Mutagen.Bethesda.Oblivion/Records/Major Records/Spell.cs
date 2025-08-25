@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class Spell
@@ -33,4 +35,7 @@ public partial class Spell
         DisallowAbsorbAndReflect = 0x40,
         TouchSpellExplodesWithoutTarget = 0x80,
     }
+    
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IReadOnlyList<IEffectGetter> IHasEffectsGetter.Effects => Effects;
 }

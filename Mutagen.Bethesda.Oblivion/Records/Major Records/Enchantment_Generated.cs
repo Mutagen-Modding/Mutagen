@@ -631,6 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEnchantment :
         IEnchantmentGetter,
         IFormLinkContainer,
+        IHasEffects,
         ILoquiObjectSetter<IEnchantmentInternal>,
         INamed,
         INamedRequired,
@@ -656,6 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         ILoquiObject<IEnchantmentGetter>,
         IMapsToGetter<IEnchantmentGetter>,
         INamedGetter,

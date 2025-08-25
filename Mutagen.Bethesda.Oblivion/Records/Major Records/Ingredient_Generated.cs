@@ -793,6 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IIngredient :
         IFormLinkContainer,
+        IHasEffects,
         IIngredientGetter,
         IItem,
         ILoquiObjectSetter<IIngredientInternal>,
@@ -828,6 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         IItemGetter,
         ILoquiObject<IIngredientGetter>,
         IMapsToGetter<IIngredientGetter>,

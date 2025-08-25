@@ -630,6 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ISpell :
         IFormLinkContainer,
+        IHasEffects,
         ILoquiObjectSetter<ISpellInternal>,
         INamed,
         INamedRequired,
@@ -657,6 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         ILoquiObject<ISpellGetter>,
         IMapsToGetter<ISpellGetter>,
         INamedGetter,

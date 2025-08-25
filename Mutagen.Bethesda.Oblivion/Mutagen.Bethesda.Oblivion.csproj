@@ -42,6 +42,7 @@
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IHasEffects.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -65,6 +66,8 @@
     <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Ingredient.cs" />
+    <Compile Include="Records\Major Records\Potion.cs" />
     <Compile Include="Records\Major Records\RegionGrasses.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
@@ -80,6 +83,7 @@
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SigilStone.cs" />
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
