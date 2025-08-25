@@ -7394,7 +7394,12 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ISkyrimMod obj)
         {
-            return EnumerateMajorRecordsLoopLogic(obj: obj);
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ISkyrimMod obj)
@@ -7419,10 +7424,15 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            return EnumerateMajorRecordsLoopLogic(
+            var ret = EnumerateMajorRecordsLoopLogic(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
@@ -12380,7 +12390,12 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
         {
-            return EnumerateMajorRecordsLoopLogic(obj: obj);
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ISkyrimModGetter obj)
@@ -12857,10 +12872,15 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            return EnumerateMajorRecordsLoopLogic(
+            var ret = EnumerateMajorRecordsLoopLogic(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(

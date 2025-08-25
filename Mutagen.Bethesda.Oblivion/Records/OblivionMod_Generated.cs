@@ -4303,7 +4303,12 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IOblivionMod obj)
         {
-            return EnumerateMajorRecordsLoopLogic(obj: obj);
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IOblivionMod obj)
@@ -4328,10 +4333,15 @@ namespace Mutagen.Bethesda.Oblivion
             Type type,
             bool throwIfUnknown)
         {
-            return EnumerateMajorRecordsLoopLogic(
+            var ret = EnumerateMajorRecordsLoopLogic(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
@@ -6632,7 +6642,12 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IOblivionModGetter obj)
         {
-            return EnumerateMajorRecordsLoopLogic(obj: obj);
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IOblivionModGetter obj)
@@ -6877,10 +6892,15 @@ namespace Mutagen.Bethesda.Oblivion
             Type type,
             bool throwIfUnknown)
         {
-            return EnumerateMajorRecordsLoopLogic(
+            var ret = EnumerateMajorRecordsLoopLogic(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(

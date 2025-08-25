@@ -271,9 +271,25 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var f = sb.Call("return EnumerateMajorRecordsLoopLogic"))
+            if (obj.GetObjectType() == ObjectType.Mod)
             {
-                f.AddPassArg("obj");
+                using (var f = sb.Call("var ret = EnumerateMajorRecordsLoopLogic"))
+                {
+                    f.AddPassArg("obj");
+                }
+                sb.AppendLine("if (obj is IMod)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("ret = ret.ToList();");
+                }
+                sb.AppendLine("return ret;");
+            }
+            else
+            {
+                using (var f = sb.Call("return EnumerateMajorRecordsLoopLogic"))
+                {
+                    f.AddPassArg("obj");
+                }
             }
         }
         sb.AppendLine();
@@ -472,11 +488,29 @@ public class MajorRecordEnumerationModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            using (var f = sb.Call("return EnumerateMajorRecordsLoopLogic"))
+            if (obj.GetObjectType() == ObjectType.Mod)
             {
-                f.AddPassArg("obj");
-                f.AddPassArg("type");
-                f.AddPassArg("throwIfUnknown");
+                using (var f = sb.Call("var ret = EnumerateMajorRecordsLoopLogic"))
+                {
+                    f.AddPassArg("obj");
+                    f.AddPassArg("type");
+                    f.AddPassArg("throwIfUnknown");
+                }
+                sb.AppendLine("if (obj is IMod)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("ret = ret.ToList();");
+                }
+                sb.AppendLine("return ret;");
+            }
+            else
+            {
+                using (var f = sb.Call("return EnumerateMajorRecordsLoopLogic"))
+                {
+                    f.AddPassArg("obj");
+                    f.AddPassArg("type");
+                    f.AddPassArg("throwIfUnknown");
+                }
             }
         }
         sb.AppendLine();
