@@ -793,6 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IIngredient :
         IFormLinkContainer,
+        IHasEffects,
         IIngredientGetter,
         IItem,
         ILoquiObjectSetter<IIngredientInternal>,
@@ -828,6 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         IItemGetter,
         ILoquiObject<IIngredientGetter>,
         IMapsToGetter<IIngredientGetter>,
@@ -2087,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _DataLocation;
         public IIngredientDataGetter? Data => _DataLocation.HasValue ? IngredientDataBinaryOverlay.IngredientDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

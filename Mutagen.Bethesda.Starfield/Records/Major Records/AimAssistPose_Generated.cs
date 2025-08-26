@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAimAssistPose);
 
 
-        public IReadOnlyList<IAimAssistPosePointGetter> AttachPoints { get; private set; } = Array.Empty<IAimAssistPosePointGetter>();
+        public IReadOnlyList<IAimAssistPosePointGetter> AttachPoints { get; private set; } = [];
         public IReadOnlyList<IAimAssistPosePointGetter>? Connections { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,

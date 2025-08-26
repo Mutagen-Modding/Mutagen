@@ -5163,7 +5163,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XALGLocation;
         public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region Keywords
@@ -5313,7 +5313,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public Light.LightLayer Layer => _LayerLocation.HasValue ? (Light.LightLayer)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation!.Value, _package.MetaData.Constants)) : default(Light.LightLayer);
+        public Light.LightLayer Layer => EnumBinaryTranslation<Light.LightLayer, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_LayerLocation, _recordData, _package, 4);
         #endregion
         #region AreaLight
         private IAreaLightGetter? _AreaLight;

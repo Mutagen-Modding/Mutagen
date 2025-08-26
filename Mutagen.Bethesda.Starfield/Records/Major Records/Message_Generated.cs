@@ -2164,7 +2164,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Message.Flag Flags => _FlagsLocation.HasValue ? (Message.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Message.Flag);
+        public Message.Flag Flags => EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region DisplayTime
         private int? _DisplayTimeLocation;
@@ -2178,7 +2178,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ShortTitleLocation;
         public ITranslatedStringGetter? ShortTitle => _ShortTitleLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortTitleLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<IMessageButtonGetter>();
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

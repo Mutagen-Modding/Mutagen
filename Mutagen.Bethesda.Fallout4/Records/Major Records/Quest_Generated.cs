@@ -2727,6 +2727,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IQuestInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IQuestInternal obj)
+        {
             foreach (var item in QuestCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -2738,8 +2743,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return QuestCommon.Instance.EnumerateMajorRecords(obj);
+            return QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -2747,7 +2752,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IQuestInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in QuestCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -3520,6 +3536,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IQuestGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IQuestGetter obj)
+        {
             foreach (var subItem in obj.DialogBranches)
             {
                 yield return subItem;
@@ -3551,11 +3572,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return QuestCommon.Instance.EnumerateMajorRecords(obj);
+            return QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IQuestGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IQuestGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -3567,14 +3599,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!Quest_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -5082,7 +5114,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _QuestCompletionXpLocation;
         public IFormLinkNullableGetter<IGlobalGetter> QuestCompletionXp => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _QuestCompletionXpLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = [];
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -5101,8 +5133,8 @@ namespace Mutagen.Bethesda.Fallout4
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
-        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = [];
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = [];
         #region AliasParse
         public partial ParseResult AliasParseCustomParse(
             OverlayStream stream,

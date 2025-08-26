@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = Array.Empty<ILoadScreenLocationGetter>();
+        public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

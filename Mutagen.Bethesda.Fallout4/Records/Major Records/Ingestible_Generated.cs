@@ -1443,6 +1443,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         IHarvestTarget,
         IHasDestructible,
+        IHasEffects,
         IHasIcons,
         IIngestibleGetter,
         IItem,
@@ -1521,6 +1522,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IHasDestructibleGetter,
+        IHasEffectsGetter,
         IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -3414,7 +3416,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AddictionNameLocation;
         public ITranslatedStringGetter? AddictionName => _AddictionNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddictionNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

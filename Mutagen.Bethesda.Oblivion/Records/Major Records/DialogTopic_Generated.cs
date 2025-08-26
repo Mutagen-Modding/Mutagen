@@ -1383,6 +1383,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IDialogTopicInternal obj)
+        {
             foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1394,8 +1399,8 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return DialogTopicCommon.Instance.EnumerateMajorRecords(obj);
+            return DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1403,7 +1408,18 @@ namespace Mutagen.Bethesda.Oblivion
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IDialogTopicInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1768,6 +1784,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IDialogTopicGetter obj)
+        {
             foreach (var subItem in obj.Items)
             {
                 yield return subItem;
@@ -1783,11 +1804,22 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return DialogTopicCommon.Instance.EnumerateMajorRecords(obj);
+            return DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IDialogTopicGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1799,14 +1831,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
                     if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IOblivionMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -2505,7 +2537,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override Type LinkType => typeof(IDialogTopic);
 
 
-        public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = Array.Empty<IFormLinkGetter<IQuestGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2516,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DialogType
         private int? _DialogTypeLocation;
-        public DialogType? DialogType => _DialogTypeLocation.HasValue ? (DialogType)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogTypeLocation!.Value, _package.MetaData.Constants)[0] : default(DialogType?);
+        public DialogType? DialogType => EnumBinaryTranslation<DialogType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_DialogTypeLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

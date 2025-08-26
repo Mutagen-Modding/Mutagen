@@ -7355,7 +7355,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MeleeSpeed
         private int? _MeleeSpeedLocation;
-        public Weapon.MeleeSpeeds? MeleeSpeed => _MeleeSpeedLocation.HasValue ? (Weapon.MeleeSpeeds)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MeleeSpeedLocation!.Value, _package.MetaData.Constants)) : default(Weapon.MeleeSpeeds?);
+        public Weapon.MeleeSpeeds? MeleeSpeed => EnumBinaryTranslation<Weapon.MeleeSpeeds, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MeleeSpeedLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

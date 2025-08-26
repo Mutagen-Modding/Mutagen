@@ -2697,6 +2697,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IWorldspaceInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IWorldspaceInternal obj)
+        {
             foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -2708,8 +2713,8 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return WorldspaceCommon.Instance.EnumerateMajorRecords(obj);
+            return WorldspaceCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -2717,7 +2722,18 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IWorldspaceInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -3789,6 +3805,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IWorldspaceGetter obj)
+        {
             if ((obj.TopCell != null))
             {
                 if (obj.TopCell is {} TopCellitem)
@@ -3814,11 +3835,22 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return WorldspaceCommon.Instance.EnumerateMajorRecords(obj);
+            return WorldspaceCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IWorldspaceGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IWorldspaceGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -3830,14 +3862,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "ISkyrimMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -5613,7 +5645,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = Array.Empty<IWorldspaceGridReferenceGetter>();
+        public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = [];
         #region MaxHeight
         private int? _MaxHeightLengthOverride;
         private RangeInt32? _MaxHeightLocation;
@@ -5694,7 +5726,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Worldspace.Flag Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag);
+        public Worldspace.Flag Flags => EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         private RangeInt32? _NAM0Location;
         #region ObjectBoundsMin

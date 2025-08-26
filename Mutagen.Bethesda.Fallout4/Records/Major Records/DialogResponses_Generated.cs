@@ -3307,8 +3307,8 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _OverrideFileNameLocation;
         public String? OverrideFileName => _OverrideFileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OverrideFileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = [];
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Prompt
         private int? _PromptLocation;
         public ITranslatedStringGetter? Prompt => _PromptLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PromptLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -3347,7 +3347,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Challenge
         private int? _ChallengeLocation;
-        public DialogResponses.ChallengeType? Challenge => _ChallengeLocation.HasValue ? (DialogResponses.ChallengeType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChallengeLocation!.Value, _package.MetaData.Constants)) : default(DialogResponses.ChallengeType?);
+        public DialogResponses.ChallengeType? Challenge => EnumBinaryTranslation<DialogResponses.ChallengeType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ChallengeLocation, _recordData, _package, 4);
         #endregion
         #region ResetGlobal
         private int? _ResetGlobalLocation;
@@ -3355,7 +3355,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SubtitlePriority
         private int? _SubtitlePriorityLocation;
-        public DialogResponses.SubtitlePriorityLevel? SubtitlePriority => _SubtitlePriorityLocation.HasValue ? (DialogResponses.SubtitlePriorityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtitlePriorityLocation!.Value, _package.MetaData.Constants)) : default(DialogResponses.SubtitlePriorityLevel?);
+        public DialogResponses.SubtitlePriorityLevel? SubtitlePriority => EnumBinaryTranslation<DialogResponses.SubtitlePriorityLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SubtitlePriorityLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

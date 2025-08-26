@@ -1235,6 +1235,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IWorldspaceBlock obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IWorldspaceBlock obj)
+        {
             foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1246,8 +1251,8 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1255,7 +1260,18 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IWorldspaceBlock obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1645,6 +1661,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IWorldspaceBlockGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IWorldspaceBlockGetter obj)
+        {
             foreach (var subItem in obj.Items)
             {
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1659,11 +1680,22 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IWorldspaceBlockGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IWorldspaceBlockGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1675,14 +1707,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                     if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "ISkyrimMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -2148,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = Array.Empty<IWorldspaceSubBlockGetter>();
+        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

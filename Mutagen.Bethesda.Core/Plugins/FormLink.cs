@@ -42,6 +42,16 @@ public class FormLinkGetter<TMajorGetter> : IFormLinkGetter<TMajorGetter>,
 
     FormKey? IFormLinkGetter.FormKeyNullable => FormKey;
 
+    public FormLinkGetter()
+    {
+        _formKey = FormKey.Null;
+    }
+
+    public FormLinkGetter(FormKey formKey)
+    {
+        _formKey = formKey;
+    }
+
     public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
     {
         formKey = FormKey;
@@ -168,24 +178,24 @@ public sealed class FormLink<TMajorGetter> : FormLinkGetter<TMajorGetter>, IForm
     }
 
     public FormLink()
+        : base(FormKey.Null)
     {
-        FormKey = FormKey.Null;
     }
 
     /// <summary>
     /// Default constructor that creates a link to the target FormKey
     /// </summary>
     public FormLink(FormKey formKey)
+        : base(formKey)
     {
-        FormKey = formKey;
     }
 
     /// <summary>
     /// Default constructor that creates a link to the target FormKey
     /// </summary>
     public FormLink(TMajorGetter record)
+        : base(record.FormKey)
     {
-        FormKey = record.FormKey;
     }
 
     /// <summary>

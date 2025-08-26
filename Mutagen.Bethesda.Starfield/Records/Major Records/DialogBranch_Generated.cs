@@ -1631,11 +1631,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Category
         private int? _CategoryLocation;
-        public DialogBranch.CategoryType? Category => _CategoryLocation.HasValue ? (DialogBranch.CategoryType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CategoryLocation!.Value, _package.MetaData.Constants)) : default(DialogBranch.CategoryType?);
+        public DialogBranch.CategoryType? Category => EnumBinaryTranslation<DialogBranch.CategoryType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_CategoryLocation, _recordData, _package, 4);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public DialogBranch.Flag? Flags => _FlagsLocation.HasValue ? (DialogBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(DialogBranch.Flag?);
+        public DialogBranch.Flag? Flags => EnumBinaryTranslation<DialogBranch.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region StartingTopic
         private int? _StartingTopicLocation;

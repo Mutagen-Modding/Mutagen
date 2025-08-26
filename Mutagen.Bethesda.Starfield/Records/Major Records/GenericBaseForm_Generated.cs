@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _ObjectPaletteDefaultsLocation;
         public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Filter
         private int? _FilterLocation;
         public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2729,7 +2729,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _TemplateLocation;
         public IFormLinkNullableGetter<IGenericBaseFormTemplateGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGenericBaseFormTemplateGetter>(_package, _recordData, _TemplateLocation);
         #endregion
-        public IReadOnlyList<String> ObjectTemplateInstanceData { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> ObjectTemplateInstanceData { get; private set; } = [];
         public IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; private set; }
         #region NavmeshGeometry
         private int? _NavmeshGeometryLengthOverride;

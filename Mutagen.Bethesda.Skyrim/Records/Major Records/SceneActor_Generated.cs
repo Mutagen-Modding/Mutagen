@@ -1221,11 +1221,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneActor.Flag? Flags => _FlagsLocation.HasValue ? (SceneActor.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.Flag?);
+        public SceneActor.Flag? Flags => EnumBinaryTranslation<SceneActor.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region BehaviorFlags
         private int? _BehaviorFlagsLocation;
-        public SceneActor.BehaviorFlag? BehaviorFlags => _BehaviorFlagsLocation.HasValue ? (SceneActor.BehaviorFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorFlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.BehaviorFlag?);
+        public SceneActor.BehaviorFlag? BehaviorFlags => EnumBinaryTranslation<SceneActor.BehaviorFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_BehaviorFlagsLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1636,7 +1636,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FMRSLocation;
         public String? FMRS => _FMRSLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMRSLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFaceMorphItemGetter> Items { get; private set; } = Array.Empty<IFaceMorphItemGetter>();
+        public IReadOnlyList<IFaceMorphItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

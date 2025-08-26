@@ -1472,6 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim
         IExplodeSpawn,
         IFormLinkContainer,
         IHasDestructible,
+        IHasEffects,
         IItem,
         IItemOrList,
         IKeyworded<IKeywordGetter>,
@@ -1545,6 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
+        IHasEffectsGetter,
         IItemGetter,
         IItemOrListGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -3477,7 +3479,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
         public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_HalfCostPerkLocation, 0x4), isSet: _HalfCostPerk_IsSet) : FormLink<IPerkGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

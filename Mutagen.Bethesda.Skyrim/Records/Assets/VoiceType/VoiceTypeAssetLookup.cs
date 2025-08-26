@@ -257,7 +257,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Get quest voices
         var questVoices = GetQuestVoices(topic, quest);
 
-        var voiceContainer = GetDialogVoiceContainer(topic, responses, quest, questVoices);
+        //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
+        var voiceContainer = GetVoices(topic, responses, quest);
+        voiceContainer.IntersectWith(questVoices);
+
         if (voiceContainer.IsDefault)
         {
             voiceContainer = GetAllDefaultVoices();
@@ -265,7 +268,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var formKey in voiceContainer.Voices.SelectMany(x =>
                  {
-                     if (x.Value.Any()) return x.Value;
+                     if (x.Value.Count > 0) return x.Value;
 
                      // Get speakers with voice type when the whole voice type is used (there are no speakers)
                      return _speakerVoices
@@ -336,7 +339,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             var userConditions = responseFormKeys
                 .Select(responseKey =>
                 {
-
                     var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
                     if (responseContext is not { Parent.Record: not null }) return null;
 

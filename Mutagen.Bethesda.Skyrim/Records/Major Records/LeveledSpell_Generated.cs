@@ -1809,7 +1809,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledSpell.Flag Flags => _FlagsLocation.HasValue ? (LeveledSpell.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledSpell.Flag);
+        public LeveledSpell.Flag Flags => EnumBinaryTranslation<LeveledSpell.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<ILeveledSpellEntryGetter>? Entries { get; private set; }
         partial void CustomFactoryEnd(

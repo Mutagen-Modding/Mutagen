@@ -3551,11 +3551,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Scene.Flag? Flags => _FlagsLocation.HasValue ? (Scene.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Scene.Flag?);
+        public Scene.Flag? Flags => EnumBinaryTranslation<Scene.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
-        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = Array.Empty<IScenePhaseGetter>();
-        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = Array.Empty<ISceneActorGetter>();
-        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = Array.Empty<ISceneActionGetter>();
+        public IReadOnlyList<IScenePhaseGetter> Phases { get; private set; } = [];
+        public IReadOnlyList<ISceneActorGetter> Actors { get; private set; } = [];
+        public IReadOnlyList<ISceneActionGetter> Actions { get; private set; } = [];
         public IScenePhaseUnusedDataGetter? Unused { get; private set; }
         public IScenePhaseUnusedDataGetter? Unused2 { get; private set; }
         #region Quest
@@ -3586,7 +3586,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region SetParentQuestStage
         private RangeInt32? _SetParentQuestStageLocation;
         public ISceneSetParentQuestStageGetter? SetParentQuestStage => _SetParentQuestStageLocation.HasValue ? SceneSetParentQuestStageBinaryOverlay.SceneSetParentQuestStageFactory(_recordData.Slice(_SetParentQuestStageLocation!.Value.Min), _package) : default;

@@ -39,6 +39,35 @@ If you're just copy pasting code, often it will not compile because some require
 
 [:octicons-arrow-right-24: Mod Retrieval](loadorder/index.md#accessing-specific-listings)
 
+## Basic Record Inspection and Override Example
+``` cs
+using var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE);
+
+var outgoingPatch = new SkyrimMod("MyPatch.esp", SkyrimRelease.SkyrimSE);
+
+foreach (var readonlyNpc in env.LoadOrder.PriorityOrder.Npc().WinningContextOverrides())
+{
+    // Readonly phase
+    // Skip npc if health offset greater than 100
+    if (readonlyNpc.Record.Configuration.HealthOffset < 100) continue;
+    // Mutable phase
+    var npc = readonlyNpc.GetOrAddAsOverride(outgoingPatch);
+    // Set all lower health offsets to be at least 100
+    npc.Configuration.HealthOffset = 100;
+}
+
+outgoingPatch.BeginWrite
+    .ToPath(Path.Combine("SomePath", outgoingPatch.ModKey.FileName))
+    .WithLoadOrder(env.LoadOrder)
+    .Write();
+```
+
+[:octicons-arrow-right-24: Environments](environment/index.md)
+
+[:octicons-arrow-right-24: Winning Overrides](loadorder/Winning-Overrides.md)
+
+[:octicons-arrow-right-24: Readonly Best Practice](best-practices/Read-Only.md)
+
 ## Construct a ModKey
 === "FromFileName"
     ``` cs

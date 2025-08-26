@@ -2336,7 +2336,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISurfaceTree);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region CNAM
         private int? _CNAMLocation;
         public ReadOnlyMemorySlice<Byte> CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;

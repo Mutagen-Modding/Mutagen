@@ -2685,11 +2685,11 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _PreviousItemLocation;
         public IFormLinkNullableGetter<IDialogItemGetter> PreviousItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogItemGetter>(_package, _recordData, _PreviousItemLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = [];
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = [];
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = [];
         #region Script
         private IScriptFieldsGetter? _Script;
         public IScriptFieldsGetter Script => _Script ?? new ScriptFields();

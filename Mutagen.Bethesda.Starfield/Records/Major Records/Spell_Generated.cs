@@ -1366,6 +1366,7 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IEffectRecord,
         IFormLinkContainer,
+        IHasEffects,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpellInternal>,
         INamed,
@@ -1422,6 +1423,7 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IEffectRecordGetter,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpellGetter>,
         IMapsToGetter<ISpellGetter>,
@@ -3285,7 +3287,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MUIDLocation;
         public Int32? MUID => _MUIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MUIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

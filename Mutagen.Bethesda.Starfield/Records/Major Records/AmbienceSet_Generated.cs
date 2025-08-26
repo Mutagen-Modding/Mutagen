@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAmbientSoundEventGetter>? Sounds { get; private set; }
         #region MergeBehavior
         private int? _MergeBehaviorLocation;
-        public AmbienceSet.MergeBehaviorEnum? MergeBehavior => _MergeBehaviorLocation.HasValue ? (AmbienceSet.MergeBehaviorEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MergeBehaviorLocation!.Value, _package.MetaData.Constants)[0] : default(AmbienceSet.MergeBehaviorEnum?);
+        public AmbienceSet.MergeBehaviorEnum? MergeBehavior => EnumBinaryTranslation<AmbienceSet.MergeBehaviorEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MergeBehaviorLocation, _recordData, _package, 1);
         #endregion
         public ISoundReferenceGetter? WallaExterior { get; private set; }
         partial void CustomFactoryEnd(

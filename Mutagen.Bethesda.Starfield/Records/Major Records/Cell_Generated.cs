@@ -3407,6 +3407,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellInternal obj)
+        {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -3418,8 +3423,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -3427,7 +3432,18 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -4705,6 +4721,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellGetter obj)
+        {
             foreach (var subItem in obj.NavigationMeshes)
             {
                 yield return subItem;
@@ -4728,11 +4749,22 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -4744,14 +4776,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -6610,7 +6642,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Cell.MajorFlag MajorFlags => (Cell.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -6625,7 +6657,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag?);
+        public Cell.Flag? Flags => EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region Grid
         private RangeInt32? _GridLocation;
@@ -6651,7 +6683,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _XILSLocation;
         public Single? XILS => _XILSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XILSLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<ICellXCLAItemGetter> XCLAs { get; private set; } = Array.Empty<ICellXCLAItemGetter>();
+        public IReadOnlyList<ICellXCLAItemGetter> XCLAs { get; private set; } = [];
         #region WaterData
         private int? _WaterDataLocation;
         public ReadOnlyMemorySlice<Byte>? WaterData => _WaterDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -6710,7 +6742,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _TimeOfDayLocation;
         public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITimeOfDayRecordGetter>(_package, _recordData, _TimeOfDayLocation);
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = [];
         #region IsLinkedRefTransient
         private int? _IsLinkedRefTransientLocation;
         public Boolean IsLinkedRefTransient => _IsLinkedRefTransientLocation.HasValue ? true : default(Boolean);

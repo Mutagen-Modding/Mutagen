@@ -1260,7 +1260,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Type
         private int? _TypeLocation;
-        public FindMatchingRefNearAlias.TypeEnum? Type => _TypeLocation.HasValue ? (FindMatchingRefNearAlias.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(FindMatchingRefNearAlias.TypeEnum?);
+        public FindMatchingRefNearAlias.TypeEnum? Type => EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region RefType
         private int? _RefTypeLocation;

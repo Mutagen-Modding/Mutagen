@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DelayStartTimeActionLocation;
         public Single? DelayStartTimeAction => _DelayStartTimeActionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DelayStartTimeActionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Action
         private int? _ActionLocation;
         public IFormLinkNullableGetter<IActionRecordGetter> Action => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActionRecordGetter>(_package, _recordData, _ActionLocation);

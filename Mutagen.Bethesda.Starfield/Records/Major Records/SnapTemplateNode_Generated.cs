@@ -2779,7 +2779,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IModelGetter? Model { get; private set; }
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -2797,8 +2797,8 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SNSTLocation;
         public UInt32? SNST => _SNSTLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNSTLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISnapTemplateNodeGetter>> AdjacentSnapNodes { get; private set; } = Array.Empty<IFormLinkGetter<ISnapTemplateNodeGetter>>();
-        public IReadOnlyList<Single> SnapAngles { get; private set; } = Array.Empty<Single>();
+        public IReadOnlyList<IFormLinkGetter<ISnapTemplateNodeGetter>> AdjacentSnapNodes { get; private set; } = [];
+        public IReadOnlyList<Single> SnapAngles { get; private set; } = [];
         #region ArtObject
         private int? _ArtObjectLocation;
         public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _ArtObjectLocation);

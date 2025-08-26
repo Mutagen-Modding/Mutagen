@@ -1928,12 +1928,12 @@ namespace Mutagen.Bethesda.Starfield
         private int? _QuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
-        public IReadOnlyList<ISceneCollectionItemGetter> Scenes { get; private set; } = Array.Empty<ISceneCollectionItemGetter>();
+        public IReadOnlyList<ISceneCollectionItemGetter> Scenes { get; private set; } = [];
         #region VNAM
         private int? _VNAMLocation;
         public Int32? VNAM => _VNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<Int64> XNAMs { get; private set; } = Array.Empty<Int64>();
+        public IReadOnlyList<Int64> XNAMs { get; private set; } = [];
         #region VNAM2
         private int? _VNAM2Location;
         public Int32? VNAM2 => _VNAM2Location.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNAM2Location.Value, _package.MetaData.Constants)) : default(Int32?);

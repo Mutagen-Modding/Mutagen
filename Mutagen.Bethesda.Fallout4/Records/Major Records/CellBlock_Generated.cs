@@ -1198,6 +1198,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellBlock obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellBlock obj)
+        {
             foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1209,8 +1214,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1218,7 +1223,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellBlock obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1612,6 +1628,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellBlockGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellBlockGetter obj)
+        {
             foreach (var subItem in obj.SubBlocks)
             {
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1626,11 +1647,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellBlockGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellBlockGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1642,14 +1674,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!CellBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -2108,7 +2140,7 @@ namespace Mutagen.Bethesda.Fallout4
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = Array.Empty<ICellSubBlockGetter>();
+        public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2133,6 +2133,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IDialogTopicInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IDialogTopicInternal obj)
+        {
             foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -2144,8 +2149,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return DialogTopicCommon.Instance.EnumerateMajorRecords(obj);
+            return DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -2153,7 +2158,18 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IDialogTopicInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -2879,6 +2895,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IDialogTopicGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IDialogTopicGetter obj)
+        {
             foreach (var subItem in obj.Responses)
             {
                 yield return subItem;
@@ -2894,11 +2915,22 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return DialogTopicCommon.Instance.EnumerateMajorRecords(obj);
+            return DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IDialogTopicGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IDialogTopicGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -2910,14 +2942,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!DialogTopic_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -3849,7 +3881,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public DialogTopic.MajorFlag MajorFlags => (DialogTopic.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -3900,7 +3932,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SubtypeName
         private int? _SubtypeNameLocation;
-        public DialogTopic.SubtypeNameEnum SubtypeName => _SubtypeNameLocation.HasValue ? (DialogTopic.SubtypeNameEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation!.Value, _package.MetaData.Constants)) : default(DialogTopic.SubtypeNameEnum);
+        public DialogTopic.SubtypeNameEnum SubtypeName => EnumBinaryTranslation<DialogTopic.SubtypeNameEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_SubtypeNameLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; private set; }
         #region InfoListCount

@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Model.Flag? Flags => _FlagsLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
+        public Model.Flag? Flags => EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;
@@ -1710,7 +1710,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FlagsVestigial
         private int? _FlagsVestigialLocation;
-        public Model.Flag? FlagsVestigial => _FlagsVestigialLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsVestigialLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
+        public Model.Flag? FlagsVestigial => EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsVestigialLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

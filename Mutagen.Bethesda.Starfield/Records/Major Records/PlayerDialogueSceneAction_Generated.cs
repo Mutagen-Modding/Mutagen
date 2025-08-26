@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DialogueTargetActorLocation;
         public Int32? DialogueTargetActor => _DialogueTargetActorLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueTargetActorLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IPlayerDialogueSceneActionItemGetter> DialogueList { get; private set; } = Array.Empty<IPlayerDialogueSceneActionItemGetter>();
+        public IReadOnlyList<IPlayerDialogueSceneActionItemGetter> DialogueList { get; private set; } = [];
         #region ATTR
         private int? _ATTRLocation;
         public ReadOnlyMemorySlice<Byte>? ATTR => _ATTRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ATTRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);

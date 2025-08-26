@@ -1975,11 +1975,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public ActorValueInformation.Flag? Flags => _FlagsLocation.HasValue ? (ActorValueInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ActorValueInformation.Flag?);
+        public ActorValueInformation.Flag? Flags => EnumBinaryTranslation<ActorValueInformation.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public ActorValueInformation.Types? Type => _TypeLocation.HasValue ? (ActorValueInformation.Types)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueInformation.Types?);
+        public ActorValueInformation.Types? Type => EnumBinaryTranslation<ActorValueInformation.Types, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region Min
         private int? _MinLocation;

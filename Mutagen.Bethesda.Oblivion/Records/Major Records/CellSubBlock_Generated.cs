@@ -1161,6 +1161,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellSubBlock obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellSubBlock obj)
+        {
             foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1172,8 +1177,8 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellSubBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return CellSubBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1181,7 +1186,18 @@ namespace Mutagen.Bethesda.Oblivion
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellSubBlock obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellSubBlockCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1483,6 +1499,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellSubBlockGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellSubBlockGetter obj)
+        {
             foreach (var subItem in obj.Cells)
             {
                 yield return subItem;
@@ -1498,11 +1519,22 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellSubBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return CellSubBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellSubBlockGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellSubBlockGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1514,14 +1546,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
                     if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IOblivionMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

@@ -1173,6 +1173,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureAssociation,
+        IHasEffects,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpellInternal>,
         INamed,
@@ -1227,6 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
+        IHasEffectsGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpellGetter>,
         IMapsToGetter<ISpellGetter>,
@@ -2755,7 +2757,7 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _CastingPerk_IsSet => _SPITLocation.HasValue;
         public IFormLinkGetter<IPerkGetter> CastingPerk => _CastingPerk_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_CastingPerkLocation, 0x4), isSet: _CastingPerk_IsSet) : FormLink<IPerkGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

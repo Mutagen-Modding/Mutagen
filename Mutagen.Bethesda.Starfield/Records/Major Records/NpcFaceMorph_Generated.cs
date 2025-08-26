@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _IndexLocation;
         public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<INpcMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<INpcMorphGroupGetter>();
+        public IReadOnlyList<INpcMorphGroupGetter> MorphGroups { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

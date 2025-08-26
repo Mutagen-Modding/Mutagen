@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFormList);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -2166,8 +2166,8 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; private set; } = Array.Empty<IFormLinkGetter<IStarfieldMajorRecordGetter>>();
-        public IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; private set; } = Array.Empty<IFormListConditionalEntryGetter>();
+        public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; private set; } = [];
+        public IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; private set; } = [];
         #region AddToList
         private int? _AddToListLocation;
         public IFormLinkNullableGetter<IFormListGetter> AddToList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _AddToListLocation);

@@ -113,6 +113,7 @@ internal sealed class ImmutableModLinkCacheCategory<TKey>
                     var majorRecords = new Cache<LinkCacheItem, TKey>(x => _keyGetter(x).Value);
                     foreach (var regis in objs.Registrations)
                     {
+                        if (!regis.ClassType.InheritsFrom(typeof(MajorRecord))) continue;
                         majorRecords.Set(
                             GetCache(
                                 type: regis.GetterType,

@@ -3703,10 +3703,10 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IPlanet);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         public IReadOnlyList<IMasterWorldspaceGetter>? MasterWorldspaces { get; private set; }
         public IReadOnlyList<IAddedWorldspaceGetter>? AddedWorldspaces { get; private set; }
-        public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
+        public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = [];
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
         public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceTreeGetter>(_package, _recordData, _SurfaceTreeLocation);
@@ -3725,7 +3725,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region BodyType
         private int? _BodyTypeLocation;
-        public Planet.BodyTypeEnum BodyType => _BodyTypeLocation.HasValue ? (Planet.BodyTypeEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyTypeLocation!.Value, _package.MetaData.Constants)[0] : default(Planet.BodyTypeEnum);
+        public Planet.BodyTypeEnum BodyType => EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_BodyTypeLocation, _recordData, _package, 1);
         #endregion
         #region SpaceCell
         private RangeInt32? _SpaceCellLocation;
@@ -3758,7 +3758,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PlayerKnowledge
         private int? _PlayerKnowledgeLocation;
-        public Planet.PlayerKnowledgeFlag? PlayerKnowledge => _PlayerKnowledgeLocation.HasValue ? (Planet.PlayerKnowledgeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerKnowledgeLocation!.Value, _package.MetaData.Constants)) : default(Planet.PlayerKnowledgeFlag?);
+        public Planet.PlayerKnowledgeFlag? PlayerKnowledge => EnumBinaryTranslation<Planet.PlayerKnowledgeFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_PlayerKnowledgeLocation, _recordData, _package, 4);
         #endregion
         #region Temperature
         private int? _TemperatureLocation;

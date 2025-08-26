@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Flags
         private int? _FlagsLocation;
-        public MusicType.Flag Flags => _FlagsLocation.HasValue ? (MusicType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MusicType.Flag);
+        public MusicType.Flag Flags => EnumBinaryTranslation<MusicType.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

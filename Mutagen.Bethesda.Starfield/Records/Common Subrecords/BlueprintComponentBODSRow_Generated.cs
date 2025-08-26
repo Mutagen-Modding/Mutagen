@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IBlueprintComponentBODSItemGetter> BODSItems { get; private set; } = Array.Empty<IBlueprintComponentBODSItemGetter>();
+        public IReadOnlyList<IBlueprintComponentBODSItemGetter> BODSItems { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -631,6 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEnchantment :
         IEnchantmentGetter,
         IFormLinkContainer,
+        IHasEffects,
         ILoquiObjectSetter<IEnchantmentInternal>,
         INamed,
         INamedRequired,
@@ -656,6 +657,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         ILoquiObject<IEnchantmentGetter>,
         IMapsToGetter<IEnchantmentGetter>,
         INamedGetter,
@@ -1728,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _DataLocation;
         public IEnchantmentDataGetter? Data => _DataLocation.HasValue ? EnchantmentDataBinaryOverlay.EnchantmentDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

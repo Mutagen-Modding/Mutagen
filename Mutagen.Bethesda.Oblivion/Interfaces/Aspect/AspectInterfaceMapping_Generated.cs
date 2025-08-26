@@ -20,6 +20,20 @@ namespace Mutagen.Bethesda.Oblivion
         public OblivionAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHasEffects)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Enchantment_Registration.Instance,
+                    Ingredient_Registration.Instance,
+                    Potion_Registration.Instance,
+                    SigilStone_Registration.Instance,
+                    Spell_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasEffects),
+                    Getter: typeof(IHasEffectsGetter)));
+            dict[typeof(IHasEffectsGetter)] = dict[typeof(IHasEffects)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

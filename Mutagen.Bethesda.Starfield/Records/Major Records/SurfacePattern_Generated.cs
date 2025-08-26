@@ -2794,7 +2794,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISurfacePattern);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region SurfacePatternStyle
         private int? _SurfacePatternStyleLocation;
         public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);

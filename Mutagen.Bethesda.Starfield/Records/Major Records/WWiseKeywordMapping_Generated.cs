@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _WMSSLocation;
         public UInt32? WMSS => _WMSSLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WMSSLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IWWiseKeywordMappingItemGetter> Items { get; private set; } = Array.Empty<IWWiseKeywordMappingItemGetter>();
+        public IReadOnlyList<IWWiseKeywordMappingItemGetter> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

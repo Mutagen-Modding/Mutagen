@@ -1333,6 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHarvestTarget,
         IHasDestructible,
+        IHasEffects,
         IHasIcons,
         IIngestibleGetter,
         IItem,
@@ -1410,6 +1411,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IHasDestructibleGetter,
+        IHasEffectsGetter,
         IHasIconsGetter,
         IItemGetter,
         IItemOrListGetter,
@@ -3252,7 +3254,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _ConsumeSound_IsSet => _ENITLocation.HasValue;
         public IFormLinkGetter<ISoundDescriptorGetter> ConsumeSound => _ConsumeSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_ConsumeSoundLocation, 0x4), isSet: _ConsumeSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

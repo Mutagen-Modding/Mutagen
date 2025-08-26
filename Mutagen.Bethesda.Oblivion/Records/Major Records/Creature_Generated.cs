@@ -3991,8 +3991,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = Array.Empty<IItemEntryGetter>();
-        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
+        public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = [];
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
@@ -4002,7 +4002,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _ConfigurationLocation;
         public ICreatureConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? CreatureConfigurationBinaryOverlay.CreatureConfigurationFactory(_recordData.Slice(_ConfigurationLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = [];
         #region DeathItem
         private int? _DeathItemLocation;
         public IFormLinkNullableGetter<IItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IItemGetter>(_package, _recordData, _DeathItemLocation);
@@ -4015,7 +4015,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _AIDataLocation;
         public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(_recordData.Slice(_AIDataLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = Array.Empty<IFormLinkGetter<IAIPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = [];
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
@@ -4053,7 +4053,7 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _InheritsSoundFromLocation;
         public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICreatureGetter>(_package, _recordData, _InheritsSoundFromLocation);
         #endregion
-        public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = Array.Empty<ICreatureSoundGetter>();
+        public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

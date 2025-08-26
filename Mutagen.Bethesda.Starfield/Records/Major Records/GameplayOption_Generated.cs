@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Starfield
         public partial IAGameplayOptionDataGetter? GetDataCustom();
         public IAGameplayOptionDataGetter? Data => GetDataCustom();
         #endregion
-        public IReadOnlyList<IGameplayOptionRewardGetter> Rewards { get; private set; } = Array.Empty<IGameplayOptionRewardGetter>();
+        public IReadOnlyList<IGameplayOptionRewardGetter> Rewards { get; private set; } = [];
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;

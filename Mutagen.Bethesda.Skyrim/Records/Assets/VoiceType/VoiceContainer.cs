@@ -22,7 +22,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     {
         foreach (var voiceType in voiceTypes)
         {
-            _voices.Add(voiceType, new HashSet<FormKey> { npc });
+            _voices.Add(voiceType, [npc]);
         }
     }
 
@@ -55,14 +55,14 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public VoiceContainer(string voiceType)
     {
-        _voices.Add(voiceType, new HashSet<FormKey>());
+        _voices.Add(voiceType, []);
     }
 
     public VoiceContainer(IEnumerable<string> voiceTypes)
     {
         foreach (var voiceType in voiceTypes)
         {
-            _voices.Add(voiceType, new HashSet<FormKey>());
+            _voices.Add(voiceType, []);
         }
     }
     #endregion
@@ -92,7 +92,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
             IsDefault = false;
             foreach (var (voiceType, npcs) in other.Voices)
             {
-                _voices.Add(voiceType, npcs);
+                _voices.Add(voiceType, [..npcs]);
             }
             return;
         }
@@ -104,10 +104,10 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             if (other._voices.TryGetValue(voiceType, out var otherNpcs))
             {
-                if (npcs.Any())
+                if (npcs.Count > 0)
                 {
                     //We don't have all NPCs of this voice type
-                    if (otherNpcs.Any())
+                    if (otherNpcs.Count > 0)
                     {
                         //Only intersect if other doesn't have all NPCs, otherwise it stays the same
                         npcs.IntersectWith(otherNpcs);
@@ -146,9 +146,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
             if (_voices.TryGetValue(voiceType, out var otherNpcs))
             {
                 //Don't add anything when we have all NPCs of this voice type
-                if (!otherNpcs.Any()) continue;
+                if (otherNpcs.Count == 0) continue;
 
-                if (npcs.Any())
+                if (npcs.Count > 0)
                 {
                     //Insert as usual
                     foreach (var npc in npcs)
@@ -162,7 +162,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
                 }
             } else
             {
-                _voices.Add(voiceType, new HashSet<FormKey>(npcs));
+                _voices.Add(voiceType, [..npcs]);
             }
         }
 
@@ -196,7 +196,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
                     }
 
                     //If all npcs are gone, remove the voice type
-                    if (!npcs.Any())
+                    if (npcs.Count == 0)
                     {
                         removeVoiceTypes.Add(voiceType);
                     }
@@ -232,7 +232,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
         foreach (var (voice, npcs) in _voices)
         {
-            clone._voices.Add(voice, new HashSet<FormKey>(npcs));
+            clone._voices.Add(voice, [..npcs]);
         }
 
         return clone;

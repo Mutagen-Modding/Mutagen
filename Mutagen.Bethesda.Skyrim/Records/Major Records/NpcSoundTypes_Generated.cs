@@ -1222,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = Array.Empty<INpcSoundTypeGetter>();
+        public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

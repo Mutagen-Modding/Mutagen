@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Flags
         private int? _FlagsLocation;
-        public AStoryManagerNode.Flag? Flags => _FlagsLocation.HasValue ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AStoryManagerNode.Flag?);
+        public AStoryManagerNode.Flag? Flags => EnumBinaryTranslation<AStoryManagerNode.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region MaxConcurrentQuests
         private int? _MaxConcurrentQuestsLocation;
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Type
         private int? _TypeLocation;
-        public StoryManagerEventNode.Types? Type => _TypeLocation.HasValue ? (StoryManagerEventNode.Types)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(StoryManagerEventNode.Types?);
+        public StoryManagerEventNode.Types? Type => EnumBinaryTranslation<StoryManagerEventNode.Types, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

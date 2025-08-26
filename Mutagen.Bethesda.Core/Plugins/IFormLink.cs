@@ -103,7 +103,10 @@ public interface IFormLink<out TMajorGetter> : IFormLinkGetter<TMajorGetter>, IC
 /// FormKey is allowed to be null to communicate absence of a record.
 /// </summary>
 /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
-public interface IFormLinkNullableGetter<out TMajorGetter> : ILink<TMajorGetter>, IFormLinkGetter, IFormLinkGetter<TMajorGetter>
+public interface IFormLinkNullableGetter<out TMajorGetter> :
+    ILink<TMajorGetter>,
+    IFormLinkGetter,
+    IFormLinkGetter<TMajorGetter>
     where TMajorGetter : class, IMajorRecordGetter
 {
     /// <summary>

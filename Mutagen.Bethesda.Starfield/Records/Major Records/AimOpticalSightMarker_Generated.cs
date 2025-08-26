@@ -2390,7 +2390,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAimOpticalSightMarker);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         private RangeInt32? _ANAMLocation;
         #region ActivateSightOnSightedMode
         private int _ActivateSightOnSightedModeLocation => _ANAMLocation!.Value.Min;

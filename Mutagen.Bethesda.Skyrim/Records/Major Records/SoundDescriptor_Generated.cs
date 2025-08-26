@@ -138,16 +138,16 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundLoopAndRumbleGetter? ISoundDescriptorGetter.LoopAndRumble => this.LoopAndRumble;
         #endregion
         #region PercentFrequencyShift
-        public Percent PercentFrequencyShift { get; set; } = default(Percent);
+        public SByte PercentFrequencyShift { get; set; } = default(SByte);
         #endregion
         #region PercentFrequencyVariance
-        public Percent PercentFrequencyVariance { get; set; } = default(Percent);
+        public SByte PercentFrequencyVariance { get; set; } = default(SByte);
         #endregion
         #region Priority
-        public SByte Priority { get; set; } = default(SByte);
+        public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Variance
-        public SByte Variance { get; set; } = default(SByte);
+        public Byte Variance { get; set; } = default(Byte);
         #endregion
         #region StaticAttenuation
         public Single StaticAttenuation { get; set; } = default(Single);
@@ -1084,10 +1084,10 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
-        new Percent PercentFrequencyShift { get; set; }
-        new Percent PercentFrequencyVariance { get; set; }
-        new SByte Priority { get; set; }
-        new SByte Variance { get; set; }
+        new SByte PercentFrequencyShift { get; set; }
+        new SByte PercentFrequencyVariance { get; set; }
+        new Byte Priority { get; set; }
+        new Byte Variance { get; set; }
         new Single StaticAttenuation { get; set; }
     }
 
@@ -1117,10 +1117,10 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? String { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ISoundLoopAndRumbleGetter? LoopAndRumble { get; }
-        Percent PercentFrequencyShift { get; }
-        Percent PercentFrequencyVariance { get; }
-        SByte Priority { get; }
-        SByte Variance { get; }
+        SByte PercentFrequencyShift { get; }
+        SByte PercentFrequencyVariance { get; }
+        Byte Priority { get; }
+        Byte Variance { get; }
         Single StaticAttenuation { get; }
 
     }
@@ -1419,10 +1419,10 @@ namespace Mutagen.Bethesda.Skyrim
             item.String = default;
             item.Conditions.Clear();
             item.LoopAndRumble = null;
-            item.PercentFrequencyShift = default(Percent);
-            item.PercentFrequencyVariance = default(Percent);
-            item.Priority = default(SByte);
-            item.Variance = default(SByte);
+            item.PercentFrequencyShift = default(SByte);
+            item.PercentFrequencyVariance = default(SByte);
+            item.Priority = default(Byte);
+            item.Variance = default(Byte);
             item.StaticAttenuation = default(Single);
             base.Clear(item);
         }
@@ -1553,8 +1553,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.LoopAndRumble,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PercentFrequencyShift = item.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift);
-            ret.PercentFrequencyVariance = item.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance);
+            ret.PercentFrequencyShift = item.PercentFrequencyShift == rhs.PercentFrequencyShift;
+            ret.PercentFrequencyVariance = item.PercentFrequencyVariance == rhs.PercentFrequencyVariance;
             ret.Priority = item.Priority == rhs.Priority;
             ret.Variance = item.Variance == rhs.Variance;
             ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
@@ -1770,11 +1770,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyShift) ?? true))
             {
-                if (!lhs.PercentFrequencyShift.Equals(rhs.PercentFrequencyShift)) return false;
+                if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyVariance) ?? true))
             {
-                if (!lhs.PercentFrequencyVariance.Equals(rhs.PercentFrequencyVariance)) return false;
+                if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Priority) ?? true))
             {
@@ -2305,14 +2305,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.BNAM)))
             {
-                PercentBinaryTranslation.Write(
-                    writer: writer,
-                    item: item.PercentFrequencyShift,
-                    integerType: FloatIntegerType.Byte);
-                PercentBinaryTranslation.Write(
-                    writer: writer,
-                    item: item.PercentFrequencyVariance,
-                    integerType: FloatIntegerType.Byte);
+                writer.Write(item.PercentFrequencyShift);
+                writer.Write(item.PercentFrequencyVariance);
                 writer.Write(item.Priority);
                 writer.Write(item.Variance);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2461,17 +2455,13 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
-                    item.PercentFrequencyShift = PercentBinaryTranslation.Parse(
-                        reader: dataFrame,
-                        integerType: FloatIntegerType.Byte);
+                    item.PercentFrequencyShift = dataFrame.ReadInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.PercentFrequencyVariance = PercentBinaryTranslation.Parse(
-                        reader: dataFrame,
-                        integerType: FloatIntegerType.Byte);
+                    item.PercentFrequencyVariance = dataFrame.ReadInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.Priority = dataFrame.ReadInt8();
+                    item.Priority = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.Variance = dataFrame.ReadInt8();
+                    item.Variance = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 2) return null;
                     item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
@@ -2542,7 +2532,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Type
         private int? _TypeLocation;
-        public SoundDescriptor.DescriptorType? Type => _TypeLocation.HasValue ? (SoundDescriptor.DescriptorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(SoundDescriptor.DescriptorType?);
+        public SoundDescriptor.DescriptorType? Type => EnumBinaryTranslation<SoundDescriptor.DescriptorType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region Category
         private int? _CategoryLocation;
@@ -2552,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _AlternateSoundForLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AlternateSoundForLocation);
         #endregion
-        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = Array.Empty<IAssetLinkGetter<SkyrimSoundAssetType>>();
+        public IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; private set; } = [];
         #region OutputModel
         private int? _OutputModelLocation;
         public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _OutputModelLocation);
@@ -2561,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _StringLocation;
         public ITranslatedStringGetter? String => _StringLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StringLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region LoopAndRumble
         private RangeInt32? _LoopAndRumbleLocation;
         public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(_recordData.Slice(_LoopAndRumbleLocation!.Value.Min), _package) : default;
@@ -2570,22 +2560,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region PercentFrequencyShift
         private int _PercentFrequencyShiftLocation => _BNAMLocation!.Value.Min;
         private bool _PercentFrequencyShift_IsSet => _BNAMLocation.HasValue;
-        public Percent PercentFrequencyShift => _PercentFrequencyShift_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PercentFrequencyShiftLocation, 1), FloatIntegerType.Byte) : default(Percent);
+        public SByte PercentFrequencyShift => _PercentFrequencyShift_IsSet ? (sbyte)_recordData.Slice(_PercentFrequencyShiftLocation, 1)[0] : default(SByte);
         #endregion
         #region PercentFrequencyVariance
         private int _PercentFrequencyVarianceLocation => _BNAMLocation!.Value.Min + 0x1;
         private bool _PercentFrequencyVariance_IsSet => _BNAMLocation.HasValue;
-        public Percent PercentFrequencyVariance => _PercentFrequencyVariance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PercentFrequencyVarianceLocation, 1), FloatIntegerType.Byte) : default(Percent);
+        public SByte PercentFrequencyVariance => _PercentFrequencyVariance_IsSet ? (sbyte)_recordData.Slice(_PercentFrequencyVarianceLocation, 1)[0] : default(SByte);
         #endregion
         #region Priority
         private int _PriorityLocation => _BNAMLocation!.Value.Min + 0x2;
         private bool _Priority_IsSet => _BNAMLocation.HasValue;
-        public SByte Priority => _Priority_IsSet ? (sbyte)_recordData.Slice(_PriorityLocation, 1)[0] : default(SByte);
+        public Byte Priority => _Priority_IsSet ? _recordData.Span[_PriorityLocation] : default;
         #endregion
         #region Variance
         private int _VarianceLocation => _BNAMLocation!.Value.Min + 0x3;
         private bool _Variance_IsSet => _BNAMLocation.HasValue;
-        public SByte Variance => _Variance_IsSet ? (sbyte)_recordData.Slice(_VarianceLocation, 1)[0] : default(SByte);
+        public Byte Variance => _Variance_IsSet ? _recordData.Span[_VarianceLocation] : default;
         #endregion
         #region StaticAttenuation
         private int _StaticAttenuationLocation => _BNAMLocation!.Value.Min + 0x4;

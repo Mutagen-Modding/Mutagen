@@ -1268,6 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHarvestTarget,
         IHasDestructible,
+        IHasEffects,
         IHasIcons,
         IHaveVirtualMachineAdapter,
         IIngredientGetter,
@@ -1343,6 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IHasDestructibleGetter,
+        IHasEffectsGetter,
         IHasIconsGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
@@ -3190,7 +3192,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _Flags_IsSet => _ENITLocation.HasValue;
         public Ingredient.Flag Flags => _Flags_IsSet ? (Ingredient.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

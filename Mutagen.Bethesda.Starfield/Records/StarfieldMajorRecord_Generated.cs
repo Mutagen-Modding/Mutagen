@@ -1081,6 +1081,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public virtual IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMajorRecordInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public virtual IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IStarfieldMajorRecordInternal obj)
+        {
             foreach (var item in StarfieldMajorRecordCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1092,8 +1097,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return StarfieldMajorRecordCommon.Instance.EnumerateMajorRecords(obj);
+            return StarfieldMajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1101,7 +1106,18 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in StarfieldMajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IStarfieldMajorRecordInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in StarfieldMajorRecordCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1366,6 +1382,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IStarfieldMajorRecordGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IStarfieldMajorRecordGetter obj)
+        {
             yield break;
         }
         
@@ -1374,11 +1395,22 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return StarfieldMajorRecordCommon.Instance.EnumerateMajorRecords(obj);
+            return StarfieldMajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IStarfieldMajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IStarfieldMajorRecordGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1390,14 +1422,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!StarfieldMajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

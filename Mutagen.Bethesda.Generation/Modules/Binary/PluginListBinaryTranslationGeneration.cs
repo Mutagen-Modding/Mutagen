@@ -722,7 +722,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         }
                         else
                         {
-                            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = Array.Empty<{typeName}>();")}");
+                            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = [];")}");
                         }
                     }
                     else
@@ -734,7 +734,7 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         else if (data.HasTrigger)
         {
-            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = Array.Empty<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>();")}");
+            sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} {{ get; private set; }}{(typeGen.Nullable ? null : $" = [];")}");
         }
         else
         {

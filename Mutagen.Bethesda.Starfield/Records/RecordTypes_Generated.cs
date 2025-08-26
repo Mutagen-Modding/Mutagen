@@ -1337,6 +1337,7 @@ public partial class RecordTypes
     public static readonly RecordType XPRM = new(0x4D525058);
     public static readonly RecordType XPWR = new(0x52575058);
     public static readonly RecordType XRDS = new(0x53445258);
+    public static readonly RecordType XRFE = new(0x45465258);
     public static readonly RecordType XRFG = new(0x47465258);
     public static readonly RecordType XRGB = new(0x42475258);
     public static readonly RecordType XRGD = new(0x44475258);

@@ -23,10 +23,10 @@
   <Object name="ASoundDescriptor" objType="Subrecord" abstract="true" />
   <Object name="SoundDescriptorStandardData" objType="Subrecord" baseClass="ASoundDescriptor">
     <Fields>
-      <Percent name="PercentFrequencyShift" integerType="Byte" />
-      <Percent name="PercentFrequencyVariance" integerType="Byte" />
-      <Int8 name="Priority" />
-      <Int8 name="Variance" />
+      <Int8 name="PercentFrequencyShift" />
+      <Int8 name="PercentFrequencyVariance" />
+      <UInt8 name="Priority" />
+      <UInt8 name="Variance" />
       <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
     </Fields>
   </Object>

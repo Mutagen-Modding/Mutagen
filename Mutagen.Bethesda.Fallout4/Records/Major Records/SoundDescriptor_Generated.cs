@@ -2675,12 +2675,12 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _AlternateSoundForLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _AlternateSoundForLocation);
         #endregion
-        public IReadOnlyList<String> SoundFiles { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> SoundFiles { get; private set; } = [];
         #region OutputModel
         private int? _OutputModelLocation;
         public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundOutputModelGetter>(_package, _recordData, _OutputModelLocation);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region LoopAndRumble
         private RangeInt32? _LoopAndRumbleLocation;
         public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(_recordData.Slice(_LoopAndRumbleLocation!.Value.Min), _package) : default;
@@ -2691,7 +2691,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset,
             PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors { get; private set; } = Array.Empty<IFormLinkGetter<ISoundDescriptorGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors { get; private set; } = [];
         public IReadOnlyList<ISoundRateOfFireGetter>? RatesOfFire { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,

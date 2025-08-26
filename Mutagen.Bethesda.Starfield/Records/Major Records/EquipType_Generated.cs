@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region Flag
         private int? _FlagLocation;
-        public EquipType.Flags? Flag => _FlagLocation.HasValue ? (EquipType.Flags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagLocation!.Value, _package.MetaData.Constants)) : default(EquipType.Flags?);
+        public EquipType.Flags? Flag => EnumBinaryTranslation<EquipType.Flags, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagLocation, _recordData, _package, 4);
         #endregion
         #region ConditionActorValue
         private int? _ConditionActorValueLocation;

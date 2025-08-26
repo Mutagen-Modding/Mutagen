@@ -1676,7 +1676,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IConditionRecord);
 
 
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region OwnerQuest
         private int? _OwnerQuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _OwnerQuestLocation);

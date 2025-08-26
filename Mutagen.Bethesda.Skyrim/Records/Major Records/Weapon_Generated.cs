@@ -4569,7 +4569,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DetectionSoundLevel
         private int? _DetectionSoundLevelLocation;
-        public SoundLevel? DetectionSoundLevel => _DetectionSoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DetectionSoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
+        public SoundLevel? DetectionSoundLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_DetectionSoundLevelLocation, _recordData, _package, 4);
         #endregion
         #region Template
         private int? _TemplateLocation;

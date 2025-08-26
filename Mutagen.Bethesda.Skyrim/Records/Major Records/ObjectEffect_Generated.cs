@@ -1024,6 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectRecord,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasEffects,
         IKnowable,
         ILoquiObjectSetter<IObjectEffectInternal>,
         IMagicItem,
@@ -1070,6 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectRecordGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         IKnowableGetter,
         ILoquiObject<IObjectEffectGetter>,
         IMagicItemGetter,
@@ -2465,7 +2467,7 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
         public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IFormListGetter>(_package, _recordData.Span.Slice(_WornRestrictionsLocation, 0x4), isSet: _WornRestrictions_IsSet) : FormLink<IFormListGetter>.Null;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

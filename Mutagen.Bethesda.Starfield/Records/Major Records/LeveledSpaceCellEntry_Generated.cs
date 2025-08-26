@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _Unused2_IsSet => _LVLOLocation.HasValue;
         public SByte Unused2 => _Unused2_IsSet ? (sbyte)_recordData.Slice(_Unused2Location, 1)[0] : default(SByte);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

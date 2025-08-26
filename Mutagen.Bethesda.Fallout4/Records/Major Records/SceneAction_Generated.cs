@@ -4827,7 +4827,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneAction.Flag? Flags => _FlagsLocation.HasValue ? (SceneAction.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneAction.Flag?);
+        public SceneAction.Flag? Flags => EnumBinaryTranslation<SceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region StartPhase
         private int? _StartPhaseLocation;
@@ -4853,7 +4853,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _STSCLocation;
         public ReadOnlyMemorySlice<Byte>? STSC => _STSCLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _STSCLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = Array.Empty<IStartSceneGetter>();
+        public IReadOnlyList<IStartSceneGetter> StartScenes { get; private set; } = [];
         #region PlayerPositiveResponse
         private int? _PlayerPositiveResponseLocation;
         public IFormLinkNullableGetter<IDialogTopicGetter> PlayerPositiveResponse => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _PlayerPositiveResponseLocation);
@@ -4923,7 +4923,7 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _DialogueTargetActorIdLocation;
         public Int32? DialogueTargetActorId => _DialogueTargetActorIdLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueTargetActorIdLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = [];
         #region Topic
         private int? _TopicLocation;
         public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
@@ -4948,7 +4948,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Emotion
         private int? _EmotionLocation;
-        public Emotion? Emotion => _EmotionLocation.HasValue ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmotionLocation!.Value, _package.MetaData.Constants)) : default(Emotion?);
+        public Emotion? Emotion => EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EmotionLocation, _recordData, _package, 4);
         #endregion
         #region EmotionValue
         private int? _EmotionValueLocation;

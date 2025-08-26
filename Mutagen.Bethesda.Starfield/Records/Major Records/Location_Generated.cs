@@ -6346,7 +6346,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? AddedSpecialReferences { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? MasterSpecialReferences { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? RemovedSpecialReferences { get; private set; }
-        public IReadOnlyList<ILocationCoordinateGetter> MasterWorldspaceCells { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> MasterWorldspaceCells { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? AddedInitiallyDisabledReferences { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? MasterInitiallyDisabledReferences { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? AddedEnablePointReferences { get; private set; }

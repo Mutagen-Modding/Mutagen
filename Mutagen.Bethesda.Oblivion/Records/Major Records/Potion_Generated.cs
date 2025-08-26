@@ -793,6 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IPotion :
         IFormLinkContainer,
+        IHasEffects,
         IItem,
         ILoquiObjectSetter<IPotionInternal>,
         IModeled,
@@ -828,6 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasEffectsGetter,
         IItemGetter,
         ILoquiObject<IPotionGetter>,
         IMapsToGetter<IPotionGetter>,
@@ -2087,7 +2089,7 @@ namespace Mutagen.Bethesda.Oblivion
         private RangeInt32? _DataLocation;
         public IPotionDataGetter? Data => _DataLocation.HasValue ? PotionDataBinaryOverlay.PotionDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

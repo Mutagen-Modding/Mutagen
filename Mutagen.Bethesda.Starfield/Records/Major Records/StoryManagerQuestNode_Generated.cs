@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _HoursUntilResetLocation;
         public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = Array.Empty<IStoryManagerQuestGetter>();
+        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2573,13 +2573,13 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISnapTemplate);
 
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Parent
         private int? _ParentLocation;
         public IFormLinkNullableGetter<ISnapTemplateGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _ParentLocation);
         #endregion
-        public IReadOnlyList<ISnapNodeEntryGetter> Nodes { get; private set; } = Array.Empty<ISnapNodeEntryGetter>();
-        public IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; private set; } = Array.Empty<ISnapParentNodeEntryGetter>();
+        public IReadOnlyList<ISnapNodeEntryGetter> Nodes { get; private set; } = [];
+        public IReadOnlyList<ISnapParentNodeEntryGetter> ParentNodes { get; private set; } = [];
         #region BNAM
         private int? _BNAMLocation;
         public ReadOnlyMemorySlice<Single>? BNAM => _BNAMLocation.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants), amount: 6) : default(ReadOnlyMemorySlice<Single>?);
@@ -2596,7 +2596,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _CNAMLocation;
         public String? CNAM => _CNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<ISnapTemplateRnamTraversalGetter> SnapTemplateRnamTraversal { get; private set; } = Array.Empty<ISnapTemplateRnamTraversalGetter>();
+        public IReadOnlyList<ISnapTemplateRnamTraversalGetter> SnapTemplateRnamTraversal { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

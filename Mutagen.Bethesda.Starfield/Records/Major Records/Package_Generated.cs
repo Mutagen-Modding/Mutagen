@@ -3896,7 +3896,7 @@ namespace Mutagen.Bethesda.Starfield
         private bool _ScheduleDurationInMinutes_IsSet => _PSDTLocation.HasValue;
         public Int32 ScheduleDurationInMinutes => _ScheduleDurationInMinutes_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ScheduleDurationInMinutesLocation, 4)) : default(Int32);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
@@ -3920,7 +3920,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region PackageGroup
         private int? _PackageGroupLocation;
-        public Package.Group PackageGroup => _PackageGroupLocation.HasValue ? (Package.Group)HeaderTranslation.ExtractSubrecordMemory(_recordData, _PackageGroupLocation!.Value, _package.MetaData.Constants)[0] : default(Package.Group);
+        public Package.Group PackageGroup => EnumBinaryTranslation<Package.Group, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_PackageGroupLocation, _recordData, _package, 1);
         #endregion
         #region ProcedureTree
         partial void ProcedureTreeCustomParse(

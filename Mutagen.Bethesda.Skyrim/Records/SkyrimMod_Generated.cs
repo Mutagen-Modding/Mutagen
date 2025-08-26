@@ -7394,6 +7394,16 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ISkyrimMod obj)
         {
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ISkyrimMod obj)
+        {
             foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -7405,8 +7415,8 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return SkyrimModCommon.Instance.EnumerateMajorRecords(obj);
+            return SkyrimModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -7414,7 +7424,23 @@ namespace Mutagen.Bethesda.Skyrim
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            var ret = EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ISkyrimMod obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in SkyrimModCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -12364,6 +12390,16 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ISkyrimModGetter obj)
         {
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ISkyrimModGetter obj)
+        {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
             {
                 yield return item;
@@ -12827,11 +12863,27 @@ namespace Mutagen.Bethesda.Skyrim
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return SkyrimModCommon.Instance.EnumerateMajorRecords(obj);
+            return SkyrimModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ISkyrimModGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            var ret = EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ISkyrimModGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -12843,14 +12895,14 @@ namespace Mutagen.Bethesda.Skyrim
                 case "ISkyrimMajorRecord":
                 case "SkyrimMajorRecord":
                     if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "ISkyrimMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

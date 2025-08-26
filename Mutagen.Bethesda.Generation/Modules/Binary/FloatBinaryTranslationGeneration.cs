@@ -111,15 +111,15 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         }
         else if (floatType.HasMultiplier && floatType.HasDivisor)
         {
-            return $"{dataAccessor}.Float() * {(float)floatType.Multiplier}f / {(float)floatType.Divisor}f";
+            return $"{dataAccessor}.Float() * {floatType.MultiplierFloatString} / {floatType.DivisorFloatString}";
         }
         else if (floatType.HasMultiplier)
         {
-            return $"{dataAccessor}.Float() * {(float)floatType.Multiplier}f";
+            return $"{dataAccessor}.Float() * {floatType.MultiplierFloatString}";
         }
         else if (floatType.HasDivisor)
         {
-            return $"{dataAccessor}.Float() / {(float)floatType.Divisor}f";
+            return $"{dataAccessor}.Float() / {floatType.DivisorFloatString}";
         }
         else
         {

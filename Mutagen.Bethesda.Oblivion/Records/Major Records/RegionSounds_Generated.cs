@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region MusicType
         private int? _MusicTypeLocation;
-        public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicTypeLocation!.Value, _package.MetaData.Constants)) : default(MusicType?);
+        public MusicType? MusicType => EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MusicTypeLocation, _recordData, _package, 4);
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomFactoryEnd(

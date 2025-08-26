@@ -1969,11 +1969,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
+        public SoulLevel? ContainedSoul => EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_ContainedSoulLocation, _recordData, _package, 1);
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
-        public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
+        public SoulLevel? MaximumCapacity => EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_MaximumCapacityLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -4716,10 +4716,10 @@ namespace Mutagen.Bethesda.Starfield
         public String? FilterString => _FilterStringLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterStringLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IFloraGetter>>? Flora { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IResourceGenerationDataGetter>> ResourceGeneration { get; private set; } = Array.Empty<IFormLinkGetter<IResourceGenerationDataGetter>>();
-        public IReadOnlyList<IBiomeProceduralObjectGenerationGetter> ProceduralObjectGeneration { get; private set; } = Array.Empty<IBiomeProceduralObjectGenerationGetter>();
-        public IReadOnlyList<IFormLinkGetter<IObjectSwapGetter>> ObjectSwaps { get; private set; } = Array.Empty<IFormLinkGetter<IObjectSwapGetter>>();
-        public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>> MaterialSwaps { get; private set; } = Array.Empty<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IResourceGenerationDataGetter>> ResourceGeneration { get; private set; } = [];
+        public IReadOnlyList<IBiomeProceduralObjectGenerationGetter> ProceduralObjectGeneration { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IObjectSwapGetter>> ObjectSwaps { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>> MaterialSwaps { get; private set; } = [];
         #region Climate
         private int? _ClimateLocation;
         public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
@@ -4778,10 +4778,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Type
         private int? _TypeLocation;
-        public Biome.TypeEnum Type => _TypeLocation.HasValue ? (Biome.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Biome.TypeEnum);
+        public Biome.TypeEnum Type => EnumBinaryTranslation<Biome.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 4);
         #endregion
-        public IReadOnlyList<IBiomeMarkerTypeGetter> MarkerObjectKeywords { get; private set; } = Array.Empty<IBiomeMarkerTypeGetter>();
-        public IReadOnlyList<IBiomeTerrainGetter> Terrain { get; private set; } = Array.Empty<IBiomeTerrainGetter>();
+        public IReadOnlyList<IBiomeMarkerTypeGetter> MarkerObjectKeywords { get; private set; } = [];
+        public IReadOnlyList<IBiomeTerrainGetter> Terrain { get; private set; } = [];
         #region GroundLayerNormal
         private int? _GroundLayerNormalLocation;
         public String? GroundLayerNormal => _GroundLayerNormalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GroundLayerNormalLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);

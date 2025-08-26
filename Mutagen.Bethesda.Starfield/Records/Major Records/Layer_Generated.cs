@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Layer.MajorFlag MajorFlags => (Layer.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Parent
         private int? _ParentLocation;
         public IFormLinkNullableGetter<ILayerGetter> Parent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _ParentLocation);
@@ -1801,7 +1801,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region LodBehavior
         private int? _LodBehaviorLocation;
-        public Layer.LodBehaviorType LodBehavior => _LodBehaviorLocation.HasValue ? (Layer.LodBehaviorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodBehaviorLocation!.Value, _package.MetaData.Constants)) : default(Layer.LodBehaviorType);
+        public Layer.LodBehaviorType LodBehavior => EnumBinaryTranslation<Layer.LodBehaviorType, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_LodBehaviorLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

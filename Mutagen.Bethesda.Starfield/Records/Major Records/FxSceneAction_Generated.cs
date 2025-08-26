@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Starfield
         public Int32 FLMV => _FLMVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLMVLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region BIPL
         private int? _BIPLLocation;
         public IFormLinkGetter<IPlacedObjectGetter> BIPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _BIPLLocation);

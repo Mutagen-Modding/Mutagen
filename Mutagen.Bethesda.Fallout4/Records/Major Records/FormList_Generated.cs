@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Items { get; private set; } = Array.Empty<IFormLinkGetter<IFallout4MajorRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
