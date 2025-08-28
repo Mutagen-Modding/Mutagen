@@ -519,24 +519,24 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         if (!IsLoqui) 
         { 
             reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
-        }
-
-        reader = reader.SpawnWithLength(subHeader.ContentLength);
+        } 
+ 
+        var loopReader = reader.SpawnAll().SpawnWithLength(subHeader.ContentLength); 
         
         var ret = new ExtendedList<T>(); 
         var startingPos = reader.Position; 
         for (int i = 0; i < amount; i++) 
-        {
-            if (reader.Remaining == 0)
-            {
-                break;
-            }
+        { 
+            if (loopReader.Remaining == 0) 
+            { 
+                break; 
+            } 
             if (transl(reader, out var subIitem)) 
             { 
                 ret.Add(subIitem); 
             } 
         } 
-        if (ret.Count != 0 && reader.Position == startingPos) 
+        if (ret.Count != 0 && reader.Position == startingPos)  
         { 
             throw SubrecordException.Enrich( 
                 new MalformedDataException($"Parsed item on the list consumed no data."), 
