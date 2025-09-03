@@ -15,6 +15,48 @@ partial class PackageBranch
     }
 }
 
+public static class ProcedureType
+{
+    public static string Acquire => "Acquire";
+    public static string Activate => "Activate";
+    public static string Eat => "Eat";
+    public static string Escort => "Escort";
+    public static string Find => "Find";
+    public static string Flee => "Flee";
+    public static string FlightGrab => "FlightGrab";
+    public static string Follow => "Follow";
+    public static string FollowTo => "FollowTo";
+    public static string ForceGreet => "ForceGreet";
+    public static string Guard => "Guard";
+    public static string HoldPosition => "HoldPosition";
+    public static string Hover => "Hover";
+    public static string KeepAnEyeOn => "KeepAnEyeOn";
+    public static string LockDoors => "LockDoors";
+    public static string Orbit => "Orbit";
+    public static string Patrol => "Patrol";
+    public static string Sandbox => "Sandbox";
+    public static string Say => "Say";
+    public static string Shout => "Shout";
+    public static string Sit => "Sit";
+    public static string Sleep => "Sleep";
+    public static string Travel => "Travel";
+    public static string UnlockDoors => "UnlockDoors";
+    public static string UseIdleMarker => "UseIdleMarker";
+    public static string UseMagic => "UseMagic";
+    public static string UseWeapon => "UseWeapon";
+    public static string Wait => "Wait";
+    public static string Wander => "Wander";
+}
+
+public static class BranchType
+{
+    public static string Procedure => "Procedure";
+    public static string Random => "Random";
+    public static string Sequential => "Sequential";
+    public static string Simultaneous => "Simultaneous";
+    public static string Stacked => "Stacked";
+}
+
 partial class PackageBranchBinaryCreateTranslation
 {
     public static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item, PreviousParse lastParsed)
