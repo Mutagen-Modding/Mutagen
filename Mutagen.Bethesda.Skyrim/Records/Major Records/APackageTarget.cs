@@ -34,9 +34,9 @@ public partial class APackageTarget
             {
                 Type = (TargetObjectType)frame.ReadInt32()
             },
-            APackageTarget.Type.LinkedReference => new PackageTargetReference()
+            APackageTarget.Type.LinkedReference => new PackageTargetLinkedReference()
             {
-                Reference = new FormLink<ISkyrimMajorRecordGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
+                Keyword = new FormLink<IKeywordGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
             },
             APackageTarget.Type.RefAlias => new PackageTargetAlias()
             {
@@ -82,9 +82,9 @@ partial class APackageTargetBinaryWriteTranslation
                 writer.Write((int)APackageTarget.Type.ObjectType);
                 writer.Write((int)r.Type);
                 break;
-            case PackageTargetReference r:
+            case PackageTargetLinkedReference r:
                 writer.Write((int)APackageTarget.Type.LinkedReference);
-                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference);
+                FormKeyBinaryTranslation.Instance.Write(writer, r.Keyword);
                 break;
             case PackageTargetAlias r:
                 writer.Write((int)APackageTarget.Type.RefAlias);
