@@ -139,9 +139,9 @@
       <Enum name="Type" enumName="TargetObjectType" />
     </Fields>
   </Object>
-  <Object name="PackageTargetReference" baseClass="APackageTarget" objType="Subrecord">
+  <Object name="PackageTargetLinkedReference" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
-      <FormLink name="Reference" refName="Fallout4MajorRecord" />
+      <FormLink name="Keyword" refName="Keyword" />
     </Fields>
   </Object>
   <Object name="PackageTargetAlias" baseClass="APackageTarget" objType="Subrecord">

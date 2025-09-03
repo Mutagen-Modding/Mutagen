@@ -6272,9 +6272,6 @@
     <Compile Include="Records\Major Records\PackageTargetObjectType_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageTargetReference_Generated.cs">
-      <DependentUpon>Package.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PackageTargetAlias_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -6882,6 +6879,9 @@
     <Compile Include="Interfaces\Link\ILocationOwner_Generated.cs" />
     <Compile Include="Records\Major Records\LocationOwnerData_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
