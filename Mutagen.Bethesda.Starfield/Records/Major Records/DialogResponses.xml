@@ -5,9 +5,9 @@
       <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Flags" refName="DialogResponseFlags" />
+      <ByteArray name="TPIC" recordType="TPIC" unknown="true" />
       <FormLink name="SharedDialog" recordType="DNAM" refName="DialogResponses" />
       <FormLink name="DialogGroup" recordType="GNAM" refName="DialogResponses" />
-      <ByteArray name="TPIC" recordType="TPIC" unknown="true" />
       <RefList name="Responses" refName="DialogResponse" />
       <RefList name="Conditions" refName="Condition" />
       <String name="Prompt" recordType="RNAM" translated="Normal" />
