@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
+    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetLinkedReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
     /// </summary>
     public abstract partial class APackageTarget :
         IAPackageTarget,
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
+    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetLinkedReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
     /// </summary>
     public partial interface IAPackageTarget :
         IAPackageTargetGetter,
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
+    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetLinkedReference, PackageTargetAlias, PackageTargetUnknown, PackageTargetSelf]
     /// </summary>
     public partial interface IAPackageTargetGetter :
         ILoquiObject,
