@@ -123,12 +123,15 @@ public static class IModExt
 
         // Rename strings files
         var stringsDir = fileSystem.Path.Combine(fileSystemRoot, "Strings");
-        foreach (var file in fileSystem.Directory.EnumerateFiles(stringsDir))
+        if (fileSystem.Directory.Exists(stringsDir))
         {
-            var fileName = fileSystem.Path.GetFileName(file);
-            if (fileName.StartsWith(oldModKey.Name))
+            foreach (var file in fileSystem.Directory.EnumerateFiles(stringsDir))
             {
-                fileSystem.File.Move(file, fileSystem.Path.Combine(stringsDir, newModKey.Name + fileName[oldModKey.Name.Length..]));
+                var fileName = fileSystem.Path.GetFileName(file);
+                if (fileName.StartsWith(oldModKey.Name))
+                {
+                    fileSystem.File.Move(file, fileSystem.Path.Combine(stringsDir, newModKey.Name + fileName[oldModKey.Name.Length..]));
+                }
             }
         }
 
