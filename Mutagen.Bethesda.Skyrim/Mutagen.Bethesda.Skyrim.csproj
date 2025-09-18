@@ -2826,9 +2826,6 @@
     <Compile Include="Records\Major Records\PackageTargetObjectType_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageTargetReference_Generated.cs">
-      <DependentUpon>Package.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PackageTargetAlias_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -4745,6 +4742,9 @@
     </Compile>
     <Compile Include="Records\Major Records\PersistentActorReference_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
