@@ -30,7 +30,7 @@ public static class LoadOrderExt
         where TMod : class, IModGetter
     {
         return loadOrder
-            .Where(x => x.ExistsOnDisk);
+            .Where(x => x.ModExists);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public static class LoadOrderExt
         where TListing : IModListingGetter
     {
         return loadOrder
-            .Where(x => x.Enabled && x.ExistsOnDisk);
+            .Where(x => x.Enabled && x.ModExists);
     }
 
     /// <summary>
@@ -155,12 +155,12 @@ public static class LoadOrderExt
     /// Converts ModKeys to LoadOrderListing objects
     /// </summary>
     /// <param name="loadOrder">ModKeys to convert</param>
-    /// <param name="existsOnDisk">Whether to mark the ModListings as existing on disk</param>
+    /// <param name="modExists">Whether to mark the ModListings as existing on disk</param>
     /// <param name="markEnabled">Whether to mark the listings as enabled</param>
     /// <returns>ModKeys as LoadOrderListing objects</returns>
-    public static IEnumerable<IModListingGetter> ToModListings(this IEnumerable<ModKey> loadOrder, bool existsOnDisk, bool markEnabled = true)
+    public static IEnumerable<IModListingGetter> ToModListings(this IEnumerable<ModKey> loadOrder, bool modExists, bool markEnabled = true)
     {
-        return loadOrder.Select(x => new ModListing(x, enabled: markEnabled, existsOnDisk: existsOnDisk));
+        return loadOrder.Select(x => new ModListing(x, enabled: markEnabled, modExists: modExists));
     }
 
     public static bool TryGetIndex<TListing>(this ILoadOrderGetter<TListing> loadOrder, int index, [MaybeNullWhen(false)] out TListing listing)
@@ -218,7 +218,7 @@ public static class LoadOrderExt
         where TModItem : class, IModKeyed
     {
         return loadOrder
-            .Where(x => x.Enabled && x.ExistsOnDisk);
+            .Where(x => x.Enabled && x.ModExists);
     }
 
     public static LoadOrder<TListing> FilterToMods<TListing>(this ILoadOrderGetter<TListing> loadOrder, IReadOnlyCollection<ModKey> modKeys)

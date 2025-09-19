@@ -48,7 +48,7 @@ public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
                     .QueryWhenChanged(x => x)
                     .Unit())
             .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
-            .Select(x => LoadOrder.Select(x => new ModListing(x.ModKey, x.Enabled, x.ExistsOnDisk, x.GhostSuffix)).ToArray())
+            .Select(x => LoadOrder.Select(x => new ModListing(x.ModKey, x.Enabled, x.ModExists, x.GhostSuffix)).ToArray())
             .DistinctUntilChanged(new SequenceEqualityComparer())
             .Subscribe(x =>
             {

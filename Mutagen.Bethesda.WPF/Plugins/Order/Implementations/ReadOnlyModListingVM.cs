@@ -26,18 +26,18 @@ public class ReadOnlyModListingVM : ViewModel, IModListingGetter
     /// <inheritdoc />
     public string FileName => _listing.FileName;
 
-    private readonly ObservableAsPropertyHelper<bool> _existsOnDisk;
-    public bool ExistsOnDisk => _existsOnDisk.Value;
+    private readonly ObservableAsPropertyHelper<bool> _modExists;
+    public bool ModExists => _modExists.Value;
         
     public ReadOnlyModListingVM(ILoadOrderListingGetter listing, string dataFolder)
     {
         _listing = listing;
         var path = Path.Combine(dataFolder, listing.FileName);
         var exists = File.Exists(path);
-        _existsOnDisk = Observable.Defer(() =>
+        _modExists = Observable.Defer(() =>
                 Noggog.ObservableExt.WatchFile(path)
                     .Select(_ => File.Exists(path)))
-            .ToGuiProperty(this, nameof(ExistsOnDisk), initialValue: exists);
+            .ToGuiProperty(this, nameof(ModExists), initialValue: exists);
     }
 
     public override string ToString()

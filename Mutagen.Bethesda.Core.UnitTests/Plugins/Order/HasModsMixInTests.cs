@@ -20,9 +20,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: true),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModExists(TestConstants.LightModKey)
@@ -43,9 +43,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: true),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModExists(TestConstants.LightModKey, enabled: true)
@@ -88,9 +88,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: true),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModsExist(TestConstants.LightModKey)
@@ -111,9 +111,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: true),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
@@ -153,9 +153,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: true),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModsExist(true, TestConstants.LightModKey)
@@ -188,9 +188,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: false),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: false),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModsExist(TestConstants.LightModKey)
@@ -211,9 +211,9 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, modExists: true),
+            new ModListing(TestConstants.LightModKey2, false, modExists: true),
+            new ModListing(TestConstants.LightModKey3, true, modExists: true),
         };
         listings
             .ModsExist(

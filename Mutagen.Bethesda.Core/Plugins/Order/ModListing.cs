@@ -14,7 +14,7 @@ public sealed record ModListing : IModListingGetter
     public bool Enabled { get; init; }
 
     /// <inheritdoc />
-    public bool ExistsOnDisk { get; init; } = true;
+    public bool ModExists { get; init; } = true;
 
     /// <inheritdoc />
     public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
@@ -29,10 +29,10 @@ public sealed record ModListing : IModListingGetter
     {
     }
 
-    public ModListing(ModKey modKey, bool enabled, bool existsOnDisk, string ghostSuffix = "")
+    public ModListing(ModKey modKey, bool enabled, bool modExists, string ghostSuffix = "")
     {
         ModKey = modKey;
-        ExistsOnDisk = existsOnDisk;
+        ModExists = modExists;
         Enabled = enabled;
         GhostSuffix = ghostSuffix;
     }
@@ -64,7 +64,7 @@ public sealed record ModListing<TMod> : IModListing<TMod>
     public bool Enabled { get; init; }
 
     /// <inheritdoc />
-    public bool ExistsOnDisk => Mod != null;
+    public bool ModExists => Mod != null;
 
     /// <inheritdoc />
     public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
@@ -159,11 +159,11 @@ public interface IModListing<TMod> : IModListingGetter<TMod>
 /// </summary>
 public interface IModListingGetter : ILoadOrderListingGetter
 {
-    public bool ExistsOnDisk { get; }
+    public bool ModExists { get; }
         
     public static string ToString(IModListingGetter getter)
     {
-        return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.ExistsOnDisk ? null : " (missing)")}{(getter.Ghosted ? " (ghosted)" : null)}";
+        return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.ModExists ? null : " (missing)")}{(getter.Ghosted ? " (ghosted)" : null)}";
     }
 }
 
