@@ -825,6 +825,19 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
             return _cache.PriorityOrder;
         }
     }
+
+    public IEnumerable<TMajor> WinningOverrides<TMajor>(bool includeDeletedRecords = false)
+        where TMajor : class, IMajorRecordQueryableGetter
+    {
+        CheckDisposal();
+        return PriorityOrder.WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
+    }
+
+    public IEnumerable<IMajorRecordGetter> WinningOverrides(Type type, bool includeDeletedRecords = false)
+    {
+        CheckDisposal();
+        return PriorityOrder.WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
+    }
 }
 
 /// <summary>
@@ -1592,6 +1605,38 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
             CheckDisposal();
             return  _cache.ListedOrder;
         }
+    }
+
+    public IEnumerable<TMajor> WinningOverrides<TMajor>(bool includeDeletedRecords = false)
+        where TMajor : class, IMajorRecordQueryableGetter
+    {
+        CheckDisposal();
+        return PriorityOrder.WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
+    }
+
+    public IEnumerable<IMajorRecordGetter> WinningOverrides(Type type, bool includeDeletedRecords = false)
+    {
+        CheckDisposal();
+        return PriorityOrder.WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
+    }
+
+    public IEnumerable<IModContext<TMod, TModGetter, TSetter, TGetter>> WinningContextOverrides<TSetter, TGetter>(
+        ILinkCache linkCache,
+        bool includeDeletedRecords = false)
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
+    {
+        CheckDisposal();
+        return PriorityOrder.Cast<TModGetter>().WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(linkCache, includeDeletedRecords: includeDeletedRecords);
+    }
+
+    public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> WinningContextOverrides(
+        ILinkCache linkCache,
+        Type type,
+        bool includeDeletedRecords = false)
+    {
+        CheckDisposal();
+        return PriorityOrder.Cast<TModGetter>().WinningContextOverrides<TMod, TModGetter>(linkCache, type, includeDeletedRecords: includeDeletedRecords);
     }
 
     /// <inheritdoc />
