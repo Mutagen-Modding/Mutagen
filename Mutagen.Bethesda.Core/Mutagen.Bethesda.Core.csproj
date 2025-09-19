@@ -125,6 +125,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Extensions\GetOrAddAsOverrideMixIns.cs" />
         <Compile Include="Extensions\ListsModsMixIn.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
