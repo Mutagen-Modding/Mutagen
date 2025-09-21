@@ -52,6 +52,14 @@ public interface IBinaryModdedWriteBuilderTargetChoice
     /// <param name="fileSystem">Filesystem to write mod file to</param>
     /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilderLoadOrderChoice ToPath(FilePath path, IFileSystem? fileSystem = null);
+
+    /// <summary>
+    /// Instructs the builder to target a folder, using the mod's ModKey.FileName for the file name
+    /// </summary>
+    /// <param name="folderPath">Folder path where the mod file will be written</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderLoadOrderChoice IntoFolder(DirectoryPath folderPath, IFileSystem? fileSystem = null);
 }
 
 public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWriteBuilderTargetChoice
@@ -90,8 +98,23 @@ public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWr
         });
     }
 
+    /// <summary>
+    /// Instructs the builder to target a folder, using the mod's ModKey.FileName for the file name
+    /// </summary>
+    /// <param name="folderPath">Folder path where the mod file will be written</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> IntoFolder(DirectoryPath folderPath, IFileSystem? fileSystem = null)
+    {
+        var path = Path.Combine(folderPath, _mod.ModKey.FileName);
+        return ToPath(path, fileSystem);
+    }
+
     IBinaryModdedWriteBuilderLoadOrderChoice IBinaryModdedWriteBuilderTargetChoice.ToPath(FilePath path, IFileSystem? fileSystem = null) =>
         ToPath(path, fileSystem);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IBinaryModdedWriteBuilderTargetChoice.IntoFolder(DirectoryPath folderPath, IFileSystem? fileSystem = null) =>
+        IntoFolder(folderPath, fileSystem);
 }
 
 public record BinaryWriteBuilderTargetChoice<TModGetter>
