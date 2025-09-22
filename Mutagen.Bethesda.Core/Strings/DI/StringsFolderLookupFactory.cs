@@ -69,7 +69,7 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                                     out var type,
                                     out var lang, 
                                     out var modName)
-                                || !modKey.Name.AsSpan().Equals(modName, StringComparison.InvariantCulture))
+                                || !modKey.Name.AsSpan().Equals(modName, StringComparison.OrdinalIgnoreCase))
                             {
                                 continue;
                             }
