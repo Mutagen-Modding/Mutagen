@@ -218,12 +218,13 @@ public class StringsFolderLookupOverlayTests
             writer.Register(germanStr, Language.German, StringsSource.IL);
         }
 
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_English.ilstrings"));
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_French.ilstrings"));
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_German.strings"));
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_English.dlstrings"));
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_French.dlstrings"));
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_German.dlstrings"));
+        var languageFormat = GameConstants.Get(GameRelease.SkyrimSE).StringsLanguageFormat!.Value;
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(languageFormat, modKey, Language.English, StringsSource.IL)));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(languageFormat, modKey, Language.French, StringsSource.IL)));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(languageFormat, modKey, Language.German, StringsSource.Normal)));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(languageFormat, modKey, Language.English, StringsSource.DL)));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(languageFormat, modKey, Language.French, StringsSource.DL)));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(languageFormat, modKey, Language.German, StringsSource.DL)));
 
         var overlay = factory.InternalFactory(modKey);
 
@@ -297,8 +298,8 @@ public class StringsFolderLookupOverlayTests
             dlId = writer.Register(englishDL, Language.English, StringsSource.DL);
         }
 
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_French.ilstrings"));
-        fileSystem.File.Delete(Path.Combine(existingPath.Path, $"{modKey.Name}_French.dlstrings"));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(GameConstants.Get(GameRelease.SkyrimSE).StringsLanguageFormat!.Value, modKey, Language.French, StringsSource.IL)));
+        fileSystem.File.Delete(Path.Combine(existingPath.Path, StringsUtility.GetFileName(GameConstants.Get(GameRelease.SkyrimSE).StringsLanguageFormat!.Value, modKey, Language.French, StringsSource.DL)));
 
         var overlay = factory.InternalFactory(modKey);
     
