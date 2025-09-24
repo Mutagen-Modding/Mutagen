@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Shouldly;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing.AutoData;
