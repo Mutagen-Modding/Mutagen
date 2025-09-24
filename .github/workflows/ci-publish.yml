@@ -112,8 +112,11 @@ jobs:
         tag: ${{ github.event.release.tag_name }}
         file_glob: "true"
     - name: Publish to Nuget.org
-      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-  
+      run: |
+        Get-ChildItem "out/*.nupkg" | ForEach-Object {
+          Write-Host "Pushing $($_.Name)"
+          dotnet nuget push $_.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        }  
   update-nightly:
     needs: [build-test-push, activity-short-circuit]
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
