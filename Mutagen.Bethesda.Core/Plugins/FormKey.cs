@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Plugins;
 ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.<br/>
 /// </summary>
 [DebuggerDisplay("{ToString()}")]
-public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
+public readonly struct FormKey : IEquatable<FormKey>, IComparable<FormKey>, IFormKeyGetter
 {
     /// <summary>
     /// A static readonly singleton string representing a null FormKey
@@ -275,6 +275,37 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
         hash.Add(ModKey);
         hash.Add(ID);
         return hash.ToHashCode();
+    }
+
+    /// <summary>
+    /// Compares this FormKey to another FormKey.
+    /// Comparison is done first by ModKey, then by ID.
+    /// </summary>
+    /// <param name="other">FormKey to compare to</param>
+    /// <returns>
+    /// Less than zero: This instance precedes other in the sort order.
+    /// Zero: This instance occurs in the same position as other in the sort order.
+    /// Greater than zero: This instance follows other in the sort order.
+    /// </returns>
+    public int CompareTo(FormKey other)
+    {
+        // Handle null ModKeys specially - they should sort first
+        if (ModKey.IsNull && other.ModKey.IsNull)
+        {
+            return ID.CompareTo(other.ID);
+        }
+        if (ModKey.IsNull)
+        {
+            return -1;
+        }
+        if (other.ModKey.IsNull)
+        {
+            return 1;
+        }
+
+        var modKeyComparison = string.Compare(ModKey.ToString(), other.ModKey.ToString(), StringComparison.OrdinalIgnoreCase);
+        if (modKeyComparison != 0) return modKeyComparison;
+        return ID.CompareTo(other.ID);
     }
 
     [Obsolete("Use ToLink instead")]

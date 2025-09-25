@@ -300,5 +300,4 @@ Mutagen.Bethesda.Tests/config/
 nupkg/
 
 # Claude Code files
-CLAUDE.md
 .claude
