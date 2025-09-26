@@ -210,7 +210,7 @@ partial class MagicEffectBinaryWriteTranslation
 
 partial class MagicEffectBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
 
     partial void ConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

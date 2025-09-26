@@ -344,18 +344,18 @@ namespace Mutagen.Bethesda.Fallout4
                 this.WelcomeText = initialValue;
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.PNAM = initialValue;
                 this.LoopingSound = initialValue;
                 this.FNAM = initialValue;
-                this.Holotapes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalHolotapeEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalHolotapeEntry.Mask<TItem>?>>());
+                this.Holotapes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalHolotapeEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.Flags = initialValue;
                 this.WorkbenchData = initialValue;
                 this.MarkerModel = initialValue;
-                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
-                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalBodyText.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalBodyText.Mask<TItem>?>>());
-                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
+                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, []);
+                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalBodyText.Mask<TItem>?>>?>(initialValue, []);
+                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -401,18 +401,18 @@ namespace Mutagen.Bethesda.Fallout4
                 this.WelcomeText = WelcomeText;
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
                 this.PNAM = PNAM;
                 this.LoopingSound = LoopingSound;
                 this.FNAM = FNAM;
-                this.Holotapes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalHolotapeEntry.Mask<TItem>?>>?>(Holotapes, Enumerable.Empty<MaskItemIndexed<TItem, TerminalHolotapeEntry.Mask<TItem>?>>());
+                this.Holotapes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalHolotapeEntry.Mask<TItem>?>>?>(Holotapes, []);
                 this.Flags = Flags;
                 this.WorkbenchData = WorkbenchData;
                 this.MarkerModel = MarkerModel;
-                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
-                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalBodyText.Mask<TItem>?>>?>(BodyTexts, Enumerable.Empty<MaskItemIndexed<TItem, TerminalBodyText.Mask<TItem>?>>());
-                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(MenuItems, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
+                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, []);
+                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalBodyText.Mask<TItem>?>>?>(BodyTexts, []);
+                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(MenuItems, []);
             }
 
             #pragma warning disable CS8618
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FNAM = eval(this.FNAM);
                 if (Holotapes != null)
                 {
-                    obj.Holotapes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalHolotapeEntry.Mask<R>?>>?>(eval(this.Holotapes.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalHolotapeEntry.Mask<R>?>>());
+                    obj.Holotapes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalHolotapeEntry.Mask<R>?>>?>(eval(this.Holotapes.Overall), []);
                     if (Holotapes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TerminalHolotapeEntry.Mask<R>?>>();
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MarkerModel = eval(this.MarkerModel);
                 if (MarkerParameters != null)
                 {
-                    obj.MarkerParameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>?>(eval(this.MarkerParameters.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>());
+                    obj.MarkerParameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>?>(eval(this.MarkerParameters.Overall), []);
                     if (MarkerParameters.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>();
@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (BodyTexts != null)
                 {
-                    obj.BodyTexts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalBodyText.Mask<R>?>>?>(eval(this.BodyTexts.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalBodyText.Mask<R>?>>());
+                    obj.BodyTexts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalBodyText.Mask<R>?>>?>(eval(this.BodyTexts.Overall), []);
                     if (BodyTexts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TerminalBodyText.Mask<R>?>>();
@@ -813,7 +813,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (MenuItems != null)
                 {
-                    obj.MenuItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>?>(eval(this.MenuItems.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>());
+                    obj.MenuItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>?>(eval(this.MenuItems.Overall), []);
                     if (MenuItems.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>();

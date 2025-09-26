@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Starfield;
 
 partial class CellSubBlockBinaryOverlay
 {
-    public IReadOnlyList<ICellGetter> Cells { get; private set; } = Array.Empty<ICellGetter>();
+    public IReadOnlyList<ICellGetter> Cells { get; private set; } = [];
 
     partial void CellsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

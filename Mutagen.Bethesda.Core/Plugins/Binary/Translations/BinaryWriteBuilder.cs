@@ -29,7 +29,7 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _masterSyncAction { get; init; }
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, IReadOnlyCollection<ModKey>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
-    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>();
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = [];
     internal ILoadOrderGetter<IModListingGetter<IModGetter>>? _knownModLoadOrder { get; init; }
 }
 

@@ -170,12 +170,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.CNAM = initialValue;
                 this.DNAM = initialValue;
-                this.SurfacePatterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfacePatterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.GNAM = initialValue;
-                this.SurfacePatterns2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfacePatterns2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.GNAM2 = initialValue;
                 this.Filter = initialValue;
             }
@@ -205,12 +205,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.CNAM = CNAM;
                 this.DNAM = DNAM;
-                this.SurfacePatterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SurfacePatterns, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfacePatterns = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SurfacePatterns, []);
                 this.GNAM = GNAM;
-                this.SurfacePatterns2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SurfacePatterns2, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfacePatterns2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SurfacePatterns2, []);
                 this.GNAM2 = GNAM2;
                 this.Filter = Filter;
             }
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DNAM = eval(this.DNAM);
                 if (SurfacePatterns != null)
                 {
-                    obj.SurfacePatterns = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SurfacePatterns.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SurfacePatterns = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SurfacePatterns.Overall), []);
                     if (SurfacePatterns.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GNAM = eval(this.GNAM);
                 if (SurfacePatterns2 != null)
                 {
-                    obj.SurfacePatterns2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SurfacePatterns2.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SurfacePatterns2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SurfacePatterns2.Overall), []);
                     if (SurfacePatterns2.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1297,8 +1297,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.CNAM = Array.Empty<byte>();
-            item.DNAM = Array.Empty<byte>();
+            item.CNAM = [];
+            item.DNAM = [];
             item.SurfacePatterns.Fill(FormLink<ISurfacePatternGetter>.Null);
             item.GNAM = default;
             item.SurfacePatterns2.Fill(FormLink<ISurfacePatternGetter>.Null);

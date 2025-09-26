@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Description = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.LoadingScreenNif = initialValue;
                 this.InitialScale = initialValue;
                 this.InitialRotation = initialValue;
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Description = Description;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.LoadingScreenNif = LoadingScreenNif;
                 this.InitialScale = InitialScale;
                 this.InitialRotation = InitialRotation;
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

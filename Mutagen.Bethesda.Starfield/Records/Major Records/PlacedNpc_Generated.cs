@@ -346,20 +346,20 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.XALG = initialValue;
                 this.Base = initialValue;
                 this.LevelModifier = initialValue;
                 this.Emittance = initialValue;
                 this.Radius = initialValue;
-                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, []);
                 this.ReferenceGroup = initialValue;
                 this.SourcePackIn = initialValue;
                 this.PersistentLocation = initialValue;
                 this.IsIgnoredBySandbox = initialValue;
                 this.FactionRank = initialValue;
-                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(initialValue, []);
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, []);
                 this.IsLinkedRefTransient = initialValue;
                 this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(initialValue, new ExternalEmittance.Mask<TItem>(initialValue));
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Layer = initialValue;
                 this.Location = initialValue;
                 this.HeadTrackingWeight = initialValue;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.RagdollBipedRotation = initialValue;
                 this.Health = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
@@ -427,20 +427,20 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.XALG = XALG;
                 this.Base = Base;
                 this.LevelModifier = LevelModifier;
                 this.Emittance = Emittance;
                 this.Radius = Radius;
-                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, []);
                 this.ReferenceGroup = ReferenceGroup;
                 this.SourcePackIn = SourcePackIn;
                 this.PersistentLocation = PersistentLocation;
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
                 this.FactionRank = FactionRank;
-                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(PowerLinks, Enumerable.Empty<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>());
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.PowerLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerLink.Mask<TItem>?>>?>(PowerLinks, []);
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, []);
                 this.IsLinkedRefTransient = IsLinkedRefTransient;
                 this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(ExternalEmittance, new ExternalEmittance.Mask<TItem>(ExternalEmittance));
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Layer = Layer;
                 this.Location = Location;
                 this.HeadTrackingWeight = HeadTrackingWeight;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, []);
                 this.RagdollBipedRotation = RagdollBipedRotation;
                 this.Health = Health;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Radius = eval(this.Radius);
                 if (RagdollData != null)
                 {
-                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), []);
                     if (RagdollData.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FactionRank = eval(this.FactionRank);
                 if (PowerLinks != null)
                 {
-                    obj.PowerLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PowerLink.Mask<R>?>>?>(eval(this.PowerLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, PowerLink.Mask<R>?>>());
+                    obj.PowerLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PowerLink.Mask<R>?>>?>(eval(this.PowerLinks.Overall), []);
                     if (PowerLinks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PowerLink.Mask<R>?>>();
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (LinkedReferences != null)
                 {
-                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), []);
                     if (LinkedReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
@@ -894,7 +894,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
                 if (LocationRefTypes != null)
                 {
-                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), []);
                     if (LocationRefTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

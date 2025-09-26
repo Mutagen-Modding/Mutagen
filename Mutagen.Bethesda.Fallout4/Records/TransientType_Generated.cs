@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.FormType = initialValue;
-                this.Links = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Links = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Links)
             {
                 this.FormType = FormType;
-                this.Links = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Links, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Links = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Links, []);
             }
 
             #pragma warning disable CS8618
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FormType = eval(this.FormType);
                 if (Links != null)
                 {
-                    obj.Links = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Links.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Links = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Links.Overall), []);
                     if (Links.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -298,13 +298,13 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
     {
         if (!_hasAny || (cancel?.IsCancellationRequested ?? false))
         {
-            return Enumerable.Empty<LinkCacheItem>();
+            return [];
         }
 
         DepthCache<TKey, LinkCacheItem> cache = GetTypeCache(type);
         if (cancel?.IsCancellationRequested ?? false)
         {
-            return Enumerable.Empty<LinkCacheItem>();
+            return [];
         }
 
         // If we're done, we can just query without locking
@@ -319,13 +319,13 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
             // Fill all
             while (!InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _listedOrder.Count, cache))
             {
-                if (cancel?.IsCancellationRequested ?? false) return Enumerable.Empty<LinkCacheItem>();
+                if (cancel?.IsCancellationRequested ?? false) return [];
                 FillNextCacheDepth(cache, type);
             }
         }
 
         // Safe to return not-locked, because this particular cache will never be modified anymore, as it's fully queried
-        if (cancel?.IsCancellationRequested ?? false) return Enumerable.Empty<LinkCacheItem>();
+        if (cancel?.IsCancellationRequested ?? false) return [];
         return cache.Values;
     }
 

@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>());
-                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(initialValue, []);
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.PaintedMaterialThreshold = initialValue;
             }
 
@@ -155,9 +155,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(Grasses, Enumerable.Empty<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>());
-                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
+                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(Grasses, []);
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, []);
                 this.PaintedMaterialThreshold = PaintedMaterialThreshold;
             }
 
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Grasses != null)
                 {
-                    obj.Grasses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>?>(eval(this.Grasses.Overall), Enumerable.Empty<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>());
+                    obj.Grasses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>?>(eval(this.Grasses.Overall), []);
                     if (Grasses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, GroundCoverGrass.Mask<R>?>>();
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (LandscapeTextures != null)
                 {
-                    obj.LandscapeTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LandscapeTextures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LandscapeTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LandscapeTextures.Overall), []);
                     if (LandscapeTextures.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

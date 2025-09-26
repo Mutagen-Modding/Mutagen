@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>());
+                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(initialValue, []);
                 this.HTID = initialValue;
             }
 
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Starfield
                 StartPhase: StartPhase,
                 EndPhase: EndPhase)
             {
-                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(StartScenes, Enumerable.Empty<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>());
+                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(StartScenes, []);
                 this.HTID = HTID;
             }
 
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (StartScenes != null)
                 {
-                    obj.StartScenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StartScene.Mask<R>?>>?>(eval(this.StartScenes.Overall), Enumerable.Empty<MaskItemIndexed<R, StartScene.Mask<R>?>>());
+                    obj.StartScenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StartScene.Mask<R>?>>?>(eval(this.StartScenes.Overall), []);
                     if (StartScenes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StartScene.Mask<R>?>>();

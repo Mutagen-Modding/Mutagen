@@ -784,12 +784,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimationSound = initialValue;
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Skin = initialValue;
                 this.BipedBodyTemplate = new MaskItem<TItem, BipedBodyTemplate.Mask<TItem>?>(initialValue, new BipedBodyTemplate.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Height = new GenderedItem<TItem>(initialValue, initialValue);
                 this.DefaultWeight = new MaskItem<TItem, GenderedItem<RaceWeight.Mask<TItem>?>?>(initialValue, default);
                 this.Flags = initialValue;
@@ -830,14 +830,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OrientationLimitsPitch = initialValue;
                 this.OrientationLimitsRoll = initialValue;
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(initialValue, default);
-                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Voices = new GenderedItem<TItem>(initialValue, initialValue);
                 this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.NumberOfTintsInList = initialValue;
                 this.FacegenMainClamp = initialValue;
                 this.FacegenFaceClamp = initialValue;
                 this.AttackRace = initialValue;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
                 this.BodyPartData = initialValue;
                 this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
@@ -849,9 +849,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SoundOpenCorpse = initialValue;
                 this.SoundCloseCorpse = initialValue;
                 this.BipedObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>(initialValue, null);
-                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>());
+                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(initialValue, []);
                 this.EquipmentFlags = initialValue;
-                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>());
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(initialValue, []);
                 this.UnarmedWeapon = initialValue;
                 this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(initialValue, new FaceFxPhonemes.Mask<TItem>(initialValue));
                 this.BaseMovementDefault = initialValue;
@@ -863,10 +863,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArmorRace = initialValue;
                 this.SubgraphTemplateRace = initialValue;
                 this.SubgraphAdditiveRace = initialValue;
-                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
+                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(initialValue, []);
                 this.IdleChatterTimeMin = initialValue;
                 this.IdleChatterTimeMax = initialValue;
-                this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(initialValue, []);
                 this.MorphValuesLastIndex = initialValue;
                 this.HairColorLookupTexture = initialValue;
                 this.HairColorExtendedLookupTexture = initialValue;
@@ -985,12 +985,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.AnimationSound = AnimationSound;
                 this.Name = Name;
                 this.Description = Description;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, []);
                 this.Skin = Skin;
                 this.BipedBodyTemplate = new MaskItem<TItem, BipedBodyTemplate.Mask<TItem>?>(BipedBodyTemplate, new BipedBodyTemplate.Mask<TItem>(BipedBodyTemplate));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, []);
                 this.Height = new GenderedItem<TItem>(Height, Height);
                 this.DefaultWeight = new MaskItem<TItem, GenderedItem<RaceWeight.Mask<TItem>?>?>(DefaultWeight, default);
                 this.Flags = Flags;
@@ -1031,14 +1031,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OrientationLimitsPitch = OrientationLimitsPitch;
                 this.OrientationLimitsRoll = OrientationLimitsRoll;
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(SkeletalModel, default);
-                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, []);
                 this.Voices = new GenderedItem<TItem>(Voices, Voices);
                 this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHairColors, default);
                 this.NumberOfTintsInList = NumberOfTintsInList;
                 this.FacegenMainClamp = FacegenMainClamp;
                 this.FacegenFaceClamp = FacegenFaceClamp;
                 this.AttackRace = AttackRace;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
                 this.BodyPartData = BodyPartData;
                 this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(BehaviorGraph, default);
@@ -1050,9 +1050,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SoundOpenCorpse = SoundOpenCorpse;
                 this.SoundCloseCorpse = SoundCloseCorpse;
                 this.BipedObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>(BipedObjects, null);
-                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(MovementDataOverrides, Enumerable.Empty<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>());
+                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(MovementDataOverrides, []);
                 this.EquipmentFlags = EquipmentFlags;
-                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(EquipmentSlots, Enumerable.Empty<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>());
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(EquipmentSlots, []);
                 this.UnarmedWeapon = UnarmedWeapon;
                 this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(FaceFxPhonemes, new FaceFxPhonemes.Mask<TItem>(FaceFxPhonemes));
                 this.BaseMovementDefault = BaseMovementDefault;
@@ -1064,10 +1064,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ArmorRace = ArmorRace;
                 this.SubgraphTemplateRace = SubgraphTemplateRace;
                 this.SubgraphAdditiveRace = SubgraphAdditiveRace;
-                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(Subgraphs, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
+                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(Subgraphs, []);
                 this.IdleChatterTimeMin = IdleChatterTimeMin;
                 this.IdleChatterTimeMax = IdleChatterTimeMax;
-                this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(MorphValues, Enumerable.Empty<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>());
+                this.MorphValues = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphValue.Mask<TItem>?>>?>(MorphValues, []);
                 this.MorphValuesLastIndex = MorphValuesLastIndex;
                 this.HairColorLookupTexture = HairColorLookupTexture;
                 this.HairColorExtendedLookupTexture = HairColorExtendedLookupTexture;
@@ -1875,7 +1875,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Description = eval(this.Description);
                 if (ActorEffect != null)
                 {
-                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), []);
                     if (ActorEffect.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1891,7 +1891,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BipedBodyTemplate = this.BipedBodyTemplate == null ? null : new MaskItem<R, BipedBodyTemplate.Mask<R>?>(eval(this.BipedBodyTemplate.Overall), this.BipedBodyTemplate.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (AttachParentSlots != null)
                 {
-                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), []);
                     if (AttachParentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Fallout4
                     (m, e) => m?.Translate(e));
                 if (MovementTypeNames != null)
                 {
-                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), []);
                     if (MovementTypeNames.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2006,7 +2006,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AttackRace = eval(this.AttackRace);
                 if (Attacks != null)
                 {
-                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), []);
                     if (Attacks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (MovementDataOverrides != null)
                 {
-                    obj.MovementDataOverrides = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>?>(eval(this.MovementDataOverrides.Overall), Enumerable.Empty<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>());
+                    obj.MovementDataOverrides = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>?>(eval(this.MovementDataOverrides.Overall), []);
                     if (MovementDataOverrides.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>();
@@ -2066,7 +2066,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.EquipmentFlags = eval(this.EquipmentFlags);
                 if (EquipmentSlots != null)
                 {
-                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>?>(eval(this.EquipmentSlots.Overall), Enumerable.Empty<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>());
+                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>?>(eval(this.EquipmentSlots.Overall), []);
                     if (EquipmentSlots.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>();
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.SubgraphAdditiveRace = eval(this.SubgraphAdditiveRace);
                 if (Subgraphs != null)
                 {
-                    obj.Subgraphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Subgraph.Mask<R>?>>?>(eval(this.Subgraphs.Overall), Enumerable.Empty<MaskItemIndexed<R, Subgraph.Mask<R>?>>());
+                    obj.Subgraphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Subgraph.Mask<R>?>>?>(eval(this.Subgraphs.Overall), []);
                     if (Subgraphs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Subgraph.Mask<R>?>>();
@@ -2112,7 +2112,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.IdleChatterTimeMax = eval(this.IdleChatterTimeMax);
                 if (MorphValues != null)
                 {
-                    obj.MorphValues = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphValue.Mask<R>?>>?>(eval(this.MorphValues.Overall), Enumerable.Empty<MaskItemIndexed<R, MorphValue.Mask<R>?>>());
+                    obj.MorphValues = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphValue.Mask<R>?>>?>(eval(this.MorphValues.Overall), []);
                     if (MorphValues.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MorphValue.Mask<R>?>>();

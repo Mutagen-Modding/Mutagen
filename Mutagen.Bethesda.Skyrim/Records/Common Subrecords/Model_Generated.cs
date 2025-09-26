@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
+                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                 File: File,
                 Data: Data)
             {
-                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(AlternateTextures, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
+                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(AlternateTextures, []);
             }
 
             #pragma warning disable CS8618
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (AlternateTextures != null)
                 {
-                    obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>?>(eval(this.AlternateTextures.Overall), Enumerable.Empty<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>());
+                    obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>?>(eval(this.AlternateTextures.Overall), []);
                     if (AlternateTextures.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>();

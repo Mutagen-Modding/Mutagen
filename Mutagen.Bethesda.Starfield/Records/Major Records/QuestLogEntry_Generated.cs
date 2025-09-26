@@ -141,11 +141,11 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Note = initialValue;
                 this.ScriptFlagComment = initialValue;
                 this.Entry = initialValue;
-                this.StageCompleteDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageCompleteData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStageCompleteData.Mask<TItem>?>>());
+                this.StageCompleteDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageCompleteData.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -157,11 +157,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StageCompleteDatas)
             {
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Note = Note;
                 this.ScriptFlagComment = ScriptFlagComment;
                 this.Entry = Entry;
-                this.StageCompleteDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageCompleteData.Mask<TItem>?>>?>(StageCompleteDatas, Enumerable.Empty<MaskItemIndexed<TItem, QuestStageCompleteData.Mask<TItem>?>>());
+                this.StageCompleteDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageCompleteData.Mask<TItem>?>>?>(StageCompleteDatas, []);
             }
 
             #pragma warning disable CS8618
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Entry = eval(this.Entry);
                 if (StageCompleteDatas != null)
                 {
-                    obj.StageCompleteDatas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStageCompleteData.Mask<R>?>>?>(eval(this.StageCompleteDatas.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStageCompleteData.Mask<R>?>>());
+                    obj.StageCompleteDatas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStageCompleteData.Mask<R>?>>?>(eval(this.StageCompleteDatas.Overall), []);
                     if (StageCompleteDatas.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStageCompleteData.Mask<R>?>>();

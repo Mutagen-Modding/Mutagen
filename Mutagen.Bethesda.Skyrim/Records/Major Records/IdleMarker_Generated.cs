@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.IdleTimer = initialValue;
-                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Flags = Flags;
                 this.IdleTimer = IdleTimer;
-                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.IdleTimer = eval(this.IdleTimer);
                 if (Animations != null)
                 {
-                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), []);
                     if (Animations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
                 this.ONAM = initialValue;
                 this.NNAM = initialValue;
-                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
                 this.ONAM = ONAM;
                 this.NNAM = NNAM;
-                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(PreCutMapEntries, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(PreCutMapEntries, []);
             }
 
             #pragma warning disable CS8618
@@ -273,7 +273,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.NNAM = eval(this.NNAM);
                 if (PreCutMapEntries != null)
                 {
-                    obj.PreCutMapEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>?>(eval(this.PreCutMapEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>());
+                    obj.PreCutMapEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>?>(eval(this.PreCutMapEntries.Overall), []);
                     if (PreCutMapEntries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>();

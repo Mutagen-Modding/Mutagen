@@ -129,9 +129,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChanceNone = initialValue;
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.UseGlobal = initialValue;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -160,9 +160,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChanceNone = ChanceNone;
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.UseGlobal = UseGlobal;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledNpcEntry.Mask<TItem>?>>?>(Entries, []);
             }
 
             #pragma warning disable CS8618
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.UseGlobal = eval(this.UseGlobal);
                 if (Entries != null)
                 {
-                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledNpcEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledNpcEntry.Mask<R>?>>());
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledNpcEntry.Mask<R>?>>?>(eval(this.Entries.Overall), []);
                     if (Entries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LeveledNpcEntry.Mask<R>?>>();

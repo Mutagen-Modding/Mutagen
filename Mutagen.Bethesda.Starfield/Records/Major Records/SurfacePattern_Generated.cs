@@ -194,14 +194,14 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.SurfacePatternStyle = initialValue;
-                this.Blocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.MasterBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.MasterBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.OverrideBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.OverrideBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Blocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
+                this.MasterBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
+                this.MasterBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
+                this.OverrideBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
+                this.OverrideBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -229,14 +229,14 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.SurfacePatternStyle = SurfacePatternStyle;
-                this.Blocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(Blocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.MasterBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(MasterBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.MasterBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(MasterBlockRotations, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.OverrideBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(OverrideBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.OverrideBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(OverrideBlockRotations, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Worldspaces, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Blocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(Blocks, []);
+                this.MasterBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(MasterBlocks, []);
+                this.MasterBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(MasterBlockRotations, []);
+                this.OverrideBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(OverrideBlocks, []);
+                this.OverrideBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(OverrideBlockRotations, []);
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Worldspaces, []);
             }
 
             #pragma warning disable CS8618
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatternStyle = eval(this.SurfacePatternStyle);
                 if (Blocks != null)
                 {
-                    obj.Blocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.Blocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.Blocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.Blocks.Overall), []);
                     if (Blocks.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterBlocks != null)
                 {
-                    obj.MasterBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.MasterBlocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.MasterBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.MasterBlocks.Overall), []);
                     if (MasterBlocks.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterBlockRotations != null)
                 {
-                    obj.MasterBlockRotations = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.MasterBlockRotations.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.MasterBlockRotations = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.MasterBlockRotations.Overall), []);
                     if (MasterBlockRotations.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (OverrideBlocks != null)
                 {
-                    obj.OverrideBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.OverrideBlocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.OverrideBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.OverrideBlocks.Overall), []);
                     if (OverrideBlocks.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (OverrideBlockRotations != null)
                 {
-                    obj.OverrideBlockRotations = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.OverrideBlockRotations.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.OverrideBlockRotations = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.OverrideBlockRotations.Overall), []);
                     if (OverrideBlockRotations.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Worldspaces != null)
                 {
-                    obj.Worldspaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Worldspaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Worldspaces.Overall), []);
                     if (Worldspaces.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

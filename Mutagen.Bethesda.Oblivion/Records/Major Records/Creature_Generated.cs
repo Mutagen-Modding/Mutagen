@@ -330,17 +330,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>());
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Models = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>(initialValue, []);
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Models = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.NIFT = initialValue;
                 this.Configuration = new MaskItem<TItem, CreatureConfiguration.Mask<TItem>?>(initialValue, new CreatureConfiguration.Mask<TItem>(initialValue));
-                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(initialValue, []);
                 this.DeathItem = initialValue;
                 this.Script = initialValue;
                 this.AIData = new MaskItem<TItem, CreatureAIData.Mask<TItem>?>(initialValue, new CreatureAIData.Mask<TItem>(initialValue));
-                this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Data = new MaskItem<TItem, CreatureData.Mask<TItem>?>(initialValue, new CreatureData.Mask<TItem>(initialValue));
                 this.AttackReach = initialValue;
                 this.CombatStyle = initialValue;
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BloodSpray = initialValue;
                 this.BloodDecal = initialValue;
                 this.InheritsSoundFrom = initialValue;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CreatureSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CreatureSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CreatureSound.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -391,17 +391,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>());
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Models = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Models, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>(Items, []);
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, []);
+                this.Models = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Models, []);
                 this.NIFT = NIFT;
                 this.Configuration = new MaskItem<TItem, CreatureConfiguration.Mask<TItem>?>(Configuration, new CreatureConfiguration.Mask<TItem>(Configuration));
-                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(Factions, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(Factions, []);
                 this.DeathItem = DeathItem;
                 this.Script = Script;
                 this.AIData = new MaskItem<TItem, CreatureAIData.Mask<TItem>?>(AIData, new CreatureAIData.Mask<TItem>(AIData));
-                this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AIPackages, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AIPackages, []);
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, []);
                 this.Data = new MaskItem<TItem, CreatureData.Mask<TItem>?>(Data, new CreatureData.Mask<TItem>(Data));
                 this.AttackReach = AttackReach;
                 this.CombatStyle = CombatStyle;
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BloodSpray = BloodSpray;
                 this.BloodDecal = BloodDecal;
                 this.InheritsSoundFrom = InheritsSoundFrom;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CreatureSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, CreatureSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CreatureSound.Mask<TItem>?>>?>(Sounds, []);
             }
 
             #pragma warning disable CS8618
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemEntry.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemEntry.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ItemEntry.Mask<R>?>>();
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Spells != null)
                 {
-                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), []);
                     if (Spells.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Models != null)
                 {
-                    obj.Models = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Models.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Models = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Models.Overall), []);
                     if (Models.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -816,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Configuration = this.Configuration == null ? null : new MaskItem<R, CreatureConfiguration.Mask<R>?>(eval(this.Configuration.Overall), this.Configuration.Specific?.Translate(eval));
                 if (Factions != null)
                 {
-                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>?>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement.Mask<R>?>>());
+                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>?>(eval(this.Factions.Overall), []);
                     if (Factions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.AIData = this.AIData == null ? null : new MaskItem<R, CreatureAIData.Mask<R>?>(eval(this.AIData.Overall), this.AIData.Specific?.Translate(eval));
                 if (AIPackages != null)
                 {
-                    obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AIPackages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AIPackages.Overall), []);
                     if (AIPackages.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Animations != null)
                 {
-                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), []);
                     if (Animations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.InheritsSoundFrom = eval(this.InheritsSoundFrom);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CreatureSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, CreatureSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CreatureSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CreatureSound.Mask<R>?>>();

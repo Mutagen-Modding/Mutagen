@@ -610,10 +610,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Skin = initialValue;
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(initialValue, new BodyTemplate.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngularTolerance = initialValue;
                 this.MountData = new MaskItem<TItem, MountData.Mask<TItem>?>(initialValue, new MountData.Mask<TItem>(initialValue));
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(initialValue, default);
-                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Voices = new GenderedItem<TItem>(initialValue, initialValue);
                 this.DecapitateArmors = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
@@ -653,10 +653,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FacegenMainClamp = initialValue;
                 this.FacegenFaceClamp = initialValue;
                 this.AttackRace = initialValue;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
-                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.BodyPartData = initialValue;
                 this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
                 this.MaterialType = initialValue;
@@ -665,9 +665,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OpenLootSound = initialValue;
                 this.CloseLootSound = initialValue;
                 this.BipedObjectNames = new MaskItem<TItem, IEnumerable<KeyValuePair<BipedObject, TItem>>?>(initialValue, null);
-                this.MovementTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>());
+                this.MovementTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>(initialValue, []);
                 this.EquipmentFlags = initialValue;
-                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.UnarmedEquipSlot = initialValue;
                 this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(initialValue, new FaceFxPhonemes.Mask<TItem>(initialValue));
                 this.BaseMovementDefaultWalk = initialValue;
@@ -773,10 +773,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = Name;
                 this.Description = Description;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, []);
                 this.Skin = Skin;
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
                 this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
                 this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost2, new SkillBoost.Mask<TItem>(SkillBoost2));
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngularTolerance = AngularTolerance;
                 this.MountData = new MaskItem<TItem, MountData.Mask<TItem>?>(MountData, new MountData.Mask<TItem>(MountData));
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(SkeletalModel, default);
-                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, []);
                 this.Voices = new GenderedItem<TItem>(Voices, Voices);
                 this.DecapitateArmors = new MaskItem<TItem, GenderedItem<TItem>?>(DecapitateArmors, default);
                 this.DefaultHairColors = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHairColors, default);
@@ -816,10 +816,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FacegenMainClamp = FacegenMainClamp;
                 this.FacegenFaceClamp = FacegenFaceClamp;
                 this.AttackRace = AttackRace;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
-                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, []);
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, []);
                 this.BodyPartData = BodyPartData;
                 this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(BehaviorGraph, default);
                 this.MaterialType = MaterialType;
@@ -828,9 +828,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OpenLootSound = OpenLootSound;
                 this.CloseLootSound = CloseLootSound;
                 this.BipedObjectNames = new MaskItem<TItem, IEnumerable<KeyValuePair<BipedObject, TItem>>?>(BipedObjectNames, null);
-                this.MovementTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>(MovementTypes, Enumerable.Empty<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>());
+                this.MovementTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceMovementType.Mask<TItem>?>>?>(MovementTypes, []);
                 this.EquipmentFlags = EquipmentFlags;
-                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EquipmentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EquipmentSlots, []);
                 this.UnarmedEquipSlot = UnarmedEquipSlot;
                 this.FaceFxPhonemes = new MaskItem<TItem, FaceFxPhonemes.Mask<TItem>?>(FaceFxPhonemes, new FaceFxPhonemes.Mask<TItem>(FaceFxPhonemes));
                 this.BaseMovementDefaultWalk = BaseMovementDefaultWalk;
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 if (ActorEffect != null)
                 {
-                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), []);
                     if (ActorEffect.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1613,7 +1613,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BodyTemplate = this.BodyTemplate == null ? null : new MaskItem<R, BodyTemplate.Mask<R>?>(eval(this.BodyTemplate.Overall), this.BodyTemplate.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim
                     (m, e) => m?.Translate(e));
                 if (MovementTypeNames != null)
                 {
-                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), []);
                     if (MovementTypeNames.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1716,7 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AttackRace = eval(this.AttackRace);
                 if (Attacks != null)
                 {
-                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), []);
                     if (Attacks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Skyrim
                     (m, e) => m?.Translate(e));
                 if (Hairs != null)
                 {
-                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), []);
                     if (Hairs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Eyes != null)
                 {
-                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), []);
                     if (Eyes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (MovementTypes != null)
                 {
-                    obj.MovementTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceMovementType.Mask<R>?>>?>(eval(this.MovementTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, RaceMovementType.Mask<R>?>>());
+                    obj.MovementTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceMovementType.Mask<R>?>>?>(eval(this.MovementTypes.Overall), []);
                     if (MovementTypes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RaceMovementType.Mask<R>?>>();
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.EquipmentFlags = eval(this.EquipmentFlags);
                 if (EquipmentSlots != null)
                 {
-                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.EquipmentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.EquipmentSlots.Overall), []);
                     if (EquipmentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

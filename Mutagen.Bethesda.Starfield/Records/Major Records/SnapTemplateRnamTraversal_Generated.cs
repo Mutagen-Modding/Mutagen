@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Traversal = initialValue;
-                this.NodeIDs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NodeIDs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem NodeIDs)
             {
                 this.Traversal = Traversal;
-                this.NodeIDs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NodeIDs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NodeIDs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NodeIDs, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Traversal = eval(this.Traversal);
                 if (NodeIDs != null)
                 {
-                    obj.NodeIDs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NodeIDs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.NodeIDs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NodeIDs.Overall), []);
                     if (NodeIDs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

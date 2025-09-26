@@ -346,7 +346,7 @@ public class StringsFolderLookupOverlayTests
         }
     
         var mockGetApplicableArchivePaths = Substitute.For<IGetApplicableArchivePaths>();
-        mockGetApplicableArchivePaths.Get(modKey).Returns(Enumerable.Empty<FilePath>());
+        mockGetApplicableArchivePaths.Get(modKey).Returns([]);
     
         var factory = new StringsFolderLookupFactory(gameRelease, dataDirectoryProvider, mockGetApplicableArchivePaths, fileSystem, new StringsReadParameters()
         {
@@ -375,7 +375,7 @@ public class StringsFolderLookupOverlayTests
         var modKey = ModKey.FromFileName("Skyrim.esm");
     
         var mockGetApplicableArchivePaths = Substitute.For<IGetApplicableArchivePaths>();
-        mockGetApplicableArchivePaths.Get(modKey).Returns(Enumerable.Empty<FilePath>());
+        mockGetApplicableArchivePaths.Get(modKey).Returns([]);
     
         var factory = new StringsFolderLookupFactory(gameRelease, dataDirectoryProvider, mockGetApplicableArchivePaths, fileSystem, new StringsReadParameters()
         {

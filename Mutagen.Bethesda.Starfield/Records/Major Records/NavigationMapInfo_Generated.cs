@@ -167,9 +167,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.NavigationMesh = initialValue;
                 this.Data = initialValue;
-                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
+                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(initialValue, []);
                 this.Unknown = initialValue;
             }
 
@@ -183,9 +183,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.NavigationMesh = NavigationMesh;
                 this.Data = Data;
-                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MergedTo, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PreferredMerges, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(LinkedDoors, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
+                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MergedTo, []);
+                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PreferredMerges, []);
+                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(LinkedDoors, []);
                 this.Unknown = Unknown;
             }
 
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Data = eval(this.Data);
                 if (MergedTo != null)
                 {
-                    obj.MergedTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MergedTo.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MergedTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MergedTo.Overall), []);
                     if (MergedTo.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (PreferredMerges != null)
                 {
-                    obj.PreferredMerges = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PreferredMerges.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PreferredMerges = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PreferredMerges.Overall), []);
                     if (PreferredMerges.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (LinkedDoors != null)
                 {
-                    obj.LinkedDoors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>?>(eval(this.LinkedDoors.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>());
+                    obj.LinkedDoors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>?>(eval(this.LinkedDoors.Overall), []);
                     if (LinkedDoors.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>();
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MergedTo.Clear();
             item.PreferredMerges.Clear();
             item.LinkedDoors.Clear();
-            item.Unknown = Array.Empty<byte>();
+            item.Unknown = [];
         }
         
         #region Mutagen

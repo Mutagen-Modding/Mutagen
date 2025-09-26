@@ -259,11 +259,11 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxRank = initialValue;
                 this.LevelTierScaledOffset = initialValue;
                 this.AttachPoint = initialValue;
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModItem.Mask<TItem>?>>());
-                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>());
-                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModItem.Mask<TItem>?>>?>(initialValue, []);
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(initialValue, []);
+                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LooseMod = initialValue;
                 this.Priority = initialValue;
                 this.Filter = initialValue;
@@ -308,11 +308,11 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxRank = MaxRank;
                 this.LevelTierScaledOffset = LevelTierScaledOffset;
                 this.AttachPoint = AttachPoint;
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModItem.Mask<TItem>?>>());
-                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(Includes, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>());
-                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetOmodKeywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FilterKeywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModItem.Mask<TItem>?>>?>(Items, []);
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(Includes, []);
+                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetOmodKeywords, []);
+                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FilterKeywords, []);
                 this.LooseMod = LooseMod;
                 this.Priority = Priority;
                 this.Filter = Filter;
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AttachPoint = eval(this.AttachPoint);
                 if (AttachParentSlots != null)
                 {
-                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), []);
                     if (AttachParentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectModItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectModItem.Mask<R>?>>();
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Includes != null)
                 {
-                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>?>(eval(this.Includes.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>());
+                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>?>(eval(this.Includes.Overall), []);
                     if (Includes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>();
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (TargetOmodKeywords != null)
                 {
-                    obj.TargetOmodKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetOmodKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TargetOmodKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetOmodKeywords.Overall), []);
                     if (TargetOmodKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (FilterKeywords != null)
                 {
-                    obj.FilterKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FilterKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.FilterKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FilterKeywords.Overall), []);
                     if (FilterKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

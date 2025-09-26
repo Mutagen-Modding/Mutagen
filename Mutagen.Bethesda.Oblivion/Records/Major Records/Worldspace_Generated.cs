@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Road = new MaskItem<TItem, Road.Mask<TItem>?>(initialValue, new Road.Mask<TItem>(initialValue));
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Road = new MaskItem<TItem, Road.Mask<TItem>?>(Road, new Road.Mask<TItem>(Road));
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, []);
             }
 
             #pragma warning disable CS8618
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
                 if (SubCells != null)
                 {
-                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
+                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), []);
                     if (SubCells.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();

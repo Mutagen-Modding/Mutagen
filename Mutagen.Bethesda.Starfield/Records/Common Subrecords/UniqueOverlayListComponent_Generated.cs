@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem Worldspaces)
             : base()
             {
-                this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueOverlayListComponentItem.Mask<TItem>?>>?>(Worldspaces, Enumerable.Empty<MaskItemIndexed<TItem, UniqueOverlayListComponentItem.Mask<TItem>?>>());
+                this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueOverlayListComponentItem.Mask<TItem>?>>?>(Worldspaces, []);
             }
 
             #pragma warning disable CS8618
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Worldspaces != null)
                 {
-                    obj.Worldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueOverlayListComponentItem.Mask<R>?>>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, UniqueOverlayListComponentItem.Mask<R>?>>());
+                    obj.Worldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueOverlayListComponentItem.Mask<R>?>>?>(eval(this.Worldspaces.Overall), []);
                     if (Worldspaces.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, UniqueOverlayListComponentItem.Mask<R>?>>();

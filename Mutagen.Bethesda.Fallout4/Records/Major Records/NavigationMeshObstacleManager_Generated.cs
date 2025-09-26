@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
+                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(SubObjects, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>());
+                this.SubObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshObstacleManagerSubObject.Mask<TItem>?>>?>(SubObjects, []);
             }
 
             #pragma warning disable CS8618
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (SubObjects != null)
                 {
-                    obj.SubObjects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>?>(eval(this.SubObjects.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>());
+                    obj.SubObjects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>?>(eval(this.SubObjects.Overall), []);
                     if (SubObjects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavigationMeshObstacleManagerSubObject.Mask<R>?>>();

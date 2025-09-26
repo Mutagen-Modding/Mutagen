@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Priority = initialValue;
                 this.Branch = initialValue;
@@ -234,10 +234,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Category = initialValue;
                 this.Subtype = initialValue;
                 this.SubtypeName = initialValue;
-                this.TopicInfoList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TopicInfoList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Priority = Priority;
                 this.Branch = Branch;
@@ -283,10 +283,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Category = Category;
                 this.Subtype = Subtype;
                 this.SubtypeName = SubtypeName;
-                this.TopicInfoList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TopicInfoList, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TopicInfoList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TopicInfoList, []);
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, []);
             }
 
             #pragma warning disable CS8618
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SubtypeName = eval(this.SubtypeName);
                 if (TopicInfoList != null)
                 {
-                    obj.TopicInfoList = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TopicInfoList.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TopicInfoList = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TopicInfoList.Overall), []);
                     if (TopicInfoList.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown = eval(this.Unknown);
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponses.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponses.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponses.Mask<R>?>>?>(eval(this.Responses.Overall), []);
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponses.Mask<R>?>>();

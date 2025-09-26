@@ -137,8 +137,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Versioning = initialValue;
                 this.ExtraBindDataVersion = initialValue;
                 this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(initialValue, new ScriptEntry.Mask<TItem>(initialValue));
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(initialValue, []);
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -158,8 +158,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Versioning = Versioning;
                 this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(Script, new ScriptEntry.Mask<TItem>(Script));
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(Fragments, []);
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(Aliases, []);
             }
 
             #pragma warning disable CS8618
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Script = this.Script == null ? null : new MaskItem<R, ScriptEntry.Mask<R>?>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
                 if (Fragments != null)
                 {
-                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>>());
+                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), []);
                     if (Fragments.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>>();
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Aliases != null)
                 {
-                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>>());
+                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), []);
                     if (Aliases.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>>();

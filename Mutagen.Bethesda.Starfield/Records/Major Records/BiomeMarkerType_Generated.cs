@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.MarkerType = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Keywords)
             {
                 this.MarkerType = MarkerType;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
             }
 
             #pragma warning disable CS8618
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MarkerType = eval(this.MarkerType);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

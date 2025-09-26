@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
+                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(initialValue, []);
                 this.MaxHeight = new MaskItem<TItem, WorldspaceMaxHeight.Mask<TItem>?>(initialValue, new WorldspaceMaxHeight.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.FixedDimensionsCenterCell = initialValue;
@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
                 this.SubCellsUnknown = initialValue;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
+                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, []);
                 this.MaxHeight = new MaskItem<TItem, WorldspaceMaxHeight.Mask<TItem>?>(MaxHeight, new WorldspaceMaxHeight.Mask<TItem>(MaxHeight));
                 this.Name = Name;
                 this.FixedDimensionsCenterCell = FixedDimensionsCenterCell;
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
                 this.SubCellsUnknown = SubCellsUnknown;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, []);
             }
 
             #pragma warning disable CS8618
@@ -800,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (LargeReferences != null)
                 {
-                    obj.LargeReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>?>(eval(this.LargeReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>());
+                    obj.LargeReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>?>(eval(this.LargeReferences.Overall), []);
                     if (LargeReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>();
@@ -846,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.SubCellsUnknown = eval(this.SubCellsUnknown);
                 if (SubCells != null)
                 {
-                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
+                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), []);
                     if (SubCells.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();

@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Flags = initialValue;
                 this.Name = initialValue;
-                this.Types = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Types = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Flags = Flags;
                 this.Name = Name;
-                this.Types = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Types, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Types = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Types, []);
             }
 
             #pragma warning disable CS8618
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Name = eval(this.Name);
                 if (Types != null)
                 {
-                    obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Types.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Types = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Types.Overall), []);
                     if (Types.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

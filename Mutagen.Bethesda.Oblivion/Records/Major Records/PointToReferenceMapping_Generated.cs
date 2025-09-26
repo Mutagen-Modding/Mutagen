@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Reference = initialValue;
-                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Points)
             {
                 this.Reference = Reference;
-                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Points, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Points = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Points, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Reference = eval(this.Reference);
                 if (Points != null)
                 {
-                    obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Points.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Points = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Points.Overall), []);
                     if (Points.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = initialValue;
                 this.IngredientValue = initialValue;
                 this.Flags = initialValue;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = Weight;
                 this.IngredientValue = IngredientValue;
                 this.Flags = Flags;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, []);
             }
 
             #pragma warning disable CS8618
@@ -578,7 +578,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Flags = eval(this.Flags);
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();

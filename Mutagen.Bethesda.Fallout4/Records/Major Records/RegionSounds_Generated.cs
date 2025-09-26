@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Music = initialValue;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(initialValue, []);
                 this.LodDisplayDistanceMultiplier = initialValue;
                 this.OcclusionAccuracyDist = initialValue;
             }
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Icons: Icons)
             {
                 this.Music = Music;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(Sounds, []);
                 this.LodDisplayDistanceMultiplier = LodDisplayDistanceMultiplier;
                 this.OcclusionAccuracyDist = OcclusionAccuracyDist;
             }
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Music = eval(this.Music);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionSound.Mask<R>?>>();

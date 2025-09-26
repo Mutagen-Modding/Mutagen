@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Index = initialValue;
                 this.Flags = initialValue;
                 this.DisplayText = initialValue;
-                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>());
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Index = Index;
                 this.Flags = Flags;
                 this.DisplayText = DisplayText;
-                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>(Targets, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>());
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>(Targets, []);
             }
 
             #pragma warning disable CS8618
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DisplayText = eval(this.DisplayText);
                 if (Targets != null)
                 {
-                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjectiveTarget.Mask<R>?>>?>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestObjectiveTarget.Mask<R>?>>());
+                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjectiveTarget.Mask<R>?>>?>(eval(this.Targets.Overall), []);
                     if (Targets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestObjectiveTarget.Mask<R>?>>();

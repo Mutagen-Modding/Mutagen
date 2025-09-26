@@ -62,7 +62,7 @@ public class OblivionProcessor : Processor
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
     {
-        return Array.Empty<AStringsAlignment>();
+        return [];
     }
 
     private void ProcessNPC(

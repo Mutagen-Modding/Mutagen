@@ -219,7 +219,7 @@ public static class IFormLinkExt
     {
         if (link.FormKeyNullable is not {} formKey)
         {
-            return Enumerable.Empty<TMajor>();
+            return [];
         }
         return cache.ResolveAll<TMajor>(formKey);
     }
@@ -239,7 +239,7 @@ public static class IFormLinkExt
     {
         if (link.FormKeyNullable is not {} formKey)
         {
-            return Enumerable.Empty<TScopedMajor>();
+            return [];
         }
         return cache.ResolveAll<TScopedMajor>(formKey);
     }
@@ -381,7 +381,7 @@ public static class IFormLinkExt
     {
         if (link.FormKeyNullable is not {} formKey)
         {
-            return Enumerable.Empty<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>();
+            return [];
         }
         return cache.ResolveAllContexts<TMajor, TMajorGetter>(formKey);
     }
@@ -409,7 +409,7 @@ public static class IFormLinkExt
     {
         if (link.FormKeyNullable is not {} formKey)
         {
-            return Enumerable.Empty<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>>();
+            return [];
         }
         return cache.ResolveAllContexts<TScopedSetter, TScopedGetter>(formKey);
     }
@@ -521,7 +521,7 @@ public static class IFormLinkExt
     {
         if (link.FormKeyNullable is not {} formKey)
         {
-            return Enumerable.Empty<IModContext<TMajor>>();
+            return [];
         }
         return cache.ResolveAllSimpleContexts<TMajor>(formKey);
     }
@@ -543,7 +543,7 @@ public static class IFormLinkExt
     {
         if (link.FormKeyNullable is not {} formKey)
         {
-            return Enumerable.Empty<IModContext<TScoped>>();
+            return [];
         }
         return cache.ResolveAllSimpleContexts<TScoped>(formKey);
     }

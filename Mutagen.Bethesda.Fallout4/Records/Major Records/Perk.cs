@@ -571,7 +571,7 @@ partial class PerkBinaryWriteTranslation
 
 partial class PerkBinaryOverlay
 {
-    public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = Array.Empty<IAPerkEffectGetter>();
+    public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = [];
 
     private static RecordTriggerSpecs _effectSpecs = new(
         new RecordCollection()

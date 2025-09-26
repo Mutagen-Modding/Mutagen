@@ -24,7 +24,7 @@ partial class PackageEventBinaryWriteTranslation
 
 partial class PackageEventBinaryOverlay
 {
-    public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = Array.Empty<IATopicReferenceGetter>();
+    public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = [];
 
     partial void TopicsCustomParse(
         OverlayStream stream,

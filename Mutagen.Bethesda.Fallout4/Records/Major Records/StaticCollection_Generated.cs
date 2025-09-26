@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.Filter = initialValue;
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Name = Name;
                 this.Filter = Filter;
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(Parts, []);
             }
 
             #pragma warning disable CS8618
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Filter = eval(this.Filter);
                 if (Parts != null)
                 {
-                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPart.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, StaticPart.Mask<R>?>>());
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPart.Mask<R>?>>?>(eval(this.Parts.Overall), []);
                     if (Parts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StaticPart.Mask<R>?>>();

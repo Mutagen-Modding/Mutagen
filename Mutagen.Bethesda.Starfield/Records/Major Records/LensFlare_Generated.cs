@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ExposureInfluence = initialValue;
                 this.MinEV100 = initialValue;
                 this.MaxEV100 = initialValue;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ExposureInfluence = ExposureInfluence;
                 this.MinEV100 = MinEV100;
                 this.MaxEV100 = MaxEV100;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, []);
             }
 
             #pragma warning disable CS8618
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MaxEV100 = eval(this.MaxEV100);
                 if (Sprites != null)
                 {
-                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), Enumerable.Empty<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>());
+                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), []);
                     if (Sprites.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>();

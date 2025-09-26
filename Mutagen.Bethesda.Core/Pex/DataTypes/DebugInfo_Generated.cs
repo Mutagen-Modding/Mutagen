@@ -115,9 +115,9 @@ namespace Mutagen.Bethesda.Pex
             public Mask(TItem initialValue)
             {
                 this.ModificationTime = initialValue;
-                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>());
-                this.PropertyGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>());
-                this.StructOrders = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugStructOrder.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebugStructOrder.Mask<TItem>?>>());
+                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>(initialValue, []);
+                this.PropertyGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>(initialValue, []);
+                this.StructOrders = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugStructOrder.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -127,9 +127,9 @@ namespace Mutagen.Bethesda.Pex
                 TItem StructOrders)
             {
                 this.ModificationTime = ModificationTime;
-                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>(Functions, Enumerable.Empty<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>());
-                this.PropertyGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>(PropertyGroups, Enumerable.Empty<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>());
-                this.StructOrders = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugStructOrder.Mask<TItem>?>>?>(StructOrders, Enumerable.Empty<MaskItemIndexed<TItem, DebugStructOrder.Mask<TItem>?>>());
+                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>(Functions, []);
+                this.PropertyGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>(PropertyGroups, []);
+                this.StructOrders = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugStructOrder.Mask<TItem>?>>?>(StructOrders, []);
             }
 
             #pragma warning disable CS8618
@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.ModificationTime = eval(this.ModificationTime);
                 if (Functions != null)
                 {
-                    obj.Functions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebugFunction.Mask<R>?>>?>(eval(this.Functions.Overall), Enumerable.Empty<MaskItemIndexed<R, DebugFunction.Mask<R>?>>());
+                    obj.Functions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebugFunction.Mask<R>?>>?>(eval(this.Functions.Overall), []);
                     if (Functions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DebugFunction.Mask<R>?>>();
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Pex
                 }
                 if (PropertyGroups != null)
                 {
-                    obj.PropertyGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>>?>(eval(this.PropertyGroups.Overall), Enumerable.Empty<MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>>());
+                    obj.PropertyGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>>?>(eval(this.PropertyGroups.Overall), []);
                     if (PropertyGroups.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>>();
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Pex
                 }
                 if (StructOrders != null)
                 {
-                    obj.StructOrders = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebugStructOrder.Mask<R>?>>?>(eval(this.StructOrders.Overall), Enumerable.Empty<MaskItemIndexed<R, DebugStructOrder.Mask<R>?>>());
+                    obj.StructOrders = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebugStructOrder.Mask<R>?>>?>(eval(this.StructOrders.Overall), []);
                     if (StructOrders.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DebugStructOrder.Mask<R>?>>();

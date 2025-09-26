@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Name = Name;
-                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

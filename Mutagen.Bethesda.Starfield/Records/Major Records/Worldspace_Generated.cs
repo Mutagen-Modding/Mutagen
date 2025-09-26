@@ -422,8 +422,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.EncounterLocation = initialValue;
                 this.Location = initialValue;
@@ -448,16 +448,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.EnvironmentMap = initialValue;
                 this.WaterEnvironmentMap = initialValue;
                 this.GNAM = initialValue;
-                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CellWaterHeightLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WaterHeights = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.CellWaterHeightLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.WaterHeights = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.HNAM = initialValue;
                 this.OffsetData = initialValue;
                 this.CellSizeData = initialValue;
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
                 this.SubCellsUnknown = initialValue;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -513,8 +513,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
+                this.LargeReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceGridReference.Mask<TItem>?>>?>(LargeReferences, []);
                 this.Name = Name;
                 this.EncounterLocation = EncounterLocation;
                 this.Location = Location;
@@ -539,16 +539,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.EnvironmentMap = EnvironmentMap;
                 this.WaterEnvironmentMap = WaterEnvironmentMap;
                 this.GNAM = GNAM;
-                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CellWaterHeightLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CellWaterHeightLocations, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WaterHeights = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WaterHeights, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, []);
+                this.CellWaterHeightLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CellWaterHeightLocations, []);
+                this.WaterHeights = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WaterHeights, []);
                 this.HNAM = HNAM;
                 this.OffsetData = OffsetData;
                 this.CellSizeData = CellSizeData;
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
                 this.SubCellsUnknown = SubCellsUnknown;
-                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>());
+                this.SubCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceBlock.Mask<TItem>?>>?>(SubCells, []);
             }
 
             #pragma warning disable CS8618
@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (LargeReferences != null)
                 {
-                    obj.LargeReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>?>(eval(this.LargeReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>());
+                    obj.LargeReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>?>(eval(this.LargeReferences.Overall), []);
                     if (LargeReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceGridReference.Mask<R>?>>();
@@ -1005,7 +1005,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GNAM = eval(this.GNAM);
                 if (LandscapeTextures != null)
                 {
-                    obj.LandscapeTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LandscapeTextures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LandscapeTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LandscapeTextures.Overall), []);
                     if (LandscapeTextures.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (CellWaterHeightLocations != null)
                 {
-                    obj.CellWaterHeightLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CellWaterHeightLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CellWaterHeightLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CellWaterHeightLocations.Overall), []);
                     if (CellWaterHeightLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (WaterHeights != null)
                 {
-                    obj.WaterHeights = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WaterHeights.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.WaterHeights = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WaterHeights.Overall), []);
                     if (WaterHeights.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SubCellsUnknown = eval(this.SubCellsUnknown);
                 if (SubCells != null)
                 {
-                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>());
+                    obj.SubCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>?>(eval(this.SubCells.Overall), []);
                     if (SubCells.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Flags: Flags,
                 Priority: Priority)
             {
-                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, []);
             }
 
             #pragma warning disable CS8618
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Grasses != null)
                 {
-                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Grasses.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Grasses.Overall), []);
                     if (Grasses.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

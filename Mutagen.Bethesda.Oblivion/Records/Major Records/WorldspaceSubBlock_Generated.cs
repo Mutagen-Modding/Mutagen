@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BlockNumberX = initialValue;
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BlockNumberX = BlockNumberX;
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.LastModified = eval(this.LastModified);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Cell.Mask<R>?>>();

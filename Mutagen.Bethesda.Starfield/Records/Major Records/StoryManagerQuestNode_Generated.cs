@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaxConcurrentQuests = initialValue;
                 this.MaxNumQuestsToRun = initialValue;
                 this.HoursUntilReset = initialValue;
-                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
+                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaxConcurrentQuests = MaxConcurrentQuests;
                 this.MaxNumQuestsToRun = MaxNumQuestsToRun;
                 this.HoursUntilReset = HoursUntilReset;
-                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
+                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, []);
             }
 
             #pragma warning disable CS8618
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.HoursUntilReset = eval(this.HoursUntilReset);
                 if (Quests != null)
                 {
-                    obj.Quests = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>?>(eval(this.Quests.Overall), Enumerable.Empty<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>());
+                    obj.Quests = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>?>(eval(this.Quests.Overall), []);
                     if (Quests.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>();

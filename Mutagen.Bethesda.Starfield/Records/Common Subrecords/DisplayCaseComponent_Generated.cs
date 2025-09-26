@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DisplayCaseComponentItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DisplayCaseComponentItem.Mask<TItem>?>>());
-                this.DCED = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DisplayCaseComponentItem.Mask<TItem>?>>?>(initialValue, []);
+                this.DCED = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem DCED)
             : base()
             {
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DisplayCaseComponentItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, DisplayCaseComponentItem.Mask<TItem>?>>());
-                this.DCED = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DCED, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DisplayCaseComponentItem.Mask<TItem>?>>?>(Items, []);
+                this.DCED = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DCED, []);
             }
 
             #pragma warning disable CS8618
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DisplayCaseComponentItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, DisplayCaseComponentItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DisplayCaseComponentItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DisplayCaseComponentItem.Mask<R>?>>();
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (DCED != null)
                 {
-                    obj.DCED = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DCED.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DCED = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DCED.Overall), []);
                     if (DCED.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

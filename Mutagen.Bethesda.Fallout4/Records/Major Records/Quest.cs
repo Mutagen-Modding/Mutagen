@@ -326,7 +326,7 @@ partial class QuestBinaryWriteTranslation
 
 partial class QuestBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = [];
     public IReadOnlyList<IConditionGetter>? UnusedConditions { get; private set; }
     public IReadOnlyList<IAQuestAliasGetter>? Aliases { get; private set; }
 
@@ -336,11 +336,11 @@ partial class QuestBinaryOverlay
 
     public int Unknown => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
-    public IReadOnlyList<ISceneGetter> Scenes { get; private set; } = Array.Empty<ISceneGetter>();
+    public IReadOnlyList<ISceneGetter> Scenes { get; private set; } = [];
 
-    public IReadOnlyList<IDialogTopicGetter> DialogTopics { get; private set; } = Array.Empty<IDialogTopicGetter>();
+    public IReadOnlyList<IDialogTopicGetter> DialogTopics { get; private set; } = [];
 
-    public IReadOnlyList<IDialogBranchGetter> DialogBranches { get; private set; } = Array.Empty<IDialogBranchGetter>();
+    public IReadOnlyList<IDialogBranchGetter> DialogBranches { get; private set; } = [];
 
     partial void DialogConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

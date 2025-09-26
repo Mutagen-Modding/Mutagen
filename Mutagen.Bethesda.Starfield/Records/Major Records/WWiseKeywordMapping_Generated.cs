@@ -126,9 +126,9 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.WMTI = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.WMSS = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WWiseKeywordMappingItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -153,9 +153,9 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.WMTI = WMTI;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.WMSS = WMSS;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, WWiseKeywordMappingItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WMTI = eval(this.WMTI);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WMSS = eval(this.WMSS);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WWiseKeywordMappingItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, WWiseKeywordMappingItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WWiseKeywordMappingItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WWiseKeywordMappingItem.Mask<R>?>>();

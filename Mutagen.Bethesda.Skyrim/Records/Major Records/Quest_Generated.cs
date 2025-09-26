@@ -265,14 +265,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = initialValue;
                 this.Type = initialValue;
                 this.Event = initialValue;
-                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Filter = initialValue;
-                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, []);
                 this.NextAliasID = initialValue;
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
             }
 
@@ -318,14 +318,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = Unknown;
                 this.Type = Type;
                 this.Event = Event;
-                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, []);
                 this.Filter = Filter;
-                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(EventConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, []);
+                this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(EventConditions, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, []);
                 this.NextAliasID = NextAliasID;
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(Aliases, []);
                 this.Description = Description;
             }
 
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Event = eval(this.Event);
                 if (TextDisplayGlobals != null)
                 {
-                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), []);
                     if (TextDisplayGlobals.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Filter = eval(this.Filter);
                 if (DialogConditions != null)
                 {
-                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), []);
                     if (DialogConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (EventConditions != null)
                 {
-                    obj.EventConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.EventConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.EventConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.EventConditions.Overall), []);
                     if (EventConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Objectives != null)
                 {
-                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestObjective.Mask<R>?>>());
+                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), []);
                     if (Objectives.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestObjective.Mask<R>?>>();
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.NextAliasID = eval(this.NextAliasID);
                 if (Aliases != null)
                 {
-                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestAlias.Mask<R>?>>());
+                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), []);
                     if (Aliases.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestAlias.Mask<R>?>>();

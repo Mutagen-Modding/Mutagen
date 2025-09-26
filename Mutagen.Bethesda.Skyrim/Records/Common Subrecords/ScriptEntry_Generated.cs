@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = initialValue;
                 this.Flags = initialValue;
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Name = Name;
                 this.Flags = Flags;
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(Properties, []);
             }
 
             #pragma warning disable CS8618
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Flags = eval(this.Flags);
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>();

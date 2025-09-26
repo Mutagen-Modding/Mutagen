@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SetParentQuestStage = initialValue;
                 this.TimerMinSeconds = initialValue;
                 this.STSC = initialValue;
-                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>());
+                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(initialValue, []);
                 this.PlayerPositiveResponse = initialValue;
                 this.PlayerNegativeResponse = initialValue;
                 this.PlayerNeutralResponse = initialValue;
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PlayerNegativeSubtype = initialValue;
                 this.PlayerNeutralSubtype = initialValue;
                 this.PlayerQuestionSubtype = initialValue;
-                this.NpcHeadtrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NpcHeadtrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.NpcPositiveResponse = initialValue;
                 this.NpcNegativeResponse = initialValue;
                 this.NpcNeutralResponse = initialValue;
@@ -499,14 +499,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NpcNeutralSubtype = initialValue;
                 this.NpcQuestionSubtype = initialValue;
                 this.DialogueTargetActorId = initialValue;
-                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Topic = initialValue;
                 this.LoopingMax = initialValue;
                 this.LoopingMin = initialValue;
                 this.Camera = new MaskItem<TItem, SceneCamera.Mask<TItem>?>(initialValue, new SceneCamera.Mask<TItem>(initialValue));
                 this.Emotion = initialValue;
                 this.EmotionValue = initialValue;
-                this.PlayerHeadTrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PlayerHeadTrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.DialogueSubtype = initialValue;
                 this.AnimArchType = initialValue;
                 this.AudioOutputOverride = initialValue;
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.SetParentQuestStage = SetParentQuestStage;
                 this.TimerMinSeconds = TimerMinSeconds;
                 this.STSC = STSC;
-                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(StartScenes, Enumerable.Empty<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>());
+                this.StartScenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StartScene.Mask<TItem>?>>?>(StartScenes, []);
                 this.PlayerPositiveResponse = PlayerPositiveResponse;
                 this.PlayerNegativeResponse = PlayerNegativeResponse;
                 this.PlayerNeutralResponse = PlayerNeutralResponse;
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PlayerNegativeSubtype = PlayerNegativeSubtype;
                 this.PlayerNeutralSubtype = PlayerNeutralSubtype;
                 this.PlayerQuestionSubtype = PlayerQuestionSubtype;
-                this.NpcHeadtrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NpcHeadtrackingActorIds, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NpcHeadtrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NpcHeadtrackingActorIds, []);
                 this.NpcPositiveResponse = NpcPositiveResponse;
                 this.NpcNegativeResponse = NpcNegativeResponse;
                 this.NpcNeutralResponse = NpcNeutralResponse;
@@ -587,14 +587,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NpcNeutralSubtype = NpcNeutralSubtype;
                 this.NpcQuestionSubtype = NpcQuestionSubtype;
                 this.DialogueTargetActorId = DialogueTargetActorId;
-                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, []);
                 this.Topic = Topic;
                 this.LoopingMax = LoopingMax;
                 this.LoopingMin = LoopingMin;
                 this.Camera = new MaskItem<TItem, SceneCamera.Mask<TItem>?>(Camera, new SceneCamera.Mask<TItem>(Camera));
                 this.Emotion = Emotion;
                 this.EmotionValue = EmotionValue;
-                this.PlayerHeadTrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PlayerHeadTrackingActorIds, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PlayerHeadTrackingActorIds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PlayerHeadTrackingActorIds, []);
                 this.DialogueSubtype = DialogueSubtype;
                 this.AnimArchType = AnimArchType;
                 this.AudioOutputOverride = AudioOutputOverride;
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.STSC = eval(this.STSC);
                 if (StartScenes != null)
                 {
-                    obj.StartScenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StartScene.Mask<R>?>>?>(eval(this.StartScenes.Overall), Enumerable.Empty<MaskItemIndexed<R, StartScene.Mask<R>?>>());
+                    obj.StartScenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StartScene.Mask<R>?>>?>(eval(this.StartScenes.Overall), []);
                     if (StartScenes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StartScene.Mask<R>?>>();
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PlayerQuestionSubtype = eval(this.PlayerQuestionSubtype);
                 if (NpcHeadtrackingActorIds != null)
                 {
-                    obj.NpcHeadtrackingActorIds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NpcHeadtrackingActorIds.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.NpcHeadtrackingActorIds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NpcHeadtrackingActorIds.Overall), []);
                     if (NpcHeadtrackingActorIds.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DialogueTargetActorId = eval(this.DialogueTargetActorId);
                 if (Packages != null)
                 {
-                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), []);
                     if (Packages.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.EmotionValue = eval(this.EmotionValue);
                 if (PlayerHeadTrackingActorIds != null)
                 {
-                    obj.PlayerHeadTrackingActorIds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PlayerHeadTrackingActorIds.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PlayerHeadTrackingActorIds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PlayerHeadTrackingActorIds.Overall), []);
                     if (PlayerHeadTrackingActorIds.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

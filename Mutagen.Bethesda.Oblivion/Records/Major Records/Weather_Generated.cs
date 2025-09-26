@@ -172,11 +172,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = initialValue;
                 this.TextureUpperLayer = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>());
+                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(initialValue, []);
                 this.FogDistance = new MaskItem<TItem, FogDistance.Mask<TItem>?>(initialValue, new FogDistance.Mask<TItem>(initialValue));
                 this.HDRData = new MaskItem<TItem, HDRData.Mask<TItem>?>(initialValue, new HDRData.Mask<TItem>(initialValue));
                 this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(initialValue, new WeatherData.Mask<TItem>(initialValue));
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -203,11 +203,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureLowerLayer = TextureLowerLayer;
                 this.TextureUpperLayer = TextureUpperLayer;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(Colors, Enumerable.Empty<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>());
+                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(Colors, []);
                 this.FogDistance = new MaskItem<TItem, FogDistance.Mask<TItem>?>(FogDistance, new FogDistance.Mask<TItem>(FogDistance));
                 this.HDRData = new MaskItem<TItem, HDRData.Mask<TItem>?>(HDRData, new HDRData.Mask<TItem>(HDRData));
                 this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(Data, new WeatherData.Mask<TItem>(Data));
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, []);
             }
 
             #pragma warning disable CS8618
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Colors != null)
                 {
-                    obj.Colors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherColors.Mask<R>?>>?>(eval(this.Colors.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherColors.Mask<R>?>>());
+                    obj.Colors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherColors.Mask<R>?>>?>(eval(this.Colors.Overall), []);
                     if (Colors.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherColors.Mask<R>?>>();
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Data = this.Data == null ? null : new MaskItem<R, WeatherData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherSound.Mask<R>?>>();

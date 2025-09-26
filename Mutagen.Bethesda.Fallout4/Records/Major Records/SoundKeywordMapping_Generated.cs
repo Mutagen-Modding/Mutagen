@@ -159,8 +159,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ExteriorTail = initialValue;
                 this.VatsDescriptor = initialValue;
                 this.VatsThreshold = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MappingSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MappingSound.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MappingSound.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -190,8 +190,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ExteriorTail = ExteriorTail;
                 this.VatsDescriptor = VatsDescriptor;
                 this.VatsThreshold = VatsThreshold;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MappingSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, MappingSound.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MappingSound.Mask<TItem>?>>?>(Sounds, []);
             }
 
             #pragma warning disable CS8618
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.VatsThreshold = eval(this.VatsThreshold);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MappingSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, MappingSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MappingSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MappingSound.Mask<R>?>>();

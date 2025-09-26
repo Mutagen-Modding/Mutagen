@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Pex
                 this.StateName = initialValue;
                 this.FunctionName = initialValue;
                 this.FunctionType = initialValue;
-                this.Instructions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Instructions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Pex
                 this.StateName = StateName;
                 this.FunctionName = FunctionName;
                 this.FunctionType = FunctionType;
-                this.Instructions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Instructions, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Instructions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Instructions, []);
             }
 
             #pragma warning disable CS8618
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.FunctionType = eval(this.FunctionType);
                 if (Instructions != null)
                 {
-                    obj.Instructions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Instructions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Instructions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Instructions.Overall), []);
                     if (Instructions.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

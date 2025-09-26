@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.EdgeFallOff = initialValue;
-                this.RegionPointListData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RegionPointListData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem RegionPointListData)
             {
                 this.EdgeFallOff = EdgeFallOff;
-                this.RegionPointListData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RegionPointListData, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RegionPointListData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RegionPointListData, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.EdgeFallOff = eval(this.EdgeFallOff);
                 if (RegionPointListData != null)
                 {
-                    obj.RegionPointListData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RegionPointListData.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RegionPointListData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RegionPointListData.Overall), []);
                     if (RegionPointListData.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -370,7 +370,7 @@ partial class CellBinaryOverlay
     private ReadOnlyMemorySlice<byte>? _grupData;
 
     public IReadOnlyList<ITraversalReferenceGetter>? Traversals { get; private set; }
-    public IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; private set; } = Array.Empty<INavigationMeshGetter>();
+    public IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; private set; } = [];
 
     public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
@@ -378,11 +378,11 @@ partial class CellBinaryOverlay
 
     private int? _persistentLocation;
     public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedData) : 0;
-    public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = Array.Empty<IPlacedGetter>();
+    public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = [];
 
     private int? _temporaryLocation;
     public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedData) : 0;
-    public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = Array.Empty<IPlacedGetter>();
+    public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = [];
 
     public int PersistentUnknownGroupData => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_persistentLocation.Value + 20)) : 0;
 

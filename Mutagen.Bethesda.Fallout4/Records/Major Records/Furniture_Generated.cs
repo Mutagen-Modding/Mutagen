@@ -421,25 +421,25 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.NativeTerminal = initialValue;
                 this.ForcedLocRefType = initialValue;
                 this.PNAM = initialValue;
                 this.DrinkingWater = initialValue;
                 this.ActivateTextOverride = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.BenchType = initialValue;
                 this.UsesSkill = initialValue;
                 this.AssociatedForm = initialValue;
                 this.EnabledEntryPoints = initialValue;
-                this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
+                this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(initialValue, []);
                 this.MarkerModel = initialValue;
-                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, []);
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, []);
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
                 this.WBDTDataTypeState = initialValue;
             }
@@ -494,25 +494,25 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
                 this.NativeTerminal = NativeTerminal;
                 this.ForcedLocRefType = ForcedLocRefType;
                 this.PNAM = PNAM;
                 this.DrinkingWater = DrinkingWater;
                 this.ActivateTextOverride = ActivateTextOverride;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, []);
                 this.BenchType = BenchType;
                 this.UsesSkill = UsesSkill;
                 this.AssociatedForm = AssociatedForm;
                 this.EnabledEntryPoints = EnabledEntryPoints;
-                this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(MarkerEntryPoints, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
+                this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(MarkerEntryPoints, []);
                 this.MarkerModel = MarkerModel;
-                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, []);
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, []);
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, []);
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
                 this.WBDTDataTypeState = WBDTDataTypeState;
             }
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.EnabledEntryPoints = eval(this.EnabledEntryPoints);
                 if (MarkerEntryPoints != null)
                 {
-                    obj.MarkerEntryPoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>?>(eval(this.MarkerEntryPoints.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>());
+                    obj.MarkerEntryPoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>?>(eval(this.MarkerEntryPoints.Overall), []);
                     if (MarkerEntryPoints.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FurnitureMarkerEntryPoints.Mask<R>?>>();
@@ -1017,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MarkerModel = eval(this.MarkerModel);
                 if (MarkerParameters != null)
                 {
-                    obj.MarkerParameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>?>(eval(this.MarkerParameters.Overall), Enumerable.Empty<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>());
+                    obj.MarkerParameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>?>(eval(this.MarkerParameters.Overall), []);
                     if (MarkerParameters.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FurnitureMarkerParameters.Mask<R>?>>();
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (AttachParentSlots != null)
                 {
-                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), []);
                     if (AttachParentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (ObjectTemplates != null)
                 {
-                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), []);
                     if (ObjectTemplates.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();

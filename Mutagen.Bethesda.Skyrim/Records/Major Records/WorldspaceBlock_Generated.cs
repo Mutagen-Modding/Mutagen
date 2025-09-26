@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unknown = eval(this.Unknown);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>();

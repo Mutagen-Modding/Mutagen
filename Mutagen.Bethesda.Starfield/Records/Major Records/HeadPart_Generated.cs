@@ -227,18 +227,18 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.Type = initialValue;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ColorMapping = initialValue;
                 this.PartMask = initialValue;
                 this.TextureSet = initialValue;
                 this.ValidRaces = initialValue;
                 this.Morph = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -270,18 +270,18 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Flags = Flags;
                 this.Type = Type;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, []);
                 this.ColorMapping = ColorMapping;
                 this.PartMask = PartMask;
                 this.TextureSet = TextureSet;
                 this.ValidRaces = ValidRaces;
                 this.Morph = Morph;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
             }
 
             #pragma warning disable CS8618
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Type = eval(this.Type);
                 if (ExtraParts != null)
                 {
-                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), []);
                     if (ExtraParts.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Morph = eval(this.Morph);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

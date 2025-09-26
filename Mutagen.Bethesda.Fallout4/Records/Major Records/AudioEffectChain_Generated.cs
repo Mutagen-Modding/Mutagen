@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AAudioEffect.Mask<TItem>?>>?>(Effects, []);
             }
 
             #pragma warning disable CS8618
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AAudioEffect.Mask<R>?>>();

@@ -427,12 +427,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = initialValue;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.MarkerColor = initialValue;
                 this.ActivateTextOverride = initialValue;
                 this.FNAM = initialValue;
@@ -440,8 +440,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ingredient = initialValue;
                 this.HarvestSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(initialValue, new SeasonalIngredientProduction.Mask<TItem>(initialValue));
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, []);
                 this.ActionKeyword = initialValue;
                 this.DamageRequiredToHarvest = initialValue;
                 this.MaxHarvestCount = initialValue;
@@ -502,12 +502,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = DirtinessScale;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
                 this.MarkerColor = MarkerColor;
                 this.ActivateTextOverride = ActivateTextOverride;
                 this.FNAM = FNAM;
@@ -515,8 +515,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ingredient = Ingredient;
                 this.HarvestSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(HarvestSound, new SoundReference.Mask<TItem>(HarvestSound));
                 this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(Production, new SeasonalIngredientProduction.Mask<TItem>(Production));
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, []);
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, []);
                 this.ActionKeyword = ActionKeyword;
                 this.DamageRequiredToHarvest = DamageRequiredToHarvest;
                 this.MaxHarvestCount = MaxHarvestCount;
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Production = this.Production == null ? null : new MaskItem<R, SeasonalIngredientProduction.Mask<R>?>(eval(this.Production.Overall), this.Production.Specific?.Translate(eval));
                 if (AttachParentSlots != null)
                 {
-                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), []);
                     if (AttachParentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ObjectTemplates != null)
                 {
-                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), []);
                     if (ObjectTemplates.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();

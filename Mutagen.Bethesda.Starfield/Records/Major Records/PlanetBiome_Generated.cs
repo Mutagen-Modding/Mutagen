@@ -190,10 +190,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Chance = initialValue;
                 this.Unknown2 = initialValue;
                 this.ResourceGeneration = initialValue;
-                this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>());
-                this.UnknownItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>());
+                this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(initialValue, []);
+                this.UnknownItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -210,10 +210,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Chance = Chance;
                 this.Unknown2 = Unknown2;
                 this.ResourceGeneration = ResourceGeneration;
-                this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Fauna, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(Flora, Enumerable.Empty<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>());
-                this.UnknownItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>(UnknownItems, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>());
+                this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Fauna, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(Flora, []);
+                this.UnknownItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>(UnknownItems, []);
             }
 
             #pragma warning disable CS8618
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ResourceGeneration = eval(this.ResourceGeneration);
                 if (Fauna != null)
                 {
-                    obj.Fauna = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Fauna.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Fauna = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Fauna.Overall), []);
                     if (Fauna.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Flora != null)
                 {
-                    obj.Flora = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetFlora.Mask<R>?>>?>(eval(this.Flora.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetFlora.Mask<R>?>>());
+                    obj.Flora = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetFlora.Mask<R>?>>?>(eval(this.Flora.Overall), []);
                     if (Flora.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PlanetFlora.Mask<R>?>>();
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (UnknownItems != null)
                 {
-                    obj.UnknownItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>?>(eval(this.UnknownItems.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>());
+                    obj.UnknownItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>?>(eval(this.UnknownItems.Overall), []);
                     if (UnknownItems.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>();

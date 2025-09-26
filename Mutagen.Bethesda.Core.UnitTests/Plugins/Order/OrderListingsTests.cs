@@ -74,7 +74,7 @@ public class OrderListingsTests
         ModKey esm2 = new ModKey("Normal2", ModType.Master);
 
         new OrderListings().Order(
-                implicitListings: Array.Empty<ModKey>(),
+                implicitListings: [],
                 creationClubListings:
                 [
                     ccEsm,

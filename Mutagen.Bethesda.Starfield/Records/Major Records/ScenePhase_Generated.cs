@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.StartConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.CompletionConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.StartConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.CompletionConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.EditorWidth = initialValue;
                 this.Flags = initialValue;
                 this.PhaseSetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(initialValue, new SceneSetParentQuestStage.Mask<TItem>(initialValue));
@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SPMV)
             {
                 this.Name = Name;
-                this.StartConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(StartConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.CompletionConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(CompletionConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.StartConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(StartConditions, []);
+                this.CompletionConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(CompletionConditions, []);
                 this.EditorWidth = EditorWidth;
                 this.Flags = Flags;
                 this.PhaseSetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(PhaseSetParentQuestStage, new SceneSetParentQuestStage.Mask<TItem>(PhaseSetParentQuestStage));
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (StartConditions != null)
                 {
-                    obj.StartConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.StartConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.StartConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.StartConditions.Overall), []);
                     if (StartConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (CompletionConditions != null)
                 {
-                    obj.CompletionConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.CompletionConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.CompletionConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.CompletionConditions.Overall), []);
                     if (CompletionConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

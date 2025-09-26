@@ -1,4 +1,4 @@
-﻿using Shouldly;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Testing;
 using Xunit;

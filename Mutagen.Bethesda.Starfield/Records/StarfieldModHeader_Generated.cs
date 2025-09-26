@@ -232,10 +232,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Deleted = initialValue;
                 this.Author = initialValue;
                 this.Description = initialValue;
-                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
-                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, []);
+                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Screenshot = initialValue;
-                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>());
+                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(initialValue, []);
                 this.Branch = initialValue;
                 this.INTV = initialValue;
                 this.InteriorCellCount = initialValue;
@@ -272,10 +272,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Deleted = Deleted;
                 this.Author = Author;
                 this.Description = Description;
-                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
-                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OverriddenForms, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, []);
+                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OverriddenForms, []);
                 this.Screenshot = Screenshot;
-                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(TransientTypes, Enumerable.Empty<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>());
+                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(TransientTypes, []);
                 this.Branch = Branch;
                 this.INTV = INTV;
                 this.InteriorCellCount = InteriorCellCount;
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Description = eval(this.Description);
                 if (MasterReferences != null)
                 {
-                    obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference.Mask<R>?>>?>(eval(this.MasterReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterReference.Mask<R>?>>());
+                    obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference.Mask<R>?>>?>(eval(this.MasterReferences.Overall), []);
                     if (MasterReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MasterReference.Mask<R>?>>();
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (OverriddenForms != null)
                 {
-                    obj.OverriddenForms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.OverriddenForms.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.OverriddenForms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.OverriddenForms.Overall), []);
                     if (OverriddenForms.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Screenshot = eval(this.Screenshot);
                 if (TransientTypes != null)
                 {
-                    obj.TransientTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TransientType.Mask<R>?>>?>(eval(this.TransientTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, TransientType.Mask<R>?>>());
+                    obj.TransientTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TransientType.Mask<R>?>>?>(eval(this.TransientTypes.Overall), []);
                     if (TransientTypes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TransientType.Mask<R>?>>();

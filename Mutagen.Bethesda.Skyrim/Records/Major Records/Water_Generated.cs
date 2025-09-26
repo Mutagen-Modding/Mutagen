@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.UnusedNoisemaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UnusedNoisemaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Opacity = initialValue;
                 this.Flags = initialValue;
                 this.MNAM = initialValue;
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
-                this.UnusedNoisemaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnusedNoisemaps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UnusedNoisemaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnusedNoisemaps, []);
                 this.Opacity = Opacity;
                 this.Flags = Flags;
                 this.MNAM = MNAM;
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Name = eval(this.Name);
                 if (UnusedNoisemaps != null)
                 {
-                    obj.UnusedNoisemaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnusedNoisemaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.UnusedNoisemaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnusedNoisemaps.Overall), []);
                     if (UnusedNoisemaps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

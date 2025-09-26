@@ -35,7 +35,7 @@ public partial class Static
 
 partial class StaticBinaryOverlay
 {
-    public IReadOnlyList<IDistantLodGetter> DistantLods { get; private set; } = Array.Empty<IDistantLodGetter>();
+    public IReadOnlyList<IDistantLodGetter> DistantLods { get; private set; } = [];
 
     public partial ParseResult DistantLodParsingCustomParse(
         OverlayStream stream,

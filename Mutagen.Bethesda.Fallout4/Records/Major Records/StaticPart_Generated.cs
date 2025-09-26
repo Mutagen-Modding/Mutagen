@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Static = initialValue;
-                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>());
+                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Placements)
             {
                 this.Static = Static;
-                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(Placements, Enumerable.Empty<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>());
+                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(Placements, []);
             }
 
             #pragma warning disable CS8618
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Static = eval(this.Static);
                 if (Placements != null)
                 {
-                    obj.Placements = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>?>(eval(this.Placements.Overall), Enumerable.Empty<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>());
+                    obj.Placements = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>?>(eval(this.Placements.Overall), []);
                     if (Placements.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>();

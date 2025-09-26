@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Music = initialValue;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Icons: Icons)
             {
                 this.Music = Music;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionSound.Mask<TItem>?>>?>(Sounds, []);
             }
 
             #pragma warning disable CS8618
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Music = eval(this.Music);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionSound.Mask<R>?>>();

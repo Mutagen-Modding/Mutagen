@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.ExternalBaseTemplate = initialValue;
-                this.Sources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ExternalDataSource.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ExternalDataSource.Mask<TItem>?>>());
-                this.EXASs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Sources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ExternalDataSource.Mask<TItem>?>>?>(initialValue, []);
+                this.EXASs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.EXBS = initialValue;
             }
 
@@ -149,8 +149,8 @@ namespace Mutagen.Bethesda.Starfield
             : base()
             {
                 this.ExternalBaseTemplate = ExternalBaseTemplate;
-                this.Sources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ExternalDataSource.Mask<TItem>?>>?>(Sources, Enumerable.Empty<MaskItemIndexed<TItem, ExternalDataSource.Mask<TItem>?>>());
-                this.EXASs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EXASs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Sources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ExternalDataSource.Mask<TItem>?>>?>(Sources, []);
+                this.EXASs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EXASs, []);
                 this.EXBS = EXBS;
             }
 
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ExternalBaseTemplate = eval(this.ExternalBaseTemplate);
                 if (Sources != null)
                 {
-                    obj.Sources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ExternalDataSource.Mask<R>?>>?>(eval(this.Sources.Overall), Enumerable.Empty<MaskItemIndexed<R, ExternalDataSource.Mask<R>?>>());
+                    obj.Sources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ExternalDataSource.Mask<R>?>>?>(eval(this.Sources.Overall), []);
                     if (Sources.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ExternalDataSource.Mask<R>?>>();
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (EXASs != null)
                 {
-                    obj.EXASs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.EXASs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.EXASs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.EXASs.Overall), []);
                     if (EXASs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Static = initialValue;
                 this.Unknown = initialValue;
-                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>());
+                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Static = Static;
                 this.Unknown = Unknown;
-                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(Placements, Enumerable.Empty<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>());
+                this.Placements = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPlacement.Mask<TItem>?>>?>(Placements, []);
             }
 
             #pragma warning disable CS8618
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown = eval(this.Unknown);
                 if (Placements != null)
                 {
-                    obj.Placements = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>?>(eval(this.Placements.Overall), Enumerable.Empty<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>());
+                    obj.Placements = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>?>(eval(this.Placements.Overall), []);
                     if (Placements.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StaticPlacement.Mask<R>?>>();

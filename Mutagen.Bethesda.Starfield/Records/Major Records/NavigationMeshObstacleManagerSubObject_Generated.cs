@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.DATAs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DATAs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.INTV = initialValue;
                 this.Model = initialValue;
             }
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Model)
             {
                 this.Index = Index;
-                this.DATAs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DATAs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DATAs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DATAs, []);
                 this.INTV = INTV;
                 this.Model = Model;
             }
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Index = eval(this.Index);
                 if (DATAs != null)
                 {
-                    obj.DATAs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DATAs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DATAs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DATAs.Overall), []);
                     if (DATAs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

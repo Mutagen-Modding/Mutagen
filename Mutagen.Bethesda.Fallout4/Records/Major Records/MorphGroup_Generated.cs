@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.MorphPresets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphPreset.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphPreset.Mask<TItem>?>>());
+                this.MorphPresets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphPreset.Mask<TItem>?>>?>(initialValue, []);
                 this.UnknownMPPK = initialValue;
                 this.UnknownMPGS = initialValue;
             }
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem UnknownMPGS)
             {
                 this.Name = Name;
-                this.MorphPresets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphPreset.Mask<TItem>?>>?>(MorphPresets, Enumerable.Empty<MaskItemIndexed<TItem, MorphPreset.Mask<TItem>?>>());
+                this.MorphPresets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphPreset.Mask<TItem>?>>?>(MorphPresets, []);
                 this.UnknownMPPK = UnknownMPPK;
                 this.UnknownMPGS = UnknownMPGS;
             }
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (MorphPresets != null)
                 {
-                    obj.MorphPresets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphPreset.Mask<R>?>>?>(eval(this.MorphPresets.Overall), Enumerable.Empty<MaskItemIndexed<R, MorphPreset.Mask<R>?>>());
+                    obj.MorphPresets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphPreset.Mask<R>?>>?>(eval(this.MorphPresets.Overall), []);
                     if (MorphPresets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MorphPreset.Mask<R>?>>();

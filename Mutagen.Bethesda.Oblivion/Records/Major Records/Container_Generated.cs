@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Script = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>(initialValue, []);
                 this.Data = new MaskItem<TItem, ContainerData.Mask<TItem>?>(initialValue, new ContainerData.Mask<TItem>(initialValue));
                 this.OpenSound = initialValue;
                 this.CloseSound = initialValue;
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Script = Script;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerItem.Mask<TItem>?>>?>(Items, []);
                 this.Data = new MaskItem<TItem, ContainerData.Mask<TItem>?>(Data, new ContainerData.Mask<TItem>(Data));
                 this.OpenSound = OpenSound;
                 this.CloseSound = CloseSound;
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Script = eval(this.Script);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ContainerItem.Mask<R>?>>();

@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem Navmeshes)
             {
-                this.Navmeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Navmeshes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Navmeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Navmeshes, []);
             }
 
             #pragma warning disable CS8618
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Navmeshes != null)
                 {
-                    obj.Navmeshes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Navmeshes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Navmeshes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Navmeshes.Overall), []);
                     if (Navmeshes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

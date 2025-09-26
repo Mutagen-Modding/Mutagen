@@ -77,7 +77,7 @@ public class ObjectSettingsVM : SettingsNodeVM
                 return TryGet<string>.Succeed((string)nameMember.GetValue(x)!);
             })
             .ToArray();
-        if (attrs.Length == 0) return Array.Empty<string>();
+        if (attrs.Length == 0) return [];
         var members = GetMemberInfos(param).ToArray();
         var selectedMembers = new List<MemberInfo>();
         foreach (var attr in attrs)

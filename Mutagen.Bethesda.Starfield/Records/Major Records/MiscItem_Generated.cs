@@ -335,15 +335,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(initialValue, []);
                 this.Value = initialValue;
                 this.Weight = initialValue;
                 this.FLAG = initialValue;
@@ -392,15 +392,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.XALG = XALG;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(Resources, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(Resources, []);
                 this.Value = Value;
                 this.Weight = Weight;
                 this.FLAG = FLAG;
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Resources != null)
                 {
-                    obj.Resources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemResource.Mask<R>?>>?>(eval(this.Resources.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemResource.Mask<R>?>>());
+                    obj.Resources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemResource.Mask<R>?>>?>(eval(this.Resources.Overall), []);
                     if (Resources.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ItemResource.Mask<R>?>>();

@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>());
+                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>(initialValue, []);
                 this.DATA = initialValue;
             }
 
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem DATA)
             : base()
             {
-                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>(SurfaceBlocks, Enumerable.Empty<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>());
+                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<P2Int, TItem, BlockHeightAdjustmentComponentItem.Mask<TItem>?>>?>(SurfaceBlocks, []);
                 this.DATA = DATA;
             }
 
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (SurfaceBlocks != null)
                 {
-                    obj.SurfaceBlocks = new MaskItem<R, IEnumerable<MaskItemIndexed<P2Int, R, BlockHeightAdjustmentComponentItem.Mask<R>?>>?>(eval(this.SurfaceBlocks.Overall), Enumerable.Empty<MaskItemIndexed<P2Int, R, BlockHeightAdjustmentComponentItem.Mask<R>?>>());
+                    obj.SurfaceBlocks = new MaskItem<R, IEnumerable<MaskItemIndexed<P2Int, R, BlockHeightAdjustmentComponentItem.Mask<R>?>>?>(eval(this.SurfaceBlocks.Overall), []);
                     if (SurfaceBlocks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<P2Int, R, BlockHeightAdjustmentComponentItem.Mask<R>?>>();

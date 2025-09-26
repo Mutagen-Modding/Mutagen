@@ -128,7 +128,7 @@ partial class WorldspaceBinaryOverlay
 
     public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
 
-    public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = Array.Empty<IWorldspaceBlockGetter>();
+    public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = [];
 
     partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
     {

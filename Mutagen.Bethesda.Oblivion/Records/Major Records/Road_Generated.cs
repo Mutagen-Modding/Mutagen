@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>());
+                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>(Points, Enumerable.Empty<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>());
+                this.Points = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RoadPoint.Mask<TItem>?>>?>(Points, []);
             }
 
             #pragma warning disable CS8618
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Points != null)
                 {
-                    obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint.Mask<R>?>>?>(eval(this.Points.Overall), Enumerable.Empty<MaskItemIndexed<R, RoadPoint.Mask<R>?>>());
+                    obj.Points = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RoadPoint.Mask<R>?>>?>(eval(this.Points.Overall), []);
                     if (Points.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RoadPoint.Mask<R>?>>();

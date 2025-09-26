@@ -119,16 +119,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceHeadPart.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceHeadPart.Mask<TItem>?>>());
-                this.BoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceHeadPart.Mask<TItem>?>>?>(initialValue, []);
+                this.BoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
                 TItem HeadParts,
                 TItem BoneModifiers)
             {
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceHeadPart.Mask<TItem>?>>?>(HeadParts, Enumerable.Empty<MaskItemIndexed<TItem, RaceHeadPart.Mask<TItem>?>>());
-                this.BoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BoneModifiers, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceHeadPart.Mask<TItem>?>>?>(HeadParts, []);
+                this.BoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BoneModifiers, []);
             }
 
             #pragma warning disable CS8618
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (HeadParts != null)
                 {
-                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceHeadPart.Mask<R>?>>?>(eval(this.HeadParts.Overall), Enumerable.Empty<MaskItemIndexed<R, RaceHeadPart.Mask<R>?>>());
+                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceHeadPart.Mask<R>?>>?>(eval(this.HeadParts.Overall), []);
                     if (HeadParts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RaceHeadPart.Mask<R>?>>();
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (BoneModifiers != null)
                 {
-                    obj.BoneModifiers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BoneModifiers.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.BoneModifiers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BoneModifiers.Overall), []);
                     if (BoneModifiers.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

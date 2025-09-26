@@ -97,11 +97,11 @@ public class Api
     [Fact]
     public static void TypeSolidifier()
     {
-        IEnumerable<IModListingGetter<ISkyrimModGetter>> listings = Enumerable.Empty<IModListingGetter<ISkyrimModGetter>>();
+        IEnumerable<IModListingGetter<ISkyrimModGetter>> listings = [];
         IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition().WinningOverrides();
         IEnumerable<IPlacedGetter> placed = listings.IPlaced().WinningOverrides();
         IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);
-        IEnumerable<ISkyrimModGetter> mods = Enumerable.Empty<ISkyrimModGetter>();
+        IEnumerable<ISkyrimModGetter> mods = [];
         ammun = mods.Ammunition().WinningOverrides();
         placed = mods.IPlaced().WinningOverrides();
         cells = mods.Cell().WinningContextOverrides(linkCache: null!);

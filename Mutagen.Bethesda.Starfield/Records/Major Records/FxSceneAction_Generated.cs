@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BTXT = initialValue;
                 this.FLMV = initialValue;
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.BIPL = initialValue;
                 this.LVLO = initialValue;
             }
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BTXT = BTXT;
                 this.FLMV = FLMV;
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.BIPL = BIPL;
                 this.LVLO = LVLO;
             }
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

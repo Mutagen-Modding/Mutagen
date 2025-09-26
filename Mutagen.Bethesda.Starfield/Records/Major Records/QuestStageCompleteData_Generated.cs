@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.QSRD = initialValue;
                 this.AffinityChange = initialValue;
-                this.RewardDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageRewardData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStageRewardData.Mask<TItem>?>>());
+                this.RewardDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageRewardData.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.QSRD = QSRD;
                 this.AffinityChange = AffinityChange;
-                this.RewardDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageRewardData.Mask<TItem>?>>?>(RewardDatas, Enumerable.Empty<MaskItemIndexed<TItem, QuestStageRewardData.Mask<TItem>?>>());
+                this.RewardDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStageRewardData.Mask<TItem>?>>?>(RewardDatas, []);
             }
 
             #pragma warning disable CS8618
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AffinityChange = eval(this.AffinityChange);
                 if (RewardDatas != null)
                 {
-                    obj.RewardDatas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStageRewardData.Mask<R>?>>?>(eval(this.RewardDatas.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStageRewardData.Mask<R>?>>());
+                    obj.RewardDatas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStageRewardData.Mask<R>?>>?>(eval(this.RewardDatas.Overall), []);
                     if (RewardDatas.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStageRewardData.Mask<R>?>>();

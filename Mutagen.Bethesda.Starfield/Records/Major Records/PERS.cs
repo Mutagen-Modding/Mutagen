@@ -67,7 +67,7 @@ partial class PERSBinaryWriteTranslation
 
 partial class PERSBinaryOverlay
 {
-    public IReadOnlyList<IPERSItemsGetter> Items { get; private set; } = Array.Empty<IPERSItemsGetter>();
+    public IReadOnlyList<IPERSItemsGetter> Items { get; private set; } = [];
 
     public partial ParseResult ItemsParseCustomParse(
         OverlayStream stream,

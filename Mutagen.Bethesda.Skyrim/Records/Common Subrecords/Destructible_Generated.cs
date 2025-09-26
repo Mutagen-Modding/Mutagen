@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Data = new MaskItem<TItem, DestructableData.Mask<TItem>?>(initialValue, new DestructableData.Mask<TItem>(initialValue));
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Stages)
             {
                 this.Data = new MaskItem<TItem, DestructableData.Mask<TItem>?>(Data, new DestructableData.Mask<TItem>(Data));
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(Stages, []);
             }
 
             #pragma warning disable CS8618
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Data = this.Data == null ? null : new MaskItem<R, DestructableData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DestructionStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, DestructionStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DestructionStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DestructionStage.Mask<R>?>>();

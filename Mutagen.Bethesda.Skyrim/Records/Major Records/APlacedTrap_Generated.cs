@@ -281,16 +281,16 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FactionRank = initialValue;
                 this.HeadTrackingWeight = initialValue;
                 this.FavorCost = initialValue;
-                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, []);
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, []);
                 this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(initialValue, new ActivateParents.Mask<TItem>(initialValue));
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
                 this.Emittance = initialValue;
                 this.MultiBoundReference = initialValue;
                 this.IgnoredBySandbox = initialValue;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LocationReference = initialValue;
-                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Scale = initialValue;
                 this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
             }
@@ -336,16 +336,16 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FactionRank = FactionRank;
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.FavorCost = FavorCost;
-                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, []);
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, []);
                 this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(ActivateParents, new ActivateParents.Mask<TItem>(ActivateParents));
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
                 this.Emittance = Emittance;
                 this.MultiBoundReference = MultiBoundReference;
                 this.IgnoredBySandbox = IgnoredBySandbox;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, []);
                 this.LocationReference = LocationReference;
-                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DistantLodData, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DistantLodData, []);
                 this.Scale = Scale;
                 this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(Placement, new Placement.Mask<TItem>(Placement));
             }
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FavorCost = eval(this.FavorCost);
                 if (Reflections != null)
                 {
-                    obj.Reflections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WaterReflection.Mask<R>?>>?>(eval(this.Reflections.Overall), Enumerable.Empty<MaskItemIndexed<R, WaterReflection.Mask<R>?>>());
+                    obj.Reflections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WaterReflection.Mask<R>?>>?>(eval(this.Reflections.Overall), []);
                     if (Reflections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WaterReflection.Mask<R>?>>();
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (LinkedReferences != null)
                 {
-                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), []);
                     if (LinkedReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.IgnoredBySandbox = eval(this.IgnoredBySandbox);
                 if (LocationRefTypes != null)
                 {
-                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), []);
                     if (LocationRefTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.LocationReference = eval(this.LocationReference);
                 if (DistantLodData != null)
                 {
-                    obj.DistantLodData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DistantLodData.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DistantLodData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DistantLodData.Overall), []);
                     if (DistantLodData.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

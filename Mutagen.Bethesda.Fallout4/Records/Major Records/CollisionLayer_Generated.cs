@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DebugColor = initialValue;
                 this.Flags = initialValue;
                 this.Name = initialValue;
-                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DebugColor = DebugColor;
                 this.Flags = Flags;
                 this.Name = Name;
-                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CollidesWith, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CollidesWith, []);
             }
 
             #pragma warning disable CS8618
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (CollidesWith != null)
                 {
-                    obj.CollidesWith = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CollidesWith.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CollidesWith = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CollidesWith.Overall), []);
                     if (CollidesWith.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

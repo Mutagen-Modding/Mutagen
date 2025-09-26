@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Quest = initialValue;
                 this.Flags = initialValue;
                 this.DisplayTime = initialValue;
-                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Quest = Quest;
                 this.Flags = Flags;
                 this.DisplayTime = DisplayTime;
-                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, []);
             }
 
             #pragma warning disable CS8618
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DisplayTime = eval(this.DisplayTime);
                 if (MenuButtons != null)
                 {
-                    obj.MenuButtons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MessageButton.Mask<R>?>>?>(eval(this.MenuButtons.Overall), Enumerable.Empty<MaskItemIndexed<R, MessageButton.Mask<R>?>>());
+                    obj.MenuButtons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MessageButton.Mask<R>?>>?>(eval(this.MenuButtons.Overall), []);
                     if (MenuButtons.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MessageButton.Mask<R>?>>();
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Description.Clear();
             item.Name = default;
-            item.INAM = Array.Empty<byte>();
+            item.INAM = [];
             item.Quest.Clear();
             item.Flags = default(Message.Flag);
             item.DisplayTime = default;

@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Data = new MaskItem<TItem, DestructableData.Mask<TItem>?>(initialValue, new DestructableData.Mask<TItem>(initialValue));
-                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResistanceDestructible.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResistanceDestructible.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>());
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResistanceDestructible.Mask<TItem>?>>?>(initialValue, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Stages)
             {
                 this.Data = new MaskItem<TItem, DestructableData.Mask<TItem>?>(Data, new DestructableData.Mask<TItem>(Data));
-                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResistanceDestructible.Mask<TItem>?>>?>(Resistances, Enumerable.Empty<MaskItemIndexed<TItem, ResistanceDestructible.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>());
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResistanceDestructible.Mask<TItem>?>>?>(Resistances, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(Stages, []);
             }
 
             #pragma warning disable CS8618
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Data = this.Data == null ? null : new MaskItem<R, DestructableData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Resistances != null)
                 {
-                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResistanceDestructible.Mask<R>?>>?>(eval(this.Resistances.Overall), Enumerable.Empty<MaskItemIndexed<R, ResistanceDestructible.Mask<R>?>>());
+                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResistanceDestructible.Mask<R>?>>?>(eval(this.Resistances.Overall), []);
                     if (Resistances.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ResistanceDestructible.Mask<R>?>>();
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DestructionStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, DestructionStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DestructionStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DestructionStage.Mask<R>?>>();

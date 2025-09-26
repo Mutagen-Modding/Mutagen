@@ -14,7 +14,7 @@ public class EnumerateSubrecordsTests : RecordSpanExtensionTests
     [Fact]
     public void EnumerateSubrecordsEmpty()
     {
-        byte[] b = Array.Empty<byte>();
+        byte[] b = [];
         RecordSpanExtensions.EnumerateSubrecords(new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion)
             .ShouldBeEmpty();
     }
@@ -79,7 +79,7 @@ public class EnumerateSubrecordsTests : RecordSpanExtensionTests
     [Fact]
     public void EnumerateSubrecordsActionEmpty()
     {
-        byte[] b = Array.Empty<byte>();
+        byte[] b = [];
         List<SubrecordPinFrame> ret = new();
         RecordSpanExtensions.EnumerateSubrecords(new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion, ret.Add);
         ret.ShouldBeEmpty();

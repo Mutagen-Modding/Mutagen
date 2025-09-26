@@ -130,9 +130,9 @@ namespace Mutagen.Bethesda.Pex
                 this.ReturnTypeName = initialValue;
                 this.DocString = initialValue;
                 this.Flags = initialValue;
-                this.Parameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
-                this.Locals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
-                this.Instructions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>());
+                this.Parameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(initialValue, []);
+                this.Locals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(initialValue, []);
+                this.Instructions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>(initialValue, []);
                 this.RawUserFlags = initialValue;
             }
 
@@ -148,9 +148,9 @@ namespace Mutagen.Bethesda.Pex
                 this.ReturnTypeName = ReturnTypeName;
                 this.DocString = DocString;
                 this.Flags = Flags;
-                this.Parameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(Parameters, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
-                this.Locals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(Locals, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
-                this.Instructions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>(Instructions, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>());
+                this.Parameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(Parameters, []);
+                this.Locals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(Locals, []);
+                this.Instructions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>(Instructions, []);
                 this.RawUserFlags = RawUserFlags;
             }
 
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.Flags = eval(this.Flags);
                 if (Parameters != null)
                 {
-                    obj.Parameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>?>(eval(this.Parameters.Overall), Enumerable.Empty<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>());
+                    obj.Parameters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>?>(eval(this.Parameters.Overall), []);
                     if (Parameters.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>();
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Pex
                 }
                 if (Locals != null)
                 {
-                    obj.Locals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>?>(eval(this.Locals.Overall), Enumerable.Empty<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>());
+                    obj.Locals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>?>(eval(this.Locals.Overall), []);
                     if (Locals.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectFunctionVariable.Mask<R>?>>();
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Pex
                 }
                 if (Instructions != null)
                 {
-                    obj.Instructions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectFunctionInstruction.Mask<R>?>>?>(eval(this.Instructions.Overall), Enumerable.Empty<MaskItemIndexed<R, PexObjectFunctionInstruction.Mask<R>?>>());
+                    obj.Instructions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectFunctionInstruction.Mask<R>?>>?>(eval(this.Instructions.Overall), []);
                     if (Instructions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectFunctionInstruction.Mask<R>?>>();

@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.R = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
                 this.Th = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
                 this.W = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
-                this.Unknowns = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Phoneme.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Phoneme.Mask<TItem>?>>());
+                this.Unknowns = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Phoneme.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.R = new MaskItem<TItem, Phoneme.Mask<TItem>?>(R, new Phoneme.Mask<TItem>(R));
                 this.Th = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Th, new Phoneme.Mask<TItem>(Th));
                 this.W = new MaskItem<TItem, Phoneme.Mask<TItem>?>(W, new Phoneme.Mask<TItem>(W));
-                this.Unknowns = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Phoneme.Mask<TItem>?>>?>(Unknowns, Enumerable.Empty<MaskItemIndexed<TItem, Phoneme.Mask<TItem>?>>());
+                this.Unknowns = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Phoneme.Mask<TItem>?>>?>(Unknowns, []);
             }
 
             #pragma warning disable CS8618
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.W = this.W == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.W.Overall), this.W.Specific?.Translate(eval));
                 if (Unknowns != null)
                 {
-                    obj.Unknowns = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Phoneme.Mask<R>?>>?>(eval(this.Unknowns.Overall), Enumerable.Empty<MaskItemIndexed<R, Phoneme.Mask<R>?>>());
+                    obj.Unknowns = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Phoneme.Mask<R>?>>?>(eval(this.Unknowns.Overall), []);
                     if (Unknowns.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Phoneme.Mask<R>?>>();

@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
-                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
+                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
-                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(Cells, Enumerable.Empty<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>());
+                this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(Cells, []);
             }
 
             #pragma warning disable CS8618
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 if (Cells != null)
                 {
-                    obj.Cells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Cells.Overall), Enumerable.Empty<MaskItemIndexed<R, Cell.Mask<R>?>>());
+                    obj.Cells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Cells.Overall), []);
                     if (Cells.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Cell.Mask<R>?>>();

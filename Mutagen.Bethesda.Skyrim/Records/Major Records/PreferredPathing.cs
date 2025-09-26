@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 partial class PreferredPathingBinaryOverlay
 {
-    public IReadOnlyList<INavmeshSetGetter> NavmeshSets { get; private set; } = Array.Empty<NavmeshSetBinaryOverlay>();
+    public IReadOnlyList<INavmeshSetGetter> NavmeshSets { get; private set; } = [];
 
     partial void CustomNavmeshSetsEndPos()
     {

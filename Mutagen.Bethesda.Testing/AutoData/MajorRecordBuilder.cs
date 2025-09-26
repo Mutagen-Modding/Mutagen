@@ -112,7 +112,7 @@ public class MajorRecordBuilder : ISpecimenBuilder
         {
             var getter = prop.GetGetMethod();
             if (getter == null) return null;
-            var arr = getter.Invoke(item, Array.Empty<object>()) as Array;
+            var arr = getter.Invoke(item, []) as Array;
             if (arr == null) return null;
             var genArg = prop.PropertyType.GenericTypeArguments[0];
             for (int i = 0; i < arr.Length; i++)
@@ -131,7 +131,7 @@ public class MajorRecordBuilder : ISpecimenBuilder
         {
             var getter = prop.GetGetMethod();
             if (getter == null) return null;
-            var arr = getter.Invoke(item, Array.Empty<object>());
+            var arr = getter.Invoke(item, []);
             if (arr == null) return null;
             var len = (int)arr.GetType().GetMember("Length")
                 .OfType<PropertyInfo>()

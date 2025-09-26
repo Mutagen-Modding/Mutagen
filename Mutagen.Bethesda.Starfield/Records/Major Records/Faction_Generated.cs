@@ -291,20 +291,20 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, []);
                 this.Keyword = initialValue;
                 this.Flags = initialValue;
                 this.SharedCrimeFactionList = initialValue;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(initialValue, new CrimeValues.Mask<TItem>(initialValue));
-                this.Prisons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>());
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Prisons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>(initialValue, []);
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, []);
                 this.VendorBuySellList = initialValue;
                 this.MerchantContainer = initialValue;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.VoiceType = initialValue;
                 this.Herd = new MaskItem<TItem, FactionHerd.Mask<TItem>?>(initialValue, new FactionHerd.Mask<TItem>(initialValue));
                 this.FormationRadius = initialValue;
@@ -344,20 +344,20 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, []);
                 this.Keyword = Keyword;
                 this.Flags = Flags;
                 this.SharedCrimeFactionList = SharedCrimeFactionList;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(CrimeValues, new CrimeValues.Mask<TItem>(CrimeValues));
-                this.Prisons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>(Prisons, Enumerable.Empty<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>());
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Prisons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>(Prisons, []);
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, []);
                 this.VendorBuySellList = VendorBuySellList;
                 this.MerchantContainer = MerchantContainer;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(VendorLocation, new LocationTargetRadius.Mask<TItem>(VendorLocation));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.VoiceType = VoiceType;
                 this.Herd = new MaskItem<TItem, FactionHerd.Mask<TItem>?>(Herd, new FactionHerd.Mask<TItem>(Herd));
                 this.FormationRadius = FormationRadius;
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Relations != null)
                 {
-                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation.Mask<R>?>>());
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), []);
                     if (Relations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CrimeValues = this.CrimeValues == null ? null : new MaskItem<R, CrimeValues.Mask<R>?>(eval(this.CrimeValues.Overall), this.CrimeValues.Specific?.Translate(eval));
                 if (Prisons != null)
                 {
-                    obj.Prisons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>?>(eval(this.Prisons.Overall), Enumerable.Empty<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>());
+                    obj.Prisons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>?>(eval(this.Prisons.Overall), []);
                     if (Prisons.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>();
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Ranks != null)
                 {
-                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), []);
                     if (Ranks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

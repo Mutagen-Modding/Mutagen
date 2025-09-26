@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.EquipmentType = initialValue;
                 this.Description = initialValue;
                 this.BaseCost = initialValue;
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CastDuration = initialValue;
                 this.Range = initialValue;
                 this.CastingPerk = initialValue;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.EquipmentType = EquipmentType;
                 this.Description = Description;
                 this.BaseCost = BaseCost;
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CastDuration = CastDuration;
                 this.Range = Range;
                 this.CastingPerk = CastingPerk;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, []);
             }
 
             #pragma warning disable CS8618
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.CastingPerk = eval(this.CastingPerk);
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();

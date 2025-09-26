@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Stage = initialValue;
-                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>());
+                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem LogEntries)
             {
                 this.Stage = Stage;
-                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>(LogEntries, Enumerable.Empty<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>());
+                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LogEntry.Mask<TItem>?>>?>(LogEntries, []);
             }
 
             #pragma warning disable CS8618
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Stage = eval(this.Stage);
                 if (LogEntries != null)
                 {
-                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry.Mask<R>?>>?>(eval(this.LogEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, LogEntry.Mask<R>?>>());
+                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LogEntry.Mask<R>?>>?>(eval(this.LogEntries.Overall), []);
                     if (LogEntries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LogEntry.Mask<R>?>>();

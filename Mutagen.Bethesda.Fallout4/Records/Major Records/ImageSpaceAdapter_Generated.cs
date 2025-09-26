@@ -913,63 +913,63 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RadialBlurCenter = initialValue;
                 this.DepthOfFieldFlags = initialValue;
                 this.Unknown = initialValue;
-                this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
-                this.FadeColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
-                this.RadialBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurRampUp = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurRampDown = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurDownStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldVignetteRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldVignetteStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomBlurRadiusMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomBlurRadiusAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomThresholdMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomThresholdAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMinMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMinAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMaxMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMaxAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSunlightScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSunlightScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSkyScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSkyScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown08 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown48 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown09 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown49 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown10 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown50 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicSaturationMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicSaturationAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicBrightnessMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicContrastMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.FadeColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.RadialBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.RadialBlurRampUp = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.RadialBlurStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.RadialBlurRampDown = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.RadialBlurDownStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.DepthOfFieldVignetteRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.DepthOfFieldVignetteStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrBloomBlurRadiusMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrBloomBlurRadiusAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrBloomThresholdMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrBloomThresholdAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrBloomScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrBloomScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrTargetLumMinMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrTargetLumMinAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrTargetLumMaxMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrTargetLumMaxAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrSunlightScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrSunlightScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrSkyScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.HdrSkyScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown08 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown48 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown09 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown49 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown0A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown4A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown0B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown4B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown0C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown4C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown0D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown4D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown0E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown4E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown0F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown4F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown10 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown50 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.CinematicSaturationMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.CinematicSaturationAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.CinematicBrightnessMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.CinematicContrastMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
+                this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -1060,63 +1060,63 @@ namespace Mutagen.Bethesda.Fallout4
                 this.RadialBlurCenter = RadialBlurCenter;
                 this.DepthOfFieldFlags = DepthOfFieldFlags;
                 this.Unknown = Unknown;
-                this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DoubleVisionStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(TintColor, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
-                this.FadeColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(FadeColor, Enumerable.Empty<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>());
-                this.RadialBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurRampUp = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurRampUp, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurStart, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurRampDown = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurRampDown, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.RadialBlurDownStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurDownStart, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldDistance, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldRange, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldVignetteRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldVignetteRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.DepthOfFieldVignetteStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldVignetteStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(MotionBlurStrength, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomBlurRadiusMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomBlurRadiusMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomBlurRadiusAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomBlurRadiusAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomThresholdMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomThresholdMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomThresholdAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomThresholdAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomScaleMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrBloomScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomScaleAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMinMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMinMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMinAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMinAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMaxMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMaxMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrTargetLumMaxAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMaxAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSunlightScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSunlightScaleMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSunlightScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSunlightScaleAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSkyScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSkyScaleMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.HdrSkyScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSkyScaleAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown08 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown08, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown48 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown48, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown09 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown09, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown49 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown49, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0A, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4A, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0B, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4B, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0C, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4C, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0D, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4D, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0E, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4E, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown0F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0F, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown4F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4F, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown10 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown10, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown50 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown50, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicSaturationMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicSaturationMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicSaturationAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicSaturationAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicBrightnessMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicContrastMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastMult, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastAdd, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown14, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
-                this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown54, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
+                this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, []);
+                this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DoubleVisionStrength, []);
+                this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(TintColor, []);
+                this.FadeColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(FadeColor, []);
+                this.RadialBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurStrength, []);
+                this.RadialBlurRampUp = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurRampUp, []);
+                this.RadialBlurStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurStart, []);
+                this.RadialBlurRampDown = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurRampDown, []);
+                this.RadialBlurDownStart = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(RadialBlurDownStart, []);
+                this.DepthOfFieldStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldStrength, []);
+                this.DepthOfFieldDistance = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldDistance, []);
+                this.DepthOfFieldRange = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldRange, []);
+                this.DepthOfFieldVignetteRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldVignetteRadius, []);
+                this.DepthOfFieldVignetteStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DepthOfFieldVignetteStrength, []);
+                this.MotionBlurStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(MotionBlurStrength, []);
+                this.HdrEyeAdaptSpeedMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedMult, []);
+                this.HdrEyeAdaptSpeedAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrEyeAdaptSpeedAdd, []);
+                this.HdrBloomBlurRadiusMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomBlurRadiusMult, []);
+                this.HdrBloomBlurRadiusAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomBlurRadiusAdd, []);
+                this.HdrBloomThresholdMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomThresholdMult, []);
+                this.HdrBloomThresholdAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomThresholdAdd, []);
+                this.HdrBloomScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomScaleMult, []);
+                this.HdrBloomScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrBloomScaleAdd, []);
+                this.HdrTargetLumMinMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMinMult, []);
+                this.HdrTargetLumMinAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMinAdd, []);
+                this.HdrTargetLumMaxMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMaxMult, []);
+                this.HdrTargetLumMaxAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrTargetLumMaxAdd, []);
+                this.HdrSunlightScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSunlightScaleMult, []);
+                this.HdrSunlightScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSunlightScaleAdd, []);
+                this.HdrSkyScaleMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSkyScaleMult, []);
+                this.HdrSkyScaleAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(HdrSkyScaleAdd, []);
+                this.Unknown08 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown08, []);
+                this.Unknown48 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown48, []);
+                this.Unknown09 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown09, []);
+                this.Unknown49 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown49, []);
+                this.Unknown0A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0A, []);
+                this.Unknown4A = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4A, []);
+                this.Unknown0B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0B, []);
+                this.Unknown4B = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4B, []);
+                this.Unknown0C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0C, []);
+                this.Unknown4C = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4C, []);
+                this.Unknown0D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0D, []);
+                this.Unknown4D = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4D, []);
+                this.Unknown0E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0E, []);
+                this.Unknown4E = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4E, []);
+                this.Unknown0F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown0F, []);
+                this.Unknown4F = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown4F, []);
+                this.Unknown10 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown10, []);
+                this.Unknown50 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown50, []);
+                this.CinematicSaturationMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicSaturationMult, []);
+                this.CinematicSaturationAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicSaturationAdd, []);
+                this.CinematicBrightnessMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessMult, []);
+                this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessAdd, []);
+                this.CinematicContrastMult = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastMult, []);
+                this.CinematicContrastAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicContrastAdd, []);
+                this.Unknown14 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown14, []);
+                this.Unknown54 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(Unknown54, []);
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -2762,7 +2762,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 if (BlurRadius != null)
                 {
-                    obj.BlurRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.BlurRadius.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.BlurRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.BlurRadius.Overall), []);
                     if (BlurRadius.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2777,7 +2777,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DoubleVisionStrength != null)
                 {
-                    obj.DoubleVisionStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DoubleVisionStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.DoubleVisionStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DoubleVisionStrength.Overall), []);
                     if (DoubleVisionStrength.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (TintColor != null)
                 {
-                    obj.TintColor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ColorFrame.Mask<R>?>>?>(eval(this.TintColor.Overall), Enumerable.Empty<MaskItemIndexed<R, ColorFrame.Mask<R>?>>());
+                    obj.TintColor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ColorFrame.Mask<R>?>>?>(eval(this.TintColor.Overall), []);
                     if (TintColor.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (FadeColor != null)
                 {
-                    obj.FadeColor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ColorFrame.Mask<R>?>>?>(eval(this.FadeColor.Overall), Enumerable.Empty<MaskItemIndexed<R, ColorFrame.Mask<R>?>>());
+                    obj.FadeColor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ColorFrame.Mask<R>?>>?>(eval(this.FadeColor.Overall), []);
                     if (FadeColor.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
@@ -2822,7 +2822,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RadialBlurStrength != null)
                 {
-                    obj.RadialBlurStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.RadialBlurStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurStrength.Overall), []);
                     if (RadialBlurStrength.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2837,7 +2837,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RadialBlurRampUp != null)
                 {
-                    obj.RadialBlurRampUp = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurRampUp.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.RadialBlurRampUp = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurRampUp.Overall), []);
                     if (RadialBlurRampUp.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2852,7 +2852,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RadialBlurStart != null)
                 {
-                    obj.RadialBlurStart = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurStart.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.RadialBlurStart = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurStart.Overall), []);
                     if (RadialBlurStart.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2867,7 +2867,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RadialBlurRampDown != null)
                 {
-                    obj.RadialBlurRampDown = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurRampDown.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.RadialBlurRampDown = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurRampDown.Overall), []);
                     if (RadialBlurRampDown.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2882,7 +2882,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RadialBlurDownStart != null)
                 {
-                    obj.RadialBlurDownStart = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurDownStart.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.RadialBlurDownStart = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.RadialBlurDownStart.Overall), []);
                     if (RadialBlurDownStart.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2897,7 +2897,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DepthOfFieldStrength != null)
                 {
-                    obj.DepthOfFieldStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.DepthOfFieldStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldStrength.Overall), []);
                     if (DepthOfFieldStrength.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2912,7 +2912,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DepthOfFieldDistance != null)
                 {
-                    obj.DepthOfFieldDistance = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldDistance.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.DepthOfFieldDistance = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldDistance.Overall), []);
                     if (DepthOfFieldDistance.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2927,7 +2927,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DepthOfFieldRange != null)
                 {
-                    obj.DepthOfFieldRange = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldRange.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.DepthOfFieldRange = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldRange.Overall), []);
                     if (DepthOfFieldRange.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2942,7 +2942,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DepthOfFieldVignetteRadius != null)
                 {
-                    obj.DepthOfFieldVignetteRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldVignetteRadius.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.DepthOfFieldVignetteRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldVignetteRadius.Overall), []);
                     if (DepthOfFieldVignetteRadius.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2957,7 +2957,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DepthOfFieldVignetteStrength != null)
                 {
-                    obj.DepthOfFieldVignetteStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldVignetteStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.DepthOfFieldVignetteStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.DepthOfFieldVignetteStrength.Overall), []);
                     if (DepthOfFieldVignetteStrength.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2972,7 +2972,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (MotionBlurStrength != null)
                 {
-                    obj.MotionBlurStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.MotionBlurStrength.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.MotionBlurStrength = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.MotionBlurStrength.Overall), []);
                     if (MotionBlurStrength.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -2987,7 +2987,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrEyeAdaptSpeedMult != null)
                 {
-                    obj.HdrEyeAdaptSpeedMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrEyeAdaptSpeedMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrEyeAdaptSpeedMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrEyeAdaptSpeedMult.Overall), []);
                     if (HdrEyeAdaptSpeedMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3002,7 +3002,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrEyeAdaptSpeedAdd != null)
                 {
-                    obj.HdrEyeAdaptSpeedAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrEyeAdaptSpeedAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrEyeAdaptSpeedAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrEyeAdaptSpeedAdd.Overall), []);
                     if (HdrEyeAdaptSpeedAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrBloomBlurRadiusMult != null)
                 {
-                    obj.HdrBloomBlurRadiusMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomBlurRadiusMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrBloomBlurRadiusMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomBlurRadiusMult.Overall), []);
                     if (HdrBloomBlurRadiusMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3032,7 +3032,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrBloomBlurRadiusAdd != null)
                 {
-                    obj.HdrBloomBlurRadiusAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomBlurRadiusAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrBloomBlurRadiusAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomBlurRadiusAdd.Overall), []);
                     if (HdrBloomBlurRadiusAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3047,7 +3047,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrBloomThresholdMult != null)
                 {
-                    obj.HdrBloomThresholdMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomThresholdMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrBloomThresholdMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomThresholdMult.Overall), []);
                     if (HdrBloomThresholdMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3062,7 +3062,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrBloomThresholdAdd != null)
                 {
-                    obj.HdrBloomThresholdAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomThresholdAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrBloomThresholdAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomThresholdAdd.Overall), []);
                     if (HdrBloomThresholdAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3077,7 +3077,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrBloomScaleMult != null)
                 {
-                    obj.HdrBloomScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomScaleMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrBloomScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomScaleMult.Overall), []);
                     if (HdrBloomScaleMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3092,7 +3092,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrBloomScaleAdd != null)
                 {
-                    obj.HdrBloomScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomScaleAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrBloomScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrBloomScaleAdd.Overall), []);
                     if (HdrBloomScaleAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3107,7 +3107,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrTargetLumMinMult != null)
                 {
-                    obj.HdrTargetLumMinMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMinMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrTargetLumMinMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMinMult.Overall), []);
                     if (HdrTargetLumMinMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3122,7 +3122,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrTargetLumMinAdd != null)
                 {
-                    obj.HdrTargetLumMinAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMinAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrTargetLumMinAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMinAdd.Overall), []);
                     if (HdrTargetLumMinAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrTargetLumMaxMult != null)
                 {
-                    obj.HdrTargetLumMaxMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMaxMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrTargetLumMaxMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMaxMult.Overall), []);
                     if (HdrTargetLumMaxMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3152,7 +3152,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrTargetLumMaxAdd != null)
                 {
-                    obj.HdrTargetLumMaxAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMaxAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrTargetLumMaxAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrTargetLumMaxAdd.Overall), []);
                     if (HdrTargetLumMaxAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3167,7 +3167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrSunlightScaleMult != null)
                 {
-                    obj.HdrSunlightScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSunlightScaleMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrSunlightScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSunlightScaleMult.Overall), []);
                     if (HdrSunlightScaleMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3182,7 +3182,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrSunlightScaleAdd != null)
                 {
-                    obj.HdrSunlightScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSunlightScaleAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrSunlightScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSunlightScaleAdd.Overall), []);
                     if (HdrSunlightScaleAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3197,7 +3197,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrSkyScaleMult != null)
                 {
-                    obj.HdrSkyScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSkyScaleMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrSkyScaleMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSkyScaleMult.Overall), []);
                     if (HdrSkyScaleMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3212,7 +3212,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (HdrSkyScaleAdd != null)
                 {
-                    obj.HdrSkyScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSkyScaleAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.HdrSkyScaleAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.HdrSkyScaleAdd.Overall), []);
                     if (HdrSkyScaleAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3227,7 +3227,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown08 != null)
                 {
-                    obj.Unknown08 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown08.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown08 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown08.Overall), []);
                     if (Unknown08.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3242,7 +3242,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown48 != null)
                 {
-                    obj.Unknown48 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown48.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown48 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown48.Overall), []);
                     if (Unknown48.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3257,7 +3257,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown09 != null)
                 {
-                    obj.Unknown09 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown09.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown09 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown09.Overall), []);
                     if (Unknown09.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3272,7 +3272,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown49 != null)
                 {
-                    obj.Unknown49 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown49.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown49 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown49.Overall), []);
                     if (Unknown49.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3287,7 +3287,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown0A != null)
                 {
-                    obj.Unknown0A = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0A.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown0A = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0A.Overall), []);
                     if (Unknown0A.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3302,7 +3302,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown4A != null)
                 {
-                    obj.Unknown4A = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4A.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown4A = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4A.Overall), []);
                     if (Unknown4A.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3317,7 +3317,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown0B != null)
                 {
-                    obj.Unknown0B = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0B.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown0B = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0B.Overall), []);
                     if (Unknown0B.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3332,7 +3332,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown4B != null)
                 {
-                    obj.Unknown4B = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4B.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown4B = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4B.Overall), []);
                     if (Unknown4B.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3347,7 +3347,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown0C != null)
                 {
-                    obj.Unknown0C = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0C.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown0C = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0C.Overall), []);
                     if (Unknown0C.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3362,7 +3362,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown4C != null)
                 {
-                    obj.Unknown4C = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4C.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown4C = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4C.Overall), []);
                     if (Unknown4C.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3377,7 +3377,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown0D != null)
                 {
-                    obj.Unknown0D = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0D.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown0D = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0D.Overall), []);
                     if (Unknown0D.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3392,7 +3392,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown4D != null)
                 {
-                    obj.Unknown4D = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4D.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown4D = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4D.Overall), []);
                     if (Unknown4D.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3407,7 +3407,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown0E != null)
                 {
-                    obj.Unknown0E = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0E.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown0E = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0E.Overall), []);
                     if (Unknown0E.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3422,7 +3422,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown4E != null)
                 {
-                    obj.Unknown4E = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4E.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown4E = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4E.Overall), []);
                     if (Unknown4E.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3437,7 +3437,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown0F != null)
                 {
-                    obj.Unknown0F = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0F.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown0F = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown0F.Overall), []);
                     if (Unknown0F.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3452,7 +3452,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown4F != null)
                 {
-                    obj.Unknown4F = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4F.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown4F = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown4F.Overall), []);
                     if (Unknown4F.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3467,7 +3467,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown10 != null)
                 {
-                    obj.Unknown10 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown10.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown10 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown10.Overall), []);
                     if (Unknown10.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3482,7 +3482,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown50 != null)
                 {
-                    obj.Unknown50 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown50.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown50 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown50.Overall), []);
                     if (Unknown50.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3497,7 +3497,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CinematicSaturationMult != null)
                 {
-                    obj.CinematicSaturationMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicSaturationMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.CinematicSaturationMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicSaturationMult.Overall), []);
                     if (CinematicSaturationMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CinematicSaturationAdd != null)
                 {
-                    obj.CinematicSaturationAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicSaturationAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.CinematicSaturationAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicSaturationAdd.Overall), []);
                     if (CinematicSaturationAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3527,7 +3527,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CinematicBrightnessMult != null)
                 {
-                    obj.CinematicBrightnessMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicBrightnessMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.CinematicBrightnessMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicBrightnessMult.Overall), []);
                     if (CinematicBrightnessMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3542,7 +3542,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CinematicBrightnessAdd != null)
                 {
-                    obj.CinematicBrightnessAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicBrightnessAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.CinematicBrightnessAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicBrightnessAdd.Overall), []);
                     if (CinematicBrightnessAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3557,7 +3557,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CinematicContrastMult != null)
                 {
-                    obj.CinematicContrastMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicContrastMult.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.CinematicContrastMult = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicContrastMult.Overall), []);
                     if (CinematicContrastMult.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3572,7 +3572,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CinematicContrastAdd != null)
                 {
-                    obj.CinematicContrastAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicContrastAdd.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.CinematicContrastAdd = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.CinematicContrastAdd.Overall), []);
                     if (CinematicContrastAdd.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3587,7 +3587,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown14 != null)
                 {
-                    obj.Unknown14 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown14.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown14 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown14.Overall), []);
                     if (Unknown14.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
@@ -3602,7 +3602,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Unknown54 != null)
                 {
-                    obj.Unknown54 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown54.Overall), Enumerable.Empty<MaskItemIndexed<R, KeyFrame.Mask<R>?>>());
+                    obj.Unknown54 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.Unknown54.Overall), []);
                     if (Unknown54.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();

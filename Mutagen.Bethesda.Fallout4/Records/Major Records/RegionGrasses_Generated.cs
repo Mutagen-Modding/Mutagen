@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>?>(initialValue, []);
                 this.LodDisplayDistanceMultiplier = initialValue;
                 this.OcclusionAccuracyDist = initialValue;
             }
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Priority: Priority,
                 Icons: Icons)
             {
-                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>?>(Grasses, Enumerable.Empty<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>?>(Grasses, []);
                 this.LodDisplayDistanceMultiplier = LodDisplayDistanceMultiplier;
                 this.OcclusionAccuracyDist = OcclusionAccuracyDist;
             }
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (Grasses != null)
                 {
-                    obj.Grasses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionGrass.Mask<R>?>>?>(eval(this.Grasses.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionGrass.Mask<R>?>>());
+                    obj.Grasses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionGrass.Mask<R>?>>?>(eval(this.Grasses.Overall), []);
                     if (Grasses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionGrass.Mask<R>?>>();

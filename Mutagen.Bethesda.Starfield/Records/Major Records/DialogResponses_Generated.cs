@@ -295,13 +295,13 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(initialValue, new DialogResponsesAdapter.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(initialValue, new DialogResponseFlags.Mask<TItem>(initialValue));
                 this.TPIC = initialValue;
                 this.SharedDialog = initialValue;
                 this.DialogGroup = initialValue;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Prompt = initialValue;
                 this.Speaker = initialValue;
                 this.StartScene = initialValue;
@@ -356,13 +356,13 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(VirtualMachineAdapter, new DialogResponsesAdapter.Mask<TItem>(VirtualMachineAdapter));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(Flags, new DialogResponseFlags.Mask<TItem>(Flags));
                 this.TPIC = TPIC;
                 this.SharedDialog = SharedDialog;
                 this.DialogGroup = DialogGroup;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Prompt = Prompt;
                 this.Speaker = Speaker;
                 this.StartScene = StartScene;
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, DialogResponsesAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DialogGroup = eval(this.DialogGroup);
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), []);
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

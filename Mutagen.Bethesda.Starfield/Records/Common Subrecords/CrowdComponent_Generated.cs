@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.CDND = initialValue;
                 this.CDNS = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CrowdComponentItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CrowdComponentItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CrowdComponentItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.CDND = CDND;
                 this.CDNS = CDNS;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CrowdComponentItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, CrowdComponentItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CrowdComponentItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CDNS = eval(this.CDNS);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CrowdComponentItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, CrowdComponentItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CrowdComponentItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CrowdComponentItem.Mask<R>?>>();

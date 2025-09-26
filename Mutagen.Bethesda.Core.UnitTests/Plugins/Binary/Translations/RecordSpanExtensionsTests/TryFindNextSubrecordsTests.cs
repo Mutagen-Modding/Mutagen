@@ -13,7 +13,7 @@ public class TryFindNextSubrecordsTests : RecordSpanExtensionTests
     [Fact]
     public void TryFindNextSubrecordsEmpty()
     {
-        byte[] b = Array.Empty<byte>();
+        byte[] b = [];
         var result = RecordSpanExtensions.TryFindNextSubrecords(new ReadOnlyMemorySlice<byte>(b),
             GameConstants.Oblivion,
             out var lenParsed, false, TestRecordTypes.EDID, TestRecordTypes.FNAM);

@@ -226,17 +226,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.CreatedObject = initialValue;
                 this.WorkbenchKeyword = initialValue;
                 this.NAM1 = initialValue;
                 this.NAM2 = initialValue;
                 this.NAM3 = initialValue;
                 this.MenuArtObject = initialValue;
-                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CreatedObjectCounts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>());
+                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.CreatedObjectCounts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -271,17 +271,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(Components, []);
                 this.Description = Description;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.CreatedObject = CreatedObject;
                 this.WorkbenchKeyword = WorkbenchKeyword;
                 this.NAM1 = NAM1;
                 this.NAM2 = NAM2;
                 this.NAM3 = NAM3;
                 this.MenuArtObject = MenuArtObject;
-                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Categories, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CreatedObjectCounts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>(CreatedObjectCounts, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>());
+                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Categories, []);
+                this.CreatedObjectCounts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleCreatedObjectCount.Mask<TItem>?>>?>(CreatedObjectCounts, []);
             }
 
             #pragma warning disable CS8618
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PutDownSound = eval(this.PutDownSound);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Description = eval(this.Description);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.MenuArtObject = eval(this.MenuArtObject);
                 if (Categories != null)
                 {
-                    obj.Categories = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Categories.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Categories = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Categories.Overall), []);
                     if (Categories.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CreatedObjectCounts != null)
                 {
-                    obj.CreatedObjectCounts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>?>(eval(this.CreatedObjectCounts.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>());
+                    obj.CreatedObjectCounts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>?>(eval(this.CreatedObjectCounts.Overall), []);
                     if (CreatedObjectCounts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ConstructibleCreatedObjectCount.Mask<R>?>>();

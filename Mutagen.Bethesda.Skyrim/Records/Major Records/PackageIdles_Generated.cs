@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Type = initialValue;
                 this.TimerSetting = initialValue;
-                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Type = Type;
                 this.TimerSetting = TimerSetting;
-                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, []);
             }
 
             #pragma warning disable CS8618
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.TimerSetting = eval(this.TimerSetting);
                 if (Animations != null)
                 {
-                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), []);
                     if (Animations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

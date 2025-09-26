@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>(Morphs, Enumerable.Empty<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>(Morphs, []);
             }
 
             #pragma warning disable CS8618
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Morphs != null)
                 {
-                    obj.Morphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>?>(eval(this.Morphs.Overall), Enumerable.Empty<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>());
+                    obj.Morphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>?>(eval(this.Morphs.Overall), []);
                     if (Morphs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>();

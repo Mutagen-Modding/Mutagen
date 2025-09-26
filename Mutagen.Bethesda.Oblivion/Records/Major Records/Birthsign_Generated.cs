@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = initialValue;
                 this.Icon = initialValue;
                 this.Description = initialValue;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Icon = Icon;
                 this.Description = Description;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, []);
             }
 
             #pragma warning disable CS8618
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Description = eval(this.Description);
                 if (Spells != null)
                 {
-                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), []);
                     if (Spells.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem Names)
             {
-                this.Names = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRule.Mask<TItem>?>>?>(Names, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRule.Mask<TItem>?>>());
+                this.Names = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRule.Mask<TItem>?>>?>(Names, []);
             }
 
             #pragma warning disable CS8618
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Names != null)
                 {
-                    obj.Names = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>?>(eval(this.Names.Overall), Enumerable.Empty<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>());
+                    obj.Names = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>?>(eval(this.Names.Overall), []);
                     if (Names.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, InstanceNamingRule.Mask<R>?>>();

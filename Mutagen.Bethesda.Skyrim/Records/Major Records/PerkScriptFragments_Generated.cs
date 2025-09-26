@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ExtraBindDataVersion = initialValue;
                 this.FileName = initialValue;
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.FileName = FileName;
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IndexedScriptFragment.Mask<TItem>?>>?>(Fragments, []);
             }
 
             #pragma warning disable CS8618
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FileName = eval(this.FileName);
                 if (Fragments != null)
                 {
-                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), Enumerable.Empty<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>());
+                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), []);
                     if (Fragments.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IndexedScriptFragment.Mask<R>?>>();

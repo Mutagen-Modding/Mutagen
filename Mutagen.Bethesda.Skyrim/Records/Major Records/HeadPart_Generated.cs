@@ -207,8 +207,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.Type = initialValue;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(initialValue, []);
                 this.TextureSet = initialValue;
                 this.Color = initialValue;
                 this.ValidRaces = initialValue;
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Flags = Flags;
                 this.Type = Type;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, []);
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(Parts, []);
                 this.TextureSet = TextureSet;
                 this.Color = Color;
                 this.ValidRaces = ValidRaces;
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Type = eval(this.Type);
                 if (ExtraParts != null)
                 {
-                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), []);
                     if (ExtraParts.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Parts != null)
                 {
-                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Part.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, Part.Mask<R>?>>());
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Part.Mask<R>?>>?>(eval(this.Parts.Overall), []);
                     if (Parts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Part.Mask<R>?>>();

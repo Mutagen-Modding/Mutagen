@@ -144,9 +144,9 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.BehaviorGraph = initialValue;
-                this.ActorKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.TargetKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AnimationPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.TargetKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AnimationPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Role = initialValue;
                 this.Perspective = initialValue;
             }
@@ -160,9 +160,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Perspective)
             {
                 this.BehaviorGraph = BehaviorGraph;
-                this.ActorKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorKeywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.TargetKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetKeywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AnimationPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AnimationPaths, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorKeywords, []);
+                this.TargetKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetKeywords, []);
+                this.AnimationPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AnimationPaths, []);
                 this.Role = Role;
                 this.Perspective = Perspective;
             }
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BehaviorGraph = eval(this.BehaviorGraph);
                 if (ActorKeywords != null)
                 {
-                    obj.ActorKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ActorKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorKeywords.Overall), []);
                     if (ActorKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (TargetKeywords != null)
                 {
-                    obj.TargetKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TargetKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetKeywords.Overall), []);
                     if (TargetKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (AnimationPaths != null)
                 {
-                    obj.AnimationPaths = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AnimationPaths.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AnimationPaths = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AnimationPaths.Overall), []);
                     if (AnimationPaths.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

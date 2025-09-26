@@ -756,21 +756,21 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Base = initialValue;
                 this.BoundHalfExtents = initialValue;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
-                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
+                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, []);
                 this.RoomPortal = new MaskItem<TItem, Bounding.Mask<TItem>?>(initialValue, new Bounding.Mask<TItem>(initialValue));
                 this.XORD = initialValue;
                 this.OcclusionPlane = new MaskItem<TItem, Bounding.Mask<TItem>?>(initialValue, new Bounding.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
                 this.LightingTemplate = initialValue;
                 this.ImageSpace = initialValue;
-                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.IsMultiBoundPrimitive = initialValue;
-                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, []);
                 this.RagdollBipedRotation = initialValue;
                 this.Radius = initialValue;
                 this.Emittance = initialValue;
                 this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(initialValue, new PlacedObjectLighting.Mask<TItem>(initialValue));
-                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(initialValue, new Alpha.Mask<TItem>(initialValue));
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(initialValue, new TeleportDestination.Mask<TItem>(initialValue));
                 this.TeleportLocName = initialValue;
@@ -798,14 +798,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
                 this.LocationReference = initialValue;
                 this.LocationRefType = initialValue;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.IsIgnoredBySandbox = initialValue;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.FactionRank = initialValue;
                 this.ItemCount = initialValue;
                 this.HealthPercent = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, []);
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
                 this.Action = initialValue;
                 this.HeadTrackingWeight = initialValue;
@@ -813,15 +813,15 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OpenByDefault = initialValue;
                 this.MapMarker = new MaskItem<TItem, PlacedObjectMapMarker.Mask<TItem>?>(initialValue, new PlacedObjectMapMarker.Mask<TItem>(initialValue));
                 this.AttachRef = initialValue;
-                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SplineLink.Mask<TItem>?>>());
-                this.PowerGridConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerGridConnection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PowerGridConnection.Mask<TItem>?>>());
+                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineLink.Mask<TItem>?>>?>(initialValue, []);
+                this.PowerGridConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerGridConnection.Mask<TItem>?>>?>(initialValue, []);
                 this.XCVR = initialValue;
                 this.XCVL = initialValue;
                 this.CurrentZoneReference = initialValue;
                 this.XCZA = initialValue;
                 this.CurrentZoneCell = initialValue;
                 this.Scale = initialValue;
-                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Position = initialValue;
                 this.Rotation = initialValue;
                 this.Comments = initialValue;
@@ -921,21 +921,21 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Base = Base;
                 this.BoundHalfExtents = BoundHalfExtents;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
-                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
+                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, []);
                 this.RoomPortal = new MaskItem<TItem, Bounding.Mask<TItem>?>(RoomPortal, new Bounding.Mask<TItem>(RoomPortal));
                 this.XORD = XORD;
                 this.OcclusionPlane = new MaskItem<TItem, Bounding.Mask<TItem>?>(OcclusionPlane, new Bounding.Mask<TItem>(OcclusionPlane));
                 this.Unknown = Unknown;
                 this.LightingTemplate = LightingTemplate;
                 this.ImageSpace = ImageSpace;
-                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, []);
                 this.IsMultiBoundPrimitive = IsMultiBoundPrimitive;
-                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, []);
                 this.RagdollBipedRotation = RagdollBipedRotation;
                 this.Radius = Radius;
                 this.Emittance = Emittance;
                 this.Lighting = new MaskItem<TItem, PlacedObjectLighting.Mask<TItem>?>(Lighting, new PlacedObjectLighting.Mask<TItem>(Lighting));
-                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LitWater, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LitWater, []);
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(Alpha, new Alpha.Mask<TItem>(Alpha));
                 this.TeleportDestination = new MaskItem<TItem, TeleportDestination.Mask<TItem>?>(TeleportDestination, new TeleportDestination.Mask<TItem>(TeleportDestination));
                 this.TeleportLocName = TeleportLocName;
@@ -963,14 +963,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
                 this.LocationReference = LocationReference;
                 this.LocationRefType = LocationRefType;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, []);
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.FactionRank = FactionRank;
                 this.ItemCount = ItemCount;
                 this.HealthPercent = HealthPercent;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, []);
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
                 this.Action = Action;
                 this.HeadTrackingWeight = HeadTrackingWeight;
@@ -978,15 +978,15 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OpenByDefault = OpenByDefault;
                 this.MapMarker = new MaskItem<TItem, PlacedObjectMapMarker.Mask<TItem>?>(MapMarker, new PlacedObjectMapMarker.Mask<TItem>(MapMarker));
                 this.AttachRef = AttachRef;
-                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineLink.Mask<TItem>?>>?>(SplineConnections, Enumerable.Empty<MaskItemIndexed<TItem, SplineLink.Mask<TItem>?>>());
-                this.PowerGridConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerGridConnection.Mask<TItem>?>>?>(PowerGridConnections, Enumerable.Empty<MaskItemIndexed<TItem, PowerGridConnection.Mask<TItem>?>>());
+                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineLink.Mask<TItem>?>>?>(SplineConnections, []);
+                this.PowerGridConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PowerGridConnection.Mask<TItem>?>>?>(PowerGridConnections, []);
                 this.XCVR = XCVR;
                 this.XCVL = XCVL;
                 this.CurrentZoneReference = CurrentZoneReference;
                 this.XCZA = XCZA;
                 this.CurrentZoneCell = CurrentZoneCell;
                 this.Scale = Scale;
-                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DistantLodData, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DistantLodData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DistantLodData, []);
                 this.Position = Position;
                 this.Rotation = Rotation;
                 this.Comments = Comments;
@@ -1757,7 +1757,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
                 if (Portals != null)
                 {
-                    obj.Portals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Portal.Mask<R>?>>?>(eval(this.Portals.Overall), Enumerable.Empty<MaskItemIndexed<R, Portal.Mask<R>?>>());
+                    obj.Portals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Portal.Mask<R>?>>?>(eval(this.Portals.Overall), []);
                     if (Portals.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Portal.Mask<R>?>>();
@@ -1778,7 +1778,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.ImageSpace = eval(this.ImageSpace);
                 if (LinkedRooms != null)
                 {
-                    obj.LinkedRooms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkedRooms.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LinkedRooms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkedRooms.Overall), []);
                     if (LinkedRooms.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.IsMultiBoundPrimitive = eval(this.IsMultiBoundPrimitive);
                 if (RagdollData != null)
                 {
-                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), []);
                     if (RagdollData.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, PlacedObjectLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
                 if (LitWater != null)
                 {
-                    obj.LitWater = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LitWater.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LitWater = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LitWater.Overall), []);
                     if (LitWater.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LocationRefType = eval(this.LocationRefType);
                 if (LocationRefTypes != null)
                 {
-                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), []);
                     if (LocationRefTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
                 if (LinkedReferences != null)
                 {
-                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), []);
                     if (LinkedReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AttachRef = eval(this.AttachRef);
                 if (SplineConnections != null)
                 {
-                    obj.SplineConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SplineLink.Mask<R>?>>?>(eval(this.SplineConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, SplineLink.Mask<R>?>>());
+                    obj.SplineConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SplineLink.Mask<R>?>>?>(eval(this.SplineConnections.Overall), []);
                     if (SplineConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SplineLink.Mask<R>?>>();
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (PowerGridConnections != null)
                 {
-                    obj.PowerGridConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PowerGridConnection.Mask<R>?>>?>(eval(this.PowerGridConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, PowerGridConnection.Mask<R>?>>());
+                    obj.PowerGridConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PowerGridConnection.Mask<R>?>>?>(eval(this.PowerGridConnections.Overall), []);
                     if (PowerGridConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PowerGridConnection.Mask<R>?>>();
@@ -1931,7 +1931,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Scale = eval(this.Scale);
                 if (DistantLodData != null)
                 {
-                    obj.DistantLodData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DistantLodData.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DistantLodData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DistantLodData.Overall), []);
                     if (DistantLodData.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.SoundType = initialValue;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SoundItem.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Sounds)
             {
                 this.SoundType = SoundType;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundItem.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, SoundItem.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundItem.Mask<TItem>?>>?>(Sounds, []);
             }
 
             #pragma warning disable CS8618
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SoundType = eval(this.SoundType);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundItem.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundItem.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SoundItem.Mask<R>?>>();

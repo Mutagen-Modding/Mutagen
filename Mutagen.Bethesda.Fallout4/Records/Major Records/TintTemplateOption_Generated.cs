@@ -196,10 +196,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Index = initialValue;
                 this.Name = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.BlendOperation = initialValue;
-                this.TemplateColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>());
+                this.TemplateColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>(initialValue, []);
                 this.Default = initialValue;
             }
 
@@ -218,10 +218,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Index = Index;
                 this.Name = Name;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, []);
                 this.BlendOperation = BlendOperation;
-                this.TemplateColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>(TemplateColors, Enumerable.Empty<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>());
+                this.TemplateColors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateColor.Mask<TItem>?>>?>(TemplateColors, []);
                 this.Default = Default;
             }
 
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Textures != null)
                 {
-                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Textures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Textures.Overall), []);
                     if (Textures.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BlendOperation = eval(this.BlendOperation);
                 if (TemplateColors != null)
                 {
-                    obj.TemplateColors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintTemplateColor.Mask<R>?>>?>(eval(this.TemplateColors.Overall), Enumerable.Empty<MaskItemIndexed<R, TintTemplateColor.Mask<R>?>>());
+                    obj.TemplateColors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintTemplateColor.Mask<R>?>>?>(eval(this.TemplateColors.Overall), []);
                     if (TemplateColors.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TintTemplateColor.Mask<R>?>>();

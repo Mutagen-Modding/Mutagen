@@ -135,10 +135,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Filename = initialValue;
                 this.AnimationEvent = initialValue;
-                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LoopingSecondsMin = initialValue;
                 this.LoopingSecondsMax = initialValue;
                 this.Flags = initialValue;
@@ -172,10 +172,10 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Filename = Filename;
                 this.AnimationEvent = AnimationEvent;
-                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdles, []);
                 this.LoopingSecondsMin = LoopingSecondsMin;
                 this.LoopingSecondsMax = LoopingSecondsMax;
                 this.Flags = Flags;
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AnimationEvent = eval(this.AnimationEvent);
                 if (RelatedIdles != null)
                 {
-                    obj.RelatedIdles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RelatedIdles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdles.Overall), []);
                     if (RelatedIdles.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

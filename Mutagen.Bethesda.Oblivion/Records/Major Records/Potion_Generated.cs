@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = initialValue;
                 this.Weight = initialValue;
                 this.Data = new MaskItem<TItem, PotionData.Mask<TItem>?>(initialValue, new PotionData.Mask<TItem>(initialValue));
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = Script;
                 this.Weight = Weight;
                 this.Data = new MaskItem<TItem, PotionData.Mask<TItem>?>(Data, new PotionData.Mask<TItem>(Data));
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, []);
             }
 
             #pragma warning disable CS8618
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Data = this.Data == null ? null : new MaskItem<R, PotionData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();

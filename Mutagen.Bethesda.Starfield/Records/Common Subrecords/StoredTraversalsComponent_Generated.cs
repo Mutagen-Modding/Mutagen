@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
-                this.ActivatorTraversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoredTraversalsComponentItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StoredTraversalsComponentItem.Mask<TItem>?>>());
+                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, []);
+                this.ActivatorTraversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoredTraversalsComponentItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ActivatorTraversals)
             : base()
             {
-                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
-                this.ActivatorTraversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoredTraversalsComponentItem.Mask<TItem>?>>?>(ActivatorTraversals, Enumerable.Empty<MaskItemIndexed<TItem, StoredTraversalsComponentItem.Mask<TItem>?>>());
+                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, []);
+                this.ActivatorTraversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoredTraversalsComponentItem.Mask<TItem>?>>?>(ActivatorTraversals, []);
             }
 
             #pragma warning disable CS8618
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Traversals != null)
                 {
-                    obj.Traversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TraversalReference.Mask<R>?>>?>(eval(this.Traversals.Overall), Enumerable.Empty<MaskItemIndexed<R, TraversalReference.Mask<R>?>>());
+                    obj.Traversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TraversalReference.Mask<R>?>>?>(eval(this.Traversals.Overall), []);
                     if (Traversals.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TraversalReference.Mask<R>?>>();
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ActivatorTraversals != null)
                 {
-                    obj.ActivatorTraversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StoredTraversalsComponentItem.Mask<R>?>>?>(eval(this.ActivatorTraversals.Overall), Enumerable.Empty<MaskItemIndexed<R, StoredTraversalsComponentItem.Mask<R>?>>());
+                    obj.ActivatorTraversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StoredTraversalsComponentItem.Mask<R>?>>?>(eval(this.ActivatorTraversals.Overall), []);
                     if (ActivatorTraversals.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StoredTraversalsComponentItem.Mask<R>?>>();

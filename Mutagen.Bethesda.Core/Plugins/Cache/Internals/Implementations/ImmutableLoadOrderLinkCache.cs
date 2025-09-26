@@ -745,7 +745,7 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
         // Break early if no content
         if (!_hasAny || formKey.IsNull)
         {
-            return Enumerable.Empty<IModContext<IMajorRecordGetter>>();
+            return [];
         }
 
         switch (target)
@@ -1846,7 +1846,7 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
         // Break early if no content
         if (!_hasAny || formKey.IsNull)
         {
-            return Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+            return [];
         }
 
         switch (target)

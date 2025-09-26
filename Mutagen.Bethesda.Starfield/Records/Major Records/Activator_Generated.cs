@@ -423,13 +423,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.SnapBehavior = initialValue;
                 this.DefaultLayer = initialValue;
                 this.XALG = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.NativeTerminal = initialValue;
                 this.MarkerColor = initialValue;
                 this.WaterMaterial = initialValue;
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = initialValue;
                 this.ActivationAngle = initialValue;
                 this.InvertFacing = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
             }
 
@@ -498,13 +498,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.SnapBehavior = SnapBehavior;
                 this.DefaultLayer = DefaultLayer;
                 this.XALG = XALG;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, []);
                 this.NativeTerminal = NativeTerminal;
                 this.MarkerColor = MarkerColor;
                 this.WaterMaterial = WaterMaterial;
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = Flags;
                 this.ActivationAngle = ActivationAngle;
                 this.InvertFacing = InvertFacing;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
             }
 
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -955,7 +955,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ForcedLocations != null)
                 {
-                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), []);
                     if (ForcedLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.InvertFacing = eval(this.InvertFacing);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Reference = initialValue;
-                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Triangles)
             {
                 this.Reference = Reference;
-                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Triangles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Triangles, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Reference = eval(this.Reference);
                 if (Triangles != null)
                 {
-                    obj.Triangles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Triangles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Triangles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Triangles.Overall), []);
                     if (Triangles.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

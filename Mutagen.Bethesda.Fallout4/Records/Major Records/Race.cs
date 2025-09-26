@@ -208,7 +208,7 @@ partial class RaceBinaryOverlay
     private GenderedItem<IReadOnlyList<IBoneGetter>?>? _boneData;
     public IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData => _boneData ?? new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
 
-    public IReadOnlyList<IMorphValueGetter> MorphValues { get; private set; } = Array.Empty<MorphValueBinaryOverlay>();
+    public IReadOnlyList<IMorphValueGetter> MorphValues { get; private set; } = [];
 
     partial void ExtraNAM2CustomParse(OverlayStream stream, int offset)
     {

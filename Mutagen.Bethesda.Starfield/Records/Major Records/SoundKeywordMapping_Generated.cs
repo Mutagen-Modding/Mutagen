@@ -132,8 +132,8 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundKeywordMappingItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SoundKeywordMappingItem.Mask<R>?>>();

@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FalloffScale = initialValue;
                 this.FalloffBias = initialValue;
                 this.NoiseUvScale = initialValue;
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DNAMs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DNAMs, []);
                 this.FalloffScale = FalloffScale;
                 this.FalloffBias = FalloffBias;
                 this.NoiseUvScale = NoiseUvScale;
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (DNAMs != null)
                 {
-                    obj.DNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DNAMs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DNAMs.Overall), []);
                     if (DNAMs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

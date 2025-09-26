@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Data = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoItem.Mask<TItem>?>>());
+                this.Data = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoItem.Mask<TItem>?>>?>(initialValue, []);
                 this.Unknown = initialValue;
             }
 
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Data,
                 TItem Unknown)
             {
-                this.Data = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoItem.Mask<TItem>?>>?>(Data, Enumerable.Empty<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoItem.Mask<TItem>?>>());
+                this.Data = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfaceTreePatternSwapInfoItem.Mask<TItem>?>>?>(Data, []);
                 this.Unknown = Unknown;
             }
 
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Data != null)
                 {
-                    obj.Data = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfaceTreePatternSwapInfoItem.Mask<R>?>>?>(eval(this.Data.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfaceTreePatternSwapInfoItem.Mask<R>?>>());
+                    obj.Data = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfaceTreePatternSwapInfoItem.Mask<R>?>>?>(eval(this.Data.Overall), []);
                     if (Data.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SurfaceTreePatternSwapInfoItem.Mask<R>?>>();
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Data.Clear();
-            item.Unknown = Array.Empty<byte>();
+            item.Unknown = [];
         }
         
         #region Mutagen

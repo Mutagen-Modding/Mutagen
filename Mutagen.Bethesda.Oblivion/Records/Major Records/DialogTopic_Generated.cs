@@ -134,11 +134,11 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Quests = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Quests = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Name = initialValue;
                 this.DialogType = initialValue;
                 this.Timestamp = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -159,11 +159,11 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.Quests = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Quests, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Quests = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Quests, []);
                 this.Name = Name;
                 this.DialogType = DialogType;
                 this.Timestamp = Timestamp;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, DialogItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (Quests != null)
                 {
-                    obj.Quests = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Quests.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Quests = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Quests.Overall), []);
                     if (Quests.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Timestamp = eval(this.Timestamp);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogItem.Mask<R>?>>();
