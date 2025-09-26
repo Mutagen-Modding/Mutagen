@@ -889,7 +889,11 @@ public class TriggeringRecordModule : GenerationModule
         HashSet<RecordType> recordTypes = new HashSet<RecordType>();
         foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
-            recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
+            var types = await GetAllRecordTypes(obj).ToArrayAsync();
+            foreach (var type in types)
+            {
+                recordTypes.Add(type);
+            }
         }
 
         recordTypes.Add("GRUP");
