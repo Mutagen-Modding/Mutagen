@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />
-      <Int32 name="NodeIndex" recordType="DATA" nullable="False" />
+      <UInt32 name="NodeIndex" recordType="DATA" nullable="False" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
       <Data recordType="DNAM">
         <Fields>

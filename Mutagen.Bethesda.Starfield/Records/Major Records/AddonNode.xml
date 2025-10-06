@@ -6,7 +6,7 @@
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
-      <Int32 name="NodeIndex" recordType="DATA" nullable="False" />
+      <UInt32 name="NodeIndex" recordType="DATA" nullable="False" />
       <FormLink name="Light" refName="Light" recordType="LNAM" />
       <ByteArray name="Reflection" recordType="PSDF" unknown="true" />
       <Data recordType="DNAM">
