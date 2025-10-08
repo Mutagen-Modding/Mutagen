@@ -15,7 +15,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
-    private readonly Dictionary<bool, HashSet<FormKey>> _genderNPCs = new();
+    private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
@@ -532,8 +532,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IGetIsSexConditionDataGetter sexConditionDataGetter:
-                var isFemale = sexConditionDataGetter.MaleFemaleGender == MaleFemaleGender.Female;
-                if (_genderNPCs.TryGetValue(isFemale, out var genderNpcFormKeys))
+                if (_genderNPCs.TryGetValue(sexConditionDataGetter.MaleFemaleGender, out var genderNpcFormKeys))
                 {
                     voices = new VoiceContainer(genderNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
@@ -937,11 +936,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     #endregion
 
     #region Gender Parser
-    private HashSet<bool> GetGenders(INpcGetter npc)
+    private HashSet<MaleFemaleGender> GetGenders(INpcGetter npc)
     {
         if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0)
         {
-            return [(npc.Configuration.Flags & NpcConfiguration.Flag.Female) != 0];
+            return [(npc.Configuration.Flags & NpcConfiguration.Flag.Female) != 0 ? MaleFemaleGender.Female : MaleFemaleGender.Male];
         }
 
         return [];
