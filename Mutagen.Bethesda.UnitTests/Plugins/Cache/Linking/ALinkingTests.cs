@@ -40,9 +40,9 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
         
     public abstract bool ReadOnly { get; }
 
-    protected abstract (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs);
+    protected abstract (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs);
 
-    protected abstract (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs);
+    protected abstract (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs);
 
     protected LinkCachePreferences GetPrefs(LinkCachePreferences.RetentionType type)
     {
@@ -53,15 +53,15 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
         };
     }
 
-    protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences.RetentionType type) => GetLinkCache(modGetter, GetPrefs(type));
+    protected (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences.RetentionType type) => GetLinkCache(modGetter, GetPrefs(type));
 
-    protected (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences.RetentionType type) => GetLinkCache(loadOrder, GetPrefs(type));
+    protected (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences.RetentionType type) => GetLinkCache(loadOrder, GetPrefs(type));
 
-    protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheStyle style, Action a)
+    protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheDepthStyle depthStyle, Action a)
     {
         switch (cacheType)
         {
-            case LinkCachePreferences.RetentionType.OnlyIdentifiers when style != LinkCacheStyle.OnlyDirect:
+            case LinkCachePreferences.RetentionType.OnlyIdentifiers when depthStyle != LinkCacheDepthStyle.OnlyDirect:
                 Assert.Throws<ArgumentException>(a);
                 break;
             default:

@@ -23,17 +23,17 @@ public class ImmutableDirectTests : ALinkingTests
         return Disposable.Empty;
     }
 
-    protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(
+    protected override (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(
         ISkyrimModGetter modGetter, LinkCachePreferences prefs)
     {
-        return (LinkCacheStyle.HasCaching,
+        return (LinkCacheDepthStyle.HasCaching,
             new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs));
     }
 
-    protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(
+    protected override (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(
         LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
     {
-        return (LinkCacheStyle.HasCaching, loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs));
+        return (LinkCacheDepthStyle.HasCaching, loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs));
     }
 }
     
