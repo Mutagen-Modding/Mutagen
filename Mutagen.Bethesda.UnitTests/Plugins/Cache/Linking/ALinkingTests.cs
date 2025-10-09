@@ -12,6 +12,8 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking;
 
+public record LinkingTestParameters(LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache);
+
 public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IClassFixture<LoquiUse>
 {
     private readonly LinkingTestInit _testInit;
@@ -40,9 +42,9 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
         
     public abstract bool ReadOnly { get; }
 
-    protected abstract (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs);
+    protected abstract LinkingTestParameters GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences prefs);
 
-    protected abstract (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs);
+    protected abstract LinkingTestParameters GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs);
 
     protected LinkCachePreferences GetPrefs(LinkCachePreferences.RetentionType type)
     {
@@ -53,9 +55,9 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
         };
     }
 
-    protected (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences.RetentionType type) => GetLinkCache(modGetter, GetPrefs(type));
+    protected LinkingTestParameters GetLinkCache(ISkyrimModGetter modGetter, LinkCachePreferences.RetentionType type) => GetLinkCache(modGetter, GetPrefs(type));
 
-    protected (LinkCacheDepthStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences.RetentionType type) => GetLinkCache(loadOrder, GetPrefs(type));
+    protected LinkingTestParameters GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences.RetentionType type) => GetLinkCache(loadOrder, GetPrefs(type));
 
     protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheDepthStyle depthStyle, Action a)
     {
