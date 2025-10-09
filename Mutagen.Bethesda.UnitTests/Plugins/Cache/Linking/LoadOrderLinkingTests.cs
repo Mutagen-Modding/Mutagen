@@ -24,33 +24,33 @@ public partial class ALinkingTests
         var (style, linkCache) = GetLinkCache(loadOrder, cacheType);
 
         // Test FormKey fails
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest(linkCache, UnusedFormKey, out var _));
         });
         Assert.False(TryTest(linkCache, FormKey.Null, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, UnusedFormKey, out var _));
         });
         Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, FormKey.Null, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, UnusedFormKey, out var _));
         });
         Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, FormKey.Null, out var _));
         // Test EditorID fails
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest(linkCache, UnusedEditorID, out var _));
         });
         Assert.False(TryTest(linkCache, string.Empty, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, UnusedEditorID, out var _));
         });
         Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(linkCache, string.Empty, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(linkCache, UnusedEditorID, out var _));
         });
@@ -70,34 +70,34 @@ public partial class ALinkingTests
         var (style, cache) = GetLinkCache(loadOrder, cacheType);
 
         // Test FormKey fails 
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest(cache, UnusedFormKey, out var _));
         });
         Assert.False(TryTest(cache, FormKey.Null, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(cache, UnusedFormKey, out var _));
         });
         Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(cache, FormKey.Null, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, UnusedFormKey, out var _));
         });
         Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, FormKey.Null, out var _));
 
         // Test EditorID fails
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest(cache, UnusedEditorID, out var _));
         });
         Assert.False(TryTest(cache, string.Empty, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(cache, UnusedEditorID, out var _));
         });
         Assert.False(TryTest<IMajorRecord, IMajorRecordGetter>(cache, string.Empty, out var _));
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, UnusedEditorID, out var _));
         });
@@ -120,123 +120,123 @@ public partial class ALinkingTests
         // Test query successes
 
         // Do linked interfaces first, as this tests a specific edge case
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
         });
 
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
@@ -244,113 +244,113 @@ public partial class ALinkingTests
 
         if (ReadOnly)
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.EditorID, out var _));
             });
         }
         else
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
@@ -377,235 +377,235 @@ public partial class ALinkingTests
         // Test query successes
 
         // Do linked interfaces first, as this tests a specific edge case
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
         if (ReadOnly)
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.EditorID, out var _));
             });
         }
         else
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
@@ -637,185 +637,185 @@ public partial class ALinkingTests
         // Test query successes
 
         // Do linked interfaces first, as this tests a specific edge case
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, overriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, unoverriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, topModRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, overriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, unoverriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, topModRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
             
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, overriddenRec.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, unoverriddenRec.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, topModRec.FormKey, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, overriddenRec.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, unoverriddenRec.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, topModRec.EditorID, out var rec));
             Assert.Equal((rec as IMajorRecordGetter).FormKey, topModRec.FormKey);
         });
 
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, overriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, unoverriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, topModRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, overriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, unoverriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, topModRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, overriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, unoverriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, topModRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, overriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, unoverriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, topModRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, overriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, unoverriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, topModRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, overriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, unoverriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, topModRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
 
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, overriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, unoverriddenRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, topModRec.FormKey, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, overriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, overrideRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, unoverriddenRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, topModRec.EditorID, out var rec));
             Assert.Equal(rec.FormKey, topModRec.FormKey);
@@ -823,168 +823,168 @@ public partial class ALinkingTests
 
         if (ReadOnly)
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, unoverriddenRec.FormKey, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, topModRec.FormKey, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, unoverriddenRec.FormKey, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, topModRec.FormKey, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, unoverriddenRec.FormKey, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, topModRec.FormKey, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, unoverriddenRec.EditorID, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, topModRec.EditorID, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, unoverriddenRec.EditorID, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, topModRec.EditorID, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, unoverriddenRec.EditorID, out _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, topModRec.EditorID, out _));
             });
         }
         else
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             });
 
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, unoverriddenRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, topModRec.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, overrideRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, unoverriddenRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, unoverriddenRec.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, topModRec.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, topModRec.FormKey);
@@ -1015,34 +1015,34 @@ public partial class ALinkingTests
         // Test query successes
 
         // Do linked interfaces first, as this tests a specific edge case
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
             rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
             (rec as IMajorRecordGetter).EditorID.ShouldBe(overriddenRec.EditorID);
         });
 
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
             rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
             rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
             rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
 
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
             rec.EditorID.ShouldBe(overriddenRec.EditorID);
@@ -1050,33 +1050,33 @@ public partial class ALinkingTests
 
         if (ReadOnly)
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.FormKey, out var _, ResolveTarget.Origin));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.FormKey, out var _, ResolveTarget.Origin));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.FormKey, out var _, ResolveTarget.Origin));
             });
         }
         else
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
                 rec.EditorID.ShouldBe(overriddenRec.EditorID);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
                 rec.EditorID.ShouldBe(overriddenRec.EditorID);
             });
 
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
                 rec.EditorID.ShouldBe(overriddenRec.EditorID);
@@ -1096,23 +1096,23 @@ public partial class ALinkingTests
         loadOrder.Add(overrideWrapper);
         var (style, cache) = GetLinkCache(loadOrder, cacheType);
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<INpc, INpcGetter>(cache, TestFileFormKey, out var rec));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(TryTest<INpc, INpcGetter>(cache, TestFileFormKey2, out var rec));
                 Assert.NotNull(rec.Name);
                 Assert.Equal("A Name", rec.Name.String);
             });
         }
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<INpc, INpc>(cache, TestFileFormKey, out var rec));
             Assert.False(TryTest<INpc, INpc>(cache, TestFileFormKey2, out rec));
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(TryTest<Npc, Npc>(cache, TestFileFormKey, out var rec));
             Assert.False(TryTest<Npc, Npc>(cache, TestFileFormKey2, out rec));

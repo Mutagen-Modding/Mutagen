@@ -59,11 +59,12 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
 
     protected LinkingTestParameters GetLinkCache(LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences.RetentionType type) => GetLinkCache(loadOrder, GetPrefs(type));
 
-    protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheDepthStyle depthStyle, Action a)
+    protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheDepthStyle depthStyle, AContextRetriever contextRetriever, Action a)
     {
         switch (cacheType)
         {
-            case LinkCachePreferences.RetentionType.OnlyIdentifiers when depthStyle != LinkCacheDepthStyle.OnlyDirect:
+            case LinkCachePreferences.RetentionType.OnlyIdentifiers
+                when depthStyle != LinkCacheDepthStyle.OnlyDirect:
                 Assert.Throws<ArgumentException>(a);
                 break;
             default:

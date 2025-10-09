@@ -40,13 +40,13 @@ public partial class ALinkingTests
         });
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
                 .ShouldBeTrue();
             rec.Record.ShouldBe(placed);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
                 .ShouldBeTrue();
@@ -87,13 +87,13 @@ public partial class ALinkingTests
         });
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
                 .ShouldBeTrue();
             rec2.ShouldBe(placed);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
                 .ShouldBeTrue();
@@ -120,13 +120,13 @@ public partial class ALinkingTests
         });
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             package.TryResolve<IPlacedGetter>(placed.FormKey, out var rec2)
                 .ShouldBeTrue();
             rec2.ShouldBe(placed);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             contextRetriever.TryResolveContext<IPlaced, IPlacedGetter>(placed.AsLink(), package, out var rec)
                 .ShouldBeTrue();
@@ -170,7 +170,7 @@ public partial class ALinkingTests
         });
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
                 .ShouldBeTrue();

@@ -42,7 +42,7 @@ public partial class ALinkingTests
         var npc = mod.Npcs.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(1);
