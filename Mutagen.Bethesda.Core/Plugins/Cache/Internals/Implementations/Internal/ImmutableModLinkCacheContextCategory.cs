@@ -104,7 +104,10 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
         return true;
     }
 
-    public bool TryResolveContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
+    public bool TryResolveContext(
+        TKey key, 
+        Type type,
+        [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
     {
         if (_shortCircuit(key))
         {
