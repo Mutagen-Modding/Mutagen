@@ -46,7 +46,7 @@ public partial class ALinkingTests
                 .ShouldBeTrue();
             rec.Record.ShouldBe(placed);
         });
-        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
+        WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
                 .ShouldBeTrue();
@@ -87,7 +87,7 @@ public partial class ALinkingTests
         });
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
+        WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
                 .ShouldBeTrue();
@@ -120,7 +120,7 @@ public partial class ALinkingTests
         });
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
+        WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolve<IPlacedGetter>(placed.FormKey, out var rec2)
                 .ShouldBeTrue();

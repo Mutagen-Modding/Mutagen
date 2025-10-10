@@ -64,11 +64,41 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
         switch (cacheType)
         {
             case LinkCachePreferences.RetentionType.OnlyIdentifiers
+                when depthStyle != LinkCacheDepthStyle.OnlyDirect && contextRetriever is not SimpleContextRetriever:
+                Assert.Throws<ArgumentException>(a);
+                break;
+            default:
+                try
+                {
+                    a();
+                }
+                catch (Exception e)
+                {
+                    a();
+                    throw;
+                }
+                break;
+        }
+    }
+    
+    protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheDepthStyle depthStyle, Action a)
+    {
+        switch (cacheType)
+        {
+            case LinkCachePreferences.RetentionType.OnlyIdentifiers
                 when depthStyle != LinkCacheDepthStyle.OnlyDirect:
                 Assert.Throws<ArgumentException>(a);
                 break;
             default:
-                a();
+                try
+                {
+                    a();
+                }
+                catch (Exception e)
+                {
+                    a();
+                    throw;
+                }
                 break;
         }
     }
