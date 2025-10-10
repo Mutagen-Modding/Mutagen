@@ -48,6 +48,8 @@ dotnet build Mutagen.Records.sln
 dotnet build Mutagen.Bethesda.Core/Mutagen.Bethesda.Core.csproj
 ```
 
+**Note**: Initial builds and full rebuilds can take several minutes due to the large amount of generated code in this project. The codebase includes extensive code generation for game record types, which results in large generated files that need to be compiled. This is normal - be patient and allow extra time for build operations to complete.
+
 ### Cleaning the Repository
 
 If you encounter build errors (e.g., error code 0x00000001), clean the repository:
@@ -88,6 +90,52 @@ Many of the public-facing APIs are code-generated. Check the following for gener
 - `Mutagen.Bethesda.Generation` - Generation infrastructure
 - `Mutagen.Bethesda.[Game].Generator` - Game-specific generators
 - `Mutagen.Bethesda.SourceGenerators` - Roslyn source generators
+
+### Running Code Generators
+
+After modifying generation code, you need to run the generators to update the generated files. Generators must be run from their build output directories because they use relative paths to locate project files.
+
+**Important**: First build the generation solution to ensure your changes are compiled:
+
+```bash
+dotnet build Mutagen.Records.sln
+```
+
+#### Running a Single Game Generator (Faster)
+
+For most changes, you can run just one game's generator to test your modifications quickly:
+
+```bash
+# Example: Running the Skyrim generator (adjust .NET version as needed)
+cd Mutagen.Bethesda.Skyrim.Generator/bin/Debug/net9.0
+./Mutagen.Bethesda.Skyrim.Generator.exe
+```
+
+Replace `net9.0` with your installed .NET SDK version (net8.0, net9.0, net10.0, etc.).
+
+Other game generators follow the same pattern:
+- `Mutagen.Bethesda.Fallout4.Generator/bin/Debug/net9.0/Mutagen.Bethesda.Fallout4.Generator.exe`
+- `Mutagen.Bethesda.Oblivion.Generator/bin/Debug/net9.0/Mutagen.Bethesda.Oblivion.Generator.exe`
+- `Mutagen.Bethesda.Starfield.Generator/bin/Debug/net9.0/Mutagen.Bethesda.Starfield.Generator.exe`
+
+#### Running All Game Generators
+
+Once you've verified your changes work with a single game generator, run the full generator to update all games:
+
+```bash
+# From repository root
+cd Mutagen.Bethesda.Generator.All/bin/Debug/net8.0
+./Mutagen.Bethesda.Generator.All.exe
+```
+
+#### When to Use Each Generator
+
+- **Single game generator**: Use when making changes specific to one game's definitions, or for quick iteration when testing generation code changes
+- **All games generator**: Use when making changes to core generation infrastructure (like `MajorRecord` or other shared base types), or before committing your final changes
+
+#### Why Working Directory Matters
+
+The generators use relative paths like `../../../../Mutagen.Bethesda.{Game}/Records` to locate project files. Running from the build output directory ensures these relative paths resolve correctly to the repository structure.
 
 ## Development Workflow
 
