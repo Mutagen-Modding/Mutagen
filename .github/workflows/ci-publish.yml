@@ -44,22 +44,20 @@ jobs:
     needs: activity-short-circuit
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: ${{ matrix.os }}
-    
+
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         sln:
           - Mutagen.Records.sln
           - Mutagen.Records.Linux.sln
         exclude:
           - os: ubuntu-latest
             sln: Mutagen.Records.sln
-          - os: macos-latest
-            sln: Mutagen.Records.sln
           - os: windows-latest
             sln: Mutagen.Records.Linux.sln
-          
+
     steps:
     - uses: actions/checkout@v4
       with:
