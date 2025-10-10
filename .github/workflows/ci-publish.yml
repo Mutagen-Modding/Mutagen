@@ -71,9 +71,18 @@ jobs:
         dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
         dotnet restore ${{ matrix.sln }}
     - name: Build
-      run: dotnet build ${{ matrix.sln }} -c Release --no-restore
+      run: dotnet build ${{ matrix.sln }} -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Test
       run: dotnet test ${{ matrix.sln }} -c Release --no-build
+    - name: Upload build artifacts
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-build
+        path: |
+          **/bin/Release/**
+          **/obj/Release/**
+        retention-days: 1
 
   build-test-push:
     needs: [build-test, activity-short-circuit]
@@ -92,12 +101,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0.*
-    - name: Install dependencies
-      run: |
-        dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
-        dotnet restore Mutagen.Records.sln
-    - name: Build
-      run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-build
     - name: Pack
       run: |
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
