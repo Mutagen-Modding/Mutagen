@@ -105,11 +105,9 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: windows-build
-    - name: Restore dependencies
-      run: dotnet restore Mutagen.Records.sln
     - name: Pack
       run: |
-        dotnet pack Mutagen.Records.sln -c Release --no-build -o out --include-symbols -p:SymbolPackageFormat=snupkg
+        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
