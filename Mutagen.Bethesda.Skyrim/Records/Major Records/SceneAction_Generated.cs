@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StartPhase = initialValue;
                 this.EndPhase = initialValue;
                 this.TimerSeconds = initialValue;
-                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Topic = initialValue;
                 this.HeadtrackActorID = initialValue;
                 this.LoopingMax = initialValue;
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StartPhase = StartPhase;
                 this.EndPhase = EndPhase;
                 this.TimerSeconds = TimerSeconds;
-                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, []);
                 this.Topic = Topic;
                 this.HeadtrackActorID = HeadtrackActorID;
                 this.LoopingMax = LoopingMax;
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.TimerSeconds = eval(this.TimerSeconds);
                 if (Packages != null)
                 {
-                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), []);
                     if (Packages.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

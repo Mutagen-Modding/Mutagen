@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Text = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Property = new MaskItem<TItem, InstanceNamingRuleProperty.Mask<TItem>?>(initialValue, new InstanceNamingRuleProperty.Mask<TItem>(initialValue));
                 this.Index = initialValue;
             }
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Index)
             {
                 this.Text = Text;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Property = new MaskItem<TItem, InstanceNamingRuleProperty.Mask<TItem>?>(Property, new InstanceNamingRuleProperty.Mask<TItem>(Property));
                 this.Index = Index;
             }
@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Text = eval(this.Text);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

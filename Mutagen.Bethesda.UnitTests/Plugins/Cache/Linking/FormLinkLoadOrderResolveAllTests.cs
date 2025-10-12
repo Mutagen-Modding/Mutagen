@@ -36,7 +36,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(1);
@@ -62,7 +62,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(2);
@@ -89,7 +89,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(2);
@@ -117,7 +117,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(2);
@@ -145,7 +145,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(2);
@@ -153,7 +153,7 @@ public partial class ALinkingTests
             resolved.Last().ShouldBeSameAs(npc);
         });
         formLink = new FormLink<INpcGetter>(unrelatedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
             resolved.ShouldHaveCount(1);

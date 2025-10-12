@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, []);
                 this.SunTexture = initialValue;
                 this.SunGlareTexture = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(WeatherTypes, []);
                 this.SunTexture = SunTexture;
                 this.SunGlareTexture = SunGlareTexture;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (WeatherTypes != null)
                 {
-                    obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.WeatherTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
+                    obj.WeatherTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.WeatherTypes.Overall), []);
                     if (WeatherTypes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();

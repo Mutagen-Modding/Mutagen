@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
@@ -297,7 +297,7 @@ public class LoadOrderIntegrationTests
         ModKey esm2 = new ModKey("Normal2", ModType.Master);
 
         LoadOrder.OrderListings(
-                implicitListings: Array.Empty<ModKey>(),
+                implicitListings: [],
                 creationClubListings:
                 [
                     ccEsm,

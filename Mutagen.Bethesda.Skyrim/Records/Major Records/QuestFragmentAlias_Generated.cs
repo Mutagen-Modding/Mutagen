@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Property = new MaskItem<TItem, ScriptObjectProperty.Mask<TItem>?>(initialValue, new ScriptObjectProperty.Mask<TItem>(initialValue));
                 this.Version = initialValue;
                 this.ObjectFormat = initialValue;
-                this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
+                this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Property = new MaskItem<TItem, ScriptObjectProperty.Mask<TItem>?>(Property, new ScriptObjectProperty.Mask<TItem>(Property));
                 this.Version = Version;
                 this.ObjectFormat = ObjectFormat;
-                this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(Scripts, Enumerable.Empty<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>());
+                this.Scripts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptEntry.Mask<TItem>?>>?>(Scripts, []);
             }
 
             #pragma warning disable CS8618
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ObjectFormat = eval(this.ObjectFormat);
                 if (Scripts != null)
                 {
-                    obj.Scripts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>?>(eval(this.Scripts.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>());
+                    obj.Scripts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>?>(eval(this.Scripts.Overall), []);
                     if (Scripts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScriptEntry.Mask<R>?>>();

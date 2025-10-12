@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ExtraBindDataVersion = initialValue;
                 this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(initialValue, new ScriptEntry.Mask<TItem>(initialValue));
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragmentIndexed.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptFragmentIndexed.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragmentIndexed.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.Script = new MaskItem<TItem, ScriptEntry.Mask<TItem>?>(Script, new ScriptEntry.Mask<TItem>(Script));
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragmentIndexed.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, ScriptFragmentIndexed.Mask<TItem>?>>());
+                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragmentIndexed.Mask<TItem>?>>?>(Fragments, []);
             }
 
             #pragma warning disable CS8618
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Script = this.Script == null ? null : new MaskItem<R, ScriptEntry.Mask<R>?>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
                 if (Fragments != null)
                 {
-                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptFragmentIndexed.Mask<R>?>>?>(eval(this.Fragments.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptFragmentIndexed.Mask<R>?>>());
+                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptFragmentIndexed.Mask<R>?>>?>(eval(this.Fragments.Overall), []);
                     if (Fragments.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScriptFragmentIndexed.Mask<R>?>>();

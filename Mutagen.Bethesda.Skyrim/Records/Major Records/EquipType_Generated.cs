@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.UseAllParents = initialValue;
             }
 
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, []);
                 this.UseAllParents = UseAllParents;
             }
 
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (SlotParents != null)
                 {
-                    obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), []);
                     if (SlotParents.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

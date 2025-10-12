@@ -125,8 +125,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Min = initialValue;
                 this.Max = initialValue;
-                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -137,8 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Min = Min;
                 this.Max = Max;
-                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Triangles, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Triangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Triangles, []);
+                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, []);
             }
 
             #pragma warning disable CS8618
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Max = eval(this.Max);
                 if (Triangles != null)
                 {
-                    obj.Triangles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Triangles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Triangles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Triangles.Overall), []);
                     if (Triangles.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Vertices != null)
                 {
-                    obj.Vertices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Vertices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Vertices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Vertices.Overall), []);
                     if (Vertices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

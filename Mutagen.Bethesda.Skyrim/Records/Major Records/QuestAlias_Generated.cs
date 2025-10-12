@@ -375,17 +375,17 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CreateReferenceToObject = new MaskItem<TItem, CreateReferenceToObject.Mask<TItem>?>(initialValue, new CreateReferenceToObject.Mask<TItem>(initialValue));
                 this.FindMatchingRefNearAlias = new MaskItem<TItem, FindMatchingRefNearAlias.Mask<TItem>?>(initialValue, new FindMatchingRefNearAlias.Mask<TItem>(initialValue));
                 this.FindMatchingRefFromEvent = new MaskItem<TItem, FindMatchingRefFromEvent.Mask<TItem>?>(initialValue, new FindMatchingRefFromEvent.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.SpectatorOverridePackageList = initialValue;
                 this.ObserveDeadBodyOverridePackageList = initialValue;
                 this.GuardWarnOverridePackageList = initialValue;
                 this.CombatOverridePackageList = initialValue;
                 this.DisplayName = initialValue;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Factions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PackageData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Factions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.PackageData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.VoiceTypes = initialValue;
             }
 
@@ -429,17 +429,17 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CreateReferenceToObject = new MaskItem<TItem, CreateReferenceToObject.Mask<TItem>?>(CreateReferenceToObject, new CreateReferenceToObject.Mask<TItem>(CreateReferenceToObject));
                 this.FindMatchingRefNearAlias = new MaskItem<TItem, FindMatchingRefNearAlias.Mask<TItem>?>(FindMatchingRefNearAlias, new FindMatchingRefNearAlias.Mask<TItem>(FindMatchingRefNearAlias));
                 this.FindMatchingRefFromEvent = new MaskItem<TItem, FindMatchingRefFromEvent.Mask<TItem>?>(FindMatchingRefFromEvent, new FindMatchingRefFromEvent.Mask<TItem>(FindMatchingRefFromEvent));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, []);
                 this.SpectatorOverridePackageList = SpectatorOverridePackageList;
                 this.ObserveDeadBodyOverridePackageList = ObserveDeadBodyOverridePackageList;
                 this.GuardWarnOverridePackageList = GuardWarnOverridePackageList;
                 this.CombatOverridePackageList = CombatOverridePackageList;
                 this.DisplayName = DisplayName;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Factions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Factions, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PackageData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PackageData, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, []);
+                this.Factions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Factions, []);
+                this.PackageData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PackageData, []);
                 this.VoiceTypes = VoiceTypes;
             }
 
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FindMatchingRefFromEvent = this.FindMatchingRefFromEvent == null ? null : new MaskItem<R, FindMatchingRefFromEvent.Mask<R>?>(eval(this.FindMatchingRefFromEvent.Overall), this.FindMatchingRefFromEvent.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DisplayName = eval(this.DisplayName);
                 if (Spells != null)
                 {
-                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), []);
                     if (Spells.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Factions != null)
                 {
-                    obj.Factions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Factions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Factions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Factions.Overall), []);
                     if (Factions.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (PackageData != null)
                 {
-                    obj.PackageData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PackageData.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PackageData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PackageData.Overall), []);
                     if (PackageData.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

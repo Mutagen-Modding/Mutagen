@@ -206,11 +206,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
                 this.SnapTemplate = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.Filter = initialValue;
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -241,11 +241,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
                 this.SnapTemplate = SnapTemplate;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Name = Name;
                 this.Filter = Filter;
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StaticPart.Mask<TItem>?>>?>(Parts, []);
             }
 
             #pragma warning disable CS8618
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SnapTemplate = eval(this.SnapTemplate);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Filter = eval(this.Filter);
                 if (Parts != null)
                 {
-                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPart.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, StaticPart.Mask<R>?>>());
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StaticPart.Mask<R>?>>?>(eval(this.Parts.Overall), []);
                     if (Parts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StaticPart.Mask<R>?>>();

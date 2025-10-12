@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Object = initialValue;
-                this.ObjectBounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectBoundsFloat.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectBoundsFloat.Mask<TItem>?>>());
+                this.ObjectBounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectBoundsFloat.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem ObjectBounds)
             {
                 this.Object = Object;
-                this.ObjectBounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectBoundsFloat.Mask<TItem>?>>?>(ObjectBounds, Enumerable.Empty<MaskItemIndexed<TItem, ObjectBoundsFloat.Mask<TItem>?>>());
+                this.ObjectBounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectBoundsFloat.Mask<TItem>?>>?>(ObjectBounds, []);
             }
 
             #pragma warning disable CS8618
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Object = eval(this.Object);
                 if (ObjectBounds != null)
                 {
-                    obj.ObjectBounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectBoundsFloat.Mask<R>?>>?>(eval(this.ObjectBounds.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectBoundsFloat.Mask<R>?>>());
+                    obj.ObjectBounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectBoundsFloat.Mask<R>?>>?>(eval(this.ObjectBounds.Overall), []);
                     if (ObjectBounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectBoundsFloat.Mask<R>?>>();

@@ -227,7 +227,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
                 {
                     if (data.IsAfterBreak)
                     {
-                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Length <= {posStr} ? {(typeGen.Nullable ? "null" : "Array.Empty<byte>()")} : {structDataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Length <= {posStr} ? {(typeGen.Nullable ? "null" : "[]")} : {structDataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
                     }
                     else
                     {

@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubtypeName = initialValue;
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SubtypeName = SubtypeName;
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, []);
             }
 
             #pragma warning disable CS8618
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unknown = eval(this.Unknown);
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponses.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponses.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponses.Mask<R>?>>?>(eval(this.Responses.Overall), []);
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponses.Mask<R>?>>();

@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Priority: Priority,
                 Icons: Icons)
             {
-                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (Weathers != null)
                 {
-                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), []);
                     if (Weathers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();

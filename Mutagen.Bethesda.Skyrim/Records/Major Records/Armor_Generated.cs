@@ -346,9 +346,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BashImpactDataSet = initialValue;
                 this.AlternateBlockMaterial = initialValue;
                 this.Race = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Description = initialValue;
-                this.Armature = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Armature = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Value = initialValue;
                 this.Weight = initialValue;
                 this.ArmorRating = initialValue;
@@ -409,9 +409,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BashImpactDataSet = BashImpactDataSet;
                 this.AlternateBlockMaterial = AlternateBlockMaterial;
                 this.Race = Race;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Description = Description;
-                this.Armature = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Armature, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Armature = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Armature, []);
                 this.Value = Value;
                 this.Weight = Weight;
                 this.ArmorRating = ArmorRating;
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Race = eval(this.Race);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 if (Armature != null)
                 {
-                    obj.Armature = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Armature.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Armature = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Armature.Overall), []);
                     if (Armature.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

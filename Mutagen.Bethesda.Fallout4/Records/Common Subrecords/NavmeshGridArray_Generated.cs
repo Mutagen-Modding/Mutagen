@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem GridCell)
             {
-                this.GridCell = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(GridCell, Enumerable.Empty<(int Index, TItem Value)>());
+                this.GridCell = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(GridCell, []);
             }
 
             #pragma warning disable CS8618
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (GridCell != null)
                 {
-                    obj.GridCell = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.GridCell.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.GridCell = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.GridCell.Overall), []);
                     if (GridCell.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

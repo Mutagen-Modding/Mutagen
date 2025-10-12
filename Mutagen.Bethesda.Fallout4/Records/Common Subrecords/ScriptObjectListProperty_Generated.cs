@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Name: Name,
                 Flags: Flags)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptObjectProperty.Mask<TItem>?>>?>(Objects, []);
             }
 
             #pragma warning disable CS8618
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScriptObjectProperty.Mask<R>?>>();

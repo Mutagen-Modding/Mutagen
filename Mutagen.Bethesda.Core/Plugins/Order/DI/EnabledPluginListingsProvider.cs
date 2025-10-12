@@ -31,7 +31,7 @@ public sealed class EnabledPluginListingsProvider : IEnabledPluginListingsProvid
         }
         else
         {
-            return Enumerable.Empty<ILoadOrderListingGetter>();
+            return [];
         }
     }
 }

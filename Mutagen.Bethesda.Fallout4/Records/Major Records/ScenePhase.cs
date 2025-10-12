@@ -49,9 +49,9 @@ partial class ScenePhaseBinaryWriteTranslation
 
 partial class ScenePhaseBinaryOverlay
 {
-    public IReadOnlyList<IConditionGetter> StartConditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> StartConditions { get; private set; } = [];
 
-    public IReadOnlyList<IConditionGetter> CompletionConditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> CompletionConditions { get; private set; } = [];
 
     partial void StartConditionsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Flags = initialValue;
                 this.ContextNotes = initialValue;
-                this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
+                this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(initialValue, []);
                 this.ActorValue = initialValue;
                 this.EventSize = initialValue;
                 this.DistanceToPlayer = initialValue;
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Flags = Flags;
                 this.ContextNotes = ContextNotes;
-                this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(ActorReactions, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
+                this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(ActorReactions, []);
                 this.ActorValue = ActorValue;
                 this.EventSize = EventSize;
                 this.DistanceToPlayer = DistanceToPlayer;
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ContextNotes = eval(this.ContextNotes);
                 if (ActorReactions != null)
                 {
-                    obj.ActorReactions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorReaction.Mask<R>?>>?>(eval(this.ActorReactions.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorReaction.Mask<R>?>>());
+                    obj.ActorReactions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorReaction.Mask<R>?>>?>(eval(this.ActorReactions.Overall), []);
                     if (ActorReactions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ActorReaction.Mask<R>?>>();

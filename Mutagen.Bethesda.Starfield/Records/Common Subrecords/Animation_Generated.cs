@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AnimationOnlyMovement = initialValue;
                 this.UseFlavorAnimation = initialValue;
                 this.DelayStartTimeAction = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Action = initialValue;
                 this.UseActorAnimationAction = initialValue;
                 this.AnimationHoldEvent = initialValue;
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AnimationOnlyMovement = AnimationOnlyMovement;
                 this.UseFlavorAnimation = UseFlavorAnimation;
                 this.DelayStartTimeAction = DelayStartTimeAction;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Action = Action;
                 this.UseActorAnimationAction = UseActorAnimationAction;
                 this.AnimationHoldEvent = AnimationHoldEvent;
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DelayStartTimeAction = eval(this.DelayStartTimeAction);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

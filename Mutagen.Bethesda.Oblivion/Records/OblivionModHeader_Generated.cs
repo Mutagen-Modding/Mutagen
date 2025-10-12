@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Deleted = initialValue;
                 this.Author = initialValue;
                 this.Description = initialValue;
-                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Deleted = Deleted;
                 this.Author = Author;
                 this.Description = Description;
-                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
+                this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, []);
             }
 
             #pragma warning disable CS8618
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Description = eval(this.Description);
                 if (MasterReferences != null)
                 {
-                    obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference.Mask<R>?>>?>(eval(this.MasterReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterReference.Mask<R>?>>());
+                    obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterReference.Mask<R>?>>?>(eval(this.MasterReferences.Overall), []);
                     if (MasterReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MasterReference.Mask<R>?>>();

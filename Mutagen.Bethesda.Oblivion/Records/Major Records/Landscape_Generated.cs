@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.VertexNormals = initialValue;
                 this.VertexHeightMap = initialValue;
                 this.VertexColors = initialValue;
-                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
-                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(initialValue, []);
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -182,8 +182,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.VertexNormals = VertexNormals;
                 this.VertexHeightMap = VertexHeightMap;
                 this.VertexColors = VertexColors;
-                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(Layers, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
-                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(Layers, []);
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, []);
             }
 
             #pragma warning disable CS8618
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.VertexColors = eval(this.VertexColors);
                 if (Layers != null)
                 {
-                    obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>?>(eval(this.Layers.Overall), Enumerable.Empty<MaskItemIndexed<R, BaseLayer.Mask<R>?>>());
+                    obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>?>(eval(this.Layers.Overall), []);
                     if (Layers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BaseLayer.Mask<R>?>>();
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Textures != null)
                 {
-                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Textures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Textures.Overall), []);
                     if (Textures.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

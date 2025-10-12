@@ -138,9 +138,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Activities = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Activities = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
             }
 
@@ -150,9 +150,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Activities,
                 TItem Description)
             {
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Activities = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>(Activities, Enumerable.Empty<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Activities = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>(Activities, []);
                 this.Description = Description;
             }
 
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, APerkEffect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, APerkEffect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, APerkEffect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, APerkEffect.Mask<R>?>>();
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Activities != null)
                 {
-                    obj.Activities = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Activity.Mask<R>?>>?>(eval(this.Activities.Overall), Enumerable.Empty<MaskItemIndexed<R, Activity.Mask<R>?>>());
+                    obj.Activities = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Activity.Mask<R>?>>?>(eval(this.Activities.Overall), []);
                     if (Activities.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Activity.Mask<R>?>>();

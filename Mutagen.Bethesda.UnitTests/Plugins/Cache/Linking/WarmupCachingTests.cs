@@ -37,7 +37,7 @@ public partial class ALinkingTests
         prototype.Armors.Clear();
         prototype.LeveledItems.Clear();
         package.TryResolveIdentifier<IArmorGetter>(armor.FormKey, out _)
-            .ShouldBe(style == LinkCacheStyle.HasCaching || ReadOnly);
+            .ShouldBe(style == LinkCacheDepthStyle.HasCaching || ReadOnly);
         package.TryResolveIdentifier<ILeveledItemGetter>(llist.FormKey, out _)
             .ShouldBe(ReadOnly);
     }

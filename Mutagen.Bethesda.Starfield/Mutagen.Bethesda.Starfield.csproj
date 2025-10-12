@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Starfield mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
@@ -6272,9 +6272,6 @@
     <Compile Include="Records\Major Records\PackageTargetObjectType_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageTargetReference_Generated.cs">
-      <DependentUpon>Package.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PackageTargetAlias_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -6882,6 +6879,9 @@
     <Compile Include="Interfaces\Link\ILocationOwner_Generated.cs" />
     <Compile Include="Records\Major Records\LocationOwnerData_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
     public static IReadOnlyMasterReferenceCollection Empty { get; } = new MasterReferenceCollection(ModKey.Null);
 
     /// <inheritdoc />
-    public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = Array.Empty<IMasterReferenceGetter>();
+    public IReadOnlyList<IMasterReferenceGetter> Masters { get; private set; } = [];
         
     /// <inheritdoc />
     public ModKey CurrentMod { get; }
@@ -66,7 +66,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
     public MasterReferenceCollection(ModKey modKey)
     {
         CurrentMod = modKey;
-        SetTo(Enumerable.Empty<IMasterReferenceGetter>());
+        SetTo([]);
     }
 
     /// <summary>

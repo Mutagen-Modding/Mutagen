@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Skyrim mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
@@ -2826,9 +2826,6 @@
     <Compile Include="Records\Major Records\PackageTargetObjectType_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageTargetReference_Generated.cs">
-      <DependentUpon>Package.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PackageTargetAlias_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -4745,6 +4742,9 @@
     </Compile>
     <Compile Include="Records\Major Records\PersistentActorReference_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

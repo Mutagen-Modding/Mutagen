@@ -46,7 +46,7 @@ public sealed class CreationClubListingsProvider : ICreationClubListingsProvider
     public IEnumerable<IModListingGetter> Get(bool throwIfMissing)
     {
         var path = ListingsPathProvider.Path;
-        if (path == null) return Enumerable.Empty<IModListingGetter>();
+        if (path == null) return [];
         if (!_fileSystem.File.Exists(path.Value))
         {
             if (throwIfMissing)
@@ -55,13 +55,13 @@ public sealed class CreationClubListingsProvider : ICreationClubListingsProvider
             }
             else
             {
-                return Enumerable.Empty<IModListingGetter>();
+                return [];
             }
         }
 
         return Reader.Read(_fileSystem.File.OpenRead(path.Value))
             .Where(x => _fileSystem.File.Exists(Path.Combine(DirectoryProvider.Path, x.ModKey.FileName)))
-            .Select(x => x.ToModListing(existsOnDisk: true))
+            .Select(x => x.ToModListing(modExists: true))
             .ToList();
     }
 }

@@ -255,11 +255,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Topic = initialValue;
                 this.PreviousDialog = initialValue;
                 this.FavorLevel = initialValue;
-                this.LinkTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ResponseData = initialValue;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnknownData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponsesUnknownData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponsesUnknownData.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.UnknownData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponsesUnknownData.Mask<TItem>?>>?>(initialValue, []);
                 this.Prompt = initialValue;
                 this.Speaker = initialValue;
                 this.WalkAwayTopic = initialValue;
@@ -304,11 +304,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Topic = Topic;
                 this.PreviousDialog = PreviousDialog;
                 this.FavorLevel = FavorLevel;
-                this.LinkTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkTo, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkTo, []);
                 this.ResponseData = ResponseData;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnknownData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponsesUnknownData.Mask<TItem>?>>?>(UnknownData, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponsesUnknownData.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.UnknownData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponsesUnknownData.Mask<TItem>?>>?>(UnknownData, []);
                 this.Prompt = Prompt;
                 this.Speaker = Speaker;
                 this.WalkAwayTopic = WalkAwayTopic;
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FavorLevel = eval(this.FavorLevel);
                 if (LinkTo != null)
                 {
-                    obj.LinkTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkTo.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LinkTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkTo.Overall), []);
                     if (LinkTo.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ResponseData = eval(this.ResponseData);
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), []);
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (UnknownData != null)
                 {
-                    obj.UnknownData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponsesUnknownData.Mask<R>?>>?>(eval(this.UnknownData.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponsesUnknownData.Mask<R>?>>());
+                    obj.UnknownData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponsesUnknownData.Mask<R>?>>?>(eval(this.UnknownData.Overall), []);
                     if (UnknownData.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponsesUnknownData.Mask<R>?>>();

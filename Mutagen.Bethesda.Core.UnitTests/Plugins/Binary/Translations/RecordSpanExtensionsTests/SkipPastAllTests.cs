@@ -11,7 +11,7 @@ public class SkipPastAllTests : RecordSpanExtensionTests
     [Fact]
     public void SkipPastAllEmpty()
     {
-        byte[] b = Array.Empty<byte>();
+        byte[] b = [];
         RecordSpanExtensions.SkipPastAll(
                 new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion,
                 TestRecordTypes.EDID, out var numPassed)

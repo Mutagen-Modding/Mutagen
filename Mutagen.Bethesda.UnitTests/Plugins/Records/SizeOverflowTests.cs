@@ -46,7 +46,7 @@ public abstract class SizeOverflowTests
         worldspace.OffsetData = new byte[ushort.MaxValue + 1];
         using (var writer = new MutagenWriter(mockFileSystem.File.OpenWrite(path), GameConstants.SkyrimSE))
         {
-            writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
+            writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, []);
             writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             worldspace.WriteToBinary(writer);
         }
@@ -68,7 +68,7 @@ public abstract class SizeOverflowTests
         };
         using (var writer = new MutagenWriter(mockFileSystem.File.OpenWrite(path), GameConstants.SkyrimSE))
         {
-            writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, Enumerable.Empty<IMasterReferenceGetter>());
+            writer.MetaData.MasterReferences = new MasterReferenceCollection(ModKey.Null, []);
             writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             worldspace.WriteToBinary(writer);
         }

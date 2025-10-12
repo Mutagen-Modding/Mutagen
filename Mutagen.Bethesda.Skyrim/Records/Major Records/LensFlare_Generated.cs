@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ColorInfluence = initialValue;
                 this.FadeDistanceRadiusScale = initialValue;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ColorInfluence = ColorInfluence;
                 this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
-                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, Enumerable.Empty<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>());
+                this.Sprites = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LensFlareSprite.Mask<TItem>?>>?>(Sprites, []);
             }
 
             #pragma warning disable CS8618
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FadeDistanceRadiusScale = eval(this.FadeDistanceRadiusScale);
                 if (Sprites != null)
                 {
-                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), Enumerable.Empty<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>());
+                    obj.Sprites = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>?>(eval(this.Sprites.Overall), []);
                     if (Sprites.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LensFlareSprite.Mask<R>?>>();

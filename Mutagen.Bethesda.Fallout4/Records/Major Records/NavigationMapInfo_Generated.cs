@@ -175,9 +175,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = initialValue;
                 this.Point = initialValue;
                 this.UnknownFloat = initialValue;
-                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
+                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(initialValue, []);
                 this.Island = new MaskItem<TItem, IslandData.Mask<TItem>?>(initialValue, new IslandData.Mask<TItem>(initialValue));
                 this.Unknown2 = initialValue;
                 this.Parent = new MaskItem<TItem, ANavigationMapInfoParent.Mask<TItem>?>(initialValue, new ANavigationMapInfoParent.Mask<TItem>(initialValue));
@@ -199,9 +199,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Unknown = Unknown;
                 this.Point = Point;
                 this.UnknownFloat = UnknownFloat;
-                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MergedTo, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PreferredMerges, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(LinkedDoors, Enumerable.Empty<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>());
+                this.MergedTo = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MergedTo, []);
+                this.PreferredMerges = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PreferredMerges, []);
+                this.LinkedDoors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDoor.Mask<TItem>?>>?>(LinkedDoors, []);
                 this.Island = new MaskItem<TItem, IslandData.Mask<TItem>?>(Island, new IslandData.Mask<TItem>(Island));
                 this.Unknown2 = Unknown2;
                 this.Parent = new MaskItem<TItem, ANavigationMapInfoParent.Mask<TItem>?>(Parent, new ANavigationMapInfoParent.Mask<TItem>(Parent));
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.UnknownFloat = eval(this.UnknownFloat);
                 if (MergedTo != null)
                 {
-                    obj.MergedTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MergedTo.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MergedTo = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MergedTo.Overall), []);
                     if (MergedTo.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (PreferredMerges != null)
                 {
-                    obj.PreferredMerges = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PreferredMerges.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PreferredMerges = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PreferredMerges.Overall), []);
                     if (PreferredMerges.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (LinkedDoors != null)
                 {
-                    obj.LinkedDoors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>?>(eval(this.LinkedDoors.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>());
+                    obj.LinkedDoors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>?>(eval(this.LinkedDoors.Overall), []);
                     if (LinkedDoors.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>();

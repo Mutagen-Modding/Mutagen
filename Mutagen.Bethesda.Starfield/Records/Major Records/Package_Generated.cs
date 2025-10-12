@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ScheduleMinute = initialValue;
                 this.Unknown3 = initialValue;
                 this.ScheduleDurationInMinutes = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.IdleAnimations = new MaskItem<TItem, PackageIdles.Mask<TItem>?>(initialValue, new PackageIdles.Mask<TItem>(initialValue));
                 this.CombatStyle = initialValue;
                 this.OwnerQuest = initialValue;
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DataInputVersion = initialValue;
                 this.Data = new MaskItem<TItem, IEnumerable<MaskItemIndexed<SByte, TItem, APackageData.Mask<TItem>?>>?>(initialValue, null);
                 this.PackageGroup = initialValue;
-                this.ProcedureTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PackageBranch.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PackageBranch.Mask<TItem>?>>());
+                this.ProcedureTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PackageBranch.Mask<TItem>?>>?>(initialValue, []);
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ScheduleMinute = ScheduleMinute;
                 this.Unknown3 = Unknown3;
                 this.ScheduleDurationInMinutes = ScheduleDurationInMinutes;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.IdleAnimations = new MaskItem<TItem, PackageIdles.Mask<TItem>?>(IdleAnimations, new PackageIdles.Mask<TItem>(IdleAnimations));
                 this.CombatStyle = CombatStyle;
                 this.OwnerQuest = OwnerQuest;
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DataInputVersion = DataInputVersion;
                 this.Data = new MaskItem<TItem, IEnumerable<MaskItemIndexed<SByte, TItem, APackageData.Mask<TItem>?>>?>(Data, null);
                 this.PackageGroup = PackageGroup;
-                this.ProcedureTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PackageBranch.Mask<TItem>?>>?>(ProcedureTree, Enumerable.Empty<MaskItemIndexed<TItem, PackageBranch.Mask<TItem>?>>());
+                this.ProcedureTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PackageBranch.Mask<TItem>?>>?>(ProcedureTree, []);
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnBegin, new PackageEvent.Mask<TItem>(OnBegin));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnEnd, new PackageEvent.Mask<TItem>(OnEnd));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnChange, new PackageEvent.Mask<TItem>(OnChange));
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ScheduleDurationInMinutes = eval(this.ScheduleDurationInMinutes);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.PackageGroup = eval(this.PackageGroup);
                 if (ProcedureTree != null)
                 {
-                    obj.ProcedureTree = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PackageBranch.Mask<R>?>>?>(eval(this.ProcedureTree.Overall), Enumerable.Empty<MaskItemIndexed<R, PackageBranch.Mask<R>?>>());
+                    obj.ProcedureTree = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PackageBranch.Mask<R>?>>?>(eval(this.ProcedureTree.Overall), []);
                     if (ProcedureTree.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PackageBranch.Mask<R>?>>();

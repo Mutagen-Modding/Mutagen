@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ChargeTime = initialValue;
                 this.BaseEnchantment = initialValue;
                 this.WornRestrictions = initialValue;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, []);
                 this.ENITDataTypeState = initialValue;
             }
 
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ChargeTime = ChargeTime;
                 this.BaseEnchantment = BaseEnchantment;
                 this.WornRestrictions = WornRestrictions;
-                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, []);
                 this.ENITDataTypeState = ENITDataTypeState;
             }
 
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.WornRestrictions = eval(this.WornRestrictions);
                 if (Effects != null)
                 {
-                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
                     if (Effects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();

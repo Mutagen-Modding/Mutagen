@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem Members)
             {
-                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(Members, Enumerable.Empty<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>());
+                this.Members = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptProperty.Mask<TItem>?>>?>(Members, []);
             }
 
             #pragma warning disable CS8618
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Members != null)
                 {
-                    obj.Members = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>?>(eval(this.Members.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>());
+                    obj.Members = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>?>(eval(this.Members.Overall), []);
                     if (Members.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScriptProperty.Mask<R>?>>();

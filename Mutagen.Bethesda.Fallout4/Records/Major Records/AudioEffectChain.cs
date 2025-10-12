@@ -95,7 +95,7 @@ partial class AudioEffectChainBinaryWriteTranslation
 
 partial class AudioEffectChainBinaryOverlay
 {
-    public IReadOnlyList<IAAudioEffectGetter> Effects { get; private set; } = Array.Empty<IAAudioEffectGetter>();
+    public IReadOnlyList<IAAudioEffectGetter> Effects { get; private set; } = [];
     
     partial void EffectsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

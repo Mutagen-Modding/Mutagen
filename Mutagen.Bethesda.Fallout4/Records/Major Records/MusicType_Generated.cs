@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Flags = initialValue;
                 this.Data = new MaskItem<TItem, MusicTypeData.Mask<TItem>?>(initialValue, new MusicTypeData.Mask<TItem>(initialValue));
                 this.FadeDuration = initialValue;
-                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Flags = Flags;
                 this.Data = new MaskItem<TItem, MusicTypeData.Mask<TItem>?>(Data, new MusicTypeData.Mask<TItem>(Data));
                 this.FadeDuration = FadeDuration;
-                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Tracks, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Tracks, []);
             }
 
             #pragma warning disable CS8618
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FadeDuration = eval(this.FadeDuration);
                 if (Tracks != null)
                 {
-                    obj.Tracks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Tracks.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Tracks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Tracks.Overall), []);
                     if (Tracks.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

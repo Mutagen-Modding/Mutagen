@@ -739,8 +739,8 @@ public static class ListsModsMixIn
         return ret;
     }
 
-    public static IModListingGetter ToModListing(this ILoadOrderListingGetter listing, bool existsOnDisk)
+    public static IModListingGetter ToModListing(this ILoadOrderListingGetter listing, bool modExists)
     {
-        return new ModListing(listing.ModKey, listing.Enabled, ghostSuffix: listing.GhostSuffix, existsOnDisk: existsOnDisk);
+        return new ModListing(listing.ModKey, listing.Enabled, ghostSuffix: listing.GhostSuffix, modExists: modExists);
     }
 }

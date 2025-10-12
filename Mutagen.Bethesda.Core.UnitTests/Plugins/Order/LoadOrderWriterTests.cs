@@ -25,7 +25,7 @@ public class LoadOrderWriterTests
         var markers = Substitute.For<IHasEnabledMarkersProvider>();
         markers.HasEnabledMarkers.Returns(false);
         var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
-        implicitMods.Listings.Returns(Array.Empty<ModKey>());
+        implicitMods.Listings.Returns([]);
         new LoadOrderWriter(
                 fs,
                 markers,
@@ -52,7 +52,7 @@ public class LoadOrderWriterTests
         var markers = Substitute.For<IHasEnabledMarkersProvider>();
         markers.HasEnabledMarkers.Returns(true);
         var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
-        implicitMods.Listings.Returns(Array.Empty<ModKey>());
+        implicitMods.Listings.Returns([]);
         new LoadOrderWriter(
                 fs,
                 markers,

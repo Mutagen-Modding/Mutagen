@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
         <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -125,6 +125,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Extensions\GetOrAddAsOverrideMixIns.cs" />
         <Compile Include="Extensions\ListsModsMixIn.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -334,6 +335,7 @@
         <Compile Include="Plugins\IO\DI\ModFilesMover.cs" />
         <Compile Include="Plugins\IO\AssociatedModFileCategory.cs" />
         <Compile Include="Plugins\IO\PluginUtilityIO.cs" />
+        <Compile Include="Plugins\IWinningOverrideProvider.cs" />
         <Compile Include="Plugins\Masters\DI\FormIDTranslator.cs" />
         <Compile Include="Plugins\Masters\DI\IKeyedMasterStyleReader.cs" />
         <Compile Include="Plugins\Masters\DI\MasterFlagsLookupCompiler.cs" />

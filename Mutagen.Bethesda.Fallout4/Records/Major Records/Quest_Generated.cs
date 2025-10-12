@@ -334,21 +334,21 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Event = initialValue;
                 this.Location = initialValue;
                 this.QuestCompletionXp = initialValue;
-                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Filter = initialValue;
-                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, []);
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
                 this.QuestGroup = initialValue;
                 this.SwfFile = initialValue;
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
-                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
-                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
+                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(initialValue, []);
+                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, []);
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -395,21 +395,21 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Event = Event;
                 this.Location = Location;
                 this.QuestCompletionXp = QuestCompletionXp;
-                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, []);
                 this.Filter = Filter;
-                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, []);
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, []);
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(Aliases, []);
                 this.Description = Description;
                 this.QuestGroup = QuestGroup;
                 this.SwfFile = SwfFile;
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
-                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(DialogBranches, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
-                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
+                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(DialogBranches, []);
+                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, []);
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, []);
             }
 
             #pragma warning disable CS8618
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.QuestCompletionXp = eval(this.QuestCompletionXp);
                 if (TextDisplayGlobals != null)
                 {
-                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), []);
                     if (TextDisplayGlobals.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Filter = eval(this.Filter);
                 if (DialogConditions != null)
                 {
-                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), []);
                     if (DialogConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (UnusedConditions != null)
                 {
-                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), []);
                     if (UnusedConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
@@ -857,7 +857,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Objectives != null)
                 {
-                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestObjective.Mask<R>?>>());
+                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), []);
                     if (Objectives.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestObjective.Mask<R>?>>();
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Aliases != null)
                 {
-                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>());
+                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), []);
                     if (Aliases.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>();
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 if (DialogBranches != null)
                 {
-                    obj.DialogBranches = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogBranch.Mask<R>?>>?>(eval(this.DialogBranches.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogBranch.Mask<R>?>>());
+                    obj.DialogBranches = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogBranch.Mask<R>?>>?>(eval(this.DialogBranches.Overall), []);
                     if (DialogBranches.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogBranch.Mask<R>?>>();
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (DialogTopics != null)
                 {
-                    obj.DialogTopics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogTopic.Mask<R>?>>?>(eval(this.DialogTopics.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogTopic.Mask<R>?>>());
+                    obj.DialogTopics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogTopic.Mask<R>?>>?>(eval(this.DialogTopics.Overall), []);
                     if (DialogTopics.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogTopic.Mask<R>?>>();
@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Scenes != null)
                 {
-                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Scene.Mask<R>?>>?>(eval(this.Scenes.Overall), Enumerable.Empty<MaskItemIndexed<R, Scene.Mask<R>?>>());
+                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Scene.Mask<R>?>>?>(eval(this.Scenes.Overall), []);
                     if (Scenes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Scene.Mask<R>?>>();

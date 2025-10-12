@@ -16085,6 +16085,26 @@ namespace Mutagen.Bethesda.Starfield
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                case "GameSettingBool":
+                case "IGameSettingBoolGetter":
+                case "IGameSettingBool":
+                case "IGameSettingBoolInternal":
+                case "GameSettingUInt":
+                case "IGameSettingUIntGetter":
+                case "IGameSettingUInt":
+                case "IGameSettingUIntInternal":
                     return obj.GameSettings;
                 case "Keyword":
                 case "IKeywordGetter":
@@ -16654,6 +16674,34 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAObjectModificationGetter":
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
+                case "WeaponModification":
+                case "IWeaponModificationGetter":
+                case "IWeaponModification":
+                case "IWeaponModificationInternal":
+                case "ArmorModification":
+                case "IArmorModificationGetter":
+                case "IArmorModification":
+                case "IArmorModificationInternal":
+                case "FloraModification":
+                case "IFloraModificationGetter":
+                case "IFloraModification":
+                case "IFloraModificationInternal":
+                case "NpcModification":
+                case "INpcModificationGetter":
+                case "INpcModification":
+                case "INpcModificationInternal":
+                case "ContainerModification":
+                case "IContainerModificationGetter":
+                case "IContainerModification":
+                case "IContainerModificationInternal":
+                case "ObjectModification":
+                case "IObjectModificationGetter":
+                case "IObjectModification":
+                case "IObjectModificationInternal":
+                case "UnknownObjectModification":
+                case "IUnknownObjectModificationGetter":
+                case "IUnknownObjectModification":
+                case "IUnknownObjectModificationInternal":
                     return obj.ObjectModifications;
                 case "Zoom":
                 case "IZoomGetter":

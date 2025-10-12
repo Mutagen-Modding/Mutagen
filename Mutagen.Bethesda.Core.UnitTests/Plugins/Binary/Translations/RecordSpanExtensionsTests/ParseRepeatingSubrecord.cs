@@ -13,7 +13,7 @@ public class ParseRepeatingSubrecord : RecordSpanExtensionTests
     [Fact]
     public void ParseRepeatingSubrecordEmptyData()
     {
-        byte[] b = Array.Empty<byte>();
+        byte[] b = [];
         RecordSpanExtensions.ParseRepeatingSubrecord(new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion, RecordTypes.EDID, out var len)
             .ShouldBeEmpty();
         len.ShouldBe(0);

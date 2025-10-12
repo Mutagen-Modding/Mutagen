@@ -203,13 +203,13 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(initialValue, []);
                 this.AvailableMorphs = new MaskItem<TItem, AvailableMorphs.Mask<TItem>?>(initialValue, new AvailableMorphs.Mask<TItem>(initialValue));
-                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.DefaultFaceTexture = initialValue;
-                this.TintMasks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>());
+                this.TintMasks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
@@ -223,13 +223,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TintMasks,
                 TItem Model)
             {
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(HeadParts, Enumerable.Empty<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(HeadParts, []);
                 this.AvailableMorphs = new MaskItem<TItem, AvailableMorphs.Mask<TItem>?>(AvailableMorphs, new AvailableMorphs.Mask<TItem>(AvailableMorphs));
-                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AvailableHairColors, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FaceDetails, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, []);
+                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AvailableHairColors, []);
+                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FaceDetails, []);
                 this.DefaultFaceTexture = DefaultFaceTexture;
-                this.TintMasks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>(TintMasks, Enumerable.Empty<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>());
+                this.TintMasks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>(TintMasks, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (HeadParts != null)
                 {
-                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>?>(eval(this.HeadParts.Overall), Enumerable.Empty<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>());
+                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>?>(eval(this.HeadParts.Overall), []);
                     if (HeadParts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>();
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AvailableMorphs = this.AvailableMorphs == null ? null : new MaskItem<R, AvailableMorphs.Mask<R>?>(eval(this.AvailableMorphs.Overall), this.AvailableMorphs.Specific?.Translate(eval));
                 if (RacePresets != null)
                 {
-                    obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), []);
                     if (RacePresets.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (AvailableHairColors != null)
                 {
-                    obj.AvailableHairColors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AvailableHairColors.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AvailableHairColors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AvailableHairColors.Overall), []);
                     if (AvailableHairColors.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (FaceDetails != null)
                 {
-                    obj.FaceDetails = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FaceDetails.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.FaceDetails = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FaceDetails.Overall), []);
                     if (FaceDetails.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DefaultFaceTexture = eval(this.DefaultFaceTexture);
                 if (TintMasks != null)
                 {
-                    obj.TintMasks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintAssets.Mask<R>?>>?>(eval(this.TintMasks.Overall), Enumerable.Empty<MaskItemIndexed<R, TintAssets.Mask<R>?>>());
+                    obj.TintMasks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintAssets.Mask<R>?>>?>(eval(this.TintMasks.Overall), []);
                     if (TintMasks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TintAssets.Mask<R>?>>();

@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Abbreviation = initialValue;
                 this.CNAM = initialValue;
                 this.Skill = new MaskItem<TItem, ActorValueSkill.Mask<TItem>?>(initialValue, new ActorValueSkill.Mask<TItem>(initialValue));
-                this.PerkTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValuePerkNode.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorValuePerkNode.Mask<TItem>?>>());
+                this.PerkTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValuePerkNode.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Abbreviation = Abbreviation;
                 this.CNAM = CNAM;
                 this.Skill = new MaskItem<TItem, ActorValueSkill.Mask<TItem>?>(Skill, new ActorValueSkill.Mask<TItem>(Skill));
-                this.PerkTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValuePerkNode.Mask<TItem>?>>?>(PerkTree, Enumerable.Empty<MaskItemIndexed<TItem, ActorValuePerkNode.Mask<TItem>?>>());
+                this.PerkTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValuePerkNode.Mask<TItem>?>>?>(PerkTree, []);
             }
 
             #pragma warning disable CS8618
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Skill = this.Skill == null ? null : new MaskItem<R, ActorValueSkill.Mask<R>?>(eval(this.Skill.Overall), this.Skill.Specific?.Translate(eval));
                 if (PerkTree != null)
                 {
-                    obj.PerkTree = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>>?>(eval(this.PerkTree.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>>());
+                    obj.PerkTree = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>>?>(eval(this.PerkTree.Overall), []);
                     if (PerkTree.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>>();

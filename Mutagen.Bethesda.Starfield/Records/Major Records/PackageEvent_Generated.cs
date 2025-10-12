@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Idle = initialValue;
-                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>());
+                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Topics)
             {
                 this.Idle = Idle;
-                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(Topics, Enumerable.Empty<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>());
+                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(Topics, []);
             }
 
             #pragma warning disable CS8618
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Idle = eval(this.Idle);
                 if (Topics != null)
                 {
-                    obj.Topics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ATopicReference.Mask<R>?>>?>(eval(this.Topics.Overall), Enumerable.Empty<MaskItemIndexed<R, ATopicReference.Mask<R>?>>());
+                    obj.Topics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ATopicReference.Mask<R>?>>?>(eval(this.Topics.Overall), []);
                     if (Topics.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ATopicReference.Mask<R>?>>();

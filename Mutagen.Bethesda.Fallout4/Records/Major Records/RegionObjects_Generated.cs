@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(initialValue, []);
                 this.LodDisplayDistanceMultiplier = initialValue;
                 this.OcclusionAccuracyDist = initialValue;
             }
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Priority: Priority,
                 Icons: Icons)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(Objects, []);
                 this.LodDisplayDistanceMultiplier = LodDisplayDistanceMultiplier;
                 this.OcclusionAccuracyDist = OcclusionAccuracyDist;
             }
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionObject.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionObject.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionObject.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionObject.Mask<R>?>>();

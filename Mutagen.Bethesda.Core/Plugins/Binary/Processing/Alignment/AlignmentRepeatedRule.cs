@@ -52,7 +52,7 @@ public sealed class AlignmentRepeatedRule : AlignmentRule
         {
             throw new NotImplementedException();
         }
-        if (inputStream.Complete) return Array.Empty<byte>();
+        if (inputStream.Complete) return [];
         var dataList = new List<List<ReadOnlyMemorySlice<byte>>>();
         var latestList = new List<ReadOnlyMemorySlice<byte>>();
         var encountered = new HashSet<RecordType>(RecordTypes);

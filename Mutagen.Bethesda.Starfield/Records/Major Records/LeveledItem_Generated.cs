@@ -301,23 +301,23 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.XALG = initialValue;
                 this.ChanceNone = initialValue;
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.UseChanceNoneGlobal = initialValue;
                 this.RequiredBiome = initialValue;
                 this.RequiredResourceVein = initialValue;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
-                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, []);
+                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(initialValue, []);
                 this.EpicLootChance = initialValue;
                 this.MarkerColor = initialValue;
                 this.OverrideName = initialValue;
                 this.LegendaryItemDefaultListRank = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.XALG = XALG;
                 this.ChanceNone = ChanceNone;
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.UseChanceNoneGlobal = UseChanceNoneGlobal;
                 this.RequiredBiome = RequiredBiome;
                 this.RequiredResourceVein = RequiredResourceVein;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
-                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(FilterKeywordChances, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, []);
+                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(FilterKeywordChances, []);
                 this.EpicLootChance = EpicLootChance;
                 this.MarkerColor = MarkerColor;
                 this.OverrideName = OverrideName;
                 this.LegendaryItemDefaultListRank = LegendaryItemDefaultListRank;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, []);
             }
 
             #pragma warning disable CS8618
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.RequiredResourceVein = eval(this.RequiredResourceVein);
                 if (Entries != null)
                 {
-                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>());
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), []);
                     if (Entries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>();
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (FilterKeywordChances != null)
                 {
-                    obj.FilterKeywordChances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>?>(eval(this.FilterKeywordChances.Overall), Enumerable.Empty<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>());
+                    obj.FilterKeywordChances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>?>(eval(this.FilterKeywordChances.Overall), []);
                     if (FilterKeywordChances.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>();
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (ForcedLocations != null)
                 {
-                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), []);
                     if (ForcedLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

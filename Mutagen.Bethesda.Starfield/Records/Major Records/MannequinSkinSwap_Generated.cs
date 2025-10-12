@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.MSSS = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Items)
             {
                 this.MSSS = MSSS;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwapItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MSSS = eval(this.MSSS);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MannequinSkinSwapItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, MannequinSkinSwapItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MannequinSkinSwapItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MannequinSkinSwapItem.Mask<R>?>>();

@@ -276,9 +276,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(initialValue, new SceneAdapter.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
-                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>());
-                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>());
-                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>());
+                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(initialValue, []);
+                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(initialValue, []);
+                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>(initialValue, []);
                 this.Unused = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(initialValue, new ScenePhaseUnusedData.Mask<TItem>(initialValue));
                 this.Unused2 = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(initialValue, new ScenePhaseUnusedData.Mask<TItem>(initialValue));
                 this.Quest = initialValue;
@@ -287,8 +287,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CameraDistanceOverride = initialValue;
                 this.DialogueDistanceOverride = initialValue;
                 this.FovOverride = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.SetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(initialValue, new SceneSetParentQuestStage.Mask<TItem>(initialValue));
                 this.Notes = initialValue;
                 this.Template = initialValue;
@@ -333,9 +333,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(VirtualMachineAdapter, new SceneAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
-                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(Phases, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>());
-                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(Actors, Enumerable.Empty<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>());
-                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>(Actions, Enumerable.Empty<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>());
+                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(Phases, []);
+                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(Actors, []);
+                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneAction.Mask<TItem>?>>?>(Actions, []);
                 this.Unused = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(Unused, new ScenePhaseUnusedData.Mask<TItem>(Unused));
                 this.Unused2 = new MaskItem<TItem, ScenePhaseUnusedData.Mask<TItem>?>(Unused2, new ScenePhaseUnusedData.Mask<TItem>(Unused2));
                 this.Quest = Quest;
@@ -344,8 +344,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.CameraDistanceOverride = CameraDistanceOverride;
                 this.DialogueDistanceOverride = DialogueDistanceOverride;
                 this.FovOverride = FovOverride;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.SetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(SetParentQuestStage, new SceneSetParentQuestStage.Mask<TItem>(SetParentQuestStage));
                 this.Notes = Notes;
                 this.Template = Template;
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Flags = eval(this.Flags);
                 if (Phases != null)
                 {
-                    obj.Phases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhase.Mask<R>?>>?>(eval(this.Phases.Overall), Enumerable.Empty<MaskItemIndexed<R, ScenePhase.Mask<R>?>>());
+                    obj.Phases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhase.Mask<R>?>>?>(eval(this.Phases.Overall), []);
                     if (Phases.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScenePhase.Mask<R>?>>();
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Actors != null)
                 {
-                    obj.Actors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneActor.Mask<R>?>>?>(eval(this.Actors.Overall), Enumerable.Empty<MaskItemIndexed<R, SceneActor.Mask<R>?>>());
+                    obj.Actors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneActor.Mask<R>?>>?>(eval(this.Actors.Overall), []);
                     if (Actors.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SceneActor.Mask<R>?>>();
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Actions != null)
                 {
-                    obj.Actions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneAction.Mask<R>?>>?>(eval(this.Actions.Overall), Enumerable.Empty<MaskItemIndexed<R, SceneAction.Mask<R>?>>());
+                    obj.Actions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneAction.Mask<R>?>>?>(eval(this.Actions.Overall), []);
                     if (Actions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SceneAction.Mask<R>?>>();
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FovOverride = eval(this.FovOverride);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

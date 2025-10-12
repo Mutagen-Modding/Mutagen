@@ -471,6 +471,112 @@ public class FormKeyTests
     #endregion
     #endregion
 
+    #region IComparable<FormKey>
+    [Fact]
+    public void CompareTo_SameFormKey_ReturnsZero()
+    {
+        var fk = FormKey.Factory("123456:Skyrim.esm");
+        fk.CompareTo(fk).ShouldBe(0);
+    }
+
+    [Fact]
+    public void CompareTo_EqualFormKeys_ReturnsZero()
+    {
+        var fk1 = FormKey.Factory("123456:Skyrim.esm");
+        var fk2 = FormKey.Factory("123456:Skyrim.esm");
+        fk1.CompareTo(fk2).ShouldBe(0);
+    }
+
+    [Fact]
+    public void CompareTo_DifferentModKey_OrdersByModKey()
+    {
+        var fk1 = FormKey.Factory("123456:Knights.esm");
+        var fk2 = FormKey.Factory("123456:Skyrim.esm");
+        fk1.CompareTo(fk2).ShouldBeLessThan(0);
+        fk2.CompareTo(fk1).ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public void CompareTo_SameModKeyDifferentID_OrdersByID()
+    {
+        var fk1 = FormKey.Factory("123456:Skyrim.esm");
+        var fk2 = FormKey.Factory("234567:Skyrim.esm");
+        fk1.CompareTo(fk2).ShouldBeLessThan(0);
+        fk2.CompareTo(fk1).ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public void CompareTo_DifferentModTypesSameName_OrdersByModKey()
+    {
+        var fk1 = FormKey.Factory("123456:Skyrim.esm");
+        var fk2 = FormKey.Factory("123456:Skyrim.esp");
+        var result = fk1.CompareTo(fk2);
+        result.ShouldNotBe(0);
+    }
+
+    [Fact]
+    public void CompareTo_NullFormKeys_ReturnsZero()
+    {
+        FormKey.Null.CompareTo(FormKey.Null).ShouldBe(0);
+    }
+
+    [Fact]
+    public void CompareTo_OneNullOneNot_OrdersNullFirst()
+    {
+        var nonNull = FormKey.Factory("123456:Skyrim.esm");
+        FormKey.Null.CompareTo(nonNull).ShouldBeLessThan(0);
+        nonNull.CompareTo(FormKey.Null).ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public void CompareTo_NoneFormKeys_ReturnsZero()
+    {
+        FormKey.None.CompareTo(FormKey.None).ShouldBe(0);
+    }
+
+    [Fact]
+    public void CompareTo_ZeroIDsWithDifferentModKeys_OrdersByModKey()
+    {
+        var fk1 = new FormKey(ModKey.FromNameAndExtension("Knights.esm"), 0);
+        var fk2 = new FormKey(ModKey.FromNameAndExtension("Skyrim.esm"), 0);
+        fk1.CompareTo(fk2).ShouldBeLessThan(0);
+        fk2.CompareTo(fk1).ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public void CompareTo_CaseInsensitiveModKeyComparison()
+    {
+        var fk1 = new FormKey(ModKey.FromNameAndExtension("knights.esm"), 123456);
+        var fk2 = new FormKey(ModKey.FromNameAndExtension("KNIGHTS.ESM"), 123456);
+        fk1.CompareTo(fk2).ShouldBe(0);
+    }
+
+    [Fact]
+    public void CompareTo_CanBeUsedForSorting()
+    {
+        var formKeys = new List<FormKey>
+        {
+            FormKey.Factory("300000:Skyrim.esm"),
+            FormKey.Factory("100000:Knights.esm"),
+            FormKey.Factory("200000:Knights.esm"),
+            FormKey.Factory("100000:Skyrim.esm"),
+            FormKey.Null
+        };
+
+        formKeys.Sort();
+
+        formKeys[0].ShouldBe(FormKey.Null);
+        formKeys[1].ModKey.Name.ShouldBe("Knights");
+        formKeys[1].ID.ShouldBe(0x100000u);
+        formKeys[2].ModKey.Name.ShouldBe("Knights");
+        formKeys[2].ID.ShouldBe(0x200000u);
+        formKeys[3].ModKey.Name.ShouldBe("Skyrim");
+        formKeys[3].ID.ShouldBe(0x100000u);
+        formKeys[4].ModKey.Name.ShouldBe("Skyrim");
+        formKeys[4].ID.ShouldBe(0x300000u);
+    }
+    #endregion
+
     #region Strings
 
     [Fact]

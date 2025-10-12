@@ -418,24 +418,24 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.PersistentActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
-                this.PersistentActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
-                this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
-                this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
-                this.UniqueActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
-                this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
-                this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WorldspaceCellsAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.WorldspaceCellsStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.WorldspaceCellsRemoved = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.InitiallyDisabledReferencesAdded = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.InitiallyDisabledReferencesStatic = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.EnableParentReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
-                this.EnableParentReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
+                this.PersistentActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(initialValue, []);
+                this.PersistentActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(initialValue, []);
+                this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, []);
+                this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, []);
+                this.UniqueActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, []);
+                this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, []);
+                this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.WorldspaceCellsAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, []);
+                this.WorldspaceCellsStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, []);
+                this.WorldspaceCellsRemoved = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, []);
+                this.InitiallyDisabledReferencesAdded = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.InitiallyDisabledReferencesStatic = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.EnableParentReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(initialValue, []);
+                this.EnableParentReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ParentLocation = initialValue;
                 this.Music = initialValue;
                 this.UnreportedCrimeFaction = initialValue;
@@ -487,24 +487,24 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.PersistentActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(PersistentActorReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
-                this.PersistentActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(PersistentActorReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
-                this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PersistentActorReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
-                this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
-                this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
-                this.UniqueActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UniqueActorReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
-                this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
-                this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypeReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WorldspaceCellsAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsAdded, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.WorldspaceCellsStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsStatic, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.WorldspaceCellsRemoved = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsRemoved, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.InitiallyDisabledReferencesAdded = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(InitiallyDisabledReferencesAdded, Enumerable.Empty<(int Index, TItem Value)>());
-                this.InitiallyDisabledReferencesStatic = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(InitiallyDisabledReferencesStatic, Enumerable.Empty<(int Index, TItem Value)>());
-                this.EnableParentReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(EnableParentReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
-                this.EnableParentReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(EnableParentReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
+                this.PersistentActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(PersistentActorReferencesAdded, []);
+                this.PersistentActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(PersistentActorReferencesStatic, []);
+                this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PersistentActorReferencesRemoved, []);
+                this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesAdded, []);
+                this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesStatic, []);
+                this.UniqueActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UniqueActorReferencesRemoved, []);
+                this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesAdded, []);
+                this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesStatic, []);
+                this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypeReferencesRemoved, []);
+                this.WorldspaceCellsAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsAdded, []);
+                this.WorldspaceCellsStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsStatic, []);
+                this.WorldspaceCellsRemoved = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsRemoved, []);
+                this.InitiallyDisabledReferencesAdded = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(InitiallyDisabledReferencesAdded, []);
+                this.InitiallyDisabledReferencesStatic = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(InitiallyDisabledReferencesStatic, []);
+                this.EnableParentReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(EnableParentReferencesAdded, []);
+                this.EnableParentReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(EnableParentReferencesStatic, []);
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.ParentLocation = ParentLocation;
                 this.Music = Music;
                 this.UnreportedCrimeFaction = UnreportedCrimeFaction;
@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (PersistentActorReferencesAdded != null)
                 {
-                    obj.PersistentActorReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>?>(eval(this.PersistentActorReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>());
+                    obj.PersistentActorReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>?>(eval(this.PersistentActorReferencesAdded.Overall), []);
                     if (PersistentActorReferencesAdded.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>();
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (PersistentActorReferencesStatic != null)
                 {
-                    obj.PersistentActorReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>?>(eval(this.PersistentActorReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>());
+                    obj.PersistentActorReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>?>(eval(this.PersistentActorReferencesStatic.Overall), []);
                     if (PersistentActorReferencesStatic.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>();
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (PersistentActorReferencesRemoved != null)
                 {
-                    obj.PersistentActorReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PersistentActorReferencesRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PersistentActorReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PersistentActorReferencesRemoved.Overall), []);
                     if (PersistentActorReferencesRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (UniqueActorReferencesAdded != null)
                 {
-                    obj.UniqueActorReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>?>(eval(this.UniqueActorReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>());
+                    obj.UniqueActorReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>?>(eval(this.UniqueActorReferencesAdded.Overall), []);
                     if (UniqueActorReferencesAdded.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>();
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (UniqueActorReferencesStatic != null)
                 {
-                    obj.UniqueActorReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>?>(eval(this.UniqueActorReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>());
+                    obj.UniqueActorReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>?>(eval(this.UniqueActorReferencesStatic.Overall), []);
                     if (UniqueActorReferencesStatic.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>();
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (UniqueActorReferencesRemoved != null)
                 {
-                    obj.UniqueActorReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UniqueActorReferencesRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.UniqueActorReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UniqueActorReferencesRemoved.Overall), []);
                     if (UniqueActorReferencesRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (LocationRefTypeReferencesAdded != null)
                 {
-                    obj.LocationRefTypeReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>?>(eval(this.LocationRefTypeReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>());
+                    obj.LocationRefTypeReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>?>(eval(this.LocationRefTypeReferencesAdded.Overall), []);
                     if (LocationRefTypeReferencesAdded.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>();
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (LocationRefTypeReferencesStatic != null)
                 {
-                    obj.LocationRefTypeReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>?>(eval(this.LocationRefTypeReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>());
+                    obj.LocationRefTypeReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>?>(eval(this.LocationRefTypeReferencesStatic.Overall), []);
                     if (LocationRefTypeReferencesStatic.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>();
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (LocationRefTypeReferencesRemoved != null)
                 {
-                    obj.LocationRefTypeReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypeReferencesRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LocationRefTypeReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypeReferencesRemoved.Overall), []);
                     if (LocationRefTypeReferencesRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (WorldspaceCellsAdded != null)
                 {
-                    obj.WorldspaceCellsAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    obj.WorldspaceCellsAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsAdded.Overall), []);
                     if (WorldspaceCellsAdded.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (WorldspaceCellsStatic != null)
                 {
-                    obj.WorldspaceCellsStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    obj.WorldspaceCellsStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsStatic.Overall), []);
                     if (WorldspaceCellsStatic.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (WorldspaceCellsRemoved != null)
                 {
-                    obj.WorldspaceCellsRemoved = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsRemoved.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    obj.WorldspaceCellsRemoved = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsRemoved.Overall), []);
                     if (WorldspaceCellsRemoved.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (InitiallyDisabledReferencesAdded != null)
                 {
-                    obj.InitiallyDisabledReferencesAdded = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InitiallyDisabledReferencesAdded.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.InitiallyDisabledReferencesAdded = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InitiallyDisabledReferencesAdded.Overall), []);
                     if (InitiallyDisabledReferencesAdded.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (InitiallyDisabledReferencesStatic != null)
                 {
-                    obj.InitiallyDisabledReferencesStatic = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InitiallyDisabledReferencesStatic.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.InitiallyDisabledReferencesStatic = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InitiallyDisabledReferencesStatic.Overall), []);
                     if (InitiallyDisabledReferencesStatic.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (EnableParentReferencesAdded != null)
                 {
-                    obj.EnableParentReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>?>(eval(this.EnableParentReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>());
+                    obj.EnableParentReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>?>(eval(this.EnableParentReferencesAdded.Overall), []);
                     if (EnableParentReferencesAdded.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>();
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (EnableParentReferencesStatic != null)
                 {
-                    obj.EnableParentReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>?>(eval(this.EnableParentReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>());
+                    obj.EnableParentReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>?>(eval(this.EnableParentReferencesStatic.Overall), []);
                     if (EnableParentReferencesStatic.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>();
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

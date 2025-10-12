@@ -116,153 +116,153 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(mod, cacheType);
 
         // Do linked interfaces first, as this tests a specific edge case
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IEffectRecordGetter>(objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve(objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve(objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve(objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve(objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IMajorRecordGetter>(objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect1.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect1.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<IObjectEffectGetter>(objEffect2.EditorID, out var rec));
             Assert.Equal(rec.FormKey, objEffect2.FormKey);
         });
         if (ReadOnly)
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var _));
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.False(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var _));
             });
@@ -276,62 +276,62 @@ public partial class ALinkingTests
         }
         else
         {
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<ObjectEffect>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<ObjectEffect>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<ObjectEffect>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<ObjectEffect>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffect>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffect>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffect>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IObjectEffect>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecord>(objEffect1.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecord>(objEffect1.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect1.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecord>(objEffect2.FormKey, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
             });
-            WrapPotentialThrow(cacheType, style, () =>
+            WrapPotentialThrow(cacheType, style, null, () =>
             {
                 Assert.True(package.TryResolve<IEffectRecord>(objEffect2.EditorID, out var rec));
                 Assert.Equal(rec.FormKey, objEffect2.FormKey);
@@ -346,27 +346,27 @@ public partial class ALinkingTests
     {
         var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
         var (style, package) = GetLinkCache(wrapper, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<INpcGetter>(TestFileFormKey, out var rec));
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<INpcGetter>(TestFileEditorID, out var rec));
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(package.TryResolve<INpc>(TestFileFormKey, out var rec));
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(package.TryResolve<INpc>(TestFileEditorID, out var rec));
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(package.TryResolve<Npc>(TestFileFormKey, out var rec));
         });
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.False(package.TryResolve<Npc>(TestFileEditorID, out var rec));
         });
@@ -379,7 +379,7 @@ public partial class ALinkingTests
     {
         var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
         var (style, package) = GetLinkCache(wrapper, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(package.TryResolve<INpcGetter>(TestFileEditorID.ToLower(), out var rec));
         });

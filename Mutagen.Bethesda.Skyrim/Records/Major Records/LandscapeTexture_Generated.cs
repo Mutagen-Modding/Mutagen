@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HavokFriction = initialValue;
                 this.HavokRestitution = initialValue;
                 this.TextureSpecularExponent = initialValue;
-                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Flags = initialValue;
             }
 
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HavokFriction = HavokFriction;
                 this.HavokRestitution = HavokRestitution;
                 this.TextureSpecularExponent = TextureSpecularExponent;
-                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, []);
                 this.Flags = Flags;
             }
 
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
                 if (Grasses != null)
                 {
-                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Grasses.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Grasses = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Grasses.Overall), []);
                     if (Grasses.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

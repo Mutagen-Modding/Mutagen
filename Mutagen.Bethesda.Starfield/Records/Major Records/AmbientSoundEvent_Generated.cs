@@ -148,12 +148,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.WeatherKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MarkerKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WeatherKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.MarkerKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.SwitchGroup = initialValue;
                 this.ReEvaluateIntervalUseCustom = initialValue;
                 this.ReEvaluateIntervalSeconds = initialValue;
-                this.PlanetCustomizations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundPlanetCustomization.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AmbientSoundPlanetCustomization.Mask<TItem>?>>());
+                this.PlanetCustomizations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundPlanetCustomization.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -166,12 +166,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem PlanetCustomizations)
             {
                 this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound, new SoundReference.Mask<TItem>(Sound));
-                this.WeatherKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WeatherKeywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MarkerKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MarkerKeywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WeatherKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WeatherKeywords, []);
+                this.MarkerKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MarkerKeywords, []);
                 this.SwitchGroup = SwitchGroup;
                 this.ReEvaluateIntervalUseCustom = ReEvaluateIntervalUseCustom;
                 this.ReEvaluateIntervalSeconds = ReEvaluateIntervalSeconds;
-                this.PlanetCustomizations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundPlanetCustomization.Mask<TItem>?>>?>(PlanetCustomizations, Enumerable.Empty<MaskItemIndexed<TItem, AmbientSoundPlanetCustomization.Mask<TItem>?>>());
+                this.PlanetCustomizations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundPlanetCustomization.Mask<TItem>?>>?>(PlanetCustomizations, []);
             }
 
             #pragma warning disable CS8618
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Sound = this.Sound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound.Overall), this.Sound.Specific?.Translate(eval));
                 if (WeatherKeywords != null)
                 {
-                    obj.WeatherKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WeatherKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.WeatherKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WeatherKeywords.Overall), []);
                     if (WeatherKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MarkerKeywords != null)
                 {
-                    obj.MarkerKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MarkerKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MarkerKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MarkerKeywords.Overall), []);
                     if (MarkerKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ReEvaluateIntervalSeconds = eval(this.ReEvaluateIntervalSeconds);
                 if (PlanetCustomizations != null)
                 {
-                    obj.PlanetCustomizations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AmbientSoundPlanetCustomization.Mask<R>?>>?>(eval(this.PlanetCustomizations.Overall), Enumerable.Empty<MaskItemIndexed<R, AmbientSoundPlanetCustomization.Mask<R>?>>());
+                    obj.PlanetCustomizations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AmbientSoundPlanetCustomization.Mask<R>?>>?>(eval(this.PlanetCustomizations.Overall), []);
                     if (PlanetCustomizations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AmbientSoundPlanetCustomization.Mask<R>?>>();

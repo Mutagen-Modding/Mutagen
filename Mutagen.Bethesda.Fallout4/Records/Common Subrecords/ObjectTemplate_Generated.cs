@@ -1517,11 +1517,11 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LevelMin = initialValue;
                 this.LevelMax = initialValue;
                 this.Default = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.MinLevelForRanks = initialValue;
                 this.AltLevelsPerTier = initialValue;
-                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplateInclude.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplateInclude.Mask<TItem>?>>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>());
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplateInclude.Mask<TItem>?>>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(initialValue, []);
             }
         
             public Mask(
@@ -1543,11 +1543,11 @@ namespace Mutagen.Bethesda.Fallout4
                 this.LevelMin = LevelMin;
                 this.LevelMax = LevelMax;
                 this.Default = Default;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.MinLevelForRanks = MinLevelForRanks;
                 this.AltLevelsPerTier = AltLevelsPerTier;
-                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplateInclude.Mask<TItem>?>>?>(Includes, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplateInclude.Mask<TItem>?>>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>());
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplateInclude.Mask<TItem>?>>?>(Includes, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(Properties, []);
             }
         
             #pragma warning disable CS8618
@@ -1732,7 +1732,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Default = eval(this.Default);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AltLevelsPerTier = eval(this.AltLevelsPerTier);
                 if (Includes != null)
                 {
-                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplateInclude.Mask<R>?>>?>(eval(this.Includes.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplateInclude.Mask<R>?>>());
+                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplateInclude.Mask<R>?>>?>(eval(this.Includes.Overall), []);
                     if (Includes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectTemplateInclude.Mask<R>?>>();
@@ -1763,7 +1763,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AObjectModProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, AObjectModProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AObjectModProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AObjectModProperty.Mask<R>?>>();

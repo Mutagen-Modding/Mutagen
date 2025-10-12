@@ -315,12 +315,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FeaturedItemMessage = initialValue;
                 this.Value = initialValue;
                 this.Weight = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>());
-                this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -364,12 +364,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.FeaturedItemMessage = FeaturedItemMessage;
                 this.Value = Value;
                 this.Weight = Weight;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>());
-                this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ComponentDisplayIndices, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MiscItemComponent.Mask<TItem>?>>?>(Components, []);
+                this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ComponentDisplayIndices, []);
             }
 
             #pragma warning disable CS8618
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PutDownSound = eval(this.PutDownSound);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Weight = eval(this.Weight);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MiscItemComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, MiscItemComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MiscItemComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MiscItemComponent.Mask<R>?>>();
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (ComponentDisplayIndices != null)
                 {
-                    obj.ComponentDisplayIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ComponentDisplayIndices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ComponentDisplayIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ComponentDisplayIndices.Overall), []);
                     if (ComponentDisplayIndices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

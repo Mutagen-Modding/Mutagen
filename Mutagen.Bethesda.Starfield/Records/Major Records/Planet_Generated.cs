@@ -263,10 +263,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.MasterWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>());
-                this.AddedWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>());
-                this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.MasterWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>(initialValue, []);
+                this.AddedWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>(initialValue, []);
+                this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(initialValue, []);
                 this.SurfaceTree = initialValue;
                 this.ScanWorldspaceMultiplier = initialValue;
                 this.Name = initialValue;
@@ -324,10 +324,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.MasterWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>(MasterWorldspaces, Enumerable.Empty<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>());
-                this.AddedWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>(AddedWorldspaces, Enumerable.Empty<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>());
-                this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(Biomes, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
+                this.MasterWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>(MasterWorldspaces, []);
+                this.AddedWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>(AddedWorldspaces, []);
+                this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(Biomes, []);
                 this.SurfaceTree = SurfaceTree;
                 this.ScanWorldspaceMultiplier = ScanWorldspaceMultiplier;
                 this.Name = Name;
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterWorldspaces != null)
                 {
-                    obj.MasterWorldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>?>(eval(this.MasterWorldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>());
+                    obj.MasterWorldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>?>(eval(this.MasterWorldspaces.Overall), []);
                     if (MasterWorldspaces.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>();
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedWorldspaces != null)
                 {
-                    obj.AddedWorldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>?>(eval(this.AddedWorldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>());
+                    obj.AddedWorldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>?>(eval(this.AddedWorldspaces.Overall), []);
                     if (AddedWorldspaces.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>();
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Biomes != null)
                 {
-                    obj.Biomes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetBiome.Mask<R>?>>?>(eval(this.Biomes.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetBiome.Mask<R>?>>());
+                    obj.Biomes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetBiome.Mask<R>?>>?>(eval(this.Biomes.Overall), []);
                     if (Biomes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PlanetBiome.Mask<R>?>>();

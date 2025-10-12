@@ -172,11 +172,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BranchType = initialValue;
                 this.Note = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Root = new MaskItem<TItem, PackageRoot.Mask<TItem>?>(initialValue, new PackageRoot.Mask<TItem>(initialValue));
                 this.ProcedureType = initialValue;
                 this.Flags = initialValue;
-                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FlagsOverride = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(initialValue, new PackageFlagsOverride.Mask<TItem>(initialValue));
                 this.FlagsOverrideUnused = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(initialValue, new PackageFlagsOverride.Mask<TItem>(initialValue));
             }
@@ -194,11 +194,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BranchType = BranchType;
                 this.Note = Note;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Root = new MaskItem<TItem, PackageRoot.Mask<TItem>?>(Root, new PackageRoot.Mask<TItem>(Root));
                 this.ProcedureType = ProcedureType;
                 this.Flags = Flags;
-                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DataInputIndices, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DataInputIndices, []);
                 this.FlagsOverride = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(FlagsOverride, new PackageFlagsOverride.Mask<TItem>(FlagsOverride));
                 this.FlagsOverrideUnused = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(FlagsOverrideUnused, new PackageFlagsOverride.Mask<TItem>(FlagsOverrideUnused));
             }
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Note = eval(this.Note);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 if (DataInputIndices != null)
                 {
-                    obj.DataInputIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DataInputIndices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DataInputIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DataInputIndices.Overall), []);
                     if (DataInputIndices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

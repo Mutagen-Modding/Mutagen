@@ -176,15 +176,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Parent = initialValue;
-                this.Nodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>());
-                this.ParentNodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>());
-                this.BNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Nodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>(initialValue, []);
+                this.ParentNodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>(initialValue, []);
+                this.BNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.NextNodeID = initialValue;
                 this.STPT = initialValue;
                 this.CNAM = initialValue;
-                this.SnapTemplateRnamTraversal = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>());
+                this.SnapTemplateRnamTraversal = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -213,15 +213,15 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Parent = Parent;
-                this.Nodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>(Nodes, Enumerable.Empty<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>());
-                this.ParentNodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>(ParentNodes, Enumerable.Empty<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>());
-                this.BNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BNAM, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Nodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapNodeEntry.Mask<TItem>?>>?>(Nodes, []);
+                this.ParentNodes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapParentNodeEntry.Mask<TItem>?>>?>(ParentNodes, []);
+                this.BNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BNAM, []);
                 this.NextNodeID = NextNodeID;
                 this.STPT = STPT;
                 this.CNAM = CNAM;
-                this.SnapTemplateRnamTraversal = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>(SnapTemplateRnamTraversal, Enumerable.Empty<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>());
+                this.SnapTemplateRnamTraversal = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapTemplateRnamTraversal.Mask<TItem>?>>?>(SnapTemplateRnamTraversal, []);
             }
 
             #pragma warning disable CS8618
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Parent = eval(this.Parent);
                 if (Nodes != null)
                 {
-                    obj.Nodes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>?>(eval(this.Nodes.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>());
+                    obj.Nodes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>?>(eval(this.Nodes.Overall), []);
                     if (Nodes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SnapNodeEntry.Mask<R>?>>();
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ParentNodes != null)
                 {
-                    obj.ParentNodes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>?>(eval(this.ParentNodes.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>());
+                    obj.ParentNodes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>?>(eval(this.ParentNodes.Overall), []);
                     if (ParentNodes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SnapParentNodeEntry.Mask<R>?>>();
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (BNAM != null)
                 {
-                    obj.BNAM = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BNAM.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.BNAM = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BNAM.Overall), []);
                     if (BNAM.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -502,7 +502,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CNAM = eval(this.CNAM);
                 if (SnapTemplateRnamTraversal != null)
                 {
-                    obj.SnapTemplateRnamTraversal = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>?>(eval(this.SnapTemplateRnamTraversal.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>());
+                    obj.SnapTemplateRnamTraversal = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>?>(eval(this.SnapTemplateRnamTraversal.Overall), []);
                     if (SnapTemplateRnamTraversal.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SnapTemplateRnamTraversal.Mask<R>?>>();

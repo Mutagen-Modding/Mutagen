@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
                 this.Description = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Projectile = initialValue;
                 this.Flags = initialValue;
                 this.Damage = initialValue;
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
                 this.Description = Description;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Projectile = Projectile;
                 this.Flags = Flags;
                 this.Damage = Damage;
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

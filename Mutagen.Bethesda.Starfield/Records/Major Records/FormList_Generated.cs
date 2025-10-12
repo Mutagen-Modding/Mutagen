@@ -171,10 +171,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.AddToList = initialValue;
             }
 
@@ -200,10 +200,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
-                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(ConditionalEntries, Enumerable.Empty<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, []);
+                this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(ConditionalEntries, []);
                 this.AddToList = AddToList;
             }
 
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ConditionalEntries != null)
                 {
-                    obj.ConditionalEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>?>(eval(this.ConditionalEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>());
+                    obj.ConditionalEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>?>(eval(this.ConditionalEntries.Overall), []);
                     if (ConditionalEntries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>();

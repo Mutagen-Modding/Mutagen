@@ -500,7 +500,7 @@ partial class PackageBinaryWriteTranslation
 
 partial class PackageBinaryOverlay
 {
-    public IReadOnlyList<IPackageBranchGetter> ProcedureTree { get; private set; } = Array.Empty<IPackageBranchGetter>();
+    public IReadOnlyList<IPackageBranchGetter> ProcedureTree { get; private set; } = [];
 
     private readonly Dictionary<sbyte, APackageData> _packageData = new Dictionary<sbyte, APackageData>();
     public IReadOnlyDictionary<sbyte, IAPackageDataGetter> Data => _packageData.Covariant<sbyte, APackageData, IAPackageDataGetter>();

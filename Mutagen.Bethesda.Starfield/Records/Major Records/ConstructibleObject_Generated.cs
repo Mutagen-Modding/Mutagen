@@ -306,12 +306,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
                 this.WorkbenchKeyword = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
-                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(initialValue, []);
                 this.CreatedObject = initialValue;
                 this.AmountProduced = initialValue;
                 this.MenuSortOrder = initialValue;
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.RepairComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.RepairComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.LearnMethod = initialValue;
                 this.Value = initialValue;
                 this.MenuArtObject = initialValue;
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseReturnScaleTable = initialValue;
                 this.LearnChance = initialValue;
                 this.MaxBuildCountGlobal = initialValue;
-                this.RecipeFilters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RecipeFilters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.InstantiationFilterKeyword = initialValue;
                 this.Flags = initialValue;
             }
@@ -373,12 +373,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Description = Description;
                 this.WorkbenchKeyword = WorkbenchKeyword;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(ConstructableComponents, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
-                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(ConstructableComponents, []);
+                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, []);
                 this.CreatedObject = CreatedObject;
                 this.AmountProduced = AmountProduced;
                 this.MenuSortOrder = MenuSortOrder;
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
-                this.RepairComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(RepairComponents, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.RepairComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(RepairComponents, []);
                 this.LearnMethod = LearnMethod;
                 this.Value = Value;
                 this.MenuArtObject = MenuArtObject;
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseReturnScaleTable = BaseReturnScaleTable;
                 this.LearnChance = LearnChance;
                 this.MaxBuildCountGlobal = MaxBuildCountGlobal;
-                this.RecipeFilters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RecipeFilters, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RecipeFilters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RecipeFilters, []);
                 this.InstantiationFilterKeyword = InstantiationFilterKeyword;
                 this.Flags = Flags;
             }
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -752,7 +752,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WorkbenchKeyword = eval(this.WorkbenchKeyword);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ConstructableComponents != null)
                 {
-                    obj.ConstructableComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.ConstructableComponents.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>());
+                    obj.ConstructableComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.ConstructableComponents.Overall), []);
                     if (ConstructableComponents.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RequiredPerks != null)
                 {
-                    obj.RequiredPerks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>?>(eval(this.RequiredPerks.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>());
+                    obj.RequiredPerks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>?>(eval(this.RequiredPerks.Overall), []);
                     if (RequiredPerks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>();
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
                 if (RepairComponents != null)
                 {
-                    obj.RepairComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.RepairComponents.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>());
+                    obj.RepairComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.RepairComponents.Overall), []);
                     if (RepairComponents.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MaxBuildCountGlobal = eval(this.MaxBuildCountGlobal);
                 if (RecipeFilters != null)
                 {
-                    obj.RecipeFilters = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RecipeFilters.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RecipeFilters = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RecipeFilters.Overall), []);
                     if (RecipeFilters.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

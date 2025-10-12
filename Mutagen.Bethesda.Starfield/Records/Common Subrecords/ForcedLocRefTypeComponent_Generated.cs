@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem ForcedLocations)
             : base()
             {
-                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, []);
             }
 
             #pragma warning disable CS8618
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (ForcedLocations != null)
                 {
-                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), []);
                     if (ForcedLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

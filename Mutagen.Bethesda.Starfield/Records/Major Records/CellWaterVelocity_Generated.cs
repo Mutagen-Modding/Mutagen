@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Offset = default(P3Float);
             item.Unknown = default(Int32);
             item.Angle = default(P3Float);
-            item.UnknownBytes = Array.Empty<byte>();
+            item.UnknownBytes = [];
         }
         
         #region Mutagen

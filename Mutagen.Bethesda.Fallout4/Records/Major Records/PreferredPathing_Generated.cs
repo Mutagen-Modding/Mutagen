@@ -119,16 +119,16 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.NavmeshSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshSet.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshSet.Mask<TItem>?>>());
-                this.NavmeshTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshNode.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshNode.Mask<TItem>?>>());
+                this.NavmeshSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshSet.Mask<TItem>?>>?>(initialValue, []);
+                this.NavmeshTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshNode.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
                 TItem NavmeshSets,
                 TItem NavmeshTree)
             {
-                this.NavmeshSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshSet.Mask<TItem>?>>?>(NavmeshSets, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshSet.Mask<TItem>?>>());
-                this.NavmeshTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshNode.Mask<TItem>?>>?>(NavmeshTree, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshNode.Mask<TItem>?>>());
+                this.NavmeshSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshSet.Mask<TItem>?>>?>(NavmeshSets, []);
+                this.NavmeshTree = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshNode.Mask<TItem>?>>?>(NavmeshTree, []);
             }
 
             #pragma warning disable CS8618
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (NavmeshSets != null)
                 {
-                    obj.NavmeshSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshSet.Mask<R>?>>?>(eval(this.NavmeshSets.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshSet.Mask<R>?>>());
+                    obj.NavmeshSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshSet.Mask<R>?>>?>(eval(this.NavmeshSets.Overall), []);
                     if (NavmeshSets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshSet.Mask<R>?>>();
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (NavmeshTree != null)
                 {
-                    obj.NavmeshTree = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshNode.Mask<R>?>>?>(eval(this.NavmeshTree.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshNode.Mask<R>?>>());
+                    obj.NavmeshTree = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshNode.Mask<R>?>>?>(eval(this.NavmeshTree.Overall), []);
                     if (NavmeshTree.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshNode.Mask<R>?>>();

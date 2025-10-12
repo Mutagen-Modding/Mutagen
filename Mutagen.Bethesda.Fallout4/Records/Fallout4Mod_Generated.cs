@@ -11754,6 +11754,26 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                case "GameSettingBool":
+                case "IGameSettingBoolGetter":
+                case "IGameSettingBool":
+                case "IGameSettingBoolInternal":
+                case "GameSettingUInt":
+                case "IGameSettingUIntGetter":
+                case "IGameSettingUInt":
+                case "IGameSettingUIntInternal":
                     return obj.GameSettings;
                 case "Keyword":
                 case "IKeywordGetter":
@@ -11789,11 +11809,35 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
+                case "GlobalInt":
+                case "IGlobalIntGetter":
+                case "IGlobalInt":
+                case "IGlobalIntInternal":
+                case "GlobalShort":
+                case "IGlobalShortGetter":
+                case "IGlobalShort":
+                case "IGlobalShortInternal":
+                case "GlobalFloat":
+                case "IGlobalFloatGetter":
+                case "IGlobalFloat":
+                case "IGlobalFloatInternal":
+                case "GlobalBool":
+                case "IGlobalBoolGetter":
+                case "IGlobalBool":
+                case "IGlobalBoolInternal":
                     return obj.Globals;
                 case "ADamageType":
                 case "IADamageTypeGetter":
                 case "IADamageType":
                 case "IADamageTypeInternal":
+                case "DamageType":
+                case "IDamageTypeGetter":
+                case "IDamageType":
+                case "IDamageTypeInternal":
+                case "DamageTypeIndexed":
+                case "IDamageTypeIndexedGetter":
+                case "IDamageTypeIndexed":
+                case "IDamageTypeIndexedInternal":
                     return obj.DamageTypes;
                 case "Class":
                 case "IClassGetter":
@@ -12313,6 +12357,26 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IAObjectModificationGetter":
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
+                case "ArmorModification":
+                case "IArmorModificationGetter":
+                case "IArmorModification":
+                case "IArmorModificationInternal":
+                case "NpcModification":
+                case "INpcModificationGetter":
+                case "INpcModification":
+                case "INpcModificationInternal":
+                case "WeaponModification":
+                case "IWeaponModificationGetter":
+                case "IWeaponModification":
+                case "IWeaponModificationInternal":
+                case "ObjectModification":
+                case "IObjectModificationGetter":
+                case "IObjectModification":
+                case "IObjectModificationInternal":
+                case "UnknownObjectModification":
+                case "IUnknownObjectModificationGetter":
+                case "IUnknownObjectModification":
+                case "IUnknownObjectModificationInternal":
                     return obj.ObjectModifications;
                 case "MaterialSwap":
                 case "IMaterialSwapGetter":

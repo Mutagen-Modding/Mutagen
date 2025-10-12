@@ -25,7 +25,7 @@ public class GenerationLineDetectionSettingsReader
                 .StartWith(Unit.Default)
                 .Select(_ =>
                 {
-                    if (!fileSystem.File.Exists(path)) return Enumerable.Empty<string>();
+                    if (!fileSystem.File.Exists(path)) return [];
                     return fileSystem.File.ReadAllLines(path).Where(x => !x.IsNullOrWhitespace());
                 })
                 .Select(x => x.AsObservableChangeSet())

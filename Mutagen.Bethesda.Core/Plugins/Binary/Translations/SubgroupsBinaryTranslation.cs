@@ -23,7 +23,7 @@ internal sealed class SubgroupsBinaryTranslation<T>
 
     private static readonly Lazy<FillFunc>? Fill;
     public static readonly bool IsPartialFormable;
-    public static readonly IReadOnlyCollection<int> Subgroups = Array.Empty<int>();
+    public static readonly IReadOnlyCollection<int> Subgroups = [];
 
     static SubgroupsBinaryTranslation()
     {
@@ -33,7 +33,7 @@ internal sealed class SubgroupsBinaryTranslation<T>
         if (!IsPartialFormable) return;
         Fill = new Lazy<FillFunc>(GetCreateFunc);
         Subgroups = (IReadOnlyCollection<int>?)LoquiRegistration.GetRegister(typeof(T))!.GetType()
-            .GetProperty(Constants.SubgroupsMember, BindingFlags.Static | BindingFlags.Public)?.GetValue(null) ?? Array.Empty<int>();
+            .GetProperty(Constants.SubgroupsMember, BindingFlags.Static | BindingFlags.Public)?.GetValue(null) ?? [];
     }
     
     private static FillFunc GetCreateFunc()

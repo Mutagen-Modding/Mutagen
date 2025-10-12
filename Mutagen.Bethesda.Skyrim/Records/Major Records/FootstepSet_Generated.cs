@@ -149,11 +149,11 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -178,11 +178,11 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardAlternateFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps2, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardFootsteps, []);
+                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardFootsteps, []);
+                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps, []);
+                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardAlternateFootsteps, []);
+                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps2, []);
             }
 
             #pragma warning disable CS8618
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (WalkForwardFootsteps != null)
                 {
-                    obj.WalkForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.WalkForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardFootsteps.Overall), []);
                     if (WalkForwardFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (RunForwardFootsteps != null)
                 {
-                    obj.RunForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RunForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardFootsteps.Overall), []);
                     if (RunForwardFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (WalkForwardAlternateFootsteps != null)
                 {
-                    obj.WalkForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.WalkForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps.Overall), []);
                     if (WalkForwardAlternateFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (RunForwardAlternateFootsteps != null)
                 {
-                    obj.RunForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardAlternateFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RunForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardAlternateFootsteps.Overall), []);
                     if (RunForwardAlternateFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (WalkForwardAlternateFootsteps2 != null)
                 {
-                    obj.WalkForwardAlternateFootsteps2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps2.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.WalkForwardAlternateFootsteps2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps2.Overall), []);
                     if (WalkForwardAlternateFootsteps2.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -132,10 +132,10 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>());
+                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>(initialValue, []);
                 this.PGAG = initialValue;
-                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>());
-                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>());
+                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>(initialValue, []);
+                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -155,10 +155,10 @@ namespace Mutagen.Bethesda.Oblivion
                 EditorID: EditorID,
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
-                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>(PointToPointConnections, Enumerable.Empty<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>());
+                this.PointToPointConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PathGridPoint.Mask<TItem>?>>?>(PointToPointConnections, []);
                 this.PGAG = PGAG;
-                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>(InterCellConnections, Enumerable.Empty<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>());
-                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>(PointToReferenceMappings, Enumerable.Empty<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>());
+                this.InterCellConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InterCellPoint.Mask<TItem>?>>?>(InterCellConnections, []);
+                this.PointToReferenceMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PointToReferenceMapping.Mask<TItem>?>>?>(PointToReferenceMappings, []);
             }
 
             #pragma warning disable CS8618
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 if (PointToPointConnections != null)
                 {
-                    obj.PointToPointConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>?>(eval(this.PointToPointConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>());
+                    obj.PointToPointConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>?>(eval(this.PointToPointConnections.Overall), []);
                     if (PointToPointConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PathGridPoint.Mask<R>?>>();
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.PGAG = eval(this.PGAG);
                 if (InterCellConnections != null)
                 {
-                    obj.InterCellConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>?>(eval(this.InterCellConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>());
+                    obj.InterCellConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>?>(eval(this.InterCellConnections.Overall), []);
                     if (InterCellConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, InterCellPoint.Mask<R>?>>();
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (PointToReferenceMappings != null)
                 {
-                    obj.PointToReferenceMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>?>(eval(this.PointToReferenceMappings.Overall), Enumerable.Empty<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>());
+                    obj.PointToReferenceMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>?>(eval(this.PointToReferenceMappings.Overall), []);
                     if (PointToReferenceMappings.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PointToReferenceMapping.Mask<R>?>>();

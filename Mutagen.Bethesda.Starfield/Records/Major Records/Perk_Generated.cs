@@ -217,8 +217,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Restriction = initialValue;
                 this.PerkIcon = initialValue;
                 this.Training = initialValue;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>());
-                this.BackgroundSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>(initialValue, []);
+                this.BackgroundSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -260,8 +260,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Restriction = Restriction;
                 this.PerkIcon = PerkIcon;
                 this.Training = Training;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>());
-                this.BackgroundSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BackgroundSkills, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>(Ranks, []);
+                this.BackgroundSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BackgroundSkills, []);
             }
 
             #pragma warning disable CS8618
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Training = eval(this.Training);
                 if (Ranks != null)
                 {
-                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkRank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, PerkRank.Mask<R>?>>());
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkRank.Mask<R>?>>?>(eval(this.Ranks.Overall), []);
                     if (Ranks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PerkRank.Mask<R>?>>();
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (BackgroundSkills != null)
                 {
-                    obj.BackgroundSkills = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BackgroundSkills.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.BackgroundSkills = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BackgroundSkills.Overall), []);
                     if (BackgroundSkills.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

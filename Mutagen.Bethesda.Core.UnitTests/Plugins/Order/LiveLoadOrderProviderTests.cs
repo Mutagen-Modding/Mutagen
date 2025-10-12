@@ -96,9 +96,9 @@ public class LiveLoadOrderProviderTests
         sut.PluginLive.Changed.Returns(pluginSubj);
         sut.CccLive.Changed.Returns(Observable.Empty<Unit>());
         sut.ListingsProvider.Get().Returns(
-            _ => Enumerable.Empty<ILoadOrderListingGetter>(),
+            _ => [],
             _ => throw new NotImplementedException(),
-            _ => Enumerable.Empty<ILoadOrderListingGetter>());
+            _ => []);
             
         sut.Get(out var state, scheduler)
             .AsObservableList();
@@ -128,7 +128,7 @@ public class LiveLoadOrderProviderTests
         sut.ListingsProvider.Get().Returns(
             _ => throw new NotImplementedException(),
             _ => throw new NotImplementedException(),
-            _ => Enumerable.Empty<ILoadOrderListingGetter>());
+            _ => []);
             
         sut.Get(out var state, scheduler)
             .AsObservableList();

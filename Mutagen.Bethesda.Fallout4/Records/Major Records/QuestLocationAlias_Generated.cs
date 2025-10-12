@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ReferenceAliasLocation = new MaskItem<TItem, ReferenceAliasLocation.Mask<TItem>?>(initialValue, new ReferenceAliasLocation.Mask<TItem>(initialValue));
                 this.ExternalAliasLocation = new MaskItem<TItem, ExternalAliasLocation.Mask<TItem>?>(initialValue, new ExternalAliasLocation.Mask<TItem>(initialValue));
                 this.FindMatchingRefFromEvent = new MaskItem<TItem, FindMatchingRefFromEvent.Mask<TItem>?>(initialValue, new FindMatchingRefFromEvent.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.ClosestToAlias = initialValue;
             }
 
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.ReferenceAliasLocation = new MaskItem<TItem, ReferenceAliasLocation.Mask<TItem>?>(ReferenceAliasLocation, new ReferenceAliasLocation.Mask<TItem>(ReferenceAliasLocation));
                 this.ExternalAliasLocation = new MaskItem<TItem, ExternalAliasLocation.Mask<TItem>?>(ExternalAliasLocation, new ExternalAliasLocation.Mask<TItem>(ExternalAliasLocation));
                 this.FindMatchingRefFromEvent = new MaskItem<TItem, FindMatchingRefFromEvent.Mask<TItem>?>(FindMatchingRefFromEvent, new FindMatchingRefFromEvent.Mask<TItem>(FindMatchingRefFromEvent));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.ClosestToAlias = ClosestToAlias;
             }
 
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FindMatchingRefFromEvent = this.FindMatchingRefFromEvent == null ? null : new MaskItem<R, FindMatchingRefFromEvent.Mask<R>?>(eval(this.FindMatchingRefFromEvent.Overall), this.FindMatchingRefFromEvent.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

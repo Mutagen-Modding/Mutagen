@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ATAN = initialValue;
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.ProgressionEvalutor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>());
+                this.ProgressionEvalutor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>(initialValue, []);
                 this.ANAM = initialValue;
                 this.Configuration = initialValue;
             }
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ATAN = ATAN;
                 this.Name = Name;
                 this.Description = Description;
-                this.ProgressionEvalutor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>(ProgressionEvalutor, Enumerable.Empty<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>());
+                this.ProgressionEvalutor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ProgressionEvaluatorArgument.Mask<TItem>?>>?>(ProgressionEvalutor, []);
                 this.ANAM = ANAM;
                 this.Configuration = Configuration;
             }
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Description = eval(this.Description);
                 if (ProgressionEvalutor != null)
                 {
-                    obj.ProgressionEvalutor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ProgressionEvaluatorArgument.Mask<R>?>>?>(eval(this.ProgressionEvalutor.Overall), Enumerable.Empty<MaskItemIndexed<R, ProgressionEvaluatorArgument.Mask<R>?>>());
+                    obj.ProgressionEvalutor = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ProgressionEvaluatorArgument.Mask<R>?>>?>(eval(this.ProgressionEvalutor.Overall), []);
                     if (ProgressionEvalutor.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ProgressionEvaluatorArgument.Mask<R>?>>();

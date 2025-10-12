@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem PropertyList)
             {
-                this.PropertyList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PropertyList, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PropertyList = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PropertyList, []);
             }
 
             #pragma warning disable CS8618
@@ -185,7 +185,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (PropertyList != null)
                 {
-                    obj.PropertyList = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PropertyList.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PropertyList = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PropertyList.Overall), []);
                     if (PropertyList.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

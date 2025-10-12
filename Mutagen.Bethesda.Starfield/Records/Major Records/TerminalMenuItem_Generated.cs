@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ID = initialValue;
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(initialValue, new LockData.Mask<TItem>(initialValue));
                 this.Target = new MaskItem<TItem, ATerminalMenuItemTarget.Mask<TItem>?>(initialValue, new ATerminalMenuItemTarget.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ID = ID;
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(Lock, new LockData.Mask<TItem>(Lock));
                 this.Target = new MaskItem<TItem, ATerminalMenuItemTarget.Mask<TItem>?>(Target, new ATerminalMenuItemTarget.Mask<TItem>(Target));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
             }
 
             #pragma warning disable CS8618
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Target = this.Target == null ? null : new MaskItem<R, ATerminalMenuItemTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

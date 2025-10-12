@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Index = initialValue;
                 this.Flags = initialValue;
                 this.Unknown = initialValue;
-                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>());
+                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Index = Index;
                 this.Flags = Flags;
                 this.Unknown = Unknown;
-                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>(LogEntries, Enumerable.Empty<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>());
+                this.LogEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestLogEntry.Mask<TItem>?>>?>(LogEntries, []);
             }
 
             #pragma warning disable CS8618
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown = eval(this.Unknown);
                 if (LogEntries != null)
                 {
-                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestLogEntry.Mask<R>?>>?>(eval(this.LogEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestLogEntry.Mask<R>?>>());
+                    obj.LogEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestLogEntry.Mask<R>?>>?>(eval(this.LogEntries.Overall), []);
                     if (LogEntries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestLogEntry.Mask<R>?>>();

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem Collection)
             : base()
             {
-                this.Collection = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CollectionAlias.Mask<TItem>?>>?>(Collection, Enumerable.Empty<MaskItemIndexed<TItem, CollectionAlias.Mask<TItem>?>>());
+                this.Collection = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CollectionAlias.Mask<TItem>?>>?>(Collection, []);
             }
 
             #pragma warning disable CS8618
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Collection != null)
                 {
-                    obj.Collection = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CollectionAlias.Mask<R>?>>?>(eval(this.Collection.Overall), Enumerable.Empty<MaskItemIndexed<R, CollectionAlias.Mask<R>?>>());
+                    obj.Collection = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CollectionAlias.Mask<R>?>>?>(eval(this.Collection.Overall), []);
                     if (Collection.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CollectionAlias.Mask<R>?>>();

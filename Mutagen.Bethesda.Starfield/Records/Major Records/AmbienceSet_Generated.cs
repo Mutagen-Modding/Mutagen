@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>(initialValue, []);
                 this.MergeBehavior = initialValue;
                 this.WallaExterior = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>(Sounds, []);
                 this.MergeBehavior = MergeBehavior;
                 this.WallaExterior = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WallaExterior, new SoundReference.Mask<TItem>(WallaExterior));
             }
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>();

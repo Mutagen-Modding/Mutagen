@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(DamageTypes, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (DamageTypes != null)
                 {
-                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>());
+                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>?>(eval(this.DamageTypes.Overall), []);
                     if (DamageTypes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>();

@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 this.ObjectName = initialValue;
                 this.GroupName = initialValue;
-                this.PropertyNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PropertyNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Pex
             {
                 this.ObjectName = ObjectName;
                 this.GroupName = GroupName;
-                this.PropertyNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PropertyNames, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PropertyNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PropertyNames, []);
             }
 
             #pragma warning disable CS8618
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.GroupName = eval(this.GroupName);
                 if (PropertyNames != null)
                 {
-                    obj.PropertyNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PropertyNames.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PropertyNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PropertyNames.Overall), []);
                     if (PropertyNames.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -563,14 +563,14 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Skin = initialValue;
                 this.FirstPersonFlags = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.BodyPartData = initialValue;
                 this.Height = new GenderedItem<TItem>(initialValue, initialValue);
                 this.DefaultWeight = new MaskItem<TItem, GenderedItem<Weight.Mask<TItem>?>?>(initialValue, default);
@@ -590,20 +590,20 @@ namespace Mutagen.Bethesda.Starfield
                 this.OrientationLimitsRoll = initialValue;
                 this.DAT2Unknown3 = initialValue;
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SkeletalModel.Mask<TItem>?>?>?>(initialValue, default);
-                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Voices = new GenderedItem<TItem>(initialValue, initialValue);
                 this.FacegenMainClamp = initialValue;
                 this.FacegenFaceClamp = initialValue;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
                 this.AimAssistPose = initialValue;
                 this.ImpactMaterialType = initialValue;
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.WED1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.BipedObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>(initialValue, null);
-                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>());
+                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(initialValue, []);
                 this.EquipmentFlags = initialValue;
-                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>());
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(initialValue, []);
                 this.UnarmedWeapon = initialValue;
                 this.BaseMovementDefault = initialValue;
                 this.BaseMovementSwimDefault = initialValue;
@@ -611,12 +611,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChargenAndSkintones = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ChargenAndSkintones.Mask<TItem>?>?>?>(initialValue, default);
                 this.ArmorRace = initialValue;
                 this.SubgraphTemplateRace = initialValue;
-                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
+                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(initialValue, []);
                 this.IdleChatterTimeMin = initialValue;
                 this.IdleChatterTimeMax = initialValue;
                 this.DialogueQuest = initialValue;
                 this.HeadPartsAndBoneModifiers = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadPartsAndBoneModifiers.Mask<TItem>?>?>?>(initialValue, default);
-                this.MannequinSkinSwaps = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwap.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MannequinSkinSwap.Mask<TItem>?>>());
+                this.MannequinSkinSwaps = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwap.Mask<TItem>?>>?>(initialValue, []);
                 this.PluralName = initialValue;
             }
 
@@ -692,14 +692,14 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Description = Description;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, []);
                 this.Skin = Skin;
                 this.FirstPersonFlags = FirstPersonFlags;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
                 this.BodyPartData = BodyPartData;
                 this.Height = new GenderedItem<TItem>(Height, Height);
                 this.DefaultWeight = new MaskItem<TItem, GenderedItem<Weight.Mask<TItem>?>?>(DefaultWeight, default);
@@ -719,20 +719,20 @@ namespace Mutagen.Bethesda.Starfield
                 this.OrientationLimitsRoll = OrientationLimitsRoll;
                 this.DAT2Unknown3 = DAT2Unknown3;
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SkeletalModel.Mask<TItem>?>?>?>(SkeletalModel, default);
-                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, []);
                 this.Voices = new GenderedItem<TItem>(Voices, Voices);
                 this.FacegenMainClamp = FacegenMainClamp;
                 this.FacegenFaceClamp = FacegenFaceClamp;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
                 this.AimAssistPose = AimAssistPose;
                 this.ImpactMaterialType = ImpactMaterialType;
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
                 this.WED1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED1, new SoundReference.Mask<TItem>(WED1));
                 this.BipedObjects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<BipedObject, TItem, BipedObjectData.Mask<TItem>?>>?>(BipedObjects, null);
-                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(MovementDataOverrides, Enumerable.Empty<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>());
+                this.MovementDataOverrides = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MovementDataOverride.Mask<TItem>?>>?>(MovementDataOverrides, []);
                 this.EquipmentFlags = EquipmentFlags;
-                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(EquipmentSlots, Enumerable.Empty<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>());
+                this.EquipmentSlots = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EquipmentSlot.Mask<TItem>?>>?>(EquipmentSlots, []);
                 this.UnarmedWeapon = UnarmedWeapon;
                 this.BaseMovementDefault = BaseMovementDefault;
                 this.BaseMovementSwimDefault = BaseMovementSwimDefault;
@@ -740,12 +740,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChargenAndSkintones = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ChargenAndSkintones.Mask<TItem>?>?>?>(ChargenAndSkintones, default);
                 this.ArmorRace = ArmorRace;
                 this.SubgraphTemplateRace = SubgraphTemplateRace;
-                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(Subgraphs, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
+                this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(Subgraphs, []);
                 this.IdleChatterTimeMin = IdleChatterTimeMin;
                 this.IdleChatterTimeMax = IdleChatterTimeMax;
                 this.DialogueQuest = DialogueQuest;
                 this.HeadPartsAndBoneModifiers = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadPartsAndBoneModifiers.Mask<TItem>?>?>?>(HeadPartsAndBoneModifiers, default);
-                this.MannequinSkinSwaps = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwap.Mask<TItem>?>>?>(MannequinSkinSwaps, Enumerable.Empty<MaskItemIndexed<TItem, MannequinSkinSwap.Mask<TItem>?>>());
+                this.MannequinSkinSwaps = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MannequinSkinSwap.Mask<TItem>?>>?>(MannequinSkinSwaps, []);
                 this.PluralName = PluralName;
             }
 
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Description = eval(this.Description);
                 if (ActorEffect != null)
                 {
-                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), []);
                     if (ActorEffect.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FirstPersonFlags = eval(this.FirstPersonFlags);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1411,7 +1411,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Starfield
                     (m, e) => m?.Translate(e));
                 if (MovementTypeNames != null)
                 {
-                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MovementTypeNames = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MovementTypeNames.Overall), []);
                     if (MovementTypeNames.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FacegenFaceClamp = eval(this.FacegenFaceClamp);
                 if (Attacks != null)
                 {
-                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), []);
                     if (Attacks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MovementDataOverrides != null)
                 {
-                    obj.MovementDataOverrides = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>?>(eval(this.MovementDataOverrides.Overall), Enumerable.Empty<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>());
+                    obj.MovementDataOverrides = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>?>(eval(this.MovementDataOverrides.Overall), []);
                     if (MovementDataOverrides.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MovementDataOverride.Mask<R>?>>();
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.EquipmentFlags = eval(this.EquipmentFlags);
                 if (EquipmentSlots != null)
                 {
-                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>?>(eval(this.EquipmentSlots.Overall), Enumerable.Empty<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>());
+                    obj.EquipmentSlots = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>?>(eval(this.EquipmentSlots.Overall), []);
                     if (EquipmentSlots.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EquipmentSlot.Mask<R>?>>();
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SubgraphTemplateRace = eval(this.SubgraphTemplateRace);
                 if (Subgraphs != null)
                 {
-                    obj.Subgraphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Subgraph.Mask<R>?>>?>(eval(this.Subgraphs.Overall), Enumerable.Empty<MaskItemIndexed<R, Subgraph.Mask<R>?>>());
+                    obj.Subgraphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Subgraph.Mask<R>?>>?>(eval(this.Subgraphs.Overall), []);
                     if (Subgraphs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Subgraph.Mask<R>?>>();
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
                     (m, e) => m?.Translate(e));
                 if (MannequinSkinSwaps != null)
                 {
-                    obj.MannequinSkinSwaps = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MannequinSkinSwap.Mask<R>?>>?>(eval(this.MannequinSkinSwaps.Overall), Enumerable.Empty<MaskItemIndexed<R, MannequinSkinSwap.Mask<R>?>>());
+                    obj.MannequinSkinSwaps = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MannequinSkinSwap.Mask<R>?>>?>(eval(this.MannequinSkinSwaps.Overall), []);
                     if (MannequinSkinSwaps.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MannequinSkinSwap.Mask<R>?>>();

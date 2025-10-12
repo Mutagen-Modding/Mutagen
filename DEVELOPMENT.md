@@ -1,0 +1,183 @@
+# Development Notes
+
+This file contains helpful information for developers and AI assistants working on this codebase.
+
+## About Mutagen
+
+Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. It provides strongly typed interfaces and classes for game records with compile-time type safety.
+
+- **Documentation**: https://mutagen-modding.github.io/Mutagen/
+- **Discord**: https://discord.gg/53KMEsW
+
+## Project Structure
+
+### Solutions
+
+The repository contains multiple solution files for different purposes:
+
+- **Mutagen.Records.sln** - Main solution that imports everything (use this for full development)
+- **Mutagen.Core.sln** - Core library only
+- **Mutagen.UnitTests.sln** - Unit tests
+- **Mutagen.Records.[Game].sln** - Game-specific solutions (Skyrim, Fallout4, Oblivion, Starfield)
+- **Mutagen.Records.Linux.sln** - Linux-compatible subset
+
+### Key Projects
+
+- **Mutagen.Bethesda.Core** - Core library with shared functionality
+- **Mutagen.Bethesda.Kernel** - Kernel/foundation types
+- **Mutagen.Bethesda.[Game]** - Game-specific implementations (Skyrim, Fallout4, Oblivion, etc.)
+- **Mutagen.Bethesda.Generation** - Code generation infrastructure
+- **Mutagen.Bethesda.SourceGenerators** - Source generators
+- **Mutagen.Bethesda.Autofac** - Autofac DI integration
+- **Mutagen.Bethesda.Json** - JSON serialization support
+
+## Building
+
+### Prerequisites
+
+- .NET 8.0 or 9.0 SDK
+- Windows (for full solution), Linux/macOS supported with Mutagen.Records.Linux.sln
+
+### Build Commands
+
+```bash
+# Build the main solution
+dotnet build Mutagen.Records.sln
+
+# Build specific projects
+dotnet build Mutagen.Bethesda.Core/Mutagen.Bethesda.Core.csproj
+```
+
+**Note**: Initial builds and full rebuilds can take several minutes due to the large amount of generated code in this project. The codebase includes extensive code generation for game record types, which results in large generated files that need to be compiled. This is normal - be patient and allow extra time for build operations to complete.
+
+### Cleaning the Repository
+
+If you encounter build errors (e.g., error code 0x00000001), clean the repository:
+```bash
+dotnet clean Mutagen.Records.sln
+```
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+dotnet test Mutagen.UnitTests.sln
+
+# Run specific test project
+dotnet test Mutagen.Bethesda.UnitTests/Mutagen.Bethesda.UnitTests.csproj
+
+# Run tests with filter
+dotnet test --filter "FullyQualifiedName~Context"
+```
+
+### Test Projects
+
+- **Mutagen.Bethesda.UnitTests** - Main unit tests
+- **Mutagen.Bethesda.Core.UnitTests** - Core library unit tests
+
+## Common Issues
+
+### Case Sensitivity in Tests
+
+Some tests may fail on Linux/macOS due to case-sensitive filesystems. The codebase uses `StringsUtility.GetFileName()` for consistent file naming across platforms.
+
+## Code Generation
+
+Many of the public-facing APIs are code-generated. Check the following for generation logic:
+
+- `Mutagen.Bethesda.Generation` - Generation infrastructure
+- `Mutagen.Bethesda.[Game].Generator` - Game-specific generators
+- `Mutagen.Bethesda.SourceGenerators` - Roslyn source generators
+
+### Running Code Generators
+
+After modifying generation code, you need to run the generators to update the generated files. Generators must be run from their build output directories because they use relative paths to locate project files.
+
+**Important**: First build the generation solution to ensure your changes are compiled:
+
+```bash
+dotnet build Mutagen.Records.sln
+```
+
+#### Running a Single Game Generator (Faster)
+
+For most changes, you can run just one game's generator to test your modifications quickly:
+
+```bash
+# Example: Running the Skyrim generator (adjust .NET version as needed)
+cd Mutagen.Bethesda.Skyrim.Generator/bin/Debug/net9.0
+./Mutagen.Bethesda.Skyrim.Generator.exe
+```
+
+Replace `net9.0` with your installed .NET SDK version (net8.0, net9.0, net10.0, etc.).
+
+Other game generators follow the same pattern:
+- `Mutagen.Bethesda.Fallout4.Generator/bin/Debug/net9.0/Mutagen.Bethesda.Fallout4.Generator.exe`
+- `Mutagen.Bethesda.Oblivion.Generator/bin/Debug/net9.0/Mutagen.Bethesda.Oblivion.Generator.exe`
+- `Mutagen.Bethesda.Starfield.Generator/bin/Debug/net9.0/Mutagen.Bethesda.Starfield.Generator.exe`
+
+#### Running All Game Generators
+
+Once you've verified your changes work with a single game generator, run the full generator to update all games:
+
+```bash
+# From repository root
+cd Mutagen.Bethesda.Generator.All/bin/Debug/net8.0
+./Mutagen.Bethesda.Generator.All.exe
+```
+
+#### When to Use Each Generator
+
+- **Single game generator**: Use when making changes specific to one game's definitions, or for quick iteration when testing generation code changes
+- **All games generator**: Use when making changes to core generation infrastructure (like `MajorRecord` or other shared base types), or before committing your final changes
+
+#### Why Working Directory Matters
+
+The generators use relative paths like `../../../../Mutagen.Bethesda.{Game}/Records` to locate project files. Running from the build output directory ensures these relative paths resolve correctly to the repository structure.
+
+## Development Workflow
+
+### Always Verify Your Changes
+
+**Important**: After making code changes, always verify the solution builds and tests pass:
+
+```bash
+# 1. Clean the solution (if needed)
+dotnet clean Mutagen.Records.sln
+
+# 2. Build the solution
+dotnet build Mutagen.Records.sln
+
+# 3. Run tests to verify nothing broke
+dotnet test Mutagen.UnitTests.sln
+```
+
+This ensures your changes don't break the build or existing functionality.
+
+## Releases
+
+### Packaging
+- Packages are automatically generated in `/nupkg` directory when building with `GeneratePackageOnBuild=true`
+- Package versions managed centrally via `Directory.Packages.props`
+
+### Release Versioning
+- Create release tags using semantic versioning format: `<major>.<minor>.<patch>`
+- Always include the patch number, even if it's zero (e.g., `0.52.1`, not `0.52`)
+- **Do not prefix with `v`** (e.g., use `0.52.1`, not `v0.52.1`)
+- This format is required for GitVersion compatibility
+
+### Creating GitHub Release Drafts
+1. Find the last release tag: `git tag --sort=-version:refname`
+2. Get commits since last release: `git log --oneline <last-tag>..HEAD`
+3. Construct release notes by categorizing commits:
+   - **Enhancements**: New features, performance improvements, major changes
+   - **Bug Fixes**: Bug fixes and corrections
+   - **Testing & Documentation**: Test additions, documentation updates
+4. Create draft release: `gh release create <version> --draft --title "<version>" --notes "<release-notes>"`
+5. Include full changelog link: `**Full Changelog**: https://github.com/Mutagen-Modding/Mutagen/compare/<last-tag>...<new-tag>`
+
+## Contributing
+
+See the main README.md and official documentation for contribution guidelines.

@@ -170,9 +170,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = initialValue;
                 this.Icon = initialValue;
                 this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(initialValue, new QuestData.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, []);
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -199,9 +199,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Name = Name;
                 this.Icon = Icon;
                 this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(Data, new QuestData.Mask<TItem>(Data));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>?>(Targets, Enumerable.Empty<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, []);
+                this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestTarget.Mask<TItem>?>>?>(Targets, []);
             }
 
             #pragma warning disable CS8618
@@ -379,7 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Data = this.Data == null ? null : new MaskItem<R, QuestData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Targets != null)
                 {
-                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestTarget.Mask<R>?>>?>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestTarget.Mask<R>?>>());
+                    obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestTarget.Mask<R>?>>?>(eval(this.Targets.Overall), []);
                     if (Targets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestTarget.Mask<R>?>>();

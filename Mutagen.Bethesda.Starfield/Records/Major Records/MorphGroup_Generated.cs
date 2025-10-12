@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.Morphs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Morphs)
             {
                 this.Name = Name;
-                this.Morphs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Morphs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Morphs, []);
             }
 
             #pragma warning disable CS8618
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Morphs != null)
                 {
-                    obj.Morphs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Morphs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Morphs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Morphs.Overall), []);
                     if (Morphs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

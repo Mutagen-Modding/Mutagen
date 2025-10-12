@@ -132,8 +132,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BlueprintComponentItem.Mask<TItem>?>>());
-                this.BODSRows = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentBODSRow.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BlueprintComponentBODSRow.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentItem.Mask<TItem>?>>?>(initialValue, []);
+                this.BODSRows = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentBODSRow.Mask<TItem>?>>?>(initialValue, []);
                 this.BLUF = initialValue;
                 this.NextPartID = initialValue;
             }
@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem NextPartID)
             : base()
             {
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, BlueprintComponentItem.Mask<TItem>?>>());
-                this.BODSRows = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentBODSRow.Mask<TItem>?>>?>(BODSRows, Enumerable.Empty<MaskItemIndexed<TItem, BlueprintComponentBODSRow.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentItem.Mask<TItem>?>>?>(Items, []);
+                this.BODSRows = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentBODSRow.Mask<TItem>?>>?>(BODSRows, []);
                 this.BLUF = BLUF;
                 this.NextPartID = NextPartID;
             }
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BlueprintComponentItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, BlueprintComponentItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BlueprintComponentItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BlueprintComponentItem.Mask<R>?>>();
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (BODSRows != null)
                 {
-                    obj.BODSRows = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BlueprintComponentBODSRow.Mask<R>?>>?>(eval(this.BODSRows.Overall), Enumerable.Empty<MaskItemIndexed<R, BlueprintComponentBODSRow.Mask<R>?>>());
+                    obj.BODSRows = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BlueprintComponentBODSRow.Mask<R>?>>?>(eval(this.BODSRows.Overall), []);
                     if (BODSRows.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BlueprintComponentBODSRow.Mask<R>?>>();

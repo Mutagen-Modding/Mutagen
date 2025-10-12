@@ -36,7 +36,7 @@ public sealed class TimestampedPluginListingsProvider : ITimestampedPluginListin
     {
         if (!_fileSystem.File.Exists(ListingsPathContext.Path))
         {
-            return Enumerable.Empty<ILoadOrderListingGetter>();
+            return [];
         }
         var mods = RawListingsReader.Read(ListingsPathContext.Path);
         return Aligner.AlignToTimestamps(

@@ -9,7 +9,7 @@ public static class HasModsMixIn
 {
     private static bool CheckListing(IModListingGetter listing, bool? enabled, bool? present)
     {
-        return (present == null || listing.ExistsOnDisk == present)
+        return (present == null || listing.ModExists == present)
                && (enabled == null || listing.Enabled == enabled);
     }
     

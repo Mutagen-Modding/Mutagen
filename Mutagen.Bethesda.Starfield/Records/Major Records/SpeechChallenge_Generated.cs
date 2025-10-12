@@ -157,8 +157,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.SRAN = initialValue;
                 this.SGEN = initialValue;
                 this.Quest = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Scenes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Scenes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.DIFF = initialValue;
             }
 
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.SRAN = SRAN;
                 this.SGEN = SGEN;
                 this.Quest = Quest;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Scenes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Scenes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Scenes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Scenes, []);
                 this.DIFF = DIFF;
             }
 
@@ -344,7 +344,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Quest = eval(this.Quest);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Scenes != null)
                 {
-                    obj.Scenes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Scenes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Scenes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Scenes.Overall), []);
                     if (Scenes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -224,15 +224,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.WorkbenchKeyword = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.RequiredItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>());
-                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.RequiredItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>(initialValue, []);
+                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>(initialValue, []);
                 this.CreatedItem = initialValue;
                 this.NumberCreated = initialValue;
                 this.SortingPriority = initialValue;
                 this.Tier = initialValue;
                 this.CategoryKeyword = initialValue;
-                this.RequiredProjects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RequiredProjects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -267,15 +267,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Description = Description;
                 this.WorkbenchKeyword = WorkbenchKeyword;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.RequiredItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>(RequiredItems, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>());
-                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.RequiredItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>(RequiredItems, []);
+                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, []);
                 this.CreatedItem = CreatedItem;
                 this.NumberCreated = NumberCreated;
                 this.SortingPriority = SortingPriority;
                 this.Tier = Tier;
                 this.CategoryKeyword = CategoryKeyword;
-                this.RequiredProjects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RequiredProjects, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RequiredProjects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RequiredProjects, []);
             }
 
             #pragma warning disable CS8618
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WorkbenchKeyword = eval(this.WorkbenchKeyword);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RequiredItems != null)
                 {
-                    obj.RequiredItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>?>(eval(this.RequiredItems.Overall), Enumerable.Empty<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>());
+                    obj.RequiredItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>?>(eval(this.RequiredItems.Overall), []);
                     if (RequiredItems.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>();
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RequiredPerks != null)
                 {
-                    obj.RequiredPerks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResearchProjectRequiredPerk.Mask<R>?>>?>(eval(this.RequiredPerks.Overall), Enumerable.Empty<MaskItemIndexed<R, ResearchProjectRequiredPerk.Mask<R>?>>());
+                    obj.RequiredPerks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResearchProjectRequiredPerk.Mask<R>?>>?>(eval(this.RequiredPerks.Overall), []);
                     if (RequiredPerks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ResearchProjectRequiredPerk.Mask<R>?>>();
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CategoryKeyword = eval(this.CategoryKeyword);
                 if (RequiredProjects != null)
                 {
-                    obj.RequiredProjects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RequiredProjects.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RequiredProjects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RequiredProjects.Overall), []);
                     if (RequiredProjects.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

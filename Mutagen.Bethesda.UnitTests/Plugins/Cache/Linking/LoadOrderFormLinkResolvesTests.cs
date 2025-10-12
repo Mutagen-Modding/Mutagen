@@ -43,7 +43,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
@@ -80,19 +80,19 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
         });
         FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
             Assert.Same(cell, linkedCell);
         });
         FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
             Assert.Same(worldspace, linkedWorldspace);
@@ -121,7 +121,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(npc, formLink.TryResolve(package));
         });
@@ -157,17 +157,17 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(placedNpc, placedFormLink.TryResolve(package));
         });
         FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(cell, cellFormLink.TryResolve(package));
         });
         FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
         });
@@ -187,7 +187,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(spell, linkedRec);
@@ -232,19 +232,19 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
         });
         FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
             Assert.Same(cell, linkedCell);
         });
         FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
             Assert.Same(worldspace, linkedWorldspace);
@@ -265,7 +265,7 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(spell, formLink.TryResolve(package));
         });
@@ -309,17 +309,17 @@ public partial class ALinkingTests
         };
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(placedNpc, placedFormLink.Resolve(package));
         });
         FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(cell, cellFormLink.Resolve(package));
         });
         FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
         });

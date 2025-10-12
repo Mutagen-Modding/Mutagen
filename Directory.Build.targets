@@ -1,9 +1,29 @@
 <Project>
+    <!-- Clear NuGet packages after successful build for projects that generate packages -->
+    <Target Name="ClearLocalNuGetPackages" AfterTargets="Build" Condition="'$(GeneratePackageOnBuild)' == 'true'">
+        <PropertyGroup>
+            <NuGetPackagesPath>$(USERPROFILE)\.nuget\packages</NuGetPackagesPath>
+            <!-- Use PackageId if specified, otherwise use AssemblyName, otherwise use MSBuildProjectName -->
+            <CurrentPackageId Condition="'$(PackageId)' != ''">$(PackageId)</CurrentPackageId>
+            <CurrentPackageId Condition="'$(CurrentPackageId)' == '' AND '$(AssemblyName)' != ''">$(AssemblyName)</CurrentPackageId>
+            <CurrentPackageId Condition="'$(CurrentPackageId)' == ''">$(MSBuildProjectName)</CurrentPackageId>
+            <!-- Convert to lowercase for NuGet folder name -->
+            <CurrentPackageIdLower>$(CurrentPackageId.ToLowerInvariant())</CurrentPackageIdLower>
+        </PropertyGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Message Condition="$(PackageId) != ''" Importance="High" Text="Removing %25USERPROFILE%25\.nuget\packages\$(PackageId)" />
-    <Exec Condition="'$(IsWindows)'=='true' And $(PackageId) != ''" Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
-    <Exec Condition="'$(IsLinux)'=='true' And $(PackageId) != ''" Command="rm -rf &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
-  </Target>
-  
+        <Message Text="Clearing local NuGet package cache for $(CurrentPackageId)..." Importance="high" />
+
+        <!-- Windows -->
+        <Exec Condition="'$(OS)' == 'Windows_NT'"
+              Command="if exist &quot;$(NuGetPackagesPath)\$(CurrentPackageIdLower)&quot; ( echo Deleting $(NuGetPackagesPath)\$(CurrentPackageIdLower) &amp;&amp; rd /s /q &quot;$(NuGetPackagesPath)\$(CurrentPackageIdLower)&quot; )"
+              ContinueOnError="true" />
+
+        <!-- Linux/Mac -->
+        <Exec Condition="'$(OS)' != 'Windows_NT'"
+              Command="if [ -d &quot;$(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot; ]; then echo &quot;Deleting $(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot;; rm -rf &quot;$(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot;; fi"
+              ContinueOnError="true" />
+
+        <Message Text="Finished clearing local NuGet package cache for $(CurrentPackageId)." Importance="high" />
+    </Target>
+
 </Project>

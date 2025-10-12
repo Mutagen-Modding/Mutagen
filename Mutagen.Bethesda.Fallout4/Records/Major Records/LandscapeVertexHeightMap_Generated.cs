@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Offset = initialValue;
-                this.HeightMap = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.HeightMap = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
                 this.Unknown = initialValue;
             }
 
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Unknown)
             {
                 this.Offset = Offset;
-                this.HeightMap = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(HeightMap, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.HeightMap = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(HeightMap, []);
                 this.Unknown = Unknown;
             }
 
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Offset = eval(this.Offset);
                 if (HeightMap != null)
                 {
-                    obj.HeightMap = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.HeightMap.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.HeightMap = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.HeightMap.Overall), []);
                     if (HeightMap.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();

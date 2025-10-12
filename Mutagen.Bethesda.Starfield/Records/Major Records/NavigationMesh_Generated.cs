@@ -153,10 +153,10 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
                 this.NNAM = initialValue;
-                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -182,10 +182,10 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
                 this.NNAM = NNAM;
-                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(PreCutMapEntries, Enumerable.Empty<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>());
+                this.PreCutMapEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PreCutMapEntry.Mask<TItem>?>>?>(PreCutMapEntries, []);
             }
 
             #pragma warning disable CS8618
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.NNAM = eval(this.NNAM);
                 if (PreCutMapEntries != null)
                 {
-                    obj.PreCutMapEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>?>(eval(this.PreCutMapEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>());
+                    obj.PreCutMapEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>?>(eval(this.PreCutMapEntries.Overall), []);
                     if (PreCutMapEntries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PreCutMapEntry.Mask<R>?>>();

@@ -101,6 +101,17 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDialogResponseFlagsGetter? IDialogResponsesGetter.Flags => this.Flags;
         #endregion
+        #region TPIC
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _TPIC;
+        public MemorySlice<Byte>? TPIC
+        {
+            get => this._TPIC;
+            set => this._TPIC = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IDialogResponsesGetter.TPIC => this.TPIC;
+        #endregion
         #region SharedDialog
         private readonly IFormLinkNullable<IDialogResponsesGetter> _SharedDialog = new FormLinkNullable<IDialogResponsesGetter>();
         public IFormLinkNullable<IDialogResponsesGetter> SharedDialog
@@ -120,17 +131,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponsesGetter.DialogGroup => this.DialogGroup;
-        #endregion
-        #region TPIC
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _TPIC;
-        public MemorySlice<Byte>? TPIC
-        {
-            get => this._TPIC;
-            set => this._TPIC = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponsesGetter.TPIC => this.TPIC;
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -295,13 +295,13 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(initialValue, new DialogResponsesAdapter.Mask<TItem>(initialValue));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(initialValue, new DialogResponseFlags.Mask<TItem>(initialValue));
+                this.TPIC = initialValue;
                 this.SharedDialog = initialValue;
                 this.DialogGroup = initialValue;
-                this.TPIC = initialValue;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Prompt = initialValue;
                 this.Speaker = initialValue;
                 this.StartScene = initialValue;
@@ -328,9 +328,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem Components,
                 TItem Flags,
+                TItem TPIC,
                 TItem SharedDialog,
                 TItem DialogGroup,
-                TItem TPIC,
                 TItem Responses,
                 TItem Conditions,
                 TItem Prompt,
@@ -356,13 +356,13 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>(VirtualMachineAdapter, new DialogResponsesAdapter.Mask<TItem>(VirtualMachineAdapter));
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Flags = new MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>(Flags, new DialogResponseFlags.Mask<TItem>(Flags));
+                this.TPIC = TPIC;
                 this.SharedDialog = SharedDialog;
                 this.DialogGroup = DialogGroup;
-                this.TPIC = TPIC;
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Prompt = Prompt;
                 this.Speaker = Speaker;
                 this.StartScene = StartScene;
@@ -390,9 +390,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, DialogResponsesAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, DialogResponseFlags.Mask<TItem>?>? Flags { get; set; }
+            public TItem TPIC;
             public TItem SharedDialog;
             public TItem DialogGroup;
-            public TItem TPIC;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>? Responses;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem Prompt;
@@ -424,9 +424,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.TPIC, rhs.TPIC)) return false;
                 if (!object.Equals(this.SharedDialog, rhs.SharedDialog)) return false;
                 if (!object.Equals(this.DialogGroup, rhs.DialogGroup)) return false;
-                if (!object.Equals(this.TPIC, rhs.TPIC)) return false;
                 if (!object.Equals(this.Responses, rhs.Responses)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Prompt, rhs.Prompt)) return false;
@@ -450,9 +450,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Components);
                 hash.Add(this.Flags);
+                hash.Add(this.TPIC);
                 hash.Add(this.SharedDialog);
                 hash.Add(this.DialogGroup);
-                hash.Add(this.TPIC);
                 hash.Add(this.Responses);
                 hash.Add(this.Conditions);
                 hash.Add(this.Prompt);
@@ -500,9 +500,9 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Flags.Overall)) return false;
                     if (this.Flags.Specific != null && !this.Flags.Specific.All(eval)) return false;
                 }
+                if (!eval(this.TPIC)) return false;
                 if (!eval(this.SharedDialog)) return false;
                 if (!eval(this.DialogGroup)) return false;
-                if (!eval(this.TPIC)) return false;
                 if (this.Responses != null)
                 {
                     if (!eval(this.Responses.Overall)) return false;
@@ -578,9 +578,9 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Flags.Overall)) return true;
                     if (this.Flags.Specific != null && this.Flags.Specific.Any(eval)) return true;
                 }
+                if (eval(this.TPIC)) return true;
                 if (eval(this.SharedDialog)) return true;
                 if (eval(this.DialogGroup)) return true;
-                if (eval(this.TPIC)) return true;
                 if (this.Responses != null)
                 {
                     if (eval(this.Responses.Overall)) return true;
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, DialogResponsesAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -658,12 +658,12 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Flags = this.Flags == null ? null : new MaskItem<R, DialogResponseFlags.Mask<R>?>(eval(this.Flags.Overall), this.Flags.Specific?.Translate(eval));
+                obj.TPIC = eval(this.TPIC);
                 obj.SharedDialog = eval(this.SharedDialog);
                 obj.DialogGroup = eval(this.DialogGroup);
-                obj.TPIC = eval(this.TPIC);
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), []);
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -749,6 +749,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Flags?.Print(sb);
                     }
+                    if (printMask?.TPIC ?? true)
+                    {
+                        sb.AppendItem(TPIC, "TPIC");
+                    }
                     if (printMask?.SharedDialog ?? true)
                     {
                         sb.AppendItem(SharedDialog, "SharedDialog");
@@ -756,10 +760,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DialogGroup ?? true)
                     {
                         sb.AppendItem(DialogGroup, "DialogGroup");
-                    }
-                    if (printMask?.TPIC ?? true)
-                    {
-                        sb.AppendItem(TPIC, "TPIC");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
                         && Responses is {} ResponsesItem)
@@ -865,9 +865,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, DialogResponsesAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, DialogResponseFlags.ErrorMask?>? Flags;
+            public Exception? TPIC;
             public Exception? SharedDialog;
             public Exception? DialogGroup;
-            public Exception? TPIC;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>? Responses;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? Prompt;
@@ -897,12 +897,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case DialogResponses_FieldIndex.Flags:
                         return Flags;
+                    case DialogResponses_FieldIndex.TPIC:
+                        return TPIC;
                     case DialogResponses_FieldIndex.SharedDialog:
                         return SharedDialog;
                     case DialogResponses_FieldIndex.DialogGroup:
                         return DialogGroup;
-                    case DialogResponses_FieldIndex.TPIC:
-                        return TPIC;
                     case DialogResponses_FieldIndex.Responses:
                         return Responses;
                     case DialogResponses_FieldIndex.Conditions:
@@ -952,14 +952,14 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponses_FieldIndex.Flags:
                         this.Flags = new MaskItem<Exception?, DialogResponseFlags.ErrorMask?>(ex, null);
                         break;
+                    case DialogResponses_FieldIndex.TPIC:
+                        this.TPIC = ex;
+                        break;
                     case DialogResponses_FieldIndex.SharedDialog:
                         this.SharedDialog = ex;
                         break;
                     case DialogResponses_FieldIndex.DialogGroup:
                         this.DialogGroup = ex;
-                        break;
-                    case DialogResponses_FieldIndex.TPIC:
-                        this.TPIC = ex;
                         break;
                     case DialogResponses_FieldIndex.Responses:
                         this.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(ex, null);
@@ -1026,14 +1026,14 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponses_FieldIndex.Flags:
                         this.Flags = (MaskItem<Exception?, DialogResponseFlags.ErrorMask?>?)obj;
                         break;
+                    case DialogResponses_FieldIndex.TPIC:
+                        this.TPIC = (Exception?)obj;
+                        break;
                     case DialogResponses_FieldIndex.SharedDialog:
                         this.SharedDialog = (Exception?)obj;
                         break;
                     case DialogResponses_FieldIndex.DialogGroup:
                         this.DialogGroup = (Exception?)obj;
-                        break;
-                    case DialogResponses_FieldIndex.TPIC:
-                        this.TPIC = (Exception?)obj;
                         break;
                     case DialogResponses_FieldIndex.Responses:
                         this.Responses = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>)obj;
@@ -1092,9 +1092,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (Components != null) return true;
                 if (Flags != null) return true;
+                if (TPIC != null) return true;
                 if (SharedDialog != null) return true;
                 if (DialogGroup != null) return true;
-                if (TPIC != null) return true;
                 if (Responses != null) return true;
                 if (Conditions != null) return true;
                 if (Prompt != null) return true;
@@ -1157,13 +1157,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Flags?.Print(sb);
                 {
+                    sb.AppendItem(TPIC, "TPIC");
+                }
+                {
                     sb.AppendItem(SharedDialog, "SharedDialog");
                 }
                 {
                     sb.AppendItem(DialogGroup, "DialogGroup");
-                }
-                {
-                    sb.AppendItem(TPIC, "TPIC");
                 }
                 if (Responses is {} ResponsesItem)
                 {
@@ -1247,9 +1247,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags, (l, r) => l.Combine(r));
+                ret.TPIC = this.TPIC.Combine(rhs.TPIC);
                 ret.SharedDialog = this.SharedDialog.Combine(rhs.SharedDialog);
                 ret.DialogGroup = this.DialogGroup.Combine(rhs.DialogGroup);
-                ret.TPIC = this.TPIC.Combine(rhs.TPIC);
                 ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Prompt = this.Prompt.Combine(rhs.Prompt);
@@ -1290,9 +1290,9 @@ namespace Mutagen.Bethesda.Starfield
             public DialogResponsesAdapter.TranslationMask? VirtualMachineAdapter;
             public AComponent.TranslationMask? Components;
             public DialogResponseFlags.TranslationMask? Flags;
+            public bool TPIC;
             public bool SharedDialog;
             public bool DialogGroup;
-            public bool TPIC;
             public DialogResponse.TranslationMask? Responses;
             public Condition.TranslationMask? Conditions;
             public bool Prompt;
@@ -1316,9 +1316,9 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.TPIC = defaultOn;
                 this.SharedDialog = defaultOn;
                 this.DialogGroup = defaultOn;
-                this.TPIC = defaultOn;
                 this.Prompt = defaultOn;
                 this.Speaker = defaultOn;
                 this.StartScene = defaultOn;
@@ -1340,9 +1340,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Flags != null ? Flags.OnOverall : DefaultOn, Flags?.GetCrystal()));
+                ret.Add((TPIC, null));
                 ret.Add((SharedDialog, null));
                 ret.Add((DialogGroup, null));
-                ret.Add((TPIC, null));
                 ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Prompt, null));
@@ -1522,9 +1522,9 @@ namespace Mutagen.Bethesda.Starfield
         new DialogResponsesAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new DialogResponseFlags? Flags { get; set; }
+        new MemorySlice<Byte>? TPIC { get; set; }
         new IFormLinkNullable<IDialogResponsesGetter> SharedDialog { get; set; }
         new IFormLinkNullable<IDialogResponsesGetter> DialogGroup { get; set; }
-        new MemorySlice<Byte>? TPIC { get; set; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
         new TranslatedString? Prompt { get; set; }
@@ -1572,9 +1572,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         IReadOnlyList<IAComponentGetter> Components { get; }
         IDialogResponseFlagsGetter? Flags { get; }
+        ReadOnlyMemorySlice<Byte>? TPIC { get; }
         IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog { get; }
         IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup { get; }
-        ReadOnlyMemorySlice<Byte>? TPIC { get; }
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ITranslatedStringGetter? Prompt { get; }
@@ -1773,9 +1773,9 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         Components = 8,
         Flags = 9,
-        SharedDialog = 10,
-        DialogGroup = 11,
-        TPIC = 12,
+        TPIC = 10,
+        SharedDialog = 11,
+        DialogGroup = 12,
         Responses = 13,
         Conditions = 14,
         Prompt = 15,
@@ -1841,9 +1841,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.ENAM,
+                RecordTypes.TPIC,
                 RecordTypes.DNAM,
                 RecordTypes.GNAM,
-                RecordTypes.TPIC,
                 RecordTypes.TRDA,
                 RecordTypes.TROT,
                 RecordTypes.NAM1,
@@ -1918,9 +1918,9 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.Components.Clear();
             item.Flags = null;
+            item.TPIC = default;
             item.SharedDialog.Clear();
             item.DialogGroup.Clear();
-            item.TPIC = default;
             item.Responses.Clear();
             item.Conditions.Clear();
             item.Prompt = default;
@@ -2071,9 +2071,9 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Flags,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.TPIC = MemorySliceExt.SequenceEqual(item.TPIC, rhs.TPIC);
             ret.SharedDialog = item.SharedDialog.Equals(rhs.SharedDialog);
             ret.DialogGroup = item.DialogGroup.Equals(rhs.DialogGroup);
-            ret.TPIC = MemorySliceExt.SequenceEqual(item.TPIC, rhs.TPIC);
             ret.Responses = item.Responses.CollectionEqualsHelper(
                 rhs.Responses,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2176,6 +2176,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 FlagsItem?.Print(sb, "Flags");
             }
+            if ((printMask?.TPIC ?? true)
+                && item.TPIC is {} TPICItem)
+            {
+                sb.AppendLine($"TPIC => {SpanExt.ToHexString(TPICItem)}");
+            }
             if (printMask?.SharedDialog ?? true)
             {
                 sb.AppendItem(item.SharedDialog.FormKeyNullable, "SharedDialog");
@@ -2183,11 +2188,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.DialogGroup ?? true)
             {
                 sb.AppendItem(item.DialogGroup.FormKeyNullable, "DialogGroup");
-            }
-            if ((printMask?.TPIC ?? true)
-                && item.TPIC is {} TPICItem)
-            {
-                sb.AppendLine($"TPIC => {SpanExt.ToHexString(TPICItem)}");
             }
             if (printMask?.Responses?.Overall ?? true)
             {
@@ -2344,6 +2344,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isFlagsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.TPIC) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.TPIC, rhs.TPIC)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SharedDialog) ?? true))
             {
                 if (!lhs.SharedDialog.Equals(rhs.SharedDialog)) return false;
@@ -2351,10 +2355,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DialogGroup) ?? true))
             {
                 if (!lhs.DialogGroup.Equals(rhs.DialogGroup)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.TPIC) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.TPIC, rhs.TPIC)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
@@ -2461,12 +2461,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Flagsitem);
             }
-            hash.Add(item.SharedDialog);
-            hash.Add(item.DialogGroup);
             if (item.TPIC is {} TPICItem)
             {
                 hash.Add(TPICItem);
             }
+            hash.Add(item.SharedDialog);
+            hash.Add(item.DialogGroup);
             hash.Add(item.Responses);
             hash.Add(item.Conditions);
             if (item.Prompt is {} Promptitem)
@@ -2749,14 +2749,6 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SharedDialog) ?? true))
-            {
-                item.SharedDialog.SetTo(rhs.SharedDialog.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DialogGroup) ?? true))
-            {
-                item.DialogGroup.SetTo(rhs.DialogGroup.FormKeyNullable);
-            }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.TPIC) ?? true))
             {
                 if(rhs.TPIC is {} TPICrhs)
@@ -2767,6 +2759,14 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.TPIC = default;
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SharedDialog) ?? true))
+            {
+                item.SharedDialog.SetTo(rhs.SharedDialog.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.DialogGroup) ?? true))
+            {
+                item.DialogGroup.SetTo(rhs.DialogGroup.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Responses) ?? true))
             {
@@ -3113,6 +3113,10 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.TPIC,
+                header: translationParams.ConvertToCustom(RecordTypes.TPIC));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SharedDialog,
@@ -3121,10 +3125,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.DialogGroup,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.TPIC,
-                header: translationParams.ConvertToCustom(RecordTypes.TPIC));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
                 writer: writer,
                 items: item.Responses,
@@ -3302,6 +3302,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.Flags = Mutagen.Bethesda.Starfield.DialogResponseFlags.CreateFromBinary(frame: frame);
                     return (int)DialogResponses_FieldIndex.Flags;
                 }
+                case RecordTypeInts.TPIC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TPIC = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)DialogResponses_FieldIndex.TPIC;
+                }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3313,12 +3319,6 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DialogGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.DialogGroup;
-                }
-                case RecordTypeInts.TPIC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TPIC = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponses_FieldIndex.TPIC;
                 }
                 case RecordTypeInts.TRDA:
                 {
@@ -3503,6 +3503,10 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _FlagsLocation;
         public IDialogResponseFlagsGetter? Flags => _FlagsLocation.HasValue ? DialogResponseFlagsBinaryOverlay.DialogResponseFlagsFactory(_recordData.Slice(_FlagsLocation!.Value.Min), _package) : default;
         #endregion
+        #region TPIC
+        private int? _TPICLocation;
+        public ReadOnlyMemorySlice<Byte>? TPIC => _TPICLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TPICLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         #region SharedDialog
         private int? _SharedDialogLocation;
         public IFormLinkNullableGetter<IDialogResponsesGetter> SharedDialog => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _SharedDialogLocation);
@@ -3510,10 +3514,6 @@ namespace Mutagen.Bethesda.Starfield
         #region DialogGroup
         private int? _DialogGroupLocation;
         public IFormLinkNullableGetter<IDialogResponsesGetter> DialogGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _DialogGroupLocation);
-        #endregion
-        #region TPIC
-        private int? _TPICLocation;
-        public ReadOnlyMemorySlice<Byte>? TPIC => _TPICLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TPICLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = [];
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
@@ -3659,6 +3659,11 @@ namespace Mutagen.Bethesda.Starfield
                     _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DialogResponses_FieldIndex.Flags;
                 }
+                case RecordTypeInts.TPIC:
+                {
+                    _TPICLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.TPIC;
+                }
                 case RecordTypeInts.DNAM:
                 {
                     _SharedDialogLocation = (stream.Position - offset);
@@ -3668,11 +3673,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _DialogGroupLocation = (stream.Position - offset);
                     return (int)DialogResponses_FieldIndex.DialogGroup;
-                }
-                case RecordTypeInts.TPIC:
-                {
-                    _TPICLocation = (stream.Position - offset);
-                    return (int)DialogResponses_FieldIndex.TPIC;
                 }
                 case RecordTypeInts.TRDA:
                 {

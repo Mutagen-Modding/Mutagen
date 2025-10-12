@@ -415,10 +415,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BlockBashImpactDataSet = initialValue;
                 this.AlternateBlockMaterial = initialValue;
                 this.Race = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Description = initialValue;
                 this.InstanceNaming = initialValue;
-                this.Armatures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>());
+                this.Armatures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>(initialValue, []);
                 this.Value = initialValue;
                 this.Weight = initialValue;
                 this.Health = initialValue;
@@ -426,10 +426,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BaseAddonIndex = initialValue;
                 this.StaggerRating = initialValue;
                 this.Unused = initialValue;
-                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(initialValue, []);
                 this.TemplateArmor = initialValue;
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -492,10 +492,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BlockBashImpactDataSet = BlockBashImpactDataSet;
                 this.AlternateBlockMaterial = AlternateBlockMaterial;
                 this.Race = Race;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Description = Description;
                 this.InstanceNaming = InstanceNaming;
-                this.Armatures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>(Armatures, Enumerable.Empty<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>());
+                this.Armatures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>(Armatures, []);
                 this.Value = Value;
                 this.Weight = Weight;
                 this.Health = Health;
@@ -503,10 +503,10 @@ namespace Mutagen.Bethesda.Fallout4
                 this.BaseAddonIndex = BaseAddonIndex;
                 this.StaggerRating = StaggerRating;
                 this.Unused = Unused;
-                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(Resistances, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(Resistances, []);
                 this.TemplateArmor = TemplateArmor;
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, []);
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, []);
             }
 
             #pragma warning disable CS8618
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Race = eval(this.Race);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -891,7 +891,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.InstanceNaming = eval(this.InstanceNaming);
                 if (Armatures != null)
                 {
-                    obj.Armatures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>?>(eval(this.Armatures.Overall), Enumerable.Empty<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>());
+                    obj.Armatures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>?>(eval(this.Armatures.Overall), []);
                     if (Armatures.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>();
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unused = eval(this.Unused);
                 if (Resistances != null)
                 {
-                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>?>(eval(this.Resistances.Overall), Enumerable.Empty<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>());
+                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>?>(eval(this.Resistances.Overall), []);
                     if (Resistances.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>();
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TemplateArmor = eval(this.TemplateArmor);
                 if (AttachParentSlots != null)
                 {
-                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), []);
                     if (AttachParentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (ObjectTemplates != null)
                 {
-                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), []);
                     if (ObjectTemplates.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();

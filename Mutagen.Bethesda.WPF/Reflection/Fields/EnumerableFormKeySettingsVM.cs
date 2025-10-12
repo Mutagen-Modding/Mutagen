@@ -42,7 +42,7 @@ public class EnumerableFormKeySettingsVM : EnumerableSettingsVM
         }
         return new EnumerableFormKeySettingsVM(
             fieldMeta,
-            defaultVal as IEnumerable<FormKey> ?? Enumerable.Empty<FormKey>());
+            defaultVal as IEnumerable<FormKey> ?? []);
     }
 
     public override void Persist(JObject obj, Action<string> logger)

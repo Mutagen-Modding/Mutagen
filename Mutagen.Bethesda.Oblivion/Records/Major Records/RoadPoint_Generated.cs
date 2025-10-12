@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Point = initialValue;
                 this.NumConnectionsFluffBytes = initialValue;
-                this.Connections = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Connections = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Point = Point;
                 this.NumConnectionsFluffBytes = NumConnectionsFluffBytes;
-                this.Connections = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Connections, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Connections = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Connections, []);
             }
 
             #pragma warning disable CS8618
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.NumConnectionsFluffBytes = eval(this.NumConnectionsFluffBytes);
                 if (Connections != null)
                 {
-                    obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Connections.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Connections = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Connections.Overall), []);
                     if (Connections.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

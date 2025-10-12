@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem BODSItems)
             {
-                this.BODSItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentBODSItem.Mask<TItem>?>>?>(BODSItems, Enumerable.Empty<MaskItemIndexed<TItem, BlueprintComponentBODSItem.Mask<TItem>?>>());
+                this.BODSItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BlueprintComponentBODSItem.Mask<TItem>?>>?>(BODSItems, []);
             }
 
             #pragma warning disable CS8618
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (BODSItems != null)
                 {
-                    obj.BODSItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BlueprintComponentBODSItem.Mask<R>?>>?>(eval(this.BODSItems.Overall), Enumerable.Empty<MaskItemIndexed<R, BlueprintComponentBODSItem.Mask<R>?>>());
+                    obj.BODSItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BlueprintComponentBODSItem.Mask<R>?>>?>(eval(this.BODSItems.Overall), []);
                     if (BODSItems.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BlueprintComponentBODSItem.Mask<R>?>>();

@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.LinkedReference = initialValue;
-                this.Links = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLinkItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SnapLinkItem.Mask<TItem>?>>());
+                this.Links = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLinkItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Links)
             {
                 this.LinkedReference = LinkedReference;
-                this.Links = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLinkItem.Mask<TItem>?>>?>(Links, Enumerable.Empty<MaskItemIndexed<TItem, SnapLinkItem.Mask<TItem>?>>());
+                this.Links = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SnapLinkItem.Mask<TItem>?>>?>(Links, []);
             }
 
             #pragma warning disable CS8618
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LinkedReference = eval(this.LinkedReference);
                 if (Links != null)
                 {
-                    obj.Links = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapLinkItem.Mask<R>?>>?>(eval(this.Links.Overall), Enumerable.Empty<MaskItemIndexed<R, SnapLinkItem.Mask<R>?>>());
+                    obj.Links = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SnapLinkItem.Mask<R>?>>?>(eval(this.Links.Overall), []);
                     if (Links.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SnapLinkItem.Mask<R>?>>();

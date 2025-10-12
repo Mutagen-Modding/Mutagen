@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NpcMorphGroup.Mask<TItem>?>>());
+                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphGroup.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MorphGroups)
             {
                 this.Index = Index;
-                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphGroup.Mask<TItem>?>>?>(MorphGroups, Enumerable.Empty<MaskItemIndexed<TItem, NpcMorphGroup.Mask<TItem>?>>());
+                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcMorphGroup.Mask<TItem>?>>?>(MorphGroups, []);
             }
 
             #pragma warning disable CS8618
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Index = eval(this.Index);
                 if (MorphGroups != null)
                 {
-                    obj.MorphGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcMorphGroup.Mask<R>?>>?>(eval(this.MorphGroups.Overall), Enumerable.Empty<MaskItemIndexed<R, NpcMorphGroup.Mask<R>?>>());
+                    obj.MorphGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcMorphGroup.Mask<R>?>>?>(eval(this.MorphGroups.Overall), []);
                     if (MorphGroups.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NpcMorphGroup.Mask<R>?>>();

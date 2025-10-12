@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.File = initialValue;
                 this.TextureFileHashes = initialValue;
-                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LightLayer = initialValue;
                 this.Flags = initialValue;
                 this.ColorRemappingIndex = initialValue;
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.File = File;
                 this.TextureFileHashes = TextureFileHashes;
-                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, []);
                 this.LightLayer = LightLayer;
                 this.Flags = Flags;
                 this.ColorRemappingIndex = ColorRemappingIndex;
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.TextureFileHashes = eval(this.TextureFileHashes);
                 if (MaterialSwaps != null)
                 {
-                    obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), []);
                     if (MaterialSwaps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

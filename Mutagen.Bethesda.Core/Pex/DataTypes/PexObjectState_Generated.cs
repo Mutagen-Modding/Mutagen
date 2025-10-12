@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Pex
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectNamedFunction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectNamedFunction.Mask<TItem>?>>());
+                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectNamedFunction.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Pex
                 TItem Functions)
             {
                 this.Name = Name;
-                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectNamedFunction.Mask<TItem>?>>?>(Functions, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectNamedFunction.Mask<TItem>?>>());
+                this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectNamedFunction.Mask<TItem>?>>?>(Functions, []);
             }
 
             #pragma warning disable CS8618
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.Name = eval(this.Name);
                 if (Functions != null)
                 {
-                    obj.Functions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>>?>(eval(this.Functions.Overall), Enumerable.Empty<MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>>());
+                    obj.Functions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>>?>(eval(this.Functions.Overall), []);
                     if (Functions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectNamedFunction.Mask<R>?>>();

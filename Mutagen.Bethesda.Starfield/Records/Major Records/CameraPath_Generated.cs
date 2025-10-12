@@ -130,11 +130,11 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Parent = initialValue;
                 this.Previous = initialValue;
                 this.Zoom = initialValue;
-                this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -159,11 +159,11 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Parent = Parent;
                 this.Previous = Previous;
                 this.Zoom = Zoom;
-                this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Shots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Shots, []);
             }
 
             #pragma warning disable CS8618
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Zoom = eval(this.Zoom);
                 if (Shots != null)
                 {
-                    obj.Shots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Shots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Shots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Shots.Overall), []);
                     if (Shots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

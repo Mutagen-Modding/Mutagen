@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ProceduralObjectGenerationMaskName = initialValue;
                 this.BNAM = initialValue;
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeObject.Mask<TItem>?>>?>(initialValue, []);
                 this.Footprints = new MaskItem<TItem, BiomeFootprints.Mask<TItem>?>(initialValue, new BiomeFootprints.Mask<TItem>(initialValue));
             }
 
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ProceduralObjectGenerationMaskName = ProceduralObjectGenerationMaskName;
                 this.BNAM = BNAM;
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, BiomeObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeObject.Mask<TItem>?>>?>(Objects, []);
                 this.Footprints = new MaskItem<TItem, BiomeFootprints.Mask<TItem>?>(Footprints, new BiomeFootprints.Mask<TItem>(Footprints));
             }
 
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.BNAM = eval(this.BNAM);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeObject.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeObject.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeObject.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BiomeObject.Mask<R>?>>();

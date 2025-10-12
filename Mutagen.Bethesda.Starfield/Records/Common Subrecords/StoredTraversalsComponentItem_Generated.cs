@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Activator = initialValue;
                 this.Vector = initialValue;
-                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Activator = Activator;
                 this.Vector = Vector;
-                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, Enumerable.Empty<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>());
+                this.Traversals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TraversalReference.Mask<TItem>?>>?>(Traversals, []);
             }
 
             #pragma warning disable CS8618
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Vector = eval(this.Vector);
                 if (Traversals != null)
                 {
-                    obj.Traversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TraversalReference.Mask<R>?>>?>(eval(this.Traversals.Overall), Enumerable.Empty<MaskItemIndexed<R, TraversalReference.Mask<R>?>>());
+                    obj.Traversals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TraversalReference.Mask<R>?>>?>(eval(this.Traversals.Overall), []);
                     if (Traversals.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TraversalReference.Mask<R>?>>();

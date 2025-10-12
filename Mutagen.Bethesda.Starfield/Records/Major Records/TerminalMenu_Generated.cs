@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.MenuButtonStyle = initialValue;
                 this.Style = initialValue;
                 this.INAM = initialValue;
-                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
-                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
+                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(initialValue, []);
+                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -224,8 +224,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.MenuButtonStyle = MenuButtonStyle;
                 this.Style = Style;
                 this.INAM = INAM;
-                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(BodyTexts, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
-                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(MenuItems, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
+                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(BodyTexts, []);
+                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(MenuItems, []);
             }
 
             #pragma warning disable CS8618
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.INAM = eval(this.INAM);
                 if (BodyTexts != null)
                 {
-                    obj.BodyTexts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>?>(eval(this.BodyTexts.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>());
+                    obj.BodyTexts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>?>(eval(this.BodyTexts.Overall), []);
                     if (BodyTexts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>();
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MenuItems != null)
                 {
-                    obj.MenuItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>?>(eval(this.MenuItems.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>());
+                    obj.MenuItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>?>(eval(this.MenuItems.Overall), []);
                     if (MenuItems.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>();

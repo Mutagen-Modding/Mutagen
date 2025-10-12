@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChanceNone = initialValue;
                 this.Flags = initialValue;
                 this.Global = initialValue;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChanceNone = ChanceNone;
                 this.Flags = Flags;
                 this.Global = Global;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, []);
             }
 
             #pragma warning disable CS8618
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Global = eval(this.Global);
                 if (Entries != null)
                 {
-                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>());
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), []);
                     if (Entries.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>();

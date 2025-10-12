@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Icon = initialValue;
                 this.Description = initialValue;
-                this.Locations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LoadScreenLocation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LoadScreenLocation.Mask<TItem>?>>());
+                this.Locations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LoadScreenLocation.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Icon = Icon;
                 this.Description = Description;
-                this.Locations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LoadScreenLocation.Mask<TItem>?>>?>(Locations, Enumerable.Empty<MaskItemIndexed<TItem, LoadScreenLocation.Mask<TItem>?>>());
+                this.Locations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LoadScreenLocation.Mask<TItem>?>>?>(Locations, []);
             }
 
             #pragma warning disable CS8618
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Description = eval(this.Description);
                 if (Locations != null)
                 {
-                    obj.Locations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>>?>(eval(this.Locations.Overall), Enumerable.Empty<MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>>());
+                    obj.Locations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>>?>(eval(this.Locations.Overall), []);
                     if (Locations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LoadScreenLocation.Mask<R>?>>();

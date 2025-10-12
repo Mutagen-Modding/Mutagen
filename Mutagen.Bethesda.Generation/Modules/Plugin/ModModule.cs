@@ -456,12 +456,12 @@ public class ModModule : GenerationModule
         if (obj.GetObjectType() != ObjectType.Mod) return;
         if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
 
-        GenerateGetGroup(obj, sb);
+        await GenerateGetGroup(obj, sb);
         GenerateWriteParallel(obj, sb);
         GenerateGetRecordCount(obj, sb);
     }
 
-    private void GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
+    private async Task GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         using (var args = sb.Function(
                    "public object? GetGroup"))
@@ -493,6 +493,23 @@ public class ModModule : GenerationModule
                     {
                         sb.AppendLine($"case \"{subObj.Interface(getter: false, internalInterface: true)}\":");
                     }
+
+                    // Add case statements for inheriting types (e.g., GlobalFloat, GlobalInt, etc.)
+                    foreach (var inheritingObj in await subObj.InheritingObjects())
+                    {
+                        sb.AppendLine($"case \"{inheritingObj.Name}\":");
+                        sb.AppendLine($"case \"{inheritingObj.Interface(getter: true)}\":");
+                        sb.AppendLine($"case \"{inheritingObj.Interface(getter: false)}\":");
+                        if (inheritingObj.HasInternalGetInterface)
+                        {
+                            sb.AppendLine($"case \"{inheritingObj.Interface(getter: true, internalInterface: true)}\":");
+                        }
+                        if (inheritingObj.HasInternalSetInterface)
+                        {
+                            sb.AppendLine($"case \"{inheritingObj.Interface(getter: false, internalInterface: true)}\":");
+                        }
+                    }
+
                     using (sb.IncreaseDepth())
                     {
                         if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))

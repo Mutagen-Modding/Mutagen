@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FileName = initialValue;
                 this.MaskType = initialValue;
                 this.PresetDefault = initialValue;
-                this.Presets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintPreset.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintPreset.Mask<TItem>?>>());
+                this.Presets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintPreset.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FileName = FileName;
                 this.MaskType = MaskType;
                 this.PresetDefault = PresetDefault;
-                this.Presets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintPreset.Mask<TItem>?>>?>(Presets, Enumerable.Empty<MaskItemIndexed<TItem, TintPreset.Mask<TItem>?>>());
+                this.Presets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintPreset.Mask<TItem>?>>?>(Presets, []);
             }
 
             #pragma warning disable CS8618
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.PresetDefault = eval(this.PresetDefault);
                 if (Presets != null)
                 {
-                    obj.Presets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintPreset.Mask<R>?>>?>(eval(this.Presets.Overall), Enumerable.Empty<MaskItemIndexed<R, TintPreset.Mask<R>?>>());
+                    obj.Presets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintPreset.Mask<R>?>>?>(eval(this.Presets.Overall), []);
                     if (Presets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TintPreset.Mask<R>?>>();

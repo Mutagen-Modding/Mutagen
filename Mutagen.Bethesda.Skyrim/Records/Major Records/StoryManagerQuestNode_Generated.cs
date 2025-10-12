@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.QuestFlags = initialValue;
                 this.MaxConcurrentQuests = initialValue;
                 this.MaxNumQuestsToRun = initialValue;
-                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
+                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.QuestFlags = QuestFlags;
                 this.MaxConcurrentQuests = MaxConcurrentQuests;
                 this.MaxNumQuestsToRun = MaxNumQuestsToRun;
-                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
+                this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, []);
             }
 
             #pragma warning disable CS8618
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MaxNumQuestsToRun = eval(this.MaxNumQuestsToRun);
                 if (Quests != null)
                 {
-                    obj.Quests = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>?>(eval(this.Quests.Overall), Enumerable.Empty<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>());
+                    obj.Quests = new MaskItem<R, IEnumerable<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>?>(eval(this.Quests.Overall), []);
                     if (Quests.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>();

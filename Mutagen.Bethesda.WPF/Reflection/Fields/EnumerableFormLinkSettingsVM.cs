@@ -22,7 +22,7 @@ public class EnumerableFormLinkSettingsVM : SettingsNodeVM
     private readonly string _typeName;
     public ILinkCache? LinkCache => _linkCache.Value;
 
-    public IEnumerable<Type> ScopedTypes { get; private set; } = Enumerable.Empty<Type>();
+    public IEnumerable<Type> ScopedTypes { get; private set; } = [];
 
     public EnumerableFormLinkSettingsVM(
         IObservable<ILinkCache?> linkCache,

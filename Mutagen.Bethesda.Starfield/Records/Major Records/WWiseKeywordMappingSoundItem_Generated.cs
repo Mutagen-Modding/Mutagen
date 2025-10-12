@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.GuidPairs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingSoundItemGuidPair.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WWiseKeywordMappingSoundItemGuidPair.Mask<TItem>?>>());
+                this.GuidPairs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingSoundItemGuidPair.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem GuidPairs)
             {
                 this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound, new SoundReference.Mask<TItem>(Sound));
-                this.GuidPairs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingSoundItemGuidPair.Mask<TItem>?>>?>(GuidPairs, Enumerable.Empty<MaskItemIndexed<TItem, WWiseKeywordMappingSoundItemGuidPair.Mask<TItem>?>>());
+                this.GuidPairs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WWiseKeywordMappingSoundItemGuidPair.Mask<TItem>?>>?>(GuidPairs, []);
             }
 
             #pragma warning disable CS8618
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Sound = this.Sound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound.Overall), this.Sound.Specific?.Translate(eval));
                 if (GuidPairs != null)
                 {
-                    obj.GuidPairs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WWiseKeywordMappingSoundItemGuidPair.Mask<R>?>>?>(eval(this.GuidPairs.Overall), Enumerable.Empty<MaskItemIndexed<R, WWiseKeywordMappingSoundItemGuidPair.Mask<R>?>>());
+                    obj.GuidPairs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WWiseKeywordMappingSoundItemGuidPair.Mask<R>?>>?>(eval(this.GuidPairs.Overall), []);
                     if (GuidPairs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WWiseKeywordMappingSoundItemGuidPair.Mask<R>?>>();

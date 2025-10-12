@@ -86,9 +86,9 @@ partial class QuestAdapterBinaryWriteTranslation
 
 partial class QuestAdapterBinaryOverlay
 {
-    public IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; private set; } = Array.Empty<IQuestScriptFragmentGetter>();
+    public IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; private set; } = [];
 
-    public IReadOnlyList<IQuestFragmentAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestFragmentAliasGetter>();
+    public IReadOnlyList<IQuestFragmentAliasGetter> Aliases { get; private set; } = [];
 
     private IScriptEntryGetter? _scriptEntry;
 
