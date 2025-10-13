@@ -105,7 +105,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       with:
-        file: "**/*.nupkg"
+        file: "out/*.nupkg"
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.event.release.tag_name }}
         file_glob: "true"
