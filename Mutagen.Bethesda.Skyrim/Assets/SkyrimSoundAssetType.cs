@@ -6,5 +6,5 @@ public class SkyrimSoundAssetType : IAssetType
 {
     public static IAssetType Instance { get; } = new SkyrimSoundAssetType();
     public string BaseFolder => "Sound";
-    public IEnumerable<string> FileExtensions => [".wav", ".xwm"];
+    public IEnumerable<string> FileExtensions => [".wav", ".xwm", ".fuz"];
 }
