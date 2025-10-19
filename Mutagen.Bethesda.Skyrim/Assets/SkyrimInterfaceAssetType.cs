@@ -6,5 +6,5 @@ public class SkyrimInterfaceAssetType : IAssetType
 {
     public static IAssetType Instance { get; } = new SkyrimInterfaceAssetType();
     public string BaseFolder => "Interface";
-    public IEnumerable<string> FileExtensions => new []{ ".swf", ".gfx" };
+    public IEnumerable<string> FileExtensions => [".swf", ".gfx"];
 }
