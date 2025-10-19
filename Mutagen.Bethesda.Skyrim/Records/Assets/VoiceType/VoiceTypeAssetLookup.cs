@@ -206,7 +206,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices;
     }
 
-    public IEnumerable<DataRelativePath> GetVoiceTypePaths(IDialogTopicGetter topic)
+    public IEnumerable<DataRelativePath> GetVoiceLineFilePaths(IDialogTopicGetter topic)
     {
         var quest = topic.Quest.TryResolve(_formLinkCache);
         if (quest == null) yield break;
@@ -217,14 +217,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var (questString, topicString) = GetQuestAndTopicStrings(topic, quest);
         foreach (var responses in topic.Responses)
         {
-            foreach (var path in GetVoiceTypePaths(topic, responses, quest, questVoices, questString, topicString))
+            foreach (var path in GetVoiceLineFilePaths(topic, responses, quest, questVoices, questString, topicString))
             {
                 yield return path;
             }
         }
     }
 
-    public IEnumerable<DataRelativePath> GetVoiceTypePaths(IDialogResponsesGetter responses)
+    public IEnumerable<DataRelativePath> GetVoiceLineFilePaths(IDialogResponsesGetter responses)
     {
         var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
         if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) yield break;
@@ -236,7 +236,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var questVoices = GetQuestVoices(topic, quest);
 
         var (questString, topicString) = GetQuestAndTopicStrings(topic, quest);
-        foreach (var path in GetVoiceTypePaths(topic, responses, quest, questVoices, questString, topicString))
+        foreach (var path in GetVoiceLineFilePaths(topic, responses, quest, questVoices, questString, topicString))
         {
             yield return path;
         }
@@ -281,7 +281,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private IEnumerable<DataRelativePath> GetVoiceTypePaths(
+    private IEnumerable<DataRelativePath> GetVoiceLineFilePaths(
         IDialogTopicGetter topic,
         IDialogResponsesGetter responses,
         IQuestGetter quest,
