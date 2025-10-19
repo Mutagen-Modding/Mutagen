@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -205,7 +206,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices;
     }
 
-    public IEnumerable<string> GetVoiceTypePaths(IDialogTopicGetter topic)
+    public IEnumerable<DataRelativePath> GetVoiceTypePaths(IDialogTopicGetter topic)
     {
         var quest = topic.Quest.TryResolve(_formLinkCache);
         if (quest == null) yield break;
@@ -223,7 +224,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    public IEnumerable<string> GetVoiceTypePaths(IDialogResponsesGetter responses)
+    public IEnumerable<DataRelativePath> GetVoiceTypePaths(IDialogResponsesGetter responses)
     {
         var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
         if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) yield break;
@@ -280,7 +281,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private IEnumerable<string> GetVoiceTypePaths(
+    private IEnumerable<DataRelativePath> GetVoiceTypePaths(
         IDialogTopicGetter topic,
         IDialogResponsesGetter responses,
         IQuestGetter quest,
