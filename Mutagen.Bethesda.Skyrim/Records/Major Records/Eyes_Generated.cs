@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEyes);
+        protected override Type LinkType => typeof(IEyesGetter);
 
         public Eyes.MajorFlag MajorFlags => (Eyes.MajorFlag)this.MajorRecordFlagsRaw;
 

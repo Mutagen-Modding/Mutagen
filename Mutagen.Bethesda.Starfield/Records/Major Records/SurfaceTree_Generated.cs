@@ -1297,8 +1297,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.CNAM = [];
-            item.DNAM = [];
+            item.CNAM = Array.Empty<byte>();
+            item.DNAM = Array.Empty<byte>();
             item.SurfacePatterns.Fill(FormLink<ISurfacePatternGetter>.Null);
             item.GNAM = default;
             item.SurfacePatterns2.Fill(FormLink<ISurfacePatternGetter>.Null);
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISurfaceTree);
+        protected override Type LinkType => typeof(ISurfaceTreeGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

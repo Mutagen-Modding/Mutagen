@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICombatStyle);
+        protected override Type LinkType => typeof(ICombatStyleGetter);
 
 
         #region Data

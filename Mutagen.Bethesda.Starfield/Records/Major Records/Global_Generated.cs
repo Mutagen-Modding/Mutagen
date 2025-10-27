@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGlobal);
+        protected override Type LinkType => typeof(IGlobalGetter);
 
         public Global.MajorFlag MajorFlags => (Global.MajorFlag)this.MajorRecordFlagsRaw;
 

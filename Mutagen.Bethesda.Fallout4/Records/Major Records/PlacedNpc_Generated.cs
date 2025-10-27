@@ -4468,7 +4468,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedNpc);
+        protected override Type LinkType => typeof(IPlacedNpcGetter);
 
         public PlacedNpc.MajorFlag MajorFlags => (PlacedNpc.MajorFlag)this.MajorRecordFlagsRaw;
 

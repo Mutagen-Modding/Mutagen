@@ -6288,7 +6288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(INpcGetter);
 
         public Npc.MajorFlag MajorFlags => (Npc.MajorFlag)this.MajorRecordFlagsRaw;
 

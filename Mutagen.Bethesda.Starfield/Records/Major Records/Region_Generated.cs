@@ -1816,7 +1816,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRegion);
+        protected override Type LinkType => typeof(IRegionGetter);
 
 
         #region MapColor

@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IArtObject);
+        protected override Type LinkType => typeof(IArtObjectGetter);
 
 
         #region ObjectBounds

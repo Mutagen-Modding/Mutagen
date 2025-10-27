@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFurniture);
+        protected override Type LinkType => typeof(IFurnitureGetter);
 
 
         #region Name

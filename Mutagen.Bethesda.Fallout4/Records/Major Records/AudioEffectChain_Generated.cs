@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAudioEffectChain);
+        protected override Type LinkType => typeof(IAudioEffectChainGetter);
 
 
         #region Effects

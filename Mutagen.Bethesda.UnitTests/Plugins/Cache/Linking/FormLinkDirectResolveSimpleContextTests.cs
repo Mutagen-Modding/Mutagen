@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
 using Noggog;
+using Noggog.IO;
 using Shouldly;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking;
@@ -48,7 +49,6 @@ public partial class ALinkingTests
     [MemberData(nameof(ContextTestSources))]
     public void FormLink_Direct_ResolveSimpleContext_DialogResponses_ByRecord(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
     {
-        // Test the exact pattern from user's code
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var dialogTopic = mod.DialogTopics.AddNew();
         var dialogResponse = new DialogResponses(mod);
@@ -56,12 +56,39 @@ public partial class ALinkingTests
 
         var (style, package) = GetLinkCache(mod, cacheType);
 
-        // Enumerate DialogResponses records like in user's code
         foreach (var record in mod.EnumerateMajorRecords<IDialogResponsesGetter>())
         {
-            // This should resolve but currently doesn't according to the user
             var result = package.TryResolveSimpleContext(record, out var resolved);
             result.ShouldBeTrue($"Could not resolve DialogResponses record {record.FormKey}");
+            resolved.ShouldNotBeNull();
+            resolved!.Record.FormKey.ShouldBe(record.FormKey);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ContextTestSources))]
+    public void FormLink_Direct_ResolveSimpleContext_DialogResponses_BinaryOverlay(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
+    {
+        // Test that DialogResponses binary overlays (read-only) can be resolved
+        using var tempFile = new TempFile();
+
+        // Create and write a mod with DialogResponses
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        var dialogTopic = mod.DialogTopics.AddNew();
+        var dialogResponse = new DialogResponses(mod);
+        dialogTopic.Responses.Add(dialogResponse);
+
+        mod.WriteToBinary(tempFile.File.Path);
+
+        // Reimport as read-only (binary overlay)
+        using var reimported = SkyrimMod.CreateFromBinaryOverlay(tempFile.File.Path, SkyrimRelease.SkyrimSE);
+        var (style, package) = GetLinkCache(reimported, cacheType);
+
+        // This should work but currently fails for DialogResponsesBinaryOverlay
+        foreach (var record in reimported.EnumerateMajorRecords<IDialogResponsesGetter>())
+        {
+            var result = package.TryResolveSimpleContext(record, out var resolved);
+            result.ShouldBeTrue($"Could not resolve DialogResponses binary overlay record {record.FormKey}");
             resolved.ShouldNotBeNull();
             resolved!.Record.FormKey.ShouldBe(record.FormKey);
         }

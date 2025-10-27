@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWater);
+        protected override Type LinkType => typeof(IWaterGetter);
 
 
         #region Texture

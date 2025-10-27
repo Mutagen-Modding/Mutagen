@@ -1715,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEnchantment);
+        protected override Type LinkType => typeof(IEnchantmentGetter);
 
 
         #region Name

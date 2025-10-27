@@ -5347,7 +5347,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILocation);
+        protected override Type LinkType => typeof(ILocationGetter);
 
         public Location.MajorFlag MajorFlags => (Location.MajorFlag)this.MajorRecordFlagsRaw;
 

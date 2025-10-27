@@ -1857,7 +1857,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IZoom);
+        protected override Type LinkType => typeof(IZoomGetter);
 
 
         private RangeInt32? _ZNAMLocation;

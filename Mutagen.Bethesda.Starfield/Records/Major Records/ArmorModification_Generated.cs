@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IArmorModification);
+        protected override Type LinkType => typeof(IArmorModificationGetter);
 
 
         partial void CustomFactoryEnd(

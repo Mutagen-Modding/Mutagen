@@ -2484,7 +2484,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IArmor);
+        protected override Type LinkType => typeof(IArmorGetter);
 
 
         #region Name

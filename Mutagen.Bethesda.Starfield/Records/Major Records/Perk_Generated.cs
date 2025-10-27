@@ -2589,7 +2589,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPerk);
+        protected override Type LinkType => typeof(IPerkGetter);
 
         public Perk.MajorFlag MajorFlags => (Perk.MajorFlag)this.MajorRecordFlagsRaw;
 

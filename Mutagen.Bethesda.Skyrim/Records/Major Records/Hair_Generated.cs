@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IHair);
+        protected override Type LinkType => typeof(IHairGetter);
 
 
         partial void CustomFactoryEnd(

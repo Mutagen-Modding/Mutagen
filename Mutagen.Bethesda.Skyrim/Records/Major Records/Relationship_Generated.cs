@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRelationship);
+        protected override Type LinkType => typeof(IRelationshipGetter);
 
         public Relationship.MajorFlag MajorFlags => (Relationship.MajorFlag)this.MajorRecordFlagsRaw;
 

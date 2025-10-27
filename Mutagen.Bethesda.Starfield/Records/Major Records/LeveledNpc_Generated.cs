@@ -3219,7 +3219,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILeveledNpc);
+        protected override Type LinkType => typeof(ILeveledNpcGetter);
 
         public LeveledNpc.MajorFlag MajorFlags => (LeveledNpc.MajorFlag)this.MajorRecordFlagsRaw;
 

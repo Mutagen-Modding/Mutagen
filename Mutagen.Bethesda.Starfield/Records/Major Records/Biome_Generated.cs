@@ -2737,7 +2737,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Terrain.Clear();
             item.GroundLayerNormal = default;
             item.BTPS = default;
-            item.DistantView = [];
+            item.DistantView = Array.Empty<byte>();
             item.GlobalLayerMaterial = default;
             item.BlockDensityMultGlobal.Clear();
             item.CellDensityMultGlobal.Clear();
@@ -4692,7 +4692,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBiome);
+        protected override Type LinkType => typeof(IBiomeGetter);
 
 
         #region Name

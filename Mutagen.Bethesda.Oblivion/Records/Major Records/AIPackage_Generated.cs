@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAIPackage);
+        protected override Type LinkType => typeof(IAIPackageGetter);
 
 
         #region Data

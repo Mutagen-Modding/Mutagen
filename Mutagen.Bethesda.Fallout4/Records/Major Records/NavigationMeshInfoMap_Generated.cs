@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INavigationMeshInfoMap);
+        protected override Type LinkType => typeof(INavigationMeshInfoMapGetter);
 
 
         #region NavMeshVersion

@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPhotoModeFeature);
+        protected override Type LinkType => typeof(IPhotoModeFeatureGetter);
 
 
         #region Name

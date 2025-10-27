@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAttractionRule);
+        protected override Type LinkType => typeof(IAttractionRuleGetter);
 
 
         private RangeInt32? _AOR2Location;

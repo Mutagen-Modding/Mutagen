@@ -3150,7 +3150,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILight);
+        protected override Type LinkType => typeof(ILightGetter);
 
         public Light.MajorFlag MajorFlags => (Light.MajorFlag)this.MajorRecordFlagsRaw;
 

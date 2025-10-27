@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IClimate);
+        protected override Type LinkType => typeof(IClimateGetter);
 
 
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }

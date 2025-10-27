@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMaterialType);
+        protected override Type LinkType => typeof(IMaterialTypeGetter);
 
 
         #region Parent

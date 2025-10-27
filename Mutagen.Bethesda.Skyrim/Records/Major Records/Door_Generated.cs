@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDoor);
+        protected override Type LinkType => typeof(IDoorGetter);
 
         public Door.MajorFlag MajorFlags => (Door.MajorFlag)this.MajorRecordFlagsRaw;
 

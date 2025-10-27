@@ -8217,7 +8217,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICombatStyle);
+        protected override Type LinkType => typeof(ICombatStyleGetter);
 
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 

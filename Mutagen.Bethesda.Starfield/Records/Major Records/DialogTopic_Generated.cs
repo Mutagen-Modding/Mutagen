@@ -3878,7 +3878,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDialogTopic);
+        protected override Type LinkType => typeof(IDialogTopicGetter);
 
         public DialogTopic.MajorFlag MajorFlags => (DialogTopic.MajorFlag)this.MajorRecordFlagsRaw;
 

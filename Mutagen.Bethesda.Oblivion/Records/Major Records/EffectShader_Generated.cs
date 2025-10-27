@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEffectShader);
+        protected override Type LinkType => typeof(IEffectShaderGetter);
 
 
         #region FillTexture

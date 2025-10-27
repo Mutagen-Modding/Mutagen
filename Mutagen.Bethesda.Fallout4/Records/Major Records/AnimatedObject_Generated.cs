@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAnimatedObject);
+        protected override Type LinkType => typeof(IAnimatedObjectGetter);
 
 
         public IModelGetter? Model { get; private set; }

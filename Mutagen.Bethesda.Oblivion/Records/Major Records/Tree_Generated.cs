@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITree);
+        protected override Type LinkType => typeof(ITreeGetter);
 
 
         public IModelGetter? Model { get; private set; }

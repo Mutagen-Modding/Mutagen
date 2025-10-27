@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAimAssistPose);
+        protected override Type LinkType => typeof(IAimAssistPoseGetter);
 
 
         public IReadOnlyList<IAimAssistPosePointGetter> AttachPoints { get; private set; } = [];

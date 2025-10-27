@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IColorRecord);
+        protected override Type LinkType => typeof(IColorRecordGetter);
 
 
         #region Name

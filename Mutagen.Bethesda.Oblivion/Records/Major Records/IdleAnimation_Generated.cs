@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IIdleAnimation);
+        protected override Type LinkType => typeof(IIdleAnimationGetter);
 
 
         public IModelGetter? Model { get; private set; }

@@ -2756,7 +2756,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IShaderParticleGeometry);
+        protected override Type LinkType => typeof(IShaderParticleGeometryGetter);
 
 
         private RangeInt32? _DATALocation;

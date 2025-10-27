@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Traversal.Clear();
-            item.Unknown = [];
+            item.Unknown = Array.Empty<byte>();
         }
         
         #region Mutagen

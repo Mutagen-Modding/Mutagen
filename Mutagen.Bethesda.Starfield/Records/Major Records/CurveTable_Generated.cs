@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICurveTable);
+        protected override Type LinkType => typeof(ICurveTableGetter);
 
 
         #region REFL

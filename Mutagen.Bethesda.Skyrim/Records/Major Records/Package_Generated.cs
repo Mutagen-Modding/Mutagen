@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.PackageTemplate.Clear();
             item.DataInputVersion = default(Int32);
             item.Data.Clear();
-            item.XnamMarker = [];
+            item.XnamMarker = Array.Empty<byte>();
             item.ProcedureTree.Clear();
             item.OnBegin = null;
             item.OnEnd = null;
@@ -3856,7 +3856,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPackage);
+        protected override Type LinkType => typeof(IPackageGetter);
 
 
         #region VirtualMachineAdapter

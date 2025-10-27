@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDoor);
+        protected override Type LinkType => typeof(IDoorGetter);
 
 
         #region Name

@@ -2534,7 +2534,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDialogTopic);
+        protected override Type LinkType => typeof(IDialogTopicGetter);
 
 
         public IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; private set; } = [];

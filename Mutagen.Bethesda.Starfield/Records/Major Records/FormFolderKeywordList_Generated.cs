@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFormFolderKeywordList);
+        protected override Type LinkType => typeof(IFormFolderKeywordListGetter);
 
 
         #region REFL

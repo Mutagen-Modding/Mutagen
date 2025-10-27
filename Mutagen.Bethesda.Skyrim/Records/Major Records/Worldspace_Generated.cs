@@ -5641,7 +5641,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWorldspace);
+        protected override Type LinkType => typeof(IWorldspaceGetter);
 
         public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -1948,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IConstructibleObject);
+        protected override Type LinkType => typeof(IConstructibleObjectGetter);
 
 
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }

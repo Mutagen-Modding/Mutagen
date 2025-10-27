@@ -2885,7 +2885,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStatic);
+        protected override Type LinkType => typeof(IStaticGetter);
 
 
         #region VirtualMachineAdapter

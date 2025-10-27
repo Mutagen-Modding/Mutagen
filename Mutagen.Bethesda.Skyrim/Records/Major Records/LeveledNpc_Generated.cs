@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILeveledNpc);
+        protected override Type LinkType => typeof(ILeveledNpcGetter);
 
 
         #region ObjectBounds

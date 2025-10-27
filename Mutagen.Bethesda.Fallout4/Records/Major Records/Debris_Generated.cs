@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDebris);
+        protected override Type LinkType => typeof(IDebrisGetter);
 
 
         public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = [];

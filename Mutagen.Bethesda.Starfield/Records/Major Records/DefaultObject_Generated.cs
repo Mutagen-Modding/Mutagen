@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDefaultObject);
+        protected override Type LinkType => typeof(IDefaultObjectGetter);
 
 
         #region XALG

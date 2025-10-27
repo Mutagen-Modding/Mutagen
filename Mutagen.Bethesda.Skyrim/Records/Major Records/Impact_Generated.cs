@@ -2469,7 +2469,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImpact);
+        protected override Type LinkType => typeof(IImpactGetter);
 
 
         public IModelGetter? Model { get; private set; }

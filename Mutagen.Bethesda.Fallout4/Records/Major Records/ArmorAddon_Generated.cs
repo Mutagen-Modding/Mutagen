@@ -2856,7 +2856,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IArmorAddon);
+        protected override Type LinkType => typeof(IArmorAddonGetter);
 
         public ArmorAddon.MajorFlag MajorFlags => (ArmorAddon.MajorFlag)this.MajorRecordFlagsRaw;
 

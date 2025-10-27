@@ -1993,7 +1993,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISigilStone);
+        protected override Type LinkType => typeof(ISigilStoneGetter);
 
 
         #region Name

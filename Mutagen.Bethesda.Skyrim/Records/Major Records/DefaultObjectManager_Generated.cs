@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDefaultObjectManager);
+        protected override Type LinkType => typeof(IDefaultObjectManagerGetter);
 
 
         public IReadOnlyList<IDefaultObjectGetter>? Objects { get; private set; }

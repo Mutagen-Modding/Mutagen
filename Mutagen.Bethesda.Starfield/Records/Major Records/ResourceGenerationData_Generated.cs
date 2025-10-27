@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IResourceGenerationData);
+        protected override Type LinkType => typeof(IResourceGenerationDataGetter);
 
 
         public IReadOnlyList<IResourceGenerationDataItemGetter> Items { get; private set; } = [];

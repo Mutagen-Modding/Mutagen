@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Description.Clear();
             item.Name = default;
-            item.INAM = [];
+            item.INAM = Array.Empty<byte>();
             item.Quest.Clear();
             item.Flags = default(Message.Flag);
             item.DisplayTime = default;
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMessage);
+        protected override Type LinkType => typeof(IMessageGetter);
 
 
         #region Description

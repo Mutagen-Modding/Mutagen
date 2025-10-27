@@ -2286,7 +2286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandscape);
+        protected override Type LinkType => typeof(ILandscapeGetter);
 
 
         #region Flags

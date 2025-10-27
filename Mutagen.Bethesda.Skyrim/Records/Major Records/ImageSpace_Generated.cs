@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImageSpace);
+        protected override Type LinkType => typeof(IImageSpaceGetter);
 
 
         #region ENAM

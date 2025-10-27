@@ -3187,7 +3187,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMiscItem);
+        protected override Type LinkType => typeof(IMiscItemGetter);
 
         public MiscItem.MajorFlag MajorFlags => (MiscItem.MajorFlag)this.MajorRecordFlagsRaw;
 

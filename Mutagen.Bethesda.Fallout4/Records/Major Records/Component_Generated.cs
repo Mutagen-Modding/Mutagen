@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IComponent);
+        protected override Type LinkType => typeof(IComponentGetter);
 
 
         #region ObjectBounds

@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Starfield
             item.UnknownInt2 = default(Int32);
             item.UnknownInt3 = default(Int32);
             item.UnknownInt4 = default(Int32);
-            item.UnknownEnding = [];
+            item.UnknownEnding = Array.Empty<byte>();
             base.Clear(item);
         }
         

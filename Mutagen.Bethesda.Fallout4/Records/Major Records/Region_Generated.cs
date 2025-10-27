@@ -2320,7 +2320,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRegion);
+        protected override Type LinkType => typeof(IRegionGetter);
 
         public Region.MajorFlag MajorFlags => (Region.MajorFlag)this.MajorRecordFlagsRaw;
 
