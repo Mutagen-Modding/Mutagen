@@ -178,6 +178,17 @@ This ensures your changes don't break the build or existing functionality.
 4. Create draft release: `gh release create <version> --draft --title "<version>" --notes "<release-notes>"`
 5. Include full changelog link: `**Full Changelog**: https://github.com/Mutagen-Modding/Mutagen/compare/<last-tag>...<new-tag>`
 
+## Testing Best Practices
+
+### Using AutoFixture for Test Data
+
+Mutagen uses AutoFixture with custom builders to automatically generate properly configured test data. This is the **preferred approach** for writing tests.
+
+**Key Points:**
+- Try to use `[Theory, MutagenAutoData]` attribute for tests that need ModKeys or other primitives
+- If you want, you can use `[Theory, MutagenModAutoData]` which will allow injection of mods, and records that are added to the latest mod.
+- AutoFixture will inject properly configured `SkyrimMod`, `ModKey`, `FormKey`, etc. as test parameters
+
 ## Contributing
 
 See the main README.md and official documentation for contribution guidelines.
