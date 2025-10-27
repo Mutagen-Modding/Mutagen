@@ -72,6 +72,7 @@ nav:
     - Asset Links: plugins/AssetLink.md
     - Compaction: plugins/Compaction.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
+    - Remapping FormLinks: plugins/Remapping-FormLinks.md
     - Printing: plugins/Printing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
     - Specific Records:

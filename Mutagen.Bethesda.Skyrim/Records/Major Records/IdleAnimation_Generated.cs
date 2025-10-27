@@ -2183,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IIdleAnimation);
+        protected override Type LinkType => typeof(IIdleAnimationGetter);
 
 
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];

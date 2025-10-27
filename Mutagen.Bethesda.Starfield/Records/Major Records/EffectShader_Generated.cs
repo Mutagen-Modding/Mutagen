@@ -2768,7 +2768,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEffectShader);
+        protected override Type LinkType => typeof(IEffectShaderGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

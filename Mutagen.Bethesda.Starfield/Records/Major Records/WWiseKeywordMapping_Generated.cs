@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWWiseKeywordMapping);
+        protected override Type LinkType => typeof(IWWiseKeywordMappingGetter);
 
 
         #region WMTI

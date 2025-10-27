@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDefaultObjectManager);
+        protected override Type LinkType => typeof(IDefaultObjectManagerGetter);
 
 
         public IReadOnlyList<IDefaultObjectUseGetter>? Objects { get; private set; }

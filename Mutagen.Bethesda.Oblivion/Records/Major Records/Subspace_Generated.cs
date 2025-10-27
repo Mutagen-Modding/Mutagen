@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISubspace);
+        protected override Type LinkType => typeof(ISubspaceGetter);
 
 
         #region Point

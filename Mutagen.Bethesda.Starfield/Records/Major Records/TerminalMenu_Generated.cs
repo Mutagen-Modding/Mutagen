@@ -2314,7 +2314,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITerminalMenu);
+        protected override Type LinkType => typeof(ITerminalMenuGetter);
 
 
         #region VirtualMachineAdapter

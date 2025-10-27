@@ -3145,7 +3145,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILeveledPackIn);
+        protected override Type LinkType => typeof(ILeveledPackInGetter);
 
         public LeveledPackIn.MajorFlag MajorFlags => (LeveledPackIn.MajorFlag)this.MajorRecordFlagsRaw;
 

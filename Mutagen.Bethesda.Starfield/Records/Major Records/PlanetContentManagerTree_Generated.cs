@@ -1096,9 +1096,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetContentManagerTreeInternal item)
         {
             ClearPartial();
-            item.NAM1 = [];
-            item.NAM2 = [];
-            item.NAM5 = [];
+            item.NAM1 = Array.Empty<byte>();
+            item.NAM2 = Array.Empty<byte>();
+            item.NAM5 = Array.Empty<byte>();
             item.Nodes.Clear();
             item.Conditions = null;
             base.Clear(item);
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlanetContentManagerTree);
+        protected override Type LinkType => typeof(IPlanetContentManagerTreeGetter);
 
 
         #region NAM1

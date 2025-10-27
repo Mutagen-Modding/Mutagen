@@ -1417,7 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IScript);
+        protected override Type LinkType => typeof(IScriptGetter);
 
 
         #region Fields

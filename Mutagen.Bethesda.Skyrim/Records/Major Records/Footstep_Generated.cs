@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFootstep);
+        protected override Type LinkType => typeof(IFootstepGetter);
 
 
         #region ImpactDataSet

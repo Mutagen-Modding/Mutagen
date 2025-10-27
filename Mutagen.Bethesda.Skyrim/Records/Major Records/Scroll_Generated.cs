@@ -3376,7 +3376,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IScroll);
+        protected override Type LinkType => typeof(IScrollGetter);
 
 
         #region ObjectBounds

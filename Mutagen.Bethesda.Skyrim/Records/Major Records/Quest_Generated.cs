@@ -3416,7 +3416,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IQuest);
+        protected override Type LinkType => typeof(IQuestGetter);
 
 
         #region VirtualMachineAdapter

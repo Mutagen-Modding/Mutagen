@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectVisibilityManager);
+        protected override Type LinkType => typeof(IObjectVisibilityManagerGetter);
 
 
         public IReadOnlyList<IObjectVisibilityManagerItemGetter> Objects { get; private set; } = [];

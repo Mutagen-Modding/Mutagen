@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICollisionLayer);
+        protected override Type LinkType => typeof(ICollisionLayerGetter);
 
 
         #region Description

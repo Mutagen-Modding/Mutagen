@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDialogBranch);
+        protected override Type LinkType => typeof(IDialogBranchGetter);
 
 
         #region Quest

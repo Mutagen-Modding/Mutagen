@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITimeOfDayRecord);
+        protected override Type LinkType => typeof(ITimeOfDayRecordGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

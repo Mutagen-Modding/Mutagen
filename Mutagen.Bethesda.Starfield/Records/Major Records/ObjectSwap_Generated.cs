@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectSwap);
+        protected override Type LinkType => typeof(IObjectSwapGetter);
 
 
         partial void CustomFactoryEnd(

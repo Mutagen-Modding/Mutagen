@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEncounterZone);
+        protected override Type LinkType => typeof(IEncounterZoneGetter);
 
 
         private RangeInt32? _DATALocation;

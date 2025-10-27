@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMaterialPath);
+        protected override Type LinkType => typeof(IMaterialPathGetter);
 
 
         #region REFL

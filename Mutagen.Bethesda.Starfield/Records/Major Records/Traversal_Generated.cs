@@ -1412,7 +1412,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITraversal);
+        protected override Type LinkType => typeof(ITraversalGetter);
 
 
         #region DNAM

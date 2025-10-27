@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundOutputModel);
+        protected override Type LinkType => typeof(ISoundOutputModelGetter);
 
 
         #region Data

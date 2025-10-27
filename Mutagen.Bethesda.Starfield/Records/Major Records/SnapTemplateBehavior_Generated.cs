@@ -1765,7 +1765,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISnapTemplateBehavior);
+        protected override Type LinkType => typeof(ISnapTemplateBehaviorGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

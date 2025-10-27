@@ -2,6 +2,8 @@ using Noggog;
 using System.Diagnostics;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Assets;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Records;
@@ -129,6 +131,12 @@ public static class IMajorRecordGetterExt
     public static FormLinkInformation ToFormLinkInformation(this IMajorRecordGetter majorRec)
     {
         return FormLinkInformation.Factory(majorRec);
+    }
+    
+    public static bool IsInjected(this IMajorRecordGetter majorRec, ILinkCache linkCache)
+    {
+        return !linkCache.TryResolveSimpleContext(majorRec, out var context, target: ResolveTarget.Origin)
+            || context.ModKey != majorRec.FormKey.ModKey;
     }
 }
     

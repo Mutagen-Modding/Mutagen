@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IUnknownObjectModification);
+        protected override Type LinkType => typeof(IUnknownObjectModificationGetter);
 
 
         partial void CustomFactoryEnd(

@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBendableSpline);
+        protected override Type LinkType => typeof(IBendableSplineGetter);
 
 
         #region ObjectBounds

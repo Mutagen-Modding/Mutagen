@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGameplayOption);
+        protected override Type LinkType => typeof(IGameplayOptionGetter);
 
 
         #region Name

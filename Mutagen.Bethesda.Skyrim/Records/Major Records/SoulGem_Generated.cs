@@ -2795,7 +2795,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoulGem);
+        protected override Type LinkType => typeof(ISoulGemGetter);
 
         public SoulGem.MajorFlag MajorFlags => (SoulGem.MajorFlag)this.MajorRecordFlagsRaw;
 

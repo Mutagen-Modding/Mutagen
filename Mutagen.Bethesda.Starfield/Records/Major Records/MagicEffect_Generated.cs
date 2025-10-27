@@ -4534,7 +4534,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMagicEffect);
+        protected override Type LinkType => typeof(IMagicEffectGetter);
 
 
         #region VirtualMachineAdapter

@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INavigationMeshObstacleCoverManager);
+        protected override Type LinkType => typeof(INavigationMeshObstacleCoverManagerGetter);
 
 
         public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = [];

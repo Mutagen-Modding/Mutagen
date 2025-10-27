@@ -5332,7 +5332,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILocation);
+        protected override Type LinkType => typeof(ILocationGetter);
 
 
         public IReadOnlyList<IPersistentActorReferenceGetter>? PersistentActorReferencesAdded { get; private set; }

@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoulGem);
+        protected override Type LinkType => typeof(ISoulGemGetter);
 
 
         #region Name

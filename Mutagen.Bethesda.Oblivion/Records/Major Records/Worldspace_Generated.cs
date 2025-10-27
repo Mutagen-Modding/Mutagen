@@ -3980,7 +3980,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWorldspace);
+        protected override Type LinkType => typeof(IWorldspaceGetter);
 
 
         #region Name

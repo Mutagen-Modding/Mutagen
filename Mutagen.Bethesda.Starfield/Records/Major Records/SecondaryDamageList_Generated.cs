@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISecondaryDamageList);
+        protected override Type LinkType => typeof(ISecondaryDamageListGetter);
 
 
         public IReadOnlyList<ISecondaryDamageItemGetter> Damages { get; private set; } = [];

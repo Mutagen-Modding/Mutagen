@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILensFlare);
+        protected override Type LinkType => typeof(ILensFlareGetter);
 
 
         #region ColorInfluence

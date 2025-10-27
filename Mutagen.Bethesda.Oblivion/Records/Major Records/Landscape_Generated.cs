@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandscape);
+        protected override Type LinkType => typeof(ILandscapeGetter);
 
 
         #region DATA

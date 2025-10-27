@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMorphableObject);
+        protected override Type LinkType => typeof(IMorphableObjectGetter);
 
 
         public IModelGetter? Model { get; private set; }

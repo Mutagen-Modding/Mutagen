@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAddonNode);
+        protected override Type LinkType => typeof(IAddonNodeGetter);
 
 
         #region ObjectBounds

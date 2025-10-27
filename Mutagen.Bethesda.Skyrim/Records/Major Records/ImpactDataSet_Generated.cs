@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImpactDataSet);
+        protected override Type LinkType => typeof(IImpactDataSetGetter);
 
 
         public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = [];

@@ -3676,7 +3676,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IProjectile);
+        protected override Type LinkType => typeof(IProjectileGetter);
 
 
         #region ObjectBounds

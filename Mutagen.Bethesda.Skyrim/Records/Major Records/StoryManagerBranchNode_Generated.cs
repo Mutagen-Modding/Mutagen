@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStoryManagerBranchNode);
+        protected override Type LinkType => typeof(IStoryManagerBranchNodeGetter);
 
 
         #region Flags

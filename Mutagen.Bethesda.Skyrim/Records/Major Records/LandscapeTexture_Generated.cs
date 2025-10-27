@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandscapeTexture);
+        protected override Type LinkType => typeof(ILandscapeTextureGetter);
 
 
         #region TextureSet

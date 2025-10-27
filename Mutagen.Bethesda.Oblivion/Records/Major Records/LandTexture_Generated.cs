@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandTexture);
+        protected override Type LinkType => typeof(ILandTextureGetter);
 
 
         #region Icon

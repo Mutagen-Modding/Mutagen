@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRoad);
+        protected override Type LinkType => typeof(IRoadGetter);
 
 
         #region Points

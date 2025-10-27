@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAffinityEvent);
+        protected override Type LinkType => typeof(IAffinityEventGetter);
 
 
         #region Flags

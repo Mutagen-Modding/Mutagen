@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandscapeTexture);
+        protected override Type LinkType => typeof(ILandscapeTextureGetter);
 
 
         #region TextureSet

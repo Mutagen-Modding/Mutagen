@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IActorValueInformation);
+        protected override Type LinkType => typeof(IActorValueInformationGetter);
 
 
         #region Name

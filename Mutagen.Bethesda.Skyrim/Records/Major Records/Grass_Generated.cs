@@ -2382,7 +2382,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGrass);
+        protected override Type LinkType => typeof(IGrassGetter);
 
 
         #region ObjectBounds

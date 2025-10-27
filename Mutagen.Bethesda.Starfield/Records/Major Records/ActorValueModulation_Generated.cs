@@ -2113,7 +2113,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IActorValueModulation);
+        protected override Type LinkType => typeof(IActorValueModulationGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

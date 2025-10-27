@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAtmosphere);
+        protected override Type LinkType => typeof(IAtmosphereGetter);
 
 
         #region REFL

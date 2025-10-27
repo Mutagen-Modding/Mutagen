@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImageSpace);
+        protected override Type LinkType => typeof(IImageSpaceGetter);
 
 
         #region Reflection

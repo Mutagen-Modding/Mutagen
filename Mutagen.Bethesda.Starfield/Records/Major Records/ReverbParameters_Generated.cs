@@ -1462,7 +1462,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IReverbParameters);
+        protected override Type LinkType => typeof(IReverbParametersGetter);
 
 
         #region AudioBus

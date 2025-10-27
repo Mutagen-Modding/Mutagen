@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IShout);
+        protected override Type LinkType => typeof(IShoutGetter);
 
         public Shout.MajorFlag MajorFlags => (Shout.MajorFlag)this.MajorRecordFlagsRaw;
 

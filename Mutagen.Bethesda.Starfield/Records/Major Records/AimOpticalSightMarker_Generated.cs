@@ -2387,7 +2387,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAimOpticalSightMarker);
+        protected override Type LinkType => typeof(IAimOpticalSightMarkerGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

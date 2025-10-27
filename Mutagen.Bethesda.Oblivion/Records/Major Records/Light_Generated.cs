@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILight);
+        protected override Type LinkType => typeof(ILightGetter);
 
 
         public IModelGetter? Model { get; private set; }

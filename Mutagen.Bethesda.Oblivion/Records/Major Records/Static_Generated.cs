@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStatic);
+        protected override Type LinkType => typeof(IStaticGetter);
 
 
         public IModelGetter? Model { get; private set; }

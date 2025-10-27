@@ -1801,7 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAlchemicalApparatus);
+        protected override Type LinkType => typeof(IAlchemicalApparatusGetter);
 
 
         #region Name

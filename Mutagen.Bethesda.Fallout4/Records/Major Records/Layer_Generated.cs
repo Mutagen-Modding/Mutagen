@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILayer);
+        protected override Type LinkType => typeof(ILayerGetter);
 
 
         #region Parent
