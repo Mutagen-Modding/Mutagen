@@ -162,7 +162,14 @@ public sealed class FormKeyJsonConverter : JsonConverter
                 writer.WriteValue(fk.ToString());
                 break;
             case IFormLinkGetter fl when fl.GetType().IsGenericType:
-                writer.WriteValue(fl.FormKeyNullable?.ToString());
+                if (fl.FormKeyNullable is null)
+                {
+                    writer.WriteValue(default(string?));
+                }
+                else
+                {
+                    writer.WriteValue(fl.ToString());
+                }
                 break;
             case IFormLinkIdentifier ident:
                 writer.WriteValue(IFormLinkIdentifier.GetString(ident, simpleType: true));

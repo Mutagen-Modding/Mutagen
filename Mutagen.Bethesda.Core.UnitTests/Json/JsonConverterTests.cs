@@ -1,3 +1,4 @@
+using Loqui;
 using Shouldly;
 using Mutagen.Bethesda.Json;
 using Mutagen.Bethesda.Plugins;
@@ -12,6 +13,13 @@ namespace Mutagen.Bethesda.UnitTests.Json;
 
 public class JsonConverterTests
 {
+    static JsonConverterTests()
+    {
+        Warmup.Init();
+        LoquiRegistration.Register(TestMajorRecord_Registration.Instance);
+    }
+
+    
     #region FormKey
     class FormKeyClass
     {
@@ -174,7 +182,7 @@ public class JsonConverterTests
             Getter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .ShouldBe($"{{\"Direct\":\"{toSerialize.Direct.FormKey}\",\"Setter\":\"{toSerialize.Direct.FormKey}\",\"Getter\":\"{toSerialize.Direct.FormKey}\"}}");
+            .ShouldBe($"{{\"Direct\":\"{toSerialize.Direct.FormKey}<TestGame.ITestMajorRecordGetter>\",\"Setter\":\"{toSerialize.Direct.FormKey}<TestGame.ITestMajorRecordGetter>\",\"Getter\":\"{toSerialize.Direct.FormKey}<TestGame.ITestMajorRecordGetter>\"}}");
     }
 
     [Fact]
@@ -560,6 +568,23 @@ public class JsonConverterTests
             .Direct
             .ShouldBe(target.Direct);
         JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
+            .Interface
+            .ShouldBe(target.Interface);
+    }
+    
+    [Fact]
+    public void FormLinkInformationConverter_FormLink_Serialize_Deserialize_Generic_Interface()
+    {
+        Warmup.Init();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var formKey = FormKey.Factory("123456:Mod.esm");
+        var target = new FormLinkInformationClass()
+        {
+            Interface = new FormLink<ITestMajorRecordGetter>(formKey),
+        };
+        var serialize = JsonConvert.SerializeObject(target, settings);
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(serialize, settings)!
             .Interface
             .ShouldBe(target.Interface);
     }
