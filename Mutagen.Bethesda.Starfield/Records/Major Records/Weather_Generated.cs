@@ -7461,7 +7461,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWeather);
+        protected override Type LinkType => typeof(IWeatherGetter);
 
 
         #region Keywords

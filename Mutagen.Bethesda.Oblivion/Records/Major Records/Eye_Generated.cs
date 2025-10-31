@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEye);
+        protected override Type LinkType => typeof(IEyeGetter);
 
 
         #region Name

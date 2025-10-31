@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGameSettingInt);
+        protected override Type LinkType => typeof(IGameSettingIntGetter);
 
 
         #region Data

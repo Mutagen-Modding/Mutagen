@@ -1,4 +1,4 @@
-﻿using System.Reactive.Disposables;
+using System.Reactive.Disposables;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
@@ -23,17 +23,17 @@ public class ImmutableDirectTests : ALinkingTests
         return Disposable.Empty;
     }
 
-    protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(
+    protected override LinkingTestParameters GetLinkCache(
         ISkyrimModGetter modGetter, LinkCachePreferences prefs)
     {
-        return (LinkCacheStyle.HasCaching,
+        return new (LinkCacheDepthStyle.HasCaching,
             new ImmutableModLinkCache<ISkyrimMod, ISkyrimModGetter>(modGetter, prefs));
     }
 
-    protected override (LinkCacheStyle Style, ILinkCache<ISkyrimMod, ISkyrimModGetter> Cache) GetLinkCache(
+    protected override LinkingTestParameters GetLinkCache(
         LoadOrder<ISkyrimModGetter> loadOrder, LinkCachePreferences prefs)
     {
-        return (LinkCacheStyle.HasCaching, loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs));
+        return new (LinkCacheDepthStyle.HasCaching, loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>(prefs));
     }
 }
     

@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPERS);
+        protected override Type LinkType => typeof(IPERSGetter);
 
 
         #region DATA

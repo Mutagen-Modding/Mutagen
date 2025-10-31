@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MergedTo.Clear();
             item.PreferredMerges.Clear();
             item.LinkedDoors.Clear();
-            item.Unknown = [];
+            item.Unknown = Array.Empty<byte>();
         }
         
         #region Mutagen

@@ -3234,7 +3234,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILeveledBaseForm);
+        protected override Type LinkType => typeof(ILeveledBaseFormGetter);
 
 
         #region VirtualMachineAdapter

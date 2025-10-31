@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INavigationMesh);
+        protected override Type LinkType => typeof(INavigationMeshGetter);
 
         public NavigationMesh.MajorFlag MajorFlags => (NavigationMesh.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -2223,7 +2223,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStaticCollection);
+        protected override Type LinkType => typeof(IStaticCollectionGetter);
 
         public StaticCollection.MajorFlag MajorFlags => (StaticCollection.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILoadScreen);
+        protected override Type LinkType => typeof(ILoadScreenGetter);
 
 
         #region Icon

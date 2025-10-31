@@ -6748,7 +6748,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IQuest);
+        protected override Type LinkType => typeof(IQuestGetter);
 
         public Quest.MajorFlag MajorFlags => (Quest.MajorFlag)this.MajorRecordFlagsRaw;
 

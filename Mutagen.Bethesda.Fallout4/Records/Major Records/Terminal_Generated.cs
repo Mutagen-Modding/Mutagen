@@ -3867,7 +3867,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITerminal);
+        protected override Type LinkType => typeof(ITerminalGetter);
 
         public Terminal.MajorFlag MajorFlags => (Terminal.MajorFlag)this.MajorRecordFlagsRaw;
 

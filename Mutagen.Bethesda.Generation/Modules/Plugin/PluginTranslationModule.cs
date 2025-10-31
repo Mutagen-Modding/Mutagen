@@ -2388,7 +2388,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
             if (await obj.IsMajorRecord() && !obj.Abstract)
             {
-                sb.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                sb.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: true)});");
                 sb.AppendLine();
             }
 

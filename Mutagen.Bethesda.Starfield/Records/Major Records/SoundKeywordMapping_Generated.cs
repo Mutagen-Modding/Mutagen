@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundKeywordMapping);
+        protected override Type LinkType => typeof(ISoundKeywordMappingGetter);
 
 
         public ISoundReferenceGetter? WED0 { get; private set; }

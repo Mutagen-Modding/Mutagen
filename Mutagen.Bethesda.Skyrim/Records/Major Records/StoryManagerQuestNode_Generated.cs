@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStoryManagerQuestNode);
+        protected override Type LinkType => typeof(IStoryManagerQuestNodeGetter);
 
 
         private RangeInt32? _DNAMLocation;

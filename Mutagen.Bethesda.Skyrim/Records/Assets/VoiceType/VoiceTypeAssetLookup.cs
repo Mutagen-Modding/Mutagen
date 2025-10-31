@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -15,7 +16,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
-    private readonly Dictionary<bool, HashSet<FormKey>> _genderNPCs = new();
+    private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
@@ -205,7 +206,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices;
     }
 
-    public IEnumerable<string> GetVoiceTypePaths(IDialogTopicGetter topic)
+    public IEnumerable<DataRelativePath> GetVoiceLineFilePaths(IDialogTopicGetter topic)
     {
         var quest = topic.Quest.TryResolve(_formLinkCache);
         if (quest == null) yield break;
@@ -216,14 +217,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var (questString, topicString) = GetQuestAndTopicStrings(topic, quest);
         foreach (var responses in topic.Responses)
         {
-            foreach (var path in GetVoiceTypePaths(topic, responses, quest, questVoices, questString, topicString))
+            foreach (var path in GetVoiceLineFilePaths(topic, responses, quest, questVoices, questString, topicString))
             {
                 yield return path;
             }
         }
     }
 
-    public IEnumerable<string> GetVoiceTypePaths(IDialogResponsesGetter responses)
+    public IEnumerable<DataRelativePath> GetVoiceLineFilePaths(IDialogResponsesGetter responses)
     {
         var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
         if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) yield break;
@@ -235,7 +236,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var questVoices = GetQuestVoices(topic, quest);
 
         var (questString, topicString) = GetQuestAndTopicStrings(topic, quest);
-        foreach (var path in GetVoiceTypePaths(topic, responses, quest, questVoices, questString, topicString))
+        foreach (var path in GetVoiceLineFilePaths(topic, responses, quest, questVoices, questString, topicString))
         {
             yield return path;
         }
@@ -280,7 +281,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private IEnumerable<string> GetVoiceTypePaths(
+    private IEnumerable<DataRelativePath> GetVoiceLineFilePaths(
         IDialogTopicGetter topic,
         IDialogResponsesGetter responses,
         IQuestGetter quest,
@@ -532,8 +533,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IGetIsSexConditionDataGetter sexConditionDataGetter:
-                var isFemale = sexConditionDataGetter.MaleFemaleGender == MaleFemaleGender.Female;
-                if (_genderNPCs.TryGetValue(isFemale, out var genderNpcFormKeys))
+                if (_genderNPCs.TryGetValue(sexConditionDataGetter.MaleFemaleGender, out var genderNpcFormKeys))
                 {
                     voices = new VoiceContainer(genderNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
@@ -937,35 +937,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     #endregion
 
     #region Gender Parser
-    private HashSet<bool> GetGenders(INpcGetter npc)
+    private HashSet<MaleFemaleGender> GetGenders(INpcGetter npc)
     {
         if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0)
         {
-            return new HashSet<bool> { (npc.Configuration.Flags & NpcConfiguration.Flag.Female) != 0 };
+            return [(npc.Configuration.Flags & NpcConfiguration.Flag.Female) != 0 ? MaleFemaleGender.Female : MaleFemaleGender.Male];
         }
 
-        return npc.Template.IsNull ? new HashSet<bool>() : GetGenders(npc.Template);
-
-    }
-
-    private HashSet<bool> GetGenders(IFormLinkGetter<INpcSpawnGetter> npcTemplate)
-    {
-        if (npcTemplate.IsNull) return new HashSet<bool>();
-
-        //NPC
-        var npc = npcTemplate.TryResolve<INpcGetter>(_formLinkCache);
-        if (npc != null) return GetGenders(npc);
-
-        //Levelled NPC
-        var leveledNpc = npcTemplate.TryResolve<ILeveledNpcGetter>(_formLinkCache);
-        if (leveledNpc is { Entries: {} })
-        {
-            return leveledNpc.Entries
-                .Select(entry => entry.Data?.Reference).NotNull()
-                .SelectMany(GetGenders).ToHashSet();
-        }
-
-        return new HashSet<bool>();
+        return [];
     }
     #endregion
 
@@ -977,28 +956,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             return new HashSet<FormKey> { npc.Race.FormKey };
         }
 
-        return npc.Template.IsNull ? new HashSet<FormKey>() : GetRaces(npc.Template);
-
-    }
-
-    private HashSet<FormKey> GetRaces(IFormLinkGetter<INpcSpawnGetter> npcTemplate)
-    {
-        if (npcTemplate.IsNull) return new HashSet<FormKey>();
-
-        //NPC
-        var npc = npcTemplate.TryResolve<INpcGetter>(_formLinkCache);
-        if (npc != null) return GetRaces(npc);
-
-        //Levelled NPC
-        var leveledNpc = npcTemplate.TryResolve<ILeveledNpcGetter>(_formLinkCache);
-        if (leveledNpc is { Entries: {} })
-        {
-            return leveledNpc.Entries
-                .Select(entry => entry.Data?.Reference).NotNull()
-                .SelectMany(GetRaces).ToHashSet();
-        }
-
-        return new HashSet<FormKey>();
+        return [];
     }
     #endregion
 }

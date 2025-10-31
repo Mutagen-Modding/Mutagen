@@ -11153,6 +11153,22 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                case "GameSettingBool":
+                case "IGameSettingBoolGetter":
+                case "IGameSettingBool":
+                case "IGameSettingBoolInternal":
                     return obj.GameSettings;
                 case "Keyword":
                 case "IKeywordGetter":
@@ -11178,6 +11194,22 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
+                case "GlobalInt":
+                case "IGlobalIntGetter":
+                case "IGlobalInt":
+                case "IGlobalIntInternal":
+                case "GlobalShort":
+                case "IGlobalShortGetter":
+                case "IGlobalShort":
+                case "IGlobalShortInternal":
+                case "GlobalFloat":
+                case "IGlobalFloatGetter":
+                case "IGlobalFloat":
+                case "IGlobalFloatInternal":
+                case "GlobalUnknown":
+                case "IGlobalUnknownGetter":
+                case "IGlobalUnknown":
+                case "IGlobalUnknownInternal":
                     return obj.Globals;
                 case "Class":
                 case "IClassGetter":

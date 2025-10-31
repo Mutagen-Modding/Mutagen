@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Starfield
             item.HNAM.Clear();
             item.INAM = default;
             item.JNAM.Clear();
-            item.LNAM = [];
+            item.LNAM = Array.Empty<byte>();
             item.XGOM = default(Boolean);
         }
         

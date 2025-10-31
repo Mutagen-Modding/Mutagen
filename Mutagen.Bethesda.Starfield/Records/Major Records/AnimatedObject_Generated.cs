@@ -1805,7 +1805,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAnimatedObject);
+        protected override Type LinkType => typeof(IAnimatedObjectGetter);
 
 
         #region XALG

@@ -2508,7 +2508,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILightingTemplate);
+        protected override Type LinkType => typeof(ILightingTemplateGetter);
 
 
         private RangeInt32? _DATALocation;

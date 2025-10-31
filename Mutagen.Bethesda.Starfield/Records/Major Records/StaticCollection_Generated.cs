@@ -2377,7 +2377,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStaticCollection);
+        protected override Type LinkType => typeof(IStaticCollectionGetter);
 
 
         #region ObjectBounds

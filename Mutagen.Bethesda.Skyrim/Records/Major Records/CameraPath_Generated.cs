@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICameraPath);
+        protected override Type LinkType => typeof(ICameraPathGetter);
 
 
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];

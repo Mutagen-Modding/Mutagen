@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IConditionRecord);
+        protected override Type LinkType => typeof(IConditionRecordGetter);
 
 
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];

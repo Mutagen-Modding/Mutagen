@@ -1629,7 +1629,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDamageType);
+        protected override Type LinkType => typeof(IDamageTypeGetter);
 
 
         public IReadOnlyList<IDamageTypeItemGetter> DamageTypes { get; private set; } = [];

@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPathGrid);
+        protected override Type LinkType => typeof(IPathGridGetter);
 
 
         #region PointToPointConnections

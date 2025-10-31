@@ -12254,7 +12254,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImageSpaceAdapter);
+        protected override Type LinkType => typeof(IImageSpaceAdapterGetter);
 
 
         private RangeInt32? _DNAMLocation;

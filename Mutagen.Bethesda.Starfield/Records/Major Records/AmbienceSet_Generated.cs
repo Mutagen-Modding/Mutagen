@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAmbienceSet);
+        protected override Type LinkType => typeof(IAmbienceSetGetter);
 
 
         public IReadOnlyList<IAmbientSoundEventGetter>? Sounds { get; private set; }

@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISurfacePatternStyle);
+        protected override Type LinkType => typeof(ISurfacePatternStyleGetter);
 
 
         partial void CustomFactoryEnd(

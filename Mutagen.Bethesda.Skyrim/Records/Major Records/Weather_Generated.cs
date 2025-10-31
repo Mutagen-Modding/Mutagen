@@ -6590,7 +6590,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWeather);
+        protected override Type LinkType => typeof(IWeatherGetter);
 
 
         #region CloudTexturesParse

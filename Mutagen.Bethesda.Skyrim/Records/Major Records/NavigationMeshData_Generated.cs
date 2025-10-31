@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.MaxDistanceY = default(Single);
             item.Min = default(P3Float);
             item.Max = default(P3Float);
-            item.NavmeshGrid = [];
+            item.NavmeshGrid = Array.Empty<byte>();
         }
         
         #region Mutagen

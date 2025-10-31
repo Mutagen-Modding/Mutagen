@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMovableStatic);
+        protected override Type LinkType => typeof(IMovableStaticGetter);
 
         public MovableStatic.MajorFlag MajorFlags => (MovableStatic.MajorFlag)this.MajorRecordFlagsRaw;
 

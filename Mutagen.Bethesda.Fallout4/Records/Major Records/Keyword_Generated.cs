@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IKeyword);
+        protected override Type LinkType => typeof(IKeywordGetter);
 
         public Keyword.MajorFlag MajorFlags => (Keyword.MajorFlag)this.MajorRecordFlagsRaw;
 

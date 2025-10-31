@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFootstepSet);
+        protected override Type LinkType => typeof(IFootstepSetGetter);
 
 
         #region Count

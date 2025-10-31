@@ -5,5 +5,5 @@ public class SkyrimBehaviorAssetType : IAssetType
 {
     public static IAssetType Instance { get; } = new SkyrimBehaviorAssetType();
     public string BaseFolder => "Meshes";
-    public IEnumerable<string> FileExtensions => new []{ ".hkx" };
+    public IEnumerable<string> FileExtensions => [".hkx"];
 }

@@ -3050,7 +3050,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFaction);
+        protected override Type LinkType => typeof(IFactionGetter);
 
 
         #region Name

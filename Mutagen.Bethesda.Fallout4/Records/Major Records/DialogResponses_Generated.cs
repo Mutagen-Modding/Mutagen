@@ -3273,7 +3273,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDialogResponses);
+        protected override Type LinkType => typeof(IDialogResponsesGetter);
 
         public DialogResponses.MajorFlag MajorFlags => (DialogResponses.MajorFlag)this.MajorRecordFlagsRaw;
 

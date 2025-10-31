@@ -2657,7 +2657,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAlchemicalApparatus);
+        protected override Type LinkType => typeof(IAlchemicalApparatusGetter);
 
 
         #region VirtualMachineAdapter

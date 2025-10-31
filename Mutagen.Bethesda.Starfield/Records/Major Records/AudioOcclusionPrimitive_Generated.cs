@@ -1649,7 +1649,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAudioOcclusionPrimitive);
+        protected override Type LinkType => typeof(IAudioOcclusionPrimitiveGetter);
 
 
         #region ObjectBounds

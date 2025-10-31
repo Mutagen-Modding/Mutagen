@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAnimationSoundTagSet);
+        protected override Type LinkType => typeof(IAnimationSoundTagSetGetter);
 
 
         public IReadOnlyList<IAnimationSoundTagGetter> Tags { get; private set; } = [];

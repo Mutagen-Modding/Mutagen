@@ -2137,7 +2137,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStatic);
+        protected override Type LinkType => typeof(IStaticGetter);
 
         public Static.MajorFlag MajorFlags => (Static.MajorFlag)this.MajorRecordFlagsRaw;
 

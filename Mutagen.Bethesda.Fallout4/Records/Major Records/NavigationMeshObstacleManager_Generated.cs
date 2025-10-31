@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INavigationMeshObstacleManager);
+        protected override Type LinkType => typeof(INavigationMeshObstacleManagerGetter);
 
 
         public IReadOnlyList<INavigationMeshObstacleManagerSubObjectGetter> SubObjects { get; private set; } = [];

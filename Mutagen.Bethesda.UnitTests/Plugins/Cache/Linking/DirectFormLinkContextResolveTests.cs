@@ -19,7 +19,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<INpcGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.False(contextRetriever.TryResolveContext<INpc, INpcGetter>(formLink, package, out var _));
         });
@@ -33,7 +33,7 @@ public partial class ALinkingTests
         var npc = mod.Npcs.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<INpc, INpcGetter>(formLink, package, out var linkedRec));
             linkedRec.Record.ShouldBeSameAs(npc);
@@ -48,7 +48,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.False(contextRetriever.TryResolveContext<IPlacedNpc, IPlacedNpcGetter>(formLink, package, out var _));
         });
@@ -70,7 +70,7 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<IPlacedNpc, IPlacedNpcGetter>(placedFormLink, package, out var linkedPlacedNpc));
             linkedPlacedNpc.Record.ShouldBeSameAs(placedNpc);
@@ -95,7 +95,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<INpcGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.Null(contextRetriever.ResolveContext<INpc, INpcGetter>(formLink, package));
         });
@@ -109,7 +109,7 @@ public partial class ALinkingTests
         var npc = mod.Npcs.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             var resolvedNpc = contextRetriever.ResolveContext<INpc, INpcGetter>(formLink, package);
             resolvedNpc.Record.ShouldBeSameAs(npc);
@@ -124,7 +124,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IPlacedNpcGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.Null(contextRetriever.ResolveContext<IPlacedNpc, IPlacedNpcGetter>(formLink, package));
         });
@@ -146,7 +146,7 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             var linkedPlacedNpc = contextRetriever.ResolveContext<IPlacedNpc, IPlacedNpcGetter>(placedFormLink, package);
             linkedPlacedNpc.Record.ShouldBeSameAs(placedNpc);
@@ -173,7 +173,7 @@ public partial class ALinkingTests
         var spell = mod.Spells.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package, out var linkedRec));
             linkedRec.Record.ShouldBeSameAs(spell);
@@ -188,7 +188,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.False(contextRetriever.TryResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package, out var _));
         });
@@ -200,7 +200,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.False(contextRetriever.TryResolveContext<IPlaced, IPlacedGetter>(formLink, package, out var _));
         });
@@ -222,7 +222,7 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<IPlaced, IPlacedGetter>(placedFormLink, package, out var linkedPlacedNpc));
             linkedPlacedNpc.Record.ShouldBeSameAs(placedNpc);
@@ -249,7 +249,7 @@ public partial class ALinkingTests
         var spell = mod.Spells.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             var resolved = contextRetriever.ResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package);
             resolved.Record.ShouldBeSameAs(spell);
@@ -264,7 +264,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             var resolved = contextRetriever.ResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package);
             Assert.Null(resolved);
@@ -277,7 +277,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             var resolved = contextRetriever.ResolveContext<IPlaced, IPlacedGetter>(formLink, package);
             Assert.Null(resolved);
@@ -300,7 +300,7 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             var resolvedPlaced = contextRetriever.ResolveContext<IPlaced, IPlacedGetter>(placedFormLink, package);
             resolvedPlaced.Record.ShouldBeSameAs(placedNpc);

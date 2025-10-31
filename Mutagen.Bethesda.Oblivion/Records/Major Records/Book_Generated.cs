@@ -2015,7 +2015,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBook);
+        protected override Type LinkType => typeof(IBookGetter);
 
 
         #region Name

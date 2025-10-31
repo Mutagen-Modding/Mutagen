@@ -2789,7 +2789,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFlora);
+        protected override Type LinkType => typeof(IFloraGetter);
 
 
         #region VirtualMachineAdapter

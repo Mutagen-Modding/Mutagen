@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedArrow);
+        protected override Type LinkType => typeof(IPlacedArrowGetter);
 
 
         partial void CustomFactoryEnd(

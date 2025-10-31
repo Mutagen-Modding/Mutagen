@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGroundCover);
+        protected override Type LinkType => typeof(IGroundCoverGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

@@ -4639,7 +4639,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IActivator);
+        protected override Type LinkType => typeof(IActivatorGetter);
 
         public Activator.MajorFlag MajorFlags => (Activator.MajorFlag)this.MajorRecordFlagsRaw;
 

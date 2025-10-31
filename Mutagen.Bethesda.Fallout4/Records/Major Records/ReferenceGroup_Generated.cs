@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IReferenceGroup);
+        protected override Type LinkType => typeof(IReferenceGroupGetter);
 
 
         #region Name

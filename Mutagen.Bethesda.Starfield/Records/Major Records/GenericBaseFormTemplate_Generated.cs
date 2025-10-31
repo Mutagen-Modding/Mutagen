@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGenericBaseFormTemplate);
+        protected override Type LinkType => typeof(IGenericBaseFormTemplateGetter);
 
 
         public IReadOnlyList<String> Components { get; private set; } = [];

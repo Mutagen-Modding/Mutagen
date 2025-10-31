@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMaterialSwap);
+        protected override Type LinkType => typeof(IMaterialSwapGetter);
 
         public MaterialSwap.MajorFlag MajorFlags => (MaterialSwap.MajorFlag)this.MajorRecordFlagsRaw;
 

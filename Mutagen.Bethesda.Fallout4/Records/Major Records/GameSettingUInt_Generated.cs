@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGameSettingUInt);
+        protected override Type LinkType => typeof(IGameSettingUIntGetter);
 
 
         #region Data

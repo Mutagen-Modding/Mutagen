@@ -2527,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundDescriptor);
+        protected override Type LinkType => typeof(ISoundDescriptorGetter);
 
 
         #region Type

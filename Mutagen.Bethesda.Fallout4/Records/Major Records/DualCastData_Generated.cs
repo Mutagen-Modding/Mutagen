@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDualCastData);
+        protected override Type LinkType => typeof(IDualCastDataGetter);
 
 
         partial void CustomFactoryEnd(

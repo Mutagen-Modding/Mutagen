@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IVisualEffect);
+        protected override Type LinkType => typeof(IVisualEffectGetter);
 
 
         private RangeInt32? _DATALocation;

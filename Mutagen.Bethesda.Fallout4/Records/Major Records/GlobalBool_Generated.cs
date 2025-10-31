@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGlobalBool);
+        protected override Type LinkType => typeof(IGlobalBoolGetter);
 
 
         #region Data

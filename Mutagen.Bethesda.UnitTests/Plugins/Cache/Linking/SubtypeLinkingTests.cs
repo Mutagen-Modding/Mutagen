@@ -31,7 +31,7 @@ public partial class ALinkingTests
         };
         using var disp = ConvertMod(prototype, out var mod);
         var (style, package) = GetLinkCache(mod, cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(mod.LeveledItems.First().Entries[0].Data.Reference.TryResolve(package, out IArmorGetter armorGetterLink));
         });

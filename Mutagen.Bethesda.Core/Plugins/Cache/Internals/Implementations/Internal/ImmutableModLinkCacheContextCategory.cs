@@ -74,7 +74,7 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
             majorRec = default;
             return false;
         }
-        var cache = GetContextCache(typeof(TMajorGetter));
+        var cache = GetContextCache(typeof(TMajorGetter), forSimple: false);
         if (!cache.TryGetValue(key, out var majorRecObj)
             || !(majorRecObj.Record is TMajorGetter))
         {
@@ -93,7 +93,7 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
             majorRec = default;
             return false;
         }
-        var cache = GetContextCache(typeof(TMajorGetter));
+        var cache = GetContextCache(typeof(TMajorGetter), forSimple: true);
         if (!cache.TryGetValue(key, out var majorRecObj)
             || !(majorRecObj.Record is TMajorGetter))
         {
@@ -104,14 +104,17 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
         return true;
     }
 
-    public bool TryResolveContext(TKey key, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
+    public bool TryResolveContext(
+        TKey key, 
+        Type type,
+        [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> majorRec)
     {
         if (_shortCircuit(key))
         {
             majorRec = default;
             return false;
         }
-        var cache = GetContextCache(type);
+        var cache = GetContextCache(type, forSimple: false);
         if (!cache.TryGetValue(key, out majorRec))
         {
             majorRec = default;
@@ -127,7 +130,7 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
             majorRec = default;
             return false;
         }
-        var cache = GetContextCache(type);
+        var cache = GetContextCache(type, forSimple: true);
         if (!cache.TryGetValue(key, out majorRec))
         {
             majorRec = default;
@@ -146,9 +149,9 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
         return _untypedContexts.Value.TryGetValue(key, out majorRec);
     }
 
-    private IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey> GetContextCache(Type type)
+    private IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey> GetContextCache(Type type, bool forSimple)
     {
-        if (_parent._simple)
+        if (!forSimple && _parent._simple)
         {
             throw new ArgumentException("Queried for record on a simple cache");
         }
@@ -188,7 +191,7 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
                     foreach (var regis in objs.Registrations)
                     {
                         majorRecords.Set(
-                            GetContextCache(regis.GetterType).Items);
+                            GetContextCache(regis.GetterType, forSimple: forSimple).Items);
                     }
                     _contexts[type] = majorRecords;
                     cache = majorRecords;

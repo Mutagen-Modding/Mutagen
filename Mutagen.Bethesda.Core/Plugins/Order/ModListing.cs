@@ -17,6 +17,10 @@ public sealed record ModListing : IModListingGetter
     public bool ModExists { get; init; } = true;
 
     /// <inheritdoc />
+    [Obsolete("Use ModExists instead")]
+    public bool ExistsOnDisk => ModExists;
+
+    /// <inheritdoc />
     public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
 
     /// <inheritdoc />
@@ -65,6 +69,10 @@ public sealed record ModListing<TMod> : IModListing<TMod>
 
     /// <inheritdoc />
     public bool ModExists => Mod != null;
+
+    /// <inheritdoc />
+    [Obsolete("Use ModExists instead")]
+    public bool ExistsOnDisk => ModExists;
 
     /// <inheritdoc />
     public bool Ghosted => !string.IsNullOrWhiteSpace(GhostSuffix);
@@ -160,7 +168,10 @@ public interface IModListing<TMod> : IModListingGetter<TMod>
 public interface IModListingGetter : ILoadOrderListingGetter
 {
     public bool ModExists { get; }
-        
+
+    [Obsolete("Use ModExists instead")]
+    public bool ExistsOnDisk => ModExists;
+
     public static string ToString(IModListingGetter getter)
     {
         return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.ModExists ? null : " (missing)")}{(getter.Ghosted ? " (ghosted)" : null)}";

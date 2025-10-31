@@ -1915,7 +1915,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IActionRecord);
+        protected override Type LinkType => typeof(IActionRecordGetter);
 
         public ActionRecord.MajorFlag MajorFlags => (ActionRecord.MajorFlag)this.MajorRecordFlagsRaw;
 

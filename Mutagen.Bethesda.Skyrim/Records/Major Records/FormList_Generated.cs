@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFormList);
+        protected override Type LinkType => typeof(IFormListGetter);
 
 
         public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; private set; } = [];

@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IResource);
+        protected override Type LinkType => typeof(IResourceGetter);
 
 
         #region Name

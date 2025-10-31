@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedBeam);
+        protected override Type LinkType => typeof(IPlacedBeamGetter);
 
 
         partial void CustomFactoryEnd(

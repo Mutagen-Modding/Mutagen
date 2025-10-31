@@ -3908,7 +3908,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(INpcGetter);
 
 
         #region Name

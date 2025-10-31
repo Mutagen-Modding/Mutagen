@@ -1446,14 +1446,16 @@ public sealed class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, T
     public bool TryResolveSimpleContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,
         ResolveTarget target = ResolveTarget.Winner)
     {
-        if (TryResolveContext(formKey, type, out var context))
+        CheckDisposal();
+            
+        if (target == ResolveTarget.Origin
+            && formKey.ModKey != _sourceMod.ModKey)
         {
-            majorRec = context;
-            return true;
+            majorRec = default;
+            return false;
         }
 
-        majorRec = default;
-        return false;
+        return _formKeyContexts.TryResolveSimpleContext(formKey, type, out majorRec);
     }
 
     public bool TryResolveSimpleContext(IFormLinkIdentifier formLink, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec,

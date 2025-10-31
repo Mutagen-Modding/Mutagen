@@ -2767,7 +2767,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISnapTemplateNode);
+        protected override Type LinkType => typeof(ISnapTemplateNodeGetter);
 
 
         #region ObjectBounds

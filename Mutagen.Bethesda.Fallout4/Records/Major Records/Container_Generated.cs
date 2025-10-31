@@ -3303,7 +3303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IContainer);
+        protected override Type LinkType => typeof(IContainerGetter);
 
         public Container.MajorFlag MajorFlags => (Container.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBodyPartData);
+        protected override Type LinkType => typeof(IBodyPartDataGetter);
 
 
         public IModelGetter? Model { get; private set; }

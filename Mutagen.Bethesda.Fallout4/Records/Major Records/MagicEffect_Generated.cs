@@ -4878,7 +4878,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMagicEffect);
+        protected override Type LinkType => typeof(IMagicEffectGetter);
 
 
         #region VirtualMachineAdapter

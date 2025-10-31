@@ -2400,7 +2400,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectEffect);
+        protected override Type LinkType => typeof(IObjectEffectGetter);
 
 
         #region ObjectBounds
