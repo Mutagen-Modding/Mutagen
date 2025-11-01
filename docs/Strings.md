@@ -98,3 +98,91 @@ using (var stringsWriter = new StringsWriter(modKey, pathToStringsFolder))
     System.Console.WriteLine($"{myStr} was registered into the strings files for {source} under key: {key}.");
 }
 ```
+
+## Exporting Mods with Localization
+When exporting a mod, you can control whether strings are localized (written to separate `.strings` files) or embedded directly in the mod file.
+
+### Localization Flag
+The localization behavior is controlled by the `Localization` flag in the mod header:
+```csharp
+SkyrimMod mod = ...;
+
+// Enable localization - strings will be written to separate .strings files
+mod.ModHeader.Flags = mod.ModHeader.Flags.SetTo(SkyrimModHeader.HeaderFlag.Localized, true);
+
+// Disable localization - strings will be embedded in the mod file
+mod.ModHeader.Flags = mod.ModHeader.Flags.SetTo(SkyrimModHeader.HeaderFlag.Localized, false);
+```
+
+### Localized Export (Localization On)
+When the `Localized` flag is set, Mutagen will:
+- Write each language to separate `.strings` files (e.g., `MyMod_English.STRINGS`, `MyMod_French.STRINGS`)
+- Replace string content in the mod file with numeric indices that reference the strings files
+- Export all languages that have been set on `TranslatedString` objects
+
+```csharp
+SkyrimMod mod = ...;
+mod.ModHeader.Flags = mod.ModHeader.Flags.SetTo(SkyrimModHeader.HeaderFlag.Localized, true);
+
+Npc npc = mod.Npcs.AddNew();
+npc.Name = new TranslatedString("Goblin");
+npc.Name.Set(Language.French, "Lutin");
+npc.Name.Set(Language.Spanish, "Duende");
+
+await mod.BeginWrite
+    .ToPath(modPath)
+    .WithDefaultLoadOrder()
+    .WriteAsync();
+
+// This will create separate strings files:
+// - MyMod_English.STRINGS (contains "Goblin")
+// - MyMod_French.STRINGS (contains "Lutin")
+// - MyMod_Spanish.STRINGS (contains "Duende")
+```
+
+### Embedded Export (Localization Off)
+When the `Localized` flag is not set, Mutagen will:
+- Embed the default language's string values directly in the mod file
+- Not generate any `.strings` files
+- Ignore all non-default language translations
+
+```csharp
+SkyrimMod mod = ...;
+mod.ModHeader.Flags = mod.ModHeader.Flags.SetTo(SkyrimModHeader.HeaderFlag.Localized, false);
+
+Npc npc = mod.Npcs.AddNew();
+npc.Name = new TranslatedString("Goblin");
+npc.Name.Set(Language.French, "Lutin");  // This will be ignored during export
+
+await mod.BeginWrite
+    .ToPath(modPath)
+    .WithDefaultLoadOrder()
+    .WriteAsync();
+
+// The mod file will contain "Goblin" embedded directly
+// French translation will not be exported
+```
+
+### Setting Target Language for Embedded Export
+When exporting with localization disabled, you can specify which language should be used as the embedded value:
+```csharp
+await mod.BeginWrite
+    .ToPath(modPath)
+    .WithDefaultLoadOrder()
+    .WithTargetLanguage(Language.French)
+    .WriteAsync();
+
+// This will embed the French translation values instead of the default language
+```
+
+### Custom StringsWriter
+For advanced scenarios, you can provide a custom `StringsWriter` to control the strings export process:
+```csharp
+using var stringsWriter = new StringsWriter(mod.ModKey, stringsOutputFolder);
+
+await mod.BeginWrite
+    .ToPath(modPath)
+    .WithDefaultLoadOrder()
+    .WithStringsWriter(stringsWriter)
+    .WriteAsync();
+```
