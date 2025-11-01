@@ -1,6 +1,7 @@
 using System.Buffers.Binary;
 using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -149,6 +150,7 @@ public partial class StarfieldMod : AMod
     internal class StarfieldWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IStarfieldModGetter>
     {
         public static readonly StarfieldWriteBuilderInstantiator Instance = new();
+        private static readonly IAutoSplitModWriter AutoSplitter = new AutoSplitModWriter(new MultiModFileSplitter());
 
         public async Task WriteAsync(IStarfieldModGetter mod, BinaryWriteBuilderParams<IStarfieldModGetter> param)
         {
@@ -159,11 +161,30 @@ public partial class StarfieldMod : AMod
         {
             if (param._path != null)
             {
-                mod.WriteToBinary(param._path.Value, param._param);
+                if (param._autoSplit)
+                {
+                    AutoSplitter.Write<IStarfieldMod, IStarfieldModGetter>(
+                        mod,
+                        param._path.Value,
+                        param._param);
+                }
+                else
+                {
+                    mod.WriteToBinary(param._path.Value, param._param);
+                }
             }
             else if (param._stream != null)
             {
-                mod.WriteToBinary(param._stream, param._param);
+                if (param._autoSplit)
+                {
+                    throw new NotSupportedException(
+                        "Auto-split functionality does not support stream-based writing. " +
+                        "Please use file path-based writing (ToPath or IntoFolder) instead of ToStream when using WithAutoSplit().");
+                }
+                else
+                {
+                    mod.WriteToBinary(param._stream, param._param);
+                }
             }
             else
             {

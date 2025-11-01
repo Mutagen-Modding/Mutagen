@@ -31,6 +31,7 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
     internal IModMasterStyledGetter[] KnownMasters { get; init; } = [];
     internal ILoadOrderGetter<IModListingGetter<IModGetter>>? _knownModLoadOrder { get; init; }
+    internal bool _autoSplit { get; init; } = false;
 }
 
 /// <summary>
@@ -1091,6 +1092,15 @@ public interface IBinaryModdedWriteBuilder
     IBinaryModdedWriteBuilder WithForcedLowerFormIdRangeUsage(bool? useLowerRange);
 
     /// <summary>
+    /// Enables automatic splitting of mods when master limit is exceeded.<br/>
+    /// When enabled, if the mod exceeds the master limit during write, it will be automatically<br/>
+    /// split into multiple mod files with _1, _2, _3, etc. suffixes.<br/>
+    /// Note: Only works with file path writes, not stream writes.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithAutoSplit();
+
+    /// <summary>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -1537,6 +1547,27 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
         };
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithForcedLowerFormIdRangeUsage(bool? useLowerRange) => WithForcedLowerFormIdRangeUsage(useLowerRange);
+
+    /// <summary>
+    /// Enables automatic splitting of mods when master limit is exceeded.<br/>
+    /// When enabled, if the mod exceeds the master limit during write, it will be automatically<br/>
+    /// split into multiple mod files with _1, _2, _3, etc. suffixes.<br/>
+    /// <br/>
+    /// IMPORTANT: Only works with file path writes (ToPath/IntoFolder).<br/>
+    /// Using ToStream with WithAutoSplit() will throw a NotSupportedException.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithAutoSplit()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _autoSplit = true
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithAutoSplit() => WithAutoSplit();
 
     /// <summary>
     /// Turns off logic to check for FormID uniqueness.
@@ -2272,6 +2303,26 @@ public record BinaryWriteBuilder<TModGetter>
                 {
                     MinimumFormID = AMinimumFormIdOption.Force(useLowerRange)
                 }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Enables automatic splitting of mods when master limit is exceeded.<br/>
+    /// When enabled, if the mod exceeds the master limit during write, it will be automatically<br/>
+    /// split into multiple mod files with _1, _2, _3, etc. suffixes.<br/>
+    /// <br/>
+    /// IMPORTANT: Only works with file path writes (ToPath/IntoFolder).<br/>
+    /// Using ToStream with WithAutoSplit() will throw a NotSupportedException.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithAutoSplit()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _autoSplit = true
             }
         };
     }

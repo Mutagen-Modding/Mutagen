@@ -3,6 +3,7 @@ using DynamicData.Aggregation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -141,6 +142,7 @@ public partial class Fallout4Mod : AMod
     internal class Fallout4WriteBuilderInstantiator : IBinaryWriteBuilderWriter<IFallout4ModGetter>
     {
         public static readonly Fallout4WriteBuilderInstantiator Instance = new();
+        private static readonly IAutoSplitModWriter AutoSplitter = new AutoSplitModWriter(new MultiModFileSplitter());
 
         public async Task WriteAsync(IFallout4ModGetter mod, BinaryWriteBuilderParams<IFallout4ModGetter> param)
         {
@@ -151,11 +153,30 @@ public partial class Fallout4Mod : AMod
         {
             if (param._path != null)
             {
-                mod.WriteToBinary(param._path.Value, param._param);
+                if (param._autoSplit)
+                {
+                    AutoSplitter.Write<IFallout4Mod, IFallout4ModGetter>(
+                        mod,
+                        param._path.Value,
+                        param._param);
+                }
+                else
+                {
+                    mod.WriteToBinary(param._path.Value, param._param);
+                }
             }
             else if (param._stream != null)
             {
-                mod.WriteToBinary(param._stream, param._param);
+                if (param._autoSplit)
+                {
+                    throw new NotSupportedException(
+                        "Auto-split functionality does not support stream-based writing. " +
+                        "Please use file path-based writing (ToPath or IntoFolder) instead of ToStream when using WithAutoSplit().");
+                }
+                else
+                {
+                    mod.WriteToBinary(param._stream, param._param);
+                }
             }
             else
             {

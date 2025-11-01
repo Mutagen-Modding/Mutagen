@@ -4,7 +4,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
-public class MultiModFileSplitter
+public class MultiModFileSplitter : IMultiModFileSplitter
 {
     internal class EquatableModKeySet : IEquatable<EquatableModKeySet>
     {

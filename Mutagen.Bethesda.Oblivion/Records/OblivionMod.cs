@@ -2,6 +2,7 @@ using Noggog;
 using System.Buffers.Binary;
 using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -136,6 +137,7 @@ public partial class OblivionMod : AMod
     internal class OblivionWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IOblivionModGetter>
     {
         public static readonly OblivionWriteBuilderInstantiator Instance = new();
+        private static readonly IAutoSplitModWriter AutoSplitter = new AutoSplitModWriter(new MultiModFileSplitter());
 
         public async Task WriteAsync(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
         {
@@ -146,11 +148,30 @@ public partial class OblivionMod : AMod
         {
             if (param._path != null)
             {
-                mod.WriteToBinary(param._path.Value, param._param);
+                if (param._autoSplit)
+                {
+                    AutoSplitter.Write<IOblivionMod, IOblivionModGetter>(
+                        mod,
+                        param._path.Value,
+                        param._param);
+                }
+                else
+                {
+                    mod.WriteToBinary(param._path.Value, param._param);
+                }
             }
             else if (param._stream != null)
             {
-                mod.WriteToBinary(param._stream, param._param);
+                if (param._autoSplit)
+                {
+                    throw new NotSupportedException(
+                        "Auto-split functionality does not support stream-based writing. " +
+                        "Please use file path-based writing (ToPath or IntoFolder) instead of ToStream when using WithAutoSplit().");
+                }
+                else
+                {
+                    mod.WriteToBinary(param._stream, param._param);
+                }
             }
             else
             {

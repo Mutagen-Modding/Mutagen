@@ -2,6 +2,7 @@ using Noggog;
 using System.Buffers.Binary;
 using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -154,6 +155,7 @@ public partial class SkyrimMod : AMod
     internal class SkyrimWriteBuilderInstantiator : IBinaryWriteBuilderWriter<ISkyrimModGetter>
     {
         public static readonly SkyrimWriteBuilderInstantiator Instance = new();
+        private static readonly IAutoSplitModWriter AutoSplitter = new AutoSplitModWriter(new MultiModFileSplitter());
 
         public async Task WriteAsync(ISkyrimModGetter mod, BinaryWriteBuilderParams<ISkyrimModGetter> param)
         {
@@ -164,11 +166,30 @@ public partial class SkyrimMod : AMod
         {
             if (param._path != null)
             {
-                mod.WriteToBinary(param._path.Value, param._param);
+                if (param._autoSplit)
+                {
+                    AutoSplitter.Write<ISkyrimMod, ISkyrimModGetter>(
+                        mod,
+                        param._path.Value,
+                        param._param);
+                }
+                else
+                {
+                    mod.WriteToBinary(param._path.Value, param._param);
+                }
             }
             else if (param._stream != null)
             {
-                mod.WriteToBinary(param._stream, param._param);
+                if (param._autoSplit)
+                {
+                    throw new NotSupportedException(
+                        "Auto-split functionality does not support stream-based writing. " +
+                        "Please use file path-based writing (ToPath or IntoFolder) instead of ToStream when using WithAutoSplit().");
+                }
+                else
+                {
+                    mod.WriteToBinary(param._stream, param._param);
+                }
             }
             else
             {

@@ -158,6 +158,9 @@
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
         <Compile Include="Installs\XboxGameSource.cs" />
+        <Compile Include="Plugins\Analysis\DI\AutoSplitModWriter.cs" />
+        <Compile Include="Plugins\Analysis\DI\IAutoSplitModWriter.cs" />
+        <Compile Include="Plugins\Analysis\DI\IMultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\MultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
         <Compile Include="Plugins\Analysis\RecordCompactionCompatibilityDetection.cs" />
