@@ -70,18 +70,19 @@ public partial class ALinkingTests
     public void FormLink_Direct_ResolveSimpleContext_DialogResponses_BinaryOverlay(LinkCachePreferences.RetentionType cacheType, AContextRetriever contextRetriever)
     {
         // Test that DialogResponses binary overlays (read-only) can be resolved
-        using var tempFile = new TempFile();
-
+        using var tempFolder = TempFolder.Factory();
+        var tempFile = Path.Combine(tempFolder.Dir.Path, TestConstants.PluginModKey.FileName);
+        
         // Create and write a mod with DialogResponses
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var dialogTopic = mod.DialogTopics.AddNew();
         var dialogResponse = new DialogResponses(mod);
         dialogTopic.Responses.Add(dialogResponse);
 
-        mod.WriteToBinary(tempFile.File.Path);
+        mod.WriteToBinary(tempFile);
 
         // Reimport as read-only (binary overlay)
-        using var reimported = SkyrimMod.CreateFromBinaryOverlay(tempFile.File.Path, SkyrimRelease.SkyrimSE);
+        using var reimported = SkyrimMod.CreateFromBinaryOverlay(tempFile, SkyrimRelease.SkyrimSE);
         var (style, package) = GetLinkCache(reimported, cacheType);
 
         // This should work but currently fails for DialogResponsesBinaryOverlay
