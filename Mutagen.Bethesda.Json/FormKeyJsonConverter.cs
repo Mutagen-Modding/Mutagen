@@ -50,7 +50,7 @@ public sealed class FormKeyJsonConverter : JsonConverter
         else
         {
             var str = obj.ToString();
-                
+
             if (objectType == typeof(FormKey))
             {
                 if (str.IsNullOrWhitespace())
@@ -85,24 +85,23 @@ public sealed class FormKeyJsonConverter : JsonConverter
                 if (str.IsNullOrWhitespace())
                 {
                     key = FormKey.Null;
-                }
-                else
-                {
-                    key = FormKey.Factory(str);
+                    if (objectType.GenericTypeArguments.Length == 0)
+                    {
+                        throw new ArgumentException("Empty string to parse to a generic type without a given type argument is not supported");
+                    }
+                    else
+                    {
+                        return GetFormLink(objectType.GenericTypeArguments[0], key);
+                    }
                 }
                 
-                if (IsNullableLink(objectType))
-                {
-                    return Activator.CreateInstance(
-                        typeof(FormLinkNullable<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                        key);
-                }
-                else
-                {
-                    return Activator.CreateInstance(
-                        typeof(FormLink<>).MakeGenericType(objectType.GenericTypeArguments[0]),
-                        key);
-                }
+                (key, var regis) = ParseFormKeyAndType(str);
+                
+                var type = objectType.GenericTypeArguments.Length == 0
+                    ? regis.GetterType
+                    : objectType.GenericTypeArguments[0];
+                
+                return GetFormLink(type, key);
             }
             else
             {
@@ -111,39 +110,61 @@ public sealed class FormKeyJsonConverter : JsonConverter
                     return new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter));
                 }
                 
-                var span = str.AsSpan();
-                var startIndex = span.IndexOf('<');
-                if (startIndex == -1)
-                {
-                    throw new ArgumentException();
-                }
-
-                var endIndex = span.IndexOf('>');
-                if (endIndex == -1)
-                {
-                    throw new ArgumentException();
-                }
-
-                var typeName = span.Slice(startIndex + 1, endIndex - 1 - startIndex).ToString();
-
-                var lastPeriod = typeName.LastIndexOf(".", StringComparison.Ordinal);
-                if (lastPeriod != -1 && typeName[(lastPeriod + 1)..] == "MajorRecord")
-                {
-                    typeName = "Mutagen.Bethesda.Plugins.Records.MajorRecord";
-                }
-                else if (!typeName.StartsWith("Mutagen.Bethesda."))
-                {
-                    typeName = "Mutagen.Bethesda." + typeName;
-                }
-                var regis = LoquiRegistration.GetRegisterByFullName(typeName);
-                if (regis == null)
-                {
-                    throw new ArgumentException($"Unknown object type: {typeName}");
-                }
-
+                var (key, regis) = ParseFormKeyAndType(str);
+                
                 return new FormLinkInformation(
-                    FormKey.Factory(span.Slice(0, startIndex)),
+                    key,
                     regis.GetterType);
+            }
+        }
+        
+        (FormKey FormKey, ILoquiRegistration Registration) ParseFormKeyAndType(string str) {
+            var span = str.AsSpan();
+            var startIndex = span.IndexOf('<');
+            if (startIndex == -1)
+            {
+                throw new ArgumentException();
+            }
+            
+            var endIndex = span.IndexOf('>');
+            if (endIndex == -1)
+            {
+                throw new ArgumentException();
+            }
+            
+            var key = FormKey.Factory(span[..startIndex]);
+            var typeName = span.Slice(startIndex + 1, endIndex - 1 - startIndex).ToString();
+            
+            var lastPeriod = typeName.LastIndexOf('.');
+            if (lastPeriod != -1 && typeName[(lastPeriod + 1)..] == "MajorRecord")
+            {
+                typeName = "Mutagen.Bethesda.Plugins.Records.MajorRecord";
+            }
+            else if (!typeName.StartsWith("Mutagen.Bethesda."))
+            {
+                typeName = "Mutagen.Bethesda." + typeName;
+            }
+            var regis = LoquiRegistration.GetRegisterByFullName(typeName);
+            if (regis == null)
+            {
+                throw new ArgumentException($"Unknown object type: {typeName}");
+            }
+            
+            return (key, regis);
+        }
+        
+        object? GetFormLink(Type type, FormKey key) {
+            if (IsNullableLink(objectType))
+            {
+                return Activator.CreateInstance(
+                    typeof(FormLinkNullable<>).MakeGenericType(type),
+                    key);
+            }
+            else
+            {
+                return Activator.CreateInstance(
+                    typeof(FormLink<>).MakeGenericType(type),
+                    key);
             }
         }
     }
@@ -160,16 +181,6 @@ public sealed class FormKeyJsonConverter : JsonConverter
         {
             case FormKey fk:
                 writer.WriteValue(fk.ToString());
-                break;
-            case IFormLinkGetter fl when fl.GetType().IsGenericType:
-                if (fl.FormKeyNullable is null)
-                {
-                    writer.WriteValue(default(string?));
-                }
-                else
-                {
-                    writer.WriteValue(fl.ToString());
-                }
                 break;
             case IFormLinkIdentifier ident:
                 writer.WriteValue(IFormLinkIdentifier.GetString(ident, simpleType: true));

@@ -19,7 +19,6 @@ public class JsonConverterTests
         LoquiRegistration.Register(TestMajorRecord_Registration.Instance);
     }
 
-    
     #region FormKey
     class FormKeyClass
     {
@@ -182,7 +181,7 @@ public class JsonConverterTests
             Getter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .ShouldBe($"{{\"Direct\":\"{toSerialize.Direct.FormKey}<TestGame.ITestMajorRecordGetter>\",\"Setter\":\"{toSerialize.Direct.FormKey}<TestGame.ITestMajorRecordGetter>\",\"Getter\":\"{toSerialize.Direct.FormKey}<TestGame.ITestMajorRecordGetter>\"}}");
+            .ShouldBe($"{{\"Direct\":\"{toSerialize.Direct.FormKey}<TestGame.TestMajorRecord>\",\"Setter\":\"{toSerialize.Direct.FormKey}<TestGame.TestMajorRecord>\",\"Getter\":\"{toSerialize.Direct.FormKey}<TestGame.TestMajorRecord>\"}}");
     }
 
     [Fact]
@@ -196,7 +195,7 @@ public class JsonConverterTests
             Setter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
             Getter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
         };
-        var toDeserialize = $"{{\"Direct\":\"{target.Direct.FormKey}\",\"Setter\":\"{target.Direct.FormKey}\",\"Getter\":\"{target.Direct.FormKey}\"}}";
+        var toDeserialize = $"{{\"Direct\":\"{target.Direct.FormKey}<TestGame.TestMajorRecord>\",\"Setter\":\"{target.Direct.FormKey}<TestGame.TestMajorRecord>\",\"Getter\":\"{target.Direct.FormKey}<TestGame.TestMajorRecord>\"}}";
         JsonConvert.DeserializeObject<FormLinkClass>(toDeserialize, settings)!
             .Direct
             .ShouldBe(target.Direct);
@@ -215,6 +214,21 @@ public class JsonConverterTests
     }
 
     [Fact]
+    public void FormKeyConverter_FormLink_Serialize_Null()
+    {
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var toSerialize = new FormLinkClass()
+        {
+            Direct = new FormLink<ITestMajorRecordGetter>(FormKey.Null),
+            Setter = new FormLink<ITestMajorRecordGetter>(FormKey.Null),
+            Getter = new FormLink<ITestMajorRecordGetter>(FormKey.Null)
+        };
+        JsonConvert.SerializeObject(toSerialize, settings)
+            .ShouldBe($"{{\"Direct\":\"Null<TestGame.TestMajorRecord>\",\"Setter\":\"Null<TestGame.TestMajorRecord>\",\"Getter\":\"Null<TestGame.TestMajorRecord>\"}}");
+    }
+
+    [Fact]
     public void FormKeyConverter_FormLink_Deserialize_Null()
     {
         var settings = new JsonSerializerSettings();
@@ -225,7 +239,7 @@ public class JsonConverterTests
             Setter = new FormLink<ITestMajorRecordGetter>(FormKey.Null),
             Getter = new FormLink<ITestMajorRecordGetter>(FormKey.Null)
         };
-        var toDeserialize = $"{{\"Direct\":\"Null\",\"Setter\":\"Null\",\"Getter\":\"Null\"}}";
+        var toDeserialize = $"{{\"Direct\":\"Null<TestGame.TestMajorRecord>\",\"Setter\":\"Null<TestGame.TestMajorRecord>\",\"Getter\":\"Null<TestGame.TestMajorRecord>\"}}";
         JsonConvert.DeserializeObject<FormLinkClass>(toDeserialize, settings)!
             .Direct
             .ShouldBe(target.Direct);
@@ -291,7 +305,7 @@ public class JsonConverterTests
     //         Member = new FormLink<ITestMajorRecordGetter>(FormKey.Null)
     //     };
     //     JsonConvert.SerializeObject(toSerialize, settings)
-    //         .ShouldBe($"{{\"Member\":\"Null\"}}");
+    //         .ShouldBe($"{{\"Member\":\"Null<TestGame.TestMajorRecord>\"}}");
     // }
     //
     // [Fact]
@@ -303,7 +317,7 @@ public class JsonConverterTests
     //     {
     //         Member = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
     //     };
-    //     var toDeserialize = $"{{\"Member\":\"{target.Member.FormKey}\"}}";
+    //     var toDeserialize = $"{{\"Member\":\"{target.Member.FormKey}<TestGame.TestMajorRecord>\"}}";
     //     JsonConvert.DeserializeObject<NullableFormLinkClass>(toDeserialize, settings)!
     //         .Member
     //         .ShouldBe(target.Member);
@@ -337,7 +351,7 @@ public class JsonConverterTests
     // {
     //     var settings = new JsonSerializerSettings();
     //     settings.Converters.Add(new FormKeyJsonConverter());
-    //     var toDeserialize = $"{{\"Member\":\"Null\"}}";
+    //     var toDeserialize = $"{{\"Member\":\"Null<TestGame.TestMajorRecord>\"}}";
     //     JsonConvert.DeserializeObject<NullableFormLinkClass>(toDeserialize, settings)!
     //         .Member!.IsNull
     //         .ShouldBeTrue();
@@ -360,7 +374,7 @@ public class JsonConverterTests
             Member = new FormLinkNullable<ITestMajorRecordGetter>(TestConstants.Form2)
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .ShouldBe($"{{\"Member\":\"{toSerialize.Member.FormKey}\"}}");
+            .ShouldBe($"{{\"Member\":\"{toSerialize.Member.FormKey}<TestGame.TestMajorRecord>\"}}");
     }
 
     [Fact]
@@ -373,7 +387,7 @@ public class JsonConverterTests
             Member = new FormLinkNullable<ITestMajorRecordGetter>(default(FormKey?))
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .ShouldBe($"{{\"Member\":null}}");
+            .ShouldBe($"{{\"Member\":\"Null<TestGame.TestMajorRecord>\"}}");
     }
 
     [Fact]
@@ -386,7 +400,7 @@ public class JsonConverterTests
             Member = new FormLinkNullable<ITestMajorRecordGetter>(FormKey.Null)
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .ShouldBe($"{{\"Member\":\"Null\"}}");
+            .ShouldBe($"{{\"Member\":\"Null<TestGame.TestMajorRecord>\"}}");
     }
 
     [Fact]
@@ -398,7 +412,7 @@ public class JsonConverterTests
         {
             Member = new FormLinkNullable<ITestMajorRecordGetter>(TestConstants.Form2)
         };
-        var toDeserialize = $"{{\"Member\":\"{target.Member.FormKey}\"}}";
+        var toDeserialize = $"{{\"Member\":\"{target.Member.FormKey}<TestGame.TestMajorRecord>\"}}";
         JsonConvert.DeserializeObject<FormLinkNullableClass>(toDeserialize, settings)!
             .Member
             .ShouldBe(target.Member);
@@ -455,7 +469,7 @@ public class JsonConverterTests
         {
             Member = new FormLinkNullable<ITestMajorRecordGetter>(FormKey.Null)
         };
-        var toDeserialize = $"{{\"Member\":\"Null\"}}";
+        var toDeserialize = $"{{\"Member\":\"Null<TestGame.TestMajorRecord>\"}}";
         JsonConvert.DeserializeObject<FormLinkNullableClass>(toDeserialize, settings)!
             .Member
             .ShouldBe(target.Member);
@@ -555,15 +569,14 @@ public class JsonConverterTests
     [Fact]
     public void FormLinkInformationConverter_FormLink_Deserialize_Null()
     {
-        Warmup.Init();
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
         {
-            Interface = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
-            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+            Interface = new FormLinkInformation(FormKey.Null, typeof(ITestMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Null, typeof(ITestMajorRecordGetter)),
         };
-        var toDeserialize = $"{{\"Direct\":\"Null\",\"Interface\":\"Null\"}}";
+        var toDeserialize = $"{{\"Direct\":\"Null<TestGame.TestMajorRecord>\",\"Interface\":\"Null<TestGame.TestMajorRecord>\"}}";
         JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
             .Direct
             .ShouldBe(target.Direct);
@@ -575,7 +588,6 @@ public class JsonConverterTests
     [Fact]
     public void FormLinkInformationConverter_FormLink_Serialize_Deserialize_Generic_Interface()
     {
-        Warmup.Init();
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
         var formKey = FormKey.Factory("123456:Mod.esm");
@@ -592,7 +604,6 @@ public class JsonConverterTests
     [Fact]
     public void FormLinkInformationConverter_FormLink_Deserialize()
     {
-        Warmup.Init();
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
@@ -612,7 +623,6 @@ public class JsonConverterTests
     [Fact]
     public void FormLinkInformationConverter_FormLink_Serialize_Null()
     {
-        Warmup.Init();
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
@@ -628,7 +638,6 @@ public class JsonConverterTests
     [Fact]
     public void FormLinkInformationConverter_FormLink_Serialize()
     {
-        Warmup.Init();
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
@@ -644,7 +653,6 @@ public class JsonConverterTests
     [Fact]
     public void FormLinkInformationConverter_FormLink_Deserialize_Empty()
     {
-        Warmup.Init();
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
