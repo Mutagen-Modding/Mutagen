@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -71,8 +71,8 @@ public partial class ALinkingTests
     {
         // Test that DialogResponses binary overlays (read-only) can be resolved
         using var tempFolder = TempFolder.Factory();
-        var tempFile = Path.Combine(tempFolder.Dir.Path, TestConstants.PluginModKey.FileName);
-        
+        var tempFile = Path.Combine(tempFolder.Dir, TestConstants.PluginModKey.FileName);
+
         // Create and write a mod with DialogResponses
         var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
         var dialogTopic = mod.DialogTopics.AddNew();
