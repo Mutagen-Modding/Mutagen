@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     {
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
         public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportMultiFileGetterDelegate(ModKey targetModKey, IEnumerable<ModPath> splitFiles, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -29,6 +30,11 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Function to call to import a new Mod of type T
         /// </summary>
         public static readonly ImporterDelegate Importer;
+
+        /// <summary>
+        /// Function to call to import multiple split mod files as a unified multi-file overlay
+        /// </summary>
+        public static readonly ImportMultiFileGetterDelegate ImportMultiFileGetter;
 
         static ModFactory()
         {
@@ -53,10 +59,14 @@ namespace Mutagen.Bethesda.Plugins.Records
                 if (type == typeof(IModGetter))
                 {
                     Importer = (path, release, param) => (TMod)ModFactory.ImportGetter(path, release, param);
+                    ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
+                        (TMod)ModFactory.ImportMultiFileGetter(targetModKey, splitFiles, loadOrder, release, param);
                 }
                 else
                 {
                     Importer = (path, release, param) => (TMod)ModFactory.ImportSetter(path, release, param);
+                    ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
+                        throw new InvalidOperationException("ImportMultiFileGetter is only supported for getter types (IModGetter), not setter types (IMod)");
                 }
             }
             else
@@ -80,10 +90,14 @@ namespace Mutagen.Bethesda.Plugins.Records
                 if (typeof(TMod).InheritsFrom(typeof(IMod)))
                 {
                     Importer = ModFactoryReflection.GetImporter<TMod>(regis);
+                    ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
+                        throw new InvalidOperationException("ImportMultiFileGetter is only supported for getter/overlay types, not mutable mod types");
                 }
                 else
                 {
                     Importer = ModFactoryReflection.GetOverlay<TMod>(regis);
+                    ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
+                        (TMod)ModFactory.ImportMultiFileGetter(targetModKey, splitFiles, loadOrder, release, param);
                 }
             }
         }
@@ -132,6 +146,189 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IMod Activator(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
         {
             return _dict[release.ToCategory()].Activator(modKey, release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+        }
+
+        /// <summary>
+        /// Imports multiple split mod files and returns a multi-file overlay that presents them as a single unified mod.
+        /// </summary>
+        /// <param name="targetModKey">The ModKey for the unified overlay (typically the base name without _1, _2 suffixes)</param>
+        /// <param name="splitFiles">Paths to the split mod files to merge</param>
+        /// <param name="loadOrder">Load order to use for master ordering</param>
+        /// <param name="release">Game release for the mods</param>
+        /// <param name="param">Binary read parameters</param>
+        /// <returns>Multi-file overlay presenting all split files as a single mod</returns>
+        public static IModDisposeGetter ImportMultiFileGetter(
+            ModKey targetModKey,
+            IEnumerable<ModPath> splitFiles,
+            IEnumerable<IModMasterStyledGetter> loadOrder,
+            GameRelease release,
+            BinaryReadParameters? param = null)
+        {
+            // Import all split files as overlays
+            var overlays = new List<IModDisposeGetter>();
+            foreach (var splitFile in splitFiles)
+            {
+                var overlay = ImportGetter(splitFile, release, param);
+                overlays.Add(overlay);
+            }
+
+            // Validate no duplicate FormIDs across split files
+            ValidateNoDuplicates(overlays, targetModKey);
+
+            // Merge masters from all overlays according to load order
+            var mergedMasters = MergeMasters(overlays, loadOrder);
+
+            // Create multi-file overlay that presents all the split files as one unified mod
+            return CreateMultiFileOverlay(targetModKey, release, overlays, mergedMasters);
+        }
+
+        private static IReadOnlyList<IModMasterStyledGetter> MergeMasters(
+            List<IModDisposeGetter> overlays,
+            IEnumerable<IModMasterStyledGetter> loadOrder)
+        {
+            // Collect all unique masters from all overlays
+            var allMasters = new HashSet<ModKey>();
+            foreach (var overlay in overlays)
+            {
+                foreach (var master in overlay.MasterReferences)
+                {
+                    allMasters.Add(master.Master);
+                }
+            }
+
+            // Create a dictionary for quick load order lookup
+            var loadOrderList = loadOrder.ToList();
+            var loadOrderDict = loadOrderList
+                .Select((m, i) => new { ModKey = m.ModKey, Index = i })
+                .ToDictionary(x => x.ModKey, x => x.Index);
+
+            // Order masters according to the provided load order
+            var orderedMasterKeys = allMasters
+                .OrderBy(m => loadOrderDict.TryGetValue(m, out var index) ? index : int.MaxValue)
+                .ThenBy(m => m.FileName.String) // Fallback to alphabetical for masters not in load order
+                .ToList();
+
+            // Convert to IModMasterStyledGetter list
+            var result = new List<IModMasterStyledGetter>();
+            foreach (var masterKey in orderedMasterKeys)
+            {
+                // Try to find in original load order first
+                var loadOrderEntry = loadOrderList.FirstOrDefault(lo => lo.ModKey == masterKey);
+                if (loadOrderEntry != null)
+                {
+                    result.Add(loadOrderEntry);
+                }
+                else
+                {
+                    // Create a keyed master style if not in load order (default to full master)
+                    result.Add(new KeyedMasterStyle(masterKey, MasterStyle.Full));
+                }
+            }
+
+            return result.AsReadOnly();
+        }
+
+        private static IModDisposeGetter CreateMultiFileOverlay(
+            ModKey modKey,
+            GameRelease gameRelease,
+            List<IModDisposeGetter> overlays,
+            IReadOnlyList<IModMasterStyledGetter> mergedMasters)
+        {
+            // Determine which multi-file overlay class to instantiate based on game release
+            var (typeName, assemblyName) = gameRelease.ToCategory() switch
+            {
+                GameCategory.Skyrim => ("Mutagen.Bethesda.Skyrim.SkyrimMultiModOverlay", "Mutagen.Bethesda.Skyrim"),
+                _ => throw new NotImplementedException(
+                    $"Multi-mod overlay is not yet implemented for {gameRelease}. " +
+                    "Only Skyrim is currently supported.")
+            };
+
+            // Load the overlay type with assembly-qualified name
+            var assemblyQualifiedName = $"{typeName}, {assemblyName}";
+            var overlayType = Type.GetType(assemblyQualifiedName);
+            if (overlayType == null)
+            {
+                throw new InvalidOperationException($"Could not find multi-file overlay type: {assemblyQualifiedName}");
+            }
+
+            // Find the constructor - look for any constructor matching the pattern:
+            // (ModKey, GameRelease, IReadOnlyList<IXXXModGetter>, IReadOnlyList<IModMasterStyledGetter>)
+            var constructor = overlayType.GetConstructors()
+                .FirstOrDefault(c =>
+                {
+                    var parameters = c.GetParameters();
+                    if (parameters.Length != 4) return false;
+                    if (parameters[0].ParameterType != typeof(ModKey)) return false;
+                    if (parameters[1].ParameterType != typeof(GameRelease)) return false;
+                    if (!parameters[2].ParameterType.IsGenericType) return false;
+                    if (parameters[2].ParameterType.GetGenericTypeDefinition() != typeof(IReadOnlyList<>)) return false;
+                    // Check that the list element type is assignable from IModGetter
+                    var listElementType = parameters[2].ParameterType.GetGenericArguments()[0];
+                    if (!typeof(IModGetter).IsAssignableFrom(listElementType)) return false;
+                    if (parameters[3].ParameterType != typeof(IReadOnlyList<IModMasterStyledGetter>)) return false;
+                    return true;
+                });
+
+            if (constructor == null)
+            {
+                throw new InvalidOperationException($"Could not find appropriate constructor for {assemblyQualifiedName}");
+            }
+
+            // Get the expected list element type from the constructor parameter
+            var listParameterType = constructor.GetParameters()[2].ParameterType;
+            var listElementType = listParameterType.GetGenericArguments()[0];
+
+            // Create a properly-typed list by casting each overlay to the expected type
+            // Use reflection to create a List<TCorrectType>
+            var typedListType = typeof(List<>).MakeGenericType(listElementType);
+            var typedList = (System.Collections.IList)System.Activator.CreateInstance(typedListType)!;
+            foreach (var item in overlays)
+            {
+                typedList.Add(item);
+            }
+
+            // Convert to IReadOnlyList
+            var asReadOnlyMethod = typeof(List<>).MakeGenericType(listElementType).GetMethod("AsReadOnly")!;
+            var readOnlyList = asReadOnlyMethod.Invoke(typedList, null);
+
+            // Instantiate the overlay
+            var overlay = constructor.Invoke(new object[]
+            {
+                modKey,
+                gameRelease,
+                readOnlyList!,
+                mergedMasters
+            });
+
+            if (overlay == null)
+            {
+                throw new InvalidOperationException($"Failed to create multi-file overlay of type {assemblyQualifiedName}");
+            }
+
+            return (IModDisposeGetter)overlay;
+        }
+
+        private static void ValidateNoDuplicates(List<IModDisposeGetter> overlays, ModKey modKey)
+        {
+            var seenFormKeys = new Dictionary<FormKey, string>();
+
+            for (int i = 0; i < overlays.Count; i++)
+            {
+                var overlay = overlays[i];
+                var fileName = $"{modKey.FileName.String.Replace(modKey.Type.ToString(), "")}_{i + 1}.{modKey.Type}";
+
+                foreach (var record in overlay.EnumerateMajorRecords())
+                {
+                    if (seenFormKeys.TryGetValue(record.FormKey, out var previousFile))
+                    {
+                        throw new InvalidOperationException(
+                            $"Duplicate FormKey {record.FormKey} found in both {previousFile} and {fileName}. " +
+                            "This indicates corruption in the split files.");
+                    }
+
+                    seenFormKeys[record.FormKey] = fileName;
+                }
+            }
         }
     }
 

@@ -137,6 +137,31 @@ cd Mutagen.Bethesda.Generator.All/bin/Debug/net8.0
 
 The generators use relative paths like `../../../../Mutagen.Bethesda.{Game}/Records` to locate project files. Running from the build output directory ensures these relative paths resolve correctly to the repository structure.
 
+## Project File Management
+
+### Adding New Files to Projects
+
+**Important**: Most projects in this repository use `<EnableDefaultCompileItems>False</EnableDefaultCompileItems>`, which means all source files must be explicitly listed in the `.csproj` file. This is necessary to properly nest generated code files under their corresponding XML definition files.
+
+When adding new `.cs` files to a project:
+
+1. **Find the correct location** in the `.csproj` file (files are typically grouped by directory/feature)
+2. **Add a `<Compile Include="...">` element** with the file path
+3. **For generated files only**: Add a `<DependentUpon>...</DependentUpon>` element to nest it under the XML file
+
+Example:
+```xml
+<!-- Regular file (no nesting) -->
+<Compile Include="Plugins\Analysis\DI\MultiModFileReader.cs" />
+
+<!-- Generated file (nested under XML) -->
+<Compile Include="Records\SkyrimMod_Generated.cs">
+  <DependentUpon>SkyrimMod.xml</DependentUpon>
+</Compile>
+```
+
+If you create a new file and the build can't find it, check that it's been added to the `.csproj` file.
+
 ## Development Workflow
 
 ### Always Verify Your Changes
