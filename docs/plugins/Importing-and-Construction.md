@@ -79,13 +79,13 @@ In more complex setups, often the game type is not known at compile time.
 
 === "Untyped"
     ```cs
-    using var readOnlyInputMod = ModInstantiator.ImportGetter(pathToMod, release);
-    var mutableMod = ModInstantiator.ImportSetter(pathToMod, release);
+    using var readOnlyInputMod = ModFactory.ImportGetter(pathToMod, release);
+    var mutableMod = ModFactory.ImportSetter(pathToMod, release);
     ```
 
 === "Generic"
     ```cs
-    var mod = ModInstantiator<TMod>.Importer(ModKey.FromFileName("MyMod.esp"), release);
+    var mod = ModFactory<TMod>.Importer(ModKey.FromFileName("MyMod.esp"), release);
     ```
 	
     !!! success "Dispose Appropriately"
@@ -103,14 +103,14 @@ var newMod = new SkyrimMod(ModKey.FromFileName("MyMod.esp"), SkyrimRelease.Skyri
 ```
 
 ### Unknown Game
-In more complex setups, often the game type is not known at compile time 
+In more complex setups, often the game type is not known at compile time
 
 === "Untyped"
     ```cs
-    var newMod = ModInstantiator.Activator(ModKey.FromFileName("MyMod.esp"), release);
+    var newMod = ModFactory.Activator(ModKey.FromFileName("MyMod.esp"), release);
     ```
 
 === "Generic"
     ```cs
-    var newMod = ModInstantiator<TMod>.Activator(ModKey.FromFileName("MyMod.esp"), release);
+    var newMod = ModFactory<TMod>.Activator(ModKey.FromFileName("MyMod.esp"), release);
     ```

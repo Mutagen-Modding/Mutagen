@@ -38,7 +38,7 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
         {
             FileSystem = _fileSystem
         };
-        return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
+        return ModFactory<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 
     public IModGetter Import(ModPath modPath, BinaryReadParameters? param = null)
@@ -47,7 +47,7 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
         {
             FileSystem = _fileSystem
         };
-        return ModInstantiator.ImportGetter(modPath, _gameRelease.Release, param);
+        return ModFactory.ImportGetter(modPath, _gameRelease.Release, param);
     }
 }
 
@@ -71,7 +71,7 @@ public sealed class ModImporter<TMod> : IModImporter<TMod>
         {
             FileSystem = _fileSystem
         };
-        return ModInstantiator<TMod>.Importer(modPath, _gameRelease.Release, param);
+        return ModFactory<TMod>.Importer(modPath, _gameRelease.Release, param);
     }
 }
 

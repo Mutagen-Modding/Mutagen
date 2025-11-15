@@ -27,7 +27,7 @@ public sealed class ModActivator : IModActivator
     public TMod Activate<TMod>(ModKey modKey, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
         where TMod : IModGetter
     {
-        return ModInstantiator<TMod>.Activator(modKey, _gameRelease.Release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+        return ModFactory<TMod>.Activator(modKey, _gameRelease.Release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
     }
 }
 
@@ -44,6 +44,6 @@ public sealed class ModActivator<TMod> : IModActivator<TMod>
 
     public TMod Activate(ModKey modKey, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
     {
-        return ModInstantiator<TMod>.Activator(modKey, _gameRelease.Release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+        return ModFactory<TMod>.Activator(modKey, _gameRelease.Release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
     }
 }

@@ -42,7 +42,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     [Fact]
     public void Direct()
     {
-        var ret = ModInstantiatorReflection.GetActivator<TDirect>(Registration)(ModPath, Release);
+        var ret = ModFactoryReflection.GetActivator<TDirect>(Registration)(ModPath, Release);
         Assert.IsType<TDirect>(ret);
         Assert.Equal(ModPath.ModKey, ret.ModKey);
     }
@@ -50,7 +50,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     [Fact]
     public void Setter()
     {
-        var ret = ModInstantiatorReflection.GetActivator<TSetter>(Registration)(ModPath, Release);
+        var ret = ModFactoryReflection.GetActivator<TSetter>(Registration)(ModPath, Release);
         Assert.IsType<TDirect>(ret);
         Assert.Equal(ModPath.ModKey, ret.ModKey);
     }
@@ -58,14 +58,14 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     [Fact]
     public void Getter()
     {
-        var ret = ModInstantiatorReflection.GetActivator<TGetter>(Registration)(ModPath, Release);
+        var ret = ModFactoryReflection.GetActivator<TGetter>(Registration)(ModPath, Release);
         Assert.IsType<TDirect>(ret);
         Assert.Equal(ModPath.ModKey, ret.ModKey);
     }
     [Fact]
     public void Import_Direct()
     {
-        var ret = ModInstantiatorReflection.GetImporter<TDirect>(Registration)(
+        var ret = ModFactoryReflection.GetImporter<TDirect>(Registration)(
             ModPath,
             Release);
         Assert.IsType<TDirect>(ret);
@@ -75,7 +75,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     [Fact]
     public void Import_Setter()
     {
-        var ret = ModInstantiatorReflection.GetImporter<TSetter>(Registration)(
+        var ret = ModFactoryReflection.GetImporter<TSetter>(Registration)(
             ModPath,
             Release);
         Assert.IsType<TDirect>(ret);
@@ -85,7 +85,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     [Fact]
     public void Import_Getter()
     {
-        var ret = ModInstantiatorReflection.GetImporter<TGetter>(Registration)(
+        var ret = ModFactoryReflection.GetImporter<TGetter>(Registration)(
             ModPath,
             Release);
         Assert.IsType<TOverlay>(ret);
