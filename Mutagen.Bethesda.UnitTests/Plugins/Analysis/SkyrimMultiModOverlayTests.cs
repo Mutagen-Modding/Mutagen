@@ -1,6 +1,7 @@
 using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -30,9 +31,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Verify merged view
         overlay.FormLists.Count.ShouldBe(3);
@@ -61,9 +61,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Accessing the FormLists group should throw when it tries to cache and detects the duplicate
         Should.Throw<SplitModException>(() =>
@@ -87,27 +86,26 @@ public class SkyrimMultiModOverlayTests
         var master3 = new ModKey("Dawnguard", ModType.Master);
         mod2.ModHeader.MasterReferences.Add(new MasterReference { Master = master3 });
 
-        // Define load order
-        var loadOrder = new List<IModMasterStyledGetter>
+        // Define merged masters
+        var mergedMasters = new List<IMasterReferenceGetter>
         {
-            new KeyedMasterStyle(master1, MasterStyle.Full),
-            new KeyedMasterStyle(master2, MasterStyle.Full),
-            new KeyedMasterStyle(master3, MasterStyle.Full)
+            new MasterReference { Master = master1 },
+            new MasterReference { Master = master2 },
+            new MasterReference { Master = master3 }
         };
 
         // Create overlay
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            loadOrder);
+            mergedMasters);
 
         // Verify masters are in load order
-        overlay.Masters.Count.ShouldBe(3);
-        overlay.Masters[0].ModKey.ShouldBe(master1);
-        overlay.Masters[1].ModKey.ShouldBe(master2);
-        overlay.Masters[2].ModKey.ShouldBe(master3);
+        overlay.MasterReferences.Count.ShouldBe(3);
+        overlay.MasterReferences[0].Master.ShouldBe(master1);
+        overlay.MasterReferences[1].Master.ShouldBe(master2);
+        overlay.MasterReferences[2].Master.ShouldBe(master3);
     }
 
     [Theory, MutagenModAutoData]
@@ -119,9 +117,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Cells property should now work (returns ISkyrimListGroupGetter<ICellBlockGetter>)
         var cells = overlay.Cells;
@@ -151,9 +148,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Should return the maximum NextFormID from all mods
         var expected = Math.Max(mod1.ModHeader.Stats.NextFormID, mod2.ModHeader.Stats.NextFormID);
@@ -177,9 +173,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Should be able to access records from both mods by FormKey
         overlay.FormLists.TryGetValue(formKey1, out var retrieved1).ShouldBeTrue();
@@ -204,9 +199,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Should enumerate all records from all mods
         var allRecords = overlay.EnumerateMajorRecords().ToList();
@@ -237,9 +231,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Should sum all records from all mods (initial + newly added)
         var expectedCount = mod1.GetRecordCount() + mod2.GetRecordCount();
@@ -254,9 +247,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // Empty mods should result in empty groups
         overlay.FormLists.Count.ShouldBe(0);
@@ -277,9 +269,8 @@ public class SkyrimMultiModOverlayTests
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
             targetModKey,
-            GameRelease.SkyrimSE,
             new[] { mod1, mod2 },
-            Array.Empty<IModMasterStyledGetter>());
+            Array.Empty<IMasterReferenceGetter>());
 
         // ModHeader should come from first mod
         overlay.ModHeader.Author.ShouldBe("TestAuthor");

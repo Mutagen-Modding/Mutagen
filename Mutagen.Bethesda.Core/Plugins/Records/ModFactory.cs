@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             return CreateMultiFileOverlay(targetModKey, release, overlays, mergedMasters);
         }
 
-        private static IReadOnlyList<IModMasterStyledGetter> MergeMasters(
+        private static IReadOnlyList<IMasterReferenceGetter> MergeMasters(
             List<IModDisposeGetter> overlays,
             IEnumerable<IModMasterStyledGetter> loadOrder)
         {
@@ -208,21 +208,11 @@ namespace Mutagen.Bethesda.Plugins.Records
                 .ThenBy(m => m.FileName.String) // Fallback to alphabetical for masters not in load order
                 .ToList();
 
-            // Convert to IModMasterStyledGetter list
-            var result = new List<IModMasterStyledGetter>();
+            // Convert to IMasterReferenceGetter list
+            var result = new List<IMasterReferenceGetter>();
             foreach (var masterKey in orderedMasterKeys)
             {
-                // Try to find in original load order first
-                var loadOrderEntry = loadOrderList.FirstOrDefault(lo => lo.ModKey == masterKey);
-                if (loadOrderEntry != null)
-                {
-                    result.Add(loadOrderEntry);
-                }
-                else
-                {
-                    // Create a keyed master style if not in load order (default to full master)
-                    result.Add(new KeyedMasterStyle(masterKey, MasterStyle.Full));
-                }
+                result.Add(new MasterReference { Master = masterKey });
             }
 
             return result.AsReadOnly();
@@ -232,7 +222,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             ModKey modKey,
             GameRelease gameRelease,
             List<IModDisposeGetter> overlays,
-            IReadOnlyList<IModMasterStyledGetter> mergedMasters)
+            IReadOnlyList<IMasterReferenceGetter> mergedMasters)
         {
             // Determine which multi-file overlay class to instantiate based on game release
             var (typeName, assemblyName) = gameRelease.ToCategory() switch
@@ -252,20 +242,20 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
 
             // Find the constructor - look for any constructor matching the pattern:
-            // (ModKey, GameRelease, IReadOnlyList<IXXXModGetter>, IReadOnlyList<IModMasterStyledGetter>)
-            var constructor = overlayType.GetConstructors()
+            // (ModKey, IEnumerable<IXXXModGetter>, IReadOnlyList<IMasterReferenceGetter>)
+            var constructor = overlayType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                 .FirstOrDefault(c =>
                 {
                     var parameters = c.GetParameters();
-                    if (parameters.Length != 4) return false;
+                    if (parameters.Length != 3) return false;
                     if (parameters[0].ParameterType != typeof(ModKey)) return false;
-                    if (parameters[1].ParameterType != typeof(GameRelease)) return false;
-                    if (!parameters[2].ParameterType.IsGenericType) return false;
-                    if (parameters[2].ParameterType.GetGenericTypeDefinition() != typeof(IReadOnlyList<>)) return false;
-                    // Check that the list element type is assignable from IModGetter
-                    var listElementType = parameters[2].ParameterType.GetGenericArguments()[0];
+                    // Check that parameter 1 is IEnumerable<T> where T is assignable from IModGetter
+                    if (!parameters[1].ParameterType.IsGenericType) return false;
+                    var genDef = parameters[1].ParameterType.GetGenericTypeDefinition();
+                    if (genDef != typeof(IEnumerable<>)) return false;
+                    var listElementType = parameters[1].ParameterType.GetGenericArguments()[0];
                     if (!typeof(IModGetter).IsAssignableFrom(listElementType)) return false;
-                    if (parameters[3].ParameterType != typeof(IReadOnlyList<IModMasterStyledGetter>)) return false;
+                    if (parameters[2].ParameterType != typeof(IReadOnlyList<IMasterReferenceGetter>)) return false;
                     return true;
                 });
 
@@ -275,7 +265,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
 
             // Get the expected list element type from the constructor parameter
-            var listParameterType = constructor.GetParameters()[2].ParameterType;
+            var listParameterType = constructor.GetParameters()[1].ParameterType;
             var listElementType = listParameterType.GetGenericArguments()[0];
 
             // Create a properly-typed list by casting each overlay to the expected type
@@ -287,16 +277,11 @@ namespace Mutagen.Bethesda.Plugins.Records
                 typedList.Add(item);
             }
 
-            // Convert to IReadOnlyList
-            var asReadOnlyMethod = typeof(List<>).MakeGenericType(listElementType).GetMethod("AsReadOnly")!;
-            var readOnlyList = asReadOnlyMethod.Invoke(typedList, null);
-
             // Instantiate the overlay
             var overlay = constructor.Invoke(new object[]
             {
                 modKey,
-                gameRelease,
-                readOnlyList!,
+                typedList,
                 mergedMasters
             });
 

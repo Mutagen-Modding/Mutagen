@@ -51,6 +51,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new SubgroupsModule());
         SubModules.Add(new CircularHandlingModule());
         SubModules.Add(new PartialFormModule());
+        SubModules.Add(new MultiModOverlayModule());
     }
 
     public bool FieldFilter(TypeGeneration field)

@@ -1,22 +1,11 @@
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.IO.Abstractions;
 
 namespace Mutagen.Bethesda.Plugins.Analysis.DI;
-
-/// <summary>
-/// Exception thrown when split mod files have issues
-/// </summary>
-public class SplitModException : Exception
-{
-    public SplitModException(string message) : base(message) { }
-    public SplitModException(string message, Exception innerException) : base(message, innerException) { }
-}
 
 /// <summary>
 /// Reads multiple split mod files and merges them into a single mod object.

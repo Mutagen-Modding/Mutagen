@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
