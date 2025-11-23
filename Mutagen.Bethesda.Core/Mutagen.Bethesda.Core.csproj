@@ -164,6 +164,7 @@
         <Compile Include="Plugins\Analysis\DI\MultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\MultiModFileReader.cs" />
         <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
+        <Compile Include="Plugins\Analysis\MultiModFileAnalysis.cs" />
         <Compile Include="Plugins\Analysis\RecordCompactionCompatibilityDetection.cs" />
         <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
         <Compile Include="Plugins\Analysis\RecordLocator.cs">

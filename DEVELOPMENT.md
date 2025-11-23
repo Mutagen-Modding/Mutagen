@@ -214,6 +214,12 @@ Mutagen uses AutoFixture with custom builders to automatically generate properly
 - If you want, you can use `[Theory, MutagenModAutoData]` which will allow injection of mods, and records that are added to the latest mod.
 - AutoFixture will inject properly configured `SkyrimMod`, `ModKey`, `FormKey`, etc. as test parameters
 
+## Coding Practices
+
+### Avoid Using `dynamic`
+
+Do not use `dynamic` when possible. The codebase provides proper interfaces and generic methods that should be used instead. Using `dynamic` bypasses compile-time type checking and can lead to runtime errors.
+
 ## Contributing
 
 See the main README.md and official documentation for contribution guidelines.

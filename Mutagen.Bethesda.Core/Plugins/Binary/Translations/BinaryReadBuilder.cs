@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using Loqui.Internal;
 using Mutagen.Bethesda.Installs.DI;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -31,7 +32,8 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator { get; init; } = null!;
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, IReadOnlyCollection<ModKey>, IEnumerable<IModMasterStyledGetter>>? _loadOrderSetter { get; init; }
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
-    internal IModMasterStyledGetter[] KnownMasters { get; init; } = []; 
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = [];
+    internal bool _autoSplit { get; init; }
 }
 
 /// <summary>
@@ -543,7 +545,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
 
     /// <summary>
     /// Executes the instructions to read the mod into a readonly object. <br />
-    /// <br /> 
+    /// <br />
     /// This is a lazy loading object, with does minimal work up front, and does any
     /// parsing work as fields are accessed.<br />
     /// There is no caching, so every access will reparse the data. <br />
@@ -553,6 +555,32 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     public TModGetter Construct()
     {
         _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
+
+        // Handle auto-split detection
+        if (_param._autoSplit)
+        {
+            if (_param._path == null)
+            {
+                throw new NotSupportedException("WithAutoSplitSupport() only works with file path reads (FromPath), not stream reads.");
+            }
+
+            var fileSystem = _param.Params.FileSystem.GetOrDefault();
+            var directory = new DirectoryPath(Path.GetDirectoryName(_param._path.Value.Path) ?? ".");
+
+            if (MultiModFileAnalysis.IsMultiModFile(directory, _param.ModKey, fileSystem))
+            {
+                var splitFiles = MultiModFileAnalysis.GetSplitModFiles(directory, _param.ModKey, fileSystem);
+                var loadOrder = _param.Params.MasterFlagsLookup?.Items ?? Enumerable.Empty<IModMasterStyledGetter>();
+
+                return ModFactory<TModGetter>.ImportMultiFileGetter(
+                    _param.ModKey,
+                    splitFiles.Select(f => (ModPath)f.Path),
+                    loadOrder,
+                    _param.GameRelease,
+                    _param.Params);
+            }
+        }
+
         return _param._instantiator.Readonly(this);
     }
 
@@ -854,7 +882,27 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
             _dataFolderGetter = (param) => dataFolder.Value
         });
     }
-    
+
+    /// <summary>
+    /// Enables automatic detection and reading of split mod files.<br />
+    /// When enabled, if split files (ModName_1.esp, ModName_2.esp, etc.) are found,
+    /// they will be automatically merged into a single unified mod view.<br />
+    /// <br />
+    /// IMPORTANT: Only works with file path reads (FromPath).<br />
+    /// Using FromStream with WithAutoSplitSupport() will throw a NotSupportedException.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithAutoSplitSupport()
+    {
+        return this with
+        {
+            _param = _param with
+            {
+                _autoSplit = true
+            }
+        };
+    }
+
     #endregion
 }
 
@@ -1153,9 +1201,30 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
             _dataFolderGetter = (param) => dataFolder.Value
         });
     }
-    
+
+    /// <summary>
+    /// Enables automatic detection and reading of split mod files.<br />
+    /// When enabled, if split files (ModName_1.esp, ModName_2.esp, etc.) are found,
+    /// they will be automatically merged into a single unified mod view.<br />
+    /// For mutable imports, the merged overlay is deep-copied to a mutable mod.<br />
+    /// <br />
+    /// IMPORTANT: Only works with file path reads (FromPath).<br />
+    /// Using FromStream with WithAutoSplitSupport() will throw a NotSupportedException.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public new BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithAutoSplitSupport()
+    {
+        return this with
+        {
+            _param = _param with
+            {
+                _autoSplit = true
+            }
+        };
+    }
+
     #endregion
-    
+
     /// <summary>
     /// Adds an error mask builder, which helps debug erroring fields when loading
     /// the entire mod
@@ -1194,12 +1263,42 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     /// <br />
     /// Note that this loads in the entire mod up front, which takes longer and uses more memory. <br />
     /// Use this call only if you intend to mutate the mod after loading it, otherwise use the
-    /// non-mutable alternative. 
+    /// non-mutable alternative.
     /// </summary>
     /// <returns>A mutable mod object with all the data loaded</returns>
     public new TMod Construct()
     {
         _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
+
+        // Handle auto-split detection
+        if (_param._autoSplit)
+        {
+            if (_param._path == null)
+            {
+                throw new NotSupportedException("WithAutoSplitSupport() only works with file path reads (FromPath), not stream reads.");
+            }
+
+            var fileSystem = _param.Params.FileSystem.GetOrDefault();
+            var directory = new DirectoryPath(Path.GetDirectoryName(_param._path.Value.Path) ?? ".");
+
+            if (MultiModFileAnalysis.IsMultiModFile(directory, _param.ModKey, fileSystem))
+            {
+                var splitFiles = MultiModFileAnalysis.GetSplitModFiles(directory, _param.ModKey, fileSystem);
+                var loadOrder = _param.Params.MasterFlagsLookup?.Items ?? Enumerable.Empty<IModMasterStyledGetter>();
+
+                // Import as readonly overlay
+                using var overlay = ModFactory<TModGetter>.ImportMultiFileGetter(
+                    _param.ModKey,
+                    splitFiles.Select(f => (ModPath)f.Path),
+                    loadOrder,
+                    _param.GameRelease,
+                    _param.Params);
+
+                // Deep copy to mutable mod
+                return (TMod)overlay.DeepCopy();
+            }
+        }
+
         return _param._instantiator.Mutable(this);
     }
 }
