@@ -1,6 +1,7 @@
 ﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -315,5 +316,29 @@ public class MultiModFileSplitterTests
         }
         edidsLocal.Count.ShouldBe(0, "Not all local forms were found in output file");
         edidsOverride.Count.ShouldBe(0, "Not all overridden forms were found in output file");
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_ThrowsWhenSingleRecordExceedsMasterLimit(SkyrimMod inputMod)
+    {
+        // Create a single FormList that references more masters than the limit
+        // This cannot be split because the record itself exceeds the limit
+        var formList = inputMod.FormLists.AddNew();
+        formList.EditorID = "MassiveFormList";
+
+        // Add items from 20 different master files (exceeds our test limit of 10)
+        for (uint i = 0; i < 20; i++)
+        {
+            var masterKey = new ModKey($"Master_{i}", ModType.Plugin);
+            formList.Items.Add(new FormKey(masterKey, 0x800));
+        }
+
+        var sut = new MultiModFileSplitter();
+
+        // Split should throw because a single record exceeds the master limit
+        Should.Throw<TooManyMastersException>(() =>
+        {
+            sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
+        });
     }
 }

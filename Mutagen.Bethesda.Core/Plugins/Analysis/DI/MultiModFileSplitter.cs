@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -101,6 +102,15 @@ public class MultiModFileSplitter : IMultiModFileSplitter
         foreach (var rec in inputMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache))
         {
             var mastersHashSet = GetAllMastersForRecord(rec.Record, inputMod.ModKey);
+
+            // Check if single record exceeds master limit
+            if (mastersHashSet.Count > limit)
+            {
+                throw new TooManyMastersException(
+                    inputMod.ModKey,
+                    mastersHashSet.ToArray());
+            }
+
             var masters = new EquatableModKeySet(mastersHashSet);
 
             if (clusterLookupCache.ContainsKey(masters))
@@ -169,7 +179,7 @@ public class MultiModFileSplitter : IMultiModFileSplitter
                 curFileName = $"{inputMod.ModKey.FileName.NameWithoutExtension}_{(i + 1)}{inputMod.ModKey.FileName.Extension}";
             }
 
-            var newMod = ModInstantiator<TMod>.Activator(ModKey.FromFileName(curFileName), inputMod.GameRelease);
+            var newMod = ModFactory<TMod>.Activator(ModKey.FromFileName(curFileName), inputMod.GameRelease);
 
             foreach (var context in curCluster.Records)
             {

@@ -204,6 +204,31 @@ using var roundTripped = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
 // roundTripped contains all records from the original mod
 ```
 
+## Limitations
+
+### Single Record Exceeding Master Limit
+
+Auto-split works by distributing records across multiple files so each file stays under the 255 master limit. However, this cannot help when a **single record** itself references more than 255 masters.
+
+For example, a `FormList` that contains references to items from 300 different master files cannot be split - the record itself requires all those masters to be present. In this case, `TooManyMastersException` will be thrown even with `WithAutoSplit()` enabled.
+
+```cs
+// This will throw TooManyMastersException
+var formList = mod.FormLists.AddNew();
+for (uint i = 0; i < 300; i++)
+{
+    var masterKey = new ModKey($"Master_{i}", ModType.Plugin);
+    formList.Items.Add(new FormKey(masterKey, 0x800));
+}
+
+// Auto-split cannot help here - the single FormList needs all 300 masters
+await mod.BeginWrite
+    .ToPath(outputPath)
+    .WithLoadOrder(loadOrder)
+    .WithAutoSplit()  // Still throws TooManyMastersException
+    .WriteAsync();
+```
+
 ## Error Handling
 
 ### SplitModException

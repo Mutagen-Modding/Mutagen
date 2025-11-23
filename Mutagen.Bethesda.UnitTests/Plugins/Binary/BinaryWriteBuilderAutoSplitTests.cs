@@ -112,4 +112,35 @@ public class BinaryWriteBuilderAutoSplitTests
             }
         }
     }
+
+    [Theory, MutagenModAutoData]
+    public void WithAutoSplit_ThrowsWhenSingleRecordExceedsMasterLimit(
+        SkyrimMod mod,
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        var outputPath = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);
+
+        // Create a single FormList that references more than 255 masters
+        // This cannot be split because the record itself exceeds the limit
+        var formList = mod.FormLists.AddNew();
+        formList.EditorID = "MassiveFormList";
+
+        // Add items from 300 different master files
+        for (uint i = 0; i < 300; i++)
+        {
+            var masterKey = new ModKey($"Master_{i}", ModType.Plugin);
+            formList.Items.Add(new FormKey(masterKey, 0x800));
+        }
+
+        // Auto-split should still throw because a single record exceeds the limit
+        Should.Throw<Mutagen.Bethesda.Plugins.Exceptions.TooManyMastersException>(() =>
+        {
+            mod.BeginWrite
+                .ToPath(outputPath, fileSystem)
+                .WithNoLoadOrder()
+                .WithAutoSplit()
+                .Write();
+        });
+    }
 }
