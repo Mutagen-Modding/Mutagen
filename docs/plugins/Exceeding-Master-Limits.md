@@ -80,10 +80,10 @@ Use `MultiModFileAnalysis` to check if split files exist before reading:
 using Mutagen.Bethesda.Plugins.Analysis;
 
 // Check if split files exist
-if (MultiModFileAnalysis.IsMultiModFile(folder, modKey))
+if (MultiModFileAnalysis.IsMultiModFile(modPath))
 {
     // Get the list of split file paths
-    var splitFiles = MultiModFileAnalysis.GetSplitModFiles(folder, modKey);
+    var splitFiles = MultiModFileAnalysis.GetSplitModFiles(modPath);
     Console.WriteLine($"Found {splitFiles.Count} split files");
 }
 ```
@@ -242,10 +242,12 @@ Thrown when:
 ```cs
 try
 {
+    var modPath = new ModPath(modKey, Path.Combine(folder, modKey.FileName));
+
     // Check for split files - throws if invalid state
-    if (MultiModFileAnalysis.IsMultiModFile(folder, modKey))
+    if (MultiModFileAnalysis.IsMultiModFile(modPath))
     {
-        var files = MultiModFileAnalysis.GetSplitModFiles(folder, modKey);
+        var files = MultiModFileAnalysis.GetSplitModFiles(modPath);
     }
 }
 catch (SplitModException ex)

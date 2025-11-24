@@ -10,18 +10,19 @@ namespace Mutagen.Bethesda.Plugins.Analysis;
 public static class MultiModFileAnalysis
 {
     /// <summary>
-    /// Checks if split mod files exist for the given ModKey in the specified directory.
+    /// Checks if split mod files exist for the given mod path.
     /// </summary>
-    /// <param name="folder">Directory to check for split files</param>
-    /// <param name="modKey">The base ModKey to look for (without _1, _2 suffixes)</param>
+    /// <param name="modPath">The mod path to check for split files</param>
     /// <param name="fileSystem">Optional file system to use. Defaults to real file system.</param>
     /// <returns>True if valid split files exist, false if no split files exist (single mod)</returns>
     /// <exception cref="SplitModException">
     /// Thrown if only one split file exists, or if both split files and original mod exist
     /// </exception>
-    public static bool IsMultiModFile(DirectoryPath folder, ModKey modKey, IFileSystem? fileSystem = null)
+    public static bool IsMultiModFile(ModPath modPath, IFileSystem? fileSystem = null)
     {
         fileSystem = fileSystem.GetOrDefault();
+        var folder = new DirectoryPath(Path.GetDirectoryName(modPath.Path) ?? ".");
+        var modKey = modPath.ModKey;
         var splitFiles = DetectSplitFiles(folder, modKey, fileSystem);
 
         if (splitFiles.Count == 0)
@@ -36,8 +37,7 @@ public static class MultiModFileAnalysis
         }
 
         // Check if original unsplit mod exists - this is an error condition
-        var originalPath = Path.Combine(folder.Path, modKey.FileName);
-        if (fileSystem.File.Exists(originalPath))
+        if (fileSystem.File.Exists(modPath.Path))
         {
             throw new SplitModException(
                 $"Found both split files and original mod file for {modKey}. This is an invalid state.");
@@ -47,19 +47,20 @@ public static class MultiModFileAnalysis
     }
 
     /// <summary>
-    /// Gets the list of split mod files for the given ModKey in the specified directory.
+    /// Gets the list of split mod files for the given mod path.
     /// Throws if the split files are in an invalid state.
     /// </summary>
-    /// <param name="folder">Directory to check for split files</param>
-    /// <param name="modKey">The base ModKey to look for (without _1, _2 suffixes)</param>
+    /// <param name="modPath">The mod path to check for split files</param>
     /// <param name="fileSystem">Optional file system to use. Defaults to real file system.</param>
     /// <returns>List of split file paths in order, or empty list if no split files exist</returns>
     /// <exception cref="SplitModException">
     /// Thrown if only one split file exists, or if both split files and original mod exist
     /// </exception>
-    public static List<FilePath> GetSplitModFiles(DirectoryPath folder, ModKey modKey, IFileSystem? fileSystem = null)
+    public static List<FilePath> GetSplitModFiles(ModPath modPath, IFileSystem? fileSystem = null)
     {
         fileSystem = fileSystem.GetOrDefault();
+        var folder = new DirectoryPath(Path.GetDirectoryName(modPath.Path) ?? ".");
+        var modKey = modPath.ModKey;
         var splitFiles = DetectSplitFiles(folder, modKey, fileSystem);
 
         if (splitFiles.Count == 0)
@@ -74,8 +75,7 @@ public static class MultiModFileAnalysis
         }
 
         // Check if original unsplit mod exists - this is an error condition
-        var originalPath = Path.Combine(folder.Path, modKey.FileName);
-        if (fileSystem.File.Exists(originalPath))
+        if (fileSystem.File.Exists(modPath.Path))
         {
             throw new SplitModException(
                 $"Found both split files and original mod file for {modKey}. This is an invalid state.");

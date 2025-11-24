@@ -220,6 +220,29 @@ Mutagen uses AutoFixture with custom builders to automatically generate properly
 
 Do not use `dynamic` when possible. The codebase provides proper interfaces and generic methods that should be used instead. Using `dynamic` bypasses compile-time type checking and can lead to runtime errors.
 
+### Prefer ModPath Over DirectoryPath + ModKey
+
+When working with paths to mod files, prefer using `ModPath` instead of separate `DirectoryPath` and `ModKey` parameters. `ModPath` is essentially a string path that is expected to point to a mod file, and includes the associated `ModKey`.
+
+```cs
+// Preferred - uses ModPath
+public void ProcessMod(ModPath modPath)
+{
+    var modKey = modPath.ModKey;
+    var filePath = modPath.Path;
+    // ...
+}
+
+// Avoid - separate parameters
+public void ProcessMod(DirectoryPath folder, ModKey modKey)
+{
+    var filePath = Path.Combine(folder.Path, modKey.FileName);
+    // ...
+}
+```
+
+`ModPath` provides better API ergonomics and ensures the path and ModKey stay in sync.
+
 ## Contributing
 
 See the main README.md and official documentation for contribution guidelines.

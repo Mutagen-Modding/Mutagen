@@ -45,7 +45,8 @@ public class BinaryReadBuilderAutoSplitTests
             BinaryWriteParameters.Default with { FileSystem = fileSystem });
 
         // Verify IsMultiModFile returns true
-        MultiModFileAnalysis.IsMultiModFile(existingOutputDirectory, modKey, fileSystem).ShouldBeTrue();
+        var modPath = new ModPath(modKey, outputPath);
+        MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem).ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData]
@@ -54,8 +55,9 @@ public class BinaryReadBuilderAutoSplitTests
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("NonExistent", ModType.Plugin);
+        var modPath = new ModPath(modKey, Path.Combine(existingOutputDirectory.Path, modKey.FileName));
 
-        MultiModFileAnalysis.IsMultiModFile(existingOutputDirectory, modKey, fileSystem).ShouldBeFalse();
+        MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem).ShouldBeFalse();
     }
 
     [Theory, MutagenModAutoData]
@@ -65,12 +67,13 @@ public class BinaryReadBuilderAutoSplitTests
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
         var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
+        var modPath = new ModPath(modKey, Path.Combine(existingOutputDirectory.Path, modKey.FileName));
 
         // Create just one split file
         fileSystem.File.WriteAllText(splitFile1, "dummy");
 
         Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.IsMultiModFile(existingOutputDirectory, modKey, fileSystem))
+            MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem))
             .Message.ShouldContain("only one split file");
     }
 
@@ -93,8 +96,9 @@ public class BinaryReadBuilderAutoSplitTests
         fileSystem.File.WriteAllText(splitFile2, "dummy");
         fileSystem.File.WriteAllText(originalFile, "dummy");
 
+        var modPath = new ModPath(modKey, originalFile);
         Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.IsMultiModFile(existingOutputDirectory, modKey, fileSystem))
+            MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem))
             .Message.ShouldContain("both split files and original");
     }
 
@@ -105,11 +109,12 @@ public class BinaryReadBuilderAutoSplitTests
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
         var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
+        var modPath = new ModPath(modKey, Path.Combine(existingOutputDirectory.Path, modKey.FileName));
 
         fileSystem.File.WriteAllText(splitFile1, "dummy");
 
         Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.GetSplitModFiles(existingOutputDirectory, modKey, fileSystem))
+            MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem))
             .Message.ShouldContain("only one split file");
     }
 
@@ -127,8 +132,9 @@ public class BinaryReadBuilderAutoSplitTests
         fileSystem.File.WriteAllText(splitFile2, "dummy");
         fileSystem.File.WriteAllText(originalFile, "dummy");
 
+        var modPath = new ModPath(modKey, originalFile);
         Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.GetSplitModFiles(existingOutputDirectory, modKey, fileSystem))
+            MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem))
             .Message.ShouldContain("both split files and original");
     }
 

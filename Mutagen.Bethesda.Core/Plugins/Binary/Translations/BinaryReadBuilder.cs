@@ -565,11 +565,10 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
             }
 
             var fileSystem = _param.Params.FileSystem.GetOrDefault();
-            var directory = new DirectoryPath(Path.GetDirectoryName(_param._path.Value.Path) ?? ".");
 
-            if (MultiModFileAnalysis.IsMultiModFile(directory, _param.ModKey, fileSystem))
+            if (MultiModFileAnalysis.IsMultiModFile(_param._path.Value, fileSystem))
             {
-                var splitFiles = MultiModFileAnalysis.GetSplitModFiles(directory, _param.ModKey, fileSystem);
+                var splitFiles = MultiModFileAnalysis.GetSplitModFiles(_param._path.Value, fileSystem);
                 var loadOrder = _param.Params.MasterFlagsLookup?.Items ?? Enumerable.Empty<IModMasterStyledGetter>();
 
                 return ModFactory<TModGetter>.ImportMultiFileGetter(
@@ -1279,11 +1278,10 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
             }
 
             var fileSystem = _param.Params.FileSystem.GetOrDefault();
-            var directory = new DirectoryPath(Path.GetDirectoryName(_param._path.Value.Path) ?? ".");
 
-            if (MultiModFileAnalysis.IsMultiModFile(directory, _param.ModKey, fileSystem))
+            if (MultiModFileAnalysis.IsMultiModFile(_param._path.Value, fileSystem))
             {
-                var splitFiles = MultiModFileAnalysis.GetSplitModFiles(directory, _param.ModKey, fileSystem);
+                var splitFiles = MultiModFileAnalysis.GetSplitModFiles(_param._path.Value, fileSystem);
                 var loadOrder = _param.Params.MasterFlagsLookup?.Items ?? Enumerable.Empty<IModMasterStyledGetter>();
 
                 // Import as readonly overlay

@@ -51,7 +51,8 @@ public class MultiModFileReader : IMultiModFileReader
         var fileSystem = readParams.FileSystem.GetOrDefault();
 
         // Get and validate split files
-        var splitFiles = MultiModFileAnalysis.GetSplitModFiles(folder, modKey, fileSystem);
+        var modPath = new ModPath(modKey, Path.Combine(folder.Path, modKey.FileName));
+        var splitFiles = MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem);
 
         if (splitFiles.Count == 0)
         {
