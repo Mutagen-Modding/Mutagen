@@ -30,7 +30,7 @@ public class PassthroughVM : ViewModel
                 x => x.Do,
                 x => x.Parent.Do,
                 (c, p) => c && p)
-            .ToGuiProperty(this, nameof(Doing), out _Doing);
+            .ToRxAppGuiProperty(this, nameof(Doing), out _Doing);
         DeleteCommand = ReactiveCommand.Create(() =>
         {
             group.Passthroughs.Remove(this);

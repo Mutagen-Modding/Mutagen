@@ -63,7 +63,7 @@ public class ObjectSettingsVM : SettingsNodeVM
                 })
                 .AutoRefresh(x => x.DisplayName)
                 .Transform(n => n.DisplayName, transformOnRefresh: true)
-                .ToObservableCollection(this);
+                .ToRxAppObservableCollection(this);
         });
     }
 

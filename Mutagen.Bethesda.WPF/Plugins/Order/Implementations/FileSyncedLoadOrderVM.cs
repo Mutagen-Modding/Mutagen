@@ -28,10 +28,10 @@ public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
             .RefCount();
 
         _state = state
-            .ToGuiProperty(this, nameof(State), ErrorResponse.Fail("Uninitialized"));
+            .ToRxAppGuiProperty(this, nameof(State), ErrorResponse.Fail("Uninitialized"));
             
         LoadOrder = loadOrder
-            .ToObservableCollection(this);
+            .ToRxAppObservableCollection(this);
 
         // When listings change, resave to file
         Observable.Merge(

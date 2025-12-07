@@ -35,7 +35,7 @@ public class EnumerableFormLinkSettingsVM : SettingsNodeVM
         _linkCacheObs = linkCache;
         _typeName = typeName;
         _linkCache = linkCache
-            .ToGuiProperty(this, nameof(LinkCache), default(ILinkCache?));
+            .ToRxAppGuiProperty(this, nameof(LinkCache), default(ILinkCache?));
     }
 
     public static SettingsNodeVM Factory(ReflectionSettingsParameters param, FieldMeta fieldMeta, string typeName, object? defaultVal)

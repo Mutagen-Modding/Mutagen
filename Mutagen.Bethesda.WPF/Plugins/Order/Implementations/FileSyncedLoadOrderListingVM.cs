@@ -46,14 +46,14 @@ public class FileSyncedLoadOrderListingVM : ViewModel, IModListing
                         var ret = File.Exists(path);
                         return ret;
                     }))
-            .ToGuiProperty(this, nameof(ModExists), initialValue: exists);
+            .ToRxAppGuiProperty(this, nameof(ModExists), initialValue: exists);
         _ghosted = this.WhenAnyValue(x => x.GhostSuffix)
             .Select(x => !x.IsNullOrWhitespace())
-            .ToGuiProperty(this, nameof(Ghosted));
+            .ToRxAppGuiProperty(this, nameof(Ghosted));
         _fileName = this.WhenAnyValue( x => x.GhostSuffix)
             .Skip(1)
             .Select(x => OrderUtility.GetListingFilename(ModKey, x))
-            .ToGuiProperty(this, nameof(FileName), OrderUtility.GetListingFilename(ModKey, GhostSuffix));
+            .ToRxAppGuiProperty(this, nameof(FileName), OrderUtility.GetListingFilename(ModKey, GhostSuffix));
     }
 
     public override string ToString()

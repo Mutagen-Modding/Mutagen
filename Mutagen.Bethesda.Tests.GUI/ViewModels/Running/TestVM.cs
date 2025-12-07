@@ -32,19 +32,19 @@ public class TestVM : ViewModel
         Parent = parent;
         Test.Output
             .ToObservableChangeSet()
-            .ObserveOnGui()
+            .ObserveOnRxAppGui()
             .Bind(out _output)
             .Subscribe()
             .DisposeWith(this);
         _State = Test.StateSignal
             .Catch(Observable.Return(TestState.Error))
-            .ToGuiProperty(this, nameof(State));
+            .ToRxAppGuiProperty(this, nameof(State));
         SelectCommand = ReactiveCommand.Create(() =>
         {
             Passthrough.SelectedTest = this;
         });
         _IsSelected = passthrough.WhenAnyValue(x => x.SelectedTest)
             .Select(x => x == this)
-            .ToGuiProperty(this, nameof(IsSelected));
+            .ToRxAppGuiProperty(this, nameof(IsSelected));
     }
 }
