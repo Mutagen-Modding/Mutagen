@@ -127,24 +127,41 @@ The reader:
 
 ### Using ModFactory
 
-`ModFactory` is useful when you need to import split mods with generic type parameters. This is common in library code or utilities that work across multiple game types:
+`ModFactory` is useful when you need to import split mods with generic type parameters. This is common in library code or utilities that work across multiple game types.
+
+#### Automatic Split Detection
+
+If you don't want to manually detect split files, use `Import_WithMultiFileDetection` calls. These methods automatically detect whether a mod is split and handle it appropriately:
 
 ```cs
 using Mutagen.Bethesda.Plugins.Records;
 
-public TModGetter ImportSplitMod<TModGetter>(
-    ModKey modKey,
-    IEnumerable<ModPath> splitFiles,
-    IEnumerable<IModMasterStyledGetter> loadOrder,
-    GameRelease release)
-    where TModGetter : class, IModDisposeGetter
-{
-    return ModFactory<TModGetter>.ImportMultiFileGetter(
-        modKey,
-        splitFiles,
-        loadOrder,
-        release);
-}
+var mod = ModFactory.ImportGetterWithMultiFileDetection(
+    modPath,
+    loadOrder,
+    GameRelease.SkyrimSE);
+
+var mod = ModFactory<ISkyrimModDisposableGetter>.ImportGetterWithMultiFileDetection(
+    modPath,
+    loadOrder,
+    GameRelease.SkyrimSE);
+```
+
+These methods:
+- Use `MultiModFileAnalysis.IsMultiModFile()` to detect split files
+- If split files exist, call `ImportMultiFileGetter()` to merge them
+- If no split files exist, call the standard `ImportGetter()` for a single file
+
+#### Manual Split Detection
+
+If you know the files are split, there is a call with no detection logic:
+
+```cs
+return ModFactory<TModGetter>.ImportMultiFileGetter(
+    modKey,
+    splitFiles,
+    loadOrder,
+    release);
 ```
 
 ### Using ModImporter (DI)

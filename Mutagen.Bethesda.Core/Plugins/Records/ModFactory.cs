@@ -20,6 +20,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
         public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, BinaryReadParameters? param = null);
         public delegate TMod ImportMultiFileGetterDelegate(ModKey targetModKey, IEnumerable<ModPath> splitFiles, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportGetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportSetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -35,6 +37,18 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Function to call to import multiple split mod files as a unified multi-file overlay
         /// </summary>
         public static readonly ImportMultiFileGetterDelegate ImportMultiFileGetter;
+
+        /// <summary>
+        /// Function to call to import a mod that may be split across multiple files.
+        /// Automatically detects split files and calls the appropriate import method.
+        /// </summary>
+        public static readonly ImportGetterWithMultiFileDetectionDelegate ImportGetterWithMultiFileDetection;
+
+        /// <summary>
+        /// Function to call to import a mutable mod that may be split across multiple files.
+        /// Automatically detects split files, imports as overlay, then deep copies to mutable.
+        /// </summary>
+        public static readonly ImportSetterWithMultiFileDetectionDelegate ImportSetterWithMultiFileDetection;
 
         static ModFactory()
         {
@@ -61,12 +75,20 @@ namespace Mutagen.Bethesda.Plugins.Records
                     Importer = (path, release, param) => (TMod)ModFactory.ImportGetter(path, release, param);
                     ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
                         (TMod)ModFactory.ImportMultiFileGetter(targetModKey, splitFiles, loadOrder, release, param);
+                    ImportGetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        (TMod)ModFactory.ImportGetterWithMultiFileDetection(modPath, loadOrder, release, param);
+                    ImportSetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        throw new InvalidOperationException("ImportSetterWithMultiFileDetection is only supported for setter types (IMod), not getter types (IModGetter)");
                 }
                 else
                 {
                     Importer = (path, release, param) => (TMod)ModFactory.ImportSetter(path, release, param);
                     ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
                         throw new InvalidOperationException("ImportMultiFileGetter is only supported for getter types (IModGetter), not setter types (IMod)");
+                    ImportGetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        throw new InvalidOperationException("ImportGetterWithMultiFileDetection is only supported for getter types (IModGetter), not setter types (IMod)");
+                    ImportSetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        (TMod)ModFactory.ImportSetterWithMultiFileDetection(modPath, loadOrder, release, param);
                 }
             }
             else
@@ -92,12 +114,20 @@ namespace Mutagen.Bethesda.Plugins.Records
                     Importer = ModFactoryReflection.GetImporter<TMod>(regis);
                     ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
                         throw new InvalidOperationException("ImportMultiFileGetter is only supported for getter/overlay types, not mutable mod types");
+                    ImportGetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        throw new InvalidOperationException("ImportGetterWithMultiFileDetection is only supported for getter/overlay types, not mutable mod types");
+                    ImportSetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        (TMod)ModFactory.ImportSetterWithMultiFileDetection(modPath, loadOrder, release, param);
                 }
                 else
                 {
                     Importer = ModFactoryReflection.GetOverlay<TMod>(regis);
                     ImportMultiFileGetter = (targetModKey, splitFiles, loadOrder, release, param) =>
                         (TMod)ModFactory.ImportMultiFileGetter(targetModKey, splitFiles, loadOrder, release, param);
+                    ImportGetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        (TMod)ModFactory.ImportGetterWithMultiFileDetection(modPath, loadOrder, release, param);
+                    ImportSetterWithMultiFileDetection = (modPath, loadOrder, release, param) =>
+                        throw new InvalidOperationException("ImportSetterWithMultiFileDetection is only supported for mutable mod types, not getter/overlay types");
                 }
             }
         }
@@ -146,6 +176,66 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IMod Activator(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false)
         {
             return _dict[release.ToCategory()].Activator(modKey, release, headerVersion: headerVersion, forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+        }
+
+        /// <summary>
+        /// Imports a mod that may be split across multiple files. Automatically detects split files
+        /// and calls the appropriate import method (single file or multi-file).
+        /// </summary>
+        /// <param name="modPath">The path to the mod file (base path without _1, _2 suffixes)</param>
+        /// <param name="loadOrder">Load order to use for master ordering (required for multi-file imports)</param>
+        /// <param name="release">Game release for the mod</param>
+        /// <param name="param">Binary read parameters</param>
+        /// <returns>Mod getter, either single file overlay or multi-file overlay depending on detection</returns>
+        public static IModDisposeGetter ImportGetterWithMultiFileDetection(
+            ModPath modPath,
+            IEnumerable<IModMasterStyledGetter> loadOrder,
+            GameRelease release,
+            BinaryReadParameters? param = null)
+        {
+            var fileSystem = param?.FileSystem ?? new System.IO.Abstractions.FileSystem();
+
+            // Check if split files exist
+            if (Analysis.MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem))
+            {
+                // Get the split files
+                var splitFiles = Analysis.MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem);
+
+                // Import as multi-file
+                return ImportMultiFileGetter(
+                    modPath.ModKey,
+                    splitFiles.Select(f => new ModPath(modPath.ModKey, f.Path)),
+                    loadOrder,
+                    release,
+                    param);
+            }
+            else
+            {
+                // Import as single file
+                return ImportGetter(modPath, release, param);
+            }
+        }
+
+        /// <summary>
+        /// Imports a mutable mod that may be split across multiple files. Automatically detects split files,
+        /// imports as overlay, then deep copies to a mutable mod.
+        /// </summary>
+        /// <param name="modPath">The path to the mod file (base path without _1, _2 suffixes)</param>
+        /// <param name="loadOrder">Load order to use for master ordering (required for multi-file imports)</param>
+        /// <param name="release">Game release for the mod</param>
+        /// <param name="param">Binary read parameters</param>
+        /// <returns>Mutable mod, deep copied from overlay</returns>
+        public static IMod ImportSetterWithMultiFileDetection(
+            ModPath modPath,
+            IEnumerable<IModMasterStyledGetter> loadOrder,
+            GameRelease release,
+            BinaryReadParameters? param = null)
+        {
+            // First import as getter (handles split detection)
+            using var getter = ImportGetterWithMultiFileDetection(modPath, loadOrder, release, param);
+
+            // Deep copy to mutable mod
+            return getter.DeepCopy();
         }
 
         /// <summary>
