@@ -186,7 +186,7 @@ public class MultiModFileSplitter : IMultiModFileSplitter
                 if (context.Record.FormKey.ModKey == inputMod.ModKey)
                 {
                     // this is a Form which has been created within inputMod -> copy it right over
-                    context.DuplicateIntoAsNewRecord(newMod);
+                    context.DuplicateIntoAsNewRecord(newMod, new FormKey(newMod.ModKey, context.Record.FormKey.ID));
                 }
                 else
                 {
