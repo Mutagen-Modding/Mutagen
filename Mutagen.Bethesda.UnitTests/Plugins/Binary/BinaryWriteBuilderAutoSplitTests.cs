@@ -5,8 +5,6 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using System.IO.Abstractions;
-using FormList = Mutagen.Bethesda.Skyrim.FormList;
-using MiscItem = Mutagen.Bethesda.Skyrim.MiscItem;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary;
 
@@ -145,42 +143,24 @@ public class BinaryWriteBuilderAutoSplitTests
     }
 
     [Theory, MutagenModAutoData]
-    public void WithAutoSplit_SplitFilesHaveUniqueFormIDs(
-        SkyrimMod mod,
+    public void WithAutoSplit_LowerFormKeyPlaceholderEdgeCase(
+        ModKey modKey,
         DirectoryPath existingOutputDirectory,
         IFileSystem fileSystem)
     {
-        // This test verifies that when a mod is split, records created in each split file
-        // have unique FormIDs and don't collide within their FormID range.
-        //
-        // KNOWN ISSUE: Currently, each split file starts allocating FormIDs from 0x800,
-        // which means both files will have records with the same FormID (e.g., 0x800, 0x801, etc.).
-        // This works because they have different ModKeys (e.g., "Mod_1.esp" vs "Mod_2.esp"),
-        // making the full FormKey unique.
-        //
-        // However, this creates problems when:
-        // 1. You want to merge the split files back together
-        // 2. You want to extend one of the split files with more records
-        // 3. External tools try to reference records by FormID alone
-        //
-        // The correct behavior would be for split files to have NON-OVERLAPPING FormID ranges,
-        // e.g., File 1 uses 0x800-0x8FF, File 2 uses 0x900-0x9FF, etc.
+        var mod = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE, forceUseLowerFormIDRanges: true);
         var outputPath = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);
 
-        // Create FormLists that will trigger splitting
-        // Each FormList is a NEW record created in the mod (not an external reference)
-        for (int i = 0; i < 10; i++)
+        // Create FormLists that reference masters to exceed the master limit
+        // Create one FormList per master (256 masters) to efficiently trigger splitting
+        for (int i = 0; i < 256; i++)
         {
             var formList = mod.FormLists.AddNew();
             formList.EditorID = $"FormList{i:D3}";
 
-            // Add items from different master files (simulating many masters)
-            // This forces the mod to be split across multiple files
-            for (uint j = 0; j < 30; j++)
-            {
-                var masterKey = new ModKey($"Master_{i}_{j}", ModType.Plugin);
-                formList.Items.Add(new FormKey(masterKey, 0x800 + j));
-            }
+            // Each FormList references a unique master
+            var masterKey = new ModKey($"Master{i:D3}.esp", ModType.Plugin);
+            formList.Items.Add(new FormKey(masterKey, 0x800));
         }
 
         // Capture the original FormKeys before splitting
@@ -196,6 +176,7 @@ public class BinaryWriteBuilderAutoSplitTests
         mod.BeginWrite
             .ToPath(outputPath, fileSystem)
             .WithNoLoadOrder()
+            .WithForcedLowerFormIdRangeUsage(true)
             .WithAutoSplit()
             .Write();
 

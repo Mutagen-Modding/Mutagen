@@ -210,6 +210,37 @@ public class WriteOptionsTests
         reimport.MasterReferences.Select(x => x.Master).ShouldEqualEnumerable(modKey);
     }
 
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public async Task ForcedLowerRangeDoesNotAddPlaceholderEvenWhenAvailable(
+        IFileSystem fileSystem,
+        ModPath existingModPath,
+        ModKey someMaster,
+        ModKey placeholderModKey)
+    {
+        SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
+            forceUseLowerFormIDRanges: true);
+        var formList = mod.FormLists.AddNew();
+        formList.Items.Add(FormKey.Factory($"000800:{someMaster}"));
+
+        await mod.BeginWrite
+            .ToPath(existingModPath)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .WithForcedLowerFormIdRangeUsage(true)
+            .WithPlaceholderMasterIfLowerRangeDisallowed(placeholderModKey)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
+
+        using var reimport = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
+            .FromPath(existingModPath)
+            .WithFileSystem(fileSystem)
+            .Construct();
+
+        reimport.MasterReferences
+            .Select(x => x.Master)
+            .ShouldEqualEnumerable(someMaster);
+    }
+
     [Theory, MutagenAutoData]
     public async Task LightMasterFormIDCompactionThrows(
         IFileSystem fileSystem,
