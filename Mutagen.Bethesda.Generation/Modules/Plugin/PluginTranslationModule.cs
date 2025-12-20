@@ -2632,11 +2632,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.Add("shouldDispose: true");
                             }
                         }
-                        sb.AppendLine("catch (Exception)");
+                        sb.AppendLine("catch (Exception ex)");
                         using (sb.CurlyBrace())
                         {
+                            // Dispose only if there's an error
                             sb.AppendLine("stream.Dispose();");
-                            sb.AppendLine("throw;");
+                            sb.AppendLine("throw ModGroupsMalformedException.Enrich(ex, path.ModKey);");
                         }
                     }
                     sb.AppendLine();

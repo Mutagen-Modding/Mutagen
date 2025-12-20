@@ -35029,10 +35029,10 @@ namespace Mutagen.Bethesda.Starfield
                     release: release,
                     shouldDispose: true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 stream.Dispose();
-                throw;
+                throw ModGroupsMalformedException.Enrich(ex, path.ModKey);
             }
         }
 
