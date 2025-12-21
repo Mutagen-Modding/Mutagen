@@ -13,16 +13,16 @@ using Noggog;
 using Noggog.StructuredStrings;
 using Loqui.Internal;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Fallout4;
 
 /// <summary>
-/// Multi-mod overlay that presents multiple Skyrim mods as a single unified mod.
+/// Multi-mod overlay that presents multiple Fallout4 mods as a single unified mod.
 /// Typically used for reading split mods that were written due to exceeding master limits,
 /// but can be used with any collection of mods.
 /// </summary>
-internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
+internal class Fallout4MultiModOverlay : IFallout4ModDisposableGetter
 {
-    private readonly IReadOnlyList<ISkyrimModGetter> _sourceMods;
+    private readonly IReadOnlyList<IFallout4ModGetter> _sourceMods;
     private readonly IReadOnlyList<IModDisposeGetter>? _disposeSourceMods;
     private readonly ModKey _modKey;
     private readonly IReadOnlyList<IMasterReferenceGetter> _masters;
@@ -31,13 +31,14 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<IKeywordGetter>? _keywords;
     private MergedGroup<ILocationReferenceTypeGetter>? _locationReferenceTypes;
     private MergedGroup<IActionRecordGetter>? _actions;
+    private MergedGroup<ITransformGetter>? _transforms;
+    private MergedGroup<IComponentGetter>? _components;
     private MergedGroup<ITextureSetGetter>? _textureSets;
     private MergedGroup<IGlobalGetter>? _globals;
+    private MergedGroup<IADamageTypeGetter>? _damageTypes;
     private MergedGroup<IClassGetter>? _classes;
     private MergedGroup<IFactionGetter>? _factions;
     private MergedGroup<IHeadPartGetter>? _headParts;
-    private MergedGroup<IHairGetter>? _hairs;
-    private MergedGroup<IEyesGetter>? _eyes;
     private MergedGroup<IRaceGetter>? _races;
     private MergedGroup<ISoundMarkerGetter>? _soundMarkers;
     private MergedGroup<IAcousticSpaceGetter>? _acousticSpaces;
@@ -45,7 +46,6 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<ILandscapeTextureGetter>? _landscapeTextures;
     private MergedGroup<IObjectEffectGetter>? _objectEffects;
     private MergedGroup<ISpellGetter>? _spells;
-    private MergedGroup<IScrollGetter>? _scrolls;
     private MergedGroup<IActivatorGetter>? _activators;
     private MergedGroup<ITalkingActivatorGetter>? _talkingActivators;
     private MergedGroup<IArmorGetter>? _armors;
@@ -55,9 +55,9 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<IIngredientGetter>? _ingredients;
     private MergedGroup<ILightGetter>? _lights;
     private MergedGroup<IMiscItemGetter>? _miscItems;
-    private MergedGroup<IAlchemicalApparatusGetter>? _alchemicalApparatuses;
     private MergedGroup<IStaticGetter>? _statics;
-    private MergedGroup<IMoveableStaticGetter>? _moveableStatics;
+    private MergedGroup<IStaticCollectionGetter>? _staticCollections;
+    private MergedGroup<IMovableStaticGetter>? _movableStatics;
     private MergedGroup<IGrassGetter>? _grasses;
     private MergedGroup<ITreeGetter>? _trees;
     private MergedGroup<IFloraGetter>? _florae;
@@ -69,12 +69,13 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<IKeyGetter>? _keys;
     private MergedGroup<IIngestibleGetter>? _ingestibles;
     private MergedGroup<IIdleMarkerGetter>? _idleMarkers;
-    private MergedGroup<IConstructibleObjectGetter>? _constructibleObjects;
+    private MergedGroup<IHolotapeGetter>? _holotapes;
     private MergedGroup<IProjectileGetter>? _projectiles;
     private MergedGroup<IHazardGetter>? _hazards;
-    private MergedGroup<ISoulGemGetter>? _soulGems;
+    private MergedGroup<IBendableSplineGetter>? _bendableSplines;
+    private MergedGroup<ITerminalGetter>? _terminals;
     private MergedGroup<ILeveledItemGetter>? _leveledItems;
-    private MergedGroup<IWeatherGetter>? _weathers;
+    private MergedGroup<IWeatherGetter>? _weather;
     private MergedGroup<IClimateGetter>? _climates;
     private MergedGroup<IShaderParticleGeometryGetter>? _shaderParticleGeometries;
     private MergedGroup<IVisualEffectGetter>? _visualEffects;
@@ -82,13 +83,11 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<INavigationMeshInfoMapGetter>? _navigationMeshInfoMaps;
     private MergedListGroup? _cells;
     private MergedGroup<IWorldspaceGetter>? _worldspaces;
-    private MergedGroup<IDialogTopicGetter>? _dialogTopics;
     private MergedGroup<IQuestGetter>? _quests;
     private MergedGroup<IIdleAnimationGetter>? _idleAnimations;
     private MergedGroup<IPackageGetter>? _packages;
     private MergedGroup<ICombatStyleGetter>? _combatStyles;
     private MergedGroup<ILoadScreenGetter>? _loadScreens;
-    private MergedGroup<ILeveledSpellGetter>? _leveledSpells;
     private MergedGroup<IAnimatedObjectGetter>? _animatedObjects;
     private MergedGroup<IWaterGetter>? _waters;
     private MergedGroup<IEffectShaderGetter>? _effectShaders;
@@ -112,6 +111,7 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<ILocationGetter>? _locations;
     private MergedGroup<IMessageGetter>? _messages;
     private MergedGroup<IDefaultObjectManagerGetter>? _defaultObjectManagers;
+    private MergedGroup<IDefaultObjectGetter>? _defaultObjects;
     private MergedGroup<ILightingTemplateGetter>? _lightingTemplates;
     private MergedGroup<IMusicTypeGetter>? _musicTypes;
     private MergedGroup<IFootstepGetter>? _footsteps;
@@ -119,35 +119,47 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     private MergedGroup<IStoryManagerBranchNodeGetter>? _storyManagerBranchNodes;
     private MergedGroup<IStoryManagerQuestNodeGetter>? _storyManagerQuestNodes;
     private MergedGroup<IStoryManagerEventNodeGetter>? _storyManagerEventNodes;
-    private MergedGroup<IDialogBranchGetter>? _dialogBranches;
     private MergedGroup<IMusicTrackGetter>? _musicTracks;
     private MergedGroup<IDialogViewGetter>? _dialogViews;
-    private MergedGroup<IWordOfPowerGetter>? _wordsOfPower;
-    private MergedGroup<IShoutGetter>? _shouts;
     private MergedGroup<IEquipTypeGetter>? _equipTypes;
     private MergedGroup<IRelationshipGetter>? _relationships;
-    private MergedGroup<ISceneGetter>? _scenes;
     private MergedGroup<IAssociationTypeGetter>? _associationTypes;
     private MergedGroup<IOutfitGetter>? _outfits;
     private MergedGroup<IArtObjectGetter>? _artObjects;
     private MergedGroup<IMaterialObjectGetter>? _materialObjects;
     private MergedGroup<IMovementTypeGetter>? _movementTypes;
     private MergedGroup<ISoundDescriptorGetter>? _soundDescriptors;
-    private MergedGroup<IDualCastDataGetter>? _dualCastData;
     private MergedGroup<ISoundCategoryGetter>? _soundCategories;
     private MergedGroup<ISoundOutputModelGetter>? _soundOutputModels;
     private MergedGroup<ICollisionLayerGetter>? _collisionLayers;
     private MergedGroup<IColorRecordGetter>? _colors;
     private MergedGroup<IReverbParametersGetter>? _reverbParameters;
-    private MergedGroup<IVolumetricLightingGetter>? _volumetricLightings;
+    private MergedGroup<IPackInGetter>? _packIns;
+    private MergedGroup<IReferenceGroupGetter>? _referenceGroups;
+    private MergedGroup<IAimModelGetter>? _aimModels;
+    private MergedGroup<ILayerGetter>? _layers;
+    private MergedGroup<IConstructibleObjectGetter>? _constructibleObjects;
+    private MergedGroup<IAObjectModificationGetter>? _objectModifications;
+    private MergedGroup<IMaterialSwapGetter>? _materialSwaps;
+    private MergedGroup<IZoomGetter>? _zooms;
+    private MergedGroup<IInstanceNamingRulesGetter>? _instanceNamingRules;
+    private MergedGroup<ISoundKeywordMappingGetter>? _soundKeywordMappings;
+    private MergedGroup<IAudioEffectChainGetter>? _audioEffectChains;
+    private MergedGroup<ISceneCollectionGetter>? _sceneCollections;
+    private MergedGroup<IAttractionRuleGetter>? _attractionRules;
+    private MergedGroup<IAudioCategorySnapshotGetter>? _audioCategorySnapshots;
+    private MergedGroup<IAnimationSoundTagSetGetter>? _animationSoundTagSets;
+    private MergedGroup<INavigationMeshObstacleManagerGetter>? _navigationMeshObstacleManagers;
     private MergedGroup<ILensFlareGetter>? _lensFlares;
+    private MergedGroup<IGodRaysGetter>? _godRays;
+    private MergedGroup<IObjectVisibilityManagerGetter>? _objectVisibilityManagers;
 
     /// <summary>
-    /// Creates a new SkyrimMultiModOverlay from multiple source mod files.
+    /// Creates a new Fallout4MultiModOverlay from multiple source mod files.
     /// </summary>
-    public SkyrimMultiModOverlay(
+    public Fallout4MultiModOverlay(
         ModKey modKey,
-        IEnumerable<ISkyrimModGetter> sourceMods,
+        IEnumerable<IFallout4ModGetter> sourceMods,
         IReadOnlyList<IMasterReferenceGetter> mergedMasters)
     {
         _modKey = modKey;
@@ -166,363 +178,399 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
     }
 
     public ModKey ModKey => _modKey;
-    public ISkyrimModHeaderGetter ModHeader => _sourceMods[0].ModHeader;
+    public IFallout4ModHeaderGetter ModHeader => _sourceMods[0].ModHeader;
     public IReadOnlyList<IMasterReferenceGetter> MasterReferences => _masters;
-    public SkyrimRelease SkyrimRelease => _sourceMods[0].SkyrimRelease;
-    GameRelease IModGetter.GameRelease => SkyrimRelease.ToGameRelease();
+    public Fallout4Release Fallout4Release => _sourceMods[0].Fallout4Release;
+    GameRelease IModGetter.GameRelease => Fallout4Release.ToGameRelease();
 
-    public object CommonInstance() => SkyrimModCommon.Instance;
-    public object? CommonSetterInstance() => SkyrimModSetterCommon.Instance;
-    public object CommonSetterTranslationInstance() => SkyrimModSetterTranslationCommon.Instance;
+    public object CommonInstance() => Fallout4ModCommon.Instance;
+    public object? CommonSetterInstance() => Fallout4ModSetterCommon.Instance;
+    public object CommonSetterTranslationInstance() => Fallout4ModSetterTranslationCommon.Instance;
 
 
-    public ISkyrimGroupGetter<IGameSettingGetter> GameSettings =>
+    public IFallout4GroupGetter<IGameSettingGetter> GameSettings =>
         _gameSettings ??= new MergedGroup<IGameSettingGetter>(
             _sourceMods.Select(m => m.GameSettings));
-    public ISkyrimGroupGetter<IKeywordGetter> Keywords =>
+    public IFallout4GroupGetter<IKeywordGetter> Keywords =>
         _keywords ??= new MergedGroup<IKeywordGetter>(
             _sourceMods.Select(m => m.Keywords));
-    public ISkyrimGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes =>
+    public IFallout4GroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes =>
         _locationReferenceTypes ??= new MergedGroup<ILocationReferenceTypeGetter>(
             _sourceMods.Select(m => m.LocationReferenceTypes));
-    public ISkyrimGroupGetter<IActionRecordGetter> Actions =>
+    public IFallout4GroupGetter<IActionRecordGetter> Actions =>
         _actions ??= new MergedGroup<IActionRecordGetter>(
             _sourceMods.Select(m => m.Actions));
-    public ISkyrimGroupGetter<ITextureSetGetter> TextureSets =>
+    public IFallout4GroupGetter<ITransformGetter> Transforms =>
+        _transforms ??= new MergedGroup<ITransformGetter>(
+            _sourceMods.Select(m => m.Transforms));
+    public IFallout4GroupGetter<IComponentGetter> Components =>
+        _components ??= new MergedGroup<IComponentGetter>(
+            _sourceMods.Select(m => m.Components));
+    public IFallout4GroupGetter<ITextureSetGetter> TextureSets =>
         _textureSets ??= new MergedGroup<ITextureSetGetter>(
             _sourceMods.Select(m => m.TextureSets));
-    public ISkyrimGroupGetter<IGlobalGetter> Globals =>
+    public IFallout4GroupGetter<IGlobalGetter> Globals =>
         _globals ??= new MergedGroup<IGlobalGetter>(
             _sourceMods.Select(m => m.Globals));
-    public ISkyrimGroupGetter<IClassGetter> Classes =>
+    public IFallout4GroupGetter<IADamageTypeGetter> DamageTypes =>
+        _damageTypes ??= new MergedGroup<IADamageTypeGetter>(
+            _sourceMods.Select(m => m.DamageTypes));
+    public IFallout4GroupGetter<IClassGetter> Classes =>
         _classes ??= new MergedGroup<IClassGetter>(
             _sourceMods.Select(m => m.Classes));
-    public ISkyrimGroupGetter<IFactionGetter> Factions =>
+    public IFallout4GroupGetter<IFactionGetter> Factions =>
         _factions ??= new MergedGroup<IFactionGetter>(
             _sourceMods.Select(m => m.Factions));
-    public ISkyrimGroupGetter<IHeadPartGetter> HeadParts =>
+    public IFallout4GroupGetter<IHeadPartGetter> HeadParts =>
         _headParts ??= new MergedGroup<IHeadPartGetter>(
             _sourceMods.Select(m => m.HeadParts));
-    public ISkyrimGroupGetter<IHairGetter> Hairs =>
-        _hairs ??= new MergedGroup<IHairGetter>(
-            _sourceMods.Select(m => m.Hairs));
-    public ISkyrimGroupGetter<IEyesGetter> Eyes =>
-        _eyes ??= new MergedGroup<IEyesGetter>(
-            _sourceMods.Select(m => m.Eyes));
-    public ISkyrimGroupGetter<IRaceGetter> Races =>
+    public IFallout4GroupGetter<IRaceGetter> Races =>
         _races ??= new MergedGroup<IRaceGetter>(
             _sourceMods.Select(m => m.Races));
-    public ISkyrimGroupGetter<ISoundMarkerGetter> SoundMarkers =>
+    public IFallout4GroupGetter<ISoundMarkerGetter> SoundMarkers =>
         _soundMarkers ??= new MergedGroup<ISoundMarkerGetter>(
             _sourceMods.Select(m => m.SoundMarkers));
-    public ISkyrimGroupGetter<IAcousticSpaceGetter> AcousticSpaces =>
+    public IFallout4GroupGetter<IAcousticSpaceGetter> AcousticSpaces =>
         _acousticSpaces ??= new MergedGroup<IAcousticSpaceGetter>(
             _sourceMods.Select(m => m.AcousticSpaces));
-    public ISkyrimGroupGetter<IMagicEffectGetter> MagicEffects =>
+    public IFallout4GroupGetter<IMagicEffectGetter> MagicEffects =>
         _magicEffects ??= new MergedGroup<IMagicEffectGetter>(
             _sourceMods.Select(m => m.MagicEffects));
-    public ISkyrimGroupGetter<ILandscapeTextureGetter> LandscapeTextures =>
+    public IFallout4GroupGetter<ILandscapeTextureGetter> LandscapeTextures =>
         _landscapeTextures ??= new MergedGroup<ILandscapeTextureGetter>(
             _sourceMods.Select(m => m.LandscapeTextures));
-    public ISkyrimGroupGetter<IObjectEffectGetter> ObjectEffects =>
+    public IFallout4GroupGetter<IObjectEffectGetter> ObjectEffects =>
         _objectEffects ??= new MergedGroup<IObjectEffectGetter>(
             _sourceMods.Select(m => m.ObjectEffects));
-    public ISkyrimGroupGetter<ISpellGetter> Spells =>
+    public IFallout4GroupGetter<ISpellGetter> Spells =>
         _spells ??= new MergedGroup<ISpellGetter>(
             _sourceMods.Select(m => m.Spells));
-    public ISkyrimGroupGetter<IScrollGetter> Scrolls =>
-        _scrolls ??= new MergedGroup<IScrollGetter>(
-            _sourceMods.Select(m => m.Scrolls));
-    public ISkyrimGroupGetter<IActivatorGetter> Activators =>
+    public IFallout4GroupGetter<IActivatorGetter> Activators =>
         _activators ??= new MergedGroup<IActivatorGetter>(
             _sourceMods.Select(m => m.Activators));
-    public ISkyrimGroupGetter<ITalkingActivatorGetter> TalkingActivators =>
+    public IFallout4GroupGetter<ITalkingActivatorGetter> TalkingActivators =>
         _talkingActivators ??= new MergedGroup<ITalkingActivatorGetter>(
             _sourceMods.Select(m => m.TalkingActivators));
-    public ISkyrimGroupGetter<IArmorGetter> Armors =>
+    public IFallout4GroupGetter<IArmorGetter> Armors =>
         _armors ??= new MergedGroup<IArmorGetter>(
             _sourceMods.Select(m => m.Armors));
-    public ISkyrimGroupGetter<IBookGetter> Books =>
+    public IFallout4GroupGetter<IBookGetter> Books =>
         _books ??= new MergedGroup<IBookGetter>(
             _sourceMods.Select(m => m.Books));
-    public ISkyrimGroupGetter<IContainerGetter> Containers =>
+    public IFallout4GroupGetter<IContainerGetter> Containers =>
         _containers ??= new MergedGroup<IContainerGetter>(
             _sourceMods.Select(m => m.Containers));
-    public ISkyrimGroupGetter<IDoorGetter> Doors =>
+    public IFallout4GroupGetter<IDoorGetter> Doors =>
         _doors ??= new MergedGroup<IDoorGetter>(
             _sourceMods.Select(m => m.Doors));
-    public ISkyrimGroupGetter<IIngredientGetter> Ingredients =>
+    public IFallout4GroupGetter<IIngredientGetter> Ingredients =>
         _ingredients ??= new MergedGroup<IIngredientGetter>(
             _sourceMods.Select(m => m.Ingredients));
-    public ISkyrimGroupGetter<ILightGetter> Lights =>
+    public IFallout4GroupGetter<ILightGetter> Lights =>
         _lights ??= new MergedGroup<ILightGetter>(
             _sourceMods.Select(m => m.Lights));
-    public ISkyrimGroupGetter<IMiscItemGetter> MiscItems =>
+    public IFallout4GroupGetter<IMiscItemGetter> MiscItems =>
         _miscItems ??= new MergedGroup<IMiscItemGetter>(
             _sourceMods.Select(m => m.MiscItems));
-    public ISkyrimGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses =>
-        _alchemicalApparatuses ??= new MergedGroup<IAlchemicalApparatusGetter>(
-            _sourceMods.Select(m => m.AlchemicalApparatuses));
-    public ISkyrimGroupGetter<IStaticGetter> Statics =>
+    public IFallout4GroupGetter<IStaticGetter> Statics =>
         _statics ??= new MergedGroup<IStaticGetter>(
             _sourceMods.Select(m => m.Statics));
-    public ISkyrimGroupGetter<IMoveableStaticGetter> MoveableStatics =>
-        _moveableStatics ??= new MergedGroup<IMoveableStaticGetter>(
-            _sourceMods.Select(m => m.MoveableStatics));
-    public ISkyrimGroupGetter<IGrassGetter> Grasses =>
+    public IFallout4GroupGetter<IStaticCollectionGetter> StaticCollections =>
+        _staticCollections ??= new MergedGroup<IStaticCollectionGetter>(
+            _sourceMods.Select(m => m.StaticCollections));
+    public IFallout4GroupGetter<IMovableStaticGetter> MovableStatics =>
+        _movableStatics ??= new MergedGroup<IMovableStaticGetter>(
+            _sourceMods.Select(m => m.MovableStatics));
+    public IFallout4GroupGetter<IGrassGetter> Grasses =>
         _grasses ??= new MergedGroup<IGrassGetter>(
             _sourceMods.Select(m => m.Grasses));
-    public ISkyrimGroupGetter<ITreeGetter> Trees =>
+    public IFallout4GroupGetter<ITreeGetter> Trees =>
         _trees ??= new MergedGroup<ITreeGetter>(
             _sourceMods.Select(m => m.Trees));
-    public ISkyrimGroupGetter<IFloraGetter> Florae =>
+    public IFallout4GroupGetter<IFloraGetter> Florae =>
         _florae ??= new MergedGroup<IFloraGetter>(
             _sourceMods.Select(m => m.Florae));
-    public ISkyrimGroupGetter<IFurnitureGetter> Furniture =>
+    public IFallout4GroupGetter<IFurnitureGetter> Furniture =>
         _furniture ??= new MergedGroup<IFurnitureGetter>(
             _sourceMods.Select(m => m.Furniture));
-    public ISkyrimGroupGetter<IWeaponGetter> Weapons =>
+    public IFallout4GroupGetter<IWeaponGetter> Weapons =>
         _weapons ??= new MergedGroup<IWeaponGetter>(
             _sourceMods.Select(m => m.Weapons));
-    public ISkyrimGroupGetter<IAmmunitionGetter> Ammunitions =>
+    public IFallout4GroupGetter<IAmmunitionGetter> Ammunitions =>
         _ammunitions ??= new MergedGroup<IAmmunitionGetter>(
             _sourceMods.Select(m => m.Ammunitions));
-    public ISkyrimGroupGetter<INpcGetter> Npcs =>
+    public IFallout4GroupGetter<INpcGetter> Npcs =>
         _npcs ??= new MergedGroup<INpcGetter>(
             _sourceMods.Select(m => m.Npcs));
-    public ISkyrimGroupGetter<ILeveledNpcGetter> LeveledNpcs =>
+    public IFallout4GroupGetter<ILeveledNpcGetter> LeveledNpcs =>
         _leveledNpcs ??= new MergedGroup<ILeveledNpcGetter>(
             _sourceMods.Select(m => m.LeveledNpcs));
-    public ISkyrimGroupGetter<IKeyGetter> Keys =>
+    public IFallout4GroupGetter<IKeyGetter> Keys =>
         _keys ??= new MergedGroup<IKeyGetter>(
             _sourceMods.Select(m => m.Keys));
-    public ISkyrimGroupGetter<IIngestibleGetter> Ingestibles =>
+    public IFallout4GroupGetter<IIngestibleGetter> Ingestibles =>
         _ingestibles ??= new MergedGroup<IIngestibleGetter>(
             _sourceMods.Select(m => m.Ingestibles));
-    public ISkyrimGroupGetter<IIdleMarkerGetter> IdleMarkers =>
+    public IFallout4GroupGetter<IIdleMarkerGetter> IdleMarkers =>
         _idleMarkers ??= new MergedGroup<IIdleMarkerGetter>(
             _sourceMods.Select(m => m.IdleMarkers));
-    public ISkyrimGroupGetter<IConstructibleObjectGetter> ConstructibleObjects =>
-        _constructibleObjects ??= new MergedGroup<IConstructibleObjectGetter>(
-            _sourceMods.Select(m => m.ConstructibleObjects));
-    public ISkyrimGroupGetter<IProjectileGetter> Projectiles =>
+    public IFallout4GroupGetter<IHolotapeGetter> Holotapes =>
+        _holotapes ??= new MergedGroup<IHolotapeGetter>(
+            _sourceMods.Select(m => m.Holotapes));
+    public IFallout4GroupGetter<IProjectileGetter> Projectiles =>
         _projectiles ??= new MergedGroup<IProjectileGetter>(
             _sourceMods.Select(m => m.Projectiles));
-    public ISkyrimGroupGetter<IHazardGetter> Hazards =>
+    public IFallout4GroupGetter<IHazardGetter> Hazards =>
         _hazards ??= new MergedGroup<IHazardGetter>(
             _sourceMods.Select(m => m.Hazards));
-    public ISkyrimGroupGetter<ISoulGemGetter> SoulGems =>
-        _soulGems ??= new MergedGroup<ISoulGemGetter>(
-            _sourceMods.Select(m => m.SoulGems));
-    public ISkyrimGroupGetter<ILeveledItemGetter> LeveledItems =>
+    public IFallout4GroupGetter<IBendableSplineGetter> BendableSplines =>
+        _bendableSplines ??= new MergedGroup<IBendableSplineGetter>(
+            _sourceMods.Select(m => m.BendableSplines));
+    public IFallout4GroupGetter<ITerminalGetter> Terminals =>
+        _terminals ??= new MergedGroup<ITerminalGetter>(
+            _sourceMods.Select(m => m.Terminals));
+    public IFallout4GroupGetter<ILeveledItemGetter> LeveledItems =>
         _leveledItems ??= new MergedGroup<ILeveledItemGetter>(
             _sourceMods.Select(m => m.LeveledItems));
-    public ISkyrimGroupGetter<IWeatherGetter> Weathers =>
-        _weathers ??= new MergedGroup<IWeatherGetter>(
-            _sourceMods.Select(m => m.Weathers));
-    public ISkyrimGroupGetter<IClimateGetter> Climates =>
+    public IFallout4GroupGetter<IWeatherGetter> Weather =>
+        _weather ??= new MergedGroup<IWeatherGetter>(
+            _sourceMods.Select(m => m.Weather));
+    public IFallout4GroupGetter<IClimateGetter> Climates =>
         _climates ??= new MergedGroup<IClimateGetter>(
             _sourceMods.Select(m => m.Climates));
-    public ISkyrimGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries =>
+    public IFallout4GroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries =>
         _shaderParticleGeometries ??= new MergedGroup<IShaderParticleGeometryGetter>(
             _sourceMods.Select(m => m.ShaderParticleGeometries));
-    public ISkyrimGroupGetter<IVisualEffectGetter> VisualEffects =>
+    public IFallout4GroupGetter<IVisualEffectGetter> VisualEffects =>
         _visualEffects ??= new MergedGroup<IVisualEffectGetter>(
             _sourceMods.Select(m => m.VisualEffects));
-    public ISkyrimGroupGetter<IRegionGetter> Regions =>
+    public IFallout4GroupGetter<IRegionGetter> Regions =>
         _regions ??= new MergedGroup<IRegionGetter>(
             _sourceMods.Select(m => m.Regions));
-    public ISkyrimGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps =>
+    public IFallout4GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps =>
         _navigationMeshInfoMaps ??= new MergedGroup<INavigationMeshInfoMapGetter>(
             _sourceMods.Select(m => m.NavigationMeshInfoMaps));
-    public ISkyrimListGroupGetter<ICellBlockGetter> Cells =>
+    public IFallout4ListGroupGetter<ICellBlockGetter> Cells =>
         _cells ??= new MergedListGroup(_sourceMods.Select(m => m.Cells));
-    public ISkyrimGroupGetter<IWorldspaceGetter> Worldspaces =>
+    public IFallout4GroupGetter<IWorldspaceGetter> Worldspaces =>
         _worldspaces ??= new MergedGroup<IWorldspaceGetter>(
             _sourceMods.Select(m => m.Worldspaces));
-    public ISkyrimGroupGetter<IDialogTopicGetter> DialogTopics =>
-        _dialogTopics ??= new MergedGroup<IDialogTopicGetter>(
-            _sourceMods.Select(m => m.DialogTopics));
-    public ISkyrimGroupGetter<IQuestGetter> Quests =>
+    public IFallout4GroupGetter<IQuestGetter> Quests =>
         _quests ??= new MergedGroup<IQuestGetter>(
             _sourceMods.Select(m => m.Quests));
-    public ISkyrimGroupGetter<IIdleAnimationGetter> IdleAnimations =>
+    public IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations =>
         _idleAnimations ??= new MergedGroup<IIdleAnimationGetter>(
             _sourceMods.Select(m => m.IdleAnimations));
-    public ISkyrimGroupGetter<IPackageGetter> Packages =>
+    public IFallout4GroupGetter<IPackageGetter> Packages =>
         _packages ??= new MergedGroup<IPackageGetter>(
             _sourceMods.Select(m => m.Packages));
-    public ISkyrimGroupGetter<ICombatStyleGetter> CombatStyles =>
+    public IFallout4GroupGetter<ICombatStyleGetter> CombatStyles =>
         _combatStyles ??= new MergedGroup<ICombatStyleGetter>(
             _sourceMods.Select(m => m.CombatStyles));
-    public ISkyrimGroupGetter<ILoadScreenGetter> LoadScreens =>
+    public IFallout4GroupGetter<ILoadScreenGetter> LoadScreens =>
         _loadScreens ??= new MergedGroup<ILoadScreenGetter>(
             _sourceMods.Select(m => m.LoadScreens));
-    public ISkyrimGroupGetter<ILeveledSpellGetter> LeveledSpells =>
-        _leveledSpells ??= new MergedGroup<ILeveledSpellGetter>(
-            _sourceMods.Select(m => m.LeveledSpells));
-    public ISkyrimGroupGetter<IAnimatedObjectGetter> AnimatedObjects =>
+    public IFallout4GroupGetter<IAnimatedObjectGetter> AnimatedObjects =>
         _animatedObjects ??= new MergedGroup<IAnimatedObjectGetter>(
             _sourceMods.Select(m => m.AnimatedObjects));
-    public ISkyrimGroupGetter<IWaterGetter> Waters =>
+    public IFallout4GroupGetter<IWaterGetter> Waters =>
         _waters ??= new MergedGroup<IWaterGetter>(
             _sourceMods.Select(m => m.Waters));
-    public ISkyrimGroupGetter<IEffectShaderGetter> EffectShaders =>
+    public IFallout4GroupGetter<IEffectShaderGetter> EffectShaders =>
         _effectShaders ??= new MergedGroup<IEffectShaderGetter>(
             _sourceMods.Select(m => m.EffectShaders));
-    public ISkyrimGroupGetter<IExplosionGetter> Explosions =>
+    public IFallout4GroupGetter<IExplosionGetter> Explosions =>
         _explosions ??= new MergedGroup<IExplosionGetter>(
             _sourceMods.Select(m => m.Explosions));
-    public ISkyrimGroupGetter<IDebrisGetter> Debris =>
+    public IFallout4GroupGetter<IDebrisGetter> Debris =>
         _debris ??= new MergedGroup<IDebrisGetter>(
             _sourceMods.Select(m => m.Debris));
-    public ISkyrimGroupGetter<IImageSpaceGetter> ImageSpaces =>
+    public IFallout4GroupGetter<IImageSpaceGetter> ImageSpaces =>
         _imageSpaces ??= new MergedGroup<IImageSpaceGetter>(
             _sourceMods.Select(m => m.ImageSpaces));
-    public ISkyrimGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters =>
+    public IFallout4GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters =>
         _imageSpaceAdapters ??= new MergedGroup<IImageSpaceAdapterGetter>(
             _sourceMods.Select(m => m.ImageSpaceAdapters));
-    public ISkyrimGroupGetter<IFormListGetter> FormLists =>
+    public IFallout4GroupGetter<IFormListGetter> FormLists =>
         _formLists ??= new MergedGroup<IFormListGetter>(
             _sourceMods.Select(m => m.FormLists));
-    public ISkyrimGroupGetter<IPerkGetter> Perks =>
+    public IFallout4GroupGetter<IPerkGetter> Perks =>
         _perks ??= new MergedGroup<IPerkGetter>(
             _sourceMods.Select(m => m.Perks));
-    public ISkyrimGroupGetter<IBodyPartDataGetter> BodyParts =>
+    public IFallout4GroupGetter<IBodyPartDataGetter> BodyParts =>
         _bodyParts ??= new MergedGroup<IBodyPartDataGetter>(
             _sourceMods.Select(m => m.BodyParts));
-    public ISkyrimGroupGetter<IAddonNodeGetter> AddonNodes =>
+    public IFallout4GroupGetter<IAddonNodeGetter> AddonNodes =>
         _addonNodes ??= new MergedGroup<IAddonNodeGetter>(
             _sourceMods.Select(m => m.AddonNodes));
-    public ISkyrimGroupGetter<IActorValueInformationGetter> ActorValueInformation =>
+    public IFallout4GroupGetter<IActorValueInformationGetter> ActorValueInformation =>
         _actorValueInformation ??= new MergedGroup<IActorValueInformationGetter>(
             _sourceMods.Select(m => m.ActorValueInformation));
-    public ISkyrimGroupGetter<ICameraShotGetter> CameraShots =>
+    public IFallout4GroupGetter<ICameraShotGetter> CameraShots =>
         _cameraShots ??= new MergedGroup<ICameraShotGetter>(
             _sourceMods.Select(m => m.CameraShots));
-    public ISkyrimGroupGetter<ICameraPathGetter> CameraPaths =>
+    public IFallout4GroupGetter<ICameraPathGetter> CameraPaths =>
         _cameraPaths ??= new MergedGroup<ICameraPathGetter>(
             _sourceMods.Select(m => m.CameraPaths));
-    public ISkyrimGroupGetter<IVoiceTypeGetter> VoiceTypes =>
+    public IFallout4GroupGetter<IVoiceTypeGetter> VoiceTypes =>
         _voiceTypes ??= new MergedGroup<IVoiceTypeGetter>(
             _sourceMods.Select(m => m.VoiceTypes));
-    public ISkyrimGroupGetter<IMaterialTypeGetter> MaterialTypes =>
+    public IFallout4GroupGetter<IMaterialTypeGetter> MaterialTypes =>
         _materialTypes ??= new MergedGroup<IMaterialTypeGetter>(
             _sourceMods.Select(m => m.MaterialTypes));
-    public ISkyrimGroupGetter<IImpactGetter> Impacts =>
+    public IFallout4GroupGetter<IImpactGetter> Impacts =>
         _impacts ??= new MergedGroup<IImpactGetter>(
             _sourceMods.Select(m => m.Impacts));
-    public ISkyrimGroupGetter<IImpactDataSetGetter> ImpactDataSets =>
+    public IFallout4GroupGetter<IImpactDataSetGetter> ImpactDataSets =>
         _impactDataSets ??= new MergedGroup<IImpactDataSetGetter>(
             _sourceMods.Select(m => m.ImpactDataSets));
-    public ISkyrimGroupGetter<IArmorAddonGetter> ArmorAddons =>
+    public IFallout4GroupGetter<IArmorAddonGetter> ArmorAddons =>
         _armorAddons ??= new MergedGroup<IArmorAddonGetter>(
             _sourceMods.Select(m => m.ArmorAddons));
-    public ISkyrimGroupGetter<IEncounterZoneGetter> EncounterZones =>
+    public IFallout4GroupGetter<IEncounterZoneGetter> EncounterZones =>
         _encounterZones ??= new MergedGroup<IEncounterZoneGetter>(
             _sourceMods.Select(m => m.EncounterZones));
-    public ISkyrimGroupGetter<ILocationGetter> Locations =>
+    public IFallout4GroupGetter<ILocationGetter> Locations =>
         _locations ??= new MergedGroup<ILocationGetter>(
             _sourceMods.Select(m => m.Locations));
-    public ISkyrimGroupGetter<IMessageGetter> Messages =>
+    public IFallout4GroupGetter<IMessageGetter> Messages =>
         _messages ??= new MergedGroup<IMessageGetter>(
             _sourceMods.Select(m => m.Messages));
-    public ISkyrimGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers =>
+    public IFallout4GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers =>
         _defaultObjectManagers ??= new MergedGroup<IDefaultObjectManagerGetter>(
             _sourceMods.Select(m => m.DefaultObjectManagers));
-    public ISkyrimGroupGetter<ILightingTemplateGetter> LightingTemplates =>
+    public IFallout4GroupGetter<IDefaultObjectGetter> DefaultObjects =>
+        _defaultObjects ??= new MergedGroup<IDefaultObjectGetter>(
+            _sourceMods.Select(m => m.DefaultObjects));
+    public IFallout4GroupGetter<ILightingTemplateGetter> LightingTemplates =>
         _lightingTemplates ??= new MergedGroup<ILightingTemplateGetter>(
             _sourceMods.Select(m => m.LightingTemplates));
-    public ISkyrimGroupGetter<IMusicTypeGetter> MusicTypes =>
+    public IFallout4GroupGetter<IMusicTypeGetter> MusicTypes =>
         _musicTypes ??= new MergedGroup<IMusicTypeGetter>(
             _sourceMods.Select(m => m.MusicTypes));
-    public ISkyrimGroupGetter<IFootstepGetter> Footsteps =>
+    public IFallout4GroupGetter<IFootstepGetter> Footsteps =>
         _footsteps ??= new MergedGroup<IFootstepGetter>(
             _sourceMods.Select(m => m.Footsteps));
-    public ISkyrimGroupGetter<IFootstepSetGetter> FootstepSets =>
+    public IFallout4GroupGetter<IFootstepSetGetter> FootstepSets =>
         _footstepSets ??= new MergedGroup<IFootstepSetGetter>(
             _sourceMods.Select(m => m.FootstepSets));
-    public ISkyrimGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes =>
+    public IFallout4GroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes =>
         _storyManagerBranchNodes ??= new MergedGroup<IStoryManagerBranchNodeGetter>(
             _sourceMods.Select(m => m.StoryManagerBranchNodes));
-    public ISkyrimGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes =>
+    public IFallout4GroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes =>
         _storyManagerQuestNodes ??= new MergedGroup<IStoryManagerQuestNodeGetter>(
             _sourceMods.Select(m => m.StoryManagerQuestNodes));
-    public ISkyrimGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes =>
+    public IFallout4GroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes =>
         _storyManagerEventNodes ??= new MergedGroup<IStoryManagerEventNodeGetter>(
             _sourceMods.Select(m => m.StoryManagerEventNodes));
-    public ISkyrimGroupGetter<IDialogBranchGetter> DialogBranches =>
-        _dialogBranches ??= new MergedGroup<IDialogBranchGetter>(
-            _sourceMods.Select(m => m.DialogBranches));
-    public ISkyrimGroupGetter<IMusicTrackGetter> MusicTracks =>
+    public IFallout4GroupGetter<IMusicTrackGetter> MusicTracks =>
         _musicTracks ??= new MergedGroup<IMusicTrackGetter>(
             _sourceMods.Select(m => m.MusicTracks));
-    public ISkyrimGroupGetter<IDialogViewGetter> DialogViews =>
+    public IFallout4GroupGetter<IDialogViewGetter> DialogViews =>
         _dialogViews ??= new MergedGroup<IDialogViewGetter>(
             _sourceMods.Select(m => m.DialogViews));
-    public ISkyrimGroupGetter<IWordOfPowerGetter> WordsOfPower =>
-        _wordsOfPower ??= new MergedGroup<IWordOfPowerGetter>(
-            _sourceMods.Select(m => m.WordsOfPower));
-    public ISkyrimGroupGetter<IShoutGetter> Shouts =>
-        _shouts ??= new MergedGroup<IShoutGetter>(
-            _sourceMods.Select(m => m.Shouts));
-    public ISkyrimGroupGetter<IEquipTypeGetter> EquipTypes =>
+    public IFallout4GroupGetter<IEquipTypeGetter> EquipTypes =>
         _equipTypes ??= new MergedGroup<IEquipTypeGetter>(
             _sourceMods.Select(m => m.EquipTypes));
-    public ISkyrimGroupGetter<IRelationshipGetter> Relationships =>
+    public IFallout4GroupGetter<IRelationshipGetter> Relationships =>
         _relationships ??= new MergedGroup<IRelationshipGetter>(
             _sourceMods.Select(m => m.Relationships));
-    public ISkyrimGroupGetter<ISceneGetter> Scenes =>
-        _scenes ??= new MergedGroup<ISceneGetter>(
-            _sourceMods.Select(m => m.Scenes));
-    public ISkyrimGroupGetter<IAssociationTypeGetter> AssociationTypes =>
+    public IFallout4GroupGetter<IAssociationTypeGetter> AssociationTypes =>
         _associationTypes ??= new MergedGroup<IAssociationTypeGetter>(
             _sourceMods.Select(m => m.AssociationTypes));
-    public ISkyrimGroupGetter<IOutfitGetter> Outfits =>
+    public IFallout4GroupGetter<IOutfitGetter> Outfits =>
         _outfits ??= new MergedGroup<IOutfitGetter>(
             _sourceMods.Select(m => m.Outfits));
-    public ISkyrimGroupGetter<IArtObjectGetter> ArtObjects =>
+    public IFallout4GroupGetter<IArtObjectGetter> ArtObjects =>
         _artObjects ??= new MergedGroup<IArtObjectGetter>(
             _sourceMods.Select(m => m.ArtObjects));
-    public ISkyrimGroupGetter<IMaterialObjectGetter> MaterialObjects =>
+    public IFallout4GroupGetter<IMaterialObjectGetter> MaterialObjects =>
         _materialObjects ??= new MergedGroup<IMaterialObjectGetter>(
             _sourceMods.Select(m => m.MaterialObjects));
-    public ISkyrimGroupGetter<IMovementTypeGetter> MovementTypes =>
+    public IFallout4GroupGetter<IMovementTypeGetter> MovementTypes =>
         _movementTypes ??= new MergedGroup<IMovementTypeGetter>(
             _sourceMods.Select(m => m.MovementTypes));
-    public ISkyrimGroupGetter<ISoundDescriptorGetter> SoundDescriptors =>
+    public IFallout4GroupGetter<ISoundDescriptorGetter> SoundDescriptors =>
         _soundDescriptors ??= new MergedGroup<ISoundDescriptorGetter>(
             _sourceMods.Select(m => m.SoundDescriptors));
-    public ISkyrimGroupGetter<IDualCastDataGetter> DualCastData =>
-        _dualCastData ??= new MergedGroup<IDualCastDataGetter>(
-            _sourceMods.Select(m => m.DualCastData));
-    public ISkyrimGroupGetter<ISoundCategoryGetter> SoundCategories =>
+    public IFallout4GroupGetter<ISoundCategoryGetter> SoundCategories =>
         _soundCategories ??= new MergedGroup<ISoundCategoryGetter>(
             _sourceMods.Select(m => m.SoundCategories));
-    public ISkyrimGroupGetter<ISoundOutputModelGetter> SoundOutputModels =>
+    public IFallout4GroupGetter<ISoundOutputModelGetter> SoundOutputModels =>
         _soundOutputModels ??= new MergedGroup<ISoundOutputModelGetter>(
             _sourceMods.Select(m => m.SoundOutputModels));
-    public ISkyrimGroupGetter<ICollisionLayerGetter> CollisionLayers =>
+    public IFallout4GroupGetter<ICollisionLayerGetter> CollisionLayers =>
         _collisionLayers ??= new MergedGroup<ICollisionLayerGetter>(
             _sourceMods.Select(m => m.CollisionLayers));
-    public ISkyrimGroupGetter<IColorRecordGetter> Colors =>
+    public IFallout4GroupGetter<IColorRecordGetter> Colors =>
         _colors ??= new MergedGroup<IColorRecordGetter>(
             _sourceMods.Select(m => m.Colors));
-    public ISkyrimGroupGetter<IReverbParametersGetter> ReverbParameters =>
+    public IFallout4GroupGetter<IReverbParametersGetter> ReverbParameters =>
         _reverbParameters ??= new MergedGroup<IReverbParametersGetter>(
             _sourceMods.Select(m => m.ReverbParameters));
-    public ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings =>
-        _volumetricLightings ??= new MergedGroup<IVolumetricLightingGetter>(
-            _sourceMods.Select(m => m.VolumetricLightings));
-    public ISkyrimGroupGetter<ILensFlareGetter> LensFlares =>
+    public IFallout4GroupGetter<IPackInGetter> PackIns =>
+        _packIns ??= new MergedGroup<IPackInGetter>(
+            _sourceMods.Select(m => m.PackIns));
+    public IFallout4GroupGetter<IReferenceGroupGetter> ReferenceGroups =>
+        _referenceGroups ??= new MergedGroup<IReferenceGroupGetter>(
+            _sourceMods.Select(m => m.ReferenceGroups));
+    public IFallout4GroupGetter<IAimModelGetter> AimModels =>
+        _aimModels ??= new MergedGroup<IAimModelGetter>(
+            _sourceMods.Select(m => m.AimModels));
+    public IFallout4GroupGetter<ILayerGetter> Layers =>
+        _layers ??= new MergedGroup<ILayerGetter>(
+            _sourceMods.Select(m => m.Layers));
+    public IFallout4GroupGetter<IConstructibleObjectGetter> ConstructibleObjects =>
+        _constructibleObjects ??= new MergedGroup<IConstructibleObjectGetter>(
+            _sourceMods.Select(m => m.ConstructibleObjects));
+    public IFallout4GroupGetter<IAObjectModificationGetter> ObjectModifications =>
+        _objectModifications ??= new MergedGroup<IAObjectModificationGetter>(
+            _sourceMods.Select(m => m.ObjectModifications));
+    public IFallout4GroupGetter<IMaterialSwapGetter> MaterialSwaps =>
+        _materialSwaps ??= new MergedGroup<IMaterialSwapGetter>(
+            _sourceMods.Select(m => m.MaterialSwaps));
+    public IFallout4GroupGetter<IZoomGetter> Zooms =>
+        _zooms ??= new MergedGroup<IZoomGetter>(
+            _sourceMods.Select(m => m.Zooms));
+    public IFallout4GroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules =>
+        _instanceNamingRules ??= new MergedGroup<IInstanceNamingRulesGetter>(
+            _sourceMods.Select(m => m.InstanceNamingRules));
+    public IFallout4GroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings =>
+        _soundKeywordMappings ??= new MergedGroup<ISoundKeywordMappingGetter>(
+            _sourceMods.Select(m => m.SoundKeywordMappings));
+    public IFallout4GroupGetter<IAudioEffectChainGetter> AudioEffectChains =>
+        _audioEffectChains ??= new MergedGroup<IAudioEffectChainGetter>(
+            _sourceMods.Select(m => m.AudioEffectChains));
+    public IFallout4GroupGetter<ISceneCollectionGetter> SceneCollections =>
+        _sceneCollections ??= new MergedGroup<ISceneCollectionGetter>(
+            _sourceMods.Select(m => m.SceneCollections));
+    public IFallout4GroupGetter<IAttractionRuleGetter> AttractionRules =>
+        _attractionRules ??= new MergedGroup<IAttractionRuleGetter>(
+            _sourceMods.Select(m => m.AttractionRules));
+    public IFallout4GroupGetter<IAudioCategorySnapshotGetter> AudioCategorySnapshots =>
+        _audioCategorySnapshots ??= new MergedGroup<IAudioCategorySnapshotGetter>(
+            _sourceMods.Select(m => m.AudioCategorySnapshots));
+    public IFallout4GroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets =>
+        _animationSoundTagSets ??= new MergedGroup<IAnimationSoundTagSetGetter>(
+            _sourceMods.Select(m => m.AnimationSoundTagSets));
+    public IFallout4GroupGetter<INavigationMeshObstacleManagerGetter> NavigationMeshObstacleManagers =>
+        _navigationMeshObstacleManagers ??= new MergedGroup<INavigationMeshObstacleManagerGetter>(
+            _sourceMods.Select(m => m.NavigationMeshObstacleManagers));
+    public IFallout4GroupGetter<ILensFlareGetter> LensFlares =>
         _lensFlares ??= new MergedGroup<ILensFlareGetter>(
             _sourceMods.Select(m => m.LensFlares));
+    public IFallout4GroupGetter<IGodRaysGetter> GodRays =>
+        _godRays ??= new MergedGroup<IGodRaysGetter>(
+            _sourceMods.Select(m => m.GodRays));
+    public IFallout4GroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers =>
+        _objectVisibilityManagers ??= new MergedGroup<IObjectVisibilityManagerGetter>(
+            _sourceMods.Select(m => m.ObjectVisibilityManagers));
 
-    BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> ISkyrimModGetter.BeginWrite =>
-        new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(this, SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+    BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter> IFallout4ModGetter.BeginWrite =>
+        new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(this, Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
 
     IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite =>
-        new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(this, SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+        new BinaryModdedWriteBuilderTargetChoice<IFallout4ModGetter>(this, Fallout4Mod.Fallout4WriteBuilderInstantiator.Instance);
 
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
     {
@@ -581,19 +629,19 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
 
     IGroupGetter<TMajor>? IModGetter.TryGetTopLevelGroup<TMajor>()
     {
-        return (IGroupGetter<TMajor>?)((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).GetGroup(
+        return (IGroupGetter<TMajor>?)((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).GetGroup(
             obj: this,
             type: typeof(TMajor));
     }
 
     public IGroupGetter? TryGetTopLevelGroup(Type type)
     {
-        return (IGroupGetter?)((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).GetGroup(
+        return (IGroupGetter?)((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).GetGroup(
             obj: this,
             type: type);
     }
 
-    IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown)
+    IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown)
     {
         foreach (var mod in _sourceMods)
         {
@@ -604,7 +652,7 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
         }
     }
 
-    IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown)
+    IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<IFallout4Mod, IFallout4ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown)
     {
         foreach (var mod in _sourceMods)
         {
@@ -664,7 +712,7 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
 
     IMod IModGetter.DeepCopy()
     {
-        return ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)this).CommonSetterTranslationInstance()!).DeepCopy(
+        return ((Fallout4ModSetterTranslationCommon)((IFallout4ModGetter)this).CommonSetterTranslationInstance()!).DeepCopy(
             item: this,
             errorMask: null,
             copyMask: null);
@@ -679,7 +727,7 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
 
     public uint NextFormID => _sourceMods.Max(m => m.NextFormID);
 
-    public ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
+    public ILoquiRegistration Registration => Fallout4Mod_Registration.Instance;
 
     public void Print(StructuredStringBuilder sb, string? name = null)
     {
@@ -719,8 +767,8 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
 /// Merged group that combines multiple groups into a single unified view.
 /// Validates no duplicate FormKeys exist and caches results.
 /// </summary>
-internal class MergedGroup<TGetter> : ISkyrimGroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>
-    where TGetter : class, ISkyrimMajorRecordGetter, IBinaryItem
+internal class MergedGroup<TGetter> : IFallout4GroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>
+    where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
 {
     private readonly IEnumerable<IGroupGetter<TGetter>> _sourceGroups;
     private Dictionary<FormKey, TGetter>? _cache;
@@ -838,16 +886,16 @@ internal class MergedGroup<TGetter> : ISkyrimGroupGetter<TGetter>, IReadOnlyCach
         return Cache.Values.Where(r => type.IsAssignableFrom(r.GetType()));
     }
 
-    // ISkyrimGroupGetter members
-    public object CommonInstance(Type type) => GenericCommonInstanceGetter.Get(SkyrimGroupCommon<TGetter>.Instance, typeof(ICellBlockGetter), type);
+    // IFallout4GroupGetter members
+    public object CommonInstance(Type type) => GenericCommonInstanceGetter.Get(Fallout4GroupCommon<TGetter>.Instance, typeof(ICellBlockGetter), type);
     public object? CommonSetterInstance(Type type) => null;
-    public object CommonSetterTranslationInstance() => SkyrimGroupSetterTranslationCommon.Instance;
+    public object CommonSetterTranslationInstance() => Fallout4GroupSetterTranslationCommon.Instance;
 
-    GroupTypeEnum ISkyrimGroupGetter<TGetter>.Type => GroupTypeEnum.Type;
-    int ISkyrimGroupGetter<TGetter>.LastModified => 0;
+    GroupTypeEnum IFallout4GroupGetter<TGetter>.Type => GroupTypeEnum.Type;
+    int IFallout4GroupGetter<TGetter>.LastModified => 0;
     public int Unknown => 0;
 
-    IReadOnlyCache<TGetter, FormKey> ISkyrimGroupGetter<TGetter>.RecordCache => this;
+    IReadOnlyCache<TGetter, FormKey> IFallout4GroupGetter<TGetter>.RecordCache => this;
     IReadOnlyCache<TGetter, FormKey> IGroupGetter<TGetter>.RecordCache => this;
 
     // IReadOnlyCache explicit implementations
@@ -894,7 +942,7 @@ internal class MergedGroup<TGetter> : ISkyrimGroupGetter<TGetter>, IReadOnlyCach
 
     public void Print(StructuredStringBuilder sb, string? name = null)
     {
-        SkyrimGroupMixIn.Print(
+        Fallout4GroupMixIn.Print(
             item: this,
             sb: sb,
             name: name);
@@ -905,13 +953,13 @@ internal class MergedGroup<TGetter> : ISkyrimGroupGetter<TGetter>, IReadOnlyCach
 /// Merged list group that combines multiple list groups (like Cells) into a single unified view.
 /// CellBlocks from different mods are merged by BlockNumber.
 /// </summary>
-internal class MergedListGroup : ISkyrimListGroupGetter<ICellBlockGetter>
+internal class MergedListGroup : IFallout4ListGroupGetter<ICellBlockGetter>
 {
-    private readonly IEnumerable<ISkyrimListGroupGetter<ICellBlockGetter>> _sourceGroups;
+    private readonly IEnumerable<IFallout4ListGroupGetter<ICellBlockGetter>> _sourceGroups;
     private List<ICellBlockGetter>? _cache;
     private readonly object _cacheLock = new object();
 
-    public MergedListGroup(IEnumerable<ISkyrimListGroupGetter<ICellBlockGetter>> sourceGroups)
+    public MergedListGroup(IEnumerable<IFallout4ListGroupGetter<ICellBlockGetter>> sourceGroups)
     {
         _sourceGroups = sourceGroups;
     }
@@ -970,25 +1018,25 @@ internal class MergedListGroup : ISkyrimListGroupGetter<ICellBlockGetter>
     public ICellBlockGetter this[int index] => Cache[index];
     public IReadOnlyList<ICellBlockGetter> Records => Cache;
 
-    ILoquiRegistration ILoquiObject.Registration => SkyrimMod_Registration.Instance;
-    public static ILoquiRegistration StaticRegistration => SkyrimMod_Registration.Instance;
+    ILoquiRegistration ILoquiObject.Registration => Fallout4Mod_Registration.Instance;
+    public static ILoquiRegistration StaticRegistration => Fallout4Mod_Registration.Instance;
 
     public void Print(StructuredStringBuilder sb, string? name = null)
     {
-        SkyrimListGroupMixIn.Print(
+        Fallout4ListGroupMixIn.Print(
             item: this,
             sb: sb,
             name: name);
     }
 
-    // ISkyrimListGroupGetter properties
+    // IFallout4ListGroupGetter properties
     public GroupTypeEnum Type => _sourceGroups.FirstOrDefault()?.Type ?? GroupTypeEnum.InteriorCellBlock;
     public int LastModified => _sourceGroups.Max(g => g.LastModified);
     public int Unknown => 0;
 
-    public object CommonInstance(Type type) => GenericCommonInstanceGetter.Get(SkyrimListGroupCommon<ICellBlockGetter>.Instance, typeof(ICellBlockGetter), type);
-    public object? CommonSetterInstance(Type type) => GenericCommonInstanceGetter.Get(SkyrimListGroupSetterCommon<ICellBlock>.Instance, typeof(ICellBlockGetter), type);
-    public object CommonSetterTranslationInstance() => SkyrimListGroupSetterTranslationCommon.Instance;
+    public object CommonInstance(Type type) => GenericCommonInstanceGetter.Get(Fallout4ListGroupCommon<ICellBlockGetter>.Instance, typeof(ICellBlockGetter), type);
+    public object? CommonSetterInstance(Type type) => GenericCommonInstanceGetter.Get(Fallout4ListGroupSetterCommon<ICellBlock>.Instance, typeof(ICellBlockGetter), type);
+    public object CommonSetterTranslationInstance() => Fallout4ListGroupSetterTranslationCommon.Instance;
 
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
     {

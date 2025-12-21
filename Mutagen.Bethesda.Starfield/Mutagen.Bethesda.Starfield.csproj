@@ -6883,5 +6883,6 @@
     <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
+    <Compile Include="StarfieldMultiModOverlay_Generated.cs" />
   </ItemGroup>
 </Project>

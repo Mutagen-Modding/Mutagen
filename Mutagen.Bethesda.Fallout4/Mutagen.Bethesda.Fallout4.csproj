@@ -2485,6 +2485,7 @@
     <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
+    <Compile Include="Fallout4MultiModOverlay_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

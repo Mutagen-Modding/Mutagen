@@ -206,11 +206,11 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine($"// I{gameName}ListGroupGetter properties");
             sb.AppendLine("public GroupTypeEnum Type => _sourceGroups.FirstOrDefault()?.Type ?? GroupTypeEnum.InteriorCellBlock;");
             sb.AppendLine("public int LastModified => _sourceGroups.Max(g => g.LastModified);");
-            sb.AppendLine("public int Unknown => _sourceGroups.FirstOrDefault()?.Unknown ?? 0;");
+            sb.AppendLine("public int Unknown => 0;");
             sb.AppendLine();
             sb.AppendLine($"public object CommonInstance(Type type) => GenericCommonInstanceGetter.Get({gameName}ListGroupCommon<ICellBlockGetter>.Instance, typeof(ICellBlockGetter), type);");
             sb.AppendLine($"public object? CommonSetterInstance(Type type) => GenericCommonInstanceGetter.Get({gameName}ListGroupSetterCommon<ICellBlock>.Instance, typeof(ICellBlockGetter), type);");
-            sb.AppendLine($"public object CommonSetterTranslationInstance() => SkyrimListGroupSetterTranslationCommon.Instance;");
+            sb.AppendLine($"public object CommonSetterTranslationInstance() => {gameName}ListGroupSetterTranslationCommon.Instance;");
             sb.AppendLine();
 
             // IAssetLinkContainerGetter
@@ -351,7 +351,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine("public int BlockNumber => _blockNumber;");
             sb.AppendLine("public GroupTypeEnum GroupType => _sourceBlocks.FirstOrDefault()?.GroupType ?? GroupTypeEnum.InteriorCellBlock;");
             sb.AppendLine("public int LastModified => _sourceBlocks.Max(b => b.LastModified);");
-            sb.AppendLine("public int Unknown => _sourceBlocks.FirstOrDefault()?.Unknown ?? 0;");
+            sb.AppendLine("public int Unknown => 0;");
             sb.AppendLine();
 
             // SubBlocks property
@@ -686,7 +686,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine($"// I{gameName}GroupGetter members");
             sb.AppendLine($"public object CommonInstance(Type type) => GenericCommonInstanceGetter.Get({gameName}GroupCommon<TGetter>.Instance, typeof(ICellBlockGetter), type);");
             sb.AppendLine($"public object? CommonSetterInstance(Type type) => null;");
-            sb.AppendLine($"public object CommonSetterTranslationInstance() => SkyrimGroupSetterTranslationCommon.Instance;");
+            sb.AppendLine($"public object CommonSetterTranslationInstance() => {gameName}GroupSetterTranslationCommon.Instance;");
             sb.AppendLine();
             sb.AppendLine($"GroupTypeEnum I{gameName}GroupGetter<TGetter>.Type => GroupTypeEnum.Type;");
             sb.AppendLine($"int I{gameName}GroupGetter<TGetter>.LastModified => 0;");
@@ -1133,8 +1133,8 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("#pragma warning restore CS8603");
         sb.AppendLine();
 
-        // NextFormID
-        sb.AppendLine("public uint NextFormID => _sourceMods[0].NextFormID;");
+        // NextFormID - return max across all mods to avoid collisions
+        sb.AppendLine("public uint NextFormID => _sourceMods.Max(m => m.NextFormID);");
         sb.AppendLine();
 
         // ILoquiObject.Registration

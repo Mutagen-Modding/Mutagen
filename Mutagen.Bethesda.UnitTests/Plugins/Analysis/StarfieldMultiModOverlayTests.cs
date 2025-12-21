@@ -3,18 +3,19 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.Plugins.Masters;
+using static Mutagen.Bethesda.Plugins.Meta.GameConstants;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
 
-public class SkyrimMultiModOverlayTests
+public class StarfieldMultiModOverlayTests
 {
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void BasicMerge_TwoModsWithDifferentFormLists(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Create FormLists in mod1
         var flst1 = mod1.FormLists.AddNew();
@@ -29,7 +30,7 @@ public class SkyrimMultiModOverlayTests
 
         // Create overlay
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -44,10 +45,10 @@ public class SkyrimMultiModOverlayTests
         overlay.ModKey.ShouldBe(targetModKey);
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void DuplicateFormKey_ThrowsException(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Create same FormKey in both mods
         var formKey = mod1.GetNextFormKey();
@@ -59,7 +60,7 @@ public class SkyrimMultiModOverlayTests
 
         // Create overlay - this should succeed
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -71,19 +72,19 @@ public class SkyrimMultiModOverlayTests
         }).Message.ShouldContain(formKey.ToString());
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void MasterListMerging_OrderedByLoadOrder(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Set up masters for mod1
-        var master1 = new ModKey("Skyrim", ModType.Master);
-        var master2 = new ModKey("Update", ModType.Master);
+        var master1 = new ModKey("Starfield", ModType.Master);
+        var master2 = new ModKey("BlueprintShips-Starfield", ModType.Plugin);
         mod1.ModHeader.MasterReferences.Add(new MasterReference { Master = master1 });
         mod1.ModHeader.MasterReferences.Add(new MasterReference { Master = master2 });
 
         // Set up masters for mod2 (different master)
-        var master3 = new ModKey("Dawnguard", ModType.Master);
+        var master3 = new ModKey("Constellation", ModType.Plugin);
         mod2.ModHeader.MasterReferences.Add(new MasterReference { Master = master3 });
 
         // Define merged masters
@@ -96,7 +97,7 @@ public class SkyrimMultiModOverlayTests
 
         // Create overlay
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             mergedMasters);
@@ -108,19 +109,19 @@ public class SkyrimMultiModOverlayTests
         overlay.MasterReferences[2].Master.ShouldBe(master3);
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void DeepNestedRecords_CellsAndPlacedObjects(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Create overlay
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // Cells property should now work (returns ISkyrimListGroupGetter<ICellBlockGetter>)
+        // Cells property should now work (returns IStarfieldListGroupGetter<ICellBlockGetter>)
         var cells = overlay.Cells;
         cells.ShouldNotBeNull();
 
@@ -128,10 +129,10 @@ public class SkyrimMultiModOverlayTests
         cells.Count.ShouldBe(0);
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void NextFormID_ReturnsMaxFromAllMods(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Add some records to each mod so they have different NextFormIDs
         // AutoFixture creates mods with unique ModKeys, so adding records will give different FormIDs
@@ -146,7 +147,7 @@ public class SkyrimMultiModOverlayTests
         }
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -156,10 +157,10 @@ public class SkyrimMultiModOverlayTests
         overlay.NextFormID.ShouldBe(expected);
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void RecordAccessByFormKey_WorksAcrossMods(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Create records in both mods
         var flst1 = mod1.FormLists.AddNew();
@@ -171,7 +172,7 @@ public class SkyrimMultiModOverlayTests
         var formKey2 = flst2.FormKey;
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -184,10 +185,10 @@ public class SkyrimMultiModOverlayTests
         retrieved2.EditorID.ShouldBe("FromMod2");
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void EnumerateMajorRecords_IncludesAllMods(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Create different types of records
         mod1.FormLists.AddNew().EditorID = "FormList1";
@@ -197,7 +198,7 @@ public class SkyrimMultiModOverlayTests
         mod2.Weapons.AddNew().EditorID = "Weapon1";
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -211,10 +212,10 @@ public class SkyrimMultiModOverlayTests
         allRecords.ShouldContain(r => r.EditorID == "Weapon1");
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void GetRecordCount_SumsAllMods(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Get initial counts
         var initialCount1 = mod1.GetRecordCount();
@@ -229,7 +230,7 @@ public class SkyrimMultiModOverlayTests
         mod2.Weapons.AddNew();
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -239,13 +240,13 @@ public class SkyrimMultiModOverlayTests
         overlay.GetRecordCount().ShouldBe(expectedCount);
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void EmptyMods_CreatesEmptyOverlay(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
@@ -257,17 +258,17 @@ public class SkyrimMultiModOverlayTests
         overlay.GetRecordCount().ShouldBe(0u);
     }
 
-    [Theory, MutagenModAutoData]
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
     public void ModHeader_TakenFromFirstMod(
-        SkyrimMod mod1,
-        SkyrimMod mod2)
+        StarfieldMod mod1,
+        StarfieldMod mod2)
     {
         // Set distinct properties on mod1's header
         mod1.ModHeader.Author = "TestAuthor";
         mod1.ModHeader.Description = "TestDescription";
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
-        var overlay = new SkyrimMultiModOverlay(
+        var overlay = new StarfieldMultiModOverlay(
             targetModKey,
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
