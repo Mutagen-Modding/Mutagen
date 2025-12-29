@@ -602,7 +602,7 @@ public class JsonConverterTests
     }
     
     [Fact]
-    public void FormLinkInformationConverter_FormLink_Deserialize()
+    public void FormLinkInformationConverter_FormLink_Deserialize_Null_BethesdaMajorRecord()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
@@ -621,7 +621,7 @@ public class JsonConverterTests
     }
     
     [Fact]
-    public void FormLinkInformationConverter_FormLink_Serialize_Null()
+    public void FormLinkInformationConverter_FormLink_Serialize_Null_BethesdaMajorRecord()
     {
         var settings = new JsonSerializerSettings();
         settings.Converters.Add(new FormKeyJsonConverter());
@@ -633,6 +633,27 @@ public class JsonConverterTests
         var toDeserialize = $"{{\"Interface\":\"Null<MajorRecord>\",\"Direct\":\"Null<MajorRecord>\"}}";
         JsonConvert.SerializeObject(target, settings)
             .ShouldBe(toDeserialize);
+    }
+    
+    [Fact]
+    public void FormLinkInformationConverter_FormLink_Null_MajorRecord()
+    {
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var deserialized = new FormLinkInformationClass()
+        {
+            Interface = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+        };
+        var serialized = $"{{\"Interface\":\"Null<MajorRecord>\",\"Direct\":\"Null<MajorRecord>\"}}";
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(serialized, settings)!
+            .Direct
+            .ShouldBe(deserialized.Direct);
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(serialized, settings)!
+            .Interface
+            .ShouldBe(deserialized.Interface);
+        JsonConvert.SerializeObject(deserialized, settings)
+            .ShouldBe(serialized);
     }
     
     [Fact]
