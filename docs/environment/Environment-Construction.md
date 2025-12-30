@@ -58,6 +58,20 @@ Order between multiple `TransformModListings` is respected, but will always come
 ### WithOutputMod
 This lets you mix in a mod that you plan on exporting content with.  It will be added to the end of the LinkCache as a mutable mod that is safe to change.   You can put multiple `WithOutputMod` calls in your builder chain, and the order they appear will determine how they're placed on the Load Order and which ends up being the winning override.
 
+#### Load Order Trimming
+When using WithOutputMod, be aware that this modifies the Load Order the environment will provide you to be trimmed so that it doesn't include the outgoing mod and anything after it.   The Load Order presented by the environment represents the existing mods to consider while building the output mod, and as such, excludes the outgoing mod itself, and anything after it.
+
+This is to help avoid:
+
+- "Collection modified while looping" errors
+- Adding masters to the outgoing mod from mods after itself in the load order (not allowed)
+
+#### Link Cache
+The Link Cache made by the environment with an output mod will include the Load Order mods PLUS the outgoing mod.  Lookups against the Link Cache WILL resolve objects from your outgoing mod appropriately.   Outgoing mods are registered in the Link Cache in a non-caching fashion, so edits to your outgoing mod will reflect in subsequent lookups appropriately.
+
+#### Further Customization
+If you want to break away from the default behaviors described above, you can always make your own Load Order and Link Cache objects that contain different content the way you want them.
+
 ### WithTargetDataFolder
 Allows you to customize what game folder the environment will be constructed against.  Useful when dealing with [ad-hoc installations](Game-Locations.md#adhoc-installations).
 
