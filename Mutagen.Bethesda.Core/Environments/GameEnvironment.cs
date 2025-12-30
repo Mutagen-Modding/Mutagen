@@ -147,6 +147,7 @@ public sealed class GameEnvironmentState :
     IGameEnvironment
 {
     private readonly bool _dispose;
+    private readonly IReadOnlyList<IDisposable>? _additionalDisposables;
 
     public DirectoryPath DataFolderPath { get; }
 
@@ -158,7 +159,7 @@ public sealed class GameEnvironmentState :
     public ILinkCache LinkCache { get; }
 
     public ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder { get; }
-    
+
     public IAssetProvider AssetProvider { get; }
 
     public GameEnvironmentState(
@@ -169,7 +170,8 @@ public sealed class GameEnvironmentState :
         ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
         ILinkCache linkCache,
         IAssetProvider assetProvider,
-        bool dispose = true)
+        bool dispose = true,
+        IReadOnlyList<IDisposable>? additionalDisposables = null)
     {
         GameRelease = gameRelease;
         LoadOrderFilePath = loadOrderFilePath;
@@ -179,6 +181,7 @@ public sealed class GameEnvironmentState :
         LinkCache = linkCache;
         AssetProvider = assetProvider;
         _dispose = dispose;
+        _additionalDisposables = additionalDisposables;
     }
 
     public void Dispose()
@@ -186,6 +189,13 @@ public sealed class GameEnvironmentState :
         if (!_dispose) return;
         LoadOrder.Dispose();
         LinkCache.Dispose();
+        if (_additionalDisposables != null)
+        {
+            foreach (var disposable in _additionalDisposables)
+            {
+                disposable.Dispose();
+            }
+        }
     }
 
     public static IGameEnvironment Construct(
@@ -307,15 +317,16 @@ partial class GameEnvironmentProviderGenericContainer<TModSetter, TModGetter> : 
 /// <summary>
 /// A class housing commonly used utilities when interacting with a game environment
 /// </summary>
-public sealed class GameEnvironmentState<TModSetter, TModGetter> : 
-    IDataDirectoryProvider, 
+public sealed class GameEnvironmentState<TModSetter, TModGetter> :
+    IDataDirectoryProvider,
     IPluginListingsPathContext,
     ICreationClubListingsPathProvider,
-    IGameEnvironment<TModSetter, TModGetter> 
+    IGameEnvironment<TModSetter, TModGetter>
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
 {
     private readonly bool _dispose;
+    private readonly IReadOnlyList<IDisposable>? _additionalDisposables;
 
     public DirectoryPath DataFolderPath { get; }
 
@@ -335,7 +346,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     /// Convenience Link Cache to use created from the provided Load Order object
     /// </summary>
     public ILinkCache<TModSetter, TModGetter> LinkCache { get; }
-    
+
     /// <summary>
     /// Convenience Asset Provider created from the environment's context
     /// </summary>
@@ -349,7 +360,8 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder,
         ILinkCache<TModSetter, TModGetter> linkCache,
         IAssetProvider assetProvider,
-        bool dispose = true)
+        bool dispose = true,
+        IReadOnlyList<IDisposable>? additionalDisposables = null)
     {
         GameRelease = gameRelease;
         _pluginListingsPathContext = pluginListingsPathContext;
@@ -359,6 +371,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         LinkCache = linkCache;
         AssetProvider = assetProvider;
         _dispose = dispose;
+        _additionalDisposables = additionalDisposables;
     }
 
     public void Dispose()
@@ -366,6 +379,13 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
         if (!_dispose) return;
         LoadOrder.Dispose();
         LinkCache.Dispose();
+        if (_additionalDisposables != null)
+        {
+            foreach (var disposable in _additionalDisposables)
+            {
+                disposable.Dispose();
+            }
+        }
     }
 
     public static IGameEnvironment<TModSetter, TModGetter> Construct(

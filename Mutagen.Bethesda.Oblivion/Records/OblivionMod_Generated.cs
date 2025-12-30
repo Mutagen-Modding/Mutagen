@@ -3195,7 +3195,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -3225,7 +3225,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -4002,7 +4002,7 @@ namespace Mutagen.Bethesda.Oblivion
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     CopyInFromBinary(
                         item: item,
                         release: release,
@@ -12528,7 +12528,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             param ??= BinaryReadParameters.Default;
             var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta);

@@ -21,7 +21,7 @@ partial class ExtraDataBinaryCreateTranslation
     {
         FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
         FormKey formKey = FormKey.Factory(masters, form, reference: true);
-        if (cache.IsOfRecordType<Npc>(formKey))
+        if (cache.IsOfRecordType<INpcGetter>(formKey))
         {
             return new NpcOwner()
             {
@@ -29,7 +29,7 @@ partial class ExtraDataBinaryCreateTranslation
                 Global = new FormLink<IGlobalGetter>(FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters))
             };
         }
-        else if (cache.IsOfRecordType<Faction>(formKey))
+        else if (cache.IsOfRecordType<IFactionGetter>(formKey))
         {
             return new FactionOwner()
             {

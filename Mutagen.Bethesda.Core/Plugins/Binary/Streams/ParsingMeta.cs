@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -29,6 +30,11 @@ public sealed class ParsingMeta
     /// Optional RecordInfoCache to reference while reading
     /// </summary>
     public RecordTypeInfoCacheReader? RecordInfoCache { get; set; }
+
+    /// <summary>
+    /// Optional LinkCache for cross-mod record type resolution
+    /// </summary>
+    public ILinkCache? LinkCache { get; set; }
 
     /// <summary>
     /// Optional strings lookup to reference while reading
@@ -126,6 +132,7 @@ public sealed class ParsingMeta
         ThrowOnUnknown = readParameters.ThrowOnUnknownSubrecord;
         Parallel = readParameters.Parallel;
         FileSystem = readParameters.FileSystem.GetOrDefault();
+        LinkCache = readParameters.LinkCache;
     }
 
     public static ParsingMeta Factory(

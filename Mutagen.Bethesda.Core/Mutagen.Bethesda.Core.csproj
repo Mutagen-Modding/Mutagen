@@ -614,6 +614,7 @@
         <Compile Include="Strings\StringsLanguageFormat.cs" />
         <Compile Include="Strings\StringsFileFormat.cs" />
         <Compile Include="Strings\StringsSource.cs" />
+        <Compile Include="Plugins\Exceptions\LinkCacheMissingException.cs" />
         <Compile Include="Plugins\Exceptions\MissingModException.cs" />
         <Compile Include="Plugins\Exceptions\MissingRecordException.cs" />
         <Compile Include="Plugins\Exceptions\RecordCollisionException.cs" />

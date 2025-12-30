@@ -93,6 +93,7 @@ public partial class SkyrimMod : AMod
             else if (builder._param._streamFactory != null)
             {
                 var stream = builder._param._streamFactory();
+                var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream);
                 var recordCache =  new RecordTypeInfoCacheReader(() =>
                 {
                     var stream1 = builder._param._streamFactory();
@@ -100,9 +101,9 @@ public partial class SkyrimMod : AMod
                     {
                         throw new ArgumentException("Stream factory provided returned the same stream twice");
                     }
-                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
-                    return new MutagenBinaryReadStream(stream, meta);
-                });
+                    var meta1 = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta1);
+                }, builder._param.ModKey, meta.LinkCache);
 
                 return SkyrimMod.CreateFromBinary(
                     stream: stream,

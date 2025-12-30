@@ -8955,7 +8955,7 @@ namespace Mutagen.Bethesda.Starfield
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -8994,7 +8994,7 @@ namespace Mutagen.Bethesda.Starfield
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -10020,7 +10020,7 @@ namespace Mutagen.Bethesda.Starfield
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -35008,7 +35008,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             param ??= BinaryReadParameters.Default;
             var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta);

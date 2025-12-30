@@ -4,6 +4,8 @@ using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
@@ -18,7 +20,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 /// </summary>
 internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     internal GameRelease GameRelease { get; init; }
     internal ModKey ModKey { get; init; }
@@ -34,6 +36,8 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
     internal Func<BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>, DirectoryPath>? _dataFolderGetter { get; init; }
     internal IModMasterStyledGetter[] KnownMasters { get; init; } = [];
     internal bool _autoSplit { get; init; }
+    internal bool _hasLoadOrderCall { get; init; }
+    internal bool _hasLinkCacheCall { get; init; }
 }
 
 /// <summary>
@@ -41,7 +45,7 @@ internal record BinaryReadBuilderParams<TMod, TModGetter, TGroupMask>
 /// </summary>
 internal interface IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     TMod Mutable(BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> builder);
     TModGetter Readonly(BinaryReadBuilder<TMod, TModGetter, TGroupMask> builder);
@@ -52,7 +56,7 @@ internal interface IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask>
 /// </summary>
 public class BinaryReadBuilderSourceChoice<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     private readonly GameRelease _release;
     private readonly IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator;
@@ -116,7 +120,7 @@ public class BinaryReadBuilderSourceChoice<TMod, TModGetter, TGroupMask>
 /// </summary>
 public class BinaryReadBuilderSourceStreamFactoryChoice<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     private readonly GameRelease _release;
     private readonly IBinaryReadBuilderInstantiator<TMod, TModGetter, TGroupMask> _instantiator;
@@ -478,7 +482,7 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     }
 
     /// <summary>
-    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly, 
+    /// Separated master games (like Starfield) need to know what their masters styles are in order to parse correctly,
     /// which is normally retrieved via looking at the mod files themselves from the Data Folder. <br />
     /// This is an alternative to hand provide the information so that they do not need to be present in the Data folder
     /// </summary>
@@ -487,6 +491,24 @@ public class BinaryReadBuilderSeparatedChoice<TMod, TModGetter, TGroupMask>
     public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithKnownMasters(params KeyedMasterStyle[] knownMasters)
     {
         return WithKnownMasters(knownMasters.Cast<IModMasterStyledGetter>().ToArray());
+    }
+
+    /// <summary>
+    /// Provides a pre-built LinkCache to use for cross-mod resolution. <br />
+    /// The load order from the LinkCache will be extracted and used for master resolution.
+    /// </summary>
+    /// <param name="linkCache">LinkCache to use when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLinkCache(ILinkCache? linkCache)
+    {
+        return new BinaryReadBuilder<TMod, TModGetter, TGroupMask>(_param with
+        {
+            Params = _param.Params with
+            {
+                LinkCache = linkCache
+            },
+            _hasLinkCacheCall = true
+        });
     }
 }
 
@@ -533,7 +555,7 @@ public class BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>
 
 public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     internal BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> _param { get; set; }
 
@@ -554,7 +576,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     /// <returns>A readonly mod object with minimal initial parsing done</returns>
     public TModGetter Construct()
     {
-        _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
+        _param = BinaryReadBuilderHelper.RunFinalizationSetters(_param);
 
         // Handle auto-split detection
         if (_param._autoSplit)
@@ -902,12 +924,172 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
         };
     }
 
+    private void AssertLoadOrderLinkCacheMutualExclusion(bool isLoadOrderCall)
+    {
+        if (isLoadOrderCall && _param._hasLinkCacheCall)
+        {
+            throw new InvalidOperationException("Cannot call WithLoadOrder after WithLinkCache has been called. These methods are mutually exclusive.");
+        }
+        if (!isLoadOrderCall && _param._hasLoadOrderCall)
+        {
+            throw new InvalidOperationException("Cannot call WithLinkCache after WithLoadOrder has been called. These methods are mutually exclusive.");
+        }
+    }
+
+    /// <summary>
+    /// Provides a pre-built LinkCache to use for cross-mod resolution. <br />
+    /// This is mutually exclusive with WithLoadOrder methods.
+    /// </summary>
+    /// <param name="linkCache">LinkCache to use when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithLinkCache(ILinkCache? linkCache)
+    {
+        AssertLoadOrderLinkCacheMutualExclusion(isLoadOrderCall: false);
+
+        return this with
+        {
+            _param = _param with
+            {
+                Params = _param.Params with
+                {
+                    LinkCache = linkCache
+                },
+                _hasLinkCacheCall = true
+            }
+        };
+    }
+
+    /// <summary>
+    /// Provides a load order of ModKeys to look to. <br />
+    /// This is used to construct the load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters.
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<ModKey>? loadOrder)
+    {
+        AssertLoadOrderLinkCacheMutualExclusion(isLoadOrderCall: true);
+        return WithLoadOrder(loadOrder?.ToArray() ?? []);
+    }
+
+    /// <summary>
+    /// Provides a load order of ModKeys to look to. <br />
+    /// This is used to construct the load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters.
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params ModKey[] loadOrder)
+    {
+        AssertLoadOrderLinkCacheMutualExclusion(isLoadOrderCall: true);
+
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _hasLoadOrderCall = true,
+            _loadOrderSetter = (param, alreadyKnownMasters) =>
+            {
+                if (loadOrder.Length == 0)
+                {
+                    return [];
+                }
+
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return [];
+                }
+
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                    dataFolder.Value,
+                    loadOrder,
+                    param.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, param.GameRelease, param.Params.FileSystem),
+                    param.Params.FileSystem);
+                return lo.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
+                    .ResolveExistingMods();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters.
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(IEnumerable<IModMasterStyledGetter>? loadOrder)
+    {
+        AssertLoadOrderLinkCacheMutualExclusion(isLoadOrderCall: true);
+        return WithLoadOrder(loadOrder?.ToArray() ?? []);
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters.
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(params IModMasterStyledGetter[] loadOrder)
+    {
+        AssertLoadOrderLinkCacheMutualExclusion(isLoadOrderCall: true);
+
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _hasLoadOrderCall = true,
+            _loadOrderSetter = (param, alreadyKnownMasters) =>
+            {
+                var dataFolder = param._dataFolderGetter?.Invoke(param);
+                if (dataFolder == null)
+                {
+                    return [];
+                }
+
+                var lo = new LoadOrder<IModMasterStyledGetter>(loadOrder, disposeItems: false);
+                return lo.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey));
+            }
+        });
+    }
+
+    /// <summary>
+    /// Provides a load order of mod objects to look to. <br />
+    /// This is used to construct the load order needed to interpret FormIDs. <br />
+    /// It is expected to contain all of the mods that this mod has as masters.
+    /// </summary>
+    /// <param name="loadOrder">Load order to refer to when parsing</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask> WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter>? loadOrder)
+    {
+        AssertLoadOrderLinkCacheMutualExclusion(isLoadOrderCall: true);
+
+        if (loadOrder == null)
+        {
+            return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+            {
+                _hasLoadOrderCall = true
+            });
+        }
+
+        return new BinaryReadBuilderDataFolderChoice<TMod, TModGetter, TGroupMask>(_param with
+        {
+            _hasLoadOrderCall = true,
+            _loadOrderSetter = (param, alreadyKnownMasters) =>
+            {
+                return loadOrder.ListedOrder
+                    .Where(x => !alreadyKnownMasters.Contains(x.ModKey));
+            }
+        });
+    }
+
     #endregion
 }
 
 public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     where TMod : IMod
-    where TModGetter : IModDisposeGetter
+    where TModGetter : class, IModDisposeGetter
 {
     internal BinaryReadMutableBuilder(
         BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> param)
@@ -1267,7 +1449,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
     /// <returns>A mutable mod object with all the data loaded</returns>
     public new TMod Construct()
     {
-        _param = BinaryReadBuilderHelper.RunLoadOrderSetter(_param);
+        _param = BinaryReadBuilderHelper.RunFinalizationSetters(_param);
 
         // Handle auto-split detection
         if (_param._autoSplit)
@@ -1303,17 +1485,32 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
 
 internal static class BinaryReadBuilderHelper
 {
-    public static BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> RunLoadOrderSetter<TMod, TModGetter, TGroupMask>(
+    public static BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> RunFinalizationSetters<TMod, TModGetter, TGroupMask>(
         BinaryReadBuilderParams<TMod, TModGetter, TGroupMask> p)
         where TMod : IMod
-        where TModGetter : IModDisposeGetter
+        where TModGetter : class, IModDisposeGetter
     {
+        // Check mutual exclusion
+        if (p._hasLoadOrderCall && p._hasLinkCacheCall)
+        {
+            throw new InvalidOperationException("Cannot use both WithLoadOrder and WithLinkCache. These methods are mutually exclusive.");
+        }
+
         var knownSet = new HashSet<ModKey>(p.KnownMasters.Select(x => x.ModKey));
-        IReadOnlyCollection<IModMasterStyledGetter>? loadOrder = null; 
-        
+        IReadOnlyCollection<IModMasterStyledGetter>? loadOrder = null;
+        // Create LinkCache from load order if needed
+        ILinkCache? linkCache = p.Params.LinkCache;
+
         if (p._loadOrderSetter != null)
         {
             loadOrder = p._loadOrderSetter(p, knownSet)
+                .And(p.KnownMasters)
+                .Distinct(x => x.ModKey)
+                .ToArray();
+        }
+        else if (linkCache != null)
+        {
+            loadOrder = linkCache.ListedOrder
                 .And(p.KnownMasters)
                 .Distinct(x => x.ModKey)
                 .ToArray();
@@ -1323,6 +1520,49 @@ internal static class BinaryReadBuilderHelper
             loadOrder = p.KnownMasters;
         }
 
+        if (linkCache == null && loadOrder != null && loadOrder.Count > 0)
+        {
+            var dataFolder = p._dataFolderGetter?.Invoke(p);
+            if (dataFolder != null)
+            {
+                var fileSystem = p.Params.FileSystem.GetOrDefault();
+                var modOverlays = new List<IModGetter>();
+
+                // Create parameters with MasterFlagsLookup for loading master mods (needed for Starfield)
+                var masterFlagsLookup = loadOrder != null && loadOrder.Count > 0
+                    ? new LoadOrder<IModMasterStyledGetter>(
+                        p.KnownMasters.And(loadOrder).Distinct(x => x.ModKey))
+                    : null;
+
+                var loadParams = new BinaryReadParameters
+                {
+                    FileSystem = fileSystem,
+                    MasterFlagsLookup = masterFlagsLookup
+                };
+
+                foreach (var master in loadOrder!)
+                {
+                    var modPath = Path.Combine(dataFolder.Value, master.ModKey.FileName);
+                    if (fileSystem.File.Exists(modPath))
+                    {
+                        var overlay = ModFactory<IModGetter>.Importer(
+                            new ModPath(master.ModKey, modPath),
+                            p.GameRelease,
+                            loadParams);
+                        modOverlays.Add(overlay);
+                    }
+                }
+
+                if (modOverlays.Count > 0)
+                {
+                    linkCache = new ImmutableLoadOrderLinkCache(
+                        modOverlays,
+                        gameCategory: p.GameRelease.ToCategory(),
+                        prefs: null);
+                }
+            }
+        }
+
         return p with
         {
             Params = p.Params with
@@ -1330,7 +1570,8 @@ internal static class BinaryReadBuilderHelper
                 MasterFlagsLookup = loadOrder != null && loadOrder.Count > 0
                     ? new LoadOrder<IModMasterStyledGetter>(
                         p.KnownMasters.And(loadOrder).Distinct(x => x.ModKey))
-                    : null
+                    : null,
+                LinkCache = linkCache
             }
         };
     }

@@ -76,11 +76,11 @@ public class BinaryExtensionsTests
     {
         using var ms = new MemoryStream(streamCapacity);
         using var bw = new BinaryWriter(ms);
-        using var br = new BinaryReadStream(ms, isLittleEndian: false);
 
         write(bw);
         ms.Position = 0;
 
+        using var br = new BinaryReadStream(ms, isLittleEndian: false);
         var actual = read(br);
         Assert.Equal(expected, actual);
         Assert.Equal(ms.Length, ms.Position);
