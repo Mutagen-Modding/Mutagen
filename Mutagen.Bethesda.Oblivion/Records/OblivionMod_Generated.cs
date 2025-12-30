@@ -2823,11 +2823,15 @@ namespace Mutagen.Bethesda.Oblivion
             bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
         {
+            this.OblivionRelease = release;
             if (headerVersion != null)
             {
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
-            this.OblivionRelease = release;
+            else
+            {
+                this.ModHeader.Stats.Version = GameConstants.Get(release.ToGameRelease()).DefaultModHeaderVersion ?? 0f;
+            }
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new OblivionGroup<GameSetting>(this);
             _Globals_Object = new OblivionGroup<Global>(this);

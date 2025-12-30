@@ -5833,11 +5833,15 @@ namespace Mutagen.Bethesda.Fallout4
             bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
         {
+            this.Fallout4Release = release;
             if (headerVersion != null)
             {
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
-            this.Fallout4Release = release;
+            else
+            {
+                this.ModHeader.Stats.Version = GameConstants.Get(release.ToGameRelease()).DefaultModHeaderVersion ?? 0f;
+            }
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new Fallout4Group<GameSetting>(this);
             _Keywords_Object = new Fallout4Group<Keyword>(this);
