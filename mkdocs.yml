@@ -78,6 +78,7 @@ nav:
     - Exceeding Master Limits: plugins/Exceeding-Master-Limits.md
     - Specific Records:
       - plugins/specific/index.md
+      - ExtraData: plugins/specific/ExtraData.md
       - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
     # - Perks:
     # - Magic Effects:

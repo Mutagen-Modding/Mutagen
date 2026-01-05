@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class ExtraData
 {
-    public OwnerTarget Owner { get; set; } = new NoOwner();
+    public OwnerTarget Owner { get; set; } = new UntypedOwner();
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IOwnerTargetGetter IExtraDataGetter.Owner => Owner;
 }
@@ -21,30 +21,35 @@ partial class ExtraDataBinaryCreateTranslation
     {
         FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
         FormKey formKey = FormKey.Factory(masters, form, reference: true);
-        if (cache.IsOfRecordType<INpcGetter>(formKey))
+        try
         {
-            return new NpcOwner()
+            if (cache.IsOfRecordType<INpcGetter>(formKey))
             {
-                Npc = new FormLink<INpcGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
-                Global = new FormLink<IGlobalGetter>(FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters))
-            };
+                return new NpcOwner()
+                {
+                    Npc = new FormLink<INpcGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
+                    Global = new FormLink<IGlobalGetter>(FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters))
+                };
+            }
+            else if (cache.IsOfRecordType<IFactionGetter>(formKey))
+            {
+                return new FactionOwner()
+                {
+                    Faction = new FormLink<IFactionGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
+                    RequiredRank = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4))
+                };
+            }
         }
-        else if (cache.IsOfRecordType<IFactionGetter>(formKey))
+        catch (Mutagen.Bethesda.Plugins.Exceptions.LinkCacheMissingException)
         {
-            return new FactionOwner()
-            {
-                Faction = new FormLink<IFactionGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
-                RequiredRank = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4))
-            };
+            // Cannot determine record type without a LinkCache, fall through to UntypedOwner
         }
-        else
+
+        return new UntypedOwner()
         {
-            return new NoOwner()
-            {
-                RawOwnerData = BinaryPrimitives.ReadUInt32LittleEndian(span),
-                RawVariableData = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4))
-            };
-        }
+            OwnerData = new FormLink<IFallout4MajorRecordGetter>(FormKeyBinaryTranslation.Instance.Parse(span, masters)),
+            VariableData = new FormLink<IFallout4MajorRecordGetter>(FormKeyBinaryTranslation.Instance.Parse(span.Slice(4), masters))
+        };
     }
 
     public static partial void FillBinaryOwnerCustom(MutagenFrame frame, IExtraData item)
@@ -59,9 +64,9 @@ partial class ExtraDataBinaryWriteTranslation
     {
         switch (item.Owner)
         {
-            case NoOwner noOwner:
-                writer.Write(noOwner.RawOwnerData);
-                writer.Write(noOwner.RawVariableData);
+            case UntypedOwner untypedOwner:
+                FormKeyBinaryTranslation.Instance.Write(writer, untypedOwner.OwnerData);
+                FormKeyBinaryTranslation.Instance.Write(writer, untypedOwner.VariableData);
                 break;
             case NpcOwner npcOwner:
                 FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Npc);
