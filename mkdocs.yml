@@ -62,7 +62,8 @@ nav:
   - Plugin Record Suite:
     - plugins/index.md
     - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
-    - Importing and Construction: plugins/Importing-and-Construction.md
+    - Importing: plugins/Importing.md
+    - New Mods: plugins/New-Mods.md
     - Exporting: plugins/Exporting.md
     - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md

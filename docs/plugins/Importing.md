@@ -1,4 +1,4 @@
-## Importing
+# Importing
 All Mods are generated with the ability to create themselves from their binary plugin format (esp/esm/esl).
 
 ## Read Only
@@ -13,7 +13,7 @@ using var mod = OblivionMod.Create(OblivionRelease.Oblivion)
 
 !!! tip "Preferred"
     Use readonly when possible, up until you want to mutate records.
-	
+
 	[:octicons-arrow-right-24: Mutation Patterns](../best-practices/Create,-Duplicate,-and-Override.md#overriding-records)
 
 ### No Up Front Work
@@ -31,7 +31,7 @@ Readonly objects keep reference to an open stream internally, so they can read w
 ### Best Practices
 
 !!! warning "Avoid Repeated Access"
-    The Overlay pattern has the downside that repeated access of properties means repeated parsing of the same data.  
+    The Overlay pattern has the downside that repeated access of properties means repeated parsing of the same data.
 
 [:octicons-arrow-right-24: Overlay Best Practices](../best-practices/Overlays-Single-Access.md)
 
@@ -49,11 +49,11 @@ The only difference is we add `Mutable()`, which returns a mutable variant of th
 
 !!! warning "Heavier Load"
     This route spends more time and memory loading in everything up front, even the data you will not be interacting with.
-	
+
 	If you don't need to modify the mod, consider instead:
-	
-	[:octicons-arrow-right-24: Read Only Mod Importing](#read-only-mod-importing)
-	
+
+	[:octicons-arrow-right-24: Read Only Mod Importing](#read-only)
+
 
 ### Group Masks
 Often, users are not interested in all records that a mod contains.  Group Masks are an optional parameter that allows you to specify which record types you are interested in importing.
@@ -72,8 +72,8 @@ using var mod = OblivionMod.Create(OblivionRelease.Oblivion)
 This import call will only process and import Potions and NPCs.
 
 !!! info "Generally Unused"
-    Generally this feature is unused, as [Binary Overlays](Importing-and-Construction.md#read-only-mod-importing) handle the situation of selectively accessing data much better.
-	
+    Generally this feature is unused, as [Binary Overlays](#read-only) handle the situation of selectively accessing data much better.
+
 ## Flexible Game Target
 In more complex setups, often the game type is not known at compile time.
 
@@ -87,30 +87,6 @@ In more complex setups, often the game type is not known at compile time.
     ```cs
     var mod = ModFactory<TMod>.Importer(ModKey.FromFileName("MyMod.esp"), release);
     ```
-	
+
     !!! success "Dispose Appropriately"
          Binary overlays are disposable, as they can keep streams open as they are accessed.  Make sure to utilize `using` statements to dispose of them appropriately.
-
-
-## Construction
-How to make a new mod object from scratch without a file
-
-### Known Game
-If you know the game you will be working with at compile time, this is the typical way to create a new mod:
-
-``` cs
-var newMod = new SkyrimMod(ModKey.FromFileName("MyMod.esp"), SkyrimRelease.SkyrimSE);
-```
-
-### Unknown Game
-In more complex setups, often the game type is not known at compile time
-
-=== "Untyped"
-    ```cs
-    var newMod = ModFactory.Activator(ModKey.FromFileName("MyMod.esp"), release);
-    ```
-
-=== "Generic"
-    ```cs
-    var newMod = ModFactory<TMod>.Activator(ModKey.FromFileName("MyMod.esp"), release);
-    ```
