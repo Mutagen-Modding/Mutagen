@@ -81,6 +81,13 @@ nav:
       - plugins/specific/index.md
       - ExtraData: plugins/specific/ExtraData.md
       - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
+      - Oblivion:
+        - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
+        - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
+      - Skyrim:
+        - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
+        - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
+        - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
     # - Perks:
     # - Magic Effects:
     # - Conditions:
@@ -148,13 +155,5 @@ nav:
     - Game Constants: lowlevel/Game-Constants.md
     - Binary Streams: lowlevel/Binary-Streams.md
     - Binary Utility: lowlevel/Binary-Utility.md
-  - Game Specific Documentation:
-    - Oblivion:
-      - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
-      - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
-    - Skyrim:
-      - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
-      - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
-      - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Correctness: Correctness.md
   - Contributing: Contributing.md
