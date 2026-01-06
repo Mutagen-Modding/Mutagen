@@ -30,7 +30,7 @@ An `AssetLink`'s generic type is the type of asset it relates to.
 
 For example, a Skyrim Model path will be of type `AssetLink<SkyrimModelAssetType>`, where `SkyrimModelAssetType` is a meta class containing information about Skyrim Model assets.
 
-[:octicons-arrow-right-24: AssetType](#Asset-Type)
+[:octicons-arrow-right-24: AssetType](#asset-type)
 
 ## Asset Type
 AssetTypes are constant meta objects that contain the information 

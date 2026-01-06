@@ -76,7 +76,7 @@ The Link Cache made by the environment with an output mod will include the Load 
 If you want to break away from the default behaviors described above, you can always make your own Load Order and Link Cache objects that contain different content the way you want them.   You can even opt to not use WithOutputMod entirely and have the Game Environment give you the whole Load Order as a baseline but customize it as you want from there.
 
 ### WithTargetDataFolder
-Allows you to customize what game folder the environment will be constructed against.  Useful when dealing with [ad-hoc installations](Game-Locations.md#adhoc-installations).
+Allows you to customize what game folder the environment will be constructed against.  Useful when dealing with [ad-hoc installations](Game-Locations.md#sources).
 
 ### WithLoadOrder
 This is a `TransformLoadOrderListings` style call that simply discards any existing load order and injects an explicitly provided one.  Will respect the ordering alongside other `TransformLoadOrderListings` phase calls.

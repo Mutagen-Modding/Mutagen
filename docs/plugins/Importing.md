@@ -14,7 +14,7 @@ using var mod = OblivionMod.Create(OblivionRelease.Oblivion)
 !!! tip "Preferred"
     Use readonly when possible, up until you want to mutate records.
 
-	[:octicons-arrow-right-24: Mutation Patterns](../best-practices/Create,-Duplicate,-and-Override.md#overriding-records)
+	[:octicons-arrow-right-24: Mutation Patterns](Create,-Duplicate,-and-Override.md#overriding-records)
 
 ### No Up Front Work
 With readonly objects, a mod object is returned almost immediately for use after having done almost no parsing.  As the user accesses members of the `Mod`, the parsing is done on demand for only the members accessed.
