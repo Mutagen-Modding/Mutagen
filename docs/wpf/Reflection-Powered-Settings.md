@@ -137,6 +137,7 @@ public IFormLinkGetter ArmorsAndWeapons { get; set; } = FormLinkInformation.Null
 - `float`
 - `double`
 - `decimal`
+- Enums
 - `ModKey`
 - `FormKey`
 - FormLinks
