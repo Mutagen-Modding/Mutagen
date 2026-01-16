@@ -176,6 +176,23 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         };
     }
 
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings when reading mods.<br/>
+    /// When enabled, uses UTF8 for reading localized strings that are embedded in the plugin files.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            StringsReadParameters = (StringsReadParameters ?? new()) with
+            {
+                NonLocalizedEncodingOverride = on ? Mutagen.Bethesda.Strings.DI.MutagenEncoding._utf8 : null
+            }
+        };
+    }
+
     public GameEnvironmentBuilder<TMod, TModGetter> WithResolver(Func<Type, object?> resolver)
     {
         return this with { Resolver = resolver };
@@ -531,6 +548,23 @@ public sealed record GameEnvironmentBuilder
         return this with
         {
             StringsReadParameters = stringParameters
+        };
+    }
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings when reading mods.<br/>
+    /// When enabled, uses UTF8 for reading localized strings that are embedded in the plugin files.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            StringsReadParameters = (StringsReadParameters ?? new()) with
+            {
+                NonLocalizedEncodingOverride = on ? Mutagen.Bethesda.Strings.DI.MutagenEncoding._utf8 : null
+            }
         };
     }
 
