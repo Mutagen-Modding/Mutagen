@@ -774,6 +774,29 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     }
 
     /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings when reading.<br/>
+    /// When enabled, uses UTF8 for reading localized strings that are embedded in the plugin file.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            _param = _param with
+            {
+                Params = _param.Params with
+                {
+                    StringsParam = (_param.Params.StringsParam ?? new()) with
+                    {
+                        NonLocalizedEncodingOverride = on ? MutagenEncoding._utf8 : null
+                    }
+                }
+            }
+        };
+    }
+
+    /// <summary>
     /// Forces parsing to be done on a single thread
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -1246,6 +1269,29 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
                     StringsParam = (_param.Params.StringsParam ?? new()) with
                     {
                         NonLocalizedEncodingOverride = nonLocalizedEncoding
+                    }
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings when reading.<br/>
+    /// When enabled, uses UTF8 for reading localized strings that are embedded in the plugin file.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            _param = _param with
+            {
+                Params = _param.Params with
+                {
+                    StringsParam = (_param.Params.StringsParam ?? new()) with
+                    {
+                        NonLocalizedEncodingOverride = on ? MutagenEncoding._utf8 : null
                     }
                 }
             }

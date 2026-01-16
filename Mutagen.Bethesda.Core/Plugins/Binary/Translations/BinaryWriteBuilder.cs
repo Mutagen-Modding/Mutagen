@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 // ReSharper disable InconsistentNaming
 // ReSharper disable WithExpressionModifiesAllMembers
@@ -1147,6 +1148,14 @@ public interface IBinaryModdedWriteBuilder
     IBinaryModdedWriteBuilder WithEmbeddedEncodings(EncodingBundle? encodingBundle);
 
     /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings.<br/>
+    /// When enabled, uses UTF8 for localized strings and CP1252 for non-translated strings.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithUtf8Encoding(bool on = true);
+
+    /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
     /// Typically this occurs when the lower ranges are used without any masters present. <br />
     /// If this occurs with this option, the given mod will be added as a placeholder to make the setup legal
@@ -1696,6 +1705,29 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
         };
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithEmbeddedEncodings(EncodingBundle? encodingBundle) => WithEmbeddedEncodings(encodingBundle);
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings.<br/>
+    /// When enabled, uses UTF8 for localized strings and CP1252 for non-translated strings.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    Encodings = on
+                        ? new EncodingBundle(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._utf8)
+                        : null
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithUtf8Encoding(bool on) => WithUtf8Encoding(on);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -2443,6 +2475,28 @@ public record BinaryWriteBuilder<TModGetter>
                 _param = _params._param with
                 {
                     Encodings = encodingBundle
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings.<br/>
+    /// When enabled, uses UTF8 for localized strings and CP1252 for non-translated strings.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    Encodings = on
+                        ? new EncodingBundle(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._utf8)
+                        : null
                 }
             }
         };
