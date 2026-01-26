@@ -17,9 +17,8 @@ public interface IPluginListingsPathContext
     /// <summary>
     /// Attempts to get the expected location of the plugin load order file.
     /// </summary>
-    /// <param name="path">The path if it could be determined</param>
-    /// <returns>True if the path was determined, false otherwise</returns>
-    bool TryGetPath(out FilePath path);
+    /// <returns>The path if it could be determined, otherwise null</returns>
+    FilePath? TryGetPath();
 }
 
 public sealed class PluginListingsPathContext : IPluginListingsPathContext
@@ -52,24 +51,21 @@ public sealed class PluginListingsPathContext : IPluginListingsPathContext
     }
 
     /// <inheritdoc />
-    public bool TryGetPath(out FilePath path)
+    public FilePath? TryGetPath()
     {
         var result = _provider.Get(_gameReleaseContext.Release);
         if (result == null)
         {
-            path = default;
-            return false;
+            return null;
         }
-        path = result.Value;
-        return true;
+        return result.Value;
     }
 }
 
 public sealed record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathContext
 {
-    public bool TryGetPath(out FilePath path)
+    public FilePath? TryGetPath()
     {
-        path = Path;
-        return true;
+        return Path;
     }
 }

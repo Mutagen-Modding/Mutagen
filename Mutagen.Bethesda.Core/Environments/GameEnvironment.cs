@@ -215,16 +215,7 @@ public sealed class GameEnvironmentState :
     FilePath IPluginListingsPathContext.Path => LoadOrderFilePath
         ?? throw new InvalidOperationException("Load order file path is not available.");
 
-    bool IPluginListingsPathContext.TryGetPath(out FilePath path)
-    {
-        if (LoadOrderFilePath is { } p)
-        {
-            path = p;
-            return true;
-        }
-        path = default;
-        return false;
-    }
+    FilePath? IPluginListingsPathContext.TryGetPath() => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 }
@@ -298,16 +289,7 @@ public sealed class GameEnvironmentState<TMod> :
     FilePath IPluginListingsPathContext.Path => LoadOrderFilePath
         ?? throw new InvalidOperationException("Load order file path is not available.");
 
-    bool IPluginListingsPathContext.TryGetPath(out FilePath path)
-    {
-        if (LoadOrderFilePath is { } p)
-        {
-            path = p;
-            return true;
-        }
-        path = default;
-        return false;
-    }
+    FilePath? IPluginListingsPathContext.TryGetPath() => LoadOrderFilePath;
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
@@ -355,7 +337,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     public DirectoryPath DataFolderPath { get; }
 
     public GameRelease GameRelease { get; }
-    public FilePath? LoadOrderFilePath => _pluginListingsPathContext.TryGetPath(out var path) ? path : (FilePath?)null;
+    public FilePath? LoadOrderFilePath => _pluginListingsPathContext.TryGetPath();
     private readonly IPluginListingsPathContext _pluginListingsPathContext;
 
     public FilePath? CreationClubListingsFilePath => _creationClubListingsFilePathProvider.Path;
@@ -428,7 +410,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
 
     FilePath IPluginListingsPathContext.Path => _pluginListingsPathContext.Path;
 
-    bool IPluginListingsPathContext.TryGetPath(out FilePath path) => _pluginListingsPathContext.TryGetPath(out path);
+    FilePath? IPluginListingsPathContext.TryGetPath() => _pluginListingsPathContext.TryGetPath();
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 

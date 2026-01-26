@@ -775,7 +775,7 @@ public sealed record GameEnvironmentBuilder
         return new GameEnvironmentState(
             Release.Release,
             dataFolderPath: dataDirectory.Path,
-            loadOrderFilePath: pluginPathProvider.Path,
+            loadOrderFilePath: pluginPathProvider.TryGetPath(),
             creationClubListingsFilePath: cccPath.Path,
             loadOrder: lo,
             linkCache: linkCache,

@@ -28,11 +28,7 @@ public class OrderBuilder : ISpecimenBuilder
                 var path = new FilePath($"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "Plugins.txt")}");
                 var ret = Substitute.For<IPluginListingsPathContext>();
                 ret.Path.Returns(path);
-                ret.TryGetPath(out Arg.Any<FilePath>()).Returns(x =>
-                {
-                    x[0] = path;
-                    return true;
-                });
+                ret.TryGetPath().Returns(path);
                 return ret;
             }
             else if (t == typeof(ICreationClubListingsPathProvider))
