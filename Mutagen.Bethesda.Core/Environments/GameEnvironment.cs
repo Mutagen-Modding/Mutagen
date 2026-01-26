@@ -71,7 +71,7 @@ public interface IGameEnvironment : IDisposable
 {
     DirectoryPath DataFolderPath { get; }
     GameRelease GameRelease { get; }
-    FilePath LoadOrderFilePath { get; }
+    FilePath? LoadOrderFilePath { get; }
     FilePath? CreationClubListingsFilePath { get; }
 
     /// <summary>
@@ -152,7 +152,7 @@ public sealed class GameEnvironmentState :
     public DirectoryPath DataFolderPath { get; }
 
     public GameRelease GameRelease { get; }
-    public FilePath LoadOrderFilePath { get; }
+    public FilePath? LoadOrderFilePath { get; }
 
     public FilePath? CreationClubListingsFilePath { get; }
 
@@ -165,7 +165,7 @@ public sealed class GameEnvironmentState :
     public GameEnvironmentState(
         GameRelease gameRelease,
         DirectoryPath dataFolderPath,
-        FilePath loadOrderFilePath,
+        FilePath? loadOrderFilePath,
         FilePath? creationClubListingsFilePath,
         ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
         ILinkCache linkCache,
@@ -212,7 +212,19 @@ public sealed class GameEnvironmentState :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath
+        ?? throw new InvalidOperationException("Load order file path is not available.");
+
+    bool IPluginListingsPathContext.TryGetPath(out FilePath path)
+    {
+        if (LoadOrderFilePath is { } p)
+        {
+            path = p;
+            return true;
+        }
+        path = default;
+        return false;
+    }
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 }
@@ -232,7 +244,7 @@ public sealed class GameEnvironmentState<TMod> :
     public DirectoryPath DataFolderPath { get; }
 
     public GameRelease GameRelease { get; }
-    public FilePath LoadOrderFilePath { get; }
+    public FilePath? LoadOrderFilePath { get; }
 
     public FilePath? CreationClubListingsFilePath { get; }
 
@@ -245,7 +257,7 @@ public sealed class GameEnvironmentState<TMod> :
     public GameEnvironmentState(
         GameRelease gameRelease,
         DirectoryPath dataFolderPath,
-        FilePath loadOrderFilePath,
+        FilePath? loadOrderFilePath,
         FilePath? creationClubListingsFilePath,
         ILoadOrder<IModListing<TMod>> loadOrder,
         ILinkCache linkCache,
@@ -283,7 +295,19 @@ public sealed class GameEnvironmentState<TMod> :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath
+        ?? throw new InvalidOperationException("Load order file path is not available.");
+
+    bool IPluginListingsPathContext.TryGetPath(out FilePath path)
+    {
+        if (LoadOrderFilePath is { } p)
+        {
+            path = p;
+            return true;
+        }
+        path = default;
+        return false;
+    }
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 
@@ -331,7 +355,7 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
     public DirectoryPath DataFolderPath { get; }
 
     public GameRelease GameRelease { get; }
-    public FilePath LoadOrderFilePath => _pluginListingsPathContext.Path;
+    public FilePath? LoadOrderFilePath => _pluginListingsPathContext.TryGetPath(out var path) ? path : (FilePath?)null;
     private readonly IPluginListingsPathContext _pluginListingsPathContext;
 
     public FilePath? CreationClubListingsFilePath => _creationClubListingsFilePathProvider.Path;
@@ -402,7 +426,9 @@ public sealed class GameEnvironmentState<TModSetter, TModGetter> :
 
     DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
 
-    FilePath IPluginListingsPathContext.Path => LoadOrderFilePath;
+    FilePath IPluginListingsPathContext.Path => _pluginListingsPathContext.Path;
+
+    bool IPluginListingsPathContext.TryGetPath(out FilePath path) => _pluginListingsPathContext.TryGetPath(out path);
 
     FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
 

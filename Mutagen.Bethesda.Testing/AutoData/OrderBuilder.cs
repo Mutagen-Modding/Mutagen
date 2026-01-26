@@ -25,8 +25,14 @@ public class OrderBuilder : ISpecimenBuilder
             }
             else if (t == typeof(IPluginListingsPathContext))
             {
+                var path = new FilePath($"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "Plugins.txt")}");
                 var ret = Substitute.For<IPluginListingsPathContext>();
-                ret.Path.Returns(new FilePath($"{PathingUtil.DrivePrefix}{Path.Combine("ExistingDirectory", "Plugins.txt")}"));
+                ret.Path.Returns(path);
+                ret.TryGetPath(out Arg.Any<FilePath>()).Returns(x =>
+                {
+                    x[0] = path;
+                    return true;
+                });
                 return ret;
             }
             else if (t == typeof(ICreationClubListingsPathProvider))

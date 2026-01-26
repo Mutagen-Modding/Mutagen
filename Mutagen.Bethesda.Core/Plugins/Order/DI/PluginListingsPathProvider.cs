@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI;
 
 public interface IPluginListingsPathProvider
 {
-    FilePath Get(GameRelease release);
+    FilePath? Get(GameRelease release);
 }
 
 public class PluginListingsPathProvider : IPluginListingsPathProvider
@@ -45,7 +45,7 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             FileName);
     }
 
-    public FilePath Get(GameRelease release)
+    public FilePath? Get(GameRelease release)
     {
         var constants = GameConstants.Get(release);
 
@@ -55,8 +55,13 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
         }
         else
         {
+            var localAppData = Environment.GetEnvironmentVariable("LocalAppData");
+            if (localAppData == null)
+            {
+                return null;
+            }
             return System.IO.Path.Combine(
-                Environment.GetEnvironmentVariable("LocalAppData")!,
+                localAppData,
                 GetRelativePluginsPath(release));
         }
     }
