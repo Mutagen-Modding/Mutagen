@@ -38,6 +38,11 @@ internal static class OverrideMaskRegistrations
         return AddAsOverrideMasks.GetValueOrDefault(typeof(TMajor));
     }
 
+    public static object? Get(Type type)
+    {
+        return AddAsOverrideMasks.GetValueOrDefault(type);
+    }
+
     public static void Warmup()
     {
         // Nothing to do
