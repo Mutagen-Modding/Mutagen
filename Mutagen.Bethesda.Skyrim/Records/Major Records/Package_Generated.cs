@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         public Byte Unknown { get; set; } = default(Byte);
         #endregion
-        #region InteruptFlags
-        public Package.InterruptFlag InteruptFlags { get; set; } = default(Package.InterruptFlag);
+        #region InterruptFlag
+        public Package.InterruptFlag InterruptFlag { get; set; } = default(Package.InterruptFlag);
         #endregion
         #region Unknown2
         public UInt16 Unknown2 { get; set; } = default(UInt16);
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.InterruptOverride = initialValue;
                 this.PreferredSpeed = initialValue;
                 this.Unknown = initialValue;
-                this.InteruptFlags = initialValue;
+                this.InterruptFlag = initialValue;
                 this.Unknown2 = initialValue;
                 this.ScheduleMonth = initialValue;
                 this.ScheduleDayOfWeek = initialValue;
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem InterruptOverride,
                 TItem PreferredSpeed,
                 TItem Unknown,
-                TItem InteruptFlags,
+                TItem InterruptFlag,
                 TItem Unknown2,
                 TItem ScheduleMonth,
                 TItem ScheduleDayOfWeek,
@@ -361,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.InterruptOverride = InterruptOverride;
                 this.PreferredSpeed = PreferredSpeed;
                 this.Unknown = Unknown;
-                this.InteruptFlags = InteruptFlags;
+                this.InterruptFlag = InterruptFlag;
                 this.Unknown2 = Unknown2;
                 this.ScheduleMonth = ScheduleMonth;
                 this.ScheduleDayOfWeek = ScheduleDayOfWeek;
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem InterruptOverride;
             public TItem PreferredSpeed;
             public TItem Unknown;
-            public TItem InteruptFlags;
+            public TItem InterruptFlag;
             public TItem Unknown2;
             public TItem ScheduleMonth;
             public TItem ScheduleDayOfWeek;
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.InterruptOverride, rhs.InterruptOverride)) return false;
                 if (!object.Equals(this.PreferredSpeed, rhs.PreferredSpeed)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.InteruptFlags, rhs.InteruptFlags)) return false;
+                if (!object.Equals(this.InterruptFlag, rhs.InterruptFlag)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.ScheduleMonth, rhs.ScheduleMonth)) return false;
                 if (!object.Equals(this.ScheduleDayOfWeek, rhs.ScheduleDayOfWeek)) return false;
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.InterruptOverride);
                 hash.Add(this.PreferredSpeed);
                 hash.Add(this.Unknown);
-                hash.Add(this.InteruptFlags);
+                hash.Add(this.InterruptFlag);
                 hash.Add(this.Unknown2);
                 hash.Add(this.ScheduleMonth);
                 hash.Add(this.ScheduleDayOfWeek);
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.InterruptOverride)) return false;
                 if (!eval(this.PreferredSpeed)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.InteruptFlags)) return false;
+                if (!eval(this.InterruptFlag)) return false;
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.ScheduleMonth)) return false;
                 if (!eval(this.ScheduleDayOfWeek)) return false;
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.InterruptOverride)) return true;
                 if (eval(this.PreferredSpeed)) return true;
                 if (eval(this.Unknown)) return true;
-                if (eval(this.InteruptFlags)) return true;
+                if (eval(this.InterruptFlag)) return true;
                 if (eval(this.Unknown2)) return true;
                 if (eval(this.ScheduleMonth)) return true;
                 if (eval(this.ScheduleDayOfWeek)) return true;
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.InterruptOverride = eval(this.InterruptOverride);
                 obj.PreferredSpeed = eval(this.PreferredSpeed);
                 obj.Unknown = eval(this.Unknown);
-                obj.InteruptFlags = eval(this.InteruptFlags);
+                obj.InterruptFlag = eval(this.InterruptFlag);
                 obj.Unknown2 = eval(this.Unknown2);
                 obj.ScheduleMonth = eval(this.ScheduleMonth);
                 obj.ScheduleDayOfWeek = eval(this.ScheduleDayOfWeek);
@@ -807,9 +807,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.InteruptFlags ?? true)
+                    if (printMask?.InterruptFlag ?? true)
                     {
-                        sb.AppendItem(InteruptFlags, "InteruptFlags");
+                        sb.AppendItem(InterruptFlag, "InterruptFlag");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? InterruptOverride;
             public Exception? PreferredSpeed;
             public Exception? Unknown;
-            public Exception? InteruptFlags;
+            public Exception? InterruptFlag;
             public Exception? Unknown2;
             public Exception? ScheduleMonth;
             public Exception? ScheduleDayOfWeek;
@@ -1017,8 +1017,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return PreferredSpeed;
                     case Package_FieldIndex.Unknown:
                         return Unknown;
-                    case Package_FieldIndex.InteruptFlags:
-                        return InteruptFlags;
+                    case Package_FieldIndex.InterruptFlag:
+                        return InterruptFlag;
                     case Package_FieldIndex.Unknown2:
                         return Unknown2;
                     case Package_FieldIndex.ScheduleMonth:
@@ -1089,8 +1089,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Package_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Package_FieldIndex.InteruptFlags:
-                        this.InteruptFlags = ex;
+                    case Package_FieldIndex.InterruptFlag:
+                        this.InterruptFlag = ex;
                         break;
                     case Package_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
@@ -1184,8 +1184,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Package_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.InteruptFlags:
-                        this.InteruptFlags = (Exception?)obj;
+                    case Package_FieldIndex.InterruptFlag:
+                        this.InterruptFlag = (Exception?)obj;
                         break;
                     case Package_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (InterruptOverride != null) return true;
                 if (PreferredSpeed != null) return true;
                 if (Unknown != null) return true;
-                if (InteruptFlags != null) return true;
+                if (InterruptFlag != null) return true;
                 if (Unknown2 != null) return true;
                 if (ScheduleMonth != null) return true;
                 if (ScheduleDayOfWeek != null) return true;
@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Unknown, "Unknown");
                 }
                 {
-                    sb.AppendItem(InteruptFlags, "InteruptFlags");
+                    sb.AppendItem(InterruptFlag, "InterruptFlag");
                 }
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.InterruptOverride = this.InterruptOverride.Combine(rhs.InterruptOverride);
                 ret.PreferredSpeed = this.PreferredSpeed.Combine(rhs.PreferredSpeed);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.InteruptFlags = this.InteruptFlags.Combine(rhs.InteruptFlags);
+                ret.InterruptFlag = this.InterruptFlag.Combine(rhs.InterruptFlag);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.ScheduleMonth = this.ScheduleMonth.Combine(rhs.ScheduleMonth);
                 ret.ScheduleDayOfWeek = this.ScheduleDayOfWeek.Combine(rhs.ScheduleDayOfWeek);
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool InterruptOverride;
             public bool PreferredSpeed;
             public bool Unknown;
-            public bool InteruptFlags;
+            public bool InterruptFlag;
             public bool Unknown2;
             public bool ScheduleMonth;
             public bool ScheduleDayOfWeek;
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.InterruptOverride = defaultOn;
                 this.PreferredSpeed = defaultOn;
                 this.Unknown = defaultOn;
-                this.InteruptFlags = defaultOn;
+                this.InterruptFlag = defaultOn;
                 this.Unknown2 = defaultOn;
                 this.ScheduleMonth = defaultOn;
                 this.ScheduleDayOfWeek = defaultOn;
@@ -1577,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((InterruptOverride, null));
                 ret.Add((PreferredSpeed, null));
                 ret.Add((Unknown, null));
-                ret.Add((InteruptFlags, null));
+                ret.Add((InterruptFlag, null));
                 ret.Add((Unknown2, null));
                 ret.Add((ScheduleMonth, null));
                 ret.Add((ScheduleDayOfWeek, null));
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Package.Interrupt InterruptOverride { get; set; }
         new Package.Speed PreferredSpeed { get; set; }
         new Byte Unknown { get; set; }
-        new Package.InterruptFlag InteruptFlags { get; set; }
+        new Package.InterruptFlag InterruptFlag { get; set; }
         new UInt16 Unknown2 { get; set; }
         new SByte ScheduleMonth { get; set; }
         new Package.DayOfWeek ScheduleDayOfWeek { get; set; }
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim
         Package.Interrupt InterruptOverride { get; }
         Package.Speed PreferredSpeed { get; }
         Byte Unknown { get; }
-        Package.InterruptFlag InteruptFlags { get; }
+        Package.InterruptFlag InterruptFlag { get; }
         UInt16 Unknown2 { get; }
         SByte ScheduleMonth { get; }
         Package.DayOfWeek ScheduleDayOfWeek { get; }
@@ -2019,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim
         InterruptOverride = 10,
         PreferredSpeed = 11,
         Unknown = 12,
-        InteruptFlags = 13,
+        InterruptFlag = 13,
         Unknown2 = 14,
         ScheduleMonth = 15,
         ScheduleDayOfWeek = 16,
@@ -2162,7 +2162,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.InterruptOverride = default(Package.Interrupt);
             item.PreferredSpeed = default(Package.Speed);
             item.Unknown = default(Byte);
-            item.InteruptFlags = default(Package.InterruptFlag);
+            item.InterruptFlag = default(Package.InterruptFlag);
             item.Unknown2 = default(UInt16);
             item.ScheduleMonth = default(SByte);
             item.ScheduleDayOfWeek = default(Package.DayOfWeek);
@@ -2315,7 +2315,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.InterruptOverride = item.InterruptOverride == rhs.InterruptOverride;
             ret.PreferredSpeed = item.PreferredSpeed == rhs.PreferredSpeed;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.InteruptFlags = item.InteruptFlags == rhs.InteruptFlags;
+            ret.InterruptFlag = item.InterruptFlag == rhs.InterruptFlag;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.ScheduleMonth = item.ScheduleMonth == rhs.ScheduleMonth;
             ret.ScheduleDayOfWeek = item.ScheduleDayOfWeek == rhs.ScheduleDayOfWeek;
@@ -2437,9 +2437,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.InteruptFlags ?? true)
+            if (printMask?.InterruptFlag ?? true)
             {
-                sb.AppendItem(item.InteruptFlags, "InteruptFlags");
+                sb.AppendItem(item.InterruptFlag, "InterruptFlag");
             }
             if (printMask?.Unknown2 ?? true)
             {
@@ -2639,9 +2639,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.InterruptFlag) ?? true))
             {
-                if (lhs.InteruptFlags != rhs.InteruptFlags) return false;
+                if (lhs.InterruptFlag != rhs.InterruptFlag) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
             {
@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.InterruptOverride);
             hash.Add(item.PreferredSpeed);
             hash.Add(item.Unknown);
-            hash.Add(item.InteruptFlags);
+            hash.Add(item.InterruptFlag);
             hash.Add(item.Unknown2);
             hash.Add(item.ScheduleMonth);
             hash.Add(item.ScheduleDayOfWeek);
@@ -3039,9 +3039,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.InterruptFlag) ?? true))
             {
-                item.InteruptFlags = rhs.InteruptFlags;
+                item.InterruptFlag = rhs.InterruptFlag;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
             {
@@ -3469,7 +3469,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer.Write(item.Unknown);
                 EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
-                    item.InteruptFlags,
+                    item.InterruptFlag,
                     length: 2);
                 writer.Write(item.Unknown2);
             }
@@ -3681,7 +3681,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 1) return null;
                     item.Unknown = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 2) return null;
-                    item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.InterruptFlag = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 2);
                     if (dataFrame.Remaining < 2) return null;
@@ -3891,10 +3891,10 @@ namespace Mutagen.Bethesda.Skyrim
         private bool _Unknown_IsSet => _PKDTLocation.HasValue;
         public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
-        #region InteruptFlags
-        private int _InteruptFlagsLocation => _PKDTLocation!.Value.Min + 0x8;
-        private bool _InteruptFlags_IsSet => _PKDTLocation.HasValue;
-        public Package.InterruptFlag InteruptFlags => _InteruptFlags_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_InteruptFlagsLocation, 0x2)) : default;
+        #region InterruptFlag
+        private int _InterruptFlagLocation => _PKDTLocation!.Value.Min + 0x8;
+        private bool _InterruptFlag_IsSet => _PKDTLocation.HasValue;
+        public Package.InterruptFlag InterruptFlag => _InterruptFlag_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_InterruptFlagLocation, 0x2)) : default;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _PKDTLocation!.Value.Min + 0xA;
