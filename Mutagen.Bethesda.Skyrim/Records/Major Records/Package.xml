@@ -10,7 +10,7 @@
           <Enum name="InterruptOverride" enumName="Package.Interrupt" byteLength="1" />
           <Enum name="PreferredSpeed" enumName="Package.Speed" byteLength="1" />
           <UInt8 name="Unknown" />
-          <Enum name="InterruptFlag" enumName="Package.InterruptFlag" byteLength="2" />
+          <Enum name="InterruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
           <UInt16 name="Unknown2" />
         </Fields>
       </Data>
