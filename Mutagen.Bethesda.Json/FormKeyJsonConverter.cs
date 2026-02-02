@@ -136,7 +136,7 @@ public sealed class FormKeyJsonConverter : JsonConverter
             var typeName = span.Slice(startIndex + 1, endIndex - 1 - startIndex).ToString();
             
             var lastPeriod = typeName.LastIndexOf('.');
-            if (lastPeriod != -1 && typeName[(lastPeriod + 1)..] == "MajorRecord")
+            if (typeName == "MajorRecord" || lastPeriod != -1 && typeName[(lastPeriod + 1)..] == "MajorRecord")
             {
                 typeName = "Mutagen.Bethesda.Plugins.Records.MajorRecord";
             }
