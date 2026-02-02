@@ -255,7 +255,30 @@ foreach (var keywordGetter in loadOrder.ListedOrder.Keywords().WinningOverrides(
     }
     ```
 
-[:octicons-arrow-right-24: Winning Overrides](linkcache/ModContexts.md)
+[:octicons-arrow-right-24: Mod Contexts](linkcache/ModContexts.md)
+
+## Overriding Generic Records
+When working within generic functions, you need to explicitly provide the mod setter/getter types as well as the record setter/getter types to resolve contexts.
+
+```cs
+public void ProcessRecords<TMod, TModGetter, TMajor, TMajorGetter>(
+    ILinkCache<TMod, TModGetter> linkCache,
+    TMod outgoingMod,
+    IFormLinkGetter<TMajorGetter> targetLink)
+    where TModGetter : IModGetter
+    where TMod : IMod, TModGetter
+    where TMajorGetter : IMajorRecordGetter
+    where TMajor : IMajorRecord, TMajorGetter
+{
+    if (targetLink.TryResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(linkCache, out var context))
+    {
+        var overrideRecord = context.GetOrAddAsOverride(outgoingMod);
+        // Modify overrideRecord as needed
+    }
+}
+```
+
+[:octicons-arrow-right-24: Mod Contexts](linkcache/ModContexts.md)
 
 ## Check If A FormLink Points to a Specific Record
 === "FormKey Mapping Library"

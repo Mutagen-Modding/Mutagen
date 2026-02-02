@@ -49,7 +49,7 @@ public abstract class BasicSettingsVM<T> : SettingsNodeVM, IBasicSettingsNodeVM
         }
         _DisplayName = this.WhenAnyValue(x => x.Value)
             .Select(x => x?.ToString() ?? "Name")
-            .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
+            .ToRxAppGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
     }
 
     public override void Import(JsonElement property, Action<string> logger)

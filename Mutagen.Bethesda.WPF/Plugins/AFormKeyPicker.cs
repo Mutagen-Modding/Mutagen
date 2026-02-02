@@ -663,7 +663,7 @@ public class AFormKeyPicker : NoggogControl
             .ObserveOn(RxApp.TaskpoolScheduler)
             .Select(x => x.ToObservableChangeSet())
             .Switch()
-            .ObserveOnGui()
+            .ObserveOnRxAppGui()
             .Filter(Observable.CombineLatest(
                     this.WhenAnyValue(x => x.SearchMode)
                         .DistinctUntilChanged(),
@@ -726,8 +726,8 @@ public class AFormKeyPicker : NoggogControl
                     }
                 })
                 .Switch())
-            .ObserveOnGui()
-            .ToObservableCollection(this._unloadDisposable);
+            .ObserveOnRxAppGui()
+            .ToRxAppObservableCollection(this._unloadDisposable);
 
         this.WhenAnyValue(x => x.AllowsSearchMode)
             .Where(x => !x)
@@ -736,7 +736,7 @@ public class AFormKeyPicker : NoggogControl
 
         this.WhenAnyValue(x => x.InSearchMode)
             .Where(x => !x)
-            .ObserveOnGui()
+            .ObserveOnRxAppGui()
             .Subscribe(_ => ViewingAllowedTypes = false)
             .DisposeWith(_unloadDisposable);
     }

@@ -1,10 +1,11 @@
 ﻿using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
-public class MultiModFileSplitter
+public class MultiModFileSplitter : IMultiModFileSplitter
 {
     internal class EquatableModKeySet : IEquatable<EquatableModKeySet>
     {
@@ -101,6 +102,15 @@ public class MultiModFileSplitter
         foreach (var rec in inputMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache))
         {
             var mastersHashSet = GetAllMastersForRecord(rec.Record, inputMod.ModKey);
+
+            // Check if single record exceeds master limit
+            if (mastersHashSet.Count > limit)
+            {
+                throw new TooManyMastersException(
+                    inputMod.ModKey,
+                    mastersHashSet.ToArray());
+            }
+
             var masters = new EquatableModKeySet(mastersHashSet);
 
             if (clusterLookupCache.ContainsKey(masters))
@@ -169,14 +179,14 @@ public class MultiModFileSplitter
                 curFileName = $"{inputMod.ModKey.FileName.NameWithoutExtension}_{(i + 1)}{inputMod.ModKey.FileName.Extension}";
             }
 
-            var newMod = ModInstantiator<TMod>.Activator(ModKey.FromFileName(curFileName), inputMod.GameRelease);
+            var newMod = ModFactory<TMod>.Activator(ModKey.FromFileName(curFileName), inputMod.GameRelease);
 
             foreach (var context in curCluster.Records)
             {
                 if (context.Record.FormKey.ModKey == inputMod.ModKey)
                 {
                     // this is a Form which has been created within inputMod -> copy it right over
-                    context.DuplicateIntoAsNewRecord(newMod);
+                    context.DuplicateIntoAsNewRecord(newMod, new FormKey(newMod.ModKey, context.Record.FormKey.ID));
                 }
                 else
                 {

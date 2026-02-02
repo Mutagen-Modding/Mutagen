@@ -51,8 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Version
-        public static readonly Single VersionDefault = 1f;
-        public Single Version { get; set; } = VersionDefault;
+        public Single Version { get; set; } = default(Single);
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default(UInt32);
@@ -758,7 +757,7 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IModStats item)
         {
             ClearPartial();
-            item.Version = ModStats.VersionDefault;
+            item.Version = default(Single);
             item.NumRecords = default(UInt32);
             item.NextFormID = ModStats.NextFormIDDefault;
         }

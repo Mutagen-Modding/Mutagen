@@ -7,5 +7,5 @@ public class SkyrimSeqAssetType : IAssetType
 {
     public static IAssetType Instance { get; } = new SkyrimSeqAssetType();
     public string BaseFolder => "Seq";
-    public IEnumerable<string> FileExtensions => new []{ ".seq" };
+    public IEnumerable<string> FileExtensions => [".seq"];
 }

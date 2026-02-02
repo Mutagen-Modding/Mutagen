@@ -9,6 +9,8 @@ using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -174,6 +176,23 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         };
     }
 
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings when reading mods.<br/>
+    /// When enabled, uses UTF8 for reading localized strings that are embedded in the plugin files.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            StringsReadParameters = (StringsReadParameters ?? new()) with
+            {
+                NonLocalizedEncodingOverride = on ? Mutagen.Bethesda.Strings.DI.MutagenEncoding._utf8 : null
+            }
+        };
+    }
+
     public GameEnvironmentBuilder<TMod, TModGetter> WithResolver(Func<Type, object?> resolver)
     {
         return this with { Resolver = resolver };
@@ -308,10 +327,44 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                 fs,
                 dataDirectory));
 
+        // Create lightweight LinkCache for binary reading
+        var lightweightMods = new List<IModGetter>();
+        var modImporter = new ModImporter(fs, Release);
+        foreach (var listing in listingsToUse)
+        {
+            var modPath = new ModPath(listing.ModKey, dataDirectory.Path.GetFile(listing.ModKey.FileName).Path);
+            if (fs.File.Exists(modPath.Path))
+            {
+                try
+                {
+                    var mod = modImporter.Import(modPath, new BinaryReadParameters()
+                    {
+                        FileSystem = fs,
+                        StringsParam = StringsReadParameters
+                    });
+                    lightweightMods.Add(mod);
+                }
+                catch
+                {
+                    // Skip mods that fail to load for LinkCache
+                }
+            }
+        }
+
+        ILinkCache? lightweightLinkCache = null;
+        if (lightweightMods.Count > 0)
+        {
+            lightweightLinkCache = new ImmutableLoadOrderLinkCache(
+                lightweightMods,
+                gameCategory: Release.Release.ToCategory(),
+                prefs: null);
+        }
+
         ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import(new BinaryReadParameters()
         {
             FileSystem = fs,
-            StringsParam = StringsReadParameters
+            StringsParam = StringsReadParameters,
+            LinkCache = lightweightLinkCache
         });
         foreach (var filter in ModListingProcessors)
         {
@@ -351,7 +404,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             creationClubListingsFilePathProvider: cccPath,
             loadOrder: lo,
             linkCache: linkCache,
-            assetProvider: assetProvider);
+            assetProvider: assetProvider,
+            additionalDisposables: lightweightMods.OfType<IDisposable>().ToArray());
     }
 }
 
@@ -497,6 +551,23 @@ public sealed record GameEnvironmentBuilder
         };
     }
 
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings when reading mods.<br/>
+    /// When enabled, uses UTF8 for reading localized strings that are embedded in the plugin files.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            StringsReadParameters = (StringsReadParameters ?? new()) with
+            {
+                NonLocalizedEncodingOverride = on ? Mutagen.Bethesda.Strings.DI.MutagenEncoding._utf8 : null
+            }
+        };
+    }
+
     public GameEnvironmentBuilder WithResolver(Func<Type, object?> resolver)
     {
         return this with { Resolver = resolver };
@@ -631,10 +702,44 @@ public sealed record GameEnvironmentBuilder
                 fs,
                 Release));
 
+        // Create lightweight LinkCache for binary reading
+        var lightweightMods = new List<IModGetter>();
+        var modImporter = new ModImporter(fs, Release);
+        foreach (var listing in listingsToUse)
+        {
+            var modPath = new ModPath(listing.ModKey, dataDirectory.Path.GetFile(listing.ModKey.FileName).Path);
+            if (fs.File.Exists(modPath.Path))
+            {
+                try
+                {
+                    var mod = modImporter.Import(modPath, new BinaryReadParameters()
+                    {
+                        FileSystem = fs,
+                        StringsParam = StringsReadParameters
+                    });
+                    lightweightMods.Add(mod);
+                }
+                catch
+                {
+                    // Skip mods that fail to load for LinkCache
+                }
+            }
+        }
+
+        ILinkCache? lightweightLinkCache = null;
+        if (lightweightMods.Count > 0)
+        {
+            lightweightLinkCache = new ImmutableLoadOrderLinkCache(
+                lightweightMods,
+                gameCategory: Release.Release.ToCategory(),
+                prefs: null);
+        }
+
         ILoadOrderGetter<IModListingGetter<IModGetter>> lo = loGetter.Import(new BinaryReadParameters()
         {
             FileSystem = fs,
-            StringsParam = StringsReadParameters
+            StringsParam = StringsReadParameters,
+            LinkCache = lightweightLinkCache
         });
         foreach (var filter in ModListingProcessors)
         {
@@ -670,11 +775,12 @@ public sealed record GameEnvironmentBuilder
         return new GameEnvironmentState(
             Release.Release,
             dataFolderPath: dataDirectory.Path,
-            loadOrderFilePath: pluginPathProvider.Path,
+            loadOrderFilePath: pluginPathProvider.TryGetPath(),
             creationClubListingsFilePath: cccPath.Path,
             loadOrder: lo,
             linkCache: linkCache,
-            assetProvider: assetProvider);
+            assetProvider: assetProvider,
+            additionalDisposables: lightweightMods.OfType<IDisposable>().ToArray());
     }
 }
 

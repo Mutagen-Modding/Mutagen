@@ -136,7 +136,7 @@ public static class IModExt
         }
 
         // Read renamed mod as new mod
-        var duplicateInto = ModInstantiator.ImportSetter(newModPath, mod.GameRelease, BinaryReadParameters.Default with
+        var duplicateInto = ModFactory.ImportSetter(newModPath, mod.GameRelease, BinaryReadParameters.Default with
         {
             FileSystem = fileSystem
         });

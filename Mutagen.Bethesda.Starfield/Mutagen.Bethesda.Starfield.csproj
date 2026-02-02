@@ -2003,9 +2003,6 @@
     <Compile Include="Records\Common Subrecords\ObjectTemplate_Generated.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\NoOwner_Generated.cs">
-      <DependentUpon>ExtraData.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\NpcOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
@@ -6882,6 +6879,10 @@
     </Compile>
     <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="StarfieldMultiModOverlay_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

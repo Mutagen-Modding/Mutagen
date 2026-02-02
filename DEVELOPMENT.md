@@ -137,6 +137,31 @@ cd Mutagen.Bethesda.Generator.All/bin/Debug/net8.0
 
 The generators use relative paths like `../../../../Mutagen.Bethesda.{Game}/Records` to locate project files. Running from the build output directory ensures these relative paths resolve correctly to the repository structure.
 
+## Project File Management
+
+### Adding New Files to Projects
+
+**Important**: Most projects in this repository use `<EnableDefaultCompileItems>False</EnableDefaultCompileItems>`, which means all source files must be explicitly listed in the `.csproj` file. This is necessary to properly nest generated code files under their corresponding XML definition files.
+
+When adding new `.cs` files to a project:
+
+1. **Find the correct location** in the `.csproj` file (files are typically grouped by directory/feature)
+2. **Add a `<Compile Include="...">` element** with the file path
+3. **For generated files only**: Add a `<DependentUpon>...</DependentUpon>` element to nest it under the XML file
+
+Example:
+```xml
+<!-- Regular file (no nesting) -->
+<Compile Include="Plugins\Analysis\DI\MultiModFileReader.cs" />
+
+<!-- Generated file (nested under XML) -->
+<Compile Include="Records\SkyrimMod_Generated.cs">
+  <DependentUpon>SkyrimMod.xml</DependentUpon>
+</Compile>
+```
+
+If you create a new file and the build can't find it, check that it's been added to the `.csproj` file.
+
 ## Development Workflow
 
 ### Always Verify Your Changes
@@ -155,6 +180,18 @@ dotnet test Mutagen.UnitTests.sln
 ```
 
 This ensures your changes don't break the build or existing functionality.
+
+### File System Operations
+- **NEVER redirect to `nul`** - On Windows, `2>nul` creates unwanted files that Git tracks
+- Use proper null redirection: `2>/dev/null` (works on Windows with bash)
+- For temporary files, use `.claude/` subfolder or designated temp directories that are gitignored
+- Example: `ls directory 2>/dev/null || echo "Not found"` instead of `dir directory 2>nul`
+- **NEVER use `sed` for bulk find/replace** - `sed` does not preserve Windows CRLF line endings, creating massive spurious diffs
+  - On Windows, `sed -i` converts CRLF to LF, causing every line to show as changed in git
+  - Use targeted edits with the Edit tool instead of global sed replacements
+  - If you must do bulk replacements, only use tools that preserve line endings (e.g., PowerShell with `-Raw` and explicit encoding)
+  - Example (incorrect): `find . -name "*.cs" -exec sed -i 's/OldName/NewName/g' {} \;` - creates CRLF→LF changes on every touched file
+  - Example (correct): Use Edit tool on each file individually, or ask user to use IDE refactoring tools
 
 ## Releases
 
@@ -188,6 +225,35 @@ Mutagen uses AutoFixture with custom builders to automatically generate properly
 - Try to use `[Theory, MutagenAutoData]` attribute for tests that need ModKeys or other primitives
 - If you want, you can use `[Theory, MutagenModAutoData]` which will allow injection of mods, and records that are added to the latest mod.
 - AutoFixture will inject properly configured `SkyrimMod`, `ModKey`, `FormKey`, etc. as test parameters
+
+## Coding Practices
+
+### Avoid Using `dynamic`
+
+Do not use `dynamic` when possible. The codebase provides proper interfaces and generic methods that should be used instead. Using `dynamic` bypasses compile-time type checking and can lead to runtime errors.
+
+### Prefer ModPath Over DirectoryPath + ModKey
+
+When working with paths to mod files, prefer using `ModPath` instead of separate `DirectoryPath` and `ModKey` parameters. `ModPath` is essentially a string path that is expected to point to a mod file, and includes the associated `ModKey`.
+
+```cs
+// Preferred - uses ModPath
+public void ProcessMod(ModPath modPath)
+{
+    var modKey = modPath.ModKey;
+    var filePath = modPath.Path;
+    // ...
+}
+
+// Avoid - separate parameters
+public void ProcessMod(DirectoryPath folder, ModKey modKey)
+{
+    var filePath = Path.Combine(folder.Path, modKey.FileName);
+    // ...
+}
+```
+
+`ModPath` provides better API ergonomics and ensures the path and ModKey stay in sync.
 
 ## Contributing
 

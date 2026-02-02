@@ -50,7 +50,7 @@ public class GameEnvironmentBuilder : ISpecimenBuilder
         
         loWriter.Write(pluginPath.Path, modKeys.Select((x, i) => new LoadOrderListing(x, i % 2 == 0)));
 
-        var mods = modKeys.Select(x => ModInstantiator.Activator(x, _release)).ToArray();
+        var mods = modKeys.Select(x => ModFactory.Activator(x, _release)).ToArray();
         mods.ForEach(m =>
         {
             m.BeginWrite

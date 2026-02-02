@@ -37,7 +37,7 @@ public class ReadOnlyModListingVM : ViewModel, IModListingGetter
         _modExists = Observable.Defer(() =>
                 Noggog.ObservableExt.WatchFile(path)
                     .Select(_ => File.Exists(path)))
-            .ToGuiProperty(this, nameof(ModExists), initialValue: exists);
+            .ToRxAppGuiProperty(this, nameof(ModExists), initialValue: exists);
     }
 
     public override string ToString()

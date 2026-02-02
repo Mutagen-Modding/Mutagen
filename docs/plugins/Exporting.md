@@ -91,6 +91,8 @@ Be default, writing will check the compaction flag (Small/Medium/Full) master st
 
 `WithEmbeddedEncodings` lets you override the encodings used
 
+`WithUtf8Encoding` convenience method to write embedded strings using UTF8 encoding instead of the default Windows-1252. Use this when your mod contains non-Latin characters (Russian, Japanese, etc.) that need UTF8 support.
+
 #### Lower Range FormIDs
 
 Some mods and releases in certain situations allow the usage of FormIDs all the way down to ID 0.

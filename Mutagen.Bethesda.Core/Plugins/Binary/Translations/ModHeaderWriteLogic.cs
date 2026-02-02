@@ -412,6 +412,7 @@ internal sealed class ModHeaderWriteLogic
             case ThrowIfLowerRangeDisallowed:
                 throw new LowerFormKeyRangeDisallowedException(_disallowedLowerFormKey.Value);
             case AddPlaceholderMasterIfLowerRangeDisallowed placeholder:
+                if (_modKeys.Count > 0) return;
                 if (placeholder.ModKey == null)
                 {
                     throw new LowerFormKeyRangeDisallowedException(_disallowedLowerFormKey.Value);

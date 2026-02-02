@@ -21,7 +21,7 @@ public class ListElementWrapperVM<TItem, TWrapper> : ViewModel, IBasicSettingsNo
     {
         Value = value;
         _DisplayName = value.WhenAnyValue(x => x.DisplayName)
-            .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
+            .ToRxAppGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
     }
 
     public void WrapUp() => Value.WrapUp();

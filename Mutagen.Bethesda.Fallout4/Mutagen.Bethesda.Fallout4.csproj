@@ -1186,9 +1186,6 @@
     <Compile Include="Records\Common Subrecords\FactionOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\NoOwner_Generated.cs">
-      <DependentUpon>ExtraData.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Container_Generated.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
@@ -2484,6 +2481,10 @@
     </Compile>
     <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Fallout4MultiModOverlay_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

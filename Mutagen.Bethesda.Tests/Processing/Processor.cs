@@ -60,7 +60,7 @@ public abstract class Processor
         Meta = GameConstants.Get(GameRelease);
         ParallelOptions = new ParallelOptions()
         {
-            MaxDegreeOfParallelism = -1
+            MaxDegreeOfParallelism = 5
         };
     }
 

@@ -57,7 +57,7 @@ public class PassthroughTestVM : ViewModel
                     return path;
                 }
             })
-            .ToGuiProperty(this, nameof(Name), string.Empty);
+            .ToRxAppGuiProperty(this, nameof(Name), string.Empty);
         Tests.Connect()
             .Bind(out _testsDisplay)
             .Subscribe()
@@ -69,7 +69,7 @@ public class PassthroughTestVM : ViewModel
         });
         _IsSelected = Group.Parent.WhenAnyValue(x => x.SelectedPassthrough)
             .Select(x => x == this)
-            .ToGuiProperty(this, nameof(IsSelected));
+            .ToRxAppGuiProperty(this, nameof(IsSelected));
         _State = Tests.Connect()
             .AutoRefresh(x => x.State)
             .Transform(p => p.State, transformOnRefresh: true)
@@ -86,7 +86,7 @@ public class PassthroughTestVM : ViewModel
                 }
                 return notComplete ? TestState.Running : TestState.Complete;
             })
-            .ToGuiProperty(this, nameof(State));
+            .ToRxAppGuiProperty(this, nameof(State));
         OpenFileLocationCommand = ReactiveCommand.Create(
             () =>
             {

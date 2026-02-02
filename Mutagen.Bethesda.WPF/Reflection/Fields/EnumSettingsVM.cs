@@ -32,7 +32,7 @@ public class EnumSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
         Value = defaultVal ?? string.Empty;
         _DisplayName = this.WhenAnyValue(x => x.Value)
             .Select(x => x.ToString())
-            .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
+            .ToRxAppGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
     }
 
     public override void Import(JsonElement property, Action<string> logger)

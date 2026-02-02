@@ -2,6 +2,7 @@ using Noggog;
 using System.Buffers.Binary;
 using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -92,6 +93,7 @@ public partial class SkyrimMod : AMod
             else if (builder._param._streamFactory != null)
             {
                 var stream = builder._param._streamFactory();
+                var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream);
                 var recordCache =  new RecordTypeInfoCacheReader(() =>
                 {
                     var stream1 = builder._param._streamFactory();
@@ -99,9 +101,9 @@ public partial class SkyrimMod : AMod
                     {
                         throw new ArgumentException("Stream factory provided returned the same stream twice");
                     }
-                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
-                    return new MutagenBinaryReadStream(stream, meta);
-                });
+                    var meta1 = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta1);
+                }, builder._param.ModKey, meta.LinkCache);
 
                 return SkyrimMod.CreateFromBinary(
                     stream: stream,
@@ -154,6 +156,7 @@ public partial class SkyrimMod : AMod
     internal class SkyrimWriteBuilderInstantiator : IBinaryWriteBuilderWriter<ISkyrimModGetter>
     {
         public static readonly SkyrimWriteBuilderInstantiator Instance = new();
+        private static readonly IAutoSplitModWriter AutoSplitter = new AutoSplitModWriter(new MultiModFileSplitter());
 
         public async Task WriteAsync(ISkyrimModGetter mod, BinaryWriteBuilderParams<ISkyrimModGetter> param)
         {
@@ -164,11 +167,30 @@ public partial class SkyrimMod : AMod
         {
             if (param._path != null)
             {
-                mod.WriteToBinary(param._path.Value, param._param);
+                if (param._autoSplit)
+                {
+                    AutoSplitter.Write<ISkyrimMod, ISkyrimModGetter>(
+                        mod,
+                        param._path.Value,
+                        param._param);
+                }
+                else
+                {
+                    mod.WriteToBinary(param._path.Value, param._param);
+                }
             }
             else if (param._stream != null)
             {
-                mod.WriteToBinary(param._stream, param._param);
+                if (param._autoSplit)
+                {
+                    throw new NotSupportedException(
+                        "Auto-split functionality does not support stream-based writing. " +
+                        "Please use file path-based writing (ToPath or IntoFolder) instead of ToStream when using WithAutoSplit().");
+                }
+                else
+                {
+                    mod.WriteToBinary(param._stream, param._param);
+                }
             }
             else
             {

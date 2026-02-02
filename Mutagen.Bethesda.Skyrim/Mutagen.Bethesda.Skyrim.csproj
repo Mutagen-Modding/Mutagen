@@ -2193,9 +2193,6 @@
     <Compile Include="Records\Common Subrecords\FactionOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\NoOwner_Generated.cs">
-      <DependentUpon>ExtraData.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Icons_Generated.cs">
       <DependentUpon>Icons.xml</DependentUpon>
     </Compile>
@@ -4745,6 +4742,10 @@
     </Compile>
     <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="SkyrimMultiModOverlay_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

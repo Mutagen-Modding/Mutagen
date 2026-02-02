@@ -32,13 +32,13 @@ public class GroupTestVM : ViewModel
             .Where(p => p.Do)
             .Select(p => new PassthroughTestVM(this, p)));
         Passthroughs.Connect()
-            .ObserveOnGui()
+            .ObserveOnRxAppGui()
             .Bind(_passthroughDisplay)
             .Subscribe()
             .DisposeWith(this);
         _name = this.WhenAnyValue(x => x.Settings.GameRelease)
             .Select(g => g.ToString())
-            .ToGuiProperty(this, nameof(Name), string.Empty);
+            .ToRxAppGuiProperty(this, nameof(Name), string.Empty);
         _state = Passthroughs.Connect()
             .TransformMany(x => x.Tests)
             .AutoRefresh(x => x.State)
@@ -56,6 +56,6 @@ public class GroupTestVM : ViewModel
                 }
                 return notComplete ? TestState.Running : TestState.Complete;
             })
-            .ToGuiProperty(this, nameof(State));
+            .ToRxAppGuiProperty(this, nameof(State));
     }
 }

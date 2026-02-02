@@ -37,6 +37,39 @@ It is recommended to name the EditorIDs off the aspects that drove the record to
 
 Since each is named with a specific "goal" in mind, it will be less likely to collide.
 
+## Mixing EditorID and Blind Allocations
+A common question is what happens when some records are created with EditorIDs (for synchronization) while others are created without (blind allocation). Will there be collisions?
+
+### How Collision Avoidance Works
+Persistent allocators (`TextFileFormKeyAllocator`, `TextFileSharedFormKeyAllocator`, `SQLiteFormKeyAllocator`) track **all** allocated FormIDs internally, regardless of whether they were allocated with an EditorID or not. When a blind allocation is requested, the allocator:
+
+1. Starts with the mod's `NextFormID` as a candidate
+2. Checks if that FormID is already in use (from the persistence file or previous allocations)
+3. If in use, increments and checks again until finding an unused FormID
+4. Returns the unused FormID
+
+This means blind allocations will automatically skip over any FormIDs that were previously assigned to EditorID-based records. There is no risk of a blind allocation "stealing" a FormKey that the allocator had reserved for a specific EditorID.
+
+### Example Scenario
+Consider this workflow:
+```cs
+// Run 1: Create records with EditorIDs
+var npc1 = mod.Npcs.AddNew("MyMod_ImportantNpc");  // Gets FormID 0x800
+var npc2 = mod.Npcs.AddNew("MyMod_AnotherNpc");    // Gets FormID 0x801
+// Allocator persists: "MyMod_ImportantNpc" -> 0x800, "MyMod_AnotherNpc" -> 0x801
+
+// Run 2: Mix of EditorID and blind allocations
+var npc1 = mod.Npcs.AddNew("MyMod_ImportantNpc");  // Returns 0x800 (from persistence)
+var tempNpc = mod.Npcs.AddNew();                    // Gets 0x802 (skips 0x800, 0x801)
+var npc2 = mod.Npcs.AddNew("MyMod_AnotherNpc");    // Returns 0x801 (from persistence)
+var anotherTemp = mod.Npcs.AddNew();                // Gets 0x803
+```
+
+The blind allocations never interfere with the EditorID-mapped FormKeys, even if they're requested in a different order than the original run.
+
+### SimpleFormKeyAllocator Caveat
+Note that `SimpleFormKeyAllocator` (the default non-persistent allocator) does **not** provide this collision avoidance. It simply increments the mod's `NextFormID` sequentially. If you need to mix EditorID and blind allocations safely across runs, use one of the persistent allocators.
+
 ## Persistence and Allocation
 The other half that needs to be considered is where the mapping information is stored, and how that data gets imported/used to fulfill the allocation requests described above.
 

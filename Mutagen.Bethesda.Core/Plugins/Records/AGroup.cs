@@ -326,11 +326,11 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
             else
             {
                 MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory);
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID, reference: false);
                 if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                 {
-                    throw new MalformedDataException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
+                    throw new RecordException(formKey: formKey, recordType: null, modKey: package.MetaData.ModKey, edid: null, message: "Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                 }
-                var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID, reference: false);
                 try
                 {
                     locationDict.Add(formKey, checked((int)(stream.Position - offset)));

@@ -110,7 +110,7 @@ public class AModKeyPicker : NoggogControl
             })
             .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Return<IChangeSet<ModKey>>(ChangeSet<ModKey>.Empty))
             .Switch()
-            .ObserveOnGui()
+            .ObserveOnRxAppGui()
             .Filter(this.WhenAnyValue(x => x.FileName)
                 .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
                 .ObserveOn(RxApp.TaskpoolScheduler)
@@ -118,8 +118,8 @@ public class AModKeyPicker : NoggogControl
                 {
                     return term.IsNullOrWhitespace() || modKey.ToString().Contains(term, StringComparison.OrdinalIgnoreCase);
                 }))
-            .ObserveOnGui()
-            .ToObservableCollection(this._unloadDisposable);
+            .ObserveOnRxAppGui()
+            .ToRxAppObservableCollection(this._unloadDisposable);
 
         this.WhenAnyValue(x => x.AllowsSearchMode)
             .Where(x => !x)

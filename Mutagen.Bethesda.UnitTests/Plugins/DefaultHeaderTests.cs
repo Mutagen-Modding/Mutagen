@@ -37,10 +37,25 @@ public class DefaultHeaderTests
     }
 
     [Theory, MutagenAutoData]
-    public void Skyrim(ModKey modKey)
+    public void SkyrimSE(ModKey modKey)
     {
         var mod = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
         mod.ModHeader.Stats.Version.ShouldBe(1.71f);
         mod.ModHeader.Stats.NextFormID.ShouldEqual(0x800);
+    }
+
+    [Theory, MutagenAutoData]
+    public void SkyrimLE(ModKey modKey)
+    {
+        var mod = new SkyrimMod(modKey, SkyrimRelease.SkyrimLE);
+        mod.ModHeader.Stats.Version.ShouldBe(1.70f);
+        mod.ModHeader.Stats.NextFormID.ShouldEqual(0x800);
+    }
+    
+    [Theory, MutagenAutoData]
+    public void ExplicitHeaderVersionOverride_SkyrimSE(ModKey modKey)
+    {
+        var mod = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE, headerVersion: 2.0f);
+        mod.ModHeader.Stats.Version.ShouldBe(2.0f);
     }
 }

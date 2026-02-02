@@ -26,7 +26,7 @@ public class ModConcreteBuilder : ISpecimenBuilder
         if (request is not Type t) return new NoSpecimen();
         if (!t.IsInterface && !t.IsAbstract && t.InheritsFrom(typeof(IMod)))
         {
-            var ret = ModInstantiator.Activator(context.Create<ModKey>(), _release, forceUseLowerFormIDRanges: false);
+            var ret = ModFactory.Activator(context.Create<ModKey>(), _release, forceUseLowerFormIDRanges: false);
             LastCreatedConcreteMod = ret;
             return ret;
         }

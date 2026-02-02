@@ -96,4 +96,62 @@ public static class GetOrAddAsOverrideMixIns
         }
         throw new MissingRecordException(link.FormKey, link.Type);
     }
+
+    /// <summary>
+    /// Takes in an existing record definition, and either returns the existing override definition
+    /// from the Group, or copies the given record, inserts it, and then returns it as an override.
+    /// Returns false if the record type does not match the group's contained type.
+    /// </summary>
+    /// <param name="group">Group to retrieve and/or insert from</param>
+    /// <param name="major">Major record to query and potentially copy</param>
+    /// <param name="result">The existing or newly created override record</param>
+    /// <returns>True if successful, false if the record type does not match the group</returns>
+    public static bool TryGetOrAddAsOverrideUntyped(
+        this IGroup group,
+        IMajorRecordGetter major,
+        [MaybeNullWhen(false)] out IMajorRecord result)
+    {
+        try
+        {
+            // Check if the record type is assignable to the group's contained type
+            if (!group.ContainedRecordType.IsAssignableFrom(major.GetType()))
+            {
+                result = null;
+                return false;
+            }
+
+            // Check if the record already exists in the group
+            if (group.RecordCache.TryGetValue(major.FormKey, out var existingMajor))
+            {
+                if (existingMajor is IMajorRecord existingRecord)
+                {
+                    result = existingRecord;
+                    return true;
+                }
+                result = null;
+                return false;
+            }
+
+            // Get the override mask for this record type
+            var mask = OverrideMaskRegistrations.Get(major.GetType());
+
+            // Create a deep copy with the override mask
+            var copy = major.DeepCopy(mask as MajorRecord.TranslationMask);
+            if (copy is not IMajorRecord rhs)
+            {
+                result = null;
+                return false;
+            }
+
+            // Add the copy to the group
+            group.SetUntyped(rhs);
+            result = rhs;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            RecordException.EnrichAndThrow(ex, major.FormKey, major.GetType(), major.EditorID);
+            throw;
+        }
+    }
 }

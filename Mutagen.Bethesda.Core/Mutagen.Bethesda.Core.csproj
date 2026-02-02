@@ -158,8 +158,13 @@
         <Compile Include="Installs\RegistryHelper.cs" />
         <Compile Include="Installs\SteamGameSource.cs" />
         <Compile Include="Installs\XboxGameSource.cs" />
+        <Compile Include="Plugins\Analysis\DI\AutoSplitModWriter.cs" />
+        <Compile Include="Plugins\Analysis\DI\IAutoSplitModWriter.cs" />
+        <Compile Include="Plugins\Analysis\DI\IMultiModFileSplitter.cs" />
         <Compile Include="Plugins\Analysis\DI\MultiModFileSplitter.cs" />
+        <Compile Include="Plugins\Analysis\DI\MultiModFileReader.cs" />
         <Compile Include="Plugins\Analysis\DI\RecordCompactionCompatibilityDetector.cs" />
+        <Compile Include="Plugins\Analysis\MultiModFileAnalysis.cs" />
         <Compile Include="Plugins\Analysis\RecordCompactionCompatibilityDetection.cs" />
         <Compile Include="Plugins\Analysis\RecordLocationMarker.cs" />
         <Compile Include="Plugins\Analysis\RecordLocator.cs">
@@ -289,6 +294,8 @@
         <Compile Include="Plugins\Exceptions\LowerFormIDRangeDisallowedException.cs" />
         <Compile Include="Plugins\Exceptions\MissingGameLibsException.cs" />
         <Compile Include="Plugins\Exceptions\MissingModMappingException.cs" />
+        <Compile Include="Plugins\Exceptions\ModGroupsMalformedException.cs" />
+        <Compile Include="Plugins\Exceptions\SplitModException.cs" />
         <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
         <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
         <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
@@ -566,6 +573,9 @@
             <BuildAction>Compile</BuildAction>
         </Compile>
         <Compile Include="Plugins\Records\Mapping\RecordTypeLookup.cs" />
+        <Compile Include="Plugins\Records\MergedBlock.cs" />
+        <Compile Include="Plugins\Records\MergedGroup.cs" />
+        <Compile Include="Plugins\Records\MergedListGroup.cs" />
         <Compile Include="Plugins\Records\ModFlags.cs" />
         <Compile Include="Plugins\Records\RecordTypeInts.cs" />
         <Compile Include="Plugins\Records\RecordTypes.cs" />
@@ -604,6 +614,7 @@
         <Compile Include="Strings\StringsLanguageFormat.cs" />
         <Compile Include="Strings\StringsFileFormat.cs" />
         <Compile Include="Strings\StringsSource.cs" />
+        <Compile Include="Plugins\Exceptions\LinkCacheMissingException.cs" />
         <Compile Include="Plugins\Exceptions\MissingModException.cs" />
         <Compile Include="Plugins\Exceptions\MissingRecordException.cs" />
         <Compile Include="Plugins\Exceptions\RecordCollisionException.cs" />
@@ -734,6 +745,7 @@
         <Compile Include="Translations\Binary\UInt64BinaryTranslation.cs" />
         <Compile Include="Translations\Binary\UtilityTranslation.cs" />
         <Compile Include="Plugins\Utility\MajorRecordPrinter.cs" />
+        <Compile Include="Plugins\Records\ModFactory.cs" />
         <Compile Include="Plugins\Records\ModInstantiator.cs" />
         <Compile Include="Plugins\Utility\RecordTypeInfoCacheReader.cs" />
         <Compile Include="Plugins\Allocators\TextFileFormKeyAllocator.cs" />

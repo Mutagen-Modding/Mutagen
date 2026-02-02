@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
+    /// Implemented by: [NpcOwner, FactionOwner, UntypedOwner]
     /// </summary>
     public abstract partial class OwnerTarget :
         IEquatable<IOwnerTargetGetter>,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
+    /// Implemented by: [NpcOwner, FactionOwner, UntypedOwner]
     /// </summary>
     public partial interface IOwnerTarget :
         IFormLinkContainer,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [NpcOwner, FactionOwner, NoOwner]
+    /// Implemented by: [NpcOwner, FactionOwner, UntypedOwner]
     /// </summary>
     public partial interface IOwnerTargetGetter :
         ILoquiObject,

@@ -15,3 +15,7 @@ Some related documentation about some deviation patterns that might be encounter
 [:octicons-arrow-right-24: Abstract Subclassing](../Abstract-Subclassing.md)
 
 [:octicons-arrow-right-24: Bethesda Format Abstractions](../Bethesda-Format-Abstraction.md)
+
+[:octicons-arrow-right-24: ExtraData (Container Item Ownership)](ExtraData.md)
+
+[:octicons-arrow-right-24: Globals and GameSettings](Globals-And-GameSettings.md)

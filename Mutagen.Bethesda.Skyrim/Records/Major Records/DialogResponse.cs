@@ -31,7 +31,7 @@ partial class DialogResponsesCommon
         if (assetType != null && assetType != typeof(SkyrimSoundAssetType)) yield break;
 
         var voiceTypeLookup = linkCache.GetComponent<VoiceTypeAssetLookup>();
-        foreach (var voiceTypePath in voiceTypeLookup.GetVoiceTypePaths(obj))
+        foreach (var voiceTypePath in voiceTypeLookup.GetVoiceLineFilePaths(obj))
         {
             yield return new AssetLink<SkyrimSoundAssetType>(voiceTypePath);
         }

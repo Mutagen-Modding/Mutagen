@@ -22,7 +22,7 @@ public class RunningTestsVM : ViewModel
     public RunningTestsVM()
     {
         _SelectedTest = this.WhenAnyValue(x => x.SelectedPassthrough!.SelectedTest)
-            .ToGuiProperty(this, nameof(SelectedTest), default);
+            .ToRxAppGuiProperty(this, nameof(SelectedTest), default);
     }
 
     public async Task Run(MainVM mvm)

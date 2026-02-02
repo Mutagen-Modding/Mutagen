@@ -136,14 +136,27 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
+            if (objData.GameReleaseOptions != null)
+            {
+                sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
+            }
+
             sb.AppendLine("if (headerVersion != null)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine($"this.ModHeader.Stats.Version = headerVersion.Value;");
             }
-            if (objData.GameReleaseOptions != null)
+            sb.AppendLine("else");
+            using (sb.CurlyBrace())
             {
-                sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
+                if (objData.GameReleaseOptions != null)
+                {
+                    sb.AppendLine($"this.ModHeader.Stats.Version = {nameof(GameConstants)}.Get(release.ToGameRelease()).DefaultModHeaderVersion ?? 0f;");
+                }
+                else
+                {
+                    sb.AppendLine($"this.ModHeader.Stats.Version = {nameof(GameConstants)}.Get({nameof(GameRelease)}.{objData.GameCategory}).DefaultModHeaderVersion ?? 0f;");
+                }
             }
 
             using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
