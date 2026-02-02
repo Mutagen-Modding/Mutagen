@@ -80,3 +80,7 @@ Allows you to customize what game folder the environment will be constructed aga
 
 ### WithLoadOrder
 This is a `TransformLoadOrderListings` style call that simply discards any existing load order and injects an explicitly provided one.  Will respect the ordering alongside other `TransformLoadOrderListings` phase calls.
+
+### WithUtf8Encoding
+Convenience method to enable UTF8 encoding when reading embedded (non-localized) strings from mods.
+By default, Bethesda games use Windows-1252 encoding for embedded strings. Some mods (particularly non-English translations) use UTF8 instead. Enable this option when working with mods that contain UTF8-encoded strings with non-Latin characters (Russian, Japanese, Chinese, etc.).
