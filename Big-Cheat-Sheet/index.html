@@ -1,0 +1,3334 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mutagen-modding.github.io/Mutagen/Big-Cheat-Sheet/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../plugins/">
+      
+      
+      <link rel="icon" href="../mutagen-icon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Big Cheat Sheet - Mutagen Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#big-cheat-sheet" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Mutagen Documentation" class="md-header__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../mutagen-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mutagen Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Big Cheat Sheet
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Mutagen Documentation" class="md-nav__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../mutagen-icon.png" alt="logo">
+
+    </a>
+    Mutagen Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Big Cheat Sheet
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Big Cheat Sheet
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Target Game
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparing-the-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing the Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-namespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Namespaces
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#construct-an-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Construct an Environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieve-a-mod-from-a-load-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieve a Mod From a Load Order
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-record-inspection-and-override-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Record Inspection and Override Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#construct-a-modkey" class="md-nav__link">
+    <span class="md-ellipsis">
+      Construct a ModKey
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get-list-of-masters-from-a-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Get List of Masters From A Mod
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#look-up-a-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Look Up a Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-formkey-to-formid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert FormKey to FormID
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-formkey-to-formlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert FormKey to FormLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-if-formlink-is-pointing-to-a-null-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check if FormLink is Pointing to a Null record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-formlink-to-nullableformlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert FormLink to NullableFormLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-majorrecord-to-formlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert MajorRecord to FormLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iterate-winning-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      Iterate Winning Overrides
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iterate-original-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Iterate Original Definitions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#override-a-nested-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Override a Nested Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-generic-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding Generic Records
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-if-a-formlink-points-to-a-specific-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check If A FormLink Points to a Specific Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duplicate-a-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Duplicate a Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detect-if-given-plugin-is-the-winning-override-for-a-specific-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detect if Given Plugin is the Winning Override for a Specific Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-all-major-record-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find all Major Record Types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-all-major-record-types-for-top-level-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find all Major Record Types for Top Level Groups
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enrich-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enrich Exceptions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detect-if-placedobject-is-inside-worldspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detect if PlacedObject is inside Worldspace
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#call-generic-function-by-mod-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Call Generic Function by Mod Type
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../plugins/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Plugin Record Suite
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Plugin Record Suite
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ModKey, FormKey, FormLink
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Importing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Importing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/New-Mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Exporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interfaces (Aspect/Link/Getters)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Copy-Functionality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Copy Functionality
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Equality-Checks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Equality Checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Translation-Masks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Translation Masks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Flags-and-Enums/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flags and Enums
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/AssetLink/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Asset Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Compaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compaction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Create%2C-Duplicate%2C-and-Override/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create, Duplicate, and Override
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Remapping-FormLinks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remapping FormLinks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Printing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Printing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Abstract-Subclassing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abstract Subclassing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Exceeding-Master-Limits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exceeding Master Limits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../plugins/specific/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Specific Records
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_18" id="__nav_3_18_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18">
+            <span class="md-nav__icon md-icon"></span>
+            Specific Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/specific/ExtraData/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ExtraData
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/specific/Globals-And-GameSettings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Globals and GameSettings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18_4">
+        
+          
+          <label class="md-nav__link" for="__nav_3_18_4" id="__nav_3_18_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Oblivion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_18_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18_4">
+            <span class="md-nav__icon md-icon"></span>
+            Oblivion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../game-specific/oblivion/Oblivion-Aspect-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oblivion Aspect Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../game-specific/oblivion/Oblivion-Link-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oblivion Link Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18_5">
+        
+          
+          <label class="md-nav__link" for="__nav_3_18_5" id="__nav_3_18_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Skyrim
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_18_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyrim
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../game-specific/skyrim/Skyrim-Perks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Perks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../game-specific/skyrim/Skyrim-Aspect-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Aspect Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../game-specific/skyrim/Skyrim-Link-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Link Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/Bethesda-Format-Abstraction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bethesda Format Abstraction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/FormKey-Allocation-and-Persistence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormKey Allocation and Persistence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/other-utility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other Utility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../environment/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Environment
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Environment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../environment/Environment-Construction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Environment Construction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../environment/Game-Locations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Game Locations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../linkcache/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Link Cache
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Link Cache
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linkcache/Record-Resolves/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Record Resolves
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linkcache/Scoping-Type/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scoping Type
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linkcache/ModContexts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mod Contexts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linkcache/Previous-Override-Iteration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Previous Override Iteration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../loadorder/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Load Order
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Load Order
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../loadorder/Winning-Overrides/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Winning Override Iteration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives (BSAs)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Strings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Strings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting Familiar with C#
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Familiar with C#
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../familiar/Namespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Namespaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../familiar/Nullability-to-Indicate-Record-Presence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nullability to Indicate Record Presence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Best Practices
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Read-Only/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prefer Readonly Types
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Accessing-Known-Records/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accessing Known Records
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/FormLinks-Target-Getter-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLinks Target Getter Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/FormLinks-vs-EditorID-as-Identifiers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLinks vs EditorID as Identifiers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/FormLink-Nullability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLink Nullability
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Enumerable-Laziness/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enumerable Laziness
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/TryGet-Concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TryGet Concepts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Overlays-Single-Access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Access Overlays Once
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/ITPO-Avoidance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ITPO Avoidance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Reuse-Translation-Masks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reuse Translation Masks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Modifying-Groups-Being-Iterated/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modifying Groups Being Iterated
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Enrich-Exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enriching Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/Mo2-Compatibility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mo2 Compatibility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../wpf/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    WPF Library
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            WPF Library
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wpf/FormKey-Picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormKey Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wpf/ModKey-Picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ModKey Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wpf/Reflection-Powered-Settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reflection Powered Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wpf/Adding-Required-Resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adding Required Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Json
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../lowlevel/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Low Level Tools
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            Low Level Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lowlevel/C%23-Span/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    C# Span
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lowlevel/Header-Structs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Header Structs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lowlevel/Game-Constants/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Game Constants
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lowlevel/Binary-Streams/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binary Streams
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lowlevel/Binary-Utility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binary Utility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Correctness/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Correctness
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      Target Game
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preparing-the-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing the Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-namespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Namespaces
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#construct-an-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Construct an Environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieve-a-mod-from-a-load-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieve a Mod From a Load Order
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-record-inspection-and-override-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Record Inspection and Override Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#construct-a-modkey" class="md-nav__link">
+    <span class="md-ellipsis">
+      Construct a ModKey
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get-list-of-masters-from-a-mod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Get List of Masters From A Mod
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#look-up-a-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Look Up a Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-formkey-to-formid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert FormKey to FormID
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-formkey-to-formlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert FormKey to FormLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-if-formlink-is-pointing-to-a-null-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check if FormLink is Pointing to a Null record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-formlink-to-nullableformlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert FormLink to NullableFormLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-majorrecord-to-formlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert MajorRecord to FormLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iterate-winning-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      Iterate Winning Overrides
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iterate-original-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Iterate Original Definitions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#override-a-nested-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Override a Nested Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-generic-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overriding Generic Records
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-if-a-formlink-points-to-a-specific-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check If A FormLink Points to a Specific Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duplicate-a-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Duplicate a Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detect-if-given-plugin-is-the-winning-override-for-a-specific-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detect if Given Plugin is the Winning Override for a Specific Record
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-all-major-record-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find all Major Record Types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-all-major-record-types-for-top-level-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find all Major Record Types for Top Level Groups
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enrich-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enrich Exceptions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detect-if-placedobject-is-inside-worldspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detect if PlacedObject is inside Worldspace
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#call-generic-function-by-mod-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Call Generic Function by Mod Type
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="big-cheat-sheet">Big Cheat Sheet</h1>
+<h2 id="overview">Overview</h2>
+<p>A massive list of code snippets without much contextual explaination.</p>
+<h3 id="target-game">Target Game</h3>
+<p>Most code snippets will assume Skyrim SE, but code should work for any game, generally.</p>
+<h3 id="preparing-the-examples">Preparing the Examples</h3>
+<p>When <code>...</code> is seen, that generally means the example will not cover how that object might have been made.  <code>...</code> is not actually valid code to be copied and pasted.</p>
+<h3 id="missing-namespaces">Missing Namespaces</h3>
+<p>If you're just copy pasting code, often it will not compile because some required namespaces are missing.  You can have the IDE import them by clicking on the red object in question and activating quick fixes (<code>Ctrl - .</code> in Visual Studio).</p>
+<p><a href="../familiar/Namespaces/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Namespaces</a></p>
+<h2 id="construct-an-environment">Construct an Environment</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Typical</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GameEnvironment</span><span class="p">.</span><span class="n">Typical</span><span class="p">.</span><span class="n">Skyrim</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Data folder is: {state.DataFolderPath}"</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><a href="../environment/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Environments</a></p>
+<h2 id="retrieve-a-mod-from-a-load-order">Retrieve a Mod From a Load Order</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Resolve</label><label for="__tabbed_2_2">TryGet</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myLoadOrder</span><span class="p">.</span><span class="n">ResolveMod</span><span class="p">(</span><span class="s">"MyMod.esp"</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">myLoadOrder</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="s">"MyMod.esp"</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ..</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><a href="../loadorder/#accessing-specific-listings"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Mod Retrieval</a></p>
+<h2 id="basic-record-inspection-and-override-example">Basic Record Inspection and Override Example</h2>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GameEnvironment</span><span class="p">.</span><span class="n">Typical</span><span class="p">.</span><span class="n">Skyrim</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">outgoingPatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">(</span><span class="s">"MyPatch.esp"</span><span class="p">,</span><span class="w"> </span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">readonlyNpc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">env</span><span class="p">.</span><span class="n">LoadOrder</span><span class="p">.</span><span class="n">PriorityOrder</span><span class="p">.</span><span class="n">Npc</span><span class="p">().</span><span class="n">WinningContextOverrides</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Readonly phase</span>
+<span class="w">    </span><span class="c1">// Skip npc if health offset greater than 100</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">readonlyNpc</span><span class="p">.</span><span class="n">Record</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">HealthOffset</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Mutable phase</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readonlyNpc</span><span class="p">.</span><span class="n">GetOrAddAsOverride</span><span class="p">(</span><span class="n">outgoingPatch</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Set all lower health offsets to be at least 100</span>
+<span class="w">    </span><span class="n">npc</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">HealthOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">outgoingPatch</span><span class="p">.</span><span class="n">BeginWrite</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ToPath</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="s">"SomePath"</span><span class="p">,</span><span class="w"> </span><span class="n">outgoingPatch</span><span class="p">.</span><span class="n">ModKey</span><span class="p">.</span><span class="n">FileName</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">LoadOrder</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Write</span><span class="p">();</span>
+</code></pre></div>
+<p><a href="../environment/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Environments</a></p>
+<p><a href="../loadorder/Winning-Overrides/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Winning Overrides</a></p>
+<p><a href="../best-practices/Read-Only/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Readonly Best Practice</a></p>
+<h2 id="construct-a-modkey">Construct a ModKey</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><input id="__tabbed_3_3" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">FromFileName</label><label for="__tabbed_3_2">TryFromFileName</label><label for="__tabbed_3_3">New</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">modKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModKey</span><span class="p">.</span><span class="n">FromFileName</span><span class="p">(</span><span class="s">"Skyrim.esm"</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ModKey</span><span class="p">.</span><span class="n">TryFromFileName</span><span class="p">(</span><span class="s">"Skyrim.esm"</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">modKey</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// If conversion successful.</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// An unsuccessful conversion.</span>
+<span class="w">   </span><span class="c1">// Might occur if there was an extension typo, like "Skyrim.esz"</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">modKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ModKey</span><span class="p">(</span><span class="s">"Skyrim"</span><span class="p">,</span><span class="w"> </span><span class="n">ModType</span><span class="p">.</span><span class="n">Plugin</span><span class="p">);</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/#modkey"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> ModKeys</a></p>
+<h2 id="get-list-of-masters-from-a-mod">Get List of Masters From A Mod</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio"><input id="__tabbed_4_2" name="__tabbed_4" type="radio"><div class="tabbed-labels"><label for="__tabbed_4_1">MasterReferenceCollection</label><label for="__tabbed_4_2">Mod Object</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="kt">var</span><span class="w"> </span><span class="n">masterCollection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MasterReferenceCollection</span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">,</span><span class="w"> </span><span class="n">GameRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"The mod {masterCollection.CurrentMod} has masters:"</span><span class="p">);</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">master</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">masterCollection</span><span class="p">.</span><span class="n">Masters</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"  {master.Master.FileName}"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="hll"><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">CreateFromBinaryOverlay</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">,</span><span class="w"> </span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+</span>
+<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"The mod {mod.ModKey} has masters:"</span><span class="p">);</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">master</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">mod</span><span class="p">.</span><span class="n">ModHeader</span><span class="p">.</span><span class="n">MasterReferences</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"  {master.Master.FileName}"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="look-up-a-record">Look Up a Record</h2>
+<div class="highlight"><pre><span></span><code><span class="n">ILinkCache</span><span class="w"> </span><span class="n">linkCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">formLink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FormLink</span><span class="o">&lt;</span><span class="n">IFormListGetter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">FormKey</span><span class="p">.</span><span class="n">Factory</span><span class="p">(</span><span class="s">"123456:Skyrim.esm"</span><span class="p">));</span>
+
+<span class="hll"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">formLink</span><span class="p">.</span><span class="n">TryResolve</span><span class="p">(</span><span class="n">linkCache</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">foundRecord</span><span class="p">))</span>
+</span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Use the specific record we were looking for</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="../linkcache/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Link Caches</a></p>
+<div class="admonition tip">
+<p class="admonition-title">Avoid Hand Writing FormKeys</p>
+<p>Using the <a href="https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys">FormKey Generator</a> project is a good alternative to hand constructing FormLinks"</p>
+</div>
+<h2 id="convert-formkey-to-formid">Convert FormKey to FormID</h2>
+<p>=== MasterReferenceCollection
+    </p><div class="highlight"><pre><span></span><code><span class="n">FormKey</span><span class="w"> </span><span class="n">formKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">IMasterReferenceCollection</span><span class="w"> </span><span class="n">masterCollection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="hll"><span class="n">FormID</span><span class="w"> </span><span class="n">formID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">masterCollection</span><span class="p">.</span><span class="n">GetFormID</span><span class="p">(</span><span class="n">formKey</span><span class="p">);</span>
+</span></code></pre></div><p></p>
+<p><a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/#formkey"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormKeys</a></p>
+<h2 id="convert-formkey-to-formlink">Convert FormKey to FormLink</h2>
+<div class="highlight"><pre><span></span><code><span class="n">FormKey</span><span class="w"> </span><span class="n">formKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="c1">// NOTE: Typically want to use the "getter" interfaces for FormLinks</span>
+<span class="hll"><span class="kt">var</span><span class="w"> </span><span class="n">npcLink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">formKey</span><span class="p">.</span><span class="n">ToLink</span><span class="o">&lt;</span><span class="n">INpcGetter</span><span class="o">&gt;</span><span class="p">();</span>
+</span></code></pre></div>
+<p><a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/#formlink"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormLinks</a></p>
+<h2 id="check-if-formlink-is-pointing-to-a-null-record">Check if FormLink is Pointing to a Null record</h2>
+<div class="highlight"><pre><span></span><code><span class="n">Npc</span><span class="w"> </span><span class="n">npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="hll"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">npc</span><span class="p">.</span><span class="n">Race</span><span class="p">.</span><span class="n">IsNull</span><span class="p">)</span>
+</span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="../best-practices/FormLink-Nullability/#checking-if-formlink-is-null"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormLink Nullability</a></p>
+<h2 id="convert-formlink-to-nullableformlink">Convert FormLink to NullableFormLink</h2>
+<p>=== SetTo
+    </p><div class="highlight"><pre><span></span><code><span class="n">IFormLinkGetter</span><span class="o">&lt;</span><span class="n">IEquipTypeGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">IFormLinkNullableGetter</span><span class="o">&lt;</span><span class="n">IEquipTypeGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nullableLink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="hll"><span class="n">nullableLink</span><span class="p">.</span><span class="n">SetTo</span><span class="p">(</span><span class="n">link</span><span class="p">);</span>
+</span></code></pre></div>
+=== AsNullable
+    <div class="highlight"><pre><span></span><code><span class="n">IFormLinkGetter</span><span class="o">&lt;</span><span class="n">IEquipTypeGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="hll"><span class="n">IFormLinkNullableGetter</span><span class="o">&lt;</span><span class="n">IEquipTypeGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nullableLink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">link</span><span class="p">.</span><span class="n">AsNullable</span><span class="p">();</span>
+</span></code></pre></div><p></p>
+<p><a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/#formlink"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormLinks</a></p>
+<h2 id="convert-majorrecord-to-formlink">Convert MajorRecord to FormLink</h2>
+<div class="highlight"><pre><span></span><code><span class="n">INpcGetter</span><span class="w"> </span><span class="n">npcGetter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">npcLink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">npcGetter</span><span class="p">.</span><span class="n">ToLink</span><span class="p">();</span>
+</code></pre></div>
+<details class="tip">
+<summary>Always use Getter interfaces</summary>
+<p>If the source major record type is not a getter interface it is recommended to take extra steps to keep the link targeting the getter interface</p>
+<div class="highlight"><pre><span></span><code><span class="n">INpc</span><span class="w"> </span><span class="n">npcSetter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="hll"><span class="kt">var</span><span class="w"> </span><span class="n">npcLink2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">npcSetter</span><span class="p">.</span><span class="n">ToLink</span><span class="o">&lt;</span><span class="n">INpcGetter</span><span class="o">&gt;</span><span class="p">();</span>
+</span><span class="c1">// or</span>
+<span class="hll"><span class="n">IFormLinkGetter</span><span class="o">&lt;</span><span class="n">INpcGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">npcLink3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">npcSetter</span><span class="p">.</span><span class="n">ToLink</span><span class="p">();</span>
+</span></code></pre></div>
+<p><a href="../best-practices/FormLinks-Target-Getter-Interfaces/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Use Getter Interfaces in FormLinks</a></p>
+</details>
+<h2 id="iterate-winning-overrides">Iterate Winning Overrides</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio"><input id="__tabbed_5_2" name="__tabbed_5" type="radio"><div class="tabbed-labels"><label for="__tabbed_5_1">Normal Record</label><label for="__tabbed_5_2">Mod Context</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">ILoadOrder</span><span class="o">&lt;</span><span class="n">ISkyrimMod</span><span class="p">,</span><span class="w"> </span><span class="n">ISkyrimModGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loadOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="hll"><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">keywordGetter</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">loadOrder</span><span class="p">.</span><span class="n">PriorityOrder</span><span class="p">.</span><span class="n">Keywords</span><span class="p">().</span><span class="n">WinningOverrides</span><span class="p">())</span>
+</span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// Process each keyword record's winning override</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">ILoadOrder</span><span class="o">&lt;</span><span class="n">ISkyrimMod</span><span class="p">,</span><span class="w"> </span><span class="n">ISkyrimModGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loadOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">ILinkCache</span><span class="w"> </span><span class="n">linkCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="hll">
+</span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">cellContext</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">loadOrder</span><span class="p">.</span><span class="n">PriorityOrder</span><span class="p">.</span><span class="n">Cell</span><span class="p">().</span><span class="n">WinningContextOverrides</span><span class="p">(</span><span class="n">linkCache</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// Process each cell record's winning override</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><a href="../loadorder/Winning-Overrides/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Winning Overrides</a></p>
+<h2 id="iterate-original-definitions">Iterate Original Definitions</h2>
+<div class="highlight"><pre><span></span><code><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">keywordGetter</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">loadOrder</span><span class="p">.</span><span class="n">ListedOrder</span><span class="p">.</span><span class="n">Keywords</span><span class="p">().</span><span class="n">WinningOverrides</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// Process each keyword record's original definition</span>
+<span class="p">}</span>
+</code></pre></div>
+<details class="reasoning">
+<summary>Reasoning</summary>
+<p>By swapping to ListedOrder, the loop will now iterate over the original definitions of each record.  By viewing the load order "backwards", is sees the original mods as the winning override to return</p>
+</details>
+<h2 id="override-a-nested-record">Override a Nested Record</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio"><input id="__tabbed_6_2" name="__tabbed_6" type="radio"><div class="tabbed-labels"><label for="__tabbed_6_1">Specific Cell</label><label for="__tabbed_6_2">All Cells</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">FormKey</span><span class="w"> </span><span class="n">someFormKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">ILinkCache</span><span class="w"> </span><span class="n">linkCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">ISkyrimMod</span><span class="w"> </span><span class="n">outgoingMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">cellContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linkCache</span><span class="p">.</span><span class="n">ResolveContext</span><span class="o">&lt;</span><span class="n">ICell</span><span class="p">,</span><span class="w"> </span><span class="n">ICellGetter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">someFormKey</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">overrideCell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cellContext</span><span class="p">.</span><span class="n">GetOrAddAsOverride</span><span class="p">(</span><span class="n">outgoingMod</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">ILoadOrder</span><span class="o">&lt;</span><span class="n">ISkyrimMod</span><span class="p">,</span><span class="w"> </span><span class="n">ISkyrimModGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loadOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">FormKey</span><span class="w"> </span><span class="n">someFormKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">ILinkCache</span><span class="w"> </span><span class="n">linkCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">ISkyrimMod</span><span class="w"> </span><span class="n">outgoingMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">cellContext</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">loadOrder</span><span class="p">.</span><span class="n">PriorityOrder</span><span class="p">.</span><span class="n">Cell</span><span class="p">().</span><span class="n">WinningContextOverrides</span><span class="p">(</span><span class="n">linkCache</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">overrideCell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cellContext</span><span class="p">.</span><span class="n">GetOrAddAsOverride</span><span class="p">(</span><span class="n">outgoingMod</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p><a href="../linkcache/ModContexts/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Mod Contexts</a></p>
+<h2 id="overriding-generic-records">Overriding Generic Records</h2>
+<p>When working within generic functions, you need to explicitly provide the mod setter/getter types as well as the record setter/getter types to resolve contexts.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="n">ProcessRecords</span><span class="o">&lt;</span><span class="n">TMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span><span class="p">,</span><span class="w"> </span><span class="n">TMajor</span><span class="p">,</span><span class="w"> </span><span class="n">TMajorGetter</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ILinkCache</span><span class="o">&lt;</span><span class="n">TMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">linkCache</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TMod</span><span class="w"> </span><span class="n">outgoingMod</span><span class="p">,</span>
+<span class="w">    </span><span class="n">IFormLinkGetter</span><span class="o">&lt;</span><span class="n">TMajorGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">targetLink</span><span class="p">)</span>
+<span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="n">TModGetter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IModGetter</span>
+<span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="n">TMod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span>
+<span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="n">TMajorGetter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMajorRecordGetter</span>
+<span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="n">TMajor</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMajorRecord</span><span class="p">,</span><span class="w"> </span><span class="n">TMajorGetter</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">targetLink</span><span class="p">.</span><span class="n">TryResolveContext</span><span class="o">&lt;</span><span class="n">TMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span><span class="p">,</span><span class="w"> </span><span class="n">TMajor</span><span class="p">,</span><span class="w"> </span><span class="n">TMajorGetter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">linkCache</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">context</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">overrideRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">GetOrAddAsOverride</span><span class="p">(</span><span class="n">outgoingMod</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// Modify overrideRecord as needed</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="../linkcache/ModContexts/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Mod Contexts</a></p>
+<h2 id="check-if-a-formlink-points-to-a-specific-record">Check If A FormLink Points to a Specific Record</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:3"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio"><input id="__tabbed_7_2" name="__tabbed_7" type="radio"><input id="__tabbed_7_3" name="__tabbed_7" type="radio"><div class="tabbed-labels"><label for="__tabbed_7_1">FormKey Mapping Library</label><label for="__tabbed_7_2">By FormLink</label><label for="__tabbed_7_3">By FormKey</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p></p><div class="highlight"><pre><span></span><code><span class="n">INpcGetter</span><span class="w"> </span><span class="n">npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Skyrim</span><span class="p">.</span><span class="n">Race</span><span class="p">.</span><span class="n">KhajiitRace</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="n">npc</span><span class="p">.</span><span class="n">Race</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<a href="https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormLink Mapping</a><p></p>
+</div>
+<div class="tabbed-block">
+<p></p><div class="highlight"><pre><span></span><code><span class="n">INpcGetter</span><span class="w"> </span><span class="n">npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">IFormLinkGetter</span><span class="o">&lt;</span><span class="n">INpcGetter</span><span class="o">&gt;</span><span class="w"> </span><span class="n">formLink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="n">npc</span><span class="p">.</span><span class="n">Race</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/#formlink"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormLinks</a><p></p>
+</div>
+<div class="tabbed-block">
+<p></p><div class="highlight"><pre><span></span><code><span class="n">INpcGetter</span><span class="w"> </span><span class="n">npc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="n">FormKey</span><span class="w"> </span><span class="n">formKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">formKey</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="n">npc</span><span class="p">.</span><span class="n">Race</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<a href="../plugins/ModKey%2C%20FormKey%2C%20FormLink/#formkey"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormKeys</a><p></p>
+</div>
+</div>
+</div>
+<h2 id="duplicate-a-record">Duplicate a Record</h2>
+<p>Copy an existing record with a new FormKey</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio"><input id="__tabbed_8_2" name="__tabbed_8" type="radio"><div class="tabbed-labels"><label for="__tabbed_8_1">Same Source Mod</label><label for="__tabbed_8_2">From Target Mod</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">dup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">someRecord</span><span class="p">.</span><span class="n">Duplicate</span><span class="p">(</span><span class="n">newFormKey</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="tabbed-set tabbed-alternate" data-tabs="9:3"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio"><input id="__tabbed_9_2" name="__tabbed_9" type="radio"><input id="__tabbed_9_3" name="__tabbed_9" type="radio"><div class="tabbed-labels"><label for="__tabbed_9_1">Next Available FormKey</label><label for="__tabbed_9_2">Specific FormKey</label><label for="__tabbed_9_3">Persistence Support</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><code>cs { .cs hl_lines="2" }
+Npc someRecord = ...;
+var dup = someMod.Npcs.DuplicateInAsNewRecord(someRecord);</code></p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">FormKey</span><span class="w"> </span><span class="n">desiredFormKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="hll"><span class="kt">var</span><span class="w"> </span><span class="n">dup2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">someMod</span><span class="p">.</span><span class="n">Npcs</span><span class="p">.</span><span class="n">DuplicateInAsNewRecord</span><span class="p">(</span><span class="n">desiredFormKey</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kt">string</span><span class="w"> </span><span class="n">someUniqueEditorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="hll"><span class="kt">var</span><span class="w"> </span><span class="n">dup3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">someMod</span><span class="p">.</span><span class="n">Npcs</span><span class="p">.</span><span class="n">DuplicateInAsNewRecord</span><span class="p">(</span><span class="n">someUniqueEditorId</span><span class="p">);</span>
+</span></code></pre></div>
+<p><a href="../plugins/FormKey-Allocation-and-Persistence/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> FormKey Persistence</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="../plugins/Create%2C-Duplicate%2C-and-Override/#by-duplication"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Duplication</a></p>
+<h2 id="detect-if-given-plugin-is-the-winning-override-for-a-specific-record">Detect if Given Plugin is the Winning Override for a Specific Record</h2>
+<p>There might be several ways to accomplish this, depending on the gritty situation, but here is one route:
+</p><div class="highlight"><pre><span></span><code><span class="c1">// Use the link cache to locate the winning record, with additional context</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">formLinkOfRecordOfInterest</span><span class="p">.</span><span class="n">TryResolveSimpleContext</span><span class="p">(</span><span class="n">someLinkCache</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">context</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// The context's ModKey will be from the record that contained it</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">ModKey</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">givenPlugin</span><span class="p">.</span><span class="n">ModKey</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// givenPlugin was the winningmost override for the record!</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Some other mod is the winningmost override for this record:  context.ModKey will have which one that is</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p></p>
+<h2 id="find-all-major-record-types">Find all Major Record Types</h2>
+<div class="highlight"><pre><span></span><code><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">recTypes</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">MajorRecordTypeEnumerator</span><span class="p">.</span><span class="n">GetMajorRecordTypesFor</span><span class="p">(</span><span class="n">GameCategory</span><span class="p">.</span><span class="n">Skyrim</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Getter: {recTypes.GetterType}"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Setter: {recTypes.SetterType}"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Class: {recTypes.ClassType}"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="find-all-major-record-types-for-top-level-groups">Find all Major Record Types for Top Level Groups</h2>
+<div class="highlight"><pre><span></span><code><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">recTypes</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">MajorRecordTypeEnumerator</span><span class="p">.</span><span class="n">GetTopLevelMajorRecordTypesFor</span><span class="p">(</span><span class="n">GameCategory</span><span class="p">.</span><span class="n">Skyrim</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Getter: {recTypes.GetterType}"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Setter: {recTypes.SetterType}"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Class: {recTypes.ClassType}"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="enrich-exceptions">Enrich Exceptions</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">majorRecordContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="k">try</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Access majorRecordContext and potentially throw</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">RecordException</span><span class="p">.</span><span class="n">Enrich</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">majorRecordContext</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="../best-practices/Enrich-Exceptions/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Exception Enrichment</a></p>
+<h2 id="detect-if-placedobject-is-inside-worldspace">Detect if PlacedObject is inside Worldspace</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">loadOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">linkCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">placedObjectContext</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">loadOrder</span><span class="p">.</span><span class="n">PriorityOrder</span><span class="p">.</span><span class="n">PlacedObject</span><span class="p">().</span><span class="n">WinningContextOverrides</span><span class="p">(</span><span class="n">linkCache</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Checking placed object: {placedObjectContext.Record}"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">placedObjectContext</span><span class="p">.</span><span class="n">TryGetParent</span><span class="o">&lt;</span><span class="n">IWorldspaceGetter</span><span class="o">&gt;</span><span class="p">(</span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">worldspace</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Was in worldspace: {worldspace}"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="../linkcache/ModContexts/#parent-concepts"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Mod Context Parents</a></p>
+<h2 id="call-generic-function-by-mod-type">Call Generic Function by Mod Type</h2>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DoSomeThings</span><span class="p">(</span><span class="n">IMod</span><span class="w"> </span><span class="n">mod</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ModToGenericCallHelper</span><span class="p">.</span><span class="n">InvokeFromCategory</span><span class="p">(</span>
+<span class="w">            </span><span class="k">this</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mod</span><span class="p">.</span><span class="n">GameRelease</span><span class="p">.</span><span class="n">ToCategory</span><span class="p">(),</span>
+<span class="w">            </span><span class="k">typeof</span><span class="p">(</span><span class="n">MyClass</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">DoSomeThingsGeneric</span><span class="p">),</span><span class="w"> </span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">NonPublic</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="kt">object</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="n">DoSomeThingsGeneric</span><span class="o">&lt;</span><span class="n">TMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TMod</span><span class="w"> </span><span class="n">mod</span><span class="p">)</span>
+<span class="w">        </span><span class="k">where</span><span class="w"> </span><span class="n">TModGetter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IModGetter</span>
+<span class="w">        </span><span class="k">where</span><span class="w"> </span><span class="n">TMod</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span><span class="p">,</span><span class="w"> </span><span class="n">IMajorRecordContextEnumerable</span><span class="o">&lt;</span><span class="n">TMod</span><span class="p">,</span><span class="w"> </span><span class="n">TModGetter</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Actual logic</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="../plugins/other-utility/#common-to-generic-crossover"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Common to Generic Crossover</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Mutagen-Modding" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://discord.gg/GdKZ3SH" target="_blank" rel="noopener" title="discord.gg" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tooltips", "content.code.copy", "navigation.instant", "navigation.tracking", "navigation.indexes", "navigation.path"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

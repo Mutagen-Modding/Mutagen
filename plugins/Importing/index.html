@@ -1,0 +1,3655 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mutagen-modding.github.io/Mutagen/plugins/Importing/">
+      
+      
+        <link rel="prev" href="../ModKey%2C%20FormKey%2C%20FormLink/">
+      
+      
+        <link rel="next" href="../New-Mods/">
+      
+      
+      <link rel="icon" href="../../mutagen-icon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Importing - Mutagen Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#importing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mutagen Documentation" class="md-header__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../../mutagen-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mutagen Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Importing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Mutagen Documentation" class="md-nav__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../../mutagen-icon.png" alt="logo">
+
+    </a>
+    Mutagen Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Big-Cheat-Sheet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Big Cheat Sheet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Plugin Record Suite
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Plugin Record Suite
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ModKey%2C%20FormKey%2C%20FormLink/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ModKey, FormKey, FormLink
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Importing
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Importing
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read Only
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Read Only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-up-front-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Up Front Work
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-persistent-references-to-records-or-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Persistent References to Records or Memory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requires-an-open-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requires an Open Stream
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mutable
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flexible-game-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flexible Game Target
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#builder-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      Builder Pattern
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Builder Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source Selection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Source Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frompath" class="md-nav__link">
+    <span class="md-ellipsis">
+      FromPath
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fromstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      FromStream
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fromstreamfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      FromStreamFactory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Folder
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Folder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withdatafolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithDataFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withdefaultdatafolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithDefaultDataFolder
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-file-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split File Support
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Split File Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withautosplitsupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithAutoSplitSupport
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-order-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Load Order Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Load Order Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withloadorder-modkeys" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithLoadOrder (ModKeys)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withdefaultloadorder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithDefaultLoadOrder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withloadorderfromheadermasters" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithLoadOrderFromHeaderMasters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withlinkcache" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithLinkCache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withnoloadorder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithNoLoadOrder
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      String Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="String Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withstringsfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithStringsFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withtargetlanguage" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithTargetLanguage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withencoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithEncoding
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parallel-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallel Processing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutable-specific-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mutable-Specific Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mutable-Specific Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withgroupmask" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithGroupMask
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#witherrormask" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithErrorMask
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#throwifunknownsubrecord" class="md-nav__link">
+    <span class="md-ellipsis">
+      ThrowIfUnknownSubrecord
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withfilesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithFileSystem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfield-and-separated-master-games" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starfield and Separated Master Games
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Starfield and Separated Master Games">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withknownmasters" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithKnownMasters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separated-load-order-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Separated Load Order Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group Masks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../New-Mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Exporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interfaces (Aspect/Link/Getters)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Copy-Functionality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Copy Functionality
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Equality-Checks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Equality Checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Translation-Masks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Translation Masks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flags-and-Enums/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flags and Enums
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AssetLink/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Asset Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Compaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compaction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Create%2C-Duplicate%2C-and-Override/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create, Duplicate, and Override
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Remapping-FormLinks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remapping FormLinks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Printing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Printing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Abstract-Subclassing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abstract Subclassing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Exceeding-Master-Limits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exceeding Master Limits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../specific/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Specific Records
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_18" id="__nav_3_18_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18">
+            <span class="md-nav__icon md-icon"></span>
+            Specific Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specific/ExtraData/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ExtraData
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specific/Globals-And-GameSettings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Globals and GameSettings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18_4">
+        
+          
+          <label class="md-nav__link" for="__nav_3_18_4" id="__nav_3_18_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Oblivion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_18_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18_4">
+            <span class="md-nav__icon md-icon"></span>
+            Oblivion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/oblivion/Oblivion-Aspect-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oblivion Aspect Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/oblivion/Oblivion-Link-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oblivion Link Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18_5">
+        
+          
+          <label class="md-nav__link" for="__nav_3_18_5" id="__nav_3_18_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Skyrim
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_18_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyrim
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Perks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Perks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Aspect-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Aspect Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Link-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Link Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Bethesda-Format-Abstraction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bethesda Format Abstraction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FormKey-Allocation-and-Persistence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormKey Allocation and Persistence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other-utility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other Utility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../environment/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Environment
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Environment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/Environment-Construction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Environment Construction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/Game-Locations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Game Locations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../linkcache/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Link Cache
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Link Cache
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Record-Resolves/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Record Resolves
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Scoping-Type/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scoping Type
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/ModContexts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mod Contexts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Previous-Override-Iteration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Previous Override Iteration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../loadorder/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Load Order
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Load Order
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../loadorder/Winning-Overrides/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Winning Override Iteration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives (BSAs)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Strings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting Familiar with C#
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Familiar with C#
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../familiar/Namespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Namespaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../familiar/Nullability-to-Indicate-Record-Presence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nullability to Indicate Record Presence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Best Practices
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Read-Only/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prefer Readonly Types
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Accessing-Known-Records/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accessing Known Records
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLinks-Target-Getter-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLinks Target Getter Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLinks-vs-EditorID-as-Identifiers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLinks vs EditorID as Identifiers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLink-Nullability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLink Nullability
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Enumerable-Laziness/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enumerable Laziness
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/TryGet-Concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TryGet Concepts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Overlays-Single-Access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Access Overlays Once
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/ITPO-Avoidance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ITPO Avoidance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Reuse-Translation-Masks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reuse Translation Masks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Modifying-Groups-Being-Iterated/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modifying Groups Being Iterated
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Enrich-Exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enriching Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Mo2-Compatibility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mo2 Compatibility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../wpf/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    WPF Library
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            WPF Library
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/FormKey-Picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormKey Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/ModKey-Picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ModKey Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/Reflection-Powered-Settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reflection Powered Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/Adding-Required-Resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adding Required Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Json
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../lowlevel/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Low Level Tools
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            Low Level Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/C%23-Span/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    C# Span
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Header-Structs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Header Structs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Game-Constants/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Game Constants
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Binary-Streams/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binary Streams
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Binary-Utility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binary Utility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Correctness/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Correctness
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read Only
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Read Only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-up-front-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Up Front Work
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-persistent-references-to-records-or-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      No Persistent References to Records or Memory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requires-an-open-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requires an Open Stream
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mutable
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flexible-game-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flexible Game Target
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#builder-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      Builder Pattern
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Builder Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source Selection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Source Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frompath" class="md-nav__link">
+    <span class="md-ellipsis">
+      FromPath
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fromstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      FromStream
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fromstreamfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      FromStreamFactory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Folder
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Folder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withdatafolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithDataFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withdefaultdatafolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithDefaultDataFolder
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-file-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split File Support
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Split File Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withautosplitsupport" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithAutoSplitSupport
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-order-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Load Order Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Load Order Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withloadorder-modkeys" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithLoadOrder (ModKeys)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withdefaultloadorder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithDefaultLoadOrder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withloadorderfromheadermasters" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithLoadOrderFromHeaderMasters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withlinkcache" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithLinkCache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withnoloadorder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithNoLoadOrder
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      String Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="String Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withstringsfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithStringsFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withtargetlanguage" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithTargetLanguage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withencoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithEncoding
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parallel-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallel Processing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutable-specific-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mutable-Specific Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mutable-Specific Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withgroupmask" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithGroupMask
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#witherrormask" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithErrorMask
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#throwifunknownsubrecord" class="md-nav__link">
+    <span class="md-ellipsis">
+      ThrowIfUnknownSubrecord
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withfilesystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithFileSystem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfield-and-separated-master-games" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starfield and Separated Master Games
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Starfield and Separated Master Games">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#withknownmasters" class="md-nav__link">
+    <span class="md-ellipsis">
+      WithKnownMasters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separated-load-order-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Separated Load Order Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Group Masks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="importing">Importing</h1>
+<p>All Mods are generated with the ability to create themselves from their binary plugin format (esp/esm/esl).</p>
+<h2 id="read-only">Read Only</h2>
+<p>By default, mods are readonly.  This comes with a lot of speed and memory usage upsides.  Only fields that are accessed get parsed, which saves a lot of time and work.</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OblivionMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OblivionRelease</span><span class="p">.</span><span class="n">Oblivion</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+<span class="c1">// Code accessing the mod</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Preferred</p>
+<p>Use readonly when possible, up until you want to mutate records.</p>
+<p><a href="../Create%2C-Duplicate%2C-and-Override/#overriding-records"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Mutation Patterns</a></p>
+</div>
+<h3 id="no-up-front-work">No Up Front Work</h3>
+<p>With readonly objects, a mod object is returned almost immediately for use after having done almost no parsing.  As the user accesses members of the <code>Mod</code>, the parsing is done on demand for only the members accessed.</p>
+<h3 id="no-persistent-references-to-records-or-memory">No Persistent References to Records or Memory</h3>
+<p>Readonly systems keep no internal references to any record objects.  This means that when a user is done working with something and discards it, the GC is allowed to immediately clean it up.</p>
+<h3 id="requires-an-open-stream">Requires an Open Stream</h3>
+<p>Readonly objects keep reference to an open stream internally, so they can read when accessed.</p>
+<div class="admonition info">
+<p class="admonition-title">Disposable</p>
+<p>Binary Overlay objects implement <code>IDisposable</code>.  Putting them in <code>using</code> statements to close when appropriate is good practice.</p>
+</div>
+<h3 id="best-practices">Best Practices</h3>
+<div class="admonition warning">
+<p class="admonition-title">Avoid Repeated Access</p>
+<p>The Overlay pattern has the downside that repeated access of properties means repeated parsing of the same data.</p>
+</div>
+<p><a href="../../best-practices/Overlays-Single-Access/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Overlay Best Practices</a></p>
+<h2 id="mutable">Mutable</h2>
+<p>A normal C# object can be created containing all of a mod's data.  This is generally be reserved for when constructing or modifying records for output.</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OblivionMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OblivionRelease</span><span class="p">.</span><span class="n">Oblivion</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<p>The only difference is we add <code>Mutable()</code>, which returns a mutable variant of the mod object, which is fulfilled in a completely different way. The entire mod will have been loaded into memory via classes created to store all the various fields and records.   You can then begin to interact with the mod object.</p>
+<div class="admonition warning">
+<p class="admonition-title">Heavier Load</p>
+<p>This route spends more time and memory loading in everything up front, even the data you will not be interacting with.</p>
+<p>If you don't need to modify the mod, consider instead:</p>
+<p><a href="#read-only"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> Read Only Mod Importing</a></p>
+</div>
+<h2 id="flexible-game-target">Flexible Game Target</h2>
+<p>In more complex setups, often the game type is not known at compile time.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Untyped</label><label for="__tabbed_1_2">Generic</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">readOnlyInputMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModFactory</span><span class="p">.</span><span class="n">ImportGetter</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">,</span><span class="w"> </span><span class="n">release</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">mutableMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModFactory</span><span class="p">.</span><span class="n">ImportSetter</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">,</span><span class="w"> </span><span class="n">release</span><span class="p">);</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModFactory</span><span class="o">&lt;</span><span class="n">TMod</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Importer</span><span class="p">(</span><span class="n">ModKey</span><span class="p">.</span><span class="n">FromFileName</span><span class="p">(</span><span class="s">"MyMod.esp"</span><span class="p">),</span><span class="w"> </span><span class="n">release</span><span class="p">);</span>
+</code></pre></div>
+<div class="admonition success">
+<p class="admonition-title">Dispose Appropriately</p>
+<p>Binary overlays are disposable, as they can keep streams open as they are accessed.  Make sure to utilize <code>using</code> statements to dispose of them appropriately.</p>
+</div>
+</div>
+</div>
+</div>
+<h2 id="builder-pattern">Builder Pattern</h2>
+<p>All mod importing in Mutagen uses a fluent builder pattern that allows you to customize the import process. The builder pattern starts with <code>Create()</code> and ends with <code>Construct()</code>, with various configuration methods in between.</p>
+<h3 id="basic-structure">Basic Structure</h3>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OblivionMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OblivionRelease</span><span class="p">.</span><span class="n">Oblivion</span><span class="p">)</span><span class="w">  </span><span class="c1">// Start builder</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">)</span><span class="w">                                 </span><span class="c1">// Specify source</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span><span class="w">                                        </span><span class="c1">// Execute import</span>
+</code></pre></div>
+<p>The builder pattern is designed to guide you through the import process with a progressive API that requires certain decisions at specific points.</p>
+<h3 id="source-selection">Source Selection</h3>
+<p>The first required step is to specify where to load the mod from.</p>
+<h4 id="frompath">FromPath</h4>
+<p>Loads a mod from a file path. This is the most common approach.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ModPath</span><span class="p">(</span><span class="n">modKey</span><span class="p">,</span><span class="w"> </span><span class="n">pathToModFile</span><span class="p">))</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="fromstream">FromStream</h4>
+<p>Loads a mod from an open stream. The stream must remain open for the lifetime of the overlay.</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">OpenRead</span><span class="p">(</span><span class="n">pathToModFile</span><span class="p">);</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromStream</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span><span class="w"> </span><span class="n">modKey</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Stream Lifetime</p>
+<p>For readonly imports, the stream must remain open as data is read on-demand. For mutable imports, the stream can be closed after <code>Construct()</code> completes.</p>
+</div>
+<h4 id="fromstreamfactory">FromStreamFactory</h4>
+<p>Loads a mod using a stream factory that creates new streams on demand. Useful for readonly imports that need multiple concurrent streams.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromStreamFactory</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">OpenRead</span><span class="p">(</span><span class="n">pathToModFile</span><span class="p">),</span><span class="w"> </span><span class="n">modKey</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Stream Factory Requirements</p>
+<p>The factory must return a new stream each time it is called. Returning the same stream instance will cause errors.</p>
+</div>
+<h3 id="data-folder">Data Folder</h3>
+<h4 id="withdatafolder">WithDataFolder</h4>
+<p>Specifies the data folder location for loading master files.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">masterKey1</span><span class="p">,</span><span class="w"> </span><span class="n">masterKey2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDataFolder</span><span class="p">(</span><span class="n">dataFolderPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="withdefaultdatafolder">WithDefaultDataFolder</h4>
+<p>Uses the game's installed data folder location automatically.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDefaultDataFolder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="split-file-support">Split File Support</h3>
+<h4 id="withautosplitsupport">WithAutoSplitSupport</h4>
+<p>Enables automatic detection and merging of split mod files (e.g., <code>ModName_1.esp</code>, <code>ModName_2.esp</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplitSupport</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Path Only</p>
+<p>Auto-split support only works with <code>FromPath</code>. Using <code>FromStream</code> with this option will throw an exception.</p>
+</div>
+<p><a href="../Exceeding-Master-Limits/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> More on Split Files</a></p>
+<h3 id="load-order-configuration">Load Order Configuration</h3>
+<p>For most games and situations, <strong>load order is not required</strong> for reading mods. Load order information is only necessary in these specific cases:</p>
+<ul>
+<li><strong>Starfield</strong> - Required for proper FormID resolution with separated masters <a href="#starfield-and-separated-master-games"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> See Starfield section</a></li>
+<li><strong>ExtraData Usage</strong> - Suggested if your code will interact with ExtraData <a href="../specific/ExtraData/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span> ExtraData documentation</a></li>
+</ul>
+<p>For all other situations, you can safely omit load order configuration.</p>
+<h4 id="withloadorder-modkeys">WithLoadOrder (ModKeys)</h4>
+<p>Provides a list of ModKeys to load from the data folder.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">masterKey1</span><span class="p">,</span><span class="w"> </span><span class="n">masterKey2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDataFolder</span><span class="p">(</span><span class="n">dataFolderPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="withdefaultloadorder">WithDefaultLoadOrder</h4>
+<p>Uses the game's default load order from the installed game location.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDefaultLoadOrder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="withloadorderfromheadermasters">WithLoadOrderFromHeaderMasters</h4>
+<p>Reads the master list from the mod header and loads those specific mods.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrderFromHeaderMasters</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDataFolder</span><span class="p">(</span><span class="n">dataFolderPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="withlinkcache">WithLinkCache</h4>
+<p>Provides an existing LinkCache instead of constructing one from a load order.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">linkCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mods</span><span class="p">.</span><span class="n">ToImmutableLinkCache</span><span class="p">();</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLinkCache</span><span class="p">(</span><span class="n">linkCache</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Mutual Exclusivity</p>
+<p><code>WithLinkCache</code> and <code>WithLoadOrder</code> methods are mutually exclusive. Use one or the other, not both.</p>
+</div>
+<h4 id="withnoloadorder">WithNoLoadOrder</h4>
+<p>Skips load order processing entirely. Use with caution.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithNoLoadOrder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<div class="admonition danger">
+<p class="admonition-title">Potential Corruption</p>
+<p>For Starfield and other separated master games, using <code>WithNoLoadOrder</code> can cause data corruption if the mod references light or medium masters.</p>
+</div>
+<h3 id="string-configuration">String Configuration</h3>
+<p>Control how strings and translations are handled during import.</p>
+<h4 id="withstringsfolder">WithStringsFolder</h4>
+<p>Overrides the default strings folder location.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithStringsFolder</span><span class="p">(</span><span class="n">customStringsFolder</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="withtargetlanguage">WithTargetLanguage</h4>
+<p>Sets the target language for TranslatedString fields.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithTargetLanguage</span><span class="p">(</span><span class="n">Language</span><span class="p">.</span><span class="n">French</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h4 id="withencoding">WithEncoding</h4>
+<p>Overrides the encoding provider used for string parsing.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithEncoding</span><span class="p">(</span><span class="n">customEncodingProvider</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="performance-options">Performance Options</h3>
+<h4 id="parallel-processing">Parallel Processing</h4>
+<p>Enables or disables parallel processing during import. Enabled by default for mutable imports.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Enable parallel processing</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Parallel</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+
+<span class="c1">// Disable parallel processing</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SingleThread</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="mutable-specific-options">Mutable-Specific Options</h3>
+<p>These options are only available when using <code>.Mutable()</code>.</p>
+<h4 id="withgroupmask">WithGroupMask</h4>
+<p>Limits which record types are imported, reducing memory usage and load time.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OblivionMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OblivionRelease</span><span class="p">.</span><span class="n">Oblivion</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithGroupMask</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">GroupMask</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Potions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<span class="w">        </span><span class="n">NPCs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Generally Unused</p>
+<p>Generally this feature is unused, as <a href="#read-only">Binary Overlays</a> handle the situation of selectively accessing data much better.</p>
+</div>
+<h4 id="witherrormask">WithErrorMask</h4>
+<p>Adds error tracking to help debug issues during import.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">errorMask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ErrorMaskBuilder</span><span class="p">();</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithErrorMask</span><span class="p">(</span><span class="n">errorMask</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+
+<span class="c1">// Check for errors</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">errorMask</span><span class="p">.</span><span class="n">Overall</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">errorMask</span><span class="p">.</span><span class="n">Overall</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="error-handling">Error Handling</h3>
+<h4 id="throwifunknownsubrecord">ThrowIfUnknownSubrecord</h4>
+<p>Controls whether unknown subrecords cause exceptions.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ThrowIfUnknownSubrecord</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="advanced-options">Advanced Options</h3>
+<h4 id="withfilesystem">WithFileSystem</h4>
+<p>Provides a custom file system implementation for testing or virtualization.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithFileSystem</span><span class="p">(</span><span class="n">customFileSystem</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="starfield-and-separated-master-games">Starfield and Separated Master Games</h3>
+<p>Starfield and other games with separated master load orders require special handling for light and medium masters.</p>
+<h4 id="withknownmasters">WithKnownMasters</h4>
+<p>Provides master style information without requiring the files to be present in the data folder.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">knownMaster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KeyedMasterStyle</span><span class="p">(</span><span class="n">masterKey</span><span class="p">,</span><span class="w"> </span><span class="n">MasterStyle</span><span class="p">.</span><span class="n">Medium</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StarfieldMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">StarfieldRelease</span><span class="p">.</span><span class="n">Starfield</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithKnownMasters</span><span class="p">(</span><span class="n">knownMaster</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithNoLoadOrder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<p>This is useful when you have master information but the actual master files aren't available in the data folder.</p>
+<h4 id="separated-load-order-requirements">Separated Load Order Requirements</h4>
+<p>For Starfield, you must provide either:</p>
+<ol>
+<li>
+<p>A load order with mod objects (contains master style info):
+   </p><div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StarfieldMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">StarfieldRelease</span><span class="p">.</span><span class="n">Starfield</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">masterMod1</span><span class="p">,</span><span class="w"> </span><span class="n">masterMod2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div><p></p>
+</li>
+<li>
+<p>A load order with ModKeys and a data folder (to read master style from files):
+   </p><div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StarfieldMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">StarfieldRelease</span><span class="p">.</span><span class="n">Starfield</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">masterKey1</span><span class="p">,</span><span class="w"> </span><span class="n">masterKey2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithDataFolder</span><span class="p">(</span><span class="n">dataFolderPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div><p></p>
+</li>
+<li>
+<p>Known masters with no load order (for controlled scenarios):
+   </p><div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StarfieldMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">StarfieldRelease</span><span class="p">.</span><span class="n">Starfield</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithKnownMasters</span><span class="p">(</span><span class="n">knownMaster1</span><span class="p">,</span><span class="w"> </span><span class="n">knownMaster2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithNoLoadOrder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div><p></p>
+</li>
+</ol>
+<div class="admonition danger">
+<p class="admonition-title">Required for Starfield</p>
+<p>Failing to provide proper master information for Starfield mods will result in corrupted FormID resolution when the mod references light or medium masters.</p>
+</div>
+<h3 id="group-masks">Group Masks</h3>
+<p>Often, users are not interested in all records that a mod contains.  Group Masks are an optional parameter that allows you to specify which record types you are interested in importing.
+</p><div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OblivionMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OblivionRelease</span><span class="p">.</span><span class="n">Oblivion</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">pathToMod</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithGroupMask</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">GroupMask</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Potions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<span class="w">        </span><span class="n">NPCs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+This import call will only process and import Potions and NPCs.<p></p>
+<div class="admonition info">
+<p class="admonition-title">Generally Unused</p>
+<p>Generally this feature is unused, as <a href="#read-only">Binary Overlays</a> handle the situation of selectively accessing data much better.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Mutagen-Modding" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://discord.gg/GdKZ3SH" target="_blank" rel="noopener" title="discord.gg" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "content.code.copy", "navigation.instant", "navigation.tracking", "navigation.indexes", "navigation.path"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

@@ -1,0 +1,3124 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mutagen-modding.github.io/Mutagen/plugins/Exceeding-Master-Limits/">
+      
+      
+        <link rel="prev" href="../Abstract-Subclassing/">
+      
+      
+        <link rel="next" href="../specific/">
+      
+      
+      <link rel="icon" href="../../mutagen-icon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Exceeding Master Limits - Mutagen Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bcfcd587.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#exceeding-master-limits" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Mutagen Documentation" class="md-header__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../../mutagen-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mutagen Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Exceeding Master Limits
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Mutagen Documentation" class="md-nav__button md-logo" aria-label="Mutagen Documentation" data-md-component="logo">
+      
+  <img src="../../mutagen-icon.png" alt="logo">
+
+    </a>
+    Mutagen Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Mutagen-Modding/Mutagen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    Mutagen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Big-Cheat-Sheet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Big Cheat Sheet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Plugin Record Suite
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Plugin Record Suite
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ModKey%2C%20FormKey%2C%20FormLink/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ModKey, FormKey, FormLink
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Importing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Importing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../New-Mods/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Mods
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Exporting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Exporting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interfaces (Aspect/Link/Getters)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Copy-Functionality/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Copy Functionality
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Equality-Checks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Equality Checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Translation-Masks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Translation Masks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Flags-and-Enums/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flags and Enums
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AssetLink/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Asset Links
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Compaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compaction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Create%2C-Duplicate%2C-and-Override/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create, Duplicate, and Override
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Remapping-FormLinks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Remapping FormLinks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Printing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Printing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Abstract-Subclassing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Abstract Subclassing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Exceeding Master Limits
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Exceeding Master Limits
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Naming Convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-with-auto-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      Writing with Auto-Split
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing with Auto-Split">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-the-builder-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Builder (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-split-mods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Split Mods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Split Mods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-the-builder-recommended_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Builder (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detecting-split-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detecting Split Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-multimodfilereader" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using MultiModFileReader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-modfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using ModFactory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using ModFactory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-split-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic Split Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-split-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Split Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-modimporter-di" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using ModImporter (DI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Important Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Important Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read-only-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read-Only Result
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-disposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Disposal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-order-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Load Order Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#round-trip-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Round-Trip Support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-record-exceeding-master-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Record Exceeding Master Limit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splitmodexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      SplitModException
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toomanymastersexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      TooManyMastersException
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../specific/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Specific Records
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_18" id="__nav_3_18_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18">
+            <span class="md-nav__icon md-icon"></span>
+            Specific Records
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specific/ExtraData/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ExtraData
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specific/Globals-And-GameSettings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Globals and GameSettings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18_4">
+        
+          
+          <label class="md-nav__link" for="__nav_3_18_4" id="__nav_3_18_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Oblivion
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_18_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18_4">
+            <span class="md-nav__icon md-icon"></span>
+            Oblivion
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/oblivion/Oblivion-Aspect-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oblivion Aspect Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/oblivion/Oblivion-Link-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Oblivion Link Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_18_5">
+        
+          
+          <label class="md-nav__link" for="__nav_3_18_5" id="__nav_3_18_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Skyrim
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_18_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_18_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyrim
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Perks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Perks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Aspect-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Aspect Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../game-specific/skyrim/Skyrim-Link-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyrim Link Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Bethesda-Format-Abstraction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bethesda Format Abstraction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FormKey-Allocation-and-Persistence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormKey Allocation and Persistence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other-utility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other Utility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../environment/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Environment
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Environment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/Environment-Construction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Environment Construction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/Game-Locations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Game Locations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../linkcache/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Link Cache
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Link Cache
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Record-Resolves/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Record Resolves
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Scoping-Type/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scoping Type
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/ModContexts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mod Contexts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linkcache/Previous-Override-Iteration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Previous Override Iteration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../loadorder/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Load Order
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Load Order
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../loadorder/Winning-Overrides/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Winning Override Iteration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Archives/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archives (BSAs)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Strings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9">
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Getting Familiar with C#
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Familiar with C#
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../familiar/Namespaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Namespaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../familiar/Nullability-to-Indicate-Record-Presence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nullability to Indicate Record Presence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10">
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Best Practices
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Read-Only/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prefer Readonly Types
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Accessing-Known-Records/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Accessing Known Records
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLinks-Target-Getter-Interfaces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLinks Target Getter Interfaces
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLinks-vs-EditorID-as-Identifiers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLinks vs EditorID as Identifiers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/FormLink-Nullability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormLink Nullability
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Enumerable-Laziness/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enumerable Laziness
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/TryGet-Concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TryGet Concepts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Overlays-Single-Access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Access Overlays Once
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/ITPO-Avoidance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ITPO Avoidance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Reuse-Translation-Masks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reuse Translation Masks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Modifying-Groups-Being-Iterated/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modifying Groups Being Iterated
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Enrich-Exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Enriching Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/Mo2-Compatibility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mo2 Compatibility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../wpf/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    WPF Library
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            WPF Library
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/FormKey-Picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FormKey Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/ModKey-Picker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ModKey Picker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/Reflection-Powered-Settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reflection Powered Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wpf/Adding-Required-Resources/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adding Required Resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Json
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13">
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../lowlevel/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Low Level Tools
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            Low Level Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/C%23-Span/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    C# Span
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Header-Structs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Header Structs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Game-Constants/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Game Constants
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Binary-Streams/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binary Streams
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lowlevel/Binary-Utility/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binary Utility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Correctness/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Correctness
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Naming Convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-with-auto-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      Writing with Auto-Split
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing with Auto-Split">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-the-builder-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Builder (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-split-mods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Split Mods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Split Mods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-the-builder-recommended_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Builder (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detecting-split-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detecting Split Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-multimodfilereader" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using MultiModFileReader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-modfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using ModFactory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using ModFactory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-split-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic Split Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-split-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Split Detection
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-modimporter-di" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using ModImporter (DI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Important Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Important Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read-only-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read-Only Result
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-disposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Disposal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-order-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Load Order Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#round-trip-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Round-Trip Support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-record-exceeding-master-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Record Exceeding Master Limit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splitmodexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      SplitModException
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toomanymastersexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      TooManyMastersException
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="exceeding-master-limits">Exceeding Master Limits</h1>
+<h2 id="overview">Overview</h2>
+<p>Bethesda plugins have a hard limit of 255 masters per mod file. When a mod references records from more masters than this limit allows, it cannot be saved as a single file. Mutagen's multi-mod support provides automatic splitting of a single mod object into several mod files when exported, and merging functionality when reading to work around this limitation.</p>
+<h2 id="file-naming-convention">File Naming Convention</h2>
+<p>When a mod is split, the files follow this naming pattern:</p>
+<ul>
+<li><code>MyMod_1.esp</code></li>
+<li><code>MyMod_2.esp</code></li>
+<li><code>MyMod_3.esp</code></li>
+<li>etc.</li>
+</ul>
+<p>The files are numbered consecutively starting from <code>_1</code>. When reading, Mutagen expects no gaps in the sequence.</p>
+<h2 id="writing-with-auto-split">Writing with Auto-Split</h2>
+<h3 id="using-the-builder-recommended">Using the Builder (Recommended)</h3>
+<p>The easiest way to write a mod with automatic splitting is to use the <code>WithAutoSplit()</code> builder option:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SkyrimMod</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="k">await</span><span class="w"> </span><span class="n">mod</span><span class="p">.</span><span class="n">BeginWrite</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ToPath</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">loadOrder</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplit</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WriteAsync</span><span class="p">();</span>
+</code></pre></div>
+<p>When <code>WithAutoSplit()</code> is enabled:</p>
+<ol>
+<li>Mutagen first attempts to write the mod normally</li>
+<li>If a <code>TooManyMastersException</code> occurs, the mod is automatically split into multiple files</li>
+<li>Records are distributed across files to keep each file under the master limit</li>
+<li>Old split files (from previous writes with more splits) are automatically cleaned up</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Auto-split only works with file path writes (<code>ToPath</code> or <code>IntoFolder</code>). Using <code>ToStream</code> with <code>WithAutoSplit()</code> will throw a <code>NotSupportedException</code>.</p>
+</div>
+<h2 id="reading-split-mods">Reading Split Mods</h2>
+<h3 id="using-the-builder-recommended_1">Using the Builder (Recommended)</h3>
+<p>The easiest way to read split mods is to use the <code>WithAutoSplitSupport()</code> builder option:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Read as readonly overlay</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplitSupport</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+
+<span class="c1">// Read as mutable mod (deep copies the overlay)</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">mutableMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">modPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplitSupport</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Mutable</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+</code></pre></div>
+<p>When <code>WithAutoSplitSupport()</code> is enabled:</p>
+<ol>
+<li>Mutagen checks if split files exist (e.g., <code>MyMod_1.esp</code>, <code>MyMod_2.esp</code>)</li>
+<li>If found, automatically imports and merges them into a single unified view</li>
+<li>If no split files exist, falls back to normal single-file import</li>
+<li>For mutable imports, the merged overlay is deep-copied to a mutable mod</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Auto-split support only works with file path reads (<code>FromPath</code>). Using <code>FromStream</code> with <code>WithAutoSplitSupport()</code> will throw a <code>NotSupportedException</code>.</p>
+</div>
+<h3 id="detecting-split-files">Detecting Split Files</h3>
+<p>Use <code>MultiModFileAnalysis</code> to check if split files exist before reading:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">Mutagen.Bethesda.Plugins.Analysis</span><span class="p">;</span>
+
+<span class="c1">// Check if split files exist</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">MultiModFileAnalysis</span><span class="p">.</span><span class="n">IsMultiModFile</span><span class="p">(</span><span class="n">modPath</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Get the list of split file paths</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">splitFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MultiModFileAnalysis</span><span class="p">.</span><span class="n">GetSplitModFiles</span><span class="p">(</span><span class="n">modPath</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Found {splitFiles.Count} split files"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>IsMultiModFile</code> returns:</p>
+<ul>
+<li><code>true</code> if valid split files exist (at least _1 and _2)</li>
+<li><code>false</code> if no split files exist (single mod)</li>
+<li>Throws <code>SplitModException</code> if files are in an invalid state</li>
+</ul>
+<h3 id="using-multimodfilereader">Using MultiModFileReader</h3>
+<p>The <code>MultiModFileReader</code> class provides a way to read split mod files for dependency injection scenarios:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">Mutagen.Bethesda.Plugins.Analysis.DI</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MultiModFileReader</span><span class="p">();</span>
+
+<span class="c1">// Read split files and get a merged overlay</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mergedMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="o">&lt;</span><span class="n">ISkyrimModDisposableGetter</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">folder</span><span class="p">,</span><span class="w">           </span><span class="c1">// Directory containing the split files</span>
+<span class="w">    </span><span class="n">modKey</span><span class="p">,</span><span class="w">           </span><span class="c1">// The base ModKey (without _1, _2 suffixes)</span>
+<span class="w">    </span><span class="n">GameRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">loadOrder</span><span class="p">,</span><span class="w">        </span><span class="c1">// Load order for master ordering</span>
+<span class="w">    </span><span class="n">BinaryReadParameters</span><span class="p">.</span><span class="n">Default</span><span class="p">);</span>
+
+<span class="c1">// Use the merged mod as if it were a single file</span>
+<span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">npc</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">mergedMod</span><span class="p">.</span><span class="n">Npcs</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Process records from all split files</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The reader:</p>
+<ul>
+<li>Automatically detects split files matching the pattern <code>ModKey_1.ext</code>, <code>ModKey_2.ext</code>, etc.</li>
+<li>Validates that files are numbered consecutively</li>
+<li>Returns a read-only overlay that presents all split files as a single unified mod</li>
+<li>Throws <code>SplitModException</code> if no split files are found or only one file exists</li>
+</ul>
+<h3 id="using-modfactory">Using ModFactory</h3>
+<p><code>ModFactory</code> is useful when you need to import split mods with generic type parameters. This is common in library code or utilities that work across multiple game types.</p>
+<h4 id="automatic-split-detection">Automatic Split Detection</h4>
+<p>If you don't want to manually detect split files, use <code>Import_WithMultiFileDetection</code> calls. These methods automatically detect whether a mod is split and handle it appropriately:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">Mutagen.Bethesda.Plugins.Records</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModFactory</span><span class="p">.</span><span class="n">ImportGetterWithMultiFileDetection</span><span class="p">(</span>
+<span class="w">    </span><span class="n">modPath</span><span class="p">,</span>
+<span class="w">    </span><span class="n">loadOrder</span><span class="p">,</span>
+<span class="w">    </span><span class="n">GameRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ModFactory</span><span class="o">&lt;</span><span class="n">ISkyrimModDisposableGetter</span><span class="o">&gt;</span><span class="p">.</span><span class="n">ImportGetterWithMultiFileDetection</span><span class="p">(</span>
+<span class="w">    </span><span class="n">modPath</span><span class="p">,</span>
+<span class="w">    </span><span class="n">loadOrder</span><span class="p">,</span>
+<span class="w">    </span><span class="n">GameRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">);</span>
+</code></pre></div>
+<p>These methods:
+- Use <code>MultiModFileAnalysis.IsMultiModFile()</code> to detect split files
+- If split files exist, call <code>ImportMultiFileGetter()</code> to merge them
+- If no split files exist, call the standard <code>ImportGetter()</code> for a single file</p>
+<h4 id="manual-split-detection">Manual Split Detection</h4>
+<p>If you know the files are split, there is a call with no detection logic:</p>
+<div class="highlight"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="n">ModFactory</span><span class="o">&lt;</span><span class="n">TModGetter</span><span class="o">&gt;</span><span class="p">.</span><span class="n">ImportMultiFileGetter</span><span class="p">(</span>
+<span class="w">    </span><span class="n">modKey</span><span class="p">,</span>
+<span class="w">    </span><span class="n">splitFiles</span><span class="p">,</span>
+<span class="w">    </span><span class="n">loadOrder</span><span class="p">,</span>
+<span class="w">    </span><span class="n">release</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="using-modimporter-di">Using ModImporter (DI)</h3>
+<p>For dependency injection scenarios:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">Mutagen.Bethesda.Plugins.Records.DI</span><span class="p">;</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">modImporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ModImporter</span><span class="p">(</span><span class="n">fileSystem</span><span class="p">,</span><span class="w"> </span><span class="n">gameReleaseContext</span><span class="p">);</span>
+
+<span class="kt">var</span><span class="w"> </span><span class="n">mergedMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">modImporter</span><span class="p">.</span><span class="n">ImportMultiFile</span><span class="o">&lt;</span><span class="n">ISkyrimModDisposableGetter</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">modKey</span><span class="p">,</span>
+<span class="w">    </span><span class="n">splitFilePaths</span><span class="p">,</span>
+<span class="w">    </span><span class="n">loadOrder</span><span class="p">,</span>
+<span class="w">    </span><span class="n">BinaryReadParameters</span><span class="p">.</span><span class="n">Default</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="important-considerations">Important Considerations</h2>
+<h3 id="read-only-result">Read-Only Result</h3>
+<p>The merged multi-mod overlay is <strong>read-only</strong> (implements <code>IModGetter</code> only). If you need to modify the data, you must copy records to a new mutable mod.</p>
+<h3 id="resource-disposal">Resource Disposal</h3>
+<p>The merged overlay holds references to the underlying split files. Always dispose properly:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">mergedMod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="o">&lt;</span><span class="n">ISkyrimModDisposableGetter</span><span class="o">&gt;</span><span class="p">(...);</span>
+<span class="c1">// Use the mod</span>
+<span class="c1">// Disposal happens automatically at end of using block</span>
+</code></pre></div>
+<h3 id="load-order-requirements">Load Order Requirements</h3>
+<p>Writing with auto-split requires load order information to properly order masters in the split files. Ensure you provide an accurate load order that includes all masters referenced by the mod.</p>
+<h3 id="round-trip-support">Round-Trip Support</h3>
+<p>Mods written with auto-split can be read back using <code>WithAutoSplitSupport()</code>, preserving all records and their data:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Write with auto-split</span>
+<span class="k">await</span><span class="w"> </span><span class="n">mod</span><span class="p">.</span><span class="n">BeginWrite</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ToPath</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">loadOrder</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplit</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WriteAsync</span><span class="p">();</span>
+
+<span class="c1">// Read back as merged overlay</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">roundTripped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SkyrimMod</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">SkyrimRelease</span><span class="p">.</span><span class="n">SkyrimSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">FromPath</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplitSupport</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Construct</span><span class="p">();</span>
+
+<span class="c1">// roundTripped contains all records from the original mod</span>
+</code></pre></div>
+<h2 id="limitations">Limitations</h2>
+<h3 id="single-record-exceeding-master-limit">Single Record Exceeding Master Limit</h3>
+<p>Auto-split works by distributing records across multiple files so each file stays under the 255 master limit. However, this cannot help when a <strong>single record</strong> itself references more than 255 masters.</p>
+<p>For example, a <code>FormList</code> that contains references to items from 300 different master files cannot be split - the record itself requires all those masters to be present. In this case, <code>TooManyMastersException</code> will be thrown even with <code>WithAutoSplit()</code> enabled.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// This will throw TooManyMastersException</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">formList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mod</span><span class="p">.</span><span class="n">FormLists</span><span class="p">.</span><span class="n">AddNew</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">300</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">masterKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ModKey</span><span class="p">(</span><span class="s">$"Master_{i}"</span><span class="p">,</span><span class="w"> </span><span class="n">ModType</span><span class="p">.</span><span class="n">Plugin</span><span class="p">);</span>
+<span class="w">    </span><span class="n">formList</span><span class="p">.</span><span class="n">Items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">FormKey</span><span class="p">(</span><span class="n">masterKey</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="n">x800</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="c1">// Auto-split cannot help here - the single FormList needs all 300 masters</span>
+<span class="k">await</span><span class="w"> </span><span class="n">mod</span><span class="p">.</span><span class="n">BeginWrite</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ToPath</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithLoadOrder</span><span class="p">(</span><span class="n">loadOrder</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithAutoSplit</span><span class="p">()</span><span class="w">  </span><span class="c1">// Still throws TooManyMastersException</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WriteAsync</span><span class="p">();</span>
+</code></pre></div>
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="splitmodexception">SplitModException</h3>
+<p>Thrown when:</p>
+<ul>
+<li>No split files are found for the specified ModKey (when using <code>MultiModFileReader</code>)</li>
+<li>Only one split file exists (expected at least 2)</li>
+<li>Both split files and original unsplit mod exist in the same directory</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">try</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">modPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ModPath</span><span class="p">(</span><span class="n">modKey</span><span class="p">,</span><span class="w"> </span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span><span class="w"> </span><span class="n">modKey</span><span class="p">.</span><span class="n">FileName</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// Check for split files - throws if invalid state</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">MultiModFileAnalysis</span><span class="p">.</span><span class="n">IsMultiModFile</span><span class="p">(</span><span class="n">modPath</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MultiModFileAnalysis</span><span class="p">.</span><span class="n">GetSplitModFiles</span><span class="p">(</span><span class="n">modPath</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">SplitModException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Handle invalid split file state</span>
+<span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="toomanymastersexception">TooManyMastersException</h3>
+<p>When writing without <code>WithAutoSplit()</code>, this exception is thrown if the mod exceeds the master limit. Enable auto-split to handle this automatically.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Mutagen-Modding" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://discord.gg/GdKZ3SH" target="_blank" rel="noopener" title="discord.gg" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "content.code.copy", "navigation.instant", "navigation.tracking", "navigation.indexes", "navigation.path"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
