@@ -106,29 +106,31 @@ public class AutoSplitModWriter : IAutoSplitModWriter
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(originalPath.Path);
         var extension = Path.GetExtension(originalPath.Path);
 
-        // Look for files with pattern: {basename}_{N}{extension} where N > currentSplitCount
-        // Start checking from currentSplitCount + 1 onwards
-        for (int i = currentSplitCount + 1; i <= 100; i++) // Check up to 100 to avoid infinite loop
-        {
-            var potentialOldFile = Path.Combine(directory, $"{fileNameWithoutExtension}_{i}{extension}");
+        // Use wildcard pattern to find all split files: {basename}_*{extension}
+        var searchPattern = $"{fileNameWithoutExtension}_*{extension}";
 
-            if (fileSystem.File.Exists(potentialOldFile))
+        foreach (var filePath in fileSystem.Directory.EnumerateFiles(directory, searchPattern))
+        {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var prefix = fileNameWithoutExtension + "_";
+
+            // Extract the suffix after the underscore
+            if (!fileName.StartsWith(prefix)) continue;
+
+            var suffix = fileName.Substring(prefix.Length);
+
+            // Check if suffix is a valid number greater than currentSplitCount
+            if (int.TryParse(suffix, out var splitNumber) && splitNumber > currentSplitCount)
             {
                 try
                 {
-                    fileSystem.File.Delete(potentialOldFile);
+                    fileSystem.File.Delete(filePath);
                 }
                 catch
                 {
                     // Ignore deletion failures - file might be in use or locked
                     // We don't want to fail the entire write operation because of cleanup
                 }
-            }
-            else
-            {
-                // If we find a gap in numbering, stop looking
-                // (e.g., if _5 doesn't exist, no point checking _6, _7, etc.)
-                break;
             }
         }
     }

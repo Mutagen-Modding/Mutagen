@@ -192,5 +192,47 @@ public class AutoSplitModWriterTests
         fileSystem.File.Exists(Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}")).ShouldBeFalse();
         fileSystem.File.Exists(Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}")).ShouldBeFalse();
     }
+
+    [Theory, MutagenModAutoData]
+    public void CleansUpOldSplitFilesWithGaps(Payload payload, DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        var outputPath = Path.Combine(existingOutputDirectory.Path, payload.Mod.ModKey.FileName);
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(payload.Mod.ModKey.FileName);
+        var extension = Path.GetExtension(payload.Mod.ModKey.FileName);
+
+        // Create stale split files with gaps to simulate a previous export with more files
+        var staleFile3 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_3{extension}");
+        var staleFile5 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_5{extension}");
+        var staleFile7 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_7{extension}");
+
+        fileSystem.File.WriteAllText(staleFile3, "stale");
+        fileSystem.File.WriteAllText(staleFile5, "stale");
+        fileSystem.File.WriteAllText(staleFile7, "stale");
+
+        // Create a mod that will split into 2 files (need >254 masters to trigger split)
+        for (uint i = 0; i < 5; i++)
+        {
+            payload.CreateFormListWithContents(70); // 5 x 70 = 350 masters
+        }
+
+        var sut = new AutoSplitModWriter(new MultiModFileSplitter());
+
+        sut.Write<ISkyrimMod, ISkyrimModGetter>(
+            payload.Mod,
+            outputPath,
+            BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        // Verify split files were created
+        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
+
+        fileSystem.File.Exists(splitFile1Path).ShouldBeTrue();
+        fileSystem.File.Exists(splitFile2Path).ShouldBeTrue();
+
+        // Verify stale files were cleaned up despite gaps in numbering
+        fileSystem.File.Exists(staleFile3).ShouldBeFalse();
+        fileSystem.File.Exists(staleFile5).ShouldBeFalse();
+        fileSystem.File.Exists(staleFile7).ShouldBeFalse();
+    }
 }
 
