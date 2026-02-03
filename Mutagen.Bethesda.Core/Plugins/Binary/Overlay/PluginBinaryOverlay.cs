@@ -945,7 +945,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     public static MemoryPair ExtractGroupMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
     {
         var groupFrame = meta.Group(span);
-        return new MemoryPair(groupFrame.HeaderData.Slice(meta.MajorConstants.TypeAndLengthLength), groupFrame.Content);
+        return new MemoryPair(groupFrame.HeaderData.Slice(meta.GroupConstants.TypeAndLengthLength), groupFrame.Content);
     }
 
     public static OverlayStream ExtractSubrecordStructMemory(
