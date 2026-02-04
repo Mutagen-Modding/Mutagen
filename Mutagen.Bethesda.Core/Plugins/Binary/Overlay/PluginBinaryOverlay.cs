@@ -924,7 +924,11 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             else
             {
                 byte[] data = new byte[size];
-                stream.Read(data);
+                var read = stream.Read(data);
+                if (read != size)
+                {
+                    throw new InvalidDataException($"Expected to read size {size} but read {read}");
+                }
                 return data;
             }
         }
