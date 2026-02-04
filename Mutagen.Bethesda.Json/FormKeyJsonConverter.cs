@@ -94,13 +94,25 @@ public sealed class FormKeyJsonConverter : JsonConverter
                         return GetFormLink(objectType.GenericTypeArguments[0], key);
                     }
                 }
-                
-                (key, var regis) = ParseFormKeyAndType(str);
-                
-                var type = objectType.GenericTypeArguments.Length == 0
-                    ? regis.GetterType
-                    : objectType.GenericTypeArguments[0];
-                
+
+                Type type;
+                if (objectType.GenericTypeArguments.Length > 0)
+                {
+                    // Type is known from the generic argument, type annotation in string is optional
+                    type = objectType.GenericTypeArguments[0];
+                    var angleBracketIndex = str.IndexOf('<');
+                    key = angleBracketIndex == -1
+                        ? FormKey.Factory(str)
+                        : FormKey.Factory(str.AsSpan()[..angleBracketIndex]);
+                }
+                else
+                {
+                    // Type must be parsed from the string
+                    ILoquiRegistration regis;
+                    (key, regis) = ParseFormKeyAndType(str);
+                    type = regis.GetterType;
+                }
+
                 return GetFormLink(type, key);
             }
             else

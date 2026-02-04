@@ -10,8 +10,69 @@ namespace Mutagen.Bethesda.Tests.Json;
 
 public class JsonConverterTests
 {
+    #region FormLink with known generic type
+
+    class WeaponOverridesContainer
+    {
+        public Dictionary<string, List<IFormLinkGetter<IWeaponGetter>>> WeaponOverrides { get; set; } = new();
+    }
+
+    [Fact]
+    public void FormLinkConverter_WithKnownGenericType_DeserializesWithoutTypeAnnotation()
+    {
+        Warmup.Init();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+
+        // This is the format the user is providing - no type annotation, just FormKey
+        var json = """
+        {
+          "WeaponOverrides": {
+            "WeaponsSignalGrenades": [
+              "12E2CA:Skyrim.esm",
+              "065DEC:Skyrim.esm"
+            ]
+          }
+        }
+        """;
+
+        var result = JsonConvert.DeserializeObject<WeaponOverridesContainer>(json, settings);
+
+        result.ShouldNotBeNull();
+        result.WeaponOverrides.ShouldContainKey("WeaponsSignalGrenades");
+        result.WeaponOverrides["WeaponsSignalGrenades"].Count.ShouldBe(2);
+        result.WeaponOverrides["WeaponsSignalGrenades"][0].FormKey.ToString().ShouldBe("12E2CA:Skyrim.esm");
+    }
+
+    [Fact]
+    public void FormLinkConverter_WithKnownGenericType_StillWorksWithTypeAnnotation()
+    {
+        Warmup.Init();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+
+        // Type annotation is still supported for backward compatibility
+        var json = """
+        {
+          "WeaponOverrides": {
+            "WeaponsSignalGrenades": [
+              "12E2CA:Skyrim.esm<Skyrim.Weapon>"
+            ]
+          }
+        }
+        """;
+
+        var result = JsonConvert.DeserializeObject<WeaponOverridesContainer>(json, settings);
+
+        result.ShouldNotBeNull();
+        result.WeaponOverrides["WeaponsSignalGrenades"].Count.ShouldBe(1);
+        result.WeaponOverrides["WeaponsSignalGrenades"][0].FormKey.ToString().ShouldBe("12E2CA:Skyrim.esm");
+    }
+
+    #endregion
+
     #region FormLinkInformation
-    
+
     class FormLinkInformationClass
     {
         public IFormLinkGetter Interface { get; set; } = null!;
