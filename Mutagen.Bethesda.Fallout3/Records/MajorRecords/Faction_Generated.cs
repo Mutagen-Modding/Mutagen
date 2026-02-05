@@ -135,10 +135,10 @@ namespace Mutagen.Bethesda.Fallout3
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, []);
                 this.Flags = initialValue;
                 this.CrimeGoldMultiplier = initialValue;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -164,10 +164,10 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Name = Name;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, []);
                 this.Flags = Flags;
                 this.CrimeGoldMultiplier = CrimeGoldMultiplier;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, []);
             }
 
             #pragma warning disable CS8618
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Name = eval(this.Name);
                 if (Relations != null)
                 {
-                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation.Mask<R>?>>());
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), []);
                     if (Relations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.CrimeGoldMultiplier = eval(this.CrimeGoldMultiplier);
                 if (Ranks != null)
                 {
-                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), []);
                     if (Ranks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFaction);
+        protected override Type LinkType => typeof(IFactionGetter);
 
 
         #region Name

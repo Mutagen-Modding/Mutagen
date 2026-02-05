@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.File = initialValue;
                 this.MODB = initialValue;
                 this.Hashes = initialValue;
-                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
+                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(initialValue, []);
                 this.FaceGenFlags = initialValue;
             }
 
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.File = File;
                 this.MODB = MODB;
                 this.Hashes = Hashes;
-                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(AlternateTextures, Enumerable.Empty<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>());
+                this.AlternateTextures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlternateTexture.Mask<TItem>?>>?>(AlternateTextures, []);
                 this.FaceGenFlags = FaceGenFlags;
             }
 
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Hashes = eval(this.Hashes);
                 if (AlternateTextures != null)
                 {
-                    obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>?>(eval(this.AlternateTextures.Overall), Enumerable.Empty<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>());
+                    obj.AlternateTextures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>?>(eval(this.AlternateTextures.Overall), []);
                     if (AlternateTextures.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AlternateTexture.Mask<R>?>>();

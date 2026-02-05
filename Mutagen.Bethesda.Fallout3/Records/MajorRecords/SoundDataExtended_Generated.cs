@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ReverbAttenuationControl = initialValue;
                 this.Priority = initialValue;
                 this.Unknown2 = initialValue;
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Fallout3
                 StopTime: StopTime,
                 StartTime: StartTime)
             {
-                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, []);
                 this.ReverbAttenuationControl = ReverbAttenuationControl;
                 this.Priority = Priority;
                 this.Unknown2 = Unknown2;
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 if (AttenuationCurve != null)
                 {
-                    obj.AttenuationCurve = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttenuationCurve.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttenuationCurve = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttenuationCurve.Overall), []);
                     if (AttenuationCurve.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

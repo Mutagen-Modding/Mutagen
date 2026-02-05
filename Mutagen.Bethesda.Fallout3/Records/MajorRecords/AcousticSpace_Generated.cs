@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAcousticSpace);
+        protected override Type LinkType => typeof(IAcousticSpaceGetter);
 
 
         #region ObjectBounds

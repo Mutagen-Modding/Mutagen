@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem HeadParts)
             {
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartItem.Mask<TItem>?>>?>(HeadParts, Enumerable.Empty<MaskItemIndexed<TItem, HeadPartItem.Mask<TItem>?>>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartItem.Mask<TItem>?>>?>(HeadParts, []);
             }
 
             #pragma warning disable CS8618
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (HeadParts != null)
                 {
-                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, HeadPartItem.Mask<R>?>>?>(eval(this.HeadParts.Overall), Enumerable.Empty<MaskItemIndexed<R, HeadPartItem.Mask<R>?>>());
+                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, HeadPartItem.Mask<R>?>>?>(eval(this.HeadParts.Overall), []);
                     if (HeadParts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, HeadPartItem.Mask<R>?>>();

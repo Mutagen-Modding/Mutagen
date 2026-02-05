@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMenuIcon);
+        protected override Type LinkType => typeof(IMenuIconGetter);
 
 
         #region Icons

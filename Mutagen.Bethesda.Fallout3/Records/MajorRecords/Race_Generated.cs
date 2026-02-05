@@ -231,7 +231,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(initialValue, []);
                 this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(initialValue, new RaceData.Mask<TItem>(initialValue));
                 this.Older = initialValue;
                 this.Younger = initialValue;
@@ -243,8 +243,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.UnusedATTR = initialValue;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(initialValue, default);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
-                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FaceGenData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, FaceGenData.Mask<TItem>?>?>?>(initialValue, default);
             }
 
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = Name;
                 this.Description = Description;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(Relations, []);
                 this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(Data, new RaceData.Mask<TItem>(Data));
                 this.Older = Older;
                 this.Younger = Younger;
@@ -296,8 +296,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.UnusedATTR = UnusedATTR;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(HeadData, default);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
-                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, []);
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, []);
                 this.FaceGenData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, FaceGenData.Mask<TItem>?>?>?>(FaceGenData, default);
             }
 
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Description = eval(this.Description);
                 if (Relations != null)
                 {
-                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, RaceRelation.Mask<R>?>>());
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation.Mask<R>?>>?>(eval(this.Relations.Overall), []);
                     if (Relations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RaceRelation.Mask<R>?>>();
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout3
                     (m, e) => m?.Translate(e));
                 if (Hairs != null)
                 {
-                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), []);
                     if (Hairs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (Eyes != null)
                 {
-                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), []);
                     if (Eyes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -3214,7 +3214,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(IRaceGetter);
 
 
         #region Name

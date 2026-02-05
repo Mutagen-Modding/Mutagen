@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Icon = initialValue;
-                this.TagSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TagSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Flags = initialValue;
                 this.Services = initialValue;
                 this.Teaches = initialValue;
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = Name;
                 this.Description = Description;
                 this.Icon = Icon;
-                this.TagSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TagSkills, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TagSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TagSkills, []);
                 this.Flags = Flags;
                 this.Services = Services;
                 this.Teaches = Teaches;
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Icon = eval(this.Icon);
                 if (TagSkills != null)
                 {
-                    obj.TagSkills = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TagSkills.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TagSkills = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TagSkills.Overall), []);
                     if (TagSkills.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2223,7 +2223,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IClass);
+        protected override Type LinkType => typeof(IClassGetter);
 
 
         #region Name

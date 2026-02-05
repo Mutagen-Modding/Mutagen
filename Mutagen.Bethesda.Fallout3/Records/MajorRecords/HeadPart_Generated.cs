@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Playable = initialValue;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Playable = Playable;
-                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, []);
             }
 
             #pragma warning disable CS8618
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Playable = eval(this.Playable);
                 if (ExtraParts != null)
                 {
-                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ExtraParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraParts.Overall), []);
                     if (ExtraParts.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IHeadPart);
+        protected override Type LinkType => typeof(IHeadPartGetter);
 
 
         #region Name

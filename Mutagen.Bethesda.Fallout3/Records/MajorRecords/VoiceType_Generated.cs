@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IVoiceType);
+        protected override Type LinkType => typeof(IVoiceTypeGetter);
 
 
         partial void CustomFactoryEnd(

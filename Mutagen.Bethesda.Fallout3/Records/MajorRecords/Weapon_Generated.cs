@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWeapon);
+        protected override Type LinkType => typeof(IWeaponGetter);
 
 
         partial void CustomFactoryEnd(

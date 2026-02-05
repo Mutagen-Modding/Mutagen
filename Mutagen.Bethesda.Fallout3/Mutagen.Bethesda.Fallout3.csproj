@@ -342,5 +342,6 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IBoundItem_Generated.cs" />
+    <Compile Include="Fallout3MultiModOverlay_Generated.cs" />
   </ItemGroup>
 </Project>

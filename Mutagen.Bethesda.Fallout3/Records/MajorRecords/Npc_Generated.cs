@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(INpcGetter);
 
 
         #region Race

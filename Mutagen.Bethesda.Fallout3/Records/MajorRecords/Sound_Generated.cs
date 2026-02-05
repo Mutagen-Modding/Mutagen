@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.File = initialValue;
                 this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(initialValue, new SoundData.Mask<TItem>(initialValue));
-                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ReverbAttenuationControl = initialValue;
                 this.Priority = initialValue;
             }
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.File = File;
                 this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(Data, new SoundData.Mask<TItem>(Data));
-                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, []);
                 this.ReverbAttenuationControl = ReverbAttenuationControl;
                 this.Priority = Priority;
             }
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Data = this.Data == null ? null : new MaskItem<R, SoundData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (AttenuationCurve != null)
                 {
-                    obj.AttenuationCurve = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttenuationCurve.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttenuationCurve = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttenuationCurve.Overall), []);
                     if (AttenuationCurve.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1934,7 +1934,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISound);
+        protected override Type LinkType => typeof(ISoundGetter);
 
 
         #region ObjectBounds

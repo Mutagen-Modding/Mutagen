@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ConstantEffectBarterFactor = initialValue;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(initialValue, new AMagicEffectArchetype.Mask<TItem>(initialValue));
                 this.ActorValue = initialValue;
-                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ConstantEffectBarterFactor = ConstantEffectBarterFactor;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(Archetype, new AMagicEffectArchetype.Mask<TItem>(Archetype));
                 this.ActorValue = ActorValue;
-                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, []);
             }
 
             #pragma warning disable CS8618
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ActorValue = eval(this.ActorValue);
                 if (CounterEffects != null)
                 {
-                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), []);
                     if (CounterEffects.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -3001,7 +3001,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMagicEffect);
+        protected override Type LinkType => typeof(IMagicEffectGetter);
 
 
         #region Name

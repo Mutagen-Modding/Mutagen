@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEyes);
+        protected override Type LinkType => typeof(IEyesGetter);
 
 
         #region Name

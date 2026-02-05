@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.BodyParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPartItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BodyPartItem.Mask<TItem>?>>());
+                this.BodyParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPartItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem BodyParts)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.BodyParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPartItem.Mask<TItem>?>>?>(BodyParts, Enumerable.Empty<MaskItemIndexed<TItem, BodyPartItem.Mask<TItem>?>>());
+                this.BodyParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPartItem.Mask<TItem>?>>?>(BodyParts, []);
             }
 
             #pragma warning disable CS8618
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (BodyParts != null)
                 {
-                    obj.BodyParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPartItem.Mask<R>?>>?>(eval(this.BodyParts.Overall), Enumerable.Empty<MaskItemIndexed<R, BodyPartItem.Mask<R>?>>());
+                    obj.BodyParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPartItem.Mask<R>?>>?>(eval(this.BodyParts.Overall), []);
                     if (BodyParts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BodyPartItem.Mask<R>?>>();

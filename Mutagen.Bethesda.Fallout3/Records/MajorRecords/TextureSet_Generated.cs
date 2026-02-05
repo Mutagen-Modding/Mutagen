@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITextureSet);
+        protected override Type LinkType => typeof(ITextureSetGetter);
 
 
         #region ObjectBounds

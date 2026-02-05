@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGlobalFloat);
+        protected override Type LinkType => typeof(IGlobalFloatGetter);
 
 
         #region Data
