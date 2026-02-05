@@ -86,11 +86,16 @@ public class AutoSplitModWriter : IAutoSplitModWriter
 
     private FilePath GetSplitFilePath(FilePath originalPath, int index)
     {
+        if (index == 0)
+        {
+            return originalPath;  // First file keeps original name
+        }
+
         var directory = Path.GetDirectoryName(originalPath.Path) ?? string.Empty;
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(originalPath.Path);
         var extension = Path.GetExtension(originalPath.Path);
 
-        // First file gets _1, second gets _2, etc.
+        // index 1 → _2, index 2 → _3, etc.
         var splitFileName = $"{fileNameWithoutExtension}_{index + 1}{extension}";
         return Path.Combine(directory, splitFileName);
     }
@@ -119,7 +124,8 @@ public class AutoSplitModWriter : IAutoSplitModWriter
 
             var suffix = fileName.Substring(prefix.Length);
 
-            // Check if suffix is a valid number greater than currentSplitCount
+            // With new naming: currentSplitCount=2 means files are Name.esp + Name_2.esp
+            // Delete files where suffix number > currentSplitCount (so _3, _4, etc.)
             if (int.TryParse(suffix, out var splitNumber) && splitNumber > currentSplitCount)
             {
                 try

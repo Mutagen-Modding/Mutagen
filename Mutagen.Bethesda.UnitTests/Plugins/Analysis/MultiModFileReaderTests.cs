@@ -47,10 +47,10 @@ public class MultiModFileReaderTests
             outputPath,
             BinaryWriteParameters.Default with { FileSystem = fileSystem });
 
-        // Verify split files were created
+        // Verify split files were created (base file + _2)
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(mod.ModKey.FileName);
         var extension = Path.GetExtension(mod.ModKey.FileName);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        var splitFile1 = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);  // Base file (no suffix)
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         fileSystem.File.Exists(splitFile1).ShouldBeTrue();
@@ -120,10 +120,17 @@ public class MultiModFileReaderTests
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
+        // With new naming: base file exists but _2 doesn't = single file, not split
+        // To trigger "only one split file" error, we need base file + _2 missing but base exists
+        // Actually, since DetectSplitFiles returns empty if _2 doesn't exist, we need a different test
+        // The error occurs if base exists AND _2 exists but we somehow detect only 1 file (edge case)
+        // For new naming scheme, this test needs adjustment - create base file only
+        var baseFile = Path.Combine(existingOutputDirectory.Path, "TestMod.esp");
 
-        // Create just one split file
-        fileSystem.File.WriteAllText(splitFile1, "dummy content");
+        // Create just the base file - this means no split (not an error, returns empty)
+        // To test error, we actually don't have this edge case anymore with new detection
+        // Keep this test but expect "No split files found" since detection returns empty
+        fileSystem.File.WriteAllText(baseFile, "dummy content");
 
         var loadOrder = new List<IModMasterStyledGetter>();
         var reader = new MultiModFileReader();
@@ -136,6 +143,6 @@ public class MultiModFileReaderTests
                 GameRelease.SkyrimSE,
                 loadOrder,
                 BinaryReadParameters.Default with { FileSystem = fileSystem });
-        }).Message.ShouldContain("Found only one split file");
+        }).Message.ShouldContain("No split files found");
     }
 }

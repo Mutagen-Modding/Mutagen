@@ -61,24 +61,23 @@ public class BinaryReadBuilderAutoSplitTests
     }
 
     [Theory, MutagenModAutoData]
-    public void IsMultiModFile_ThrowsWhenOnlyFirstSplitExists(
+    public void IsMultiModFile_ReturnsFalseWhenOnlyBaseFileExists(
         DirectoryPath existingOutputDirectory,
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
-        var modPath = new ModPath(modKey, Path.Combine(existingOutputDirectory.Path, modKey.FileName));
+        var baseFile = Path.Combine(existingOutputDirectory.Path, "TestMod.esp");
+        var modPath = new ModPath(modKey, baseFile);
 
-        // Create just one split file
-        fileSystem.File.WriteAllText(splitFile1, "dummy");
+        // Create just the base file - no _2 means not a split set
+        fileSystem.File.WriteAllText(baseFile, "dummy");
 
-        Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem))
-            .Message.ShouldContain("only one split file");
+        // With new naming, a single base file without _2 is not considered a split set
+        MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem).ShouldBeFalse();
     }
 
     [Theory, MutagenModAutoData]
-    public void IsMultiModFile_ThrowsWhenOriginalAndSplitsCoexist(
+    public void IsMultiModFile_ReturnsTrueWhenBaseAndSplit2Exist(
         SkyrimMod mod,
         DirectoryPath existingOutputDirectory,
         IFileSystem fileSystem)
@@ -87,55 +86,52 @@ public class BinaryReadBuilderAutoSplitTests
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
         var extension = Path.GetExtension(modKey.FileName);
 
-        // Create split files
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        // With new naming: base file IS the first split file
+        var baseFile = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
-        var originalFile = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
 
-        fileSystem.File.WriteAllText(splitFile1, "dummy");
+        fileSystem.File.WriteAllText(baseFile, "dummy");
         fileSystem.File.WriteAllText(splitFile2, "dummy");
-        fileSystem.File.WriteAllText(originalFile, "dummy");
 
-        var modPath = new ModPath(modKey, originalFile);
-        Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem))
-            .Message.ShouldContain("both split files and original");
+        var modPath = new ModPath(modKey, baseFile);
+        // This is now valid - base file + _2 = a valid split set
+        MultiModFileAnalysis.IsMultiModFile(modPath, fileSystem).ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData]
-    public void GetSplitModFiles_ThrowsWhenOnlyFirstSplitExists(
+    public void GetSplitModFiles_ReturnsEmptyWhenOnlyBaseFileExists(
         DirectoryPath existingOutputDirectory,
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
-        var modPath = new ModPath(modKey, Path.Combine(existingOutputDirectory.Path, modKey.FileName));
+        var baseFile = Path.Combine(existingOutputDirectory.Path, "TestMod.esp");
+        var modPath = new ModPath(modKey, baseFile);
 
-        fileSystem.File.WriteAllText(splitFile1, "dummy");
+        fileSystem.File.WriteAllText(baseFile, "dummy");
 
-        Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem))
-            .Message.ShouldContain("only one split file");
+        // With new naming, a single base file without _2 returns empty (not a split set)
+        var result = MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem);
+        result.ShouldBeEmpty();
     }
 
     [Theory, MutagenModAutoData]
-    public void GetSplitModFiles_ThrowsWhenOriginalAndSplitsCoexist(
+    public void GetSplitModFiles_ReturnsFilesWhenBaseAndSplit2Exist(
         DirectoryPath existingOutputDirectory,
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
+        var baseFile = Path.Combine(existingOutputDirectory.Path, "TestMod.esp");
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, "TestMod_2.esp");
-        var originalFile = Path.Combine(existingOutputDirectory.Path, "TestMod.esp");
 
-        fileSystem.File.WriteAllText(splitFile1, "dummy");
+        fileSystem.File.WriteAllText(baseFile, "dummy");
         fileSystem.File.WriteAllText(splitFile2, "dummy");
-        fileSystem.File.WriteAllText(originalFile, "dummy");
 
-        var modPath = new ModPath(modKey, originalFile);
-        Should.Throw<SplitModException>(() =>
-            MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem))
-            .Message.ShouldContain("both split files and original");
+        var modPath = new ModPath(modKey, baseFile);
+        // With new naming, base file + _2 is a valid split set
+        var result = MultiModFileAnalysis.GetSplitModFiles(modPath, fileSystem);
+        result.Count.ShouldBe(2);
+        result[0].Path.ShouldBe(baseFile);
+        result[1].Path.ShouldBe(splitFile2);
     }
 
     [Theory, MutagenModAutoData]

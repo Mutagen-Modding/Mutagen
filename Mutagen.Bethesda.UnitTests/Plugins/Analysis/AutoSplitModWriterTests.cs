@@ -118,10 +118,10 @@ public class AutoSplitModWriterTests
             outputPath,
             BinaryWriteParameters.Default with { FileSystem = fileSystem });
 
-        // Verify split files were created (when splitting occurs, files get _1, _2, etc suffixes)
+        // Verify split files were created (first file keeps original name, then _2, _3, etc.)
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(payload.Mod.ModKey.FileName);
         var extension = Path.GetExtension(payload.Mod.ModKey.FileName);
-        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, payload.Mod.ModKey.FileName);  // Base file (no suffix)
         var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
         var splitFile3Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_3{extension}");
 
@@ -185,11 +185,10 @@ public class AutoSplitModWriterTests
         // File should be written
         fileSystem.File.Exists(outputPath).ShouldBeTrue();
 
-        // No split files should exist - check for _1 and _2 suffixes
+        // No split files should exist - check for _2 suffix (base file is the original, so only check _2)
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(mod.ModKey.FileName);
         var extension = Path.GetExtension(mod.ModKey.FileName);
 
-        fileSystem.File.Exists(Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}")).ShouldBeFalse();
         fileSystem.File.Exists(Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}")).ShouldBeFalse();
     }
 
@@ -222,8 +221,8 @@ public class AutoSplitModWriterTests
             outputPath,
             BinaryWriteParameters.Default with { FileSystem = fileSystem });
 
-        // Verify split files were created
-        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        // Verify split files were created (base file + _2)
+        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, payload.Mod.ModKey.FileName);  // Base file (no suffix)
         var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         fileSystem.File.Exists(splitFile1Path).ShouldBeTrue();
