@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.NavMeshVersion = initialValue;
-                this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
+                this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(initialValue, []);
                 this.PreferredPathing = new MaskItem<TItem, PreferredPathing.Mask<TItem>?>(initialValue, new PreferredPathing.Mask<TItem>(initialValue));
             }
 
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.NavMeshVersion = NavMeshVersion;
-                this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(MapInfos, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>());
+                this.MapInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(MapInfos, []);
                 this.PreferredPathing = new MaskItem<TItem, PreferredPathing.Mask<TItem>?>(PreferredPathing, new PreferredPathing.Mask<TItem>(PreferredPathing));
             }
 
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.NavMeshVersion = eval(this.NavMeshVersion);
                 if (MapInfos != null)
                 {
-                    obj.MapInfos = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>?>(eval(this.MapInfos.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>());
+                    obj.MapInfos = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>?>(eval(this.MapInfos.Overall), []);
                     if (MapInfos.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>();
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INavigationMeshInfoMap);
+        protected override Type LinkType => typeof(INavigationMeshInfoMapGetter);
 
 
         #region NavMeshVersion

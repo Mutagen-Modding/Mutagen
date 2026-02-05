@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundCategory);
+        protected override Type LinkType => typeof(ISoundCategoryGetter);
 
 
         #region Name

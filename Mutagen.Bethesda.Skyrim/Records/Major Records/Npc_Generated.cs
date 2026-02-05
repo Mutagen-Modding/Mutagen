@@ -591,31 +591,31 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Configuration = new MaskItem<TItem, NpcConfiguration.Mask<TItem>?>(initialValue, new NpcConfiguration.Mask<TItem>(initialValue));
-                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(initialValue, []);
                 this.DeathItem = initialValue;
                 this.Voice = initialValue;
                 this.Template = initialValue;
                 this.Race = initialValue;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.WornArmor = initialValue;
                 this.FarAwayModel = initialValue;
                 this.AttackRace = initialValue;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, []);
                 this.SpectatorOverridePackageList = initialValue;
                 this.ObserveDeadBodyOverridePackageList = initialValue;
                 this.GuardWarnOverridePackageList = initialValue;
                 this.CombatOverridePackageList = initialValue;
-                this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(initialValue, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.AIData = new MaskItem<TItem, AIData.Mask<TItem>?>(initialValue, new AIData.Mask<TItem>(initialValue));
-                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Class = initialValue;
                 this.Name = initialValue;
                 this.ShortName = initialValue;
                 this.PlayerSkills = new MaskItem<TItem, PlayerSkills.Mask<TItem>?>(initialValue, new PlayerSkills.Mask<TItem>(initialValue));
-                this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.HairColor = initialValue;
                 this.CombatStyle = initialValue;
                 this.GiftFilter = initialValue;
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextureLighting = initialValue;
                 this.FaceMorph = new MaskItem<TItem, NpcFaceMorph.Mask<TItem>?>(initialValue, new NpcFaceMorph.Mask<TItem>(initialValue));
                 this.FaceParts = new MaskItem<TItem, NpcFaceParts.Mask<TItem>?>(initialValue, new NpcFaceParts.Mask<TItem>(initialValue));
-                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintLayer.Mask<TItem>?>>());
+                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintLayer.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -700,31 +700,31 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Configuration = new MaskItem<TItem, NpcConfiguration.Mask<TItem>?>(Configuration, new NpcConfiguration.Mask<TItem>(Configuration));
-                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(Factions, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
+                this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(Factions, []);
                 this.DeathItem = DeathItem;
                 this.Voice = Voice;
                 this.Template = Template;
                 this.Race = Race;
-                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, []);
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.WornArmor = WornArmor;
                 this.FarAwayModel = FarAwayModel;
                 this.AttackRace = AttackRace;
-                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, Enumerable.Empty<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>());
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, []);
                 this.SpectatorOverridePackageList = SpectatorOverridePackageList;
                 this.ObserveDeadBodyOverridePackageList = ObserveDeadBodyOverridePackageList;
                 this.GuardWarnOverridePackageList = GuardWarnOverridePackageList;
                 this.CombatOverridePackageList = CombatOverridePackageList;
-                this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(Perks, Enumerable.Empty<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>());
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
+                this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(Perks, []);
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, []);
                 this.AIData = new MaskItem<TItem, AIData.Mask<TItem>?>(AIData, new AIData.Mask<TItem>(AIData));
-                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Packages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Packages, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Class = Class;
                 this.Name = Name;
                 this.ShortName = ShortName;
                 this.PlayerSkills = new MaskItem<TItem, PlayerSkills.Mask<TItem>?>(PlayerSkills, new PlayerSkills.Mask<TItem>(PlayerSkills));
-                this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(HeadParts, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(HeadParts, []);
                 this.HairColor = HairColor;
                 this.CombatStyle = CombatStyle;
                 this.GiftFilter = GiftFilter;
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextureLighting = TextureLighting;
                 this.FaceMorph = new MaskItem<TItem, NpcFaceMorph.Mask<TItem>?>(FaceMorph, new NpcFaceMorph.Mask<TItem>(FaceMorph));
                 this.FaceParts = new MaskItem<TItem, NpcFaceParts.Mask<TItem>?>(FaceParts, new NpcFaceParts.Mask<TItem>(FaceParts));
-                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintLayer.Mask<TItem>?>>?>(TintLayers, Enumerable.Empty<MaskItemIndexed<TItem, TintLayer.Mask<TItem>?>>());
+                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintLayer.Mask<TItem>?>>?>(TintLayers, []);
             }
 
             #pragma warning disable CS8618
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Configuration = this.Configuration == null ? null : new MaskItem<R, NpcConfiguration.Mask<R>?>(eval(this.Configuration.Overall), this.Configuration.Specific?.Translate(eval));
                 if (Factions != null)
                 {
-                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>?>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement.Mask<R>?>>());
+                    obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>?>(eval(this.Factions.Overall), []);
                     if (Factions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Race = eval(this.Race);
                 if (ActorEffect != null)
                 {
-                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ActorEffect = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorEffect.Overall), []);
                     if (ActorEffect.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AttackRace = eval(this.AttackRace);
                 if (Attacks != null)
                 {
-                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), Enumerable.Empty<MaskItemIndexed<R, Attack.Mask<R>?>>());
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), []);
                     if (Attacks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.CombatOverridePackageList = eval(this.CombatOverridePackageList);
                 if (Perks != null)
                 {
-                    obj.Perks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>?>(eval(this.Perks.Overall), Enumerable.Empty<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>());
+                    obj.Perks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>?>(eval(this.Perks.Overall), []);
                     if (Perks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>();
@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AIData = this.AIData == null ? null : new MaskItem<R, AIData.Mask<R>?>(eval(this.AIData.Overall), this.AIData.Specific?.Translate(eval));
                 if (Packages != null)
                 {
-                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Packages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Packages.Overall), []);
                     if (Packages.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.PlayerSkills = this.PlayerSkills == null ? null : new MaskItem<R, PlayerSkills.Mask<R>?>(eval(this.PlayerSkills.Overall), this.PlayerSkills.Specific?.Translate(eval));
                 if (HeadParts != null)
                 {
-                    obj.HeadParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.HeadParts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.HeadParts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.HeadParts.Overall), []);
                     if (HeadParts.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FaceParts = this.FaceParts == null ? null : new MaskItem<R, NpcFaceParts.Mask<R>?>(eval(this.FaceParts.Overall), this.FaceParts.Specific?.Translate(eval));
                 if (TintLayers != null)
                 {
-                    obj.TintLayers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintLayer.Mask<R>?>>?>(eval(this.TintLayers.Overall), Enumerable.Empty<MaskItemIndexed<R, TintLayer.Mask<R>?>>());
+                    obj.TintLayers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintLayer.Mask<R>?>>?>(eval(this.TintLayers.Overall), []);
                     if (TintLayers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TintLayer.Mask<R>?>>();
@@ -6288,7 +6288,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(INpcGetter);
 
         public Npc.MajorFlag MajorFlags => (Npc.MajorFlag)this.MajorRecordFlagsRaw;
 

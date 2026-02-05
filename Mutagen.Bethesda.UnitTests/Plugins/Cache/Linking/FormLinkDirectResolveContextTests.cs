@@ -16,7 +16,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             contextRetriever.TryResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package, out _).ShouldBeFalse();
         });
@@ -28,7 +28,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             contextRetriever.TryResolveContext<IPlacedGetter, IPlacedNpc, IPlacedNpcGetter>(formLink, package, out _).ShouldBeFalse();
         });
@@ -42,7 +42,7 @@ public partial class ALinkingTests
         var npc = mod.Npcs.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, contextRetriever, () =>
         {
             contextRetriever.TryResolveContext<INpc, INpcGetter>(formLink, package, out var resolved).ShouldBeTrue();
             resolved.ShouldNotBeNull();

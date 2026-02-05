@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -294,7 +295,7 @@ public class ReadBuilderTests
         var masterWeapon = master.Weapons.AddNew();
         var master2 = new StarfieldMod(masterMod2, StarfieldRelease.Starfield);
         var master2Weapon = master2.Weapons.AddNew();
-        
+
         var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
         mod.Weapons.GetOrAddAsOverride(masterWeapon);
         mod.Weapons.GetOrAddAsOverride(master2Weapon);
@@ -315,5 +316,58 @@ public class ReadBuilderTests
             .Construct();
         reimport.MasterReferences.Select(x => x.Master)
             .ShouldEqualEnumerable(masterMod, masterMod2);
+    }
+
+    [Theory, MutagenAutoData]
+    public void SeparatedWithLinkCache(
+        IFileSystem fileSystem,
+        ModKey masterMod,
+        ModKey modKey,
+        DirectoryPath existingDataDir)
+    {
+        // Create and write master mod
+        var master = new StarfieldMod(masterMod, StarfieldRelease.Starfield);
+        var masterWeapon = master.Weapons.AddNew();
+        var masterPath = Path.Combine(existingDataDir, masterMod.FileName);
+        master.WriteToBinary(masterPath, new BinaryWriteParameters()
+        {
+            FileSystem = fileSystem
+        });
+
+        // Create and write plugin mod that references master
+        var mod = new StarfieldMod(modKey, StarfieldRelease.Starfield);
+        mod.Weapons.GetOrAddAsOverride(masterWeapon);
+        var modPath = Path.Combine(existingDataDir, mod.ModKey.FileName);
+        mod.BeginWrite
+            .ToPath(modPath)
+            .WithLoadOrder(master)
+            .WithFileSystem(fileSystem)
+            .Write();
+
+        // Load master mod as overlay
+        using var masterOverlay = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(masterPath)
+            .WithNoLoadOrder()
+            .WithFileSystem(fileSystem)
+            .Construct();
+
+        // Create LinkCache from master mod
+        var linkCache = new[] { masterOverlay }.ToImmutableLinkCache();
+
+        // Import plugin mod using LinkCache instead of WithLoadOrder
+        var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
+            .FromPath(modPath)
+            .WithLinkCache(linkCache)
+            .WithFileSystem(fileSystem)
+            .Mutable()
+            .Construct();
+
+        // Verify master references are correct
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqualEnumerable(masterMod);
+
+        // Verify we can access the overridden weapon
+        reimport.Weapons.Count.ShouldBe(1);
+        reimport.Weapons.First().FormKey.ShouldBe(masterWeapon.FormKey);
     }
 }

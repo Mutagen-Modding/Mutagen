@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Location = new MaskItem<TItem, AIPackageLocation.Mask<TItem>?>(initialValue, new AIPackageLocation.Mask<TItem>(initialValue));
                 this.Schedule = new MaskItem<TItem, AIPackageSchedule.Mask<TItem>?>(initialValue, new AIPackageSchedule.Mask<TItem>(initialValue));
                 this.Target = new MaskItem<TItem, AIPackageTarget.Mask<TItem>?>(initialValue, new AIPackageTarget.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Location = new MaskItem<TItem, AIPackageLocation.Mask<TItem>?>(Location, new AIPackageLocation.Mask<TItem>(Location));
                 this.Schedule = new MaskItem<TItem, AIPackageSchedule.Mask<TItem>?>(Schedule, new AIPackageSchedule.Mask<TItem>(Schedule));
                 this.Target = new MaskItem<TItem, AIPackageTarget.Mask<TItem>?>(Target, new AIPackageTarget.Mask<TItem>(Target));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
             }
 
             #pragma warning disable CS8618
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Target = this.Target == null ? null : new MaskItem<R, AIPackageTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAIPackage);
+        protected override Type LinkType => typeof(IAIPackageGetter);
 
 
         #region Data

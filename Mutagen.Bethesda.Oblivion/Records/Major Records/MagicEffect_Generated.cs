@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Data = new MaskItem<TItem, MagicEffectData.Mask<TItem>?>(initialValue, new MagicEffectData.Mask<TItem>(initialValue));
-                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Data = new MaskItem<TItem, MagicEffectData.Mask<TItem>?>(Data, new MagicEffectData.Mask<TItem>(Data));
-                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, []);
             }
 
             #pragma warning disable CS8618
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Data = this.Data == null ? null : new MaskItem<R, MagicEffectData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (CounterEffects != null)
                 {
-                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), []);
                     if (CounterEffects.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMagicEffect);
+        protected override Type LinkType => typeof(IMagicEffectGetter);
 
 
         #region Name

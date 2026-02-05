@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGrass);
+        protected override Type LinkType => typeof(IGrassGetter);
 
 
         public IModelGetter? Model { get; private set; }

@@ -7761,7 +7761,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEffectShader);
+        protected override Type LinkType => typeof(IEffectShaderGetter);
 
 
         #region FillTexture

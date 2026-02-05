@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectVisibilityManagerItem.Mask<TItem>?>>?>(Objects, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectVisibilityManagerItem.Mask<R>?>>();
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectVisibilityManager);
+        protected override Type LinkType => typeof(IObjectVisibilityManagerGetter);
 
 
         public IReadOnlyList<IObjectVisibilityManagerItemGetter> Objects { get; private set; } = [];

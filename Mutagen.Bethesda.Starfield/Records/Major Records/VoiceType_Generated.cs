@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IVoiceType);
+        protected override Type LinkType => typeof(IVoiceTypeGetter);
 
 
         #region Flags

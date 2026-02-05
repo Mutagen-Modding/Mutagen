@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGodRays);
+        protected override Type LinkType => typeof(IGodRaysGetter);
 
 
         private RangeInt32? _DATALocation;

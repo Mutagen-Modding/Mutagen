@@ -1,4 +1,4 @@
-﻿using Shouldly;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;

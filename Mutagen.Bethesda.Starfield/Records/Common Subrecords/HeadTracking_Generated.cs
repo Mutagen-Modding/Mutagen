@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Aliases = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ForceRotate = initialValue;
                 this.ForceRotateMustComplete = initialValue;
             }
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ForceRotate,
                 TItem ForceRotateMustComplete)
             {
-                this.Aliases = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Aliases, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Aliases, []);
                 this.ForceRotate = ForceRotate;
                 this.ForceRotateMustComplete = ForceRotateMustComplete;
             }
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Aliases != null)
                 {
-                    obj.Aliases = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Aliases.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Aliases = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Aliases.Overall), []);
                     if (Aliases.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

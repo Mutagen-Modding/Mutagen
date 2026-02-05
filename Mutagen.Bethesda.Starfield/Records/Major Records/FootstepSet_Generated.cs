@@ -149,11 +149,11 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -178,11 +178,11 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SprintFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SneakFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SwimFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, []);
+                this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, []);
+                this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SprintFootsteps, []);
+                this.SneakFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SneakFootsteps, []);
+                this.SwimFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SwimFootsteps, []);
             }
 
             #pragma warning disable CS8618
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (WalkFootsteps != null)
                 {
-                    obj.WalkFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.WalkFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkFootsteps.Overall), []);
                     if (WalkFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RunFootsteps != null)
                 {
-                    obj.RunFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RunFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunFootsteps.Overall), []);
                     if (RunFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SprintFootsteps != null)
                 {
-                    obj.SprintFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SprintFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SprintFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SprintFootsteps.Overall), []);
                     if (SprintFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SneakFootsteps != null)
                 {
-                    obj.SneakFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SneakFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SneakFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SneakFootsteps.Overall), []);
                     if (SneakFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SwimFootsteps != null)
                 {
-                    obj.SwimFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SwimFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SwimFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SwimFootsteps.Overall), []);
                     if (SwimFootsteps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFootstepSet);
+        protected override Type LinkType => typeof(IFootstepSetGetter);
 
 
         #region Count

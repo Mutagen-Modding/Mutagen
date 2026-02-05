@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.DefaultLayer = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.ObjectEffect = initialValue;
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SpawnSpreadDegrees = initialValue;
                 this.Count = initialValue;
                 this.Duration = initialValue;
-                this.DamageType = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>());
+                this.DamageType = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.XALG = XALG;
                 this.DefaultLayer = DefaultLayer;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.ObjectEffect = ObjectEffect;
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SpawnSpreadDegrees = SpawnSpreadDegrees;
                 this.Count = Count;
                 this.Duration = Duration;
-                this.DamageType = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(DamageType, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>());
+                this.DamageType = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeValue.Mask<TItem>?>>?>(DamageType, []);
             }
 
             #pragma warning disable CS8618
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DefaultLayer = eval(this.DefaultLayer);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Duration = eval(this.Duration);
                 if (DamageType != null)
                 {
-                    obj.DamageType = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>?>(eval(this.DamageType.Overall), Enumerable.Empty<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>());
+                    obj.DamageType = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>?>(eval(this.DamageType.Overall), []);
                     if (DamageType.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DamageTypeValue.Mask<R>?>>();
@@ -3961,7 +3961,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IExplosion);
+        protected override Type LinkType => typeof(IExplosionGetter);
 
 
         #region ObjectBounds

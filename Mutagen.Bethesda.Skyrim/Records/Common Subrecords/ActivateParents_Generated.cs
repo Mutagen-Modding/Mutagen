@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Flags = initialValue;
-                this.Parents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>());
+                this.Parents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Parents)
             {
                 this.Flags = Flags;
-                this.Parents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>(Parents, Enumerable.Empty<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>());
+                this.Parents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>(Parents, []);
             }
 
             #pragma warning disable CS8618
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Flags = eval(this.Flags);
                 if (Parents != null)
                 {
-                    obj.Parents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActivateParent.Mask<R>?>>?>(eval(this.Parents.Overall), Enumerable.Empty<MaskItemIndexed<R, ActivateParent.Mask<R>?>>());
+                    obj.Parents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActivateParent.Mask<R>?>>?>(eval(this.Parents.Overall), []);
                     if (Parents.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ActivateParent.Mask<R>?>>();

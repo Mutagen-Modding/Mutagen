@@ -7983,11 +7983,15 @@ namespace Mutagen.Bethesda.Starfield
             bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
         {
+            this.StarfieldRelease = release;
             if (headerVersion != null)
             {
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
-            this.StarfieldRelease = release;
+            else
+            {
+                this.ModHeader.Stats.Version = GameConstants.Get(release.ToGameRelease()).DefaultModHeaderVersion ?? 0f;
+            }
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);
@@ -8955,7 +8959,7 @@ namespace Mutagen.Bethesda.Starfield
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -8994,7 +8998,7 @@ namespace Mutagen.Bethesda.Starfield
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -10020,7 +10024,7 @@ namespace Mutagen.Bethesda.Starfield
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -10670,6 +10674,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
         {
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IStarfieldMod obj)
+        {
             foreach (var item in StarfieldModCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -10681,8 +10695,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return StarfieldModCommon.Instance.EnumerateMajorRecords(obj);
+            return StarfieldModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -10690,7 +10704,23 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in StarfieldModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            var ret = EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IStarfieldMod obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in StarfieldModCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -12852,6 +12882,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.MagicEffects is IAssetLinkContainer MagicEffectslinkCont)
+            {
+                foreach (var item in MagicEffectslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             {
                 foreach (var item in obj.LandscapeTextures.EnumerateListedAssetLinks())
                 {
@@ -13374,6 +13411,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Factions.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MagicEffects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ProjectedDecals.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -16051,6 +16089,26 @@ namespace Mutagen.Bethesda.Starfield
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                case "GameSettingBool":
+                case "IGameSettingBoolGetter":
+                case "IGameSettingBool":
+                case "IGameSettingBoolInternal":
+                case "GameSettingUInt":
+                case "IGameSettingUIntGetter":
+                case "IGameSettingUInt":
+                case "IGameSettingUIntInternal":
                     return obj.GameSettings;
                 case "Keyword":
                 case "IKeywordGetter":
@@ -16620,6 +16678,34 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAObjectModificationGetter":
                 case "IAObjectModification":
                 case "IAObjectModificationInternal":
+                case "WeaponModification":
+                case "IWeaponModificationGetter":
+                case "IWeaponModification":
+                case "IWeaponModificationInternal":
+                case "ArmorModification":
+                case "IArmorModificationGetter":
+                case "IArmorModification":
+                case "IArmorModificationInternal":
+                case "FloraModification":
+                case "IFloraModificationGetter":
+                case "IFloraModification":
+                case "IFloraModificationInternal":
+                case "NpcModification":
+                case "INpcModificationGetter":
+                case "INpcModification":
+                case "INpcModificationInternal":
+                case "ContainerModification":
+                case "IContainerModificationGetter":
+                case "IContainerModification":
+                case "IContainerModificationInternal":
+                case "ObjectModification":
+                case "IObjectModificationGetter":
+                case "IObjectModification":
+                case "IObjectModificationInternal":
+                case "UnknownObjectModification":
+                case "IUnknownObjectModificationGetter":
+                case "IUnknownObjectModification":
+                case "IUnknownObjectModificationInternal":
                     return obj.ObjectModifications;
                 case "Zoom":
                 case "IZoomGetter":
@@ -17969,6 +18055,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IStarfieldModGetter obj)
         {
+            var ret = EnumerateMajorRecordsLoopLogic(obj: obj);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IStarfieldModGetter obj)
+        {
             foreach (var item in obj.GameSettings.EnumerateMajorRecords())
             {
                 yield return item;
@@ -18680,11 +18776,27 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return StarfieldModCommon.Instance.EnumerateMajorRecords(obj);
+            return StarfieldModCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IStarfieldModGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            var ret = EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+            if (obj is IMod)
+            {
+                ret = ret.ToList();
+            }
+            return ret;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IStarfieldModGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -18696,14 +18808,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!StarfieldMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -24795,6 +24907,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Races is IAssetLinkContainerGetter RaceslinkCont)
             {
                 foreach (var item in RaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MagicEffects is IAssetLinkContainerGetter MagicEffectslinkCont)
+            {
+                foreach (var item in MagicEffectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -34893,7 +35012,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             param ??= BinaryReadParameters.Default;
             var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
-            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta), path.ModKey, meta.LinkCache);
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
                 metaData: meta);
@@ -34914,10 +35033,10 @@ namespace Mutagen.Bethesda.Starfield
                     release: release,
                     shouldDispose: true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 stream.Dispose();
-                throw;
+                throw ModGroupsMalformedException.Enrich(ex, path.ModKey);
             }
         }
 

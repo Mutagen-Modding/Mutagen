@@ -229,13 +229,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.BaseObjectList = initialValue;
                 this.RankTemplate = initialValue;
-                this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>());
-                this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
-                this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
+                this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(initialValue, []);
+                this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, []);
+                this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -272,13 +272,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.XALG = XALG;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.BaseObjectList = BaseObjectList;
                 this.RankTemplate = RankTemplate;
-                this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(LegendaryMods, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>());
-                this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(IncludeFilters, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
-                this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(ExcludeFilters, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
+                this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(LegendaryMods, []);
+                this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(IncludeFilters, []);
+                this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(ExcludeFilters, []);
             }
 
             #pragma warning disable CS8618
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.RankTemplate = eval(this.RankTemplate);
                 if (LegendaryMods != null)
                 {
-                    obj.LegendaryMods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>?>(eval(this.LegendaryMods.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>());
+                    obj.LegendaryMods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>?>(eval(this.LegendaryMods.Overall), []);
                     if (LegendaryMods.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>();
@@ -561,7 +561,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (IncludeFilters != null)
                 {
-                    obj.IncludeFilters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>?>(eval(this.IncludeFilters.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>());
+                    obj.IncludeFilters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>?>(eval(this.IncludeFilters.Overall), []);
                     if (IncludeFilters.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>();
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ExcludeFilters != null)
                 {
-                    obj.ExcludeFilters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>?>(eval(this.ExcludeFilters.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>());
+                    obj.ExcludeFilters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>?>(eval(this.ExcludeFilters.Overall), []);
                     if (ExcludeFilters.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>();
@@ -2987,7 +2987,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILegendaryItem);
+        protected override Type LinkType => typeof(ILegendaryItemGetter);
 
 
         #region ObjectBounds

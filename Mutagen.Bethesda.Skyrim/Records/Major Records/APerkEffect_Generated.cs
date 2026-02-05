@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Rank = initialValue;
                 this.Priority = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(initialValue, []);
                 this.ButtonLabel = initialValue;
                 this.Flags = new MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>(initialValue, new PerkScriptFlag.Mask<TItem>(initialValue));
             }
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Rank = Rank;
                 this.Priority = Priority;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(Conditions, []);
                 this.ButtonLabel = ButtonLabel;
                 this.Flags = new MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>(Flags, new PerkScriptFlag.Mask<TItem>(Flags));
             }
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Priority = eval(this.Priority);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkCondition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, PerkCondition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkCondition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PerkCondition.Mask<R>?>>();

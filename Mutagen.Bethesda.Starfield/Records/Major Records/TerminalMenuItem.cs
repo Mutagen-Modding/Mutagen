@@ -130,7 +130,7 @@ partial class TerminalMenuItemBinaryOverlay
 
     private IATerminalMenuItemTargetGetter GetTarget()
     {
-        var data = _targetLocation.HasValue ? _recordData.Slice(_targetLocation.Value) : Array.Empty<byte>();
+        var data = _targetLocation.HasValue ? _recordData.Slice(_targetLocation.Value) : [];
         switch (Type)
         {
             case TerminalMenuItemBinaryCreateTranslation.TypeOption.DisplayText:

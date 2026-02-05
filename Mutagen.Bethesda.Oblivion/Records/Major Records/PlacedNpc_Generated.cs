@@ -2194,7 +2194,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedNpc);
+        protected override Type LinkType => typeof(IPlacedNpcGetter);
 
 
         #region Base

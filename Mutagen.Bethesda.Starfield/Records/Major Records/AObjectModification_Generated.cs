@@ -254,18 +254,18 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
                 this.Unknown2 = initialValue;
                 this.AttachPoint = initialValue;
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Unknown3 = initialValue;
-                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>());
-                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(initialValue, []);
+                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LooseMod = initialValue;
                 this.Priority = initialValue;
                 this.Filter = initialValue;
@@ -303,18 +303,18 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Description = Description;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Unknown = Unknown;
                 this.Unknown2 = Unknown2;
                 this.AttachPoint = AttachPoint;
-                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, []);
                 this.Unknown3 = Unknown3;
-                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(Includes, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>());
-                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetOmodKeywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FilterKeywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(Includes, []);
+                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetOmodKeywords, []);
+                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FilterKeywords, []);
                 this.LooseMod = LooseMod;
                 this.Priority = Priority;
                 this.Filter = Filter;
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AttachPoint = eval(this.AttachPoint);
                 if (AttachParentSlots != null)
                 {
-                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), []);
                     if (AttachParentSlots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown3 = eval(this.Unknown3);
                 if (Includes != null)
                 {
-                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>?>(eval(this.Includes.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>());
+                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>?>(eval(this.Includes.Overall), []);
                     if (Includes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>();
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (TargetOmodKeywords != null)
                 {
-                    obj.TargetOmodKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetOmodKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TargetOmodKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetOmodKeywords.Overall), []);
                     if (TargetOmodKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (FilterKeywords != null)
                 {
-                    obj.FilterKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FilterKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.FilterKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FilterKeywords.Overall), []);
                     if (FilterKeywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

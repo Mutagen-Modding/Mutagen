@@ -159,10 +159,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.NNAM = initialValue;
-                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>());
-                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>());
-                this.FaceDials = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>());
+                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(initialValue, []);
+                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(initialValue, []);
+                this.FaceDials = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -173,10 +173,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FaceDials)
             {
                 this.NNAM = NNAM;
-                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(MorphGroups, Enumerable.Empty<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>());
-                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(FaceMorphs, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>());
-                this.FaceDials = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>(FaceDials, Enumerable.Empty<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>());
+                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, []);
+                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(MorphGroups, []);
+                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(FaceMorphs, []);
+                this.FaceDials = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>(FaceDials, []);
             }
 
             #pragma warning disable CS8618
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.NNAM = eval(this.NNAM);
                 if (RacePresets != null)
                 {
-                    obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), []);
                     if (RacePresets.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MorphGroups != null)
                 {
-                    obj.MorphGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphGroup.Mask<R>?>>?>(eval(this.MorphGroups.Overall), Enumerable.Empty<MaskItemIndexed<R, MorphGroup.Mask<R>?>>());
+                    obj.MorphGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphGroup.Mask<R>?>>?>(eval(this.MorphGroups.Overall), []);
                     if (MorphGroups.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MorphGroup.Mask<R>?>>();
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (FaceMorphs != null)
                 {
-                    obj.FaceMorphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorph.Mask<R>?>>?>(eval(this.FaceMorphs.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceMorph.Mask<R>?>>());
+                    obj.FaceMorphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorph.Mask<R>?>>?>(eval(this.FaceMorphs.Overall), []);
                     if (FaceMorphs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FaceMorph.Mask<R>?>>();
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (FaceDials != null)
                 {
-                    obj.FaceDials = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceDial.Mask<R>?>>?>(eval(this.FaceDials.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceDial.Mask<R>?>>());
+                    obj.FaceDials = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceDial.Mask<R>?>>?>(eval(this.FaceDials.Overall), []);
                     if (FaceDials.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FaceDial.Mask<R>?>>();

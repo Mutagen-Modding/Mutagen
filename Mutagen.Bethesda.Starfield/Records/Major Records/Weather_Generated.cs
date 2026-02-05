@@ -545,12 +545,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LNAM = initialValue;
                 this.Precipitation = initialValue;
                 this.CameraEffect = initialValue;
                 this.CLDC = initialValue;
-                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>());
+                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(initialValue, []);
                 this.SkyUpperColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.FogNearColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.UnknownColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MoonGlareColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.FogNearHigh = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.FogFarHigh = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
-                this.NAM4 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NAM4 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FogDistanceDayNear = initialValue;
                 this.FogDistanceDayFar = initialValue;
                 this.FogDistanceNightNear = initialValue;
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WindDirection = initialValue;
                 this.WindDirectionRange = initialValue;
                 this.WindTurbulance = initialValue;
-                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ImageSpaceSunrise = initialValue;
                 this.ImageSpaceDay = initialValue;
                 this.ImageSpaceSunset = initialValue;
@@ -718,12 +718,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.LNAM = LNAM;
                 this.Precipitation = Precipitation;
                 this.CameraEffect = CameraEffect;
                 this.CLDC = CLDC;
-                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(Clouds, Enumerable.Empty<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>());
+                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(Clouds, []);
                 this.SkyUpperColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(SkyUpperColor, new WeatherColor.Mask<TItem>(SkyUpperColor));
                 this.FogNearColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(FogNearColor, new WeatherColor.Mask<TItem>(FogNearColor));
                 this.UnknownColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(UnknownColor, new WeatherColor.Mask<TItem>(UnknownColor));
@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MoonGlareColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(MoonGlareColor, new WeatherColor.Mask<TItem>(MoonGlareColor));
                 this.FogNearHigh = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(FogNearHigh, new WeatherColor.Mask<TItem>(FogNearHigh));
                 this.FogFarHigh = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(FogFarHigh, new WeatherColor.Mask<TItem>(FogFarHigh));
-                this.NAM4 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NAM4, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NAM4 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NAM4, []);
                 this.FogDistanceDayNear = FogDistanceDayNear;
                 this.FogDistanceDayFar = FogDistanceDayFar;
                 this.FogDistanceNightNear = FogDistanceNightNear;
@@ -779,7 +779,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WindDirection = WindDirection;
                 this.WindDirectionRange = WindDirectionRange;
                 this.WindTurbulance = WindTurbulance;
-                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, []);
                 this.ImageSpaceSunrise = ImageSpaceSunrise;
                 this.ImageSpaceDay = ImageSpaceDay;
                 this.ImageSpaceSunset = ImageSpaceSunset;
@@ -1502,7 +1502,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CLDC = eval(this.CLDC);
                 if (Clouds != null)
                 {
-                    obj.Clouds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CloudLayer.Mask<R>?>>?>(eval(this.Clouds.Overall), Enumerable.Empty<MaskItemIndexed<R, CloudLayer.Mask<R>?>>());
+                    obj.Clouds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CloudLayer.Mask<R>?>>?>(eval(this.Clouds.Overall), []);
                     if (Clouds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CloudLayer.Mask<R>?>>();
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FogFarHigh = this.FogFarHigh == null ? null : new MaskItem<R, WeatherColor.Mask<R>?>(eval(this.FogFarHigh.Overall), this.FogFarHigh.Specific?.Translate(eval));
                 if (NAM4 != null)
                 {
-                    obj.NAM4 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NAM4.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.NAM4 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NAM4.Overall), []);
                     if (NAM4.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.WindTurbulance = eval(this.WindTurbulance);
                 if (SkyStatics != null)
                 {
-                    obj.SkyStatics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SkyStatics.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SkyStatics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SkyStatics.Overall), []);
                     if (SkyStatics.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -7461,7 +7461,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWeather);
+        protected override Type LinkType => typeof(IWeatherGetter);
 
 
         #region Keywords

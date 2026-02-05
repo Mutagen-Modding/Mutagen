@@ -30,7 +30,7 @@ public partial class ALinkingTests
         var npc = mod.Npcs.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(npc, linkedRec);
@@ -64,19 +64,19 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
         });
         var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
             Assert.Same(cell, linkedCell);
         });
         var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
             Assert.Same(worldspace, linkedWorldspace);
@@ -102,7 +102,7 @@ public partial class ALinkingTests
         var npc = mod.Npcs.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(npc, formLink.TryResolve(package));
         });
@@ -135,17 +135,17 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedNpcGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(placedNpc, placedFormLink.TryResolve(package));
         });
         var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(cell, cellFormLink.TryResolve(package));
         });
         var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
         });
@@ -160,7 +160,7 @@ public partial class ALinkingTests
         var spell = mod.Spells.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(formLink.TryResolve(package, out var linkedRec));
             Assert.Same(spell, linkedRec);
@@ -204,19 +204,19 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
             Assert.Same(placedNpc, linkedPlacedNpc);
         });
         var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
             Assert.Same(cell, linkedCell);
         });
         var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
             Assert.Same(worldspace, linkedWorldspace);
@@ -232,7 +232,7 @@ public partial class ALinkingTests
         var spell = mod.Spells.AddNew();
         var (style, package) = GetLinkCache(mod, cacheType);
         var formLink = new FormLink<IEffectRecordGetter>(spell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(spell, formLink.TryResolve(package));
         });
@@ -275,17 +275,17 @@ public partial class ALinkingTests
         worldspace.SubCells.Add(block);
         var (style, package) = GetLinkCache(mod, cacheType);
         var placedFormLink = new FormLink<IPlacedGetter>(placedNpc.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(placedNpc, placedFormLink.TryResolve(package));
         });
         var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(cell, cellFormLink.TryResolve(package));
         });
         var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
-        WrapPotentialThrow(cacheType, style, () =>
+        WrapPotentialThrow(cacheType, style, null, () =>
         {
             Assert.Same(worldspace, worldspaceFormLink.TryResolve(package));
         });

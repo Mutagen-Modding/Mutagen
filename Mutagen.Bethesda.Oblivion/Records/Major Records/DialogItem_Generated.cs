@@ -201,11 +201,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Quest = initialValue;
                 this.Topic = initialValue;
                 this.PreviousItem = initialValue;
-                this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
             }
 
@@ -236,11 +236,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Quest = Quest;
                 this.Topic = Topic;
                 this.PreviousItem = PreviousItem;
-                this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Topics, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Choices, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkFrom, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Topics, []);
+                this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, []);
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Choices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Choices, []);
+                this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkFrom, []);
                 this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(Script, new ScriptFields.Mask<TItem>(Script));
             }
 
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.PreviousItem = eval(this.PreviousItem);
                 if (Topics != null)
                 {
-                    obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Topics.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Topics.Overall), []);
                     if (Topics.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Responses != null)
                 {
-                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponse.Mask<R>?>>());
+                    obj.Responses = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponse.Mask<R>?>>?>(eval(this.Responses.Overall), []);
                     if (Responses.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
@@ -509,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Choices != null)
                 {
-                    obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Choices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Choices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Choices.Overall), []);
                     if (Choices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (LinkFrom != null)
                 {
-                    obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkFrom.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LinkFrom = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkFrom.Overall), []);
                     if (LinkFrom.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDialogItem);
+        protected override Type LinkType => typeof(IDialogItemGetter);
 
 
         #region Data

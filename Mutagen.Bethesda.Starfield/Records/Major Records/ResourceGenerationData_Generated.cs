@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResourceGenerationDataItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResourceGenerationDataItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResourceGenerationDataItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResourceGenerationDataItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ResourceGenerationDataItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResourceGenerationDataItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResourceGenerationDataItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, ResourceGenerationDataItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResourceGenerationDataItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ResourceGenerationDataItem.Mask<R>?>>();
@@ -1523,7 +1523,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IResourceGenerationData);
+        protected override Type LinkType => typeof(IResourceGenerationDataGetter);
 
 
         public IReadOnlyList<IResourceGenerationDataItemGetter> Items { get; private set; } = [];

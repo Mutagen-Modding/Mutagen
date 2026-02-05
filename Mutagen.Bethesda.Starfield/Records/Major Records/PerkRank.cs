@@ -562,7 +562,7 @@ partial class PerkRankBinaryWriteTranslation
 
 partial class PerkRankBinaryOverlay
 {
-    public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = Array.Empty<IAPerkEffectGetter>();
+    public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = [];
 
     partial void EffectsCustomParse(
         OverlayStream stream,

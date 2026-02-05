@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.IdleTime = initialValue;
                 this.Idle = initialValue;
-                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>());
+                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(initialValue, []);
                 this.Topic = initialValue;
             }
 
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.IdleTime = IdleTime;
                 this.Idle = Idle;
-                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(Topics, Enumerable.Empty<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>());
+                this.Topics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ATopicReference.Mask<TItem>?>>?>(Topics, []);
                 this.Topic = Topic;
             }
 
@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Idle = eval(this.Idle);
                 if (Topics != null)
                 {
-                    obj.Topics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ATopicReference.Mask<R>?>>?>(eval(this.Topics.Overall), Enumerable.Empty<MaskItemIndexed<R, ATopicReference.Mask<R>?>>());
+                    obj.Topics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ATopicReference.Mask<R>?>>?>(eval(this.Topics.Overall), []);
                     if (Topics.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ATopicReference.Mask<R>?>>();

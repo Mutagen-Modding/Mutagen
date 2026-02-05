@@ -136,14 +136,27 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
+            if (objData.GameReleaseOptions != null)
+            {
+                sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
+            }
+
             sb.AppendLine("if (headerVersion != null)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine($"this.ModHeader.Stats.Version = headerVersion.Value;");
             }
-            if (objData.GameReleaseOptions != null)
+            sb.AppendLine("else");
+            using (sb.CurlyBrace())
             {
-                sb.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
+                if (objData.GameReleaseOptions != null)
+                {
+                    sb.AppendLine($"this.ModHeader.Stats.Version = {nameof(GameConstants)}.Get(release.ToGameRelease()).DefaultModHeaderVersion ?? 0f;");
+                }
+                else
+                {
+                    sb.AppendLine($"this.ModHeader.Stats.Version = {nameof(GameConstants)}.Get({nameof(GameRelease)}.{objData.GameCategory}).DefaultModHeaderVersion ?? 0f;");
+                }
             }
 
             using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
@@ -456,12 +469,12 @@ public class ModModule : GenerationModule
         if (obj.GetObjectType() != ObjectType.Mod) return;
         if (!maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)) return;
 
-        GenerateGetGroup(obj, sb);
+        await GenerateGetGroup(obj, sb);
         GenerateWriteParallel(obj, sb);
         GenerateGetRecordCount(obj, sb);
     }
 
-    private void GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
+    private async Task GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
     {
         using (var args = sb.Function(
                    "public object? GetGroup"))
@@ -493,6 +506,23 @@ public class ModModule : GenerationModule
                     {
                         sb.AppendLine($"case \"{subObj.Interface(getter: false, internalInterface: true)}\":");
                     }
+
+                    // Add case statements for inheriting types (e.g., GlobalFloat, GlobalInt, etc.)
+                    foreach (var inheritingObj in await subObj.InheritingObjects())
+                    {
+                        sb.AppendLine($"case \"{inheritingObj.Name}\":");
+                        sb.AppendLine($"case \"{inheritingObj.Interface(getter: true)}\":");
+                        sb.AppendLine($"case \"{inheritingObj.Interface(getter: false)}\":");
+                        if (inheritingObj.HasInternalGetInterface)
+                        {
+                            sb.AppendLine($"case \"{inheritingObj.Interface(getter: true, internalInterface: true)}\":");
+                        }
+                        if (inheritingObj.HasInternalSetInterface)
+                        {
+                            sb.AppendLine($"case \"{inheritingObj.Interface(getter: false, internalInterface: true)}\":");
+                        }
+                    }
+
                     using (sb.IncreaseDepth())
                     {
                         if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))

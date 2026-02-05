@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = initialValue;
                 this.MenuDisplayObject = initialValue;
                 this.Description = initialValue;
-                this.WordsOfPower = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>());
+                this.WordsOfPower = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = Name;
                 this.MenuDisplayObject = MenuDisplayObject;
                 this.Description = Description;
-                this.WordsOfPower = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>(WordsOfPower, Enumerable.Empty<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>());
+                this.WordsOfPower = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>(WordsOfPower, []);
             }
 
             #pragma warning disable CS8618
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 if (WordsOfPower != null)
                 {
-                    obj.WordsOfPower = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ShoutWord.Mask<R>?>>?>(eval(this.WordsOfPower.Overall), Enumerable.Empty<MaskItemIndexed<R, ShoutWord.Mask<R>?>>());
+                    obj.WordsOfPower = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ShoutWord.Mask<R>?>>?>(eval(this.WordsOfPower.Overall), []);
                     if (WordsOfPower.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ShoutWord.Mask<R>?>>();
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IShout);
+        protected override Type LinkType => typeof(IShoutGetter);
 
         public Shout.MajorFlag MajorFlags => (Shout.MajorFlag)this.MajorRecordFlagsRaw;
 

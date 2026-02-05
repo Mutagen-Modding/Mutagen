@@ -7,6 +7,20 @@ Bethesda mod files come in a few compaction styles:
 
 Compacting mods intelligently allows the game to load more mods overall.  These docs will not go into the gritty specifics of that.
 
+## Setting Small Master Flag
+
+To create a small/light master, set the header flag on your mod:
+
+```cs
+var mod = new SkyrimMod(ModKey.FromFileName("MyMod.esp"), SkyrimRelease.SkyrimSE);
+mod.ModHeader.Flags |= SkyrimModHeader.HeaderFlag.Small;
+```
+
+This creates a "flagged ESP" - an `.esp` file with the small master flag set in its header. The game will treat it as a light master.
+
+!!! note "ModType vs HeaderFlag"
+    `ModType.Light` (used in ModKey) affects the file extension (`.esl`), while `HeaderFlag.Small` sets the internal header flag. Modern practice typically uses flagged ESPs (`.esp` files with the small master flag set).
+
 ## Compacting
 
 `ModCompaction` is a static class that offers the ability to compact a mod to the given acceptable range for Small/Medium/Full masters.

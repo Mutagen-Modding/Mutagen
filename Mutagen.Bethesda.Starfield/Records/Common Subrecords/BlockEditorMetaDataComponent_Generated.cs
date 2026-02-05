@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownByte = initialValue;
                 this.UnknownString2 = initialValue;
                 this.UnknownString3 = initialValue;
-                this.UnknownInts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UnknownInts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.UnknownInt1 = initialValue;
                 this.UnknownInt2 = initialValue;
                 this.UnknownInt3 = initialValue;
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.UnknownByte = UnknownByte;
                 this.UnknownString2 = UnknownString2;
                 this.UnknownString3 = UnknownString3;
-                this.UnknownInts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnknownInts, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UnknownInts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnknownInts, []);
                 this.UnknownInt1 = UnknownInt1;
                 this.UnknownInt2 = UnknownInt2;
                 this.UnknownInt3 = UnknownInt3;
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.UnknownString3 = eval(this.UnknownString3);
                 if (UnknownInts != null)
                 {
-                    obj.UnknownInts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnknownInts.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.UnknownInts = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnknownInts.Overall), []);
                     if (UnknownInts.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

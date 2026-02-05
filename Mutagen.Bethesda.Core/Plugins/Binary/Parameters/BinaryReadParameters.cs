@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -34,4 +35,10 @@ public record BinaryReadParameters
     /// FileSystem to read from
     /// </summary>
     public IFileSystem? FileSystem { get; init; }
+
+    /// <summary>
+    /// Optional LinkCache for cross-mod record type resolution.
+    /// Required when reading records that reference records from other mods and need type information about those records.
+    /// </summary>
+    public ILinkCache? LinkCache { get; init; }
 }

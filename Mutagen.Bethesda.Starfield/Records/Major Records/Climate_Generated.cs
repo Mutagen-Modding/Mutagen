@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
-                this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, []);
+                this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(initialValue, []);
                 this.SunriseBegin = initialValue;
                 this.SunriseEnd = initialValue;
                 this.SunsetBegin = initialValue;
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
-                this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(WeatherSettings, Enumerable.Empty<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>());
+                this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, []);
+                this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(WeatherSettings, []);
                 this.SunriseBegin = SunriseBegin;
                 this.SunriseEnd = SunriseEnd;
                 this.SunsetBegin = SunsetBegin;
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Weathers != null)
                 {
-                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherType.Mask<R>?>>());
+                    obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), []);
                     if (Weathers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (WeatherSettings != null)
                 {
-                    obj.WeatherSettings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>?>(eval(this.WeatherSettings.Overall), Enumerable.Empty<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>());
+                    obj.WeatherSettings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>?>(eval(this.WeatherSettings.Overall), []);
                     if (WeatherSettings.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ClimateWeatherSettings.Mask<R>?>>();
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IClimate);
+        protected override Type LinkType => typeof(IClimateGetter);
 
 
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }

@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Quest = initialValue;
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>());
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>?>(initialValue, []);
                 this.VNAM = initialValue;
-                this.XNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.XNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.VNAM2 = initialValue;
             }
 
@@ -157,9 +157,9 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Quest = Quest;
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>());
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneCollectionItem.Mask<TItem>?>>?>(Scenes, []);
                 this.VNAM = VNAM;
-                this.XNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(XNAMs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.XNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(XNAMs, []);
                 this.VNAM2 = VNAM2;
             }
 
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Quest = eval(this.Quest);
                 if (Scenes != null)
                 {
-                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneCollectionItem.Mask<R>?>>?>(eval(this.Scenes.Overall), Enumerable.Empty<MaskItemIndexed<R, SceneCollectionItem.Mask<R>?>>());
+                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneCollectionItem.Mask<R>?>>?>(eval(this.Scenes.Overall), []);
                     if (Scenes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SceneCollectionItem.Mask<R>?>>();
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VNAM = eval(this.VNAM);
                 if (XNAMs != null)
                 {
-                    obj.XNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.XNAMs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.XNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.XNAMs.Overall), []);
                     if (XNAMs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISceneCollection);
+        protected override Type LinkType => typeof(ISceneCollectionGetter);
 
 
         #region Quest

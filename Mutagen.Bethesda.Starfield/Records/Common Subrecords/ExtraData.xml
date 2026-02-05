@@ -19,10 +19,10 @@
       <Int32 name="RequiredRank" />
     </Fields>
   </Object>
-  <Object name="NoOwner" baseClass="OwnerTarget" objType="Subrecord">
+  <Object name="UntypedOwner" baseClass="OwnerTarget" objType="Subrecord">
     <Fields>
-      <UInt32 name="RawOwnerData" />
-      <UInt32 name="RawVariableData" />
+      <FormLink name="OwnerData" refName="StarfieldMajorRecord" />
+      <FormLink name="VariableData" refName="StarfieldMajorRecord" />
     </Fields>
   </Object>
 </Loqui>

@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Properties = new MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>(initialValue, new InstanceNamingRuleProperties.Mask<TItem>(initialValue));
                 this.Index = initialValue;
             }
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Index)
             {
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Properties = new MaskItem<TItem, InstanceNamingRuleProperties.Mask<TItem>?>(Properties, new InstanceNamingRuleProperties.Mask<TItem>(Properties));
                 this.Index = Index;
             }
@@ -290,7 +290,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

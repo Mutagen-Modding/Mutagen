@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>());
+                this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BodyPart.Mask<TItem>?>>?>(Parts, []);
             }
 
             #pragma warning disable CS8618
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Parts != null)
                 {
-                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart.Mask<R>?>>?>(eval(this.Parts.Overall), Enumerable.Empty<MaskItemIndexed<R, BodyPart.Mask<R>?>>());
+                    obj.Parts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BodyPart.Mask<R>?>>?>(eval(this.Parts.Overall), []);
                     if (Parts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BodyPart.Mask<R>?>>();
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBodyPartData);
+        protected override Type LinkType => typeof(IBodyPartDataGetter);
 
 
         public IModelGetter? Model { get; private set; }

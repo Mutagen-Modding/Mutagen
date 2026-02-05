@@ -26,8 +26,8 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 extra_css:
   - stylesheets/extra.css
@@ -62,7 +62,8 @@ nav:
   - Plugin Record Suite:
     - plugins/index.md
     - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
-    - Importing and Construction: plugins/Importing-and-Construction.md
+    - Importing: plugins/Importing.md
+    - New Mods: plugins/New-Mods.md
     - Exporting: plugins/Exporting.md
     - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md
@@ -72,11 +73,21 @@ nav:
     - Asset Links: plugins/AssetLink.md
     - Compaction: plugins/Compaction.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
+    - Remapping FormLinks: plugins/Remapping-FormLinks.md
     - Printing: plugins/Printing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
+    - Exceeding Master Limits: plugins/Exceeding-Master-Limits.md
     - Specific Records:
       - plugins/specific/index.md
+      - ExtraData: plugins/specific/ExtraData.md
       - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
+      - Oblivion:
+        - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
+        - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
+      - Skyrim:
+        - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
+        - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
+        - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
     # - Perks:
     # - Magic Effects:
     # - Conditions:
@@ -144,13 +155,5 @@ nav:
     - Game Constants: lowlevel/Game-Constants.md
     - Binary Streams: lowlevel/Binary-Streams.md
     - Binary Utility: lowlevel/Binary-Utility.md
-  - Game Specific Documentation:
-    - Oblivion:
-      - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
-      - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
-    - Skyrim:
-      - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
-      - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
-      - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Correctness: Correctness.md
   - Contributing: Contributing.md

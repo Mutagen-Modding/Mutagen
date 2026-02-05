@@ -1483,7 +1483,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGameSettingString);
+        protected override Type LinkType => typeof(IGameSettingStringGetter);
 
 
         #region Data

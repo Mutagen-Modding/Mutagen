@@ -21,7 +21,7 @@ public class EnumerableObjectSettingsVM : SettingsNodeVM
     }
 
     private readonly ObjectSettingsVM _prototype;
-    internal ObjectSettingsVM[] _defaultValues = Array.Empty<ObjectSettingsVM>();
+    internal ObjectSettingsVM[] _defaultValues = [];
 
     public ObservableCollection<SelectionWrapper> Values { get; } = new ObservableCollection<SelectionWrapper>();
     public ReactiveCommand<Unit, Unit> AddCommand { get; private set; } = null!;

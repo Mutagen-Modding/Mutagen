@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HorizontalPosition = initialValue;
                 this.VerticalPosition = initialValue;
                 this.AssociatedSkill = initialValue;
-                this.ConnectionLineToIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ConnectionLineToIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Index = initialValue;
             }
 
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HorizontalPosition = HorizontalPosition;
                 this.VerticalPosition = VerticalPosition;
                 this.AssociatedSkill = AssociatedSkill;
-                this.ConnectionLineToIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ConnectionLineToIndices, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ConnectionLineToIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ConnectionLineToIndices, []);
                 this.Index = Index;
             }
 
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AssociatedSkill = eval(this.AssociatedSkill);
                 if (ConnectionLineToIndices != null)
                 {
-                    obj.ConnectionLineToIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ConnectionLineToIndices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ConnectionLineToIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ConnectionLineToIndices.Overall), []);
                     if (ConnectionLineToIndices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

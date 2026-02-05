@@ -160,10 +160,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Duration = initialValue;
                 this.FadeOut = initialValue;
                 this.MTSH = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.CuePoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CuePoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.MSTF = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -195,10 +195,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Duration = Duration;
                 this.FadeOut = FadeOut;
                 this.MTSH = new MaskItem<TItem, SoundReference.Mask<TItem>?>(MTSH, new SoundReference.Mask<TItem>(MTSH));
-                this.CuePoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CuePoints, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CuePoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CuePoints, []);
                 this.MSTF = MSTF;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Tracks, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Tracks, []);
             }
 
             #pragma warning disable CS8618
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MTSH = this.MTSH == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.MTSH.Overall), this.MTSH.Specific?.Translate(eval));
                 if (CuePoints != null)
                 {
-                    obj.CuePoints = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CuePoints.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CuePoints = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CuePoints.Overall), []);
                     if (CuePoints.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MSTF = eval(this.MSTF);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Tracks != null)
                 {
-                    obj.Tracks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Tracks.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Tracks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Tracks.Overall), []);
                     if (Tracks.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2324,7 +2324,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMusicTrack);
+        protected override Type LinkType => typeof(IMusicTrackGetter);
 
 
         #region Type

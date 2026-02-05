@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Data = new MaskItem<TItem, AGameplayOptionData.Mask<TItem>?>(initialValue, new AGameplayOptionData.Mask<TItem>(initialValue));
-                this.Rewards = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GameplayOptionReward.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, GameplayOptionReward.Mask<TItem>?>>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Rewards = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GameplayOptionReward.Mask<TItem>?>>?>(initialValue, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -200,8 +200,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Description = Description;
                 this.Data = new MaskItem<TItem, AGameplayOptionData.Mask<TItem>?>(Data, new AGameplayOptionData.Mask<TItem>(Data));
-                this.Rewards = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GameplayOptionReward.Mask<TItem>?>>?>(Rewards, Enumerable.Empty<MaskItemIndexed<TItem, GameplayOptionReward.Mask<TItem>?>>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Rewards = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GameplayOptionReward.Mask<TItem>?>>?>(Rewards, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
             }
 
             #pragma warning disable CS8618
@@ -344,7 +344,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Data = this.Data == null ? null : new MaskItem<R, AGameplayOptionData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Rewards != null)
                 {
-                    obj.Rewards = new MaskItem<R, IEnumerable<MaskItemIndexed<R, GameplayOptionReward.Mask<R>?>>?>(eval(this.Rewards.Overall), Enumerable.Empty<MaskItemIndexed<R, GameplayOptionReward.Mask<R>?>>());
+                    obj.Rewards = new MaskItem<R, IEnumerable<MaskItemIndexed<R, GameplayOptionReward.Mask<R>?>>?>(eval(this.Rewards.Overall), []);
                     if (Rewards.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, GameplayOptionReward.Mask<R>?>>();
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGameplayOption);
+        protected override Type LinkType => typeof(IGameplayOptionGetter);
 
 
         #region Name

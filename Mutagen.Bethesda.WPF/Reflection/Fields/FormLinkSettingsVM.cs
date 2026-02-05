@@ -45,7 +45,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
         Value = defaultVal;
         _linkCacheInternal = linkCache;
         _linkCache = linkCache
-            .ToGuiProperty(this, nameof(LinkCache), default);
+            .ToRxAppGuiProperty(this, nameof(LinkCache), default);
         ScopedTypes = targetTypes;
         _displayName = this.WhenAnyValue(x => x.Value)
             .CombineLatest(this.WhenAnyValue(x => x.LinkCache),
@@ -59,7 +59,7 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
                     }
                     return key.ToString();
                 })
-            .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
+            .ToRxAppGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
     }
 
     public override SettingsNodeVM Duplicate()

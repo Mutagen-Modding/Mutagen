@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMaterialType);
+        protected override Type LinkType => typeof(IMaterialTypeGetter);
 
 
         #region Parent

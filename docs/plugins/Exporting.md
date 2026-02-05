@@ -10,12 +10,20 @@ The preferred route for exporting is utilizing a "builder":
 SkyrimMod mod = ...;
 
 await mod.BeginWrite
-    .ToPath(path)
+    .IntoFolder(folderPath)
     .WithDefaultLoadOrder()
     .WriteAsync();
 ```
 
-The build acts as a "wizard", leading through the steps and options when writing.  The above will write the mod to the given path, looking up the load order in the default locations (plugins.txt) for the purposes of ordering the masters properly.
+The build acts as a "wizard", leading through the steps and options when writing.  The above will write the mod to the specified folder using the mod's ModKey.FileName for the file name, looking up the load order in the default locations (plugins.txt) for the purposes of ordering the masters properly.
+
+Alternatively, you can still specify the full path directly:
+```cs
+await mod.BeginWrite
+    .ToPath(path)
+    .WithDefaultLoadOrder()
+    .WriteAsync();
+```
 
 This builder comes with lots of dials and options to customize how you want to write a mod.
 
@@ -82,6 +90,8 @@ Be default, writing will check the compaction flag (Small/Medium/Full) master st
 `WithTargetLanguage` lets you set the target language (for embedded setups)
 
 `WithEmbeddedEncodings` lets you override the encodings used
+
+`WithUtf8Encoding` convenience method to write embedded strings using UTF8 encoding instead of the default Windows-1252. Use this when your mod contains non-Latin characters (Russian, Japanese, etc.) that need UTF8 support.
 
 #### Lower Range FormIDs
 

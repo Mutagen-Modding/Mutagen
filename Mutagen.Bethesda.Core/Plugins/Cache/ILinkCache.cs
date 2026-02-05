@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Plugins.Cache;
 /// <summary>
 /// An interface for retrieving records
 /// </summary>
-public interface ILinkCache : IIdentifierLinkCache
+public interface ILinkCache : IIdentifierLinkCache, IWinningOverrideProvider
 {
     /// <summary>
     /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
@@ -1075,7 +1075,7 @@ public interface ILinkCache : IIdentifierLinkCache
     IReadOnlyList<IModGetter> PriorityOrder { get; }
 }
 
-public interface ILinkCache<TMod, TModGetter> : ILinkCache
+public interface ILinkCache<TMod, TModGetter> : ILinkCache, IWinningOverrideProvider<TMod, TModGetter>
     where TModGetter : class, IModGetter
     where TMod : class, TModGetter, IMod
 {

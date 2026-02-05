@@ -1,4 +1,5 @@
 ﻿using Noggog;
+
 namespace Mutagen.Bethesda.Skyrim;
 
 public interface IHasEffects : ISkyrimMajorRecordInternal, IHasEffectsGetter

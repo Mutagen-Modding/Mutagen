@@ -298,3 +298,6 @@ Mutagen.Bethesda.Starfield/Mutagen.Bethesda.Starfield.xml
 Mutagen.Bethesda.Tests/config/
 
 nupkg/
+
+# Claude Code files
+.claude

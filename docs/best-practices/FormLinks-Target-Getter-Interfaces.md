@@ -36,7 +36,7 @@ if (myTargetNpc.TryResolve(myLinkCache, out var npc))
    // Found a INpc!
 }
 ```
-The `TryResolve` call wants to return an `INpc` type to you.  But if all it can find is a [readonly `INpcGetter`](../plugins/Importing-and-Construction.md#read-only-mod-importing), it cannot pretend that it's settable, and so fails to match.  This is the result of you asking the system to find an Npc that is settable, when the ones that exist are only getters.
+The `TryResolve` call wants to return an `INpc` type to you.  But if all it can find is a [readonly `INpcGetter`](../plugins/Importing.md#read-only), it cannot pretend that it's settable, and so fails to match.  This is the result of you asking the system to find an Npc that is settable, when the ones that exist are only getters.
 
 You can solve this issue by modifying the TryResolve scope:
 ```cs

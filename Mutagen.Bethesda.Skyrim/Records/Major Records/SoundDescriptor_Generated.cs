@@ -180,10 +180,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = initialValue;
                 this.Category = initialValue;
                 this.AlternateSoundFor = initialValue;
-                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.OutputModel = initialValue;
                 this.String = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.LoopAndRumble = new MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>(initialValue, new SoundLoopAndRumble.Mask<TItem>(initialValue));
                 this.PercentFrequencyShift = initialValue;
                 this.PercentFrequencyVariance = initialValue;
@@ -225,10 +225,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = Type;
                 this.Category = Category;
                 this.AlternateSoundFor = AlternateSoundFor;
-                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SoundFiles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SoundFiles, []);
                 this.OutputModel = OutputModel;
                 this.String = String;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.LoopAndRumble = new MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>(LoopAndRumble, new SoundLoopAndRumble.Mask<TItem>(LoopAndRumble));
                 this.PercentFrequencyShift = PercentFrequencyShift;
                 this.PercentFrequencyVariance = PercentFrequencyVariance;
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AlternateSoundFor = eval(this.AlternateSoundFor);
                 if (SoundFiles != null)
                 {
-                    obj.SoundFiles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SoundFiles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SoundFiles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SoundFiles.Overall), []);
                     if (SoundFiles.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.String = eval(this.String);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -2527,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundDescriptor);
+        protected override Type LinkType => typeof(ISoundDescriptorGetter);
 
 
         #region Type

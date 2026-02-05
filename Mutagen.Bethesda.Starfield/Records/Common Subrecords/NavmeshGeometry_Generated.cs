@@ -239,18 +239,18 @@ namespace Mutagen.Bethesda.Starfield
                 this.NavmeshVersion = initialValue;
                 this.CrcHash = initialValue;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(initialValue, new ANavmeshParent.Mask<TItem>(initialValue));
-                this.Vertices = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>());
-                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
-                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
-                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
-                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>());
-                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>());
-                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
+                this.Vertices = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>(initialValue, []);
+                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, []);
+                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(initialValue, []);
+                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, []);
+                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(initialValue, []);
+                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(initialValue, []);
+                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(initialValue, []);
                 this.GridSize = initialValue;
                 this.GridMaxDistance = initialValue;
                 this.GridMin = initialValue;
                 this.GridMax = initialValue;
-                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>());
+                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(initialValue, []);
                 this.Unknown3 = initialValue;
             }
 
@@ -277,18 +277,18 @@ namespace Mutagen.Bethesda.Starfield
                 this.NavmeshVersion = NavmeshVersion;
                 this.CrcHash = CrcHash;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(Parent, new ANavmeshParent.Mask<TItem>(Parent));
-                this.Vertices = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>(Vertices, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>());
-                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
-                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(EdgeLinks, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
-                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
-                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(Cover, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>());
-                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(CoverTriangleMappings, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>());
-                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(Waypoints, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
+                this.Vertices = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshVertex.Mask<TItem>?>>?>(Vertices, []);
+                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, []);
+                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(EdgeLinks, []);
+                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, []);
+                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(Cover, []);
+                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(CoverTriangleMappings, []);
+                this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(Waypoints, []);
                 this.GridSize = GridSize;
                 this.GridMaxDistance = GridMaxDistance;
                 this.GridMin = GridMin;
                 this.GridMax = GridMax;
-                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(GridArrays, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>());
+                this.GridArrays = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshGridArray.Mask<TItem>?>>?>(GridArrays, []);
                 this.Unknown3 = Unknown3;
             }
 
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Parent = this.Parent == null ? null : new MaskItem<R, ANavmeshParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
                 if (Vertices != null)
                 {
-                    obj.Vertices = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshVertex.Mask<R>?>>?>(eval(this.Vertices.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshVertex.Mask<R>?>>());
+                    obj.Vertices = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshVertex.Mask<R>?>>?>(eval(this.Vertices.Overall), []);
                     if (Vertices.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshVertex.Mask<R>?>>();
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Triangles != null)
                 {
-                    obj.Triangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>?>(eval(this.Triangles.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>());
+                    obj.Triangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>?>(eval(this.Triangles.Overall), []);
                     if (Triangles.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>();
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (EdgeLinks != null)
                 {
-                    obj.EdgeLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EdgeLink.Mask<R>?>>?>(eval(this.EdgeLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, EdgeLink.Mask<R>?>>());
+                    obj.EdgeLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EdgeLink.Mask<R>?>>?>(eval(this.EdgeLinks.Overall), []);
                     if (EdgeLinks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EdgeLink.Mask<R>?>>();
@@ -667,7 +667,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (DoorTriangles != null)
                 {
-                    obj.DoorTriangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>?>(eval(this.DoorTriangles.Overall), Enumerable.Empty<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>());
+                    obj.DoorTriangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>?>(eval(this.DoorTriangles.Overall), []);
                     if (DoorTriangles.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>();
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Cover != null)
                 {
-                    obj.Cover = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>?>(eval(this.Cover.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>());
+                    obj.Cover = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>?>(eval(this.Cover.Overall), []);
                     if (Cover.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>();
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (CoverTriangleMappings != null)
                 {
-                    obj.CoverTriangleMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>?>(eval(this.CoverTriangleMappings.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>());
+                    obj.CoverTriangleMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>?>(eval(this.CoverTriangleMappings.Overall), []);
                     if (CoverTriangleMappings.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>();
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Waypoints != null)
                 {
-                    obj.Waypoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>?>(eval(this.Waypoints.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>());
+                    obj.Waypoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>?>(eval(this.Waypoints.Overall), []);
                     if (Waypoints.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshWaypoint.Mask<R>?>>();
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GridMax = eval(this.GridMax);
                 if (GridArrays != null)
                 {
-                    obj.GridArrays = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>?>(eval(this.GridArrays.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>());
+                    obj.GridArrays = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>?>(eval(this.GridArrays.Overall), []);
                     if (GridArrays.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshGridArray.Mask<R>?>>();

@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = initialValue;
                 this.Grid = initialValue;
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(initialValue, new CellLighting.Mask<TItem>(initialValue));
-                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.MusicType = initialValue;
                 this.WaterHeight = initialValue;
                 this.Climate = initialValue;
@@ -306,11 +306,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
                 this.Timestamp = initialValue;
                 this.PersistentTimestamp = initialValue;
-                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, []);
                 this.TemporaryTimestamp = initialValue;
-                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, []);
                 this.VisibleWhenDistantTimestamp = initialValue;
-                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = Flags;
                 this.Grid = Grid;
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(Lighting, new CellLighting.Mask<TItem>(Lighting));
-                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, []);
                 this.MusicType = MusicType;
                 this.WaterHeight = WaterHeight;
                 this.Climate = Climate;
@@ -367,11 +367,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
                 this.Timestamp = Timestamp;
                 this.PersistentTimestamp = PersistentTimestamp;
-                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, []);
                 this.TemporaryTimestamp = TemporaryTimestamp;
-                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, []);
                 this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
-                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(VisibleWhenDistant, []);
             }
 
             #pragma warning disable CS8618
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
                 if (Regions != null)
                 {
-                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Regions.Overall), []);
                     if (Regions.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.PersistentTimestamp = eval(this.PersistentTimestamp);
                 if (Persistent != null)
                 {
-                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), []);
                     if (Persistent.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
                 if (Temporary != null)
                 {
-                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), []);
                     if (Temporary.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.VisibleWhenDistantTimestamp = eval(this.VisibleWhenDistantTimestamp);
                 if (VisibleWhenDistant != null)
                 {
-                    obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.VisibleWhenDistant.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.VisibleWhenDistant.Overall), []);
                     if (VisibleWhenDistant.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -2318,6 +2318,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellInternal obj)
+        {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -2329,8 +2334,8 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -2338,7 +2343,18 @@ namespace Mutagen.Bethesda.Oblivion
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -3109,6 +3125,11 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellGetter obj)
+        {
             if ((obj.PathGrid != null))
             {
                 if (obj.PathGrid is {} PathGriditem)
@@ -3150,11 +3171,22 @@ namespace Mutagen.Bethesda.Oblivion
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -3166,14 +3198,14 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IOblivionMajorRecord":
                 case "OblivionMajorRecord":
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IOblivionMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -4860,7 +4892,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICell);
+        protected override Type LinkType => typeof(ICellGetter);
 
 
         #region Name

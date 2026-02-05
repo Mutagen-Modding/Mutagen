@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem Links)
             : base()
             {
-                this.Links = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormLinkComponentLink.Mask<TItem>?>>?>(Links, Enumerable.Empty<MaskItemIndexed<TItem, FormLinkComponentLink.Mask<TItem>?>>());
+                this.Links = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormLinkComponentLink.Mask<TItem>?>>?>(Links, []);
             }
 
             #pragma warning disable CS8618
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Links != null)
                 {
-                    obj.Links = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FormLinkComponentLink.Mask<R>?>>?>(eval(this.Links.Overall), Enumerable.Empty<MaskItemIndexed<R, FormLinkComponentLink.Mask<R>?>>());
+                    obj.Links = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FormLinkComponentLink.Mask<R>?>>?>(eval(this.Links.Overall), []);
                     if (Links.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FormLinkComponentLink.Mask<R>?>>();

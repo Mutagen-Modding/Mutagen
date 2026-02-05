@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.AlphaLayerData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>());
+                this.AlphaLayerData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem AlphaLayerData)
             : base(Header: Header)
             {
-                this.AlphaLayerData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>(AlphaLayerData, Enumerable.Empty<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>());
+                this.AlphaLayerData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>(AlphaLayerData, []);
             }
 
             #pragma warning disable CS8618
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (AlphaLayerData != null)
                 {
-                    obj.AlphaLayerData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>?>(eval(this.AlphaLayerData.Overall), Enumerable.Empty<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>());
+                    obj.AlphaLayerData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>?>(eval(this.AlphaLayerData.Overall), []);
                     if (AlphaLayerData.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>();

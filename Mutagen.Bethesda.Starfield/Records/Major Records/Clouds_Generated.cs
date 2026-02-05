@@ -1410,7 +1410,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IClouds);
+        protected override Type LinkType => typeof(ICloudsGetter);
 
 
         #region REFL

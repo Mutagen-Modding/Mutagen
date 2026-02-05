@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region NodeIndex
-        public Int32 NodeIndex { get; set; } = default(Int32);
+        public UInt32 NodeIndex { get; set; } = default(UInt32);
         #endregion
         #region Light
         private readonly IFormLinkNullable<ILightGetter> _Light = new FormLinkNullable<ILightGetter>();
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.NodeIndex = initialValue;
                 this.Light = initialValue;
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.NodeIndex = NodeIndex;
                 this.Light = Light;
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DirtinessScale = eval(this.DirtinessScale);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new Int32 NodeIndex { get; set; }
+        new UInt32 NodeIndex { get; set; }
         new IFormLinkNullable<ILightGetter> Light { get; set; }
         new MemorySlice<Byte>? Reflection { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
@@ -937,7 +937,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        Int32 NodeIndex { get; }
+        UInt32 NodeIndex { get; }
         IFormLinkNullableGetter<ILightGetter> Light { get; }
         ReadOnlyMemorySlice<Byte>? Reflection { get; }
         UInt16 MasterParticleSystemCap { get; }
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Starfield
             item.DirtinessScale = default(Percent);
             item.Components.Clear();
             item.Model = null;
-            item.NodeIndex = default(Int32);
+            item.NodeIndex = default(UInt32);
             item.Light.Clear();
             item.Reflection = default;
             item.MasterParticleSystemCap = default(UInt16);
@@ -2049,7 +2049,7 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NodeIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
@@ -2176,7 +2176,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NodeIndex = frame.ReadInt32();
+                    item.NodeIndex = frame.ReadUInt32();
                     return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.LNAM:
@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAddonNode);
+        protected override Type LinkType => typeof(IAddonNodeGetter);
 
 
         #region ObjectBounds
@@ -2276,7 +2276,7 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Model { get; private set; }
         #region NodeIndex
         private int? _NodeIndexLocation;
-        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default(Int32);
+        public UInt32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Light
         private int? _LightLocation;

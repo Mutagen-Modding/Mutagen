@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Flag = initialValue;
                 this.ConditionActorValue = initialValue;
             }
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, []);
                 this.Flag = Flag;
                 this.ConditionActorValue = ConditionActorValue;
             }
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (SlotParents != null)
                 {
-                    obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), []);
                     if (SlotParents.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEquipType);
+        protected override Type LinkType => typeof(IEquipTypeGetter);
 
 
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }

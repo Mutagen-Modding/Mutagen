@@ -1,4 +1,4 @@
-﻿using Shouldly;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;

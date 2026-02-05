@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.MapColor = initialValue;
                 this.Worldspace = initialValue;
-                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, []);
                 this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(initialValue, new RegionObjects.Mask<TItem>(initialValue));
                 this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(initialValue, new RegionWeather.Mask<TItem>(initialValue));
                 this.Map = new MaskItem<TItem, RegionMap.Mask<TItem>?>(initialValue, new RegionMap.Mask<TItem>(initialValue));
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.MapColor = MapColor;
                 this.Worldspace = Worldspace;
-                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(RegionAreas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(RegionAreas, []);
                 this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(Objects, new RegionObjects.Mask<TItem>(Objects));
                 this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(Weather, new RegionWeather.Mask<TItem>(Weather));
                 this.Map = new MaskItem<TItem, RegionMap.Mask<TItem>?>(Map, new RegionMap.Mask<TItem>(Map));
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Worldspace = eval(this.Worldspace);
                 if (RegionAreas != null)
                 {
-                    obj.RegionAreas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.RegionAreas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    obj.RegionAreas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.RegionAreas.Overall), []);
                     if (RegionAreas.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
@@ -2452,7 +2452,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRegion);
+        protected override Type LinkType => typeof(IRegionGetter);
 
         public Region.MajorFlag MajorFlags => (Region.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, []);
                 this.Flags = initialValue;
                 this.ExteriorJailMarker = initialValue;
                 this.FollowerWaitMarker = initialValue;
@@ -285,12 +285,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SharedCrimeFactionList = initialValue;
                 this.JailOutfit = initialValue;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(initialValue, new CrimeValues.Mask<TItem>(initialValue));
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, []);
                 this.VendorBuySellList = initialValue;
                 this.MerchantContainer = initialValue;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, []);
                 this.Flags = Flags;
                 this.ExteriorJailMarker = ExteriorJailMarker;
                 this.FollowerWaitMarker = FollowerWaitMarker;
@@ -336,12 +336,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SharedCrimeFactionList = SharedCrimeFactionList;
                 this.JailOutfit = JailOutfit;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(CrimeValues, new CrimeValues.Mask<TItem>(CrimeValues));
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, []);
                 this.VendorBuySellList = VendorBuySellList;
                 this.MerchantContainer = MerchantContainer;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(VendorLocation, new LocationTargetRadius.Mask<TItem>(VendorLocation));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
             }
 
             #pragma warning disable CS8618
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Name = eval(this.Name);
                 if (Relations != null)
                 {
-                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, Relation.Mask<R>?>>());
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Relation.Mask<R>?>>?>(eval(this.Relations.Overall), []);
                     if (Relations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.CrimeValues = this.CrimeValues == null ? null : new MaskItem<R, CrimeValues.Mask<R>?>(eval(this.CrimeValues.Overall), this.CrimeValues.Specific?.Translate(eval));
                 if (Ranks != null)
                 {
-                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), []);
                     if (Ranks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -3050,7 +3050,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFaction);
+        protected override Type LinkType => typeof(IFactionGetter);
 
 
         #region Name

@@ -225,11 +225,11 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.List = initialValue;
                 this.Rarity = initialValue;
-                this.NextRarities = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NextRarities = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.SurfaceColor = initialValue;
                 this.ShortName = initialValue;
                 this.ResourceType = initialValue;
@@ -268,11 +268,11 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
                 this.List = List;
                 this.Rarity = Rarity;
-                this.NextRarities = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NextRarities, Enumerable.Empty<(int Index, TItem Value)>());
+                this.NextRarities = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NextRarities, []);
                 this.SurfaceColor = SurfaceColor;
                 this.ShortName = ShortName;
                 this.ResourceType = ResourceType;
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Rarity = eval(this.Rarity);
                 if (NextRarities != null)
                 {
-                    obj.NextRarities = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NextRarities.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.NextRarities = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NextRarities.Overall), []);
                     if (NextRarities.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IResource);
+        protected override Type LinkType => typeof(IResourceGetter);
 
 
         #region Name

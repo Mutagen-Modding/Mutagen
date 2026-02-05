@@ -158,12 +158,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.Reference = initialValue;
                 this.PackIn = initialValue;
                 this.LNAM = initialValue;
-                this.MNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -189,12 +189,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
                 this.Reference = Reference;
                 this.PackIn = PackIn;
                 this.LNAM = LNAM;
-                this.MNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MNAM, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MNAM, []);
             }
 
             #pragma warning disable CS8618
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LNAM = eval(this.LNAM);
                 if (MNAM != null)
                 {
-                    obj.MNAM = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MNAM.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MNAM = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MNAM.Overall), []);
                     if (MNAM.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IReferenceGroup);
+        protected override Type LinkType => typeof(IReferenceGroupGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

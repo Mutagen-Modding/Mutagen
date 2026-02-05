@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.HNAM = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(initialValue, new HeadTracking.Mask<TItem>(initialValue));
                 this.DialogueTargetActor = initialValue;
-                this.DialogueList = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>());
+                this.DialogueList = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>(initialValue, []);
                 this.ATTR = initialValue;
                 this.ACBS = initialValue;
                 this.JAIL = initialValue;
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
                 this.HNAM = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(HNAM, new HeadTracking.Mask<TItem>(HNAM));
                 this.DialogueTargetActor = DialogueTargetActor;
-                this.DialogueList = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>(DialogueList, Enumerable.Empty<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>());
+                this.DialogueList = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>(DialogueList, []);
                 this.ATTR = ATTR;
                 this.ACBS = ACBS;
                 this.JAIL = JAIL;
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DialogueTargetActor = eval(this.DialogueTargetActor);
                 if (DialogueList != null)
                 {
-                    obj.DialogueList = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlayerDialogueSceneActionItem.Mask<R>?>>?>(eval(this.DialogueList.Overall), Enumerable.Empty<MaskItemIndexed<R, PlayerDialogueSceneActionItem.Mask<R>?>>());
+                    obj.DialogueList = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlayerDialogueSceneActionItem.Mask<R>?>>?>(eval(this.DialogueList.Overall), []);
                     if (DialogueList.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PlayerDialogueSceneActionItem.Mask<R>?>>();

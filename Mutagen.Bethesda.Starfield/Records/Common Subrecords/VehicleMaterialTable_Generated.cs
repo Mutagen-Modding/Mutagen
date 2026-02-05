@@ -137,9 +137,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.MaterialID = initialValue;
-                this.AudioRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleAudioRule.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, VehicleAudioRule.Mask<TItem>?>>());
-                this.VfxRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleVfxRule.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, VehicleVfxRule.Mask<TItem>?>>());
-                this.FrictionRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleFrictionRule.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, VehicleFrictionRule.Mask<TItem>?>>());
+                this.AudioRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleAudioRule.Mask<TItem>?>>?>(initialValue, []);
+                this.VfxRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleVfxRule.Mask<TItem>?>>?>(initialValue, []);
+                this.FrictionRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleFrictionRule.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -149,9 +149,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FrictionRules)
             {
                 this.MaterialID = MaterialID;
-                this.AudioRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleAudioRule.Mask<TItem>?>>?>(AudioRules, Enumerable.Empty<MaskItemIndexed<TItem, VehicleAudioRule.Mask<TItem>?>>());
-                this.VfxRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleVfxRule.Mask<TItem>?>>?>(VfxRules, Enumerable.Empty<MaskItemIndexed<TItem, VehicleVfxRule.Mask<TItem>?>>());
-                this.FrictionRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleFrictionRule.Mask<TItem>?>>?>(FrictionRules, Enumerable.Empty<MaskItemIndexed<TItem, VehicleFrictionRule.Mask<TItem>?>>());
+                this.AudioRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleAudioRule.Mask<TItem>?>>?>(AudioRules, []);
+                this.VfxRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleVfxRule.Mask<TItem>?>>?>(VfxRules, []);
+                this.FrictionRules = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, VehicleFrictionRule.Mask<TItem>?>>?>(FrictionRules, []);
             }
 
             #pragma warning disable CS8618
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MaterialID = eval(this.MaterialID);
                 if (AudioRules != null)
                 {
-                    obj.AudioRules = new MaskItem<R, IEnumerable<MaskItemIndexed<R, VehicleAudioRule.Mask<R>?>>?>(eval(this.AudioRules.Overall), Enumerable.Empty<MaskItemIndexed<R, VehicleAudioRule.Mask<R>?>>());
+                    obj.AudioRules = new MaskItem<R, IEnumerable<MaskItemIndexed<R, VehicleAudioRule.Mask<R>?>>?>(eval(this.AudioRules.Overall), []);
                     if (AudioRules.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, VehicleAudioRule.Mask<R>?>>();
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (VfxRules != null)
                 {
-                    obj.VfxRules = new MaskItem<R, IEnumerable<MaskItemIndexed<R, VehicleVfxRule.Mask<R>?>>?>(eval(this.VfxRules.Overall), Enumerable.Empty<MaskItemIndexed<R, VehicleVfxRule.Mask<R>?>>());
+                    obj.VfxRules = new MaskItem<R, IEnumerable<MaskItemIndexed<R, VehicleVfxRule.Mask<R>?>>?>(eval(this.VfxRules.Overall), []);
                     if (VfxRules.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, VehicleVfxRule.Mask<R>?>>();
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (FrictionRules != null)
                 {
-                    obj.FrictionRules = new MaskItem<R, IEnumerable<MaskItemIndexed<R, VehicleFrictionRule.Mask<R>?>>?>(eval(this.FrictionRules.Overall), Enumerable.Empty<MaskItemIndexed<R, VehicleFrictionRule.Mask<R>?>>());
+                    obj.FrictionRules = new MaskItem<R, IEnumerable<MaskItemIndexed<R, VehicleFrictionRule.Mask<R>?>>?>(eval(this.FrictionRules.Overall), []);
                     if (FrictionRules.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, VehicleFrictionRule.Mask<R>?>>();

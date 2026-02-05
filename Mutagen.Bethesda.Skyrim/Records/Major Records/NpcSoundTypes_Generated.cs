@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem Types)
             : base()
             {
-                this.Types = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcSoundType.Mask<TItem>?>>?>(Types, Enumerable.Empty<MaskItemIndexed<TItem, NpcSoundType.Mask<TItem>?>>());
+                this.Types = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NpcSoundType.Mask<TItem>?>>?>(Types, []);
             }
 
             #pragma warning disable CS8618
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (Types != null)
                 {
-                    obj.Types = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcSoundType.Mask<R>?>>?>(eval(this.Types.Overall), Enumerable.Empty<MaskItemIndexed<R, NpcSoundType.Mask<R>?>>());
+                    obj.Types = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NpcSoundType.Mask<R>?>>?>(eval(this.Types.Overall), []);
                     if (Types.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NpcSoundType.Mask<R>?>>();

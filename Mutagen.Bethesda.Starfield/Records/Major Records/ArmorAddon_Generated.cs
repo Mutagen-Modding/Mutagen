@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.FirstPersonFlags = initialValue;
                 this.Race = initialValue;
                 this.WeaponAdjust = initialValue;
@@ -240,10 +240,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
                 this.AltSkeleton = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
-                this.ExtraLightLayers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ExtraLightLayers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.SkinTexture = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonSkinTexture.Mask<TItem>?>?>?>(initialValue, default);
                 this.Morphs = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>(initialValue, default);
-                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FootstepSound = initialValue;
                 this.ArtObject = initialValue;
                 this.BodyPartData = initialValue;
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.FirstPersonFlags = FirstPersonFlags;
                 this.Race = Race;
                 this.WeaponAdjust = WeaponAdjust;
@@ -307,10 +307,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(WorldModel, default);
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(FirstPersonModel, default);
                 this.AltSkeleton = new MaskItem<TItem, GenderedItem<TItem>?>(AltSkeleton, default);
-                this.ExtraLightLayers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraLightLayers, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ExtraLightLayers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraLightLayers, []);
                 this.SkinTexture = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonSkinTexture.Mask<TItem>?>?>?>(SkinTexture, default);
                 this.Morphs = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>(Morphs, default);
-                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, []);
                 this.FootstepSound = FootstepSound;
                 this.ArtObject = ArtObject;
                 this.BodyPartData = BodyPartData;
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Starfield
                     eval);
                 if (ExtraLightLayers != null)
                 {
-                    obj.ExtraLightLayers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraLightLayers.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ExtraLightLayers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraLightLayers.Overall), []);
                     if (ExtraLightLayers.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Starfield
                     (m, e) => m?.Translate(e));
                 if (AdditionalRaces != null)
                 {
-                    obj.AdditionalRaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdditionalRaces.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AdditionalRaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdditionalRaces.Overall), []);
                     if (AdditionalRaces.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -3755,7 +3755,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IArmorAddon);
+        protected override Type LinkType => typeof(IArmorAddonGetter);
 
         public ArmorAddon.MajorFlag MajorFlags => (ArmorAddon.MajorFlag)this.MajorRecordFlagsRaw;
 

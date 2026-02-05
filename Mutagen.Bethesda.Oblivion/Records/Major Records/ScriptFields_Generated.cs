@@ -134,8 +134,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.MetadataSummary = new MaskItem<TItem, ScriptMetaSummary.Mask<TItem>?>(initialValue, new ScriptMetaSummary.Mask<TItem>(initialValue));
                 this.CompiledScript = initialValue;
                 this.SourceCode = initialValue;
-                this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>());
-                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>());
+                this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>(initialValue, []);
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -148,8 +148,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.MetadataSummary = new MaskItem<TItem, ScriptMetaSummary.Mask<TItem>?>(MetadataSummary, new ScriptMetaSummary.Mask<TItem>(MetadataSummary));
                 this.CompiledScript = CompiledScript;
                 this.SourceCode = SourceCode;
-                this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>(LocalVariables, Enumerable.Empty<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>());
-                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(References, Enumerable.Empty<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>());
+                this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>(LocalVariables, []);
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(References, []);
             }
 
             #pragma warning disable CS8618
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.SourceCode = eval(this.SourceCode);
                 if (LocalVariables != null)
                 {
-                    obj.LocalVariables = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocalVariable.Mask<R>?>>?>(eval(this.LocalVariables.Overall), Enumerable.Empty<MaskItemIndexed<R, LocalVariable.Mask<R>?>>());
+                    obj.LocalVariables = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocalVariable.Mask<R>?>>?>(eval(this.LocalVariables.Overall), []);
                     if (LocalVariables.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocalVariable.Mask<R>?>>();
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (References != null)
                 {
-                    obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AScriptReference.Mask<R>?>>?>(eval(this.References.Overall), Enumerable.Empty<MaskItemIndexed<R, AScriptReference.Mask<R>?>>());
+                    obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AScriptReference.Mask<R>?>>?>(eval(this.References.Overall), []);
                     if (References.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AScriptReference.Mask<R>?>>();

@@ -1182,6 +1182,7 @@ public class Fallout4Processor : Processor
             { ("DLCworkshop01.esm", StringsSource.IL), new() { 0x2B5ED, 0x2BA4A } },
             { ("DLCworkshop02.esm", StringsSource.Normal), new() { 0x2, 0x7, 0x36736 } },
             { ("DLCworkshop03.esm", StringsSource.Normal), new() { 0x371 } },
+            { ("Fallout4.esm", StringsSource.DL), new() { 0x36CB7, 0x36CB9 } },
         };
     }
 

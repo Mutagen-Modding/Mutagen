@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
                 this.SkinTexture = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.TextureSwapList = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
-                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FootstepSound = initialValue;
                 this.ArtObject = initialValue;
             }
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(FirstPersonModel, default);
                 this.SkinTexture = new MaskItem<TItem, GenderedItem<TItem>?>(SkinTexture, default);
                 this.TextureSwapList = new MaskItem<TItem, GenderedItem<TItem>?>(TextureSwapList, default);
-                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, []);
                 this.FootstepSound = FootstepSound;
                 this.ArtObject = ArtObject;
             }
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
                     eval);
                 if (AdditionalRaces != null)
                 {
-                    obj.AdditionalRaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdditionalRaces.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AdditionalRaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdditionalRaces.Overall), []);
                     if (AdditionalRaces.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2808,7 +2808,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IArmorAddon);
+        protected override Type LinkType => typeof(IArmorAddonGetter);
 
 
         #region BodyTemplate

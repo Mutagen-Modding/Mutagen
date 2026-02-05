@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region NodeIndex
-        public Int32 NodeIndex { get; set; } = default(Int32);
+        public UInt32 NodeIndex { get; set; } = default(UInt32);
         #endregion
         #region Sound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new Int32 NodeIndex { get; set; }
+        new UInt32 NodeIndex { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new IFormLinkNullable<ILightGetter> Light { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        Int32 NodeIndex { get; }
+        UInt32 NodeIndex { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         IFormLinkNullableGetter<ILightGetter> Light { get; }
         UInt16 MasterParticleSystemCap { get; }
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.NodeIndex = default(Int32);
+            item.NodeIndex = default(UInt32);
             item.Sound.Clear();
             item.Light.Clear();
             item.MasterParticleSystemCap = default(UInt16);
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     translationParams: translationParams);
             }
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NodeIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NodeIndex = frame.ReadInt32();
+                    item.NodeIndex = frame.ReadUInt32();
                     return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.SNAM:
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAddonNode);
+        protected override Type LinkType => typeof(IAddonNodeGetter);
 
 
         #region ObjectBounds
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IModelGetter? Model { get; private set; }
         #region NodeIndex
         private int? _NodeIndexLocation;
-        public Int32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default(Int32);
+        public UInt32 NodeIndex => _NodeIndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeIndexLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region Sound
         private int? _SoundLocation;

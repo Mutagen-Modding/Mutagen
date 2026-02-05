@@ -453,7 +453,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta));");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta), path.{nameof(ModPath.ModKey)}, meta.{nameof(ParsingMeta.LinkCache)});");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
                     sb.AppendLine("if (reader.Remaining < 12)");
@@ -2388,7 +2388,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
             if (await obj.IsMajorRecord() && !obj.Abstract)
             {
-                sb.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: false)});");
+                sb.AppendLine($"protected override Type LinkType => typeof({obj.Interface(getter: true)});");
                 sb.AppendLine();
             }
 
@@ -2595,7 +2595,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         sb.AppendLine("param ??= BinaryReadParameters.Default;");
                         sb.AppendLine($"var meta = {nameof(ParsingMeta)}.Factory(param, {gameReleaseStr}, path);");
-                        sb.AppendLine($"meta.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta));");
+                        sb.AppendLine($"meta.{nameof(ParsingMeta.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, meta), path.{nameof(ModPath.ModKey)}, meta.{nameof(ParsingMeta.LinkCache)});");
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))
                         {
@@ -2632,11 +2632,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.Add("shouldDispose: true");
                             }
                         }
-                        sb.AppendLine("catch (Exception)");
+                        sb.AppendLine("catch (Exception ex)");
                         using (sb.CurlyBrace())
                         {
+                            // Dispose only if there's an error
                             sb.AppendLine("stream.Dispose();");
-                            sb.AppendLine("throw;");
+                            sb.AppendLine("throw ModGroupsMalformedException.Enrich(ex, path.ModKey);");
                         }
                     }
                     sb.AppendLine();

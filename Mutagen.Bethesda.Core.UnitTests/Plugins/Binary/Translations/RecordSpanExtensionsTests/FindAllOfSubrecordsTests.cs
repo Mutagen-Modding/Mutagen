@@ -12,7 +12,7 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
     [Fact]
     public void Empty()
     {
-        byte[] b = Array.Empty<byte>();
+        byte[] b = [];
         RecordSpanExtensions.FindAllOfSubrecords(
                 new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion,
                 TestRecordTypes.EDID, TestRecordTypes.FNAM)

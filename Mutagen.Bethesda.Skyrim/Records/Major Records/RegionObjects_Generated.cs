@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Priority: Priority,
                 Icons: Icons)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(Objects, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionObject.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionObject.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionObject.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionObject.Mask<R>?>>();

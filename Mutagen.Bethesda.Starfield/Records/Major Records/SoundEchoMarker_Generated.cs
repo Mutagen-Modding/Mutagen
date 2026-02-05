@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = initialValue;
                 this.XALG = initialValue;
                 this.Description = initialValue;
-                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>());
+                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>(initialValue, []);
                 this.DefaultStartMarker = new MaskItem<TItem, EchoMarker.Mask<TItem>?>(initialValue, new EchoMarker.Mask<TItem>(initialValue));
             }
 
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = DirtinessScale;
                 this.XALG = XALG;
                 this.Description = Description;
-                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>(Markers, Enumerable.Empty<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>());
+                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>(Markers, []);
                 this.DefaultStartMarker = new MaskItem<TItem, EchoMarker.Mask<TItem>?>(DefaultStartMarker, new EchoMarker.Mask<TItem>(DefaultStartMarker));
             }
 
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Description = eval(this.Description);
                 if (Markers != null)
                 {
-                    obj.Markers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EchoMarker.Mask<R>?>>?>(eval(this.Markers.Overall), Enumerable.Empty<MaskItemIndexed<R, EchoMarker.Mask<R>?>>());
+                    obj.Markers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EchoMarker.Mask<R>?>>?>(eval(this.Markers.Overall), []);
                     if (Markers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EchoMarker.Mask<R>?>>();
@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundEchoMarker);
+        protected override Type LinkType => typeof(ISoundEchoMarkerGetter);
 
 
         #region ObjectBounds

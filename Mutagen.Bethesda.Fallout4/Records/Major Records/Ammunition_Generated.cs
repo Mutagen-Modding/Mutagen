@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
                 this.Description = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Value = initialValue;
                 this.Weight = initialValue;
                 this.Projectile = initialValue;
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
                 this.Description = Description;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.Value = Value;
                 this.Weight = Weight;
                 this.Projectile = Projectile;
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Description = eval(this.Description);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2999,7 +2999,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAmmunition);
+        protected override Type LinkType => typeof(IAmmunitionGetter);
 
         public Ammunition.MajorFlag MajorFlags => (Ammunition.MajorFlag)this.MajorRecordFlagsRaw;
 

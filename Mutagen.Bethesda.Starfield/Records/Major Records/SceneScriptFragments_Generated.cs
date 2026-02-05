@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.PhaseFragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhaseFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhaseFragment.Mask<TItem>?>>());
+                this.PhaseFragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhaseFragment.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Starfield
                 OnBegin: OnBegin,
                 OnEnd: OnEnd)
             {
-                this.PhaseFragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhaseFragment.Mask<TItem>?>>?>(PhaseFragments, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhaseFragment.Mask<TItem>?>>());
+                this.PhaseFragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhaseFragment.Mask<TItem>?>>?>(PhaseFragments, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (PhaseFragments != null)
                 {
-                    obj.PhaseFragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>>?>(eval(this.PhaseFragments.Overall), Enumerable.Empty<MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>>());
+                    obj.PhaseFragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>>?>(eval(this.PhaseFragments.Overall), []);
                     if (PhaseFragments.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>>();

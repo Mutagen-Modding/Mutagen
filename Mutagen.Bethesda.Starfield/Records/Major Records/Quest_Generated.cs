@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(initialValue, new QuestAdapter.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(initialValue, new QuestData.Mask<TItem>(initialValue));
                 this.QuestType = initialValue;
                 this.QuestFaction = initialValue;
@@ -453,27 +453,27 @@ namespace Mutagen.Bethesda.Starfield
                 this.Location = initialValue;
                 this.QuestTimeLimit = initialValue;
                 this.SourceQuest = initialValue;
-                this.QDUPs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.QDUPs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Filter = initialValue;
                 this.Summary = initialValue;
-                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, []);
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(initialValue, []);
                 this.QuestGroup = initialValue;
                 this.SwfFile = initialValue;
                 this.MissionTypeKeyword = initialValue;
                 this.MissionBoardDescription = initialValue;
-                this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(initialValue, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ScriptComment = initialValue;
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
-                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
-                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
+                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(initialValue, []);
+                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(initialValue, []);
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Name = Name;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(Data, new QuestData.Mask<TItem>(Data));
                 this.QuestType = QuestType;
                 this.QuestFaction = QuestFaction;
@@ -534,27 +534,27 @@ namespace Mutagen.Bethesda.Starfield
                 this.Location = Location;
                 this.QuestTimeLimit = QuestTimeLimit;
                 this.SourceQuest = SourceQuest;
-                this.QDUPs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(QDUPs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
+                this.QDUPs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(QDUPs, []);
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, []);
                 this.Filter = Filter;
                 this.Summary = Summary;
-                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
-                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
-                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, []);
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, []);
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(Aliases, []);
                 this.QuestGroup = QuestGroup;
                 this.SwfFile = SwfFile;
                 this.MissionTypeKeyword = MissionTypeKeyword;
                 this.MissionBoardDescription = MissionBoardDescription;
-                this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(MissionBoardInfoPanels, Enumerable.Empty<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>());
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(MissionBoardInfoPanels, []);
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.ScriptComment = ScriptComment;
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
-                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(DialogBranches, Enumerable.Empty<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>());
-                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, Enumerable.Empty<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>());
-                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, Enumerable.Empty<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>());
+                this.DialogBranches = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogBranch.Mask<TItem>?>>?>(DialogBranches, []);
+                this.DialogTopics = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogTopic.Mask<TItem>?>>?>(DialogTopics, []);
+                this.Scenes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Scene.Mask<TItem>?>>?>(Scenes, []);
             }
 
             #pragma warning disable CS8618
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SourceQuest = eval(this.SourceQuest);
                 if (QDUPs != null)
                 {
-                    obj.QDUPs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.QDUPs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.QDUPs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.QDUPs.Overall), []);
                     if (QDUPs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (TextDisplayGlobals != null)
                 {
-                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), []);
                     if (TextDisplayGlobals.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Summary = eval(this.Summary);
                 if (DialogConditions != null)
                 {
-                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), []);
                     if (DialogConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (UnusedConditions != null)
                 {
-                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), []);
                     if (UnusedConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Stages != null)
                 {
-                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
                     if (Stages.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Objectives != null)
                 {
-                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestObjective.Mask<R>?>>());
+                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), []);
                     if (Objectives.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestObjective.Mask<R>?>>();
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Aliases != null)
                 {
-                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>());
+                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), []);
                     if (Aliases.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>();
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MissionBoardDescription = eval(this.MissionBoardDescription);
                 if (MissionBoardInfoPanels != null)
                 {
-                    obj.MissionBoardInfoPanels = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>?>(eval(this.MissionBoardInfoPanels.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>());
+                    obj.MissionBoardInfoPanels = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>?>(eval(this.MissionBoardInfoPanels.Overall), []);
                     if (MissionBoardInfoPanels.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>();
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown = eval(this.Unknown);
                 if (DialogBranches != null)
                 {
-                    obj.DialogBranches = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogBranch.Mask<R>?>>?>(eval(this.DialogBranches.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogBranch.Mask<R>?>>());
+                    obj.DialogBranches = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogBranch.Mask<R>?>>?>(eval(this.DialogBranches.Overall), []);
                     if (DialogBranches.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogBranch.Mask<R>?>>();
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (DialogTopics != null)
                 {
-                    obj.DialogTopics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogTopic.Mask<R>?>>?>(eval(this.DialogTopics.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogTopic.Mask<R>?>>());
+                    obj.DialogTopics = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogTopic.Mask<R>?>>?>(eval(this.DialogTopics.Overall), []);
                     if (DialogTopics.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogTopic.Mask<R>?>>();
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Scenes != null)
                 {
-                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Scene.Mask<R>?>>?>(eval(this.Scenes.Overall), Enumerable.Empty<MaskItemIndexed<R, Scene.Mask<R>?>>());
+                    obj.Scenes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Scene.Mask<R>?>>?>(eval(this.Scenes.Overall), []);
                     if (Scenes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Scene.Mask<R>?>>();
@@ -3496,6 +3496,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.TIFL,
                 RecordTypes.TIFC,
                 RecordTypes.INFO,
+                RecordTypes.TPIC,
                 RecordTypes.TRDA,
                 RecordTypes.TROT,
                 RecordTypes.NAM4,
@@ -3654,6 +3655,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IQuestInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IQuestInternal obj)
+        {
             foreach (var item in QuestCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -3665,8 +3671,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return QuestCommon.Instance.EnumerateMajorRecords(obj);
+            return QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -3674,7 +3680,18 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IQuestInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in QuestCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -4872,6 +4889,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IQuestGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IQuestGetter obj)
+        {
             foreach (var subItem in obj.DialogBranches)
             {
                 yield return subItem;
@@ -4903,11 +4925,22 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return QuestCommon.Instance.EnumerateMajorRecords(obj);
+            return QuestCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IQuestGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IQuestGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -4919,14 +4952,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!Quest_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -6715,7 +6748,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IQuest);
+        protected override Type LinkType => typeof(IQuestGetter);
 
         public Quest.MajorFlag MajorFlags => (Quest.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -319,9 +319,9 @@ partial class NpcBinaryOverlay
     {
         get
         {
-            if (!_MSDVLocation.HasValue && !_MSDKLocation.HasValue) return Array.Empty<INpcMorphGetter>();
-            ReadOnlyMemorySlice<byte> msdk = _MSDKLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSDKLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
-            ReadOnlyMemorySlice<byte> msdv = _MSDVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSDVLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+            if (!_MSDVLocation.HasValue && !_MSDKLocation.HasValue) return [];
+            ReadOnlyMemorySlice<byte> msdk = _MSDKLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSDKLocation.Value, _package.MetaData.Constants) : [];
+            ReadOnlyMemorySlice<byte> msdv = _MSDVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSDVLocation.Value, _package.MetaData.Constants) : [];
             var amount = Math.Max(msdk.Length, msdv.Length) / 4; 
             var ret = new List<INpcMorphGetter>(amount);
             for (int i = 0; i < amount; i++)

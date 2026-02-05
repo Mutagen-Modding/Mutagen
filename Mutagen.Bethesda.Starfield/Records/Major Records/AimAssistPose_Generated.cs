@@ -106,8 +106,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.AttachPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>());
-                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>());
+                this.AttachPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(initialValue, []);
+                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.AttachPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(AttachPoints, Enumerable.Empty<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>());
-                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(Connections, Enumerable.Empty<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>());
+                this.AttachPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(AttachPoints, []);
+                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(Connections, []);
             }
 
             #pragma warning disable CS8618
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (AttachPoints != null)
                 {
-                    obj.AttachPoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>?>(eval(this.AttachPoints.Overall), Enumerable.Empty<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>());
+                    obj.AttachPoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>?>(eval(this.AttachPoints.Overall), []);
                     if (AttachPoints.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>();
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Connections != null)
                 {
-                    obj.Connections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>?>(eval(this.Connections.Overall), Enumerable.Empty<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>());
+                    obj.Connections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>?>(eval(this.Connections.Overall), []);
                     if (Connections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>();
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAimAssistPose);
+        protected override Type LinkType => typeof(IAimAssistPoseGetter);
 
 
         public IReadOnlyList<IAimAssistPosePointGetter> AttachPoints { get; private set; } = [];

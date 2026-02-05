@@ -811,6 +811,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4ListGroup<T> obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IFallout4ListGroup<T> obj)
+        {
             foreach (var item in Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -822,8 +827,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj);
+            return Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -831,7 +836,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IFallout4ListGroup<T> obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1071,6 +1087,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout4ListGroupGetter<T> obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IFallout4ListGroupGetter<T> obj)
+        {
             foreach (var subItem in obj.Records)
             {
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1085,11 +1106,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj);
+            return Fallout4ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout4ListGroupGetter<T> obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IFallout4ListGroupGetter<T> obj,
             Type type,
             bool throwIfUnknown)
@@ -1101,14 +1133,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!Fallout4ListGroup_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -1641,7 +1673,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Type = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
-                this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>());
+                this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(initialValue, []);
             }
         
             public Mask(
@@ -1653,7 +1685,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Type = Type;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
-                this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(Records, Enumerable.Empty<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>());
+                this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(Records, []);
             }
         
             #pragma warning disable CS8618
@@ -1758,7 +1790,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 if (Records != null)
                 {
-                    obj.Records = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellBlock.Mask<R>?>>?>(eval(this.Records.Overall), Enumerable.Empty<MaskItemIndexed<R, CellBlock.Mask<R>?>>());
+                    obj.Records = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellBlock.Mask<R>?>>?>(eval(this.Records.Overall), []);
                     if (Records.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CellBlock.Mask<R>?>>();

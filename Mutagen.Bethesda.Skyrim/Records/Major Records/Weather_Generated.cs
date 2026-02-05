@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.DNAM = initialValue;
                 this.CNAM = initialValue;
                 this.ANAM = initialValue;
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Precipitation = initialValue;
                 this.VisualEffect = initialValue;
                 this.ONAM = initialValue;
-                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>());
+                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(initialValue, []);
                 this.SkyUpperColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.FogNearColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
                 this.UnknownColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(initialValue, new WeatherColor.Mask<TItem>(initialValue));
@@ -515,8 +515,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VisualEffectEnd = initialValue;
                 this.WindDirection = initialValue;
                 this.WindDirectionRange = initialValue;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
-                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, []);
+                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(initialValue, new WeatherImageSpaces.Mask<TItem>(initialValue));
                 this.VolumetricLighting = new MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>(initialValue, new WeatherVolumetricLighting.Mask<TItem>(initialValue));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(initialValue, new WeatherAmbientColorSet.Mask<TItem>(initialValue));
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CloudTextures, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CloudTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CloudTextures, []);
                 this.DNAM = DNAM;
                 this.CNAM = CNAM;
                 this.ANAM = ANAM;
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Precipitation = Precipitation;
                 this.VisualEffect = VisualEffect;
                 this.ONAM = ONAM;
-                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(Clouds, Enumerable.Empty<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>());
+                this.Clouds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CloudLayer.Mask<TItem>?>>?>(Clouds, []);
                 this.SkyUpperColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(SkyUpperColor, new WeatherColor.Mask<TItem>(SkyUpperColor));
                 this.FogNearColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(FogNearColor, new WeatherColor.Mask<TItem>(FogNearColor));
                 this.UnknownColor = new MaskItem<TItem, WeatherColor.Mask<TItem>?>(UnknownColor, new WeatherColor.Mask<TItem>(UnknownColor));
@@ -656,8 +656,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.VisualEffectEnd = VisualEffectEnd;
                 this.WindDirection = WindDirection;
                 this.WindDirectionRange = WindDirectionRange;
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
-                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, []);
+                this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, []);
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(ImageSpaces, new WeatherImageSpaces.Mask<TItem>(ImageSpaces));
                 this.VolumetricLighting = new MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>(VolumetricLighting, new WeatherVolumetricLighting.Mask<TItem>(VolumetricLighting));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColorSet.Mask<TItem>(DirectionalAmbientLightingColors));
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (CloudTextures != null)
                 {
-                    obj.CloudTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CloudTextures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CloudTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CloudTextures.Overall), []);
                     if (CloudTextures.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ONAM = eval(this.ONAM);
                 if (Clouds != null)
                 {
-                    obj.Clouds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CloudLayer.Mask<R>?>>?>(eval(this.Clouds.Overall), Enumerable.Empty<MaskItemIndexed<R, CloudLayer.Mask<R>?>>());
+                    obj.Clouds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CloudLayer.Mask<R>?>>?>(eval(this.Clouds.Overall), []);
                     if (Clouds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CloudLayer.Mask<R>?>>();
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.WindDirectionRange = eval(this.WindDirectionRange);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
                     if (Sounds.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WeatherSound.Mask<R>?>>();
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (SkyStatics != null)
                 {
-                    obj.SkyStatics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SkyStatics.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SkyStatics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SkyStatics.Overall), []);
                     if (SkyStatics.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -6590,7 +6590,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWeather);
+        protected override Type LinkType => typeof(IWeatherGetter);
 
 
         #region CloudTexturesParse

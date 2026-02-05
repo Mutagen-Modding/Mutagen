@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceSubBlock.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Unknown = eval(this.Unknown);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>();
@@ -1235,6 +1235,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IWorldspaceBlock obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(IWorldspaceBlock obj)
+        {
             foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1246,8 +1251,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1255,7 +1260,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            IWorldspaceBlock obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in WorldspaceBlockCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1659,6 +1675,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IWorldspaceBlockGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(IWorldspaceBlockGetter obj)
+        {
             foreach (var subItem in obj.Items)
             {
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1673,11 +1694,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return WorldspaceBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IWorldspaceBlockGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             IWorldspaceBlockGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1689,14 +1721,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

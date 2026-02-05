@@ -8,8 +8,6 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Fallout4;
-using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,12 +20,14 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
-using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
-using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -36,32 +36,32 @@ using System.Reactive.Linq;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class PackageTargetReference :
+    public partial class PackageTargetLinkedReference :
         APackageTarget,
-        IEquatable<IPackageTargetReferenceGetter>,
-        ILoquiObjectSetter<PackageTargetReference>,
-        IPackageTargetReference
+        IEquatable<IPackageTargetLinkedReferenceGetter>,
+        ILoquiObjectSetter<PackageTargetLinkedReference>,
+        IPackageTargetLinkedReference
     {
         #region Ctor
-        public PackageTargetReference()
+        public PackageTargetLinkedReference()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Reference
-        private readonly IFormLink<IFallout4MajorRecordGetter> _Reference = new FormLink<IFallout4MajorRecordGetter>();
-        public IFormLink<IFallout4MajorRecordGetter> Reference
+        #region Keyword
+        private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> Keyword
         {
-            get => _Reference;
-            set => _Reference.SetTo(value);
+            get => _Keyword;
+            set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout4MajorRecordGetter> IPackageTargetReferenceGetter.Reference => this.Reference;
+        IFormLinkGetter<IKeywordGetter> IPackageTargetLinkedReferenceGetter.Keyword => this.Keyword;
         #endregion
 
         #region To String
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageTargetReferenceMixIn.Print(
+            PackageTargetLinkedReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -81,16 +81,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPackageTargetReferenceGetter rhs) return false;
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPackageTargetLinkedReferenceGetter rhs) return false;
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPackageTargetReferenceGetter? obj)
+        public bool Equals(IPackageTargetLinkedReferenceGetter? obj)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -104,15 +104,15 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Reference = initialValue;
+                this.Keyword = initialValue;
             }
 
             public Mask(
                 TItem CountOrDistance,
-                TItem Reference)
+                TItem Keyword)
             : base(CountOrDistance: CountOrDistance)
             {
-                this.Reference = Reference;
+                this.Keyword = Keyword;
             }
 
             #pragma warning disable CS8618
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem Reference;
+            public TItem Keyword;
             #endregion
 
             #region Equals
@@ -138,13 +138,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Reference, rhs.Reference)) return false;
+                if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Reference);
+                hash.Add(this.Keyword);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Reference)) return false;
+                if (!eval(this.Keyword)) return false;
                 return true;
             }
             #endregion
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Reference)) return true;
+                if (eval(this.Keyword)) return true;
                 return false;
             }
             #endregion
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PackageTargetReference.Mask<R>();
+                var ret = new PackageTargetLinkedReference.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -180,28 +180,28 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Reference = eval(this.Reference);
+                obj.Keyword = eval(this.Keyword);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(PackageTargetReference.Mask<bool>? printMask = null)
+            public string Print(PackageTargetLinkedReference.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, PackageTargetReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PackageTargetLinkedReference.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(PackageTargetReference.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PackageTargetLinkedReference.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Reference ?? true)
+                    if (printMask?.Keyword ?? true)
                     {
-                        sb.AppendItem(Reference, "Reference");
+                        sb.AppendItem(Keyword, "Keyword");
                     }
                 }
             }
@@ -214,17 +214,17 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Reference;
+            public Exception? Keyword;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                PackageTargetReference_FieldIndex enu = (PackageTargetReference_FieldIndex)index;
+                PackageTargetLinkedReference_FieldIndex enu = (PackageTargetLinkedReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageTargetReference_FieldIndex.Reference:
-                        return Reference;
+                    case PackageTargetLinkedReference_FieldIndex.Keyword:
+                        return Keyword;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -232,11 +232,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                PackageTargetReference_FieldIndex enu = (PackageTargetReference_FieldIndex)index;
+                PackageTargetLinkedReference_FieldIndex enu = (PackageTargetLinkedReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageTargetReference_FieldIndex.Reference:
-                        this.Reference = ex;
+                    case PackageTargetLinkedReference_FieldIndex.Keyword:
+                        this.Keyword = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -246,11 +246,11 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                PackageTargetReference_FieldIndex enu = (PackageTargetReference_FieldIndex)index;
+                PackageTargetLinkedReference_FieldIndex enu = (PackageTargetLinkedReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageTargetReference_FieldIndex.Reference:
-                        this.Reference = (Exception?)obj;
+                    case PackageTargetLinkedReference_FieldIndex.Keyword:
+                        this.Keyword = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Reference != null) return true;
+                if (Keyword != null) return true;
                 return false;
             }
             #endregion
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Reference, "Reference");
+                    sb.AppendItem(Keyword, "Keyword");
                 }
             }
             #endregion
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Reference = this.Reference.Combine(rhs.Reference);
+                ret.Keyword = this.Keyword.Combine(rhs.Keyword);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool Reference;
+            public bool Keyword;
             #endregion
 
             #region Ctors
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Reference = defaultOn;
+                this.Keyword = defaultOn;
             }
 
             #endregion
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Reference, null));
+                ret.Add((Keyword, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -351,29 +351,29 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageTargetReferenceCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetReferenceSetterCommon.Instance.RemapLinks(this, mapping);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageTargetLinkedReferenceCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetLinkedReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PackageTargetReferenceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PackageTargetLinkedReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PackageTargetReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PackageTargetLinkedReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static PackageTargetReference CreateFromBinary(
+        public new static PackageTargetLinkedReference CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new PackageTargetReference();
-            ((PackageTargetReferenceSetterCommon)((IPackageTargetReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PackageTargetLinkedReference();
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PackageTargetReference item,
+            out PackageTargetLinkedReference item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -399,77 +399,77 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((PackageTargetReferenceSetterCommon)((IPackageTargetReferenceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new PackageTargetReference GetNew()
+        internal static new PackageTargetLinkedReference GetNew()
         {
-            return new PackageTargetReference();
+            return new PackageTargetLinkedReference();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPackageTargetReference :
+    public partial interface IPackageTargetLinkedReference :
         IAPackageTarget,
         IFormLinkContainer,
-        ILoquiObjectSetter<IPackageTargetReference>,
-        IPackageTargetReferenceGetter
+        ILoquiObjectSetter<IPackageTargetLinkedReference>,
+        IPackageTargetLinkedReferenceGetter
     {
-        new IFormLink<IFallout4MajorRecordGetter> Reference { get; set; }
+        new IFormLink<IKeywordGetter> Keyword { get; set; }
     }
 
-    public partial interface IPackageTargetReferenceGetter :
+    public partial interface IPackageTargetLinkedReferenceGetter :
         IAPackageTargetGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IPackageTargetReferenceGetter>
+        ILoquiObject<IPackageTargetLinkedReferenceGetter>
     {
-        static new ILoquiRegistration StaticRegistration => PackageTargetReference_Registration.Instance;
-        IFormLinkGetter<IFallout4MajorRecordGetter> Reference { get; }
+        static new ILoquiRegistration StaticRegistration => PackageTargetLinkedReference_Registration.Instance;
+        IFormLinkGetter<IKeywordGetter> Keyword { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PackageTargetReferenceMixIn
+    public static partial class PackageTargetLinkedReferenceMixIn
     {
-        public static void Clear(this IPackageTargetReference item)
+        public static void Clear(this IPackageTargetLinkedReference item)
         {
-            ((PackageTargetReferenceSetterCommon)((IPackageTargetReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PackageTargetReference.Mask<bool> GetEqualsMask(
-            this IPackageTargetReferenceGetter item,
-            IPackageTargetReferenceGetter rhs,
+        public static PackageTargetLinkedReference.Mask<bool> GetEqualsMask(
+            this IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPackageTargetReferenceGetter item,
+            this IPackageTargetLinkedReferenceGetter item,
             string? name = null,
-            PackageTargetReference.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).Print(
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPackageTargetReferenceGetter item,
+            this IPackageTargetLinkedReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PackageTargetReference.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
-            ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).Print(
+            ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -477,39 +477,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this IPackageTargetReferenceGetter item,
-            IPackageTargetReferenceGetter rhs,
-            PackageTargetReference.TranslationMask? equalsMask = null)
+            this IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
+            PackageTargetLinkedReference.TranslationMask? equalsMask = null)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).Equals(
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPackageTargetReference lhs,
-            IPackageTargetReferenceGetter rhs,
-            out PackageTargetReference.ErrorMask errorMask,
-            PackageTargetReference.TranslationMask? copyMask = null)
+            this IPackageTargetLinkedReference lhs,
+            IPackageTargetLinkedReferenceGetter rhs,
+            out PackageTargetLinkedReference.ErrorMask errorMask,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PackageTargetReference.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PackageTargetLinkedReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPackageTargetReference lhs,
-            IPackageTargetReferenceGetter rhs,
+            this IPackageTargetLinkedReference lhs,
+            IPackageTargetLinkedReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -517,32 +517,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static PackageTargetReference DeepCopy(
-            this IPackageTargetReferenceGetter item,
-            PackageTargetReference.TranslationMask? copyMask = null)
+        public static PackageTargetLinkedReference DeepCopy(
+            this IPackageTargetLinkedReferenceGetter item,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
-            return ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PackageTargetReference DeepCopy(
-            this IPackageTargetReferenceGetter item,
-            out PackageTargetReference.ErrorMask errorMask,
-            PackageTargetReference.TranslationMask? copyMask = null)
+        public static PackageTargetLinkedReference DeepCopy(
+            this IPackageTargetLinkedReferenceGetter item,
+            out PackageTargetLinkedReference.ErrorMask errorMask,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
-            return ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PackageTargetReference DeepCopy(
-            this IPackageTargetReferenceGetter item,
+        public static PackageTargetLinkedReference DeepCopy(
+            this IPackageTargetLinkedReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -550,11 +550,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPackageTargetReference item,
+            this IPackageTargetLinkedReference item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((PackageTargetReferenceSetterCommon)((IPackageTargetReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -567,52 +567,52 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum PackageTargetReference_FieldIndex
+    internal enum PackageTargetLinkedReference_FieldIndex
     {
         CountOrDistance = 0,
-        Reference = 1,
+        Keyword = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class PackageTargetReference_Registration : ILoquiRegistration
+    internal partial class PackageTargetLinkedReference_Registration : ILoquiRegistration
     {
-        public static readonly PackageTargetReference_Registration Instance = new PackageTargetReference_Registration();
+        public static readonly PackageTargetLinkedReference_Registration Instance = new PackageTargetLinkedReference_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(PackageTargetReference.Mask<>);
+        public static readonly Type MaskType = typeof(PackageTargetLinkedReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PackageTargetReference.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PackageTargetLinkedReference.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PackageTargetReference);
+        public static readonly Type ClassType = typeof(PackageTargetLinkedReference);
 
-        public static readonly Type GetterType = typeof(IPackageTargetReferenceGetter);
+        public static readonly Type GetterType = typeof(IPackageTargetLinkedReferenceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPackageTargetReference);
+        public static readonly Type SetterType = typeof(IPackageTargetLinkedReference);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.PackageTargetReference";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.PackageTargetLinkedReference";
 
-        public const string Name = "PackageTargetReference";
+        public const string Name = "PackageTargetLinkedReference";
 
-        public const string Namespace = "Mutagen.Bethesda.Fallout4";
+        public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
         public const byte GenericCount = 0;
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(PackageTargetReferenceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PackageTargetLinkedReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -643,36 +643,36 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class PackageTargetReferenceSetterCommon : APackageTargetSetterCommon
+    internal partial class PackageTargetLinkedReferenceSetterCommon : APackageTargetSetterCommon
     {
-        public new static readonly PackageTargetReferenceSetterCommon Instance = new PackageTargetReferenceSetterCommon();
+        public new static readonly PackageTargetLinkedReferenceSetterCommon Instance = new PackageTargetLinkedReferenceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPackageTargetReference item)
+        public void Clear(IPackageTargetLinkedReference item)
         {
             ClearPartial();
-            item.Reference.Clear();
+            item.Keyword.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IAPackageTarget item)
         {
-            Clear(item: (IPackageTargetReference)item);
+            Clear(item: (IPackageTargetLinkedReference)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IPackageTargetReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPackageTargetLinkedReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference.Relink(mapping);
+            obj.Keyword.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPackageTargetReference item,
+            IPackageTargetLinkedReference item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PackageTargetReferenceBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: PackageTargetLinkedReferenceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (PackageTargetReference)item,
+                item: (PackageTargetLinkedReference)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -697,17 +697,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class PackageTargetReferenceCommon : APackageTargetCommon
+    internal partial class PackageTargetLinkedReferenceCommon : APackageTargetCommon
     {
-        public new static readonly PackageTargetReferenceCommon Instance = new PackageTargetReferenceCommon();
+        public new static readonly PackageTargetLinkedReferenceCommon Instance = new PackageTargetLinkedReferenceCommon();
 
-        public PackageTargetReference.Mask<bool> GetEqualsMask(
-            IPackageTargetReferenceGetter item,
-            IPackageTargetReferenceGetter rhs,
+        public PackageTargetLinkedReference.Mask<bool> GetEqualsMask(
+            IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PackageTargetReference.Mask<bool>(false);
-            ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PackageTargetLinkedReference.Mask<bool>(false);
+            ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -716,19 +716,19 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            IPackageTargetReferenceGetter item,
-            IPackageTargetReferenceGetter rhs,
-            PackageTargetReference.Mask<bool> ret,
+            IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
+            PackageTargetLinkedReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Reference = item.Reference.Equals(rhs.Reference);
+            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IPackageTargetReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             string? name = null,
-            PackageTargetReference.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -740,18 +740,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            IPackageTargetReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PackageTargetReference.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"PackageTargetReference =>");
+                sb.AppendLine($"PackageTargetLinkedReference =>");
             }
             else
             {
-                sb.AppendLine($"{name} (PackageTargetReference) =>");
+                sb.AppendLine($"{name} (PackageTargetLinkedReference) =>");
             }
             using (sb.Brace())
             {
@@ -763,26 +763,26 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            IPackageTargetReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             StructuredStringBuilder sb,
-            PackageTargetReference.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
             APackageTargetCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Reference ?? true)
+            if (printMask?.Keyword ?? true)
             {
-                sb.AppendItem(item.Reference.FormKey, "Reference");
+                sb.AppendItem(item.Keyword.FormKey, "Keyword");
             }
         }
         
-        public static PackageTargetReference_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
+        public static PackageTargetLinkedReference_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
         {
             switch (index)
             {
                 case APackageTarget_FieldIndex.CountOrDistance:
-                    return (PackageTargetReference_FieldIndex)((int)index);
+                    return (PackageTargetLinkedReference_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -790,15 +790,15 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPackageTargetReferenceGetter? lhs,
-            IPackageTargetReferenceGetter? rhs,
+            IPackageTargetLinkedReferenceGetter? lhs,
+            IPackageTargetLinkedReferenceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)PackageTargetReference_FieldIndex.Reference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageTargetLinkedReference_FieldIndex.Keyword) ?? true))
             {
-                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+                if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
             }
             return true;
         }
@@ -809,22 +809,22 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IPackageTargetReferenceGetter?)lhs,
-                rhs: rhs as IPackageTargetReferenceGetter,
+                lhs: (IPackageTargetLinkedReferenceGetter?)lhs,
+                rhs: rhs as IPackageTargetLinkedReferenceGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IPackageTargetReferenceGetter item)
+        public virtual int GetHashCode(IPackageTargetLinkedReferenceGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Reference);
+            hash.Add(item.Keyword);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAPackageTargetGetter item)
         {
-            return GetHashCode(item: (IPackageTargetReferenceGetter)item);
+            return GetHashCode(item: (IPackageTargetLinkedReferenceGetter)item);
         }
         
         #endregion
@@ -832,31 +832,31 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return PackageTargetReference.GetNew();
+            return PackageTargetLinkedReference.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageTargetReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageTargetLinkedReferenceGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Reference);
+            yield return FormLinkInformation.Factory(obj.Keyword);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class PackageTargetReferenceSetterTranslationCommon : APackageTargetSetterTranslationCommon
+    internal partial class PackageTargetLinkedReferenceSetterTranslationCommon : APackageTargetSetterTranslationCommon
     {
-        public new static readonly PackageTargetReferenceSetterTranslationCommon Instance = new PackageTargetReferenceSetterTranslationCommon();
+        public new static readonly PackageTargetLinkedReferenceSetterTranslationCommon Instance = new PackageTargetLinkedReferenceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPackageTargetReference item,
-            IPackageTargetReferenceGetter rhs,
+            IPackageTargetLinkedReference item,
+            IPackageTargetLinkedReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -867,9 +867,9 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)PackageTargetReference_FieldIndex.Reference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageTargetLinkedReference_FieldIndex.Keyword) ?? true))
             {
-                item.Reference.SetTo(rhs.Reference.FormKey);
+                item.Keyword.SetTo(rhs.Keyword.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -880,8 +880,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         partial void DeepCopyInCustom(
-            IPackageTargetReference item,
-            IPackageTargetReferenceGetter rhs,
+            IPackageTargetLinkedReference item,
+            IPackageTargetLinkedReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -894,8 +894,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IPackageTargetReference)item,
-                rhs: (IPackageTargetReferenceGetter)rhs,
+                item: (IPackageTargetLinkedReference)item,
+                rhs: (IPackageTargetLinkedReferenceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -903,12 +903,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public PackageTargetReference DeepCopy(
-            IPackageTargetReferenceGetter item,
-            PackageTargetReference.TranslationMask? copyMask = null)
+        public PackageTargetLinkedReference DeepCopy(
+            IPackageTargetLinkedReferenceGetter item,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
-            PackageTargetReference ret = (PackageTargetReference)((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).GetNew();
-            ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackageTargetLinkedReference ret = (PackageTargetLinkedReference)((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -917,30 +917,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public PackageTargetReference DeepCopy(
-            IPackageTargetReferenceGetter item,
-            out PackageTargetReference.ErrorMask errorMask,
-            PackageTargetReference.TranslationMask? copyMask = null)
+        public PackageTargetLinkedReference DeepCopy(
+            IPackageTargetLinkedReferenceGetter item,
+            out PackageTargetLinkedReference.ErrorMask errorMask,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PackageTargetReference ret = (PackageTargetReference)((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).GetNew();
-            ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackageTargetLinkedReference ret = (PackageTargetLinkedReference)((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PackageTargetReference.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PackageTargetLinkedReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PackageTargetReference DeepCopy(
-            IPackageTargetReferenceGetter item,
+        public PackageTargetLinkedReference DeepCopy(
+            IPackageTargetLinkedReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PackageTargetReference ret = (PackageTargetReference)((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).GetNew();
-            ((PackageTargetReferenceSetterTranslationCommon)((IPackageTargetReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackageTargetLinkedReference ret = (PackageTargetLinkedReference)((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -954,23 +954,23 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageTargetReference
+    public partial class PackageTargetLinkedReference
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PackageTargetReference_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => PackageTargetReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PackageTargetLinkedReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetLinkedReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PackageTargetReferenceCommon.Instance;
+        protected override object CommonInstance() => PackageTargetLinkedReferenceCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return PackageTargetReferenceSetterCommon.Instance;
+            return PackageTargetLinkedReferenceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PackageTargetReferenceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PackageTargetLinkedReferenceSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -979,16 +979,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageTargetReferenceBinaryWriteTranslation :
+    public partial class PackageTargetLinkedReferenceBinaryWriteTranslation :
         APackageTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly PackageTargetReferenceBinaryWriteTranslation Instance = new();
+        public new static readonly PackageTargetLinkedReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IPackageTargetReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             MutagenWriter writer)
         {
             APackageTargetBinaryWriteTranslation.WriteEmbedded(
@@ -996,12 +996,12 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference);
+                item: item.Keyword);
         }
 
         public void Write(
             MutagenWriter writer,
-            IPackageTargetReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IPackageTargetReferenceGetter)item,
+                item: (IPackageTargetLinkedReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1026,80 +1026,80 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IPackageTargetReferenceGetter)item,
+                item: (IPackageTargetLinkedReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PackageTargetReferenceBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
+    internal partial class PackageTargetLinkedReferenceBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
-        public new static readonly PackageTargetReferenceBinaryCreateTranslation Instance = new PackageTargetReferenceBinaryCreateTranslation();
+        public new static readonly PackageTargetLinkedReferenceBinaryCreateTranslation Instance = new PackageTargetLinkedReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPackageTargetReference item,
+            IPackageTargetLinkedReference item,
             MutagenFrame frame)
         {
             APackageTargetBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class PackageTargetReferenceBinaryTranslationMixIn
+    public static class PackageTargetLinkedReferenceBinaryTranslationMixIn
     {
     }
     #endregion
 
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class PackageTargetReferenceBinaryOverlay :
+    internal partial class PackageTargetLinkedReferenceBinaryOverlay :
         APackageTargetBinaryOverlay,
-        IPackageTargetReferenceGetter
+        IPackageTargetLinkedReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PackageTargetReference_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => PackageTargetReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PackageTargetLinkedReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetLinkedReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PackageTargetReferenceCommon.Instance;
+        protected override object CommonInstance() => PackageTargetLinkedReferenceCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PackageTargetReferenceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PackageTargetLinkedReferenceSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageTargetReferenceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageTargetLinkedReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PackageTargetReferenceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PackageTargetLinkedReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PackageTargetReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PackageTargetLinkedReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout4MajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PackageTargetReferenceBinaryOverlay(
+        protected PackageTargetLinkedReferenceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static IPackageTargetReferenceGetter PackageTargetReferenceFactory(
+        public static IPackageTargetLinkedReferenceGetter PackageTargetLinkedReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
                 length: 0x10,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new PackageTargetReferenceBinaryOverlay(
+            var ret = new PackageTargetLinkedReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0x10;
@@ -1132,12 +1132,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static IPackageTargetReferenceGetter PackageTargetReferenceFactory(
+        public static IPackageTargetLinkedReferenceGetter PackageTargetLinkedReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return PackageTargetReferenceFactory(
+            return PackageTargetLinkedReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageTargetReferenceMixIn.Print(
+            PackageTargetLinkedReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1160,16 +1160,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPackageTargetReferenceGetter rhs) return false;
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPackageTargetLinkedReferenceGetter rhs) return false;
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPackageTargetReferenceGetter? obj)
+        public bool Equals(IPackageTargetLinkedReferenceGetter? obj)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

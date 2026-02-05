@@ -51,7 +51,7 @@ public class CustomAspectInterfaceGenerator : IIncrementalGenerator
                     .FirstOrDefault(x => x.Name.ToString() == "CustomAspectInterface");
                 if (customAspectAttr == null) return null;
                 return new InterfaceDeclaration(interf, customAspectAttr.ArgumentList?.Arguments.Select(x => x.Expression)
-                    .WhereCastable<ExpressionSyntax, TypeOfExpressionSyntax>().ToArray() ?? Enumerable.Empty<TypeOfExpressionSyntax>().ToArray());
+                    .WhereCastable<ExpressionSyntax, TypeOfExpressionSyntax>().ToArray() ?? Array.Empty<TypeOfExpressionSyntax>());
             })
             .Where(x => x != null)
             .Select((x, _) => x!);

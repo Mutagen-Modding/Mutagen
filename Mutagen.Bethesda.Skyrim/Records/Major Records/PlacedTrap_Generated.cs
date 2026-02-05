@@ -1576,7 +1576,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedTrap);
+        protected override Type LinkType => typeof(IPlacedTrapGetter);
 
 
         partial void CustomFactoryEnd(

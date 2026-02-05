@@ -651,18 +651,18 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
                 this.XORD = initialValue;
                 this.OcclusionPlane = new MaskItem<TItem, Bounding.Mask<TItem>?>(initialValue, new Bounding.Mask<TItem>(initialValue));
-                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
+                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, []);
                 this.RoomPortal = new MaskItem<TItem, Bounding.Mask<TItem>?>(initialValue, new Bounding.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
                 this.LightingTemplate = initialValue;
                 this.ImageSpace = initialValue;
-                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.IsMultiBoundPrimitive = initialValue;
                 this.RagdollData = initialValue;
                 this.RagdollBipedData = initialValue;
                 this.Radius = initialValue;
-                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
-                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, []);
+                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Emittance = initialValue;
                 this.LightData = new MaskItem<TItem, LightData.Mask<TItem>?>(initialValue, new LightData.Mask<TItem>(initialValue));
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(initialValue, new Alpha.Mask<TItem>(initialValue));
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(initialValue, new LockData.Mask<TItem>(initialValue));
                 this.EncounterZone = initialValue;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(initialValue, new NavigationDoorLink.Mask<TItem>(initialValue));
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.IsIgnoredBySandbox = initialValue;
                 this.Owner = initialValue;
                 this.FactionRank = initialValue;
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Charge = initialValue;
                 this.LocationReference = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, []);
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
                 this.Action = initialValue;
                 this.HeadTrackingWeight = initialValue;
@@ -788,18 +788,18 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
                 this.XORD = XORD;
                 this.OcclusionPlane = new MaskItem<TItem, Bounding.Mask<TItem>?>(OcclusionPlane, new Bounding.Mask<TItem>(OcclusionPlane));
-                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
+                this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, []);
                 this.RoomPortal = new MaskItem<TItem, Bounding.Mask<TItem>?>(RoomPortal, new Bounding.Mask<TItem>(RoomPortal));
                 this.Unknown = Unknown;
                 this.LightingTemplate = LightingTemplate;
                 this.ImageSpace = ImageSpace;
-                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LinkedRooms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkedRooms, []);
                 this.IsMultiBoundPrimitive = IsMultiBoundPrimitive;
                 this.RagdollData = RagdollData;
                 this.RagdollBipedData = RagdollBipedData;
                 this.Radius = Radius;
-                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
-                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LitWater, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, []);
+                this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LitWater, []);
                 this.Emittance = Emittance;
                 this.LightData = new MaskItem<TItem, LightData.Mask<TItem>?>(LightData, new LightData.Mask<TItem>(LightData));
                 this.Alpha = new MaskItem<TItem, Alpha.Mask<TItem>?>(Alpha, new Alpha.Mask<TItem>(Alpha));
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Lock = new MaskItem<TItem, LockData.Mask<TItem>?>(Lock, new LockData.Mask<TItem>(Lock));
                 this.EncounterZone = EncounterZone;
                 this.NavigationDoorLink = new MaskItem<TItem, NavigationDoorLink.Mask<TItem>?>(NavigationDoorLink, new NavigationDoorLink.Mask<TItem>(NavigationDoorLink));
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, []);
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
                 this.Owner = Owner;
                 this.FactionRank = FactionRank;
@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Charge = Charge;
                 this.LocationReference = LocationReference;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, []);
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
                 this.Action = Action;
                 this.HeadTrackingWeight = HeadTrackingWeight;
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.OcclusionPlane = this.OcclusionPlane == null ? null : new MaskItem<R, Bounding.Mask<R>?>(eval(this.OcclusionPlane.Overall), this.OcclusionPlane.Specific?.Translate(eval));
                 if (Portals != null)
                 {
-                    obj.Portals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Portal.Mask<R>?>>?>(eval(this.Portals.Overall), Enumerable.Empty<MaskItemIndexed<R, Portal.Mask<R>?>>());
+                    obj.Portals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Portal.Mask<R>?>>?>(eval(this.Portals.Overall), []);
                     if (Portals.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Portal.Mask<R>?>>();
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ImageSpace = eval(this.ImageSpace);
                 if (LinkedRooms != null)
                 {
-                    obj.LinkedRooms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkedRooms.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LinkedRooms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LinkedRooms.Overall), []);
                     if (LinkedRooms.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Radius = eval(this.Radius);
                 if (Reflections != null)
                 {
-                    obj.Reflections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WaterReflection.Mask<R>?>>?>(eval(this.Reflections.Overall), Enumerable.Empty<MaskItemIndexed<R, WaterReflection.Mask<R>?>>());
+                    obj.Reflections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WaterReflection.Mask<R>?>>?>(eval(this.Reflections.Overall), []);
                     if (Reflections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WaterReflection.Mask<R>?>>();
@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (LitWater != null)
                 {
-                    obj.LitWater = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LitWater.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LitWater = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LitWater.Overall), []);
                     if (LitWater.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.NavigationDoorLink = this.NavigationDoorLink == null ? null : new MaskItem<R, NavigationDoorLink.Mask<R>?>(eval(this.NavigationDoorLink.Overall), this.NavigationDoorLink.Specific?.Translate(eval));
                 if (LocationRefTypes != null)
                 {
-                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), []);
                     if (LocationRefTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
                 if (LinkedReferences != null)
                 {
-                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), []);
                     if (LinkedReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
@@ -7048,7 +7048,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedObject);
+        protected override Type LinkType => typeof(IPlacedObjectGetter);
 
 
         #region VirtualMachineAdapter

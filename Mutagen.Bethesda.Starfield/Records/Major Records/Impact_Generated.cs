@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Duration = initialValue;
                 this.Orientation = initialValue;
@@ -230,8 +230,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.NoDecalData = initialValue;
                 this.Result = initialValue;
                 this.Unknown = initialValue;
-                this.ProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ScatterProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ScatterProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
                 this.ImpactSoundDefault = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.ImpactSoundPlayerFirstShooter = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Duration = Duration;
                 this.Orientation = Orientation;
@@ -285,8 +285,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.NoDecalData = NoDecalData;
                 this.Result = Result;
                 this.Unknown = Unknown;
-                this.ProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ProjectedDecals, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ScatterProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ScatterProjectedDecals, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ProjectedDecals, []);
+                this.ScatterProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ScatterProjectedDecals, []);
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
                 this.ImpactSoundDefault = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ImpactSoundDefault, new SoundReference.Mask<TItem>(ImpactSoundDefault));
                 this.ImpactSoundPlayerFirstShooter = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ImpactSoundPlayerFirstShooter, new SoundReference.Mask<TItem>(ImpactSoundPlayerFirstShooter));
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown = eval(this.Unknown);
                 if (ProjectedDecals != null)
                 {
-                    obj.ProjectedDecals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ProjectedDecals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ProjectedDecals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ProjectedDecals.Overall), []);
                     if (ProjectedDecals.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ScatterProjectedDecals != null)
                 {
-                    obj.ScatterProjectedDecals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ScatterProjectedDecals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ScatterProjectedDecals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ScatterProjectedDecals.Overall), []);
                     if (ScatterProjectedDecals.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImpact);
+        protected override Type LinkType => typeof(IImpactGetter);
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];

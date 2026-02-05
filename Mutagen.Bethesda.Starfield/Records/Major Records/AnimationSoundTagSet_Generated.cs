@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>());
+                this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(Tags, Enumerable.Empty<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>());
+                this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(Tags, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Tags != null)
                 {
-                    obj.Tags = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>?>(eval(this.Tags.Overall), Enumerable.Empty<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>());
+                    obj.Tags = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>?>(eval(this.Tags.Overall), []);
                     if (Tags.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>();
@@ -1542,7 +1542,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAnimationSoundTagSet);
+        protected override Type LinkType => typeof(IAnimationSoundTagSetGetter);
 
 
         public IReadOnlyList<IAnimationSoundTagGetter>? Tags { get; private set; }

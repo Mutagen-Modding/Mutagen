@@ -3,6 +3,12 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### IHasEffects
+- Enchantment
+- Ingredient
+- Potion
+- SigilStone
+- Spell
 ### IModeled
 - Activator
 - AlchemicalApparatus
@@ -133,6 +139,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - INamed
 ### Enchantment
+- IHasEffects
 - INamed
 ### Eye
 - INamed
@@ -154,6 +161,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IdleAnimation
 - IModeled
 ### Ingredient
+- IHasEffects
 - IModeled
 - INamed
 ### Key
@@ -182,6 +190,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - INamed
 ### Potion
+- IHasEffects
 - IModeled
 - INamed
 ### Quest
@@ -191,6 +200,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ScriptEffect
 - INamed
 ### SigilStone
+- IHasEffects
 - IModeled
 - INamed
 ### SigilStoneData
@@ -201,6 +211,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### SoulGemData
 - IWeightValue
 ### Spell
+- IHasEffects
 - INamed
 ### SpellLeveled
 - INamed

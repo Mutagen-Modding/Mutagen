@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CloseSound = initialValue;
                 this.LoopSound = initialValue;
                 this.Flags = initialValue;
-                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CloseSound = CloseSound;
                 this.LoopSound = LoopSound;
                 this.Flags = Flags;
-                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RandomTeleportDestinations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RandomTeleportDestinations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RandomTeleportDestinations, []);
             }
 
             #pragma warning disable CS8618
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flags = eval(this.Flags);
                 if (RandomTeleportDestinations != null)
                 {
-                    obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RandomTeleportDestinations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RandomTeleportDestinations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RandomTeleportDestinations.Overall), []);
                     if (RandomTeleportDestinations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2091,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDoor);
+        protected override Type LinkType => typeof(IDoorGetter);
 
 
         #region Name

@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Target = initialValue;
-                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
+                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Target = Target;
-                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(RuleSets, Enumerable.Empty<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>());
+                this.RuleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, InstanceNamingRuleSet.Mask<TItem>?>>?>(RuleSets, []);
             }
 
             #pragma warning disable CS8618
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Target = eval(this.Target);
                 if (RuleSets != null)
                 {
-                    obj.RuleSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>?>(eval(this.RuleSets.Overall), Enumerable.Empty<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>());
+                    obj.RuleSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>?>(eval(this.RuleSets.Overall), []);
                     if (RuleSets.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, InstanceNamingRuleSet.Mask<R>?>>();
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IInstanceNamingRules);
+        protected override Type LinkType => typeof(IInstanceNamingRulesGetter);
 
 
         #region Target

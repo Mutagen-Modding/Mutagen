@@ -26,7 +26,7 @@ public class SandwichedMarkersRule : AlignmentRule
         {
             throw new NotImplementedException();
         }
-        if (inputStream.Complete) return Array.Empty<byte>();
+        if (inputStream.Complete) return [];
         ReadOnlyMemorySlice<byte>? data = null;
         MutagenWriter stream;
         bool second = false;
@@ -62,7 +62,7 @@ public class SandwichedMarkersRule : AlignmentRule
             data = _internalRule.ReadBytes(inputStream, null);
         }
 
-        if (data == null) return Array.Empty<byte>();
+        if (data == null) return [];
         
         byte[] ret = new byte[data.Value.Length + 2 * inputStream.MetaData.Constants.SubConstants.HeaderLength]; 
         stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);

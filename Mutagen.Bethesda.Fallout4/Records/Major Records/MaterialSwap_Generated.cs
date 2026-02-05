@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.TreeFolder = initialValue;
-                this.Substitutions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>());
+                this.Substitutions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.TreeFolder = TreeFolder;
-                this.Substitutions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>(Substitutions, Enumerable.Empty<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>());
+                this.Substitutions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>(Substitutions, []);
             }
 
             #pragma warning disable CS8618
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TreeFolder = eval(this.TreeFolder);
                 if (Substitutions != null)
                 {
-                    obj.Substitutions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>?>(eval(this.Substitutions.Overall), Enumerable.Empty<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>());
+                    obj.Substitutions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>?>(eval(this.Substitutions.Overall), []);
                     if (Substitutions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>();
@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMaterialSwap);
+        protected override Type LinkType => typeof(IMaterialSwapGetter);
 
         public MaterialSwap.MajorFlag MajorFlags => (MaterialSwap.MajorFlag)this.MajorRecordFlagsRaw;
 

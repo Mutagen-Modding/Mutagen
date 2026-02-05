@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem GameplayOptions)
             : base()
             {
-                this.GameplayOptions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(GameplayOptions, Enumerable.Empty<(int Index, TItem Value)>());
+                this.GameplayOptions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(GameplayOptions, []);
             }
 
             #pragma warning disable CS8618
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (GameplayOptions != null)
                 {
-                    obj.GameplayOptions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.GameplayOptions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.GameplayOptions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.GameplayOptions.Overall), []);
                     if (GameplayOptions.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Components = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Components, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Components = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Components, []);
             }
 
             #pragma warning disable CS8618
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Components.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Components = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1499,7 +1499,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IGenericBaseFormTemplate);
+        protected override Type LinkType => typeof(IGenericBaseFormTemplateGetter);
 
 
         public IReadOnlyList<String> Components { get; private set; } = [];

@@ -400,13 +400,13 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FilterString = initialValue;
-                this.Flora = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ResourceGeneration = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ProceduralObjectGeneration = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>());
-                this.ObjectSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Flora = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ResourceGeneration = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.ProceduralObjectGeneration = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>(initialValue, []);
+                this.ObjectSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Climate = initialValue;
                 this.Water = new MaskItem<TItem, BiomeWaterData.Mask<TItem>?>(initialValue, new BiomeWaterData.Mask<TItem>(initialValue));
                 this.BlockDensityMult = initialValue;
@@ -422,8 +422,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfaceColor2 = initialValue;
                 this.RockTint = initialValue;
                 this.Type = initialValue;
-                this.MarkerObjectKeywords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>());
-                this.Terrain = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>());
+                this.MarkerObjectKeywords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(initialValue, []);
+                this.Terrain = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>(initialValue, []);
                 this.GroundLayerNormal = initialValue;
                 this.BTPS = initialValue;
                 this.DistantView = initialValue;
@@ -483,13 +483,13 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.FilterString = FilterString;
-                this.Flora = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Flora, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ResourceGeneration = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ResourceGeneration, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ProceduralObjectGeneration = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>(ProceduralObjectGeneration, Enumerable.Empty<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>());
-                this.ObjectSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ObjectSwaps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Flora = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Flora, []);
+                this.ResourceGeneration = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ResourceGeneration, []);
+                this.ProceduralObjectGeneration = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>(ProceduralObjectGeneration, []);
+                this.ObjectSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ObjectSwaps, []);
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, []);
                 this.Climate = Climate;
                 this.Water = new MaskItem<TItem, BiomeWaterData.Mask<TItem>?>(Water, new BiomeWaterData.Mask<TItem>(Water));
                 this.BlockDensityMult = BlockDensityMult;
@@ -505,8 +505,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfaceColor2 = SurfaceColor2;
                 this.RockTint = RockTint;
                 this.Type = Type;
-                this.MarkerObjectKeywords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(MarkerObjectKeywords, Enumerable.Empty<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>());
-                this.Terrain = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>(Terrain, Enumerable.Empty<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>());
+                this.MarkerObjectKeywords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(MarkerObjectKeywords, []);
+                this.Terrain = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>(Terrain, []);
                 this.GroundLayerNormal = GroundLayerNormal;
                 this.BTPS = BTPS;
                 this.DistantView = DistantView;
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FilterString = eval(this.FilterString);
                 if (Flora != null)
                 {
-                    obj.Flora = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Flora.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Flora = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Flora.Overall), []);
                     if (Flora.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ResourceGeneration != null)
                 {
-                    obj.ResourceGeneration = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ResourceGeneration.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ResourceGeneration = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ResourceGeneration.Overall), []);
                     if (ResourceGeneration.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ProceduralObjectGeneration != null)
                 {
-                    obj.ProceduralObjectGeneration = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>?>(eval(this.ProceduralObjectGeneration.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>());
+                    obj.ProceduralObjectGeneration = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>?>(eval(this.ProceduralObjectGeneration.Overall), []);
                     if (ProceduralObjectGeneration.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>();
@@ -971,7 +971,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (ObjectSwaps != null)
                 {
-                    obj.ObjectSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ObjectSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.ObjectSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ObjectSwaps.Overall), []);
                     if (ObjectSwaps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MaterialSwaps != null)
                 {
-                    obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), []);
                     if (MaterialSwaps.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Type = eval(this.Type);
                 if (MarkerObjectKeywords != null)
                 {
-                    obj.MarkerObjectKeywords = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>?>(eval(this.MarkerObjectKeywords.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>());
+                    obj.MarkerObjectKeywords = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>?>(eval(this.MarkerObjectKeywords.Overall), []);
                     if (MarkerObjectKeywords.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>();
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Terrain != null)
                 {
-                    obj.Terrain = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>?>(eval(this.Terrain.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>());
+                    obj.Terrain = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>?>(eval(this.Terrain.Overall), []);
                     if (Terrain.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>();
@@ -4692,7 +4692,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBiome);
+        protected override Type LinkType => typeof(IBiomeGetter);
 
 
         #region Name

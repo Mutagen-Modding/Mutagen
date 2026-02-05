@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SuspensionBoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SuspensionBoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Config = new MaskItem<TItem, VehicleConfigData.Mask<TItem>?>(initialValue, new VehicleConfigData.Mask<TItem>(initialValue));
                 this.MountedWeapon = initialValue;
                 this.Weapon = new MaskItem<TItem, VehicleWeaponData.Mask<TItem>?>(initialValue, new VehicleWeaponData.Mask<TItem>(initialValue));
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Material)
             : base()
             {
-                this.SuspensionBoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SuspensionBoneModifiers, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SuspensionBoneModifiers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SuspensionBoneModifiers, []);
                 this.Config = new MaskItem<TItem, VehicleConfigData.Mask<TItem>?>(Config, new VehicleConfigData.Mask<TItem>(Config));
                 this.MountedWeapon = MountedWeapon;
                 this.Weapon = new MaskItem<TItem, VehicleWeaponData.Mask<TItem>?>(Weapon, new VehicleWeaponData.Mask<TItem>(Weapon));
@@ -331,7 +331,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (SuspensionBoneModifiers != null)
                 {
-                    obj.SuspensionBoneModifiers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SuspensionBoneModifiers.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SuspensionBoneModifiers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SuspensionBoneModifiers.Overall), []);
                     if (SuspensionBoneModifiers.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

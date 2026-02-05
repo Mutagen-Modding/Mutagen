@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Emotion = initialValue;
                 this.WEMFile = initialValue;
                 this.EmotionOut = initialValue;
-                this.TROTs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>());
+                this.TROTs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>(initialValue, []);
                 this.ResponseText = initialValue;
                 this.ScriptNotes = initialValue;
                 this.Edits = initialValue;
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Emotion = Emotion;
                 this.WEMFile = WEMFile;
                 this.EmotionOut = EmotionOut;
-                this.TROTs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>(TROTs, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>());
+                this.TROTs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>(TROTs, []);
                 this.ResponseText = ResponseText;
                 this.ScriptNotes = ScriptNotes;
                 this.Edits = Edits;
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.EmotionOut = eval(this.EmotionOut);
                 if (TROTs != null)
                 {
-                    obj.TROTs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponseTROT.Mask<R>?>>?>(eval(this.TROTs.Overall), Enumerable.Empty<MaskItemIndexed<R, DialogResponseTROT.Mask<R>?>>());
+                    obj.TROTs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DialogResponseTROT.Mask<R>?>>?>(eval(this.TROTs.Overall), []);
                     if (TROTs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponseTROT.Mask<R>?>>();

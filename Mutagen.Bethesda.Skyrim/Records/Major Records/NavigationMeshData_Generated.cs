@@ -189,10 +189,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavmeshVersion = initialValue;
                 this.CrcHash = initialValue;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(initialValue, new ANavmeshParent.Mask<TItem>(initialValue));
-                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
-                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
-                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
+                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, []);
+                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(initialValue, []);
+                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, []);
                 this.NavmeshGridDivisor = initialValue;
                 this.MaxDistanceX = initialValue;
                 this.MaxDistanceY = initialValue;
@@ -219,10 +219,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.NavmeshVersion = NavmeshVersion;
                 this.CrcHash = CrcHash;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(Parent, new ANavmeshParent.Mask<TItem>(Parent));
-                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
-                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(EdgeLinks, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
-                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
+                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, []);
+                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, []);
+                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(EdgeLinks, []);
+                this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, []);
                 this.NavmeshGridDivisor = NavmeshGridDivisor;
                 this.MaxDistanceX = MaxDistanceX;
                 this.MaxDistanceY = MaxDistanceY;
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Parent = this.Parent == null ? null : new MaskItem<R, ANavmeshParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
                 if (Vertices != null)
                 {
-                    obj.Vertices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Vertices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Vertices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Vertices.Overall), []);
                     if (Vertices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (Triangles != null)
                 {
-                    obj.Triangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>?>(eval(this.Triangles.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>());
+                    obj.Triangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>?>(eval(this.Triangles.Overall), []);
                     if (Triangles.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>();
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (EdgeLinks != null)
                 {
-                    obj.EdgeLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EdgeLink.Mask<R>?>>?>(eval(this.EdgeLinks.Overall), Enumerable.Empty<MaskItemIndexed<R, EdgeLink.Mask<R>?>>());
+                    obj.EdgeLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EdgeLink.Mask<R>?>>?>(eval(this.EdgeLinks.Overall), []);
                     if (EdgeLinks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, EdgeLink.Mask<R>?>>();
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (DoorTriangles != null)
                 {
-                    obj.DoorTriangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>?>(eval(this.DoorTriangles.Overall), Enumerable.Empty<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>());
+                    obj.DoorTriangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>?>(eval(this.DoorTriangles.Overall), []);
                     if (DoorTriangles.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DoorTriangle.Mask<R>?>>();

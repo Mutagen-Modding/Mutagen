@@ -51,7 +51,7 @@ public class CreationClubListingsIntegrationTests
                 fileSystem: fs)
             .ToList();
         results.ShouldHaveCount(1);
-        results[0].ShouldBe(new ModListing(existingModPath.ModKey, enabled: true, existsOnDisk: true));
+        results[0].ShouldBe(new ModListing(existingModPath.ModKey, enabled: true, modExists: true));
     }
 
     [Theory, MutagenAutoData]

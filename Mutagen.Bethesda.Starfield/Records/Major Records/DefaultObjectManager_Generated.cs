@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DefaultObjectUse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DefaultObjectUse.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DefaultObjectUse.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DefaultObjectUse.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, DefaultObjectUse.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DefaultObjectUse.Mask<TItem>?>>?>(Objects, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DefaultObjectUse.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, DefaultObjectUse.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DefaultObjectUse.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DefaultObjectUse.Mask<R>?>>();
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDefaultObjectManager);
+        protected override Type LinkType => typeof(IDefaultObjectManagerGetter);
 
 
         public IReadOnlyList<IDefaultObjectUseGetter>? Objects { get; private set; }

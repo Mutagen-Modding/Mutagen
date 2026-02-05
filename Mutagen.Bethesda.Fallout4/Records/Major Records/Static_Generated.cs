@@ -282,14 +282,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PreviewTransform = initialValue;
                 this.ForcedLocRefType = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
                 this.MaxAngle = initialValue;
                 this.Material = initialValue;
                 this.LeafAmplitude = initialValue;
                 this.LeafFrequency = initialValue;
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
-                this.DistantLods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>());
+                this.DistantLods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>(initialValue, []);
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -329,14 +329,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.PreviewTransform = PreviewTransform;
                 this.ForcedLocRefType = ForcedLocRefType;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
                 this.Name = Name;
                 this.MaxAngle = MaxAngle;
                 this.Material = Material;
                 this.LeafAmplitude = LeafAmplitude;
                 this.LeafFrequency = LeafFrequency;
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
-                this.DistantLods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>(DistantLods, Enumerable.Empty<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>());
+                this.DistantLods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DistantLod.Mask<TItem>?>>?>(DistantLods, []);
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
                 if (DistantLods != null)
                 {
-                    obj.DistantLods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DistantLod.Mask<R>?>>?>(eval(this.DistantLods.Overall), Enumerable.Empty<MaskItemIndexed<R, DistantLod.Mask<R>?>>());
+                    obj.DistantLods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DistantLod.Mask<R>?>>?>(eval(this.DistantLods.Overall), []);
                     if (DistantLods.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DistantLod.Mask<R>?>>();
@@ -2885,7 +2885,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IStatic);
+        protected override Type LinkType => typeof(IStaticGetter);
 
 
         #region VirtualMachineAdapter

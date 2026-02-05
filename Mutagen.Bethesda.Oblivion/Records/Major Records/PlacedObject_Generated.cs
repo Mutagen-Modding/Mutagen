@@ -3479,7 +3479,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedObject);
+        protected override Type LinkType => typeof(IPlacedObjectGetter);
 
 
         #region Base

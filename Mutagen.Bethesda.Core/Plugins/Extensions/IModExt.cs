@@ -123,17 +123,20 @@ public static class IModExt
 
         // Rename strings files
         var stringsDir = fileSystem.Path.Combine(fileSystemRoot, "Strings");
-        foreach (var file in fileSystem.Directory.EnumerateFiles(stringsDir))
+        if (fileSystem.Directory.Exists(stringsDir))
         {
-            var fileName = fileSystem.Path.GetFileName(file);
-            if (fileName.StartsWith(oldModKey.Name))
+            foreach (var file in fileSystem.Directory.EnumerateFiles(stringsDir))
             {
-                fileSystem.File.Move(file, fileSystem.Path.Combine(stringsDir, newModKey.Name + fileName[oldModKey.Name.Length..]));
+                var fileName = fileSystem.Path.GetFileName(file);
+                if (fileName.StartsWith(oldModKey.Name))
+                {
+                    fileSystem.File.Move(file, fileSystem.Path.Combine(stringsDir, newModKey.Name + fileName[oldModKey.Name.Length..]));
+                }
             }
         }
 
         // Read renamed mod as new mod
-        var duplicateInto = ModInstantiator.ImportSetter(newModPath, mod.GameRelease, BinaryReadParameters.Default with
+        var duplicateInto = ModFactory.ImportSetter(newModPath, mod.GameRelease, BinaryReadParameters.Default with
         {
             FileSystem = fileSystem
         });

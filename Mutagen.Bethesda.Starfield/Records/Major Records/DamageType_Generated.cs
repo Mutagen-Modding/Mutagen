@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Name = Name;
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DamageTypeItem.Mask<TItem>?>>?>(DamageTypes, []);
             }
 
             #pragma warning disable CS8618
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (DamageTypes != null)
                 {
-                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>());
+                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>?>(eval(this.DamageTypes.Overall), []);
                     if (DamageTypes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, DamageTypeItem.Mask<R>?>>();
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDamageType);
+        protected override Type LinkType => typeof(IDamageTypeGetter);
 
 
         #region Name

@@ -118,8 +118,8 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.SurfacePatternStyle = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>());
-                this.Rarity = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>(initialValue, []);
+                this.Rarity = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.SurfacePatternStyle = SurfacePatternStyle;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>());
-                this.Rarity = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>(Rarity, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>(Items, []);
+                this.Rarity = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>(Rarity, []);
             }
 
             #pragma warning disable CS8618
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatternStyle = eval(this.SurfacePatternStyle);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>();
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Rarity != null)
                 {
-                    obj.Rarity = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>?>(eval(this.Rarity.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>());
+                    obj.Rarity = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>?>(eval(this.Rarity.Overall), []);
                     if (Rarity.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>();
@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISurfacePatternConfig);
+        protected override Type LinkType => typeof(ISurfacePatternConfigGetter);
 
 
         #region SurfacePatternStyle

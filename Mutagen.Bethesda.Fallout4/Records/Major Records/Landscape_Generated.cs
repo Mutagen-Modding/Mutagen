@@ -174,12 +174,12 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.DATA = initialValue;
-                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
                 this.VertexHeightMap = new MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>(initialValue, new LandscapeVertexHeightMap.Mask<TItem>(initialValue));
-                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
-                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MPCDs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LandscapeMPCD.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LandscapeMPCD.Mask<TItem>?>>());
+                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
+                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(initialValue, []);
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.MPCDs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LandscapeMPCD.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -207,12 +207,12 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.DATA = DATA;
-                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, []);
                 this.VertexHeightMap = new MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>(VertexHeightMap, new LandscapeVertexHeightMap.Mask<TItem>(VertexHeightMap));
-                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexColors, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(Layers, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
-                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MPCDs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LandscapeMPCD.Mask<TItem>?>>?>(MPCDs, Enumerable.Empty<MaskItemIndexed<TItem, LandscapeMPCD.Mask<TItem>?>>());
+                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexColors, []);
+                this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(Layers, []);
+                this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, []);
+                this.MPCDs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LandscapeMPCD.Mask<TItem>?>>?>(MPCDs, []);
             }
 
             #pragma warning disable CS8618
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DATA = eval(this.DATA);
                 if (VertexNormals != null)
                 {
-                    obj.VertexNormals = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexNormals.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.VertexNormals = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexNormals.Overall), []);
                     if (VertexNormals.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.VertexHeightMap = this.VertexHeightMap == null ? null : new MaskItem<R, LandscapeVertexHeightMap.Mask<R>?>(eval(this.VertexHeightMap.Overall), this.VertexHeightMap.Specific?.Translate(eval));
                 if (VertexColors != null)
                 {
-                    obj.VertexColors = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexColors.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    obj.VertexColors = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexColors.Overall), []);
                     if (VertexColors.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Layers != null)
                 {
-                    obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>?>(eval(this.Layers.Overall), Enumerable.Empty<MaskItemIndexed<R, BaseLayer.Mask<R>?>>());
+                    obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>?>(eval(this.Layers.Overall), []);
                     if (Layers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BaseLayer.Mask<R>?>>();
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (Textures != null)
                 {
-                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Textures.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Textures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Textures.Overall), []);
                     if (Textures.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (MPCDs != null)
                 {
-                    obj.MPCDs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LandscapeMPCD.Mask<R>?>>?>(eval(this.MPCDs.Overall), Enumerable.Empty<MaskItemIndexed<R, LandscapeMPCD.Mask<R>?>>());
+                    obj.MPCDs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LandscapeMPCD.Mask<R>?>>?>(eval(this.MPCDs.Overall), []);
                     if (MPCDs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LandscapeMPCD.Mask<R>?>>();
@@ -2480,7 +2480,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandscape);
+        protected override Type LinkType => typeof(ILandscapeGetter);
 
 
         #region DATA

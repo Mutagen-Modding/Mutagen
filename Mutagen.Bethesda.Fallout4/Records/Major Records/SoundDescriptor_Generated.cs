@@ -196,12 +196,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Data = new MaskItem<TItem, ASoundDescriptor.Mask<TItem>?>(initialValue, new ASoundDescriptor.Mask<TItem>(initialValue));
                 this.Category = initialValue;
                 this.AlternateSoundFor = initialValue;
-                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.OutputModel = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.LoopAndRumble = new MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>(initialValue, new SoundLoopAndRumble.Mask<TItem>(initialValue));
-                this.Descriptors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RatesOfFire = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>());
+                this.Descriptors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.RatesOfFire = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -235,12 +235,12 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Data = new MaskItem<TItem, ASoundDescriptor.Mask<TItem>?>(Data, new ASoundDescriptor.Mask<TItem>(Data));
                 this.Category = Category;
                 this.AlternateSoundFor = AlternateSoundFor;
-                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SoundFiles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SoundFiles, []);
                 this.OutputModel = OutputModel;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.LoopAndRumble = new MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>(LoopAndRumble, new SoundLoopAndRumble.Mask<TItem>(LoopAndRumble));
-                this.Descriptors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Descriptors, Enumerable.Empty<(int Index, TItem Value)>());
-                this.RatesOfFire = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>(RatesOfFire, Enumerable.Empty<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>());
+                this.Descriptors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Descriptors, []);
+                this.RatesOfFire = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>(RatesOfFire, []);
             }
 
             #pragma warning disable CS8618
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.AlternateSoundFor = eval(this.AlternateSoundFor);
                 if (SoundFiles != null)
                 {
-                    obj.SoundFiles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SoundFiles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SoundFiles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SoundFiles.Overall), []);
                     if (SoundFiles.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.OutputModel = eval(this.OutputModel);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LoopAndRumble = this.LoopAndRumble == null ? null : new MaskItem<R, SoundLoopAndRumble.Mask<R>?>(eval(this.LoopAndRumble.Overall), this.LoopAndRumble.Specific?.Translate(eval));
                 if (Descriptors != null)
                 {
-                    obj.Descriptors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Descriptors.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Descriptors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Descriptors.Overall), []);
                     if (Descriptors.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RatesOfFire != null)
                 {
-                    obj.RatesOfFire = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>?>(eval(this.RatesOfFire.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>());
+                    obj.RatesOfFire = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>?>(eval(this.RatesOfFire.Overall), []);
                     if (RatesOfFire.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>();
@@ -2652,7 +2652,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISoundDescriptor);
+        protected override Type LinkType => typeof(ISoundDescriptorGetter);
 
 
         #region Notes

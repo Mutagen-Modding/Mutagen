@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.DATA = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PERSItems.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PERSItems.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PERSItems.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.DATA = DATA;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PERSItems.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, PERSItems.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PERSItems.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DATA = eval(this.DATA);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PERSItems.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, PERSItems.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PERSItems.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PERSItems.Mask<R>?>>();
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPERS);
+        protected override Type LinkType => typeof(IPERSGetter);
 
 
         #region DATA

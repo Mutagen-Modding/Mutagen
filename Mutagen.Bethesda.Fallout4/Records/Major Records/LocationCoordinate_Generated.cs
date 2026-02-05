@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Location = initialValue;
-                this.Coordinates = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Coordinates = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Coordinates)
             {
                 this.Location = Location;
-                this.Coordinates = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Coordinates, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Coordinates = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Coordinates, []);
             }
 
             #pragma warning disable CS8618
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Location = eval(this.Location);
                 if (Coordinates != null)
                 {
-                    obj.Coordinates = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Coordinates.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Coordinates = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Coordinates.Overall), []);
                     if (Coordinates.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

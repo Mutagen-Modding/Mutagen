@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Priority = initialValue;
-                this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>());
+                this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Priority = Priority;
-                this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(Multipliers, Enumerable.Empty<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>());
+                this.Multipliers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AudioCategoryMultiplier.Mask<TItem>?>>?>(Multipliers, []);
             }
 
             #pragma warning disable CS8618
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Priority = eval(this.Priority);
                 if (Multipliers != null)
                 {
-                    obj.Multipliers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>?>(eval(this.Multipliers.Overall), Enumerable.Empty<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>());
+                    obj.Multipliers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>?>(eval(this.Multipliers.Overall), []);
                     if (Multipliers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AudioCategoryMultiplier.Mask<R>?>>();
@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAudioCategorySnapshot);
+        protected override Type LinkType => typeof(IAudioCategorySnapshotGetter);
 
 
         #region Priority

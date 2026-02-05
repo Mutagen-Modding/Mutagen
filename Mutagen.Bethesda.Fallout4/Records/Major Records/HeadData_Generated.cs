@@ -216,14 +216,14 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.NeckFatAdjustmentsScale = new MaskItem<TItem, NeckFatAdjustmentsScale.Mask<TItem>?>(initialValue, new NeckFatAdjustmentsScale.Mask<TItem>(initialValue));
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>());
-                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(initialValue, []);
+                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.DefaultFaceTexture = initialValue;
-                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintGroup.Mask<TItem>?>>());
-                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>());
-                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>());
+                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintGroup.Mask<TItem>?>>?>(initialValue, []);
+                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(initialValue, []);
+                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(initialValue, []);
                 this.MaleWrinkleMapPath = initialValue;
             }
 
@@ -240,14 +240,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem MaleWrinkleMapPath)
             {
                 this.NeckFatAdjustmentsScale = new MaskItem<TItem, NeckFatAdjustmentsScale.Mask<TItem>?>(NeckFatAdjustmentsScale, new NeckFatAdjustmentsScale.Mask<TItem>(NeckFatAdjustmentsScale));
-                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(HeadParts, Enumerable.Empty<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>());
-                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AvailableHairColors, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FaceDetails, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(HeadParts, []);
+                this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, []);
+                this.AvailableHairColors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AvailableHairColors, []);
+                this.FaceDetails = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FaceDetails, []);
                 this.DefaultFaceTexture = DefaultFaceTexture;
-                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintGroup.Mask<TItem>?>>?>(TintLayers, Enumerable.Empty<MaskItemIndexed<TItem, TintGroup.Mask<TItem>?>>());
-                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(MorphGroups, Enumerable.Empty<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>());
-                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(FaceMorphs, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>());
+                this.TintLayers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintGroup.Mask<TItem>?>>?>(TintLayers, []);
+                this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(MorphGroups, []);
+                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(FaceMorphs, []);
                 this.MaleWrinkleMapPath = MaleWrinkleMapPath;
             }
 
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.NeckFatAdjustmentsScale = this.NeckFatAdjustmentsScale == null ? null : new MaskItem<R, NeckFatAdjustmentsScale.Mask<R>?>(eval(this.NeckFatAdjustmentsScale.Overall), this.NeckFatAdjustmentsScale.Specific?.Translate(eval));
                 if (HeadParts != null)
                 {
-                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>?>(eval(this.HeadParts.Overall), Enumerable.Empty<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>());
+                    obj.HeadParts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>?>(eval(this.HeadParts.Overall), []);
                     if (HeadParts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>();
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (RacePresets != null)
                 {
-                    obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), []);
                     if (RacePresets.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (AvailableHairColors != null)
                 {
-                    obj.AvailableHairColors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AvailableHairColors.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AvailableHairColors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AvailableHairColors.Overall), []);
                     if (AvailableHairColors.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (FaceDetails != null)
                 {
-                    obj.FaceDetails = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FaceDetails.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.FaceDetails = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FaceDetails.Overall), []);
                     if (FaceDetails.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.DefaultFaceTexture = eval(this.DefaultFaceTexture);
                 if (TintLayers != null)
                 {
-                    obj.TintLayers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintGroup.Mask<R>?>>?>(eval(this.TintLayers.Overall), Enumerable.Empty<MaskItemIndexed<R, TintGroup.Mask<R>?>>());
+                    obj.TintLayers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintGroup.Mask<R>?>>?>(eval(this.TintLayers.Overall), []);
                     if (TintLayers.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TintGroup.Mask<R>?>>();
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (MorphGroups != null)
                 {
-                    obj.MorphGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphGroup.Mask<R>?>>?>(eval(this.MorphGroups.Overall), Enumerable.Empty<MaskItemIndexed<R, MorphGroup.Mask<R>?>>());
+                    obj.MorphGroups = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MorphGroup.Mask<R>?>>?>(eval(this.MorphGroups.Overall), []);
                     if (MorphGroups.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MorphGroup.Mask<R>?>>();
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (FaceMorphs != null)
                 {
-                    obj.FaceMorphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorph.Mask<R>?>>?>(eval(this.FaceMorphs.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceMorph.Mask<R>?>>());
+                    obj.FaceMorphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorph.Mask<R>?>>?>(eval(this.FaceMorphs.Overall), []);
                     if (FaceMorphs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FaceMorph.Mask<R>?>>();

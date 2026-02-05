@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
                 this.Unknown = initialValue;
-                this.SubBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellSubBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellSubBlock.Mask<TItem>?>>());
+                this.SubBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellSubBlock.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
                 this.Unknown = Unknown;
-                this.SubBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellSubBlock.Mask<TItem>?>>?>(SubBlocks, Enumerable.Empty<MaskItemIndexed<TItem, CellSubBlock.Mask<TItem>?>>());
+                this.SubBlocks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellSubBlock.Mask<TItem>?>>?>(SubBlocks, []);
             }
 
             #pragma warning disable CS8618
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Unknown = eval(this.Unknown);
                 if (SubBlocks != null)
                 {
-                    obj.SubBlocks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellSubBlock.Mask<R>?>>?>(eval(this.SubBlocks.Overall), Enumerable.Empty<MaskItemIndexed<R, CellSubBlock.Mask<R>?>>());
+                    obj.SubBlocks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellSubBlock.Mask<R>?>>?>(eval(this.SubBlocks.Overall), []);
                     if (SubBlocks.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CellSubBlock.Mask<R>?>>();
@@ -1198,6 +1198,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellBlock obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellBlock obj)
+        {
             foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -1209,8 +1214,8 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -1218,7 +1223,18 @@ namespace Mutagen.Bethesda.Starfield
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellBlock obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1624,6 +1640,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellBlockGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellBlockGetter obj)
+        {
             foreach (var subItem in obj.SubBlocks)
             {
                 foreach (var item in subItem.EnumerateMajorRecords())
@@ -1638,11 +1659,22 @@ namespace Mutagen.Bethesda.Starfield
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellBlockCommon.Instance.EnumerateMajorRecords(obj);
+            return CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellBlockGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellBlockGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -1654,14 +1686,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecord":
                 case "StarfieldMajorRecord":
                     if (!CellBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }

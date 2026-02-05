@@ -325,7 +325,7 @@ public sealed record GameConstants
         languageFormat: Strings.StringsLanguageFormat.FullName,
         hasEnabledMarkers: false,
         defaultFormVersion: 43,
-        defaultModHeaderVersion: 1.71f,
+        defaultModHeaderVersion: 1.70f,
         defaultHighRangeFormId: 0x800,
         useLowerRangeFormIdVersion: 1.71f,
         myDocumentsString: "Skyrim",
@@ -343,14 +343,15 @@ public sealed record GameConstants
         IniName = "Enderal",
     };
     
-    /// <summary> 
-    /// Readonly singleton of Skyrim SE game constants 
-    /// </summary> 
+    /// <summary>
+    /// Readonly singleton of Skyrim SE game constants
+    /// </summary>
     public static readonly GameConstants SkyrimSE = SkyrimLE with
     {
         Release = GameRelease.SkyrimSE,
         HasEnabledMarkers = true,
         DefaultFormVersion = 44,
+        DefaultModHeaderVersion = 1.71f,
         MyDocumentsString = "Skyrim Special Edition",
     };
     

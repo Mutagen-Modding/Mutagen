@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DisplayTime = initialValue;
                 this.BNAM = initialValue;
                 this.ShortTitle = initialValue;
-                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DisplayTime = DisplayTime;
                 this.BNAM = BNAM;
                 this.ShortTitle = ShortTitle;
-                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, []);
             }
 
             #pragma warning disable CS8618
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ShortTitle = eval(this.ShortTitle);
                 if (MenuButtons != null)
                 {
-                    obj.MenuButtons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MessageButton.Mask<R>?>>?>(eval(this.MenuButtons.Overall), Enumerable.Empty<MaskItemIndexed<R, MessageButton.Mask<R>?>>());
+                    obj.MenuButtons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MessageButton.Mask<R>?>>?>(eval(this.MenuButtons.Overall), []);
                     if (MenuButtons.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, MessageButton.Mask<R>?>>();
@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMessage);
+        protected override Type LinkType => typeof(IMessageGetter);
 
 
         #region Description

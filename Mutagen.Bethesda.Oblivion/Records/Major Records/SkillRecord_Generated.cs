@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISkillRecord);
+        protected override Type LinkType => typeof(ISkillRecordGetter);
 
 
         #region Skill

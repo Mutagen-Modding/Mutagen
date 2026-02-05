@@ -7,9 +7,10 @@ public class SkyrimTranslationAssetType : IAssetType
 {
     public static IAssetType Instance { get; } = new SkyrimTranslationAssetType();
     public string BaseFolder => "Strings";
-    public IEnumerable<string> FileExtensions => new []{ ".dlstrings", ".ilstrings", ".strings" };
+    public IEnumerable<string> FileExtensions => [".dlstrings", ".ilstrings", ".strings"];
     
-    public static IEnumerable<string> Languages => new []{ 
+    public static IEnumerable<string> Languages =>
+    [
         "english",
         "french",
         "german",
@@ -17,6 +18,6 @@ public class SkyrimTranslationAssetType : IAssetType
         "japanese",
         "polish",
         "russian",
-        "spanish" 
-    };
+        "spanish"
+    ];
 }

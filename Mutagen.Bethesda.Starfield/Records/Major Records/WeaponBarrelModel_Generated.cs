@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWeaponBarrelModel);
+        protected override Type LinkType => typeof(IWeaponBarrelModelGetter);
 
 
         private RangeInt32? _ZNAMLocation;

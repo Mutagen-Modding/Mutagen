@@ -137,8 +137,8 @@ namespace Mutagen.Bethesda.Pex
                 this.Username = initialValue;
                 this.MachineName = initialValue;
                 this.DebugInfo = new MaskItem<TItem, DebugInfo.Mask<TItem>?>(initialValue, new DebugInfo.Mask<TItem>(initialValue));
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObject.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObject.Mask<TItem>?>>());
-                this.UserFlags = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObject.Mask<TItem>?>>?>(initialValue, []);
+                this.UserFlags = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Pex
                 this.Username = Username;
                 this.MachineName = MachineName;
                 this.DebugInfo = new MaskItem<TItem, DebugInfo.Mask<TItem>?>(DebugInfo, new DebugInfo.Mask<TItem>(DebugInfo));
-                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, PexObject.Mask<TItem>?>>());
-                this.UserFlags = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UserFlags, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObject.Mask<TItem>?>>?>(Objects, []);
+                this.UserFlags = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UserFlags, []);
             }
 
             #pragma warning disable CS8618
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.DebugInfo = this.DebugInfo == null ? null : new MaskItem<R, DebugInfo.Mask<R>?>(eval(this.DebugInfo.Overall), this.DebugInfo.Specific?.Translate(eval));
                 if (Objects != null)
                 {
-                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObject.Mask<R>?>>?>(eval(this.Objects.Overall), Enumerable.Empty<MaskItemIndexed<R, PexObject.Mask<R>?>>());
+                    obj.Objects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PexObject.Mask<R>?>>?>(eval(this.Objects.Overall), []);
                     if (Objects.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PexObject.Mask<R>?>>();
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Pex
                 }
                 if (UserFlags != null)
                 {
-                    obj.UserFlags = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UserFlags.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.UserFlags = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UserFlags.Overall), []);
                     if (UserFlags.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

@@ -320,15 +320,15 @@ partial class CellBinaryOverlay
 
     private int? _persistentLocation;
     public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedData) : 0;
-    public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = Array.Empty<IPlacedGetter>();
+    public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = [];
 
     private int? _temporaryLocation;
     public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedData) : 0;
-    public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = Array.Empty<IPlacedGetter>();
+    public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = [];
 
     private int? _visibleWhenDistantLocation;
     public int VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedData) : 0;
-    public IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; private set; } = Array.Empty<IPlacedGetter>();
+    public IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; private set; } = [];
 
     public static int[] ParseRecordLocations(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {

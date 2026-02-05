@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icon = initialValue;
-                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Data = new MaskItem<TItem, TreeData.Mask<TItem>?>(initialValue, new TreeData.Mask<TItem>(initialValue));
                 this.BillboardDimensions = new MaskItem<TItem, Dimensions.Mask<TItem>?>(initialValue, new Dimensions.Mask<TItem>(initialValue));
             }
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icon = Icon;
-                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SpeedTreeSeeds, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SpeedTreeSeeds, []);
                 this.Data = new MaskItem<TItem, TreeData.Mask<TItem>?>(Data, new TreeData.Mask<TItem>(Data));
                 this.BillboardDimensions = new MaskItem<TItem, Dimensions.Mask<TItem>?>(BillboardDimensions, new Dimensions.Mask<TItem>(BillboardDimensions));
             }
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Icon = eval(this.Icon);
                 if (SpeedTreeSeeds != null)
                 {
-                    obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SpeedTreeSeeds.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SpeedTreeSeeds = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SpeedTreeSeeds.Overall), []);
                     if (SpeedTreeSeeds.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1914,7 +1914,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ITree);
+        protected override Type LinkType => typeof(ITreeGetter);
 
 
         public IModelGetter? Model { get; private set; }

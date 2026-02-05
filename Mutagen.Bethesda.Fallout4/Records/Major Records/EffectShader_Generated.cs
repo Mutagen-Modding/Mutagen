@@ -4531,7 +4531,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IEffectShader);
+        protected override Type LinkType => typeof(IEffectShaderGetter);
 
 
         #region FillTexture

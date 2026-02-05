@@ -10,7 +10,7 @@
           <Enum name="InterruptOverride" enumName="Package.Interrupt" byteLength="1" />
           <Enum name="PreferredSpeed" enumName="Package.Speed" byteLength="1" />
           <UInt8 name="Unknown" />
-          <Enum name="InteruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
+          <Enum name="InterruptFlags" enumName="Package.InterruptFlag" byteLength="2" />
           <UInt16 name="Unknown2" />
         </Fields>
       </Data>
@@ -144,9 +144,9 @@
       <Enum name="Type" enumName="TargetObjectType" />
     </Fields>
   </Object>
-  <Object name="PackageTargetReference" baseClass="APackageTarget" objType="Subrecord">
+  <Object name="PackageTargetLinkedReference" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
-      <FormLink name="Reference" refName="StarfieldMajorRecord" />
+      <FormLink name="Keyword" refName="Keyword" />
     </Fields>
   </Object>
   <Object name="PackageTargetAlias" baseClass="APackageTarget" objType="Subrecord">

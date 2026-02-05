@@ -140,8 +140,8 @@ namespace Mutagen.Bethesda.Fallout4
             : base(initialValue)
             {
                 this.Quest = initialValue;
-                this.Branches = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.TNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Branches = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.TNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ENAM = initialValue;
                 this.DNAM = initialValue;
             }
@@ -169,8 +169,8 @@ namespace Mutagen.Bethesda.Fallout4
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
                 this.Quest = Quest;
-                this.Branches = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Branches, Enumerable.Empty<(int Index, TItem Value)>());
-                this.TNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TNAMs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Branches = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Branches, []);
+                this.TNAMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TNAMs, []);
                 this.ENAM = ENAM;
                 this.DNAM = DNAM;
             }
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Quest = eval(this.Quest);
                 if (Branches != null)
                 {
-                    obj.Branches = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Branches.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Branches = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Branches.Overall), []);
                     if (Branches.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (TNAMs != null)
                 {
-                    obj.TNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TNAMs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.TNAMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TNAMs.Overall), []);
                     if (TNAMs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1922,7 +1922,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDialogView);
+        protected override Type LinkType => typeof(IDialogViewGetter);
 
 
         #region Quest

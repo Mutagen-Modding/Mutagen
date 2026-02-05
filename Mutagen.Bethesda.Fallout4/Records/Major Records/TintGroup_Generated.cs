@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.Options = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateOption.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintTemplateOption.Mask<TItem>?>>());
+                this.Options = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateOption.Mask<TItem>?>>?>(initialValue, []);
                 this.CategoryIndex = initialValue;
             }
 
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem CategoryIndex)
             {
                 this.Name = Name;
-                this.Options = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateOption.Mask<TItem>?>>?>(Options, Enumerable.Empty<MaskItemIndexed<TItem, TintTemplateOption.Mask<TItem>?>>());
+                this.Options = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintTemplateOption.Mask<TItem>?>>?>(Options, []);
                 this.CategoryIndex = CategoryIndex;
             }
 
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Name = eval(this.Name);
                 if (Options != null)
                 {
-                    obj.Options = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintTemplateOption.Mask<R>?>>?>(eval(this.Options.Overall), Enumerable.Empty<MaskItemIndexed<R, TintTemplateOption.Mask<R>?>>());
+                    obj.Options = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TintTemplateOption.Mask<R>?>>?>(eval(this.Options.Overall), []);
                     if (Options.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, TintTemplateOption.Mask<R>?>>();

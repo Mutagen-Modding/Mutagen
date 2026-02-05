@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 Version2: Version2,
                 Fallout4MajorRecordFlags: Fallout4MajorRecordFlags)
             {
-                this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DamageTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DamageTypes, []);
             }
 
             #pragma warning disable CS8618
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Fallout4
                 base.Translate_InternalFill(obj, eval);
                 if (DamageTypes != null)
                 {
-                    obj.DamageTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DamageTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DamageTypes.Overall), []);
                     if (DamageTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IDamageTypeIndexed);
+        protected override Type LinkType => typeof(IDamageTypeIndexedGetter);
 
 
         public IReadOnlyList<UInt32>? DamageTypes { get; private set; }

@@ -8,25 +8,26 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Fallout4;
-using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Starfield;
+using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
-using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
-using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
+using RecordTypeInts = Mutagen.Bethesda.Starfield.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -35,28 +36,42 @@ using System.Reactive.Linq;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class NoOwner :
+    public partial class UntypedOwner :
         OwnerTarget,
-        IEquatable<INoOwnerGetter>,
-        ILoquiObjectSetter<NoOwner>,
-        INoOwner
+        IEquatable<IUntypedOwnerGetter>,
+        ILoquiObjectSetter<UntypedOwner>,
+        IUntypedOwner
     {
         #region Ctor
-        public NoOwner()
+        public UntypedOwner()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region RawOwnerData
-        public UInt32 RawOwnerData { get; set; } = default(UInt32);
+        #region OwnerData
+        private readonly IFormLink<IStarfieldMajorRecordGetter> _OwnerData = new FormLink<IStarfieldMajorRecordGetter>();
+        public IFormLink<IStarfieldMajorRecordGetter> OwnerData
+        {
+            get => _OwnerData;
+            set => _OwnerData.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IStarfieldMajorRecordGetter> IUntypedOwnerGetter.OwnerData => this.OwnerData;
         #endregion
-        #region RawVariableData
-        public UInt32 RawVariableData { get; set; } = default(UInt32);
+        #region VariableData
+        private readonly IFormLink<IStarfieldMajorRecordGetter> _VariableData = new FormLink<IStarfieldMajorRecordGetter>();
+        public IFormLink<IStarfieldMajorRecordGetter> VariableData
+        {
+            get => _VariableData;
+            set => _VariableData.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IStarfieldMajorRecordGetter> IUntypedOwnerGetter.VariableData => this.VariableData;
         #endregion
 
         #region To String
@@ -65,7 +80,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NoOwnerMixIn.Print(
+            UntypedOwnerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -76,16 +91,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not INoOwnerGetter rhs) return false;
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IUntypedOwnerGetter rhs) return false;
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INoOwnerGetter? obj)
+        public bool Equals(IUntypedOwnerGetter? obj)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((UntypedOwnerCommon)((IUntypedOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,17 +114,17 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.RawOwnerData = initialValue;
-                this.RawVariableData = initialValue;
+                this.OwnerData = initialValue;
+                this.VariableData = initialValue;
             }
 
             public Mask(
-                TItem RawOwnerData,
-                TItem RawVariableData)
+                TItem OwnerData,
+                TItem VariableData)
             : base()
             {
-                this.RawOwnerData = RawOwnerData;
-                this.RawVariableData = RawVariableData;
+                this.OwnerData = OwnerData;
+                this.VariableData = VariableData;
             }
 
             #pragma warning disable CS8618
@@ -121,8 +136,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem RawOwnerData;
-            public TItem RawVariableData;
+            public TItem OwnerData;
+            public TItem VariableData;
             #endregion
 
             #region Equals
@@ -136,15 +151,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.RawOwnerData, rhs.RawOwnerData)) return false;
-                if (!object.Equals(this.RawVariableData, rhs.RawVariableData)) return false;
+                if (!object.Equals(this.OwnerData, rhs.OwnerData)) return false;
+                if (!object.Equals(this.VariableData, rhs.VariableData)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.RawOwnerData);
-                hash.Add(this.RawVariableData);
+                hash.Add(this.OwnerData);
+                hash.Add(this.VariableData);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -155,8 +170,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.RawOwnerData)) return false;
-                if (!eval(this.RawVariableData)) return false;
+                if (!eval(this.OwnerData)) return false;
+                if (!eval(this.VariableData)) return false;
                 return true;
             }
             #endregion
@@ -165,8 +180,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.RawOwnerData)) return true;
-                if (eval(this.RawVariableData)) return true;
+                if (eval(this.OwnerData)) return true;
+                if (eval(this.VariableData)) return true;
                 return false;
             }
             #endregion
@@ -174,7 +189,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new NoOwner.Mask<R>();
+                var ret = new UntypedOwner.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -182,33 +197,33 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.RawOwnerData = eval(this.RawOwnerData);
-                obj.RawVariableData = eval(this.RawVariableData);
+                obj.OwnerData = eval(this.OwnerData);
+                obj.VariableData = eval(this.VariableData);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(NoOwner.Mask<bool>? printMask = null)
+            public string Print(UntypedOwner.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, NoOwner.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, UntypedOwner.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(NoOwner.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(UntypedOwner.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.RawOwnerData ?? true)
+                    if (printMask?.OwnerData ?? true)
                     {
-                        sb.AppendItem(RawOwnerData, "RawOwnerData");
+                        sb.AppendItem(OwnerData, "OwnerData");
                     }
-                    if (printMask?.RawVariableData ?? true)
+                    if (printMask?.VariableData ?? true)
                     {
-                        sb.AppendItem(RawVariableData, "RawVariableData");
+                        sb.AppendItem(VariableData, "VariableData");
                     }
                 }
             }
@@ -221,20 +236,20 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? RawOwnerData;
-            public Exception? RawVariableData;
+            public Exception? OwnerData;
+            public Exception? VariableData;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
+                UntypedOwner_FieldIndex enu = (UntypedOwner_FieldIndex)index;
                 switch (enu)
                 {
-                    case NoOwner_FieldIndex.RawOwnerData:
-                        return RawOwnerData;
-                    case NoOwner_FieldIndex.RawVariableData:
-                        return RawVariableData;
+                    case UntypedOwner_FieldIndex.OwnerData:
+                        return OwnerData;
+                    case UntypedOwner_FieldIndex.VariableData:
+                        return VariableData;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -242,14 +257,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthException(int index, Exception ex)
             {
-                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
+                UntypedOwner_FieldIndex enu = (UntypedOwner_FieldIndex)index;
                 switch (enu)
                 {
-                    case NoOwner_FieldIndex.RawOwnerData:
-                        this.RawOwnerData = ex;
+                    case UntypedOwner_FieldIndex.OwnerData:
+                        this.OwnerData = ex;
                         break;
-                    case NoOwner_FieldIndex.RawVariableData:
-                        this.RawVariableData = ex;
+                    case UntypedOwner_FieldIndex.VariableData:
+                        this.VariableData = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -259,14 +274,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public override void SetNthMask(int index, object obj)
             {
-                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
+                UntypedOwner_FieldIndex enu = (UntypedOwner_FieldIndex)index;
                 switch (enu)
                 {
-                    case NoOwner_FieldIndex.RawOwnerData:
-                        this.RawOwnerData = (Exception?)obj;
+                    case UntypedOwner_FieldIndex.OwnerData:
+                        this.OwnerData = (Exception?)obj;
                         break;
-                    case NoOwner_FieldIndex.RawVariableData:
-                        this.RawVariableData = (Exception?)obj;
+                    case UntypedOwner_FieldIndex.VariableData:
+                        this.VariableData = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -277,8 +292,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (RawOwnerData != null) return true;
-                if (RawVariableData != null) return true;
+                if (OwnerData != null) return true;
+                if (VariableData != null) return true;
                 return false;
             }
             #endregion
@@ -306,10 +321,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(RawOwnerData, "RawOwnerData");
+                    sb.AppendItem(OwnerData, "OwnerData");
                 }
                 {
-                    sb.AppendItem(RawVariableData, "RawVariableData");
+                    sb.AppendItem(VariableData, "VariableData");
                 }
             }
             #endregion
@@ -319,8 +334,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.RawOwnerData = this.RawOwnerData.Combine(rhs.RawOwnerData);
-                ret.RawVariableData = this.RawVariableData.Combine(rhs.RawVariableData);
+                ret.OwnerData = this.OwnerData.Combine(rhs.OwnerData);
+                ret.VariableData = this.VariableData.Combine(rhs.VariableData);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -343,8 +358,8 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool RawOwnerData;
-            public bool RawVariableData;
+            public bool OwnerData;
+            public bool VariableData;
             #endregion
 
             #region Ctors
@@ -353,8 +368,8 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.RawOwnerData = defaultOn;
-                this.RawVariableData = defaultOn;
+                this.OwnerData = defaultOn;
+                this.VariableData = defaultOn;
             }
 
             #endregion
@@ -362,8 +377,8 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((RawOwnerData, null));
-                ret.Add((RawVariableData, null));
+                ret.Add((OwnerData, null));
+                ret.Add((VariableData, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -374,25 +389,30 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => UntypedOwnerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => UntypedOwnerSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => UntypedOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((UntypedOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static NoOwner CreateFromBinary(
+        public new static UntypedOwner CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new NoOwner();
-            ((NoOwnerSetterCommon)((INoOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new UntypedOwner();
+            ((UntypedOwnerSetterCommon)((IUntypedOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -403,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out NoOwner item,
+            out UntypedOwner item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -418,77 +438,79 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((NoOwnerSetterCommon)((INoOwnerGetter)this).CommonSetterInstance()!).Clear(this);
+            ((UntypedOwnerSetterCommon)((IUntypedOwnerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new NoOwner GetNew()
+        internal static new UntypedOwner GetNew()
         {
-            return new NoOwner();
+            return new UntypedOwner();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INoOwner :
-        ILoquiObjectSetter<INoOwner>,
-        INoOwnerGetter,
-        IOwnerTarget
+    public partial interface IUntypedOwner :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IUntypedOwner>,
+        IOwnerTarget,
+        IUntypedOwnerGetter
     {
-        new UInt32 RawOwnerData { get; set; }
-        new UInt32 RawVariableData { get; set; }
+        new IFormLink<IStarfieldMajorRecordGetter> OwnerData { get; set; }
+        new IFormLink<IStarfieldMajorRecordGetter> VariableData { get; set; }
     }
 
-    public partial interface INoOwnerGetter :
+    public partial interface IUntypedOwnerGetter :
         IOwnerTargetGetter,
         IBinaryItem,
-        ILoquiObject<INoOwnerGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IUntypedOwnerGetter>
     {
-        static new ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
-        UInt32 RawOwnerData { get; }
-        UInt32 RawVariableData { get; }
+        static new ILoquiRegistration StaticRegistration => UntypedOwner_Registration.Instance;
+        IFormLinkGetter<IStarfieldMajorRecordGetter> OwnerData { get; }
+        IFormLinkGetter<IStarfieldMajorRecordGetter> VariableData { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class NoOwnerMixIn
+    public static partial class UntypedOwnerMixIn
     {
-        public static void Clear(this INoOwner item)
+        public static void Clear(this IUntypedOwner item)
         {
-            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((UntypedOwnerSetterCommon)((IUntypedOwnerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static NoOwner.Mask<bool> GetEqualsMask(
-            this INoOwnerGetter item,
-            INoOwnerGetter rhs,
+        public static UntypedOwner.Mask<bool> GetEqualsMask(
+            this IUntypedOwnerGetter item,
+            IUntypedOwnerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this INoOwnerGetter item,
+            this IUntypedOwnerGetter item,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            UntypedOwner.Mask<bool>? printMask = null)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Print(
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this INoOwnerGetter item,
+            this IUntypedOwnerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            UntypedOwner.Mask<bool>? printMask = null)
         {
-            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Print(
+            ((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -496,39 +518,39 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this INoOwnerGetter item,
-            INoOwnerGetter rhs,
-            NoOwner.TranslationMask? equalsMask = null)
+            this IUntypedOwnerGetter item,
+            IUntypedOwnerGetter rhs,
+            UntypedOwner.TranslationMask? equalsMask = null)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Equals(
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this INoOwner lhs,
-            INoOwnerGetter rhs,
-            out NoOwner.ErrorMask errorMask,
-            NoOwner.TranslationMask? copyMask = null)
+            this IUntypedOwner lhs,
+            IUntypedOwnerGetter rhs,
+            out UntypedOwner.ErrorMask errorMask,
+            UntypedOwner.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = UntypedOwner.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INoOwner lhs,
-            INoOwnerGetter rhs,
+            this IUntypedOwner lhs,
+            IUntypedOwnerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -536,32 +558,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static NoOwner DeepCopy(
-            this INoOwnerGetter item,
-            NoOwner.TranslationMask? copyMask = null)
+        public static UntypedOwner DeepCopy(
+            this IUntypedOwnerGetter item,
+            UntypedOwner.TranslationMask? copyMask = null)
         {
-            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static NoOwner DeepCopy(
-            this INoOwnerGetter item,
-            out NoOwner.ErrorMask errorMask,
-            NoOwner.TranslationMask? copyMask = null)
+        public static UntypedOwner DeepCopy(
+            this IUntypedOwnerGetter item,
+            out UntypedOwner.ErrorMask errorMask,
+            UntypedOwner.TranslationMask? copyMask = null)
         {
-            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static NoOwner DeepCopy(
-            this INoOwnerGetter item,
+        public static UntypedOwner DeepCopy(
+            this IUntypedOwnerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -569,11 +591,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this INoOwner item,
+            this IUntypedOwner item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((UntypedOwnerSetterCommon)((IUntypedOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -586,52 +608,52 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum NoOwner_FieldIndex
+    internal enum UntypedOwner_FieldIndex
     {
-        RawOwnerData = 0,
-        RawVariableData = 1,
+        OwnerData = 0,
+        VariableData = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class NoOwner_Registration : ILoquiRegistration
+    internal partial class UntypedOwner_Registration : ILoquiRegistration
     {
-        public static readonly NoOwner_Registration Instance = new NoOwner_Registration();
+        public static readonly UntypedOwner_Registration Instance = new UntypedOwner_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(NoOwner.Mask<>);
+        public static readonly Type MaskType = typeof(UntypedOwner.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NoOwner.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(UntypedOwner.ErrorMask);
 
-        public static readonly Type ClassType = typeof(NoOwner);
+        public static readonly Type ClassType = typeof(UntypedOwner);
 
-        public static readonly Type GetterType = typeof(INoOwnerGetter);
+        public static readonly Type GetterType = typeof(IUntypedOwnerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INoOwner);
+        public static readonly Type SetterType = typeof(IUntypedOwner);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.NoOwner";
+        public const string FullName = "Mutagen.Bethesda.Starfield.UntypedOwner";
 
-        public const string Name = "NoOwner";
+        public const string Name = "UntypedOwner";
 
-        public const string Namespace = "Mutagen.Bethesda.Fallout4";
+        public const string Namespace = "Mutagen.Bethesda.Starfield";
 
         public const byte GenericCount = 0;
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(NoOwnerBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(UntypedOwnerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -662,36 +684,38 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class NoOwnerSetterCommon : OwnerTargetSetterCommon
+    internal partial class UntypedOwnerSetterCommon : OwnerTargetSetterCommon
     {
-        public new static readonly NoOwnerSetterCommon Instance = new NoOwnerSetterCommon();
+        public new static readonly UntypedOwnerSetterCommon Instance = new UntypedOwnerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INoOwner item)
+        public void Clear(IUntypedOwner item)
         {
             ClearPartial();
-            item.RawOwnerData = default(UInt32);
-            item.RawVariableData = default(UInt32);
+            item.OwnerData.Clear();
+            item.VariableData.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IOwnerTarget item)
         {
-            Clear(item: (INoOwner)item);
+            Clear(item: (IUntypedOwner)item);
         }
         
         #region Mutagen
-        public void RemapLinks(INoOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IUntypedOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.OwnerData.Relink(mapping);
+            obj.VariableData.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            INoOwner item,
+            IUntypedOwner item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -699,7 +723,7 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NoOwnerBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: UntypedOwnerBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -708,7 +732,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (NoOwner)item,
+                item: (UntypedOwner)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -716,17 +740,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class NoOwnerCommon : OwnerTargetCommon
+    internal partial class UntypedOwnerCommon : OwnerTargetCommon
     {
-        public new static readonly NoOwnerCommon Instance = new NoOwnerCommon();
+        public new static readonly UntypedOwnerCommon Instance = new UntypedOwnerCommon();
 
-        public NoOwner.Mask<bool> GetEqualsMask(
-            INoOwnerGetter item,
-            INoOwnerGetter rhs,
+        public UntypedOwner.Mask<bool> GetEqualsMask(
+            IUntypedOwnerGetter item,
+            IUntypedOwnerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new NoOwner.Mask<bool>(false);
-            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new UntypedOwner.Mask<bool>(false);
+            ((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -735,20 +759,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            INoOwnerGetter item,
-            INoOwnerGetter rhs,
-            NoOwner.Mask<bool> ret,
+            IUntypedOwnerGetter item,
+            IUntypedOwnerGetter rhs,
+            UntypedOwner.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.RawOwnerData = item.RawOwnerData == rhs.RawOwnerData;
-            ret.RawVariableData = item.RawVariableData == rhs.RawVariableData;
+            ret.OwnerData = item.OwnerData.Equals(rhs.OwnerData);
+            ret.VariableData = item.VariableData.Equals(rhs.VariableData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            INoOwnerGetter item,
+            IUntypedOwnerGetter item,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            UntypedOwner.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -760,18 +784,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            INoOwnerGetter item,
+            IUntypedOwnerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            UntypedOwner.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"NoOwner =>");
+                sb.AppendLine($"UntypedOwner =>");
             }
             else
             {
-                sb.AppendLine($"{name} (NoOwner) =>");
+                sb.AppendLine($"{name} (UntypedOwner) =>");
             }
             using (sb.Brace())
             {
@@ -783,25 +807,25 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            INoOwnerGetter item,
+            IUntypedOwnerGetter item,
             StructuredStringBuilder sb,
-            NoOwner.Mask<bool>? printMask = null)
+            UntypedOwner.Mask<bool>? printMask = null)
         {
             OwnerTargetCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.RawOwnerData ?? true)
+            if (printMask?.OwnerData ?? true)
             {
-                sb.AppendItem(item.RawOwnerData, "RawOwnerData");
+                sb.AppendItem(item.OwnerData.FormKey, "OwnerData");
             }
-            if (printMask?.RawVariableData ?? true)
+            if (printMask?.VariableData ?? true)
             {
-                sb.AppendItem(item.RawVariableData, "RawVariableData");
+                sb.AppendItem(item.VariableData.FormKey, "VariableData");
             }
         }
         
-        public static NoOwner_FieldIndex ConvertFieldIndex(OwnerTarget_FieldIndex index)
+        public static UntypedOwner_FieldIndex ConvertFieldIndex(OwnerTarget_FieldIndex index)
         {
             switch (index)
             {
@@ -812,19 +836,19 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            INoOwnerGetter? lhs,
-            INoOwnerGetter? rhs,
+            IUntypedOwnerGetter? lhs,
+            IUntypedOwnerGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UntypedOwner_FieldIndex.OwnerData) ?? true))
             {
-                if (lhs.RawOwnerData != rhs.RawOwnerData) return false;
+                if (!lhs.OwnerData.Equals(rhs.OwnerData)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawVariableData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)UntypedOwner_FieldIndex.VariableData) ?? true))
             {
-                if (lhs.RawVariableData != rhs.RawVariableData) return false;
+                if (!lhs.VariableData.Equals(rhs.VariableData)) return false;
             }
             return true;
         }
@@ -835,23 +859,23 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (INoOwnerGetter?)lhs,
-                rhs: rhs as INoOwnerGetter,
+                lhs: (IUntypedOwnerGetter?)lhs,
+                rhs: rhs as IUntypedOwnerGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(INoOwnerGetter item)
+        public virtual int GetHashCode(IUntypedOwnerGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.RawOwnerData);
-            hash.Add(item.RawVariableData);
+            hash.Add(item.OwnerData);
+            hash.Add(item.VariableData);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IOwnerTargetGetter item)
         {
-            return GetHashCode(item: (INoOwnerGetter)item);
+            return GetHashCode(item: (IUntypedOwnerGetter)item);
         }
         
         #endregion
@@ -859,30 +883,32 @@ namespace Mutagen.Bethesda.Fallout4
         
         public override object GetNew()
         {
-            return NoOwner.GetNew();
+            return UntypedOwner.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INoOwnerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IUntypedOwnerGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.OwnerData);
+            yield return FormLinkInformation.Factory(obj.VariableData);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class NoOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
+    internal partial class UntypedOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
     {
-        public new static readonly NoOwnerSetterTranslationCommon Instance = new NoOwnerSetterTranslationCommon();
+        public new static readonly UntypedOwnerSetterTranslationCommon Instance = new UntypedOwnerSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            INoOwner item,
-            INoOwnerGetter rhs,
+            IUntypedOwner item,
+            IUntypedOwnerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -893,13 +919,13 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)UntypedOwner_FieldIndex.OwnerData) ?? true))
             {
-                item.RawOwnerData = rhs.RawOwnerData;
+                item.OwnerData.SetTo(rhs.OwnerData.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawVariableData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)UntypedOwner_FieldIndex.VariableData) ?? true))
             {
-                item.RawVariableData = rhs.RawVariableData;
+                item.VariableData.SetTo(rhs.VariableData.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -910,8 +936,8 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         partial void DeepCopyInCustom(
-            INoOwner item,
-            INoOwnerGetter rhs,
+            IUntypedOwner item,
+            IUntypedOwnerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -924,8 +950,8 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INoOwner)item,
-                rhs: (INoOwnerGetter)rhs,
+                item: (IUntypedOwner)item,
+                rhs: (IUntypedOwnerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -933,12 +959,12 @@ namespace Mutagen.Bethesda.Fallout4
         
         #endregion
         
-        public NoOwner DeepCopy(
-            INoOwnerGetter item,
-            NoOwner.TranslationMask? copyMask = null)
+        public UntypedOwner DeepCopy(
+            IUntypedOwnerGetter item,
+            UntypedOwner.TranslationMask? copyMask = null)
         {
-            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            UntypedOwner ret = (UntypedOwner)((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).GetNew();
+            ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -947,30 +973,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public NoOwner DeepCopy(
-            INoOwnerGetter item,
-            out NoOwner.ErrorMask errorMask,
-            NoOwner.TranslationMask? copyMask = null)
+        public UntypedOwner DeepCopy(
+            IUntypedOwnerGetter item,
+            out UntypedOwner.ErrorMask errorMask,
+            UntypedOwner.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            UntypedOwner ret = (UntypedOwner)((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).GetNew();
+            ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = UntypedOwner.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public NoOwner DeepCopy(
-            INoOwnerGetter item,
+        public UntypedOwner DeepCopy(
+            IUntypedOwnerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            UntypedOwner ret = (UntypedOwner)((UntypedOwnerCommon)((IUntypedOwnerGetter)item).CommonInstance()!).GetNew();
+            ((UntypedOwnerSetterTranslationCommon)((IUntypedOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -984,23 +1010,23 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Starfield
 {
-    public partial class NoOwner
+    public partial class UntypedOwner
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NoOwner_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => UntypedOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => UntypedOwner_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NoOwnerCommon.Instance;
+        protected override object CommonInstance() => UntypedOwnerCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NoOwnerSetterCommon.Instance;
+            return UntypedOwnerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NoOwnerSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => UntypedOwnerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1009,25 +1035,29 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Starfield
 {
-    public partial class NoOwnerBinaryWriteTranslation :
+    public partial class UntypedOwnerBinaryWriteTranslation :
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NoOwnerBinaryWriteTranslation Instance = new();
+        public new static readonly UntypedOwnerBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            INoOwnerGetter item,
+            IUntypedOwnerGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.RawOwnerData);
-            writer.Write(item.RawVariableData);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.OwnerData);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.VariableData);
         }
 
         public void Write(
             MutagenWriter writer,
-            INoOwnerGetter item,
+            IUntypedOwnerGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1041,7 +1071,7 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (INoOwnerGetter)item,
+                item: (IUntypedOwnerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1052,78 +1082,79 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams)
         {
             Write(
-                item: (INoOwnerGetter)item,
+                item: (IUntypedOwnerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class NoOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
+    internal partial class UntypedOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
-        public new static readonly NoOwnerBinaryCreateTranslation Instance = new NoOwnerBinaryCreateTranslation();
+        public new static readonly UntypedOwnerBinaryCreateTranslation Instance = new UntypedOwnerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            INoOwner item,
+            IUntypedOwner item,
             MutagenFrame frame)
         {
-            item.RawOwnerData = frame.ReadUInt32();
-            item.RawVariableData = frame.ReadUInt32();
+            item.OwnerData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.VariableData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class NoOwnerBinaryTranslationMixIn
+    public static class UntypedOwnerBinaryTranslationMixIn
     {
     }
     #endregion
 
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class NoOwnerBinaryOverlay :
+    internal partial class UntypedOwnerBinaryOverlay :
         OwnerTargetBinaryOverlay,
-        INoOwnerGetter
+        IUntypedOwnerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NoOwner_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => UntypedOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => UntypedOwner_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NoOwnerCommon.Instance;
+        protected override object CommonInstance() => UntypedOwnerCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NoOwnerSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => UntypedOwnerSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => UntypedOwnerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => UntypedOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((UntypedOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public UInt32 RawOwnerData => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public UInt32 RawVariableData => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> OwnerData => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> VariableData => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected NoOwnerBinaryOverlay(
+        protected UntypedOwnerBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1133,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static INoOwnerGetter NoOwnerFactory(
+        public static IUntypedOwnerGetter UntypedOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1145,7 +1176,7 @@ namespace Mutagen.Bethesda.Fallout4
                 length: 0x8,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new NoOwnerBinaryOverlay(
+            var ret = new UntypedOwnerBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0x8;
@@ -1156,12 +1187,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static INoOwnerGetter NoOwnerFactory(
+        public static IUntypedOwnerGetter UntypedOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return NoOwnerFactory(
+            return UntypedOwnerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1173,7 +1204,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NoOwnerMixIn.Print(
+            UntypedOwnerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1184,16 +1215,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not INoOwnerGetter rhs) return false;
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IUntypedOwnerGetter rhs) return false;
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INoOwnerGetter? obj)
+        public bool Equals(IUntypedOwnerGetter? obj)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((UntypedOwnerCommon)((IUntypedOwnerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((UntypedOwnerCommon)((IUntypedOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

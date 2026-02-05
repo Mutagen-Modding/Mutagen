@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
+                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(Impacts, Enumerable.Empty<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>());
+                this.Impacts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ImpactData.Mask<TItem>?>>?>(Impacts, []);
             }
 
             #pragma warning disable CS8618
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 if (Impacts != null)
                 {
-                    obj.Impacts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ImpactData.Mask<R>?>>?>(eval(this.Impacts.Overall), Enumerable.Empty<MaskItemIndexed<R, ImpactData.Mask<R>?>>());
+                    obj.Impacts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ImpactData.Mask<R>?>>?>(eval(this.Impacts.Overall), []);
                     if (Impacts.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ImpactData.Mask<R>?>>();
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IImpactDataSet);
+        protected override Type LinkType => typeof(IImpactDataSetGetter);
 
 
         public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = [];

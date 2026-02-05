@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxHeightData = new MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>(initialValue, new CellMaxHeightData.Mask<TItem>(initialValue));
                 this.LightingTemplate = initialValue;
                 this.WaterHeight = initialValue;
-                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Location = initialValue;
                 this.XWCN = initialValue;
                 this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(initialValue, new CellWaterVelocity.Mask<TItem>(initialValue));
@@ -511,19 +511,19 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Music = initialValue;
                 this.ImageSpace = initialValue;
                 this.GodRays = initialValue;
-                this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>());
+                this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(initialValue, []);
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
-                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, []);
                 this.Timestamp = initialValue;
                 this.UnknownGroupData = initialValue;
                 this.PersistentTimestamp = initialValue;
                 this.PersistentUnknownGroupData = initialValue;
-                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, []);
                 this.TemporaryTimestamp = initialValue;
                 this.TemporaryUnknownGroupData = initialValue;
-                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaxHeightData = new MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>(MaxHeightData, new CellMaxHeightData.Mask<TItem>(MaxHeightData));
                 this.LightingTemplate = LightingTemplate;
                 this.WaterHeight = WaterHeight;
-                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, []);
                 this.Location = Location;
                 this.XWCN = XWCN;
                 this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(WaterVelocity, new CellWaterVelocity.Mask<TItem>(WaterVelocity));
@@ -614,19 +614,19 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Music = Music;
                 this.ImageSpace = ImageSpace;
                 this.GodRays = GodRays;
-                this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PhysicsReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CombinedMeshes, Enumerable.Empty<(int Index, TItem Value)>());
-                this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(CombinedMeshReferences, Enumerable.Empty<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>());
+                this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PhysicsReferences, []);
+                this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CombinedMeshes, []);
+                this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(CombinedMeshReferences, []);
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
-                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, []);
                 this.Timestamp = Timestamp;
                 this.UnknownGroupData = UnknownGroupData;
                 this.PersistentTimestamp = PersistentTimestamp;
                 this.PersistentUnknownGroupData = PersistentUnknownGroupData;
-                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, []);
                 this.TemporaryTimestamp = TemporaryTimestamp;
                 this.TemporaryUnknownGroupData = TemporaryUnknownGroupData;
-                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, []);
             }
 
             #pragma warning disable CS8618
@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.WaterHeight = eval(this.WaterHeight);
                 if (Regions != null)
                 {
-                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Regions.Overall), []);
                     if (Regions.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.GodRays = eval(this.GodRays);
                 if (PhysicsReferences != null)
                 {
-                    obj.PhysicsReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PhysicsReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PhysicsReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PhysicsReferences.Overall), []);
                     if (PhysicsReferences.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CombinedMeshes != null)
                 {
-                    obj.CombinedMeshes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CombinedMeshes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.CombinedMeshes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CombinedMeshes.Overall), []);
                     if (CombinedMeshes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 if (CombinedMeshReferences != null)
                 {
-                    obj.CombinedMeshReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>?>(eval(this.CombinedMeshReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>());
+                    obj.CombinedMeshReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>?>(eval(this.CombinedMeshReferences.Overall), []);
                     if (CombinedMeshReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>();
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
                 if (NavigationMeshes != null)
                 {
-                    obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>());
+                    obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), []);
                     if (NavigationMeshes.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>();
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.PersistentUnknownGroupData = eval(this.PersistentUnknownGroupData);
                 if (Persistent != null)
                 {
-                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), []);
                     if (Persistent.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.TemporaryUnknownGroupData = eval(this.TemporaryUnknownGroupData);
                 if (Temporary != null)
                 {
-                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), []);
                     if (Temporary.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
@@ -3464,6 +3464,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellInternal obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecordsLoopLogic(ICellInternal obj)
+        {
             foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
             {
                 yield return (item as IMajorRecord)!;
@@ -3475,8 +3480,8 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
@@ -3484,7 +3489,18 @@ namespace Mutagen.Bethesda.Fallout4
             Type type,
             bool throwIfUnknown)
         {
-            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
+            ICellInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecordsLoopLogic(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -4601,6 +4617,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
         {
+            return EnumerateMajorRecordsLoopLogic(obj: obj);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(ICellGetter obj)
+        {
             if ((obj.Landscape != null))
             {
                 if (obj.Landscape is {} Landscapeitem)
@@ -4635,11 +4656,22 @@ namespace Mutagen.Bethesda.Fallout4
             Type? type,
             bool throwIfUnknown)
         {
-            if (type == null) return EnumerateMajorRecords(obj);
-            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+            if (type == null) return CellCommon.Instance.EnumerateMajorRecords(obj);
+            return CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            return EnumerateMajorRecordsLoopLogic(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecordsLoopLogic(
             ICellGetter obj,
             Type type,
             bool throwIfUnknown)
@@ -4651,14 +4683,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IFallout4MajorRecord":
                 case "Fallout4MajorRecord":
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IMajorRecordGetter":
                 case "IFallout4MajorRecordGetter":
-                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    foreach (var item in this.EnumerateMajorRecordsLoopLogic(obj))
                     {
                         yield return item;
                     }
@@ -6535,7 +6567,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ICell);
+        protected override Type LinkType => typeof(ICellGetter);
 
         public Cell.MajorFlag MajorFlags => (Cell.MajorFlag)this.MajorRecordFlagsRaw;
 

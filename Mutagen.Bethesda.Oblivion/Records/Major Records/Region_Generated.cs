@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.MapColor = initialValue;
                 this.Worldspace = initialValue;
-                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, []);
                 this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(initialValue, new RegionObjects.Mask<TItem>(initialValue));
                 this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(initialValue, new RegionWeather.Mask<TItem>(initialValue));
                 this.MapName = new MaskItem<TItem, RegionMap.Mask<TItem>?>(initialValue, new RegionMap.Mask<TItem>(initialValue));
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.MapColor = MapColor;
                 this.Worldspace = Worldspace;
-                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(Areas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(Areas, []);
                 this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(Objects, new RegionObjects.Mask<TItem>(Objects));
                 this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(Weather, new RegionWeather.Mask<TItem>(Weather));
                 this.MapName = new MaskItem<TItem, RegionMap.Mask<TItem>?>(MapName, new RegionMap.Mask<TItem>(MapName));
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Worldspace = eval(this.Worldspace);
                 if (Areas != null)
                 {
-                    obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.Areas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.Areas.Overall), []);
                     if (Areas.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
@@ -2264,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRegion);
+        protected override Type LinkType => typeof(IRegionGetter);
 
 
         #region Icon

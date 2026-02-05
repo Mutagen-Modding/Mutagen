@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem Slots)
             : base()
             {
-                this.Slots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Slots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Slots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Slots, []);
             }
 
             #pragma warning disable CS8618
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Slots != null)
                 {
-                    obj.Slots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Slots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Slots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Slots.Overall), []);
                     if (Slots.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

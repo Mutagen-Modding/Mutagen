@@ -276,7 +276,7 @@ partial class AObjectModificationBinaryOverlay
     public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> AttachParentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
     public uint Unknown3 => BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes.Slice(AttachSlotsEnd));
 
-    public IReadOnlyList<IObjectModIncludeGetter> Includes { get; private set; } = Array.Empty<IObjectModIncludeGetter>();
+    public IReadOnlyList<IObjectModIncludeGetter> Includes { get; private set; } = [];
 
     public partial ParseResult DataParseCustomParse(
         OverlayStream stream,

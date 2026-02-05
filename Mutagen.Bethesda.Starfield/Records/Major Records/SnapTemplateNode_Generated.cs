@@ -214,14 +214,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.CNAM = initialValue;
                 this.FNAM = initialValue;
                 this.SNST = initialValue;
-                this.AdjacentSnapNodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SnapAngles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AdjacentSnapNodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SnapAngles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ArtObject = initialValue;
             }
 
@@ -255,14 +255,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
                 this.CNAM = CNAM;
                 this.FNAM = FNAM;
                 this.SNST = SNST;
-                this.AdjacentSnapNodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdjacentSnapNodes, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SnapAngles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SnapAngles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.AdjacentSnapNodes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdjacentSnapNodes, []);
+                this.SnapAngles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SnapAngles, []);
                 this.ArtObject = ArtObject;
             }
 
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DirtinessScale = eval(this.DirtinessScale);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
                     if (Components.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SNST = eval(this.SNST);
                 if (AdjacentSnapNodes != null)
                 {
-                    obj.AdjacentSnapNodes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdjacentSnapNodes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AdjacentSnapNodes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdjacentSnapNodes.Overall), []);
                     if (AdjacentSnapNodes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SnapAngles != null)
                 {
-                    obj.SnapAngles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SnapAngles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SnapAngles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SnapAngles.Overall), []);
                     if (SnapAngles.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -2767,7 +2767,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISnapTemplateNode);
+        protected override Type LinkType => typeof(ISnapTemplateNodeGetter);
 
 
         #region ObjectBounds

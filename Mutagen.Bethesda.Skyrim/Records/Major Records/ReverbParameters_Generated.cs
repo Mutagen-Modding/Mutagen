@@ -2006,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IReverbParameters);
+        protected override Type LinkType => typeof(IReverbParametersGetter);
 
 
         private RangeInt32? _DATALocation;

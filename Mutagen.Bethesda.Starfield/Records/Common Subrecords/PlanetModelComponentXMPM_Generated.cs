@@ -118,16 +118,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.UnknownStrings = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.UnknownSubItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetModelComponentXMPMSubItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetModelComponentXMPMSubItem.Mask<TItem>?>>());
+                this.UnknownStrings = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.UnknownSubItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetModelComponentXMPMSubItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
                 TItem UnknownStrings,
                 TItem UnknownSubItems)
             {
-                this.UnknownStrings = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnknownStrings, Enumerable.Empty<(int Index, TItem Value)>());
-                this.UnknownSubItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetModelComponentXMPMSubItem.Mask<TItem>?>>?>(UnknownSubItems, Enumerable.Empty<MaskItemIndexed<TItem, PlanetModelComponentXMPMSubItem.Mask<TItem>?>>());
+                this.UnknownStrings = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UnknownStrings, []);
+                this.UnknownSubItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetModelComponentXMPMSubItem.Mask<TItem>?>>?>(UnknownSubItems, []);
             }
 
             #pragma warning disable CS8618
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (UnknownStrings != null)
                 {
-                    obj.UnknownStrings = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnknownStrings.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.UnknownStrings = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UnknownStrings.Overall), []);
                     if (UnknownStrings.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (UnknownSubItems != null)
                 {
-                    obj.UnknownSubItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetModelComponentXMPMSubItem.Mask<R>?>>?>(eval(this.UnknownSubItems.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetModelComponentXMPMSubItem.Mask<R>?>>());
+                    obj.UnknownSubItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetModelComponentXMPMSubItem.Mask<R>?>>?>(eval(this.UnknownSubItems.Overall), []);
                     if (UnknownSubItems.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, PlanetModelComponentXMPMSubItem.Mask<R>?>>();

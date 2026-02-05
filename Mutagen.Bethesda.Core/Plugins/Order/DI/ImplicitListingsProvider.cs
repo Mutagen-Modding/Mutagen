@@ -32,7 +32,7 @@ public sealed class ImplicitListingsProvider : IImplicitListingsProvider
     {
         return ListingModKeys.Listings
             .Where(x => _fileSystem.File.Exists(Path.Combine(DataFolder.Path, x.FileName.String)))
-            .Select(x => new ModListing(x, enabled: true, existsOnDisk: true));
+            .Select(x => new ModListing(x, enabled: true, modExists: true));
     }
 
     IEnumerable<ILoadOrderListingGetter> IListingsProvider.Get() => Get();

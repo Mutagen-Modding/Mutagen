@@ -368,13 +368,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(initialValue, new SceneAdapter.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
-                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>());
-                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>());
-                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ASceneAction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ASceneAction.Mask<TItem>?>>());
+                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(initialValue, []);
+                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(initialValue, []);
+                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ASceneAction.Mask<TItem>?>>?>(initialValue, []);
                 this.Quest = initialValue;
                 this.LastActionIndex = initialValue;
                 this.VNAM = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.SetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(initialValue, new SceneSetParentQuestStage.Mask<TItem>(initialValue));
                 this.Notes = initialValue;
                 this.Template = initialValue;
@@ -384,16 +384,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.JNAM = initialValue;
                 this.SCPP = initialValue;
                 this.SCSP = initialValue;
-                this.SPMA = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SPEX = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SPMA = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SPEX = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.SPRK = initialValue;
                 this.SPRW = initialValue;
                 this.SPRP = initialValue;
                 this.SPDF = initialValue;
                 this.SPPQ = initialValue;
-                this.SPKW = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SPPK = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SPKY = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SPKW = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SPPK = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SPKY = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.DEVT = initialValue;
             }
 
@@ -445,13 +445,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, SceneAdapter.Mask<TItem>?>(VirtualMachineAdapter, new SceneAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Flags = Flags;
-                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(Phases, Enumerable.Empty<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>());
-                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(Actors, Enumerable.Empty<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>());
-                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ASceneAction.Mask<TItem>?>>?>(Actions, Enumerable.Empty<MaskItemIndexed<TItem, ASceneAction.Mask<TItem>?>>());
+                this.Phases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScenePhase.Mask<TItem>?>>?>(Phases, []);
+                this.Actors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SceneActor.Mask<TItem>?>>?>(Actors, []);
+                this.Actions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ASceneAction.Mask<TItem>?>>?>(Actions, []);
                 this.Quest = Quest;
                 this.LastActionIndex = LastActionIndex;
                 this.VNAM = VNAM;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.SetParentQuestStage = new MaskItem<TItem, SceneSetParentQuestStage.Mask<TItem>?>(SetParentQuestStage, new SceneSetParentQuestStage.Mask<TItem>(SetParentQuestStage));
                 this.Notes = Notes;
                 this.Template = Template;
@@ -461,16 +461,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.JNAM = JNAM;
                 this.SCPP = SCPP;
                 this.SCSP = SCSP;
-                this.SPMA = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPMA, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SPEX = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPEX, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SPMA = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPMA, []);
+                this.SPEX = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPEX, []);
                 this.SPRK = SPRK;
                 this.SPRW = SPRW;
                 this.SPRP = SPRP;
                 this.SPDF = SPDF;
                 this.SPPQ = SPPQ;
-                this.SPKW = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPKW, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SPPK = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPPK, Enumerable.Empty<(int Index, TItem Value)>());
-                this.SPKY = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPKY, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SPKW = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPKW, []);
+                this.SPPK = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPPK, []);
+                this.SPKY = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SPKY, []);
                 this.DEVT = DEVT;
             }
 
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 if (Phases != null)
                 {
-                    obj.Phases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhase.Mask<R>?>>?>(eval(this.Phases.Overall), Enumerable.Empty<MaskItemIndexed<R, ScenePhase.Mask<R>?>>());
+                    obj.Phases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScenePhase.Mask<R>?>>?>(eval(this.Phases.Overall), []);
                     if (Phases.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ScenePhase.Mask<R>?>>();
@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Actors != null)
                 {
-                    obj.Actors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneActor.Mask<R>?>>?>(eval(this.Actors.Overall), Enumerable.Empty<MaskItemIndexed<R, SceneActor.Mask<R>?>>());
+                    obj.Actors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SceneActor.Mask<R>?>>?>(eval(this.Actors.Overall), []);
                     if (Actors.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SceneActor.Mask<R>?>>();
@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Actions != null)
                 {
-                    obj.Actions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ASceneAction.Mask<R>?>>?>(eval(this.Actions.Overall), Enumerable.Empty<MaskItemIndexed<R, ASceneAction.Mask<R>?>>());
+                    obj.Actions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ASceneAction.Mask<R>?>>?>(eval(this.Actions.Overall), []);
                     if (Actions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ASceneAction.Mask<R>?>>();
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VNAM = eval(this.VNAM);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SCSP = eval(this.SCSP);
                 if (SPMA != null)
                 {
-                    obj.SPMA = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPMA.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SPMA = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPMA.Overall), []);
                     if (SPMA.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SPEX != null)
                 {
-                    obj.SPEX = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPEX.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SPEX = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPEX.Overall), []);
                     if (SPEX.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SPPQ = eval(this.SPPQ);
                 if (SPKW != null)
                 {
-                    obj.SPKW = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPKW.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SPKW = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPKW.Overall), []);
                     if (SPKW.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SPPK != null)
                 {
-                    obj.SPPK = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPPK.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SPPK = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPPK.Overall), []);
                     if (SPPK.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (SPKY != null)
                 {
-                    obj.SPKY = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPKY.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SPKY = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SPKY.Overall), []);
                     if (SPKY.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -4634,7 +4634,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IScene);
+        protected override Type LinkType => typeof(ISceneGetter);
 
 
         #region VirtualMachineAdapter

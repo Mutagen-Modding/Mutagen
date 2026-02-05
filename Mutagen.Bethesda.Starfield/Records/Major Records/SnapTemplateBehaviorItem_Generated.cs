@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ENAM = initialValue;
                 this.BaseObject = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.SnapTemplateNode = initialValue;
                 this.Keyword = initialValue;
             }
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ENAM = ENAM;
                 this.BaseObject = BaseObject;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.SnapTemplateNode = SnapTemplateNode;
                 this.Keyword = Keyword;
             }
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.BaseObject = eval(this.BaseObject);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();

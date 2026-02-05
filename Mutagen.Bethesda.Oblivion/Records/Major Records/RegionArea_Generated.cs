@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.EdgeFallOff = initialValue;
-                this.RegionPoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RegionPoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem RegionPoints)
             {
                 this.EdgeFallOff = EdgeFallOff;
-                this.RegionPoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RegionPoints, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RegionPoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RegionPoints, []);
             }
 
             #pragma warning disable CS8618
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.EdgeFallOff = eval(this.EdgeFallOff);
                 if (RegionPoints != null)
                 {
-                    obj.RegionPoints = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RegionPoints.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RegionPoints = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RegionPoints.Overall), []);
                     if (RegionPoints.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

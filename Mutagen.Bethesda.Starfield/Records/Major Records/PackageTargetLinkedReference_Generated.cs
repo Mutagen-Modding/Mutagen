@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -38,25 +39,29 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class NoOwner :
-        OwnerTarget,
-        IEquatable<INoOwnerGetter>,
-        ILoquiObjectSetter<NoOwner>,
-        INoOwner
+    public partial class PackageTargetLinkedReference :
+        APackageTarget,
+        IEquatable<IPackageTargetLinkedReferenceGetter>,
+        ILoquiObjectSetter<PackageTargetLinkedReference>,
+        IPackageTargetLinkedReference
     {
         #region Ctor
-        public NoOwner()
+        public PackageTargetLinkedReference()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region RawOwnerData
-        public UInt32 RawOwnerData { get; set; } = default(UInt32);
-        #endregion
-        #region RawVariableData
-        public UInt32 RawVariableData { get; set; } = default(UInt32);
+        #region Keyword
+        private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> Keyword
+        {
+            get => _Keyword;
+            set => _Keyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeywordGetter> IPackageTargetLinkedReferenceGetter.Keyword => this.Keyword;
         #endregion
 
         #region To String
@@ -65,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NoOwnerMixIn.Print(
+            PackageTargetLinkedReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -76,22 +81,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not INoOwnerGetter rhs) return false;
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPackageTargetLinkedReferenceGetter rhs) return false;
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INoOwnerGetter? obj)
+        public bool Equals(IPackageTargetLinkedReferenceGetter? obj)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Mask
         public new class Mask<TItem> :
-            OwnerTarget.Mask<TItem>,
+            APackageTarget.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -99,17 +104,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.RawOwnerData = initialValue;
-                this.RawVariableData = initialValue;
+                this.Keyword = initialValue;
             }
 
             public Mask(
-                TItem RawOwnerData,
-                TItem RawVariableData)
-            : base()
+                TItem CountOrDistance,
+                TItem Keyword)
+            : base(CountOrDistance: CountOrDistance)
             {
-                this.RawOwnerData = RawOwnerData;
-                this.RawVariableData = RawVariableData;
+                this.Keyword = Keyword;
             }
 
             #pragma warning disable CS8618
@@ -121,8 +124,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem RawOwnerData;
-            public TItem RawVariableData;
+            public TItem Keyword;
             #endregion
 
             #region Equals
@@ -136,15 +138,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.RawOwnerData, rhs.RawOwnerData)) return false;
-                if (!object.Equals(this.RawVariableData, rhs.RawVariableData)) return false;
+                if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.RawOwnerData);
-                hash.Add(this.RawVariableData);
+                hash.Add(this.Keyword);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -155,8 +155,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.RawOwnerData)) return false;
-                if (!eval(this.RawVariableData)) return false;
+                if (!eval(this.Keyword)) return false;
                 return true;
             }
             #endregion
@@ -165,8 +164,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.RawOwnerData)) return true;
-                if (eval(this.RawVariableData)) return true;
+                if (eval(this.Keyword)) return true;
                 return false;
             }
             #endregion
@@ -174,7 +172,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new NoOwner.Mask<R>();
+                var ret = new PackageTargetLinkedReference.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -182,33 +180,28 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.RawOwnerData = eval(this.RawOwnerData);
-                obj.RawVariableData = eval(this.RawVariableData);
+                obj.Keyword = eval(this.Keyword);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(NoOwner.Mask<bool>? printMask = null)
+            public string Print(PackageTargetLinkedReference.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, NoOwner.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PackageTargetLinkedReference.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(NoOwner.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PackageTargetLinkedReference.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.RawOwnerData ?? true)
+                    if (printMask?.Keyword ?? true)
                     {
-                        sb.AppendItem(RawOwnerData, "RawOwnerData");
-                    }
-                    if (printMask?.RawVariableData ?? true)
-                    {
-                        sb.AppendItem(RawVariableData, "RawVariableData");
+                        sb.AppendItem(Keyword, "Keyword");
                     }
                 }
             }
@@ -217,24 +210,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public new class ErrorMask :
-            OwnerTarget.ErrorMask,
+            APackageTarget.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? RawOwnerData;
-            public Exception? RawVariableData;
+            public Exception? Keyword;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
+                PackageTargetLinkedReference_FieldIndex enu = (PackageTargetLinkedReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case NoOwner_FieldIndex.RawOwnerData:
-                        return RawOwnerData;
-                    case NoOwner_FieldIndex.RawVariableData:
-                        return RawVariableData;
+                    case PackageTargetLinkedReference_FieldIndex.Keyword:
+                        return Keyword;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -242,14 +232,11 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
+                PackageTargetLinkedReference_FieldIndex enu = (PackageTargetLinkedReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case NoOwner_FieldIndex.RawOwnerData:
-                        this.RawOwnerData = ex;
-                        break;
-                    case NoOwner_FieldIndex.RawVariableData:
-                        this.RawVariableData = ex;
+                    case PackageTargetLinkedReference_FieldIndex.Keyword:
+                        this.Keyword = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -259,14 +246,11 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
+                PackageTargetLinkedReference_FieldIndex enu = (PackageTargetLinkedReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case NoOwner_FieldIndex.RawOwnerData:
-                        this.RawOwnerData = (Exception?)obj;
-                        break;
-                    case NoOwner_FieldIndex.RawVariableData:
-                        this.RawVariableData = (Exception?)obj;
+                    case PackageTargetLinkedReference_FieldIndex.Keyword:
+                        this.Keyword = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -277,8 +261,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (RawOwnerData != null) return true;
-                if (RawVariableData != null) return true;
+                if (Keyword != null) return true;
                 return false;
             }
             #endregion
@@ -306,10 +289,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(RawOwnerData, "RawOwnerData");
-                }
-                {
-                    sb.AppendItem(RawVariableData, "RawVariableData");
+                    sb.AppendItem(Keyword, "Keyword");
                 }
             }
             #endregion
@@ -319,8 +299,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.RawOwnerData = this.RawOwnerData.Combine(rhs.RawOwnerData);
-                ret.RawVariableData = this.RawVariableData.Combine(rhs.RawVariableData);
+                ret.Keyword = this.Keyword.Combine(rhs.Keyword);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -339,12 +318,11 @@ namespace Mutagen.Bethesda.Starfield
 
         }
         public new class TranslationMask :
-            OwnerTarget.TranslationMask,
+            APackageTarget.TranslationMask,
             ITranslationMask
         {
             #region Members
-            public bool RawOwnerData;
-            public bool RawVariableData;
+            public bool Keyword;
             #endregion
 
             #region Ctors
@@ -353,8 +331,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.RawOwnerData = defaultOn;
-                this.RawVariableData = defaultOn;
+                this.Keyword = defaultOn;
             }
 
             #endregion
@@ -362,8 +339,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((RawOwnerData, null));
-                ret.Add((RawVariableData, null));
+                ret.Add((Keyword, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -374,25 +350,30 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageTargetLinkedReferenceCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetLinkedReferenceSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PackageTargetLinkedReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PackageTargetLinkedReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static NoOwner CreateFromBinary(
+        public new static PackageTargetLinkedReference CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new NoOwner();
-            ((NoOwnerSetterCommon)((INoOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PackageTargetLinkedReference();
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -403,7 +384,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out NoOwner item,
+            out PackageTargetLinkedReference item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -418,77 +399,77 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((NoOwnerSetterCommon)((INoOwnerGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new NoOwner GetNew()
+        internal static new PackageTargetLinkedReference GetNew()
         {
-            return new NoOwner();
+            return new PackageTargetLinkedReference();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INoOwner :
-        ILoquiObjectSetter<INoOwner>,
-        INoOwnerGetter,
-        IOwnerTarget
+    public partial interface IPackageTargetLinkedReference :
+        IAPackageTarget,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IPackageTargetLinkedReference>,
+        IPackageTargetLinkedReferenceGetter
     {
-        new UInt32 RawOwnerData { get; set; }
-        new UInt32 RawVariableData { get; set; }
+        new IFormLink<IKeywordGetter> Keyword { get; set; }
     }
 
-    public partial interface INoOwnerGetter :
-        IOwnerTargetGetter,
+    public partial interface IPackageTargetLinkedReferenceGetter :
+        IAPackageTargetGetter,
         IBinaryItem,
-        ILoquiObject<INoOwnerGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IPackageTargetLinkedReferenceGetter>
     {
-        static new ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
-        UInt32 RawOwnerData { get; }
-        UInt32 RawVariableData { get; }
+        static new ILoquiRegistration StaticRegistration => PackageTargetLinkedReference_Registration.Instance;
+        IFormLinkGetter<IKeywordGetter> Keyword { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class NoOwnerMixIn
+    public static partial class PackageTargetLinkedReferenceMixIn
     {
-        public static void Clear(this INoOwner item)
+        public static void Clear(this IPackageTargetLinkedReference item)
         {
-            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static NoOwner.Mask<bool> GetEqualsMask(
-            this INoOwnerGetter item,
-            INoOwnerGetter rhs,
+        public static PackageTargetLinkedReference.Mask<bool> GetEqualsMask(
+            this IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this INoOwnerGetter item,
+            this IPackageTargetLinkedReferenceGetter item,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Print(
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this INoOwnerGetter item,
+            this IPackageTargetLinkedReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
-            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Print(
+            ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -496,39 +477,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this INoOwnerGetter item,
-            INoOwnerGetter rhs,
-            NoOwner.TranslationMask? equalsMask = null)
+            this IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
+            PackageTargetLinkedReference.TranslationMask? equalsMask = null)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Equals(
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this INoOwner lhs,
-            INoOwnerGetter rhs,
-            out NoOwner.ErrorMask errorMask,
-            NoOwner.TranslationMask? copyMask = null)
+            this IPackageTargetLinkedReference lhs,
+            IPackageTargetLinkedReferenceGetter rhs,
+            out PackageTargetLinkedReference.ErrorMask errorMask,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PackageTargetLinkedReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INoOwner lhs,
-            INoOwnerGetter rhs,
+            this IPackageTargetLinkedReference lhs,
+            IPackageTargetLinkedReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -536,32 +517,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static NoOwner DeepCopy(
-            this INoOwnerGetter item,
-            NoOwner.TranslationMask? copyMask = null)
+        public static PackageTargetLinkedReference DeepCopy(
+            this IPackageTargetLinkedReferenceGetter item,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
-            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static NoOwner DeepCopy(
-            this INoOwnerGetter item,
-            out NoOwner.ErrorMask errorMask,
-            NoOwner.TranslationMask? copyMask = null)
+        public static PackageTargetLinkedReference DeepCopy(
+            this IPackageTargetLinkedReferenceGetter item,
+            out PackageTargetLinkedReference.ErrorMask errorMask,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
-            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static NoOwner DeepCopy(
-            this INoOwnerGetter item,
+        public static PackageTargetLinkedReference DeepCopy(
+            this IPackageTargetLinkedReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -569,11 +550,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this INoOwner item,
+            this IPackageTargetLinkedReference item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PackageTargetLinkedReferenceSetterCommon)((IPackageTargetLinkedReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -589,41 +570,41 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum NoOwner_FieldIndex
+    internal enum PackageTargetLinkedReference_FieldIndex
     {
-        RawOwnerData = 0,
-        RawVariableData = 1,
+        CountOrDistance = 0,
+        Keyword = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class NoOwner_Registration : ILoquiRegistration
+    internal partial class PackageTargetLinkedReference_Registration : ILoquiRegistration
     {
-        public static readonly NoOwner_Registration Instance = new NoOwner_Registration();
+        public static readonly PackageTargetLinkedReference_Registration Instance = new PackageTargetLinkedReference_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(NoOwner.Mask<>);
+        public static readonly Type MaskType = typeof(PackageTargetLinkedReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NoOwner.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PackageTargetLinkedReference.ErrorMask);
 
-        public static readonly Type ClassType = typeof(NoOwner);
+        public static readonly Type ClassType = typeof(PackageTargetLinkedReference);
 
-        public static readonly Type GetterType = typeof(INoOwnerGetter);
+        public static readonly Type GetterType = typeof(IPackageTargetLinkedReferenceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INoOwner);
+        public static readonly Type SetterType = typeof(IPackageTargetLinkedReference);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.NoOwner";
+        public const string FullName = "Mutagen.Bethesda.Starfield.PackageTargetLinkedReference";
 
-        public const string Name = "NoOwner";
+        public const string Name = "PackageTargetLinkedReference";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -631,7 +612,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(NoOwnerBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PackageTargetLinkedReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -662,36 +643,36 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class NoOwnerSetterCommon : OwnerTargetSetterCommon
+    internal partial class PackageTargetLinkedReferenceSetterCommon : APackageTargetSetterCommon
     {
-        public new static readonly NoOwnerSetterCommon Instance = new NoOwnerSetterCommon();
+        public new static readonly PackageTargetLinkedReferenceSetterCommon Instance = new PackageTargetLinkedReferenceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INoOwner item)
+        public void Clear(IPackageTargetLinkedReference item)
         {
             ClearPartial();
-            item.RawOwnerData = default(UInt32);
-            item.RawVariableData = default(UInt32);
+            item.Keyword.Clear();
             base.Clear(item);
         }
         
-        public override void Clear(IOwnerTarget item)
+        public override void Clear(IAPackageTarget item)
         {
-            Clear(item: (INoOwner)item);
+            Clear(item: (IPackageTargetLinkedReference)item);
         }
         
         #region Mutagen
-        public void RemapLinks(INoOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPackageTargetLinkedReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Keyword.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            INoOwner item,
+            IPackageTargetLinkedReference item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -699,16 +680,16 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NoOwnerBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: PackageTargetLinkedReferenceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
-            IOwnerTarget item,
+            IAPackageTarget item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (NoOwner)item,
+                item: (PackageTargetLinkedReference)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -716,17 +697,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class NoOwnerCommon : OwnerTargetCommon
+    internal partial class PackageTargetLinkedReferenceCommon : APackageTargetCommon
     {
-        public new static readonly NoOwnerCommon Instance = new NoOwnerCommon();
+        public new static readonly PackageTargetLinkedReferenceCommon Instance = new PackageTargetLinkedReferenceCommon();
 
-        public NoOwner.Mask<bool> GetEqualsMask(
-            INoOwnerGetter item,
-            INoOwnerGetter rhs,
+        public PackageTargetLinkedReference.Mask<bool> GetEqualsMask(
+            IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new NoOwner.Mask<bool>(false);
-            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PackageTargetLinkedReference.Mask<bool>(false);
+            ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -735,20 +716,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            INoOwnerGetter item,
-            INoOwnerGetter rhs,
-            NoOwner.Mask<bool> ret,
+            IPackageTargetLinkedReferenceGetter item,
+            IPackageTargetLinkedReferenceGetter rhs,
+            PackageTargetLinkedReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.RawOwnerData = item.RawOwnerData == rhs.RawOwnerData;
-            ret.RawVariableData = item.RawVariableData == rhs.RawVariableData;
+            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            INoOwnerGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -760,18 +740,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            INoOwnerGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            NoOwner.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"NoOwner =>");
+                sb.AppendLine($"PackageTargetLinkedReference =>");
             }
             else
             {
-                sb.AppendLine($"{name} (NoOwner) =>");
+                sb.AppendLine($"{name} (PackageTargetLinkedReference) =>");
             }
             using (sb.Brace())
             {
@@ -783,28 +763,26 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            INoOwnerGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             StructuredStringBuilder sb,
-            NoOwner.Mask<bool>? printMask = null)
+            PackageTargetLinkedReference.Mask<bool>? printMask = null)
         {
-            OwnerTargetCommon.ToStringFields(
+            APackageTargetCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.RawOwnerData ?? true)
+            if (printMask?.Keyword ?? true)
             {
-                sb.AppendItem(item.RawOwnerData, "RawOwnerData");
-            }
-            if (printMask?.RawVariableData ?? true)
-            {
-                sb.AppendItem(item.RawVariableData, "RawVariableData");
+                sb.AppendItem(item.Keyword.FormKey, "Keyword");
             }
         }
         
-        public static NoOwner_FieldIndex ConvertFieldIndex(OwnerTarget_FieldIndex index)
+        public static PackageTargetLinkedReference_FieldIndex ConvertFieldIndex(APackageTarget_FieldIndex index)
         {
             switch (index)
             {
+                case APackageTarget_FieldIndex.CountOrDistance:
+                    return (PackageTargetLinkedReference_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -812,46 +790,41 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            INoOwnerGetter? lhs,
-            INoOwnerGetter? rhs,
+            IPackageTargetLinkedReferenceGetter? lhs,
+            IPackageTargetLinkedReferenceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
+            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PackageTargetLinkedReference_FieldIndex.Keyword) ?? true))
             {
-                if (lhs.RawOwnerData != rhs.RawOwnerData) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawVariableData) ?? true))
-            {
-                if (lhs.RawVariableData != rhs.RawVariableData) return false;
+                if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
             }
             return true;
         }
         
         public override bool Equals(
-            IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs,
+            IAPackageTargetGetter? lhs,
+            IAPackageTargetGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (INoOwnerGetter?)lhs,
-                rhs: rhs as INoOwnerGetter,
+                lhs: (IPackageTargetLinkedReferenceGetter?)lhs,
+                rhs: rhs as IPackageTargetLinkedReferenceGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(INoOwnerGetter item)
+        public virtual int GetHashCode(IPackageTargetLinkedReferenceGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.RawOwnerData);
-            hash.Add(item.RawVariableData);
+            hash.Add(item.Keyword);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IOwnerTargetGetter item)
+        public override int GetHashCode(IAPackageTargetGetter item)
         {
-            return GetHashCode(item: (INoOwnerGetter)item);
+            return GetHashCode(item: (IPackageTargetLinkedReferenceGetter)item);
         }
         
         #endregion
@@ -859,47 +832,44 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return NoOwner.GetNew();
+            return PackageTargetLinkedReference.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INoOwnerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageTargetLinkedReferenceGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.Keyword);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class NoOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
+    internal partial class PackageTargetLinkedReferenceSetterTranslationCommon : APackageTargetSetterTranslationCommon
     {
-        public new static readonly NoOwnerSetterTranslationCommon Instance = new NoOwnerSetterTranslationCommon();
+        public new static readonly PackageTargetLinkedReferenceSetterTranslationCommon Instance = new PackageTargetLinkedReferenceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            INoOwner item,
-            INoOwnerGetter rhs,
+            IPackageTargetLinkedReference item,
+            IPackageTargetLinkedReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IOwnerTarget)item,
-                (IOwnerTargetGetter)rhs,
+                (IAPackageTarget)item,
+                (IAPackageTargetGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageTargetLinkedReference_FieldIndex.Keyword) ?? true))
             {
-                item.RawOwnerData = rhs.RawOwnerData;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawVariableData) ?? true))
-            {
-                item.RawVariableData = rhs.RawVariableData;
+                item.Keyword.SetTo(rhs.Keyword.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -910,22 +880,22 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            INoOwner item,
-            INoOwnerGetter rhs,
+            IPackageTargetLinkedReference item,
+            IPackageTargetLinkedReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         
         public override void DeepCopyIn(
-            IOwnerTarget item,
-            IOwnerTargetGetter rhs,
+            IAPackageTarget item,
+            IAPackageTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INoOwner)item,
-                rhs: (INoOwnerGetter)rhs,
+                item: (IPackageTargetLinkedReference)item,
+                rhs: (IPackageTargetLinkedReferenceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -933,12 +903,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public NoOwner DeepCopy(
-            INoOwnerGetter item,
-            NoOwner.TranslationMask? copyMask = null)
+        public PackageTargetLinkedReference DeepCopy(
+            IPackageTargetLinkedReferenceGetter item,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
-            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackageTargetLinkedReference ret = (PackageTargetLinkedReference)((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -947,30 +917,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public NoOwner DeepCopy(
-            INoOwnerGetter item,
-            out NoOwner.ErrorMask errorMask,
-            NoOwner.TranslationMask? copyMask = null)
+        public PackageTargetLinkedReference DeepCopy(
+            IPackageTargetLinkedReferenceGetter item,
+            out PackageTargetLinkedReference.ErrorMask errorMask,
+            PackageTargetLinkedReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackageTargetLinkedReference ret = (PackageTargetLinkedReference)((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PackageTargetLinkedReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public NoOwner DeepCopy(
-            INoOwnerGetter item,
+        public PackageTargetLinkedReference DeepCopy(
+            IPackageTargetLinkedReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
-            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PackageTargetLinkedReference ret = (PackageTargetLinkedReference)((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PackageTargetLinkedReferenceSetterTranslationCommon)((IPackageTargetLinkedReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -986,21 +956,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class NoOwner
+    public partial class PackageTargetLinkedReference
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NoOwner_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PackageTargetLinkedReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetLinkedReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NoOwnerCommon.Instance;
+        protected override object CommonInstance() => PackageTargetLinkedReferenceCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NoOwnerSetterCommon.Instance;
+            return PackageTargetLinkedReferenceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NoOwnerSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PackageTargetLinkedReferenceSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1011,23 +981,27 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class NoOwnerBinaryWriteTranslation :
-        OwnerTargetBinaryWriteTranslation,
+    public partial class PackageTargetLinkedReferenceBinaryWriteTranslation :
+        APackageTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NoOwnerBinaryWriteTranslation Instance = new();
+        public new static readonly PackageTargetLinkedReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            INoOwnerGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.RawOwnerData);
-            writer.Write(item.RawVariableData);
+            APackageTargetBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Keyword);
         }
 
         public void Write(
             MutagenWriter writer,
-            INoOwnerGetter item,
+            IPackageTargetLinkedReferenceGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1041,34 +1015,36 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (INoOwnerGetter)item,
+                item: (IPackageTargetLinkedReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
-            IOwnerTargetGetter item,
+            IAPackageTargetGetter item,
             TypedWriteParams translationParams)
         {
             Write(
-                item: (INoOwnerGetter)item,
+                item: (IPackageTargetLinkedReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class NoOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
+    internal partial class PackageTargetLinkedReferenceBinaryCreateTranslation : APackageTargetBinaryCreateTranslation
     {
-        public new static readonly NoOwnerBinaryCreateTranslation Instance = new NoOwnerBinaryCreateTranslation();
+        public new static readonly PackageTargetLinkedReferenceBinaryCreateTranslation Instance = new PackageTargetLinkedReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            INoOwner item,
+            IPackageTargetLinkedReference item,
             MutagenFrame frame)
         {
-            item.RawOwnerData = frame.ReadUInt32();
-            item.RawVariableData = frame.ReadUInt32();
+            APackageTargetBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1077,7 +1053,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class NoOwnerBinaryTranslationMixIn
+    public static class PackageTargetLinkedReferenceBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1086,44 +1062,44 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class NoOwnerBinaryOverlay :
-        OwnerTargetBinaryOverlay,
-        INoOwnerGetter
+    internal partial class PackageTargetLinkedReferenceBinaryOverlay :
+        APackageTargetBinaryOverlay,
+        IPackageTargetLinkedReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NoOwner_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => NoOwner_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PackageTargetLinkedReference_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageTargetLinkedReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NoOwnerCommon.Instance;
+        protected override object CommonInstance() => PackageTargetLinkedReferenceCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NoOwnerSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PackageTargetLinkedReferenceSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageTargetLinkedReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PackageTargetLinkedReferenceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PackageTargetLinkedReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public UInt32 RawOwnerData => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public UInt32 RawVariableData => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected NoOwnerBinaryOverlay(
+        protected PackageTargetLinkedReferenceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1133,7 +1109,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static INoOwnerGetter NoOwnerFactory(
+        public static IPackageTargetLinkedReferenceGetter PackageTargetLinkedReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1142,13 +1118,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x8,
+                length: 0x10,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new NoOwnerBinaryOverlay(
+            var ret = new PackageTargetLinkedReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x8;
+            stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1156,12 +1132,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static INoOwnerGetter NoOwnerFactory(
+        public static IPackageTargetLinkedReferenceGetter PackageTargetLinkedReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return NoOwnerFactory(
+            return PackageTargetLinkedReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1173,7 +1149,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NoOwnerMixIn.Print(
+            PackageTargetLinkedReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1184,16 +1160,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not INoOwnerGetter rhs) return false;
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPackageTargetLinkedReferenceGetter rhs) return false;
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INoOwnerGetter? obj)
+        public bool Equals(IPackageTargetLinkedReferenceGetter? obj)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PackageTargetLinkedReferenceCommon)((IPackageTargetLinkedReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

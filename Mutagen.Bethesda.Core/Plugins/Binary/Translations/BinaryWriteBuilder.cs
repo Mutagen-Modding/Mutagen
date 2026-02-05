@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 // ReSharper disable InconsistentNaming
 // ReSharper disable WithExpressionModifiesAllMembers
@@ -29,8 +30,9 @@ internal record BinaryWriteBuilderParams<TModGetter>
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, BinaryWriteParameters>? _masterSyncAction { get; init; }
     internal Func<TModGetter, BinaryWriteBuilderParams<TModGetter>, IReadOnlyCollection<ModKey>, BinaryWriteParameters>? _loadOrderSetter { get; init; }
     internal Func<TModGetter, BinaryWriteParameters, DirectoryPath>? _dataFolderGetter { get; init; }
-    internal IModMasterStyledGetter[] KnownMasters { get; init; } = Array.Empty<IModMasterStyledGetter>();
+    internal IModMasterStyledGetter[] KnownMasters { get; init; } = [];
     internal ILoadOrderGetter<IModListingGetter<IModGetter>>? _knownModLoadOrder { get; init; }
+    internal bool _autoSplit { get; init; } = false;
 }
 
 /// <summary>
@@ -52,6 +54,14 @@ public interface IBinaryModdedWriteBuilderTargetChoice
     /// <param name="fileSystem">Filesystem to write mod file to</param>
     /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilderLoadOrderChoice ToPath(FilePath path, IFileSystem? fileSystem = null);
+
+    /// <summary>
+    /// Instructs the builder to target a folder, using the mod's ModKey.FileName for the file name
+    /// </summary>
+    /// <param name="folderPath">Folder path where the mod file will be written</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderLoadOrderChoice IntoFolder(DirectoryPath folderPath, IFileSystem? fileSystem = null);
 }
 
 public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWriteBuilderTargetChoice
@@ -90,8 +100,23 @@ public record BinaryModdedWriteBuilderTargetChoice<TModGetter> : IBinaryModdedWr
         });
     }
 
+    /// <summary>
+    /// Instructs the builder to target a folder, using the mod's ModKey.FileName for the file name
+    /// </summary>
+    /// <param name="folderPath">Folder path where the mod file will be written</param>
+    /// <param name="fileSystem">Filesystem to write mod file to</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> IntoFolder(DirectoryPath folderPath, IFileSystem? fileSystem = null)
+    {
+        var path = Path.Combine(folderPath, _mod.ModKey.FileName);
+        return ToPath(path, fileSystem);
+    }
+
     IBinaryModdedWriteBuilderLoadOrderChoice IBinaryModdedWriteBuilderTargetChoice.ToPath(FilePath path, IFileSystem? fileSystem = null) =>
         ToPath(path, fileSystem);
+
+    IBinaryModdedWriteBuilderLoadOrderChoice IBinaryModdedWriteBuilderTargetChoice.IntoFolder(DirectoryPath folderPath, IFileSystem? fileSystem = null) =>
+        IntoFolder(folderPath, fileSystem);
 }
 
 public record BinaryWriteBuilderTargetChoice<TModGetter>
@@ -1068,6 +1093,15 @@ public interface IBinaryModdedWriteBuilder
     IBinaryModdedWriteBuilder WithForcedLowerFormIdRangeUsage(bool? useLowerRange);
 
     /// <summary>
+    /// Enables automatic splitting of mods when master limit is exceeded.<br/>
+    /// When enabled, if the mod exceeds the master limit during write, it will be automatically<br/>
+    /// split into multiple mod files with _1, _2, _3, etc. suffixes.<br/>
+    /// Note: Only works with file path writes, not stream writes.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithAutoSplit();
+
+    /// <summary>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -1112,6 +1146,14 @@ public interface IBinaryModdedWriteBuilder
     /// <param name="encodingBundle">Encoding overrides to use for embedded strings</param>
     /// <returns>Builder object to continue customization</returns>
     IBinaryModdedWriteBuilder WithEmbeddedEncodings(EncodingBundle? encodingBundle);
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings.<br/>
+    /// When enabled, uses UTF8 for localized strings and CP1252 for non-translated strings.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder WithUtf8Encoding(bool on = true);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -1516,6 +1558,27 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithForcedLowerFormIdRangeUsage(bool? useLowerRange) => WithForcedLowerFormIdRangeUsage(useLowerRange);
 
     /// <summary>
+    /// Enables automatic splitting of mods when master limit is exceeded.<br/>
+    /// When enabled, if the mod exceeds the master limit during write, it will be automatically<br/>
+    /// split into multiple mod files with _1, _2, _3, etc. suffixes.<br/>
+    /// <br/>
+    /// IMPORTANT: Only works with file path writes (ToPath/IntoFolder).<br/>
+    /// Using ToStream with WithAutoSplit() will throw a NotSupportedException.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithAutoSplit()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _autoSplit = true
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithAutoSplit() => WithAutoSplit();
+
+    /// <summary>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -1642,6 +1705,29 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
         };
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithEmbeddedEncodings(EncodingBundle? encodingBundle) => WithEmbeddedEncodings(encodingBundle);
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings.<br/>
+    /// When enabled, uses UTF8 for localized strings and CP1252 for non-translated strings.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    Encodings = on
+                        ? new EncodingBundle(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._utf8)
+                        : null
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.WithUtf8Encoding(bool on) => WithUtf8Encoding(on);
 
     /// <summary>
     /// Adjusts how to handle when lower formID ranges are used in a non-allowed way. <br />
@@ -2254,6 +2340,26 @@ public record BinaryWriteBuilder<TModGetter>
     }
 
     /// <summary>
+    /// Enables automatic splitting of mods when master limit is exceeded.<br/>
+    /// When enabled, if the mod exceeds the master limit during write, it will be automatically<br/>
+    /// split into multiple mod files with _1, _2, _3, etc. suffixes.<br/>
+    /// <br/>
+    /// IMPORTANT: Only works with file path writes (ToPath/IntoFolder).<br/>
+    /// Using ToStream with WithAutoSplit() will throw a NotSupportedException.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithAutoSplit()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _autoSplit = true
+            }
+        };
+    }
+
+    /// <summary>
     /// Turns off logic to check for FormID uniqueness.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -2369,6 +2475,28 @@ public record BinaryWriteBuilder<TModGetter>
                 _param = _params._param with
                 {
                     Encodings = encodingBundle
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Convenience method to enable or disable UTF8 encoding for embedded localized strings.<br/>
+    /// When enabled, uses UTF8 for localized strings and CP1252 for non-translated strings.
+    /// </summary>
+    /// <param name="on">Whether to enable UTF8 encoding (default: true)</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> WithUtf8Encoding(bool on = true)
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    Encodings = on
+                        ? new EncodingBundle(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._utf8)
+                        : null
                 }
             }
         };

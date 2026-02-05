@@ -38,7 +38,7 @@ public abstract class SettingsNodeVM : ViewModel
         {
             _IsFocused = this.Meta.MainVM.WhenAnyValue(x => x.SelectedSettings)
                 .Select(x => IsFocusedCheck(x))
-                .ToGuiProperty(this, nameof(IsFocused), deferSubscription: true);
+                .ToRxAppGuiProperty(this, nameof(IsFocused), deferSubscription: true);
         }
     }
 

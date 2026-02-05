@@ -49,7 +49,7 @@ public class EnumerableStringSettingsVM : EnumerableSettingsVM
                     IsSelected = true
                 });
             },
-            defaultVal as IEnumerable<string> ?? Enumerable.Empty<string>());
+            defaultVal as IEnumerable<string> ?? []);
     }
 
     public override SettingsNodeVM Duplicate()

@@ -233,8 +233,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(initialValue, []);
                 this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(initialValue, new RaceData.Mask<TItem>(initialValue));
                 this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.DefaultHair = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
@@ -242,10 +242,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenMainClamp = initialValue;
                 this.FaceGenFaceClamp = initialValue;
                 this.RaceStats = new MaskItem<TItem, GenderedItem<RaceStats.Mask<TItem>?>?>(initialValue, default);
-                this.FaceData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePartItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FacePartItem.Mask<TItem>?>>());
+                this.FaceData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePartItem.Mask<TItem>?>>?>(initialValue, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(initialValue, default);
-                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(initialValue, new FaceGenData.Mask<TItem>(initialValue));
                 this.SNAM = initialValue;
             }
@@ -282,8 +282,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = Name;
                 this.Description = Description;
-                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
+                this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, []);
+                this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(Relations, []);
                 this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(Data, new RaceData.Mask<TItem>(Data));
                 this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(Voices, default);
                 this.DefaultHair = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHair, default);
@@ -291,10 +291,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenMainClamp = FaceGenMainClamp;
                 this.FaceGenFaceClamp = FaceGenFaceClamp;
                 this.RaceStats = new MaskItem<TItem, GenderedItem<RaceStats.Mask<TItem>?>?>(RaceStats, default);
-                this.FaceData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePartItem.Mask<TItem>?>>?>(FaceData, Enumerable.Empty<MaskItemIndexed<TItem, FacePartItem.Mask<TItem>?>>());
+                this.FaceData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacePartItem.Mask<TItem>?>>?>(FaceData, []);
                 this.BodyData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, BodyData.Mask<TItem>?>?>?>(BodyData, default);
-                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, []);
+                this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, []);
                 this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(FaceGenData, new FaceGenData.Mask<TItem>(FaceGenData));
                 this.SNAM = SNAM;
             }
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Description = eval(this.Description);
                 if (Spells != null)
                 {
-                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Spells = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Spells.Overall), []);
                     if (Spells.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Relations != null)
                 {
-                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation.Mask<R>?>>?>(eval(this.Relations.Overall), Enumerable.Empty<MaskItemIndexed<R, RaceRelation.Mask<R>?>>());
+                    obj.Relations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RaceRelation.Mask<R>?>>?>(eval(this.Relations.Overall), []);
                     if (Relations.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RaceRelation.Mask<R>?>>();
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
                     (m, e) => m?.Translate(e));
                 if (FaceData != null)
                 {
-                    obj.FaceData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacePartItem.Mask<R>?>>?>(eval(this.FaceData.Overall), Enumerable.Empty<MaskItemIndexed<R, FacePartItem.Mask<R>?>>());
+                    obj.FaceData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacePartItem.Mask<R>?>>?>(eval(this.FaceData.Overall), []);
                     if (FaceData.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FacePartItem.Mask<R>?>>();
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
                     (m, e) => m?.Translate(e));
                 if (Hairs != null)
                 {
-                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Hairs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Hairs.Overall), []);
                     if (Hairs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -660,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (Eyes != null)
                 {
-                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Eyes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Eyes.Overall), []);
                     if (Eyes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -3342,7 +3342,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(IRaceGetter);
 
 
         #region Name

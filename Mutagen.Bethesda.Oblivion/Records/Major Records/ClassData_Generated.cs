@@ -136,9 +136,9 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Versioning = initialValue;
-                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Specialization = initialValue;
-                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Flags = initialValue;
                 this.ClassServices = initialValue;
                 this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(initialValue, new ClassTraining.Mask<TItem>(initialValue));
@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Training)
             {
                 this.Versioning = Versioning;
-                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PrimaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PrimaryAttributes, []);
                 this.Specialization = Specialization;
-                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SecondaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SecondaryAttributes, []);
                 this.Flags = Flags;
                 this.ClassServices = ClassServices;
                 this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(Training, new ClassTraining.Mask<TItem>(Training));
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Versioning = eval(this.Versioning);
                 if (PrimaryAttributes != null)
                 {
-                    obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PrimaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PrimaryAttributes.Overall), []);
                     if (PrimaryAttributes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Specialization = eval(this.Specialization);
                 if (SecondaryAttributes != null)
                 {
-                    obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SecondaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.SecondaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SecondaryAttributes.Overall), []);
                     if (SecondaryAttributes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

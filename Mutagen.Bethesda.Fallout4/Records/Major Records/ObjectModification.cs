@@ -260,9 +260,9 @@ partial class AObjectModificationBinaryOverlay
 
     public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> AttachParentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
 
-    public IReadOnlyList<IObjectModItemGetter> Items { get; private set; } = Array.Empty<IObjectModItemGetter>();
+    public IReadOnlyList<IObjectModItemGetter> Items { get; private set; } = [];
 
-    public IReadOnlyList<IObjectModIncludeGetter> Includes { get; private set; } = Array.Empty<IObjectModIncludeGetter>();
+    public IReadOnlyList<IObjectModIncludeGetter> Includes { get; private set; } = [];
 
     public partial ParseResult DataParseCustomParse(
         OverlayStream stream,

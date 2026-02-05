@@ -50,7 +50,7 @@ public class EnumerableEnumSettingsVM : EnumerableSettingsVM
         }
         else
         {
-            defaults = Array.Empty<string>();
+            defaults = [];
         }
         return new EnumerableEnumSettingsVM(fieldMeta, defaults, names);
     }

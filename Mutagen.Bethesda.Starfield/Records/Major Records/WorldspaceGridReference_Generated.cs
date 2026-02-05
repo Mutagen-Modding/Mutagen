@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.GridPosition = initialValue;
-                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceReference.Mask<TItem>?>>());
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceReference.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem References)
             {
                 this.GridPosition = GridPosition;
-                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceReference.Mask<TItem>?>>?>(References, Enumerable.Empty<MaskItemIndexed<TItem, WorldspaceReference.Mask<TItem>?>>());
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceReference.Mask<TItem>?>>?>(References, []);
             }
 
             #pragma warning disable CS8618
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.GridPosition = eval(this.GridPosition);
                 if (References != null)
                 {
-                    obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceReference.Mask<R>?>>?>(eval(this.References.Overall), Enumerable.Empty<MaskItemIndexed<R, WorldspaceReference.Mask<R>?>>());
+                    obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WorldspaceReference.Mask<R>?>>?>(eval(this.References.Overall), []);
                     if (References.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceReference.Mask<R>?>>();

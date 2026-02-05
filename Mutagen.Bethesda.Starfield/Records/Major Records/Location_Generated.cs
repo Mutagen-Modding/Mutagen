@@ -486,27 +486,27 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.RemovedPersistLocationReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedUniqueBaseForms = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>());
-                this.LocationCellUniqueReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>());
-                this.RemovedUniqueBaseForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.MasterUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.RemovedUniqueNpcs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.MasterSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.RemovedSpecialReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MasterWorldspaceCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.AddedInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MasterInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
-                this.MasterEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
+                this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, []);
+                this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, []);
+                this.RemovedPersistLocationReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AddedUniqueBaseForms = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(initialValue, []);
+                this.LocationCellUniqueReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(initialValue, []);
+                this.RemovedUniqueBaseForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AddedUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, []);
+                this.MasterUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, []);
+                this.RemovedUniqueNpcs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AddedSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, []);
+                this.MasterSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, []);
+                this.RemovedSpecialReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.MasterWorldspaceCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, []);
+                this.AddedInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.MasterInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AddedEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, []);
+                this.MasterEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.Owner = new MaskItem<TItem, LocationOwnerData.Mask<TItem>?>(initialValue, new LocationOwnerData.Mask<TItem>(initialValue));
                 this.ParentLocation = initialValue;
                 this.MusicType = initialValue;
@@ -569,27 +569,27 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(AddedPersistLocationReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(MasterPersistLocationReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.RemovedPersistLocationReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedPersistLocationReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedUniqueBaseForms = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(AddedUniqueBaseForms, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>());
-                this.LocationCellUniqueReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(LocationCellUniqueReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>());
-                this.RemovedUniqueBaseForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedUniqueBaseForms, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(AddedUniqueNpcs, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.MasterUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(MasterUniqueNpcs, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.RemovedUniqueNpcs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedUniqueNpcs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(AddedSpecialReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.MasterSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(MasterSpecialReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.RemovedSpecialReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedSpecialReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MasterWorldspaceCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(MasterWorldspaceCells, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.AddedInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AddedInitiallyDisabledReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.MasterInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MasterInitiallyDisabledReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.AddedEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(AddedEnablePointReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
-                this.MasterEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(MasterEnablePointReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
+                this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(AddedPersistLocationReferences, []);
+                this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(MasterPersistLocationReferences, []);
+                this.RemovedPersistLocationReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedPersistLocationReferences, []);
+                this.AddedUniqueBaseForms = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(AddedUniqueBaseForms, []);
+                this.LocationCellUniqueReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUniqueReference.Mask<TItem>?>>?>(LocationCellUniqueReferences, []);
+                this.RemovedUniqueBaseForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedUniqueBaseForms, []);
+                this.AddedUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(AddedUniqueNpcs, []);
+                this.MasterUniqueNpcs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(MasterUniqueNpcs, []);
+                this.RemovedUniqueNpcs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedUniqueNpcs, []);
+                this.AddedSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(AddedSpecialReferences, []);
+                this.MasterSpecialReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(MasterSpecialReferences, []);
+                this.RemovedSpecialReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RemovedSpecialReferences, []);
+                this.MasterWorldspaceCells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(MasterWorldspaceCells, []);
+                this.AddedInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AddedInitiallyDisabledReferences, []);
+                this.MasterInitiallyDisabledReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MasterInitiallyDisabledReferences, []);
+                this.AddedEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(AddedEnablePointReferences, []);
+                this.MasterEnablePointReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(MasterEnablePointReferences, []);
                 this.Name = Name;
-                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties2, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.Properties2 = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties2, []);
                 this.Owner = new MaskItem<TItem, LocationOwnerData.Mask<TItem>?>(Owner, new LocationOwnerData.Mask<TItem>(Owner));
                 this.ParentLocation = ParentLocation;
                 this.MusicType = MusicType;
@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Properties != null)
                 {
-                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
                     if (Properties.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedPersistLocationReferences != null)
                 {
-                    obj.AddedPersistLocationReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.AddedPersistLocationReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    obj.AddedPersistLocationReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.AddedPersistLocationReferences.Overall), []);
                     if (AddedPersistLocationReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterPersistLocationReferences != null)
                 {
-                    obj.MasterPersistLocationReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.MasterPersistLocationReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    obj.MasterPersistLocationReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.MasterPersistLocationReferences.Overall), []);
                     if (MasterPersistLocationReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RemovedPersistLocationReferences != null)
                 {
-                    obj.RemovedPersistLocationReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedPersistLocationReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RemovedPersistLocationReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedPersistLocationReferences.Overall), []);
                     if (RemovedPersistLocationReferences.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedUniqueBaseForms != null)
                 {
-                    obj.AddedUniqueBaseForms = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>?>(eval(this.AddedUniqueBaseForms.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>());
+                    obj.AddedUniqueBaseForms = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>?>(eval(this.AddedUniqueBaseForms.Overall), []);
                     if (AddedUniqueBaseForms.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>();
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (LocationCellUniqueReferences != null)
                 {
-                    obj.LocationCellUniqueReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>?>(eval(this.LocationCellUniqueReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>());
+                    obj.LocationCellUniqueReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>?>(eval(this.LocationCellUniqueReferences.Overall), []);
                     if (LocationCellUniqueReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUniqueReference.Mask<R>?>>();
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RemovedUniqueBaseForms != null)
                 {
-                    obj.RemovedUniqueBaseForms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedUniqueBaseForms.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RemovedUniqueBaseForms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedUniqueBaseForms.Overall), []);
                     if (RemovedUniqueBaseForms.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedUniqueNpcs != null)
                 {
-                    obj.AddedUniqueNpcs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.AddedUniqueNpcs.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>());
+                    obj.AddedUniqueNpcs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.AddedUniqueNpcs.Overall), []);
                     if (AddedUniqueNpcs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterUniqueNpcs != null)
                 {
-                    obj.MasterUniqueNpcs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.MasterUniqueNpcs.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>());
+                    obj.MasterUniqueNpcs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.MasterUniqueNpcs.Overall), []);
                     if (MasterUniqueNpcs.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RemovedUniqueNpcs != null)
                 {
-                    obj.RemovedUniqueNpcs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedUniqueNpcs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RemovedUniqueNpcs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedUniqueNpcs.Overall), []);
                     if (RemovedUniqueNpcs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedSpecialReferences != null)
                 {
-                    obj.AddedSpecialReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.AddedSpecialReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>());
+                    obj.AddedSpecialReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.AddedSpecialReferences.Overall), []);
                     if (AddedSpecialReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterSpecialReferences != null)
                 {
-                    obj.MasterSpecialReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.MasterSpecialReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>());
+                    obj.MasterSpecialReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.MasterSpecialReferences.Overall), []);
                     if (MasterSpecialReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
@@ -1436,7 +1436,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (RemovedSpecialReferences != null)
                 {
-                    obj.RemovedSpecialReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedSpecialReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RemovedSpecialReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RemovedSpecialReferences.Overall), []);
                     if (RemovedSpecialReferences.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterWorldspaceCells != null)
                 {
-                    obj.MasterWorldspaceCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.MasterWorldspaceCells.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    obj.MasterWorldspaceCells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.MasterWorldspaceCells.Overall), []);
                     if (MasterWorldspaceCells.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedInitiallyDisabledReferences != null)
                 {
-                    obj.AddedInitiallyDisabledReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AddedInitiallyDisabledReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.AddedInitiallyDisabledReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AddedInitiallyDisabledReferences.Overall), []);
                     if (AddedInitiallyDisabledReferences.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterInitiallyDisabledReferences != null)
                 {
-                    obj.MasterInitiallyDisabledReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MasterInitiallyDisabledReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.MasterInitiallyDisabledReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MasterInitiallyDisabledReferences.Overall), []);
                     if (MasterInitiallyDisabledReferences.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (AddedEnablePointReferences != null)
                 {
-                    obj.AddedEnablePointReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.AddedEnablePointReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>());
+                    obj.AddedEnablePointReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.AddedEnablePointReferences.Overall), []);
                     if (AddedEnablePointReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
@@ -1508,7 +1508,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (MasterEnablePointReferences != null)
                 {
-                    obj.MasterEnablePointReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.MasterEnablePointReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>());
+                    obj.MasterEnablePointReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.MasterEnablePointReferences.Overall), []);
                     if (MasterEnablePointReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 if (Keywords != null)
                 {
-                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
                     if (Keywords.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1538,7 +1538,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (Properties2 != null)
                 {
-                    obj.Properties2 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties2.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
+                    obj.Properties2 = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties2.Overall), []);
                     if (Properties2.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>();
@@ -6329,7 +6329,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILocation);
+        protected override Type LinkType => typeof(ILocationGetter);
 
         public Location.MajorFlag MajorFlags => (Location.MajorFlag)this.MajorRecordFlagsRaw;
 

@@ -132,9 +132,9 @@ namespace Mutagen.Bethesda.Oblivion
             : base(initialValue)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.AnimationGroupSection = initialValue;
-                this.RelatedIdleAnimations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RelatedIdleAnimations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -155,9 +155,9 @@ namespace Mutagen.Bethesda.Oblivion
                 OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.AnimationGroupSection = AnimationGroupSection;
-                this.RelatedIdleAnimations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdleAnimations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RelatedIdleAnimations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdleAnimations, []);
             }
 
             #pragma warning disable CS8618
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.AnimationGroupSection = eval(this.AnimationGroupSection);
                 if (RelatedIdleAnimations != null)
                 {
-                    obj.RelatedIdleAnimations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdleAnimations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.RelatedIdleAnimations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdleAnimations.Overall), []);
                     if (RelatedIdleAnimations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IIdleAnimation);
+        protected override Type LinkType => typeof(IIdleAnimationGetter);
 
 
         public IModelGetter? Model { get; private set; }

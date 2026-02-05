@@ -125,7 +125,7 @@ public class MainVM : ViewModel
                 ReadInSettings(p.Settings ?? new TestingSettings());
                 return p.Settings;
             })
-            .ToGuiProperty(this, nameof(SelectedSettings), default);
+            .ToRxAppGuiProperty(this, nameof(SelectedSettings), default);
 
         // Set up additional file picker error to fire if settings couldn't parse
         SelectedConfigPath.AdditionalError = this.WhenAnyValue(x => x.SelectedSettings)
@@ -138,7 +138,7 @@ public class MainVM : ViewModel
         // Funnel into convenient valid boolean for GUI use
         _validTarget = this.WhenAnyValue(x => x.SelectedConfigPath.ErrorState)
             .Select(err => err.Succeeded)
-            .ToGuiProperty(this, nameof(ValidTarget));
+            .ToRxAppGuiProperty(this, nameof(ValidTarget));
 
         RunAllCommand = ReactiveCommand.CreateFromTask(Run);
 

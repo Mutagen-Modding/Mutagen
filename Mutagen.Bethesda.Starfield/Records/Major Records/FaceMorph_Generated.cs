@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FMRU = initialValue;
                 this.Name = initialValue;
                 this.FMRS = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FMRU = FMRU;
                 this.Name = Name;
                 this.FMRS = FMRS;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>());
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FMRS = eval(this.FMRS);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>?>(eval(this.Items.Overall), []);
                     if (Items.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>();

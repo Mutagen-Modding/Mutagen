@@ -361,14 +361,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Base = initialValue;
                 this.EncounterZone = initialValue;
-                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(initialValue, []);
                 this.RagdollBipedRotation = initialValue;
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(initialValue, new Patrol.Mask<TItem>(initialValue));
                 this.LevelModifier = initialValue;
                 this.Count = initialValue;
                 this.Radius = initialValue;
                 this.Health = initialValue;
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(initialValue, []);
                 this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(initialValue, new ActivateParents.Mask<TItem>(initialValue));
                 this.IsActivationPoint = initialValue;
                 this.IsLinkedRefTransient = initialValue;
@@ -377,9 +377,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaterialSwap = initialValue;
                 this.PersistentLocation = initialValue;
                 this.LocationReference = initialValue;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.IsIgnoredBySandbox = initialValue;
-                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineConnection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SplineConnection.Mask<TItem>?>>());
+                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineConnection.Mask<TItem>?>>?>(initialValue, []);
                 this.HeadTrackingWeight = initialValue;
                 this.FavorCost = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
@@ -448,14 +448,14 @@ namespace Mutagen.Bethesda.Fallout4
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Base = Base;
                 this.EncounterZone = EncounterZone;
-                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, Enumerable.Empty<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>());
+                this.RagdollData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RagdollData.Mask<TItem>?>>?>(RagdollData, []);
                 this.RagdollBipedRotation = RagdollBipedRotation;
                 this.Patrol = new MaskItem<TItem, Patrol.Mask<TItem>?>(Patrol, new Patrol.Mask<TItem>(Patrol));
                 this.LevelModifier = LevelModifier;
                 this.Count = Count;
                 this.Radius = Radius;
                 this.Health = Health;
-                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, Enumerable.Empty<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>());
+                this.LinkedReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedReferences.Mask<TItem>?>>?>(LinkedReferences, []);
                 this.ActivateParents = new MaskItem<TItem, ActivateParents.Mask<TItem>?>(ActivateParents, new ActivateParents.Mask<TItem>(ActivateParents));
                 this.IsActivationPoint = IsActivationPoint;
                 this.IsLinkedRefTransient = IsLinkedRefTransient;
@@ -464,9 +464,9 @@ namespace Mutagen.Bethesda.Fallout4
                 this.MaterialSwap = MaterialSwap;
                 this.PersistentLocation = PersistentLocation;
                 this.LocationReference = LocationReference;
-                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, []);
                 this.IsIgnoredBySandbox = IsIgnoredBySandbox;
-                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineConnection.Mask<TItem>?>>?>(SplineConnections, Enumerable.Empty<MaskItemIndexed<TItem, SplineConnection.Mask<TItem>?>>());
+                this.SplineConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SplineConnection.Mask<TItem>?>>?>(SplineConnections, []);
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.FavorCost = FavorCost;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.EncounterZone = eval(this.EncounterZone);
                 if (RagdollData != null)
                 {
-                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), Enumerable.Empty<MaskItemIndexed<R, RagdollData.Mask<R>?>>());
+                    obj.RagdollData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RagdollData.Mask<R>?>>?>(eval(this.RagdollData.Overall), []);
                     if (RagdollData.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RagdollData.Mask<R>?>>();
@@ -863,7 +863,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Health = eval(this.Health);
                 if (LinkedReferences != null)
                 {
-                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>());
+                    obj.LinkedReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>?>(eval(this.LinkedReferences.Overall), []);
                     if (LinkedReferences.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.LocationReference = eval(this.LocationReference);
                 if (LocationRefTypes != null)
                 {
-                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), []);
                     if (LocationRefTypes.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
                 if (SplineConnections != null)
                 {
-                    obj.SplineConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SplineConnection.Mask<R>?>>?>(eval(this.SplineConnections.Overall), Enumerable.Empty<MaskItemIndexed<R, SplineConnection.Mask<R>?>>());
+                    obj.SplineConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SplineConnection.Mask<R>?>>?>(eval(this.SplineConnections.Overall), []);
                     if (SplineConnections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, SplineConnection.Mask<R>?>>();
@@ -4468,7 +4468,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IPlacedNpc);
+        protected override Type LinkType => typeof(IPlacedNpcGetter);
 
         public PlacedNpc.MajorFlag MajorFlags => (PlacedNpc.MajorFlag)this.MajorRecordFlagsRaw;
 

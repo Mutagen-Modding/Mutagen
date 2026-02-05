@@ -180,14 +180,14 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.BranchType = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Root = new MaskItem<TItem, PackageRoot.Mask<TItem>?>(initialValue, new PackageRoot.Mask<TItem>(initialValue));
                 this.ProcedureType = initialValue;
                 this.Flags = initialValue;
-                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FlagsOverride = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(initialValue, new PackageFlagsOverride.Mask<TItem>(initialValue));
                 this.FlagsOverrideUnused = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(initialValue, new PackageFlagsOverride.Mask<TItem>(initialValue));
-                this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -202,14 +202,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Unknown)
             {
                 this.BranchType = BranchType;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Root = new MaskItem<TItem, PackageRoot.Mask<TItem>?>(Root, new PackageRoot.Mask<TItem>(Root));
                 this.ProcedureType = ProcedureType;
                 this.Flags = Flags;
-                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DataInputIndices, Enumerable.Empty<(int Index, TItem Value)>());
+                this.DataInputIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DataInputIndices, []);
                 this.FlagsOverride = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(FlagsOverride, new PackageFlagsOverride.Mask<TItem>(FlagsOverride));
                 this.FlagsOverrideUnused = new MaskItem<TItem, PackageFlagsOverride.Mask<TItem>?>(FlagsOverrideUnused, new PackageFlagsOverride.Mask<TItem>(FlagsOverrideUnused));
-                this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Unknown, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Unknown, []);
             }
 
             #pragma warning disable CS8618
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.BranchType = eval(this.BranchType);
                 if (Conditions != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
                     if (Conditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Flags = eval(this.Flags);
                 if (DataInputIndices != null)
                 {
-                    obj.DataInputIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DataInputIndices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.DataInputIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DataInputIndices.Overall), []);
                     if (DataInputIndices.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.FlagsOverrideUnused = this.FlagsOverrideUnused == null ? null : new MaskItem<R, PackageFlagsOverride.Mask<R>?>(eval(this.FlagsOverrideUnused.Overall), this.FlagsOverrideUnused.Specific?.Translate(eval));
                 if (Unknown != null)
                 {
-                    obj.Unknown = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Unknown.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.Unknown = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Unknown.Overall), []);
                     if (Unknown.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();

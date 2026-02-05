@@ -19,7 +19,14 @@ var potion = mod.Potions.AddNew();
     The new record will have the next available `FormKey` from that mod based on the metadata in its header, and automatically be added to the Group it originated from.  
     
 ### By Duplication
-Duplicating a record is the equivalent of creating a fresh record, and then copying in data to match a different record.  This can be done via [CopyIn](Copy-Functionality.md#deepcopyin) API, but there are some convenience methods for this as well
+Duplicating a record creates a new record with a new FormKey while copying all the data from an existing source record. This differs from overriding, where the original FormKey is preserved. Duplication is useful when you want to create a new, distinct record based on an existing one.
+
+#### Key Differences: Duplication vs Override
+- **Duplication**: Assigns a new FormKey → Creates a new record
+- **Override**: Preserves the original FormKey → Modifies an existing record
+
+#### DuplicateInAsNewRecord
+For simple, non-nested records, use the `DuplicateInAsNewRecord` convenience method:
 
 === "Claim Next FormID"
     ``` { .cs hl_lines=4 }
@@ -48,6 +55,32 @@ Duplicating a record is the equivalent of creating a fresh record, and then copy
         If the supplied EditorID is not unique, it will throw an exception.
 
         [:octicons-arrow-right-24: FormID Allocation](FormKey-Allocation-and-Persistence.md#keep-editorids-unique)
+
+#### Duplicate + Add Pattern
+For complex nested records or when you need more control, use the `Duplicate()` method followed by `Add()`:
+
+```csharp
+INpcGetter sourceNpc = ...;
+ISkyrimMod myMod = ...;
+
+// Create a duplicate with a new FormKey
+var npcCopy = sourceNpc.Duplicate(myMod.GetNextFormKey());
+
+// Optionally modify the duplicate
+npcCopy.Name = "Variant Name";
+
+// Add it to your mod
+myMod.Npcs.Add(npcCopy);
+```
+
+This pattern is necessary for nested records like Placed Objects or Cells where `DuplicateInAsNewRecord` is not available.
+
+#### FormLink Behavior
+
+!!! warning "FormLinks Are Not Automatically Updated"
+    When you duplicate a record, any FormLinks within that record still point to their original targets. They are **not** automatically updated to point to the new duplicated record.
+
+    You must manually update FormLinks if needed. See the [Remapping FormLinks](Remapping-FormLinks.md) page for details on how to update FormLinks to point to duplicated records.
 
 
 

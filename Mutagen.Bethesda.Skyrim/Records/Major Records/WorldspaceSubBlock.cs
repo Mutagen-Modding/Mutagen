@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 partial class WorldspaceSubBlockBinaryOverlay
 {
-    public IReadOnlyList<ICellGetter> Items { get; private set; } = Array.Empty<ICellGetter>();
+    public IReadOnlyList<ICellGetter> Items { get; private set; } = [];
 
     partial void ItemsCustomParse(OverlayStream stream, int finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {

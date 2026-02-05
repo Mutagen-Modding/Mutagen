@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Havok = new MaskItem<TItem, HavokData.Mask<TItem>?>(initialValue, new HavokData.Mask<TItem>(initialValue));
                 this.TextureSpecularExponent = initialValue;
-                this.PotentialGrass = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PotentialGrass = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Havok = new MaskItem<TItem, HavokData.Mask<TItem>?>(Havok, new HavokData.Mask<TItem>(Havok));
                 this.TextureSpecularExponent = TextureSpecularExponent;
-                this.PotentialGrass = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PotentialGrass, Enumerable.Empty<(int Index, TItem Value)>());
+                this.PotentialGrass = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PotentialGrass, []);
             }
 
             #pragma warning disable CS8618
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
                 if (PotentialGrass != null)
                 {
-                    obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PotentialGrass.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    obj.PotentialGrass = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PotentialGrass.Overall), []);
                     if (PotentialGrass.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILandTexture);
+        protected override Type LinkType => typeof(ILandTextureGetter);
 
 
         #region Icon
