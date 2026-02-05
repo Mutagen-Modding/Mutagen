@@ -3,6 +3,7 @@
   <PropertyGroup>
 	<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
+    <NoWarn>NU1701</NoWarn>
     <IsPackable>true</IsPackable>
       <DebugType>portable</DebugType>
       <DebugSymbols>true</DebugSymbols>

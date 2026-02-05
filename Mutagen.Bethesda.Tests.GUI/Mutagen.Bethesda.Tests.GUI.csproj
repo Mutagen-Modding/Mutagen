@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

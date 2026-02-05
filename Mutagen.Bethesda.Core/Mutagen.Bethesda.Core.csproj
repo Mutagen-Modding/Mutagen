@@ -25,7 +25,6 @@
         <PackageReference Include="SharpZipLib" />
         <PackageReference Include="StrongInject" />
         <PackageReference Include="System.Collections.Immutable" />
-        <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
         <PackageReference Include="GameFinder.StoreHandlers.GOG" />
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
