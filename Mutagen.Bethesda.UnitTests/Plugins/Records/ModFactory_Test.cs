@@ -206,11 +206,12 @@ public class ModFactoryMultiFileTests
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
         var extension = Path.GetExtension(modKey.FileName);
         var basePath = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        // First file is the base path (no suffix), subsequent files have _2, _3, etc.
+        var splitFile1 = basePath;  // First file uses base path
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         // Write split files (allow ModKey to be corrected to match the file path)
-        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
+        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem });
         mod.WriteToBinary(splitFile2, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
 
         // Import using ImportGetterWithMultiFileDetection with base path
@@ -239,11 +240,12 @@ public class ModFactoryMultiFileTests
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
         var extension = Path.GetExtension(modKey.FileName);
         var basePath = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        // First file is the base path (no suffix), subsequent files have _2, _3, etc.
+        var splitFile1 = basePath;  // First file uses base path
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         // Write split files
-        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
+        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem });
         mod.WriteToBinary(splitFile2, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
 
         // Import using generic ModFactory
@@ -327,11 +329,12 @@ public class ModFactoryMultiFileTests
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
         var extension = Path.GetExtension(modKey.FileName);
         var basePath = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        // First file is the base path (no suffix), subsequent files have _2, _3, etc.
+        var splitFile1 = basePath;  // First file uses base path
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         // Write split files
-        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
+        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem });
         mod.WriteToBinary(splitFile2, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
 
         // Import using ImportSetterWithMultiFileDetection with base path
@@ -359,11 +362,12 @@ public class ModFactoryMultiFileTests
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
         var extension = Path.GetExtension(modKey.FileName);
         var basePath = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        // First file is the base path (no suffix), subsequent files have _2, _3, etc.
+        var splitFile1 = basePath;  // First file uses base path
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         // Write split files
-        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
+        mod.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem });
         mod.WriteToBinary(splitFile2, BinaryWriteParameters.Default with { FileSystem = fileSystem, ModKey = ModKeyOption.CorrectToPath });
 
         // Import using generic ModFactory
