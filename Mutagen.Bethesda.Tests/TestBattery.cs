@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Mutagen.Bethesda.Tests.CLI;
 using Noggog.StructuredStrings;
 using Noggog.WorkEngine;
 
@@ -20,7 +22,10 @@ public static class TestBattery
             try
             {
                 await test.Start();
-                passed += 1 + test.ChildCount;
+                var failedCount = test.CountFailed();
+                var totalCount = 1 + test.ChildCount;
+                passed += totalCount - failedCount;
+                failed += failedCount;
             }
             catch (Exception ex)
             {
@@ -46,6 +51,30 @@ public static class TestBattery
         {
             Console.WriteLine($"{failed} / {(passed + failed)} failed");
         }
+    }
+
+    public static async Task<List<TestResult>> RunTestsStructured(TestingSettings settings, IWorkDropoff workDropoff)
+    {
+        var results = new List<TestResult>();
+        await foreach (var test in GetTests(settings: settings, workDropoff))
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            try
+            {
+                await test.Start();
+                sw.Stop();
+                results.Add(new TestResult(test.Name, true, null, sw.ElapsedMilliseconds));
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                results.Add(new TestResult(test.Name, false, ex, sw.ElapsedMilliseconds));
+            }
+            await test.Output.LastOrDefaultAsync();
+            GC.Collect();
+        }
+        return results;
     }
 
     public static Test RunTest(string name, Func<Subject<string>, Task> toDo, IWorkDropoff workDropoff)
