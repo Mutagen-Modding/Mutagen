@@ -200,10 +200,6 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
-        #region ActorValue
-        public static readonly ActorValue ActorValueDefault = ActorValue.None;
-        public ActorValue ActorValue { get; set; } = ActorValueDefault;
-        #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? _CounterEffects;
@@ -263,7 +259,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ConstantEffectEnchantmentFactor = initialValue;
                 this.ConstantEffectBarterFactor = initialValue;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(initialValue, new AMagicEffectArchetype.Mask<TItem>(initialValue));
-                this.ActorValue = initialValue;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
@@ -295,7 +290,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ConstantEffectEnchantmentFactor,
                 TItem ConstantEffectBarterFactor,
                 TItem Archetype,
-                TItem ActorValue,
                 TItem CounterEffects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -326,7 +320,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ConstantEffectEnchantmentFactor = ConstantEffectEnchantmentFactor;
                 this.ConstantEffectBarterFactor = ConstantEffectBarterFactor;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(Archetype, new AMagicEffectArchetype.Mask<TItem>(Archetype));
-                this.ActorValue = ActorValue;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, []);
             }
 
@@ -359,7 +352,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem ConstantEffectEnchantmentFactor;
             public TItem ConstantEffectBarterFactor;
             public MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
-            public TItem ActorValue;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CounterEffects;
             #endregion
 
@@ -394,7 +386,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ConstantEffectEnchantmentFactor, rhs.ConstantEffectEnchantmentFactor)) return false;
                 if (!object.Equals(this.ConstantEffectBarterFactor, rhs.ConstantEffectBarterFactor)) return false;
                 if (!object.Equals(this.Archetype, rhs.Archetype)) return false;
-                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
                 if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
                 return true;
             }
@@ -421,7 +412,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ConstantEffectEnchantmentFactor);
                 hash.Add(this.ConstantEffectBarterFactor);
                 hash.Add(this.Archetype);
-                hash.Add(this.ActorValue);
                 hash.Add(this.CounterEffects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -461,7 +451,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Archetype.Overall)) return false;
                     if (this.Archetype.Specific != null && !this.Archetype.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ActorValue)) return false;
                 if (this.CounterEffects != null)
                 {
                     if (!eval(this.CounterEffects.Overall)) return false;
@@ -509,7 +498,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Archetype.Overall)) return true;
                     if (this.Archetype.Specific != null && this.Archetype.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ActorValue)) return true;
                 if (this.CounterEffects != null)
                 {
                     if (eval(this.CounterEffects.Overall)) return true;
@@ -556,7 +544,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ConstantEffectEnchantmentFactor = eval(this.ConstantEffectEnchantmentFactor);
                 obj.ConstantEffectBarterFactor = eval(this.ConstantEffectBarterFactor);
                 obj.Archetype = this.Archetype == null ? null : new MaskItem<R, AMagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
-                obj.ActorValue = eval(this.ActorValue);
                 if (CounterEffects != null)
                 {
                     obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), []);
@@ -669,10 +656,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Archetype?.Print(sb);
                     }
-                    if (printMask?.ActorValue ?? true)
-                    {
-                        sb.AppendItem(ActorValue, "ActorValue");
-                    }
                     if ((printMask?.CounterEffects?.Overall ?? true)
                         && CounterEffects is {} CounterEffectsItem)
                     {
@@ -725,7 +708,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? ConstantEffectEnchantmentFactor;
             public Exception? ConstantEffectBarterFactor;
             public MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>? Archetype;
-            public Exception? ActorValue;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
             #endregion
 
@@ -775,8 +757,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return ConstantEffectBarterFactor;
                     case MagicEffect_FieldIndex.Archetype:
                         return Archetype;
-                    case MagicEffect_FieldIndex.ActorValue:
-                        return ActorValue;
                     case MagicEffect_FieldIndex.CounterEffects:
                         return CounterEffects;
                     default:
@@ -848,9 +828,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case MagicEffect_FieldIndex.Archetype:
                         this.Archetype = new MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>(ex, null);
-                        break;
-                    case MagicEffect_FieldIndex.ActorValue:
-                        this.ActorValue = ex;
                         break;
                     case MagicEffect_FieldIndex.CounterEffects:
                         this.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -926,9 +903,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case MagicEffect_FieldIndex.Archetype:
                         this.Archetype = (MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>?)obj;
                         break;
-                    case MagicEffect_FieldIndex.ActorValue:
-                        this.ActorValue = (Exception?)obj;
-                        break;
                     case MagicEffect_FieldIndex.CounterEffects:
                         this.CounterEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -961,7 +935,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ConstantEffectEnchantmentFactor != null) return true;
                 if (ConstantEffectBarterFactor != null) return true;
                 if (Archetype != null) return true;
-                if (ActorValue != null) return true;
                 if (CounterEffects != null) return true;
                 return false;
             }
@@ -1045,9 +1018,6 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
                 }
                 Archetype?.Print(sb);
-                {
-                    sb.AppendItem(ActorValue, "ActorValue");
-                }
                 if (CounterEffects is {} CounterEffectsItem)
                 {
                     sb.AppendLine("CounterEffects =>");
@@ -1096,7 +1066,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ConstantEffectEnchantmentFactor = this.ConstantEffectEnchantmentFactor.Combine(rhs.ConstantEffectEnchantmentFactor);
                 ret.ConstantEffectBarterFactor = this.ConstantEffectBarterFactor.Combine(rhs.ConstantEffectBarterFactor);
                 ret.Archetype = this.Archetype.Combine(rhs.Archetype, (l, r) => l.Combine(r));
-                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
                 ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), Noggog.ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
                 return ret;
             }
@@ -1140,7 +1109,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool ConstantEffectEnchantmentFactor;
             public bool ConstantEffectBarterFactor;
             public AMagicEffectArchetype.TranslationMask? Archetype;
-            public bool ActorValue;
             public bool CounterEffects;
             #endregion
 
@@ -1168,7 +1136,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AreaSound = defaultOn;
                 this.ConstantEffectEnchantmentFactor = defaultOn;
                 this.ConstantEffectBarterFactor = defaultOn;
-                this.ActorValue = defaultOn;
                 this.CounterEffects = defaultOn;
             }
 
@@ -1197,7 +1164,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ConstantEffectEnchantmentFactor, null));
                 ret.Add((ConstantEffectBarterFactor, null));
                 ret.Add((Archetype != null ? Archetype.OnOverall : DefaultOn, Archetype?.GetCrystal()));
-                ret.Add((ActorValue, null));
                 ret.Add((CounterEffects, null));
             }
 
@@ -1364,7 +1330,6 @@ namespace Mutagen.Bethesda.Fallout3
         new Single ConstantEffectEnchantmentFactor { get; set; }
         new Single ConstantEffectBarterFactor { get; set; }
         new AMagicEffectArchetype Archetype { get; set; }
-        new ActorValue ActorValue { get; set; }
         new ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; set; }
     }
 
@@ -1417,7 +1382,6 @@ namespace Mutagen.Bethesda.Fallout3
         Single ConstantEffectEnchantmentFactor { get; }
         Single ConstantEffectBarterFactor { get; }
         IAMagicEffectArchetypeGetter Archetype { get; }
-        ActorValue ActorValue { get; }
         IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
 
     }
@@ -1615,8 +1579,7 @@ namespace Mutagen.Bethesda.Fallout3
         ConstantEffectEnchantmentFactor = 24,
         ConstantEffectBarterFactor = 25,
         Archetype = 26,
-        ActorValue = 27,
-        CounterEffects = 28,
+        CounterEffects = 27,
     }
     #endregion
 
@@ -1627,9 +1590,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -1732,7 +1695,6 @@ namespace Mutagen.Bethesda.Fallout3
             item.ConstantEffectEnchantmentFactor = default(Single);
             item.ConstantEffectBarterFactor = default(Single);
             item.Archetype.Clear();
-            item.ActorValue = MagicEffect.ActorValueDefault;
             item.CounterEffects = null;
             base.Clear(item);
         }
@@ -1851,7 +1813,6 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor.EqualsWithin(rhs.ConstantEffectEnchantmentFactor);
             ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor);
             ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
-            ret.ActorValue = item.ActorValue == rhs.ActorValue;
             ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
                 rhs.CounterEffects,
                 (l, r) => object.Equals(l, r),
@@ -1988,10 +1949,6 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Archetype?.Overall ?? true)
             {
                 item.Archetype?.Print(sb, "Archetype");
-            }
-            if (printMask?.ActorValue ?? true)
-            {
-                sb.AppendItem(item.ActorValue, "ActorValue");
             }
             if ((printMask?.CounterEffects?.Overall ?? true)
                 && item.CounterEffects is {} CounterEffectsItem)
@@ -2146,10 +2103,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isArchetypeEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue) ?? true))
-            {
-                if (lhs.ActorValue != rhs.ActorValue) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
                 if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
@@ -2214,7 +2167,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.ConstantEffectEnchantmentFactor);
             hash.Add(item.ConstantEffectBarterFactor);
             hash.Add(item.Archetype);
-            hash.Add(item.ActorValue);
             hash.Add(item.CounterEffects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2459,10 +2411,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue) ?? true))
-            {
-                item.ActorValue = rhs.ActorValue;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
@@ -2733,10 +2681,6 @@ namespace Mutagen.Bethesda.Fallout3
                 MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
                     writer: writer,
                     item: item);
-                EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.ActorValue,
-                    length: 4);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
@@ -2921,11 +2865,7 @@ namespace Mutagen.Bethesda.Fallout3
                     MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.ActorValue = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 4);
-                    return (int)MagicEffect_FieldIndex.ActorValue;
+                    return (int)MagicEffect_FieldIndex.Archetype;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -3109,11 +3049,6 @@ namespace Mutagen.Bethesda.Fallout3
         public partial IAMagicEffectArchetypeGetter GetArchetypeCustom();
         public IAMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
-        #region ActorValue
-        private int _ActorValueLocation => _DATALocation!.Value.Min + 0x44;
-        private bool _ActorValue_IsSet => _DATALocation.HasValue;
-        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ActorValueLocation, 0x4)) : default;
-        #endregion
         public IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3210,7 +3145,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)MagicEffect_FieldIndex.ActorValue;
+                    return (int)MagicEffect_FieldIndex.Archetype;
                 }
                 case RecordTypeInts.ESCE:
                 {

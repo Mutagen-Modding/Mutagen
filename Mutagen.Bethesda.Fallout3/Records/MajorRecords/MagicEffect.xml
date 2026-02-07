@@ -24,8 +24,8 @@
           <FormLink name="AreaSound" refName="Sound" />
           <Float name="ConstantEffectEnchantmentFactor" />
           <Float name="ConstantEffectBarterFactor" />
-          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="4" defaultType="MagicEffectArchetype" />
-          <Enum name="ActorValue" enumName="ActorValue" byteLength="4" default="ActorValue.None" />
+          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" defaultType="MagicEffectArchetype" />
+          <!-- Actor Value parsed by above custom logic -->
         </Fields>
       </Data>
       <List name="CounterEffects" recordType="ESCE">
