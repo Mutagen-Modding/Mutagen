@@ -65,7 +65,14 @@ public partial class RecordTypes
     public static readonly RecordType RDAT = new(0x54414452);
     public static readonly RecordType REFR = new(0x52464552);
     public static readonly RecordType RNAM = new(0x4D414E52);
-    public static readonly RecordType SCRI = new(0x49524353);
+    public static readonly RecordType SCDA = new(0x41444353);
+    public static readonly RecordType SCHR = new(0x52484353);
+    public static readonly RecordType SCPT = new(0x54504353);
+    public static readonly RecordType SCRO = new(0x4F524353);
+    public static readonly RecordType SCRV = new(0x56524353);
+    public static readonly RecordType SCTX = new(0x58544353);
+    public static readonly RecordType SCVR = new(0x52564353);
+    public static readonly RecordType SLSD = new(0x44534C53);
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType SNDD = new(0x44444E53);
     public static readonly RecordType SNDX = new(0x58444E53);

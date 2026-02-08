@@ -63,7 +63,14 @@ public partial class RecordTypeInts
     public const int RDAT = 0x54414452;
     public const int REFR = 0x52464552;
     public const int RNAM = 0x4D414E52;
-    public const int SCRI = 0x49524353;
+    public const int SCDA = 0x41444353;
+    public const int SCHR = 0x52484353;
+    public const int SCPT = 0x54504353;
+    public const int SCRO = 0x4F524353;
+    public const int SCRV = 0x56524353;
+    public const int SCTX = 0x58544353;
+    public const int SCVR = 0x52564353;
+    public const int SLSD = 0x44534C53;
     public const int SNAM = 0x4D414E53;
     public const int SNDD = 0x44444E53;
     public const int SNDX = 0x58444E53;

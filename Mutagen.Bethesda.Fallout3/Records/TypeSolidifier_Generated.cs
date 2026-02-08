@@ -516,9 +516,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Script</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter> Script(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter> Script(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IScriptGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -528,9 +528,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Script</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter> Script(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter> Script(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IScriptGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IScript, IScriptGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -728,30 +728,6 @@ namespace Mutagen.Bethesda.Fallout3
             return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IBoundItem, IBoundItemGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IBoundItemGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IBoundItem, IBoundItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to MagicEffectItemReference
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on MagicEffectItemReference</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, MagicEffectItemReference, MagicEffectItemReferenceGetter> MagicEffectItemReference(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, MagicEffectItemReference, MagicEffectItemReferenceGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<MagicEffectItemReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, MagicEffectItemReference, MagicEffectItemReferenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to MagicEffectItemReference
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on MagicEffectItemReference</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, MagicEffectItemReference, MagicEffectItemReferenceGetter> MagicEffectItemReference(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, MagicEffectItemReference, MagicEffectItemReferenceGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<MagicEffectItemReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, MagicEffectItemReference, MagicEffectItemReferenceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

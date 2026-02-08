@@ -159,6 +159,9 @@
     <Compile Include="Records\MajorRecords\Region_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Script.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Script_Generated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -325,7 +328,6 @@
     <Compile Include="Records\MajorRecords\MagicEffect_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\Link\MagicEffectItemReference_Generated.cs" />
     <Compile Include="Records\MajorRecords\AMagicEffectArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -343,5 +345,32 @@
     </Compile>
     <Compile Include="Interfaces\Link\IBoundItem_Generated.cs" />
     <Compile Include="Fallout3MultiModOverlay_Generated.cs" />
+    <Compile Include="Records\MajorRecords\ScriptFields.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ScriptFields_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ScriptMetaSummary.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ScriptMetaSummary_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LocalVariable_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LocalVariableData_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\AScriptReference_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ScriptVariableReference_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ScriptObjectReference_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

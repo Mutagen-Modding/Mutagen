@@ -21,6 +21,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Faction
 - Hair
 - HeadPart
+- LocalVariable
 - MagicEffect
 - Race
 ### IObjectBounded
@@ -52,6 +53,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPartItem
 - IHasIcons
 - IModeled
+### LocalVariable
+- INamed
 ### MagicEffect
 - IModeled
 - INamed

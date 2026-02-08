@@ -71,6 +71,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    LocalVariable_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     Race_Registration.Instance,
                 },

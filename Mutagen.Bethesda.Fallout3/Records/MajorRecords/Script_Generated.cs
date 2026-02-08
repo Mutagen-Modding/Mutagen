@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +54,13 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Fields
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly ScriptFields _Fields_Object = new ScriptFields();
+        public ScriptFields Fields => _Fields_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScriptFieldsGetter IScriptGetter.Fields => _Fields_Object;
+        #endregion
 
         #region To String
 
@@ -78,6 +86,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Fields = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -87,7 +96,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Fields)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +107,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Fields = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(Fields, new ScriptFields.Mask<TItem>(Fields));
             }
 
             #pragma warning disable CS8618
@@ -105,6 +116,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ScriptFields.Mask<TItem>?>? Fields { get; set; }
             #endregion
 
             #region Equals
@@ -118,11 +133,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Fields, rhs.Fields)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Fields);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +150,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Fields != null)
+                {
+                    if (!eval(this.Fields.Overall)) return false;
+                    if (this.Fields.Specific != null && !this.Fields.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -141,6 +163,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Fields != null)
+                {
+                    if (eval(this.Fields.Overall)) return true;
+                    if (this.Fields.Specific != null && this.Fields.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -156,6 +183,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Fields = this.Fields == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.Fields.Overall), this.Fields.Specific?.Translate(eval));
             }
             #endregion
 
@@ -174,6 +202,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Script.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Fields?.Overall ?? true)
+                    {
+                        Fields?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -184,12 +216,18 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ScriptFields.ErrorMask?>? Fields;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Script_FieldIndex enu = (Script_FieldIndex)index;
                 switch (enu)
                 {
+                    case Script_FieldIndex.Fields:
+                        return Fields;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +238,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Script_FieldIndex enu = (Script_FieldIndex)index;
                 switch (enu)
                 {
+                    case Script_FieldIndex.Fields:
+                        this.Fields = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +252,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Script_FieldIndex enu = (Script_FieldIndex)index;
                 switch (enu)
                 {
+                    case Script_FieldIndex.Fields:
+                        this.Fields = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +264,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Fields != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +291,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Fields?.Print(sb);
             }
             #endregion
 
@@ -254,6 +300,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Fields = this.Fields.Combine(rhs.Fields, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,6 +322,10 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ScriptFields.TranslationMask? Fields;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -284,6 +335,12 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Fields != null ? Fields.OnOverall : DefaultOn, Fields?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +352,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Script_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptSetterCommon.Instance.RemapLinks(this, mapping);
         public Script(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,10 +472,11 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IScript :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptInternal>,
-        IScriptGetter,
-        MagicEffectItemReference
+        IScriptGetter
     {
+        new ScriptFields Fields { get; }
     }
 
     public partial interface IScriptInternal :
@@ -424,17 +484,19 @@ namespace Mutagen.Bethesda.Fallout3
         IScript,
         IScriptGetter
     {
+        new ScriptFields Fields { get; }
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.SCRI)]
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.SCPT)]
     public partial interface IScriptGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IScriptGetter>,
-        IMapsToGetter<IScriptGetter>,
-        MagicEffectItemReferenceGetter
+        IMapsToGetter<IScriptGetter>
     {
         static new ILoquiRegistration StaticRegistration => Script_Registration.Instance;
+        IScriptFieldsGetter Fields { get; }
 
     }
 
@@ -611,6 +673,7 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Fields = 7,
     }
     #endregion
 
@@ -621,9 +684,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Script.Mask<>);
 
@@ -649,12 +712,17 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.SCRI;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SCPT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SCRI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SCPT);
+            var all = RecordCollection.Factory(
+                RecordTypes.SCPT,
+                RecordTypes.SCHR);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ScriptBinaryWriteTranslation);
         #region Interface
@@ -713,6 +781,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IScript obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Fields.RemapLinks(mapping);
         }
         
         #endregion
@@ -780,6 +849,7 @@ namespace Mutagen.Bethesda.Fallout3
             Script.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Fields = MaskItemExt.Factory(item.Fields.GetEqualsMask(rhs.Fields, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +899,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Fields?.Overall ?? true)
+            {
+                item.Fields?.Print(sb, "Fields");
+            }
         }
         
         public static Script_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +953,14 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Fields, rhs.Fields, out var lhsFields, out var rhsFields, out var isFieldsEqual))
+                {
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsFields).CommonInstance()!).Equals(lhsFields, rhsFields, equalsMask?.GetSubCrystal((int)Script_FieldIndex.Fields))) return false;
+                }
+                else if (!isFieldsEqual) return false;
+            }
             return true;
         }
         
@@ -907,6 +989,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IScriptGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Fields);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -935,6 +1018,13 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Fields is IFormLinkContainerGetter FieldslinkCont)
+            {
+                foreach (var item in FieldslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1010,6 +1100,26 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
+            {
+                errorMask?.PushIndex((int)Script_FieldIndex.Fields);
+                try
+                {
+                    item.Fields.DeepCopyIn(
+                        rhs: rhs.Fields,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Script_FieldIndex.Fields));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +1280,22 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly ScriptBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IScriptGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var FieldsItem = item.Fields;
+            ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)FieldsItem).BinaryWriteTranslator).Write(
+                item: FieldsItem,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
         public void Write(
             MutagenWriter writer,
             IScriptGetter item,
@@ -1179,7 +1305,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item,
                 translationParams: translationParams,
-                type: RecordTypes.SCRI,
+                type: RecordTypes.SCPT,
                 writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
                 writeRecordTypes: WriteRecordTypes);
         }
@@ -1223,7 +1349,38 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly ScriptBinaryCreateTranslation Instance = new ScriptBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.SCRI;
+        public override RecordType RecordType => RecordTypes.SCPT;
+        public static ParseResult FillBinaryRecordTypes(
+            IScriptInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.SCHR:
+                {
+                    item.Fields.CopyInFromBinary(
+                        frame: frame,
+                        translationParams: null);
+                    return (int)Script_FieldIndex.Fields;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +1413,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1270,6 +1428,10 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IScriptGetter);
 
 
+        #region Fields
+        private IScriptFieldsGetter? _Fields;
+        public IScriptFieldsGetter Fields => _Fields ?? new ScriptFields();
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +1489,37 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.SCHR:
+                {
+                    this._Fields = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Script_FieldIndex.Fields;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -414,8 +414,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ICreature :
         ICreatureGetter,
         IFallout3MajorRecordInternal,
-        ILoquiObjectSetter<ICreatureInternal>,
-        MagicEffectItemReference
+        ILoquiObjectSetter<ICreatureInternal>
     {
     }
 
@@ -431,8 +430,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ICreatureGetter>,
-        IMapsToGetter<ICreatureGetter>,
-        MagicEffectItemReferenceGetter
+        IMapsToGetter<ICreatureGetter>
     {
         static new ILoquiRegistration StaticRegistration => Creature_Registration.Instance;
 

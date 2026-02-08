@@ -1,8 +1,52 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Script" baseClass="Fallout3MajorRecord" objType="Record" recordType="SCRI">
+  <Object name="Script" objType="Record" recordType="SCPT" baseClass="Fallout3MajorRecord">
     <Fields>
+      <RefDirect name="Fields" refName="ScriptFields" singleton="true" />
     </Fields>
-    <LinkInterface>MagicEffectItemReference</LinkInterface>
+  </Object>
+  <Object name="ScriptFields" objType="Subrecord">
+    <Fields>
+      <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" singleton="true" />
+      <ByteArray name="CompiledScript" recordType="SCDA" generateClassMembers="false" />
+      <String name="SourceCode" recordType="SCTX" binaryType="Plain" />
+      <RefList name="LocalVariables" refName="LocalVariable" />
+      <RefList name="References" refName="AScriptReference" />
+    </Fields>
+  </Object>
+  <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR">
+    <Fields>
+      <ByteArray name="Unknown" byteLength="4" nullable="False" />
+      <UInt32 name="RefCount" />
+      <Int32 name="CompiledSize" derivative="true" binary="Custom" byteLength="4" />
+      <UInt32 name="VariableCount" />
+      <Enum name="Type" enumName="ScriptFields.ScriptType" byteLength="2" />
+      <UInt16 name="Enabled" />
+    </Fields>
+  </Object>
+  <Object name="LocalVariable" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Data" refName="LocalVariableData" />
+      <String name="Name" recordType="SCVR" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD">
+    <Fields>
+      <UInt32 name="Index" />
+      <ByteArray name="Unknown" byteLength="12" nullable="False" />
+      <UInt8 name="IsLongOrShort" />
+      <ByteArray name="Unknown2" byteLength="7" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="AScriptReference" abstract="true" objType="Subrecord" />
+  <Object name="ScriptVariableReference" baseClass="AScriptReference" objType="Subrecord">
+    <Fields>
+      <Int32 name="VariableIndex" recordType="SCRV" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="ScriptObjectReference" baseClass="AScriptReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference" recordType="SCRO" refName="Fallout3MajorRecord" nullable="False" />
+    </Fields>
   </Object>
 </Loqui>

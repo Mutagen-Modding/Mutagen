@@ -3,6 +3,5 @@
   <Object name="Creature" baseClass="Fallout3MajorRecord" objType="Record" recordType="CREA">
     <Fields>
     </Fields>
-    <LinkInterface>MagicEffectItemReference</LinkInterface>
   </Object>
 </Loqui>

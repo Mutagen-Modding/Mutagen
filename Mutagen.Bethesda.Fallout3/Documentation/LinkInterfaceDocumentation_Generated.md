@@ -19,9 +19,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRelatable
 - Faction
 - Race
-### MagicEffectItemReference
-- Creature
-- Script
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IExplodeSpawn
@@ -29,15 +26,11 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IReferenceableObject
 ### Armor
 - IBoundItem
-### Creature
-- MagicEffectItemReference
 ### Faction
 - IRelatable
 ### PlacedObject
 - IPlaced
 ### Race
 - IRelatable
-### Script
-- MagicEffectItemReference
 ### Weapon
 - IBoundItem

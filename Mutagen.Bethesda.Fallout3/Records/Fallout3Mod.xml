@@ -16,6 +16,7 @@
       <Group name="Sounds" refName="Sound" />
       <Group name="AcousticSpaces" refName="AcousticSpace" />
       <Group name="MagicEffects" refName="MagicEffect" />
+      <Group name="Scripts" refName="Script" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
