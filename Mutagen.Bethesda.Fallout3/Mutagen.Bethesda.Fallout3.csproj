@@ -372,5 +372,17 @@
     <Compile Include="Records\MajorRecords\ScriptObjectReference_Generated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\LandscapeTexture_Generated.cs">
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\HavokData.cs">
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\HavokData_Generated.cs">
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Grass_Generated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

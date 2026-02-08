@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     BodyPartItem_Registration.Instance,
                     HeadPartItem_Registration.Instance,
+                    LandscapeTexture_Registration.Instance,
                     MenuIcon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(

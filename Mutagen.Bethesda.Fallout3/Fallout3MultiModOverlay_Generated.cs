@@ -41,6 +41,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IAcousticSpaceGetter>? _acousticSpaces;
     private MergedGroup<IMagicEffectGetter>? _magicEffects;
     private MergedGroup<IScriptGetter>? _scripts;
+    private MergedGroup<ILandscapeTextureGetter>? _landscapeTextures;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -118,6 +119,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IScriptGetter> Scripts =>
         _scripts ??= new MergedGroup<IScriptGetter>(
             _sourceMods.Select(m => m.Scripts));
+    public IFallout3GroupGetter<ILandscapeTextureGetter> LandscapeTextures =>
+        _landscapeTextures ??= new MergedGroup<ILandscapeTextureGetter>(
+            _sourceMods.Select(m => m.LandscapeTextures));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

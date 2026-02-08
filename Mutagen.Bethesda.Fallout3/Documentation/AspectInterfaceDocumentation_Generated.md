@@ -6,6 +6,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IHasIcons
 - BodyPartItem
 - HeadPartItem
+- LandscapeTexture
 - MenuIcon
 ### IModeled
 - BodyData
@@ -53,6 +54,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPartItem
 - IHasIcons
 - IModeled
+### LandscapeTexture
+- IHasIcons
 ### LocalVariable
 - INamed
 ### MagicEffect

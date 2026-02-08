@@ -32,6 +32,7 @@ public partial class RecordTypes
     public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GNAM = new(0x4D414E47);
+    public static readonly RecordType GRAS = new(0x53415247);
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HAIR = new(0x52494148);
     public static readonly RecordType HDPT = new(0x54504448);
@@ -42,6 +43,7 @@ public partial class RecordTypes
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INDX = new(0x58444E49);
     public static readonly RecordType LIGH = new(0x4847494C);
+    public static readonly RecordType LTEX = new(0x5845544C);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MICN = new(0x4E43494D);
@@ -78,6 +80,7 @@ public partial class RecordTypes
     public static readonly RecordType SNDX = new(0x58444E53);
     public static readonly RecordType SOUN = new(0x4E554F53);
     public static readonly RecordType TES4 = new(0x34534554);
+    public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TX00 = new(0x30305854);
     public static readonly RecordType TX01 = new(0x31305854);
     public static readonly RecordType TX02 = new(0x32305854);

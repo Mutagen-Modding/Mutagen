@@ -30,6 +30,7 @@ public partial class RecordTypeInts
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GNAM = 0x4D414E47;
+    public const int GRAS = 0x53415247;
     public const int GRUP = 0x50555247;
     public const int HAIR = 0x52494148;
     public const int HDPT = 0x54504448;
@@ -40,6 +41,7 @@ public partial class RecordTypeInts
     public const int INAM = 0x4D414E49;
     public const int INDX = 0x58444E49;
     public const int LIGH = 0x4847494C;
+    public const int LTEX = 0x5845544C;
     public const int MAST = 0x5453414D;
     public const int MGEF = 0x4645474D;
     public const int MICN = 0x4E43494D;
@@ -76,6 +78,7 @@ public partial class RecordTypeInts
     public const int SNDX = 0x58444E53;
     public const int SOUN = 0x4E554F53;
     public const int TES4 = 0x34534554;
+    public const int TNAM = 0x4D414E54;
     public const int TX00 = 0x30305854;
     public const int TX01 = 0x31305854;
     public const int TX02 = 0x32305854;
