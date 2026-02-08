@@ -103,10 +103,62 @@ public class AssociatedFilesLocatorTests
                 existingModPath.AsEnumerable()
                     .Select(x => x.Path)
                     .And(files));
-        sut.GetAssociatedFiles(existingModPath, 
-                AssociatedModFileCategory.Plugin 
+        sut.GetAssociatedFiles(existingModPath,
+                AssociatedModFileCategory.Plugin
                 | AssociatedModFileCategory.RawStrings)
             .Select(x => (ModPath)x)
             .ShouldEqualEnumerable(existingModPath);
+    }
+
+    [Theory, MutagenAutoData]
+    public void SplitPluginFiles(
+        IFileSystem fileSystem,
+        ModPath existingModPath,
+        AssociatedFilesLocator sut)
+    {
+        var dir = existingModPath.Path.Directory!;
+        var baseName = Path.GetFileNameWithoutExtension(existingModPath.Path);
+        var extension = Path.GetExtension(existingModPath.Path);
+        var splitFiles = new List<FilePath>
+        {
+            new(Path.Combine(dir, $"{baseName}_2{extension}")),
+            new(Path.Combine(dir, $"{baseName}_3{extension}")),
+        };
+        foreach (var f in splitFiles)
+        {
+            fileSystem.File.Create(f);
+        }
+        sut.GetAssociatedFiles(existingModPath, AssociatedModFileCategory.SplitPlugins)
+            .ShouldBe(splitFiles);
+    }
+
+    [Theory, MutagenAutoData]
+    public void PluginFlagDoesNotReturnSplitFiles(
+        IFileSystem fileSystem,
+        ModPath existingModPath,
+        AssociatedFilesLocator sut)
+    {
+        var dir = existingModPath.Path.Directory!;
+        var baseName = Path.GetFileNameWithoutExtension(existingModPath.Path);
+        var extension = Path.GetExtension(existingModPath.Path);
+        var splitFile = Path.Combine(dir, $"{baseName}_2{extension}");
+        fileSystem.File.Create(splitFile);
+        sut.GetAssociatedFiles(existingModPath, AssociatedModFileCategory.Plugin)
+            .ShouldEqualEnumerable(existingModPath);
+    }
+
+    [Theory, MutagenAutoData]
+    public void NonNumericSuffixExcluded(
+        IFileSystem fileSystem,
+        ModPath existingModPath,
+        AssociatedFilesLocator sut)
+    {
+        var dir = existingModPath.Path.Directory!;
+        var baseName = Path.GetFileNameWithoutExtension(existingModPath.Path);
+        var extension = Path.GetExtension(existingModPath.Path);
+        fileSystem.File.Create(Path.Combine(dir, $"{baseName}_Patch{extension}"));
+        fileSystem.File.Create(Path.Combine(dir, $"{baseName}_abc{extension}"));
+        sut.GetAssociatedFiles(existingModPath, AssociatedModFileCategory.SplitPlugins)
+            .ShouldBeEmpty();
     }
 }

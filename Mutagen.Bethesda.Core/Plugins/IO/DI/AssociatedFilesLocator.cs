@@ -9,7 +9,8 @@ public interface IAssociatedFilesLocator
     /// Locates all existing associated files for a given mod: <br />
     /// - Mod itself <br />
     /// - Strings files <br />
-    /// - Archive files
+    /// - Archive files <br />
+    /// - Split plugin files
     /// </summary>
     /// <param name="modPath">Path to mod</param>
     /// <param name="categories">Types of files to look for</param>
@@ -28,7 +29,7 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
     
     public IEnumerable<FilePath> GetAssociatedFiles(ModPath modPath, AssociatedModFileCategory? categories = null)
     {
-        categories ??= AssociatedModFileCategory.Archives | AssociatedModFileCategory.Plugin | AssociatedModFileCategory.RawStrings;
+        categories ??= AssociatedModFileCategory.Archives | AssociatedModFileCategory.Plugin | AssociatedModFileCategory.RawStrings | AssociatedModFileCategory.SplitPlugins;
 
         if (categories.Value.HasFlag(AssociatedModFileCategory.Plugin))
         {
@@ -60,6 +61,32 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
                          .And(EnumerateBsas(dir.Value, modPath.ModKey, "ba2")))
             {
                 yield return bsa;
+            }
+        }
+
+        if (categories.Value.HasFlag(AssociatedModFileCategory.SplitPlugins))
+        {
+            foreach (var splitFile in EnumerateSplitPlugins(dir.Value, modPath.Path))
+            {
+                yield return splitFile;
+            }
+        }
+    }
+
+    private IEnumerable<FilePath> EnumerateSplitPlugins(
+        DirectoryPath dir,
+        FilePath modPath)
+    {
+        var baseName = Path.GetFileNameWithoutExtension(modPath);
+        var extension = Path.GetExtension(modPath);
+        var searchPattern = $"{baseName}_*{extension}";
+        foreach (var file in _fileSystem.Directory.EnumerateFiles(dir, searchPattern))
+        {
+            var fileName = Path.GetFileNameWithoutExtension(file);
+            var suffix = fileName[(baseName.Length + 1)..];
+            if (int.TryParse(suffix, out _))
+            {
+                yield return file;
             }
         }
     }
