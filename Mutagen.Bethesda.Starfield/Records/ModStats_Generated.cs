@@ -51,7 +51,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Version
-        public Single Version { get; set; } = default(Single);
+        public static readonly Single VersionDefault = 0.96f;
+        public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default(UInt32);
@@ -757,7 +758,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IModStats item)
         {
             ClearPartial();
-            item.Version = default(Single);
+            item.Version = ModStats.VersionDefault;
             item.NumRecords = default(UInt32);
             item.NextFormID = ModStats.NextFormIDDefault;
         }
