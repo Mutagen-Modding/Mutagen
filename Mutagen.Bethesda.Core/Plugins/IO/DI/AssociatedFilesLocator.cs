@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.IO.DI;
@@ -83,8 +84,7 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
         foreach (var file in _fileSystem.Directory.EnumerateFiles(dir, searchPattern))
         {
             var fileName = Path.GetFileNameWithoutExtension(file);
-            var suffix = fileName[(baseName.Length + 1)..];
-            if (int.TryParse(suffix, out _))
+            if (MultiModFileAnalysis.IsSplitFileName(fileName, baseName))
             {
                 yield return file;
             }

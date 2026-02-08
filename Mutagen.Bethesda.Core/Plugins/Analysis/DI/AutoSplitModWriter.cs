@@ -117,16 +117,11 @@ public class AutoSplitModWriter : IAutoSplitModWriter
         foreach (var filePath in fileSystem.Directory.EnumerateFiles(directory, searchPattern))
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
-            var prefix = fileNameWithoutExtension + "_";
-
-            // Extract the suffix after the underscore
-            if (!fileName.StartsWith(prefix)) continue;
-
-            var suffix = fileName.Substring(prefix.Length);
 
             // With new naming: currentSplitCount=2 means files are Name.esp + Name_2.esp
             // Delete files where suffix number > currentSplitCount (so _3, _4, etc.)
-            if (int.TryParse(suffix, out var splitNumber) && splitNumber > currentSplitCount)
+            if (MultiModFileAnalysis.IsSplitFileName(fileName, fileNameWithoutExtension, out var splitNumber)
+                && splitNumber > currentSplitCount)
             {
                 try
                 {

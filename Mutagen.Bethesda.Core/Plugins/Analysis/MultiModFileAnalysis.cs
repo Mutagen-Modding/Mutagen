@@ -71,6 +71,39 @@ public static class MultiModFileAnalysis
     }
 
     /// <summary>
+    /// Pure string-level check: is candidateNameWithoutExt a split sibling of baseNameWithoutExt?
+    /// e.g. ("MyMod_2", "MyMod") → true, ("MyMod_Patch", "MyMod") → false
+    /// </summary>
+    public static bool IsSplitFileName(string candidateNameWithoutExt, string baseNameWithoutExt)
+    {
+        return IsSplitFileName(candidateNameWithoutExt, baseNameWithoutExt, out _);
+    }
+
+    /// <summary>
+    /// Pure string-level check with the parsed split index.
+    /// e.g. ("MyMod_3", "MyMod") → true, splitIndex=3
+    /// </summary>
+    public static bool IsSplitFileName(string candidateNameWithoutExt, string baseNameWithoutExt, out int splitIndex)
+    {
+        splitIndex = 0;
+        var prefix = baseNameWithoutExt + "_";
+        if (!candidateNameWithoutExt.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return false;
+        var suffix = candidateNameWithoutExt.Substring(prefix.Length);
+        return int.TryParse(suffix, out splitIndex);
+    }
+
+    /// <summary>
+    /// ModKey-level check: same mod type + filename is a split sibling.
+    /// e.g. ("MyMod_2.esp", "MyMod.esp") → true, ("MyMod_2.esm", "MyMod.esp") → false
+    /// </summary>
+    public static bool IsSplitModSibling(ModKey candidate, ModKey baseModKey)
+    {
+        if (candidate.Type != baseModKey.Type) return false;
+        return IsSplitFileName(candidate.Name, baseModKey.Name);
+    }
+
+    /// <summary>
     /// Detects split files matching the pattern ModKey.ext, ModKey_2.ext, ModKey_3.ext, etc.
     /// First file is the base (no suffix), subsequent files have _2, _3, etc.
     /// </summary>
