@@ -20,6 +20,16 @@ namespace Mutagen.Bethesda.Fallout3
         public Fallout3AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHasEffects)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    ObjectEffect_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasEffects),
+                    Getter: typeof(IHasEffectsGetter)));
+            dict[typeof(IHasEffectsGetter)] = dict[typeof(IHasEffects)] with { Setter = false };
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
@@ -56,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
                     MagicEffect_Registration.Instance,
+                    ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
@@ -74,6 +85,7 @@ namespace Mutagen.Bethesda.Fallout3
                     HeadPart_Registration.Instance,
                     LocalVariable_Registration.Instance,
                     MagicEffect_Registration.Instance,
+                    ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
                 },
                 new InterfaceMappingTypes(

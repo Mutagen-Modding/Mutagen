@@ -2,6 +2,8 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int ACHR = 0x52484341;
+    public const int ACRE = 0x45524341;
     public const int ANAM = 0x4D414E41;
     public const int ARMO = 0x4F4D5241;
     public const int ASPC = 0x43505341;
@@ -10,14 +12,19 @@ public partial class RecordTypeInts
     public const int CLAS = 0x53414C43;
     public const int CNAM = 0x4D414E43;
     public const int CREA = 0x41455243;
+    public const int CTDA = 0x41445443;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
     public const int DESC = 0x43534544;
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
     public const int EDID = 0x44494445;
+    public const int EFID = 0x44494645;
+    public const int EFIT = 0x54494645;
     public const int EFSH = 0x48534645;
     public const int ENAM = 0x4D414E45;
+    public const int ENCH = 0x48434E45;
+    public const int ENIT = 0x54494E45;
     public const int ESCE = 0x45435345;
     public const int EYES = 0x53455945;
     public const int FACT = 0x54434146;
@@ -60,6 +67,9 @@ public partial class RecordTypeInts
     public const int OBND = 0x444E424F;
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
+    public const int PBEA = 0x41454250;
+    public const int PGRE = 0x45524750;
+    public const int PMIS = 0x53494D50;
     public const int PNAM = 0x4D414E50;
     public const int RACE = 0x45434152;
     public const int RDAT = 0x54414452;

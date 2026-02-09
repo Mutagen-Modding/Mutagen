@@ -75,6 +75,11 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
             true,
             new ILoquiRegistration[]
             {
+                PlacedBeam_Registration.Instance,
+                PlacedCreature_Registration.Instance,
+                PlacedGrenade_Registration.Instance,
+                PlacedMissile_Registration.Instance,
+                PlacedNpc_Registration.Instance,
                 PlacedObject_Registration.Instance,
             },
             new InterfaceMappingTypes(

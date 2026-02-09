@@ -4,6 +4,8 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypes
 {
+    public static readonly RecordType ACHR = new(0x52484341);
+    public static readonly RecordType ACRE = new(0x45524341);
     public static readonly RecordType ANAM = new(0x4D414E41);
     public static readonly RecordType ARMO = new(0x4F4D5241);
     public static readonly RecordType ASPC = new(0x43505341);
@@ -12,14 +14,19 @@ public partial class RecordTypes
     public static readonly RecordType CLAS = new(0x53414C43);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType CREA = new(0x41455243);
+    public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DESC = new(0x43534544);
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType EDID = new(0x44494445);
+    public static readonly RecordType EFID = new(0x44494645);
+    public static readonly RecordType EFIT = new(0x54494645);
     public static readonly RecordType EFSH = new(0x48534645);
     public static readonly RecordType ENAM = new(0x4D414E45);
+    public static readonly RecordType ENCH = new(0x48434E45);
+    public static readonly RecordType ENIT = new(0x54494E45);
     public static readonly RecordType ESCE = new(0x45435345);
     public static readonly RecordType EYES = new(0x53455945);
     public static readonly RecordType FACT = new(0x54434146);
@@ -62,6 +69,9 @@ public partial class RecordTypes
     public static readonly RecordType OBND = new(0x444E424F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
+    public static readonly RecordType PBEA = new(0x41454250);
+    public static readonly RecordType PGRE = new(0x45524750);
+    public static readonly RecordType PMIS = new(0x53494D50);
     public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType RACE = new(0x45434152);
     public static readonly RecordType RDAT = new(0x54414452);

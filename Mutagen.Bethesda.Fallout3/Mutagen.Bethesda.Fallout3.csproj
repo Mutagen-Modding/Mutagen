@@ -22,7 +22,14 @@
     <Compile Include="Enum\ClassService.cs" />
     <Compile Include="Enum\CombatReaction.cs" />
     <Compile Include="Enum\GroupTypeEnum.cs" />
+    <Compile Include="Enum\CompareOperator.cs" />
+    <Compile Include="Enum\Function.cs" />
     <Compile Include="Enum\Skill.cs" />
+    <Compile Include="Interfaces\Aspect\IHasEffects.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Aspect\IHasIcons.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -47,6 +54,12 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\Icons_Generated.cs">
       <DependentUpon>Icons.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Effect.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Model.cs">
       <DependentUpon>Model.xml</DependentUpon>
@@ -152,6 +165,9 @@
     </Compile>
     <Compile Include="Records\MajorRecords\MenuIcon.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ObjectEffect.cs">
+      <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -383,6 +399,33 @@
     </Compile>
     <Compile Include="Records\MajorRecords\Grass_Generated.cs">
       <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Condition_Generated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Effect_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EffectData_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ObjectEffect_Generated.cs">
+      <DependentUpon>ObjectEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlacedBeam_Generated.cs">
+      <DependentUpon>PlacedBeam.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlacedCreature_Generated.cs">
+      <DependentUpon>PlacedCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlacedGrenade_Generated.cs">
+      <DependentUpon>PlacedGrenade.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlacedMissile_Generated.cs">
+      <DependentUpon>PlacedMissile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlacedNpc_Generated.cs">
+      <DependentUpon>PlacedNpc.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
