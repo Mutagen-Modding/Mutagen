@@ -12,8 +12,14 @@ namespace Mutagen.Bethesda.Tests;
 public class Fallout3Processor : Processor
 {
     public override bool StrictStrings => true;
-    
-    public Fallout3Processor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+
+    public override KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
+    [
+        // Corrupted compressed LAND record in FalloutNV.esm — bad zlib header
+        new(new RecordType("LAND"), FormKey.Factory("150FC0:FalloutNV.esm")),
+    ];
+
+    public Fallout3Processor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
         : base(workDropoff, GameRelease.Fallout3, masterFlagLookup)
     {
     }
