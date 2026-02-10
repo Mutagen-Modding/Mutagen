@@ -10,16 +10,19 @@ namespace Mutagen.Bethesda.Tests;
 
 public class Fallout3PassthroughTest : PassthroughTest
 {
+    private readonly Fallout3Release _release;
+
     protected override Processor ProcessorFactory() => new Fallout3Processor(WorkDropoff, MasterFlagsLookup);
 
     public Fallout3PassthroughTest(PassthroughTestParams param, GameRelease release)
         : base(param, release)
     {
+        _release = release.ToFallout3Release();
     }
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return Fallout3Mod.Create(Fallout3Release.Fallout3)
+        return Fallout3Mod.Create(_release)
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .Parallel(parallel: Settings.ParallelModTranslations)
@@ -30,7 +33,7 @@ public class Fallout3PassthroughTest : PassthroughTest
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return Fallout3Mod.Create(Fallout3Release.Fallout3)
+        return Fallout3Mod.Create(_release)
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .Parallel(parallel: Settings.ParallelModTranslations)
@@ -43,9 +46,9 @@ public class Fallout3PassthroughTest : PassthroughTest
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
         var wrapper = Fallout3Mod.CreateFromBinaryOverlay(file.Path,
-            Fallout3Release.Fallout3);
+            _release);
         var ret = new Fallout3Mod(ModKey,
-            Fallout3Release.Fallout3);
+            _release);
         ret.DeepCopyIn(wrapper);
         return ret;
     }

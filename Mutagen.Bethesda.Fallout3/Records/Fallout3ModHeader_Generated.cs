@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -117,6 +118,20 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
+        #region OverriddenForms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>? OverriddenForms
+        {
+            get => this._OverriddenForms;
+            set => this._OverriddenForms = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>>? IFallout3ModHeaderGetter.OverriddenForms => _OverriddenForms;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -167,6 +182,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Author = initialValue;
                 this.Description = initialValue;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, []);
+                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -180,7 +196,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Deleted,
                 TItem Author,
                 TItem Description,
-                TItem MasterReferences)
+                TItem MasterReferences,
+                TItem OverriddenForms)
             {
                 this.Flags = Flags;
                 this.FormID = FormID;
@@ -193,6 +210,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Author = Author;
                 this.Description = Description;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, []);
+                this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OverriddenForms, []);
             }
 
             #pragma warning disable CS8618
@@ -215,6 +233,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Author;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>? MasterReferences;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? OverriddenForms;
             #endregion
 
             #region Equals
@@ -238,6 +257,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Author, rhs.Author)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
+                if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -254,6 +274,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Author);
                 hash.Add(this.Description);
                 hash.Add(this.MasterReferences);
+                hash.Add(this.OverriddenForms);
                 return hash.ToHashCode();
             }
 
@@ -288,6 +309,17 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (this.OverriddenForms != null)
+                {
+                    if (!eval(this.OverriddenForms.Overall)) return false;
+                    if (this.OverriddenForms.Specific != null)
+                    {
+                        foreach (var item in this.OverriddenForms.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -318,6 +350,17 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.OverriddenForms != null)
+                {
+                    if (eval(this.OverriddenForms.Overall)) return true;
+                    if (this.OverriddenForms.Specific != null)
+                    {
+                        foreach (var item in this.OverriddenForms.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -357,6 +400,20 @@ namespace Mutagen.Bethesda.Fallout3
                             MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
+                        }
+                    }
+                }
+                if (OverriddenForms != null)
+                {
+                    obj.OverriddenForms = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.OverriddenForms.Overall), []);
+                    if (OverriddenForms.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.OverriddenForms.Specific = l;
+                        foreach (var item in OverriddenForms.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
@@ -437,6 +494,27 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
+                    if ((printMask?.OverriddenForms?.Overall ?? true)
+                        && OverriddenForms is {} OverriddenFormsItem)
+                    {
+                        sb.AppendLine("OverriddenForms =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(OverriddenFormsItem.Overall);
+                            if (OverriddenFormsItem.Specific != null)
+                            {
+                                foreach (var subItem in OverriddenFormsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -472,6 +550,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Author;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>? MasterReferences;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OverriddenForms;
             #endregion
 
             #region IErrorMask
@@ -502,6 +581,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Description;
                     case Fallout3ModHeader_FieldIndex.MasterReferences:
                         return MasterReferences;
+                    case Fallout3ModHeader_FieldIndex.OverriddenForms:
+                        return OverriddenForms;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -544,6 +625,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3ModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Fallout3ModHeader_FieldIndex.OverriddenForms:
+                        this.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -588,6 +672,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3ModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>)obj;
                         break;
+                    case Fallout3ModHeader_FieldIndex.OverriddenForms:
+                        this.OverriddenForms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -607,6 +694,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Author != null) return true;
                 if (Description != null) return true;
                 if (MasterReferences != null) return true;
+                if (OverriddenForms != null) return true;
                 return false;
             }
             #endregion
@@ -678,6 +766,26 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (OverriddenForms is {} OverriddenFormsItem)
+                {
+                    sb.AppendLine("OverriddenForms =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(OverriddenFormsItem.Overall);
+                        if (OverriddenFormsItem.Specific != null)
+                        {
+                            foreach (var subItem in OverriddenFormsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -697,6 +805,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Author = this.Author.Combine(rhs.Author);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
+                ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), Noggog.ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -731,6 +840,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Author;
             public bool Description;
             public MasterReference.TranslationMask? MasterReferences;
+            public bool OverriddenForms;
             #endregion
 
             #region Ctors
@@ -749,6 +859,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
                 this.Description = defaultOn;
+                this.OverriddenForms = defaultOn;
             }
 
             #endregion
@@ -775,6 +886,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Author, null));
                 ret.Add((Description, null));
                 ret.Add((MasterReferences == null ? DefaultOn : !MasterReferences.GetCrystal().CopyNothing, MasterReferences?.GetCrystal()));
+                ret.Add((OverriddenForms, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -787,6 +899,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout3ModHeader_Registration.TriggeringRecordType;
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3ModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout3ModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -849,6 +963,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IFallout3ModHeader :
         IFallout3ModHeaderGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout3ModHeader>
     {
         new Fallout3ModHeader.HeaderFlag Flags { get; set; }
@@ -862,11 +977,13 @@ namespace Mutagen.Bethesda.Fallout3
         new String? Author { get; set; }
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
+        new ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>? OverriddenForms { get; set; }
     }
 
     public partial interface IFallout3ModHeaderGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFallout3ModHeaderGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -887,6 +1004,7 @@ namespace Mutagen.Bethesda.Fallout3
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
+        IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>>? OverriddenForms { get; }
 
     }
 
@@ -1067,6 +1185,7 @@ namespace Mutagen.Bethesda.Fallout3
         Author = 8,
         Description = 9,
         MasterReferences = 10,
+        OverriddenForms = 11,
     }
     #endregion
 
@@ -1077,9 +1196,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Fallout3ModHeader.Mask<>);
 
@@ -1118,7 +1237,9 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.CNAM,
                 RecordTypes.SNAM,
                 RecordTypes.MAST,
-                RecordTypes.DATA);
+                RecordTypes.DATA,
+                RecordTypes.ONAM,
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1174,11 +1295,13 @@ namespace Mutagen.Bethesda.Fallout3
             item.Author = default;
             item.Description = default;
             item.MasterReferences.Clear();
+            item.OverriddenForms = null;
         }
         
         #region Mutagen
         public void RemapLinks(IFallout3ModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.OverriddenForms?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1240,6 +1363,10 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MasterReferences = item.MasterReferences.CollectionEqualsHelper(
                 rhs.MasterReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.OverriddenForms = item.OverriddenForms.CollectionEqualsHelper(
+                rhs.OverriddenForms,
+                (l, r) => object.Equals(l, r),
                 include);
         }
         
@@ -1343,6 +1470,21 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
+            if ((printMask?.OverriddenForms?.Overall ?? true)
+                && item.OverriddenForms is {} OverriddenFormsItem)
+            {
+                sb.AppendLine("OverriddenForms =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in OverriddenFormsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         #region Equals and Hash
@@ -1400,6 +1542,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Fallout3ModHeader_FieldIndex.MasterReferences)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.OverriddenForms) ?? true))
+            {
+                if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
+            }
             return true;
         }
         
@@ -1429,6 +1575,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.MasterReferences);
+            hash.Add(item.OverriddenForms);
             return hash.ToHashCode();
         }
         
@@ -1443,6 +1590,13 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModHeaderGetter obj)
         {
+            if (obj.OverriddenForms is {} OverriddenFormsItem)
+            {
+                foreach (var item in OverriddenFormsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
             yield break;
         }
         
@@ -1546,6 +1700,33 @@ namespace Mutagen.Bethesda.Fallout3
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.OverriddenForms) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3ModHeader_FieldIndex.OverriddenForms);
+                try
+                {
+                    if ((rhs.OverriddenForms != null))
+                    {
+                        item.OverriddenForms = 
+                            rhs.OverriddenForms
+                                .Select(b => (IFormLinkGetter<IFallout3MajorRecordGetter>)new FormLink<IFallout3MajorRecordGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>();
+                    }
+                    else
+                    {
+                        item.OverriddenForms = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1706,6 +1887,17 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout3MajorRecordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.OverriddenForms,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ONAM),
+                overflowRecord: RecordTypes.XXXX,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout3MajorRecordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
         }
 
         public static partial void WriteBinaryMasterReferencesCustom(
@@ -1825,6 +2017,21 @@ namespace Mutagen.Bethesda.Fallout3
                         lastParsed: lastParsed);
                     return (int)Fallout3ModHeader_FieldIndex.MasterReferences;
                 }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OverriddenForms = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout3MajorRecordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>();
+                    return (int)Fallout3ModHeader_FieldIndex.OverriddenForms;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
                     return default(int?);
@@ -1885,6 +2092,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3ModHeaderCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Fallout3ModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1926,6 +2134,7 @@ namespace Mutagen.Bethesda.Fallout3
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>>? OverriddenForms { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2025,6 +2234,21 @@ namespace Mutagen.Bethesda.Fallout3
                         trigger: MasterReference_Registration.TriggerSpecs,
                         factory: MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)Fallout3ModHeader_FieldIndex.MasterReferences;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IFallout3MajorRecordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 4,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(p, s));
+                    return (int)Fallout3ModHeader_FieldIndex.OverriddenForms;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return default(int?);

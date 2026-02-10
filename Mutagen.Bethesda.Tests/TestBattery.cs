@@ -64,7 +64,18 @@ public static class TestBattery
             {
                 await test.Start();
                 sw.Stop();
-                results.Add(new TestResult(test.Name, true, null, sw.ElapsedMilliseconds));
+                var failedTests = test.GetFailedTests().ToList();
+                if (failedTests.Count > 0)
+                {
+                    foreach (var failed in failedTests)
+                    {
+                        results.Add(new TestResult(failed.Name, false, failed.Error, sw.ElapsedMilliseconds));
+                    }
+                }
+                else
+                {
+                    results.Add(new TestResult(test.Name, true, null, sw.ElapsedMilliseconds));
+                }
             }
             catch (Exception ex)
             {

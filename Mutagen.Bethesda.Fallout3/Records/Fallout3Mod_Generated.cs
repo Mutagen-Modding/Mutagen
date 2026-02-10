@@ -2180,6 +2180,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public void RemapLinks(IFallout3Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.ModHeader.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
             obj.HeadParts.RemapLinks(mapping);
             obj.Hairs.RemapLinks(mapping);
@@ -3087,6 +3088,10 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj)
         {
+            foreach (var item in obj.ModHeader.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             foreach (var item in obj.Factions.EnumerateFormLinks())
             {
                 yield return item;

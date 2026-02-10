@@ -28,6 +28,7 @@ public class Test
     public GameRelease? GameRelease { get; }
     public FilePath? FilePath { get; }
     public bool Failed { get; private set; }
+    public Exception? Error { get; private set; }
     public IObservable<string> Output => _output;
     public IObservable<string> AllOutput => Observable.Merge(_children.Select(c => c.AllOutput).And(_output));
     public IObservable<TestState> StateSignal => _stateSignal;
@@ -40,6 +41,14 @@ public class Test
         foreach (var child in _children)
             count += child.CountFailed();
         return count;
+    }
+
+    public IEnumerable<Test> GetFailedTests()
+    {
+        if (Failed) yield return this;
+        foreach (var child in _children)
+        foreach (var failed in child.GetFailedTests())
+            yield return failed;
     }
 
     public Test(string name, IWorkDropoff workDropoff, Func<Subject<string>, Task> toDo, GameRelease? release = null, FilePath? filePath = null)
@@ -80,6 +89,7 @@ public class Test
         catch (Exception ex)
         {
             Failed = true;
+            Error = ex;
             _stateSignal.OnError(ex);
             while (ex != null)
             {
