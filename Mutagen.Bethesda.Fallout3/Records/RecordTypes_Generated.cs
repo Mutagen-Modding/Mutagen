@@ -6,6 +6,7 @@ public partial class RecordTypes
 {
     public static readonly RecordType ACHR = new(0x52484341);
     public static readonly RecordType ACRE = new(0x45524341);
+    public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ANAM = new(0x4D414E41);
     public static readonly RecordType ARMO = new(0x4F4D5241);
     public static readonly RecordType ASPC = new(0x43505341);
@@ -16,10 +17,16 @@ public partial class RecordTypes
     public static readonly RecordType CREA = new(0x41455243);
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType DATA = new(0x41544144);
+    public static readonly RecordType DEBR = new(0x52424544);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DESC = new(0x43534544);
+    public static readonly RecordType DEST = new(0x54534544);
+    public static readonly RecordType DMDL = new(0x4C444D44);
+    public static readonly RecordType DMDT = new(0x54444D44);
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
+    public static readonly RecordType DSTD = new(0x44545344);
+    public static readonly RecordType DSTF = new(0x46545344);
     public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType EFID = new(0x44494645);
     public static readonly RecordType EFIT = new(0x54494645);
@@ -28,6 +35,7 @@ public partial class RecordTypes
     public static readonly RecordType ENCH = new(0x48434E45);
     public static readonly RecordType ENIT = new(0x54494E45);
     public static readonly RecordType ESCE = new(0x45435345);
+    public static readonly RecordType EXPL = new(0x4C505845);
     public static readonly RecordType EYES = new(0x53455945);
     public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FGGA = new(0x41474746);
@@ -80,6 +88,7 @@ public partial class RecordTypes
     public static readonly RecordType SCDA = new(0x41444353);
     public static readonly RecordType SCHR = new(0x52484353);
     public static readonly RecordType SCPT = new(0x54504353);
+    public static readonly RecordType SCRI = new(0x49524353);
     public static readonly RecordType SCRO = new(0x4F524353);
     public static readonly RecordType SCRV = new(0x56524353);
     public static readonly RecordType SCTX = new(0x58544353);
@@ -91,6 +100,7 @@ public partial class RecordTypes
     public static readonly RecordType SOUN = new(0x4E554F53);
     public static readonly RecordType SPEL = new(0x4C455053);
     public static readonly RecordType SPIT = new(0x54495053);
+    public static readonly RecordType TACT = new(0x54434154);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TX00 = new(0x30305854);
@@ -101,11 +111,14 @@ public partial class RecordTypes
     public static readonly RecordType TX05 = new(0x35305854);
     public static readonly RecordType TXST = new(0x54535854);
     public static readonly RecordType UNAM = new(0x4D414E55);
+    public static readonly RecordType VNAM = new(0x4D414E56);
     public static readonly RecordType VTCK = new(0x4B435456);
     public static readonly RecordType VTYP = new(0x50595456);
+    public static readonly RecordType WATR = new(0x52544157);
     public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType WMI1 = new(0x31494D57);
     public static readonly RecordType WNAM = new(0x4D414E57);
+    public static readonly RecordType XATO = new(0x4F544158);
     public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);
     public static readonly RecordType YNAM = new(0x4D414E59);

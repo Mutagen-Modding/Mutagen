@@ -3,6 +3,8 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### IHasDestructible
+- Activator
 ### IHasEffects
 - ObjectEffect
 - Spell
@@ -12,13 +14,16 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LandscapeTexture
 - MenuIcon
 ### IModeled
+- Activator
 - BodyData
 - BodyPartItem
+- DestructionStage
 - Hair
 - HeadPart
 - HeadPartItem
 - MagicEffect
 ### INamed
+- Activator
 - AlternateTexture
 - Class
 - Eyes
@@ -32,10 +37,16 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 ### IObjectBounded
 - AcousticSpace
+- Activator
 - Sound
 - TextureSet
 ## Concrete Classes to Interfaces
 ### AcousticSpace
+- IObjectBounded
+### Activator
+- IHasDestructible
+- IModeled
+- INamed
 - IObjectBounded
 ### AlternateTexture
 - INamed
@@ -46,6 +57,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### Class
 - INamed
+### DestructionStage
+- IModeled
 ### Eyes
 - INamed
 ### Faction

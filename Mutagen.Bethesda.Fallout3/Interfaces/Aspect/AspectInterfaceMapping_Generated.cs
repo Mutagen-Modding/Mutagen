@@ -20,6 +20,16 @@ namespace Mutagen.Bethesda.Fallout3
         public Fallout3AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHasDestructible)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Activator_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasDestructible),
+                    Getter: typeof(IHasDestructibleGetter)));
+            dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
             dict[typeof(IHasEffects)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
@@ -48,8 +58,10 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Activator_Registration.Instance,
                     BodyData_Registration.Instance,
                     BodyPartItem_Registration.Instance,
+                    DestructionStage_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
                     HeadPartItem_Registration.Instance,
@@ -63,6 +75,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Activator_Registration.Instance,
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
@@ -79,6 +92,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Activator_Registration.Instance,
                     AlternateTexture_Registration.Instance,
                     Class_Registration.Instance,
                     Eyes_Registration.Instance,
@@ -133,6 +147,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Activator_Registration.Instance,
                     Sound_Registration.Instance,
                     TextureSet_Registration.Instance,
                 },

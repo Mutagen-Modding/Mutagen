@@ -25,6 +25,11 @@
     <Compile Include="Enum\CompareOperator.cs" />
     <Compile Include="Enum\Function.cs" />
     <Compile Include="Enum\Skill.cs" />
+    <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Aspect\IHasEffects.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -60,6 +65,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Destructible.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Model.cs">
       <DependentUpon>Model.xml</DependentUpon>
@@ -432,6 +440,36 @@
     </Compile>
     <Compile Include="Records\MajorRecords\PlacedNpc_Generated.cs">
       <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Destructible_Generated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DestructableData_Generated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DestructionStage_Generated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DestructionStageData_Generated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Activator.cs">
+      <DependentUpon>Activator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Activator_Generated.cs">
+      <DependentUpon>Activator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Debris_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Explosion_Generated.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\TalkingActivator_Generated.cs">
+      <DependentUpon>TalkingActivator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Water_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

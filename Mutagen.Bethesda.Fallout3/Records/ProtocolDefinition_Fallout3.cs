@@ -10,6 +10,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
     {
         LoquiRegistration.Register(
             AcousticSpace_Registration.Instance,
+            Activator_Registration.Instance,
             AlternateTexture_Registration.Instance,
             AMagicEffectArchetype_Registration.Instance,
             Armor_Registration.Instance,
@@ -22,10 +23,16 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Class_Registration.Instance,
             Condition_Registration.Instance,
             Creature_Registration.Instance,
+            Debris_Registration.Instance,
             Decal_Registration.Instance,
+            DestructableData_Registration.Instance,
+            Destructible_Registration.Instance,
+            DestructionStage_Registration.Instance,
+            DestructionStageData_Registration.Instance,
             Effect_Registration.Instance,
             EffectData_Registration.Instance,
             EffectShader_Registration.Instance,
+            Explosion_Registration.Instance,
             Eye_Registration.Instance,
             Eyes_Registration.Instance,
             FaceGenData_Registration.Instance,
@@ -88,8 +95,10 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             SoundData_Registration.Instance,
             SoundDataExtended_Registration.Instance,
             Spell_Registration.Instance,
+            TalkingActivator_Registration.Instance,
             TextureSet_Registration.Instance,
             VoiceType_Registration.Instance,
+            Water_Registration.Instance,
             Weapon_Registration.Instance
         );
     }

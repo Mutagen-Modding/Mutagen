@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Global" recordType="GLOB" baseClass="Fallout3MajorRecord" objType="Record" abstract="true">
+  <Object name="Global" recordType="GLOB" baseClass="Fallout3MajorRecord" majorFlag="true" objType="Record" abstract="true">
     <Fields>
       <CustomLogic name="TypeChar" recordType="FNAM" />
     </Fields>

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, Armor, Cell, Class, Creature, EffectShader, Eye, Eyes, Faction, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TextureSet, VoiceType, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Armor, Cell, Class, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TalkingActivator, TextureSet, VoiceType, Water, Weapon]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, Armor, Cell, Class, Creature, EffectShader, Eye, Eyes, Faction, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TextureSet, VoiceType, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Armor, Cell, Class, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TalkingActivator, TextureSet, VoiceType, Water, Weapon]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Armor, Cell, Class, Creature, EffectShader, Eye, Eyes, Faction, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TextureSet, VoiceType, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Armor, Cell, Class, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TalkingActivator, TextureSet, VoiceType, Water, Weapon]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,

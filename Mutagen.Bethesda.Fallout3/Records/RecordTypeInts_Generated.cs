@@ -4,6 +4,7 @@ public partial class RecordTypeInts
 {
     public const int ACHR = 0x52484341;
     public const int ACRE = 0x45524341;
+    public const int ACTI = 0x49544341;
     public const int ANAM = 0x4D414E41;
     public const int ARMO = 0x4F4D5241;
     public const int ASPC = 0x43505341;
@@ -14,10 +15,16 @@ public partial class RecordTypeInts
     public const int CREA = 0x41455243;
     public const int CTDA = 0x41445443;
     public const int DATA = 0x41544144;
+    public const int DEBR = 0x52424544;
     public const int DELE = 0x454C4544;
     public const int DESC = 0x43534544;
+    public const int DEST = 0x54534544;
+    public const int DMDL = 0x4C444D44;
+    public const int DMDT = 0x54444D44;
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
+    public const int DSTD = 0x44545344;
+    public const int DSTF = 0x46545344;
     public const int EDID = 0x44494445;
     public const int EFID = 0x44494645;
     public const int EFIT = 0x54494645;
@@ -26,6 +33,7 @@ public partial class RecordTypeInts
     public const int ENCH = 0x48434E45;
     public const int ENIT = 0x54494E45;
     public const int ESCE = 0x45435345;
+    public const int EXPL = 0x4C505845;
     public const int EYES = 0x53455945;
     public const int FACT = 0x54434146;
     public const int FGGA = 0x41474746;
@@ -78,6 +86,7 @@ public partial class RecordTypeInts
     public const int SCDA = 0x41444353;
     public const int SCHR = 0x52484353;
     public const int SCPT = 0x54504353;
+    public const int SCRI = 0x49524353;
     public const int SCRO = 0x4F524353;
     public const int SCRV = 0x56524353;
     public const int SCTX = 0x58544353;
@@ -89,6 +98,7 @@ public partial class RecordTypeInts
     public const int SOUN = 0x4E554F53;
     public const int SPEL = 0x4C455053;
     public const int SPIT = 0x54495053;
+    public const int TACT = 0x54434154;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int TX00 = 0x30305854;
@@ -99,11 +109,14 @@ public partial class RecordTypeInts
     public const int TX05 = 0x35305854;
     public const int TXST = 0x54535854;
     public const int UNAM = 0x4D414E55;
+    public const int VNAM = 0x4D414E56;
     public const int VTCK = 0x4B435456;
     public const int VTYP = 0x50595456;
+    public const int WATR = 0x52544157;
     public const int WEAP = 0x50414557;
     public const int WMI1 = 0x31494D57;
     public const int WNAM = 0x4D414E57;
+    public const int XATO = 0x4F544158;
     public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;
     public const int YNAM = 0x4D414E59;

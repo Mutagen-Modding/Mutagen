@@ -14,6 +14,12 @@ public partial interface IGlobalGetter
 
 public partial class Global : GlobalCustomParsing.IGlobalCommon
 {
+    [Flags]
+    public enum MajorFlag
+    {
+        Constant = 0x0000_0040,
+    }
+
     public abstract float? RawFloat { get; set; }
 
     char IGlobalGetter.TypeChar => throw new NotImplementedException();

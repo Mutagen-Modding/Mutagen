@@ -78,6 +78,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LandscapeTextures_Object = new Fallout3Group<LandscapeTexture>(this);
             _ObjectEffects_Object = new Fallout3Group<ObjectEffect>(this);
             _Spells_Object = new Fallout3Group<Spell>(this);
+            _Activators_Object = new Fallout3Group<Activator>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -209,6 +210,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ISpellGetter> IFallout3ModGetter.Spells => _Spells_Object;
         #endregion
+        #region Activators
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Activator> _Activators_Object;
+        public Fallout3Group<Activator> Activators => _Activators_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IActivatorGetter> IFallout3ModGetter.Activators => _Activators_Object;
+        #endregion
 
         #region To String
 
@@ -266,6 +274,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LandscapeTextures = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.ObjectEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Spells = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Activators = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -286,7 +295,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Scripts,
                 TItem LandscapeTextures,
                 TItem ObjectEffects,
-                TItem Spells)
+                TItem Spells,
+                TItem Activators)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -306,6 +316,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LandscapeTextures = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LandscapeTextures, new Fallout3Group.Mask<TItem>(LandscapeTextures));
                 this.ObjectEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ObjectEffects, new Fallout3Group.Mask<TItem>(ObjectEffects));
                 this.Spells = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Spells, new Fallout3Group.Mask<TItem>(Spells));
+                this.Activators = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Activators, new Fallout3Group.Mask<TItem>(Activators));
             }
 
             #pragma warning disable CS8618
@@ -335,6 +346,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LandscapeTextures { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ObjectEffects { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Spells { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Activators { get; set; }
             #endregion
 
             #region Equals
@@ -365,6 +377,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
                 if (!object.Equals(this.ObjectEffects, rhs.ObjectEffects)) return false;
                 if (!object.Equals(this.Spells, rhs.Spells)) return false;
+                if (!object.Equals(this.Activators, rhs.Activators)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -388,6 +401,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.LandscapeTextures);
                 hash.Add(this.ObjectEffects);
                 hash.Add(this.Spells);
+                hash.Add(this.Activators);
                 return hash.ToHashCode();
             }
 
@@ -486,6 +500,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Spells.Overall)) return false;
                     if (this.Spells.Specific != null && !this.Spells.Specific.All(eval)) return false;
                 }
+                if (Activators != null)
+                {
+                    if (!eval(this.Activators.Overall)) return false;
+                    if (this.Activators.Specific != null && !this.Activators.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -583,6 +602,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Spells.Overall)) return true;
                     if (this.Spells.Specific != null && this.Spells.Specific.Any(eval)) return true;
                 }
+                if (Activators != null)
+                {
+                    if (eval(this.Activators.Overall)) return true;
+                    if (this.Activators.Specific != null && this.Activators.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -615,6 +639,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
                 obj.ObjectEffects = this.ObjectEffects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ObjectEffects.Overall), this.ObjectEffects.Specific?.Translate(eval));
                 obj.Spells = this.Spells == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
+                obj.Activators = this.Activators == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
             }
             #endregion
 
@@ -705,6 +730,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Spells?.Print(sb);
                     }
+                    if (printMask?.Activators?.Overall ?? true)
+                    {
+                        Activators?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -747,6 +776,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<ObjectEffect.ErrorMask>?>? ObjectEffects;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Spell.ErrorMask>?>? Spells;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Activator.ErrorMask>?>? Activators;
             #endregion
 
             #region IErrorMask
@@ -791,6 +821,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return ObjectEffects;
                     case Fallout3Mod_FieldIndex.Spells:
                         return Spells;
+                    case Fallout3Mod_FieldIndex.Activators:
+                        return Activators;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -854,6 +886,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Spells:
                         this.Spells = new MaskItem<Exception?, Fallout3Group.ErrorMask<Spell.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Activators:
+                        this.Activators = new MaskItem<Exception?, Fallout3Group.ErrorMask<Activator.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -919,6 +954,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Spells:
                         this.Spells = (MaskItem<Exception?, Fallout3Group.ErrorMask<Spell.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Activators:
+                        this.Activators = (MaskItem<Exception?, Fallout3Group.ErrorMask<Activator.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -945,6 +983,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (LandscapeTextures != null) return true;
                 if (ObjectEffects != null) return true;
                 if (Spells != null) return true;
+                if (Activators != null) return true;
                 return false;
             }
             #endregion
@@ -988,6 +1027,7 @@ namespace Mutagen.Bethesda.Fallout3
                 LandscapeTextures?.Print(sb);
                 ObjectEffects?.Print(sb);
                 Spells?.Print(sb);
+                Activators?.Print(sb);
             }
             #endregion
 
@@ -1014,6 +1054,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.LandscapeTextures = this.LandscapeTextures.Combine(rhs.LandscapeTextures, (l, r) => l.Combine(r));
                 ret.ObjectEffects = this.ObjectEffects.Combine(rhs.ObjectEffects, (l, r) => l.Combine(r));
                 ret.Spells = this.Spells.Combine(rhs.Spells, (l, r) => l.Combine(r));
+                ret.Activators = this.Activators.Combine(rhs.Activators, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1055,6 +1096,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
             public Fallout3Group.TranslationMask<ObjectEffect.TranslationMask>? ObjectEffects;
             public Fallout3Group.TranslationMask<Spell.TranslationMask>? Spells;
+            public Fallout3Group.TranslationMask<Activator.TranslationMask>? Activators;
             #endregion
 
             #region Ctors
@@ -1097,6 +1139,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((LandscapeTextures != null ? LandscapeTextures.OnOverall : DefaultOn, LandscapeTextures?.GetCrystal()));
                 ret.Add((ObjectEffects != null ? ObjectEffects.OnOverall : DefaultOn, ObjectEffects?.GetCrystal()));
                 ret.Add((Spells != null ? Spells.OnOverall : DefaultOn, Spells?.GetCrystal()));
+                ret.Add((Activators != null ? Activators.OnOverall : DefaultOn, Activators?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1174,6 +1217,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LandscapeTextures_Object = new Fallout3Group<LandscapeTexture>(this);
             _ObjectEffects_Object = new Fallout3Group<ObjectEffect>(this);
             _Spells_Object = new Fallout3Group<Spell>(this);
+            _Activators_Object = new Fallout3Group<Activator>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1247,6 +1291,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Spells ?? true)
             {
                 this.Spells.RecordCache.Set(rhsMod.Spells.RecordCache.Items);
+            }
+            if (mask?.Activators ?? true)
+            {
+                this.Activators.RecordCache.Set(rhsMod.Activators.RecordCache.Items);
             }
         }
 
@@ -1526,6 +1574,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<LandscapeTexture> LandscapeTextures { get; }
         new Fallout3Group<ObjectEffect> ObjectEffects { get; }
         new Fallout3Group<Spell> Spells { get; }
+        new Fallout3Group<Activator> Activators { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1563,6 +1612,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
         IFallout3GroupGetter<IObjectEffectGetter> ObjectEffects { get; }
         IFallout3GroupGetter<ISpellGetter> Spells { get; }
+        IFallout3GroupGetter<IActivatorGetter> Activators { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2131,6 +2181,7 @@ namespace Mutagen.Bethesda.Fallout3
         LandscapeTextures = 15,
         ObjectEffects = 16,
         Spells = 17,
+        Activators = 18,
     }
     #endregion
 
@@ -2141,9 +2192,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2227,6 +2278,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.LandscapeTextures.Clear();
             item.ObjectEffects.Clear();
             item.Spells.Clear();
+            item.Activators.Clear();
         }
         
         #region Mutagen
@@ -2243,6 +2295,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LandscapeTextures.RemapLinks(mapping);
             obj.ObjectEffects.RemapLinks(mapping);
             obj.Spells.RemapLinks(mapping);
+            obj.Activators.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2320,6 +2373,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LandscapeTextures.Remove(keys);
             obj.ObjectEffects.Remove(keys);
             obj.Spells.Remove(keys);
+            obj.Activators.Remove(keys);
         }
         
         public void Remove(
@@ -2503,6 +2557,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Activator":
+                case "IActivatorGetter":
+                case "IActivator":
+                case "IActivatorInternal":
+                    obj.Activators.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -2641,6 +2703,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.LandscapeTextures = MaskItemExt.Factory(item.LandscapeTextures.GetEqualsMask(rhs.LandscapeTextures, include), include);
             ret.ObjectEffects = MaskItemExt.Factory(item.ObjectEffects.GetEqualsMask(rhs.ObjectEffects, include), include);
             ret.Spells = MaskItemExt.Factory(item.Spells.GetEqualsMask(rhs.Spells, include), include);
+            ret.Activators = MaskItemExt.Factory(item.Activators.GetEqualsMask(rhs.Activators, include), include);
         }
         
         public string Print(
@@ -2756,6 +2819,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Spells?.Overall ?? true)
             {
                 item.Spells?.Print(sb, "Spells");
+            }
+            if (printMask?.Activators?.Overall ?? true)
+            {
+                item.Activators?.Print(sb, "Activators");
             }
         }
         
@@ -2910,6 +2977,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isSpellsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Activators) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Activators, rhs.Activators, out var lhsActivators, out var rhsActivators, out var isActivatorsEqual))
+                {
+                    if (!object.Equals(lhsActivators, rhsActivators)) return false;
+                }
+                else if (!isActivatorsEqual) return false;
+            }
             return true;
         }
         
@@ -2934,6 +3009,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.LandscapeTextures);
             hash.Add(item.ObjectEffects);
             hash.Add(item.Spells);
+            hash.Add(item.Activators);
             return hash.ToHashCode();
         }
         
@@ -3065,6 +3141,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ISpell":
                 case "ISpellInternal":
                     return obj.Spells;
+                case "Activator":
+                case "IActivatorGetter":
+                case "IActivator":
+                case "IActivatorInternal":
+                    return obj.Activators;
                 default:
                     return null;
             }
@@ -3082,7 +3163,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[17];
+            Stream[] outputStreams = new Stream[18];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -3101,6 +3182,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 14, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.ObjectEffects, 15, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Spells, 16, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Activators, 17, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -3163,6 +3245,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Spells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Activators.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -3215,6 +3298,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Spells.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Activators.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -3298,6 +3385,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Spells.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Activators.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3505,6 +3596,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Activator":
+                case "IActivatorGetter":
+                case "IActivator":
+                case "IActivatorInternal":
+                    foreach (var item in obj.Activators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -3679,6 +3779,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Spells,
                 groupGetter: (m) => m.Spells))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Activator, IActivatorGetter>(
+                srcGroup: obj.Activators,
+                type: typeof(IActivatorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Activators,
+                groupGetter: (m) => m.Activators))
             {
                 yield return item;
             }
@@ -3947,6 +4056,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Spells,
                         groupGetter: (m) => m.Spells))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Activator":
+                case "IActivatorGetter":
+                case "IActivator":
+                case "IActivatorInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Activator, IActivatorGetter>(
+                        srcGroup: obj.Activators,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Activators,
+                        groupGetter: (m) => m.Activators))
                     {
                         yield return item;
                     }
@@ -4376,6 +4499,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Activators) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Activators);
+                try
+                {
+                    item.Activators.DeepCopyIn(
+                        rhs: rhs.Activators,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Activators));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -4496,6 +4639,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool LandscapeTextures;
         public bool ObjectEffects;
         public bool Spells;
+        public bool Activators;
         public GroupMask()
         {
         }
@@ -4518,6 +4662,7 @@ namespace Mutagen.Bethesda.Fallout3
             LandscapeTextures = defaultValue;
             ObjectEffects = defaultValue;
             Spells = defaultValue;
+            Activators = defaultValue;
         }
     }
 
@@ -4763,6 +4908,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellGetter>(
                         item: SpellsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Activators ?? true)
+            {
+                var ActivatorsItem = item.Activators;
+                if (ActivatorsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
+                        item: ActivatorsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -5075,6 +5231,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Spells;
                 }
+                case RecordTypeInts.ACTI:
+                {
+                    if (importMask?.Activators ?? true)
+                    {
+                        item.Activators.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Activators;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -5325,6 +5495,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? Fallout3GroupBinaryOverlay<ISpellGetter>.Fallout3GroupFactory(_stream, _SpellsLocations, _package) : default;
         public IFallout3GroupGetter<ISpellGetter> Spells => _Spells ?? new Fallout3Group<Spell>(this);
         #endregion
+        #region Activators
+        private List<RangeInt64>? _ActivatorsLocations;
+        private IFallout3GroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? Fallout3GroupBinaryOverlay<IActivatorGetter>.Fallout3GroupFactory(_stream, _ActivatorsLocations, _package) : default;
+        public IFallout3GroupGetter<IActivatorGetter> Activators => _Activators ?? new Fallout3Group<Activator>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5500,6 +5675,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _SpellsLocations ??= new();
                     _SpellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Spells;
+                }
+                case RecordTypeInts.ACTI:
+                {
+                    _ActivatorsLocations ??= new();
+                    _ActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Activators;
                 }
                 default:
                     return default(int?);

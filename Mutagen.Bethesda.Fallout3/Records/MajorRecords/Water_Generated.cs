@@ -39,17 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public abstract partial class Global :
+    public partial class Water :
         Fallout3MajorRecord,
-        IEquatable<IGlobalGetter>,
-        IGlobalInternal,
-        ILoquiObjectSetter<Global>
+        IEquatable<IWaterGetter>,
+        ILoquiObjectSetter<Water>,
+        IWaterInternal
     {
         #region Ctor
-        protected Global()
+        protected Water()
         {
             CustomCtor();
         }
@@ -63,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalMixIn.Print(
+            WaterMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -151,7 +148,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Global.Mask<R>();
+                var ret = new Water.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -165,16 +162,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Global.Mask<bool>? printMask = null)
+            public string Print(Water.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Global.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Water.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Global.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -190,7 +187,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -200,7 +197,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -211,7 +208,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -297,8 +294,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Global_Registration.TriggeringRecordType;
-        public Global(
+        public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
+        public Water(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -306,7 +303,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Global(
+        private Water(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -314,14 +311,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Global(IFallout3Mod mod)
+        public Water(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Global(IFallout3Mod mod, string editorID)
+        public Water(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -331,14 +328,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Global>.ToString(this);
+            return MajorRecordPrinter<Water>.ToString(this);
         }
 
-        public MajorFlag MajorFlags
-        {
-            get => (MajorFlag)this.MajorRecordFlagsRaw;
-            set => this.MajorRecordFlagsRaw = (int)value;
-        }
+        protected override Type LinkType => typeof(IWater);
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -346,16 +340,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWaterGetter rhs) return false;
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGlobalGetter? obj)
+        public bool Equals(IWaterGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -363,15 +357,41 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
+        }
+        #region Binary Create
+        public new static Water CreateFromBinary(
+            MutagenFrame frame,
+            TypedParseParams translationParams = default)
+        {
+            var ret = new Water();
+            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                translationParams: translationParams);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out Water item,
+            TypedParseParams translationParams = default)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(
+                frame: frame,
+                translationParams: translationParams);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -379,94 +399,82 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((GlobalSetterCommon)((IGlobalGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WaterSetterCommon)((IWaterGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Global GetNew()
+        internal static new Water GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new Water();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public partial interface IGlobal :
+    public partial interface IWater :
         IFallout3MajorRecordInternal,
-        IGlobalGetter,
-        ILoquiObjectSetter<IGlobalInternal>
-    {
-        #region Mutagen
-        new Global.MajorFlag MajorFlags { get; set; }
-        #endregion
-
-    }
-
-    public partial interface IGlobalInternal :
-        IFallout3MajorRecordInternal,
-        IGlobal,
-        IGlobalGetter
+        ILoquiObjectSetter<IWaterInternal>,
+        IWaterGetter
     {
     }
 
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public partial interface IGlobalGetter :
+    public partial interface IWaterInternal :
+        IFallout3MajorRecordInternal,
+        IWater,
+        IWaterGetter
+    {
+    }
+
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.WATR)]
+    public partial interface IWaterGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalGetter>
+        ILoquiObject<IWaterGetter>,
+        IMapsToGetter<IWaterGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
-
-        #region Mutagen
-        Global.MajorFlag MajorFlags { get; }
-        #endregion
+        static new ILoquiRegistration StaticRegistration => Water_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class GlobalMixIn
+    public static partial class WaterMixIn
     {
-        public static void Clear(this IGlobalInternal item)
+        public static void Clear(this IWaterInternal item)
         {
-            ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Global.Mask<bool> GetEqualsMask(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
+        public static Water.Mask<bool> GetEqualsMask(
+            this IWaterGetter item,
+            IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IGlobalGetter item,
+            this IWaterGetter item,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Print(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IGlobalGetter item,
+            this IWaterGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
-            ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Print(
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -474,39 +482,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
-            Global.TranslationMask? equalsMask = null)
+            this IWaterGetter item,
+            IWaterGetter rhs,
+            Water.TranslationMask? equalsMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Equals(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IGlobalInternal lhs,
-            IGlobalGetter rhs,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IGlobalInternal lhs,
-            IGlobalGetter rhs,
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -514,55 +522,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
-            Global.TranslationMask? copyMask = null)
+        public static Water DeepCopy(
+            this IWaterGetter item,
+            Water.TranslationMask? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+        public static Water DeepCopy(
+            this IWaterGetter item,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
+        public static Water DeepCopy(
+            this IWaterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Global Duplicate(
-            this IGlobalGetter item,
+        public static Water Duplicate(
+            this IWaterGetter item,
             FormKey formKey,
-            Global.TranslationMask? copyMask = null)
+            Water.TranslationMask? copyMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Global Duplicate(
-            this IGlobalGetter item,
+        public static Water Duplicate(
+            this IWaterGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -572,11 +580,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IGlobalInternal item,
+            this IWaterInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -592,7 +600,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Global_FieldIndex
+    internal enum Water_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -605,9 +613,9 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Registration
-    internal partial class Global_Registration : ILoquiRegistration
+    internal partial class Water_Registration : ILoquiRegistration
     {
-        public static readonly Global_Registration Instance = new Global_Registration();
+        public static readonly Water_Registration Instance = new Water_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -615,23 +623,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Global.Mask<>);
+        public static readonly Type MaskType = typeof(Water.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Global.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Water.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Global);
+        public static readonly Type ClassType = typeof(Water);
 
-        public static readonly Type GetterType = typeof(IGlobalGetter);
+        public static readonly Type GetterType = typeof(IWaterGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGlobal);
+        public static readonly Type SetterType = typeof(IWater);
 
-        public static readonly Type? InternalSetterType = typeof(IGlobalInternal);
+        public static readonly Type? InternalSetterType = typeof(IWaterInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Global";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.Water";
 
-        public const string Name = "Global";
+        public const string Name = "Water";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -639,19 +647,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WATR;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.GLOB);
-            var all = RecordCollection.Factory(
-                RecordTypes.GLOB,
-                RecordTypes.FNAM);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            var all = RecordCollection.Factory(RecordTypes.WATR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(GlobalBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -682,13 +685,13 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class GlobalSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class WaterSetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly GlobalSetterCommon Instance = new GlobalSetterCommon();
+        public new static readonly WaterSetterCommon Instance = new WaterSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGlobalInternal item)
+        public void Clear(IWaterInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -696,16 +699,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (IGlobalInternal)item);
+            Clear(item: (IWaterInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGlobalInternal)item);
+            Clear(item: (IWaterInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IGlobal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWater obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -714,16 +717,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGlobalInternal item,
+            IWaterInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IGlobalInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IWaterInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GlobalBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: GlobalBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: WaterBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: WaterBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -732,7 +735,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Global)item,
+                item: (Water)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -743,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Global)item,
+                item: (Water)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -751,17 +754,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class GlobalCommon : Fallout3MajorRecordCommon
+    internal partial class WaterCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly GlobalCommon Instance = new GlobalCommon();
+        public new static readonly WaterCommon Instance = new WaterCommon();
 
-        public Global.Mask<bool> GetEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
+        public Water.Mask<bool> GetEqualsMask(
+            IWaterGetter item,
+            IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Global.Mask<bool>(false);
-            ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Water.Mask<bool>(false);
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -770,18 +773,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
-            Global.Mask<bool> ret,
+            IWaterGetter item,
+            IWaterGetter rhs,
+            Water.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IGlobalGetter item,
+            IWaterGetter item,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -793,18 +796,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IGlobalGetter item,
+            IWaterGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Global =>");
+                sb.AppendLine($"Water =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Global) =>");
+                sb.AppendLine($"{name} (Water) =>");
             }
             using (sb.Brace())
             {
@@ -816,9 +819,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IGlobalGetter item,
+            IWaterGetter item,
             StructuredStringBuilder sb,
-            Global.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
@@ -826,41 +829,41 @@ namespace Mutagen.Bethesda.Fallout3
                 printMask: printMask);
         }
         
-        public static Global_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static Water_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormVersion:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Version2:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Global_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Water_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -868,8 +871,8 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGlobalGetter? lhs,
-            IGlobalGetter? rhs,
+            IWaterGetter? lhs,
+            IWaterGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -883,8 +886,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGlobalGetter?)lhs,
-                rhs: rhs as IGlobalGetter,
+                lhs: (IWaterGetter?)lhs,
+                rhs: rhs as IWaterGetter,
                 equalsMask: equalsMask);
         }
         
@@ -894,12 +897,12 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGlobalGetter?)lhs,
-                rhs: rhs as IGlobalGetter,
+                lhs: (IWaterGetter?)lhs,
+                rhs: rhs as IWaterGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IGlobalGetter item)
+        public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -908,12 +911,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (IGlobalGetter)item);
+            return GetHashCode(item: (IWaterGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IGlobalGetter)item);
+            return GetHashCode(item: (IWaterGetter)item);
         }
         
         #endregion
@@ -921,11 +924,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Global.GetNew();
+            return Water.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGlobalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -935,12 +938,14 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Duplicate
-        public virtual Global Duplicate(
-            IGlobalGetter item,
+        public Water Duplicate(
+            IWaterGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            var newRec = new Water(formKey, default(Fallout3Release));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
         
         public override Fallout3MajorRecord Duplicate(
@@ -949,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalGetter)item,
+                item: (IWaterGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -960,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalGetter)item,
+                item: (IWaterGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -970,14 +975,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class GlobalSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class WaterSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly GlobalSetterTranslationCommon Instance = new GlobalSetterTranslationCommon();
+        public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IGlobalInternal item,
-            IGlobalGetter rhs,
+        public void DeepCopyIn(
+            IWaterInternal item,
+            IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -990,9 +995,9 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
         }
         
-        public virtual void DeepCopyIn(
-            IGlobal item,
-            IGlobalGetter rhs,
+        public void DeepCopyIn(
+            IWater item,
+            IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1012,8 +1017,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IGlobal item,
-            IGlobalGetter rhs,
+            IWater item,
+            IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1025,8 +1030,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobalInternal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IWaterInternal)item,
+                rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1040,8 +1045,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IWater)item,
+                rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1055,8 +1060,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobalInternal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IWaterInternal)item,
+                rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1070,8 +1075,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IWater)item,
+                rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1079,12 +1084,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Global DeepCopy(
-            IGlobalGetter item,
-            Global.TranslationMask? copyMask = null)
+        public Water DeepCopy(
+            IWaterGetter item,
+            Water.TranslationMask? copyMask = null)
         {
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
+            ((WaterSetterTranslationCommon)((IWaterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1093,30 +1098,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Global DeepCopy(
-            IGlobalGetter item,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+        public Water DeepCopy(
+            IWaterGetter item,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
+            ((WaterSetterTranslationCommon)((IWaterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Global DeepCopy(
-            IGlobalGetter item,
+        public Water DeepCopy(
+            IWaterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
+            ((WaterSetterTranslationCommon)((IWaterGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1132,21 +1137,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Global
+    public partial class Water
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GlobalCommon.Instance;
+        protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return GlobalSetterCommon.Instance;
+            return WaterSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GlobalSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WaterSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1157,45 +1162,24 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class GlobalBinaryWriteTranslation :
+    public partial class WaterBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalBinaryWriteTranslation Instance = new();
+        public new static readonly WaterBinaryWriteTranslation Instance = new();
 
-        public static void WriteRecordTypes(
-            IGlobalGetter item,
+        public void Write(
             MutagenWriter writer,
+            IWaterGetter item,
             TypedWriteParams translationParams)
         {
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
                 item: item,
-                writer: writer,
-                translationParams: translationParams);
-            GlobalBinaryWriteTranslation.WriteBinaryTypeChar(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryTypeCharCustom(
-            MutagenWriter writer,
-            IGlobalGetter item);
-
-        public static void WriteBinaryTypeChar(
-            MutagenWriter writer,
-            IGlobalGetter item)
-        {
-            WriteBinaryTypeCharCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public virtual void Write(
-            MutagenWriter writer,
-            IGlobalGetter item,
-            TypedWriteParams translationParams)
-        {
-            throw new NotImplementedException();
+                translationParams: translationParams,
+                type: RecordTypes.WATR,
+                writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1204,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IWaterGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1215,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IWaterGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1226,61 +1210,25 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IWaterGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class GlobalBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class WaterBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
+        public new static readonly WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
-        public static ParseResult FillBinaryRecordTypes(
-            IGlobalInternal item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.FNAM:
-                {
-                    return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
-                }
-                default:
-                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
-
-        public static partial ParseResult FillBinaryTypeCharCustom(
-            MutagenFrame frame,
-            IGlobalInternal item,
-            PreviousParse lastParsed);
-
+        public override RecordType RecordType => RecordTypes.WATR;
     }
 
 }
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class GlobalBinaryTranslationMixIn
+    public static class WaterBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1289,49 +1237,44 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal abstract partial class GlobalBinaryOverlay :
+    internal partial class WaterBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        IGlobalGetter
+        IWaterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GlobalCommon.Instance;
+        protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GlobalSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WaterSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        public Global.MajorFlag MajorFlags => (Global.MajorFlag)this.MajorRecordFlagsRaw;
+        protected override Type LinkType => typeof(IWaterGetter);
 
-        #region TypeChar
-        public partial ParseResult TypeCharCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
-        #endregion
+
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected GlobalBinaryOverlay(
+        protected WaterBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1341,44 +1284,54 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-
-        public override ParseResult FillRecordType(
+        public static IWaterGetter WaterFactory(
             OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
+            BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.FNAM:
-                {
-                    return TypeCharCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: translationParams.WithNoConverter());
-            }
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
+            var ret = new WaterBinaryOverlay(
+                memoryPair: memoryPair,
+                package: package);
+            ret._package.FormVersion = ret;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                translationParams: translationParams,
+                fill: ret.FillRecordType);
+            return ret;
         }
+
+        public static IWaterGetter WaterFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams translationParams = default)
+        {
+            return WaterFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                translationParams: translationParams);
+        }
+
         #region To String
 
         public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalMixIn.Print(
+            WaterMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1388,7 +1341,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Global>.ToString(this);
+            return MajorRecordPrinter<Water>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1398,16 +1351,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWaterGetter rhs) return false;
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGlobalGetter? obj)
+        public bool Equals(IWaterGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

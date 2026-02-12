@@ -20,6 +20,7 @@
       <Group name="LandscapeTextures" refName="LandscapeTexture" />
       <Group name="ObjectEffects" refName="ObjectEffect" />
       <Group name="Spells" refName="Spell" />
+      <Group name="Activators" refName="Activator" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

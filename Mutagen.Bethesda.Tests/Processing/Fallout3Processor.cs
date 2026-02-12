@@ -29,6 +29,7 @@ public class Fallout3Processor : Processor
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.FACT, ProcessFactions);
+        AddDynamicProcessing(RecordTypes.ACTI, ProcessDestructible);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -47,6 +48,17 @@ public class Fallout3Processor : Processor
         {
             var dataIndex = dataRec.EndLocation;
             ProcessZeroFloat(majorFrame, fileOffset, ref dataIndex);
+        }
+    }
+
+    private void ProcessDestructible(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(new RecordType("DEST"), out var dest))
+        {
+            // DEST layout: Int32 Health (4), UInt8 DESTCount (1), Bool VATSTargetable (1), ByteArray Unused (2)
+            ProcessBool(dest, fileOffset, 5, 1, 1);
         }
     }
 
