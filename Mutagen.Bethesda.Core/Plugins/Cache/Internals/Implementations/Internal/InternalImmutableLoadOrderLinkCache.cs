@@ -60,7 +60,7 @@ internal sealed class InternalImmutableLoadOrderLinkCache
             {
                 modsByKey.Add(modGetter.ModKey, modGetter.ToUntypedImmutableLinkCache(prefs));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ArgumentException(
                     $"Mods with duplicate ModKeys were passed into the Link Cache: {modGetter.ModKey}");
