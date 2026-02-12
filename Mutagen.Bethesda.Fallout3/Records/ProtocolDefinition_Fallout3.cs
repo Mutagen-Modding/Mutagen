@@ -87,6 +87,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Sound_Registration.Instance,
             SoundData_Registration.Instance,
             SoundDataExtended_Registration.Instance,
+            Spell_Registration.Instance,
             TextureSet_Registration.Instance,
             VoiceType_Registration.Instance,
             Weapon_Registration.Instance

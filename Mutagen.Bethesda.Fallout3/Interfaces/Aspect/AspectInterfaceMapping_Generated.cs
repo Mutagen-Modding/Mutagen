@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     ObjectEffect_Registration.Instance,
+                    Spell_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasEffects),
@@ -68,6 +69,7 @@ namespace Mutagen.Bethesda.Fallout3
                     MagicEffect_Registration.Instance,
                     ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
+                    Spell_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamed),
@@ -87,6 +89,7 @@ namespace Mutagen.Bethesda.Fallout3
                     MagicEffect_Registration.Instance,
                     ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
+                    Spell_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),

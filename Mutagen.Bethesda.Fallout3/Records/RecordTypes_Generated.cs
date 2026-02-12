@@ -89,6 +89,8 @@ public partial class RecordTypes
     public static readonly RecordType SNDD = new(0x44444E53);
     public static readonly RecordType SNDX = new(0x58444E53);
     public static readonly RecordType SOUN = new(0x4E554F53);
+    public static readonly RecordType SPEL = new(0x4C455053);
+    public static readonly RecordType SPIT = new(0x54495053);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TX00 = new(0x30305854);

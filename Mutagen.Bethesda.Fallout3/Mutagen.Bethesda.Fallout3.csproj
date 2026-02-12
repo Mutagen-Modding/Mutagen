@@ -181,6 +181,12 @@
     <Compile Include="Records\MajorRecords\Script_Generated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Spell.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Spell_Generated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\SoundData.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>

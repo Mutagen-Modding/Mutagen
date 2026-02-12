@@ -87,6 +87,8 @@ public partial class RecordTypeInts
     public const int SNDD = 0x44444E53;
     public const int SNDX = 0x58444E53;
     public const int SOUN = 0x4E554F53;
+    public const int SPEL = 0x4C455053;
+    public const int SPIT = 0x54495053;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int TX00 = 0x30305854;

@@ -5,6 +5,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IHasEffects
 - ObjectEffect
+- Spell
 ### IHasIcons
 - BodyPartItem
 - HeadPartItem
@@ -28,6 +29,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - ObjectEffect
 - Race
+- Spell
 ### IObjectBounded
 - AcousticSpace
 - Sound
@@ -73,5 +75,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Sound
 - IObjectBounded
+### Spell
+- IHasEffects
+- INamed
 ### TextureSet
 - IObjectBounded

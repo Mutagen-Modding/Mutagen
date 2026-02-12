@@ -19,6 +19,7 @@
       <Group name="Scripts" refName="Script" />
       <Group name="LandscapeTextures" refName="LandscapeTexture" />
       <Group name="ObjectEffects" refName="ObjectEffect" />
+      <Group name="Spells" refName="Spell" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
