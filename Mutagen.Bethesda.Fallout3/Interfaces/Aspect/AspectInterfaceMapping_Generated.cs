@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
+                    Class_Registration.Instance,
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
@@ -113,6 +114,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Class_Registration.Instance,
                     HeadPart_Registration.Instance,
                     Race_Registration.Instance,
                 },

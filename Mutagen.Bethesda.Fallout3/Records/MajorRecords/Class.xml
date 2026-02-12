@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Class" recordType="CLAS" objType="Record" baseClass="Fallout3MajorRecord">
     <Fields>
-      <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <String name="Icon" recordType="ICON" />
       <Data>

@@ -57,15 +57,26 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamedRequired, ITranslatedNamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public TranslatedString Name { get; set; } = string.Empty;
-        ITranslatedStringGetter IClassGetter.Name => this.Name;
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IClassGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
         {
@@ -974,13 +985,15 @@ namespace Mutagen.Bethesda.Fallout3
         IClassGetter,
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<IClassInternal>,
+        INamed,
         INamedRequired,
+        ITranslatedNamed,
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamedRequired, ITranslatedNamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new TranslatedString Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
         new String? Icon { get; set; }
         new ActorValue[] TagSkills { get; }
@@ -1006,15 +1019,17 @@ namespace Mutagen.Bethesda.Fallout3
         IBinaryItem,
         ILoquiObject<IClassGetter>,
         IMapsToGetter<IClassGetter>,
+        INamedGetter,
         INamedRequiredGetter,
+        ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Class_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedRequiredGetter, ITranslatedNamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        ITranslatedStringGetter Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter Description { get; }
         String? Icon { get; }
@@ -1305,7 +1320,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IClassInternal item)
         {
             ClearPartial();
-            item.Name.Clear();
+            item.Name = default;
             item.Description.Clear();
             item.Icon = default;
             item.TagSkills.Reset();
@@ -1465,9 +1480,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Name ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
             {
-                sb.AppendItem(item.Name, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Description ?? true)
             {
@@ -1646,7 +1662,10 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IClassGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Name);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
             hash.Add(item.Description);
             if (item.Icon is {} Iconitem)
             {
@@ -1767,7 +1786,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name.DeepCopy();
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
@@ -1974,7 +1993,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
@@ -2228,10 +2247,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         #region Description
