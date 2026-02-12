@@ -465,6 +465,9 @@
     <Compile Include="Records\MajorRecords\Explosion_Generated.cs">
       <DependentUpon>Explosion.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\TalkingActivator.cs">
+      <DependentUpon>TalkingActivator.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\TalkingActivator_Generated.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
     </Compile>

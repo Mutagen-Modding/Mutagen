@@ -21,6 +21,7 @@
       <Group name="ObjectEffects" refName="ObjectEffect" />
       <Group name="Spells" refName="Spell" />
       <Group name="Activators" refName="Activator" />
+      <Group name="TalkingActivators" refName="TalkingActivator" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

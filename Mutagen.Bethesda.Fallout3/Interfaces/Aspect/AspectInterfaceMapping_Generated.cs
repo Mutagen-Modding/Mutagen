@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasDestructible),
@@ -66,6 +67,7 @@ namespace Mutagen.Bethesda.Fallout3
                     HeadPart_Registration.Instance,
                     HeadPartItem_Registration.Instance,
                     MagicEffect_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IModeled),
@@ -84,6 +86,7 @@ namespace Mutagen.Bethesda.Fallout3
                     ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
                     Spell_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamed),
@@ -105,6 +108,7 @@ namespace Mutagen.Bethesda.Fallout3
                     ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
                     Spell_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),
@@ -117,6 +121,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Class_Registration.Instance,
                     HeadPart_Registration.Instance,
                     Race_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(ITranslatedNamed),
@@ -130,6 +135,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Eyes_Registration.Instance,
                     HeadPart_Registration.Instance,
                     Race_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(ITranslatedNamedRequired),
@@ -151,6 +157,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     Sound_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
                     TextureSet_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
