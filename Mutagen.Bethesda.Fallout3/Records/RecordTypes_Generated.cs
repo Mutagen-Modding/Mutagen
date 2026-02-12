@@ -102,6 +102,8 @@ public partial class RecordTypes
     public static readonly RecordType VTCK = new(0x4B435456);
     public static readonly RecordType VTYP = new(0x50595456);
     public static readonly RecordType WEAP = new(0x50414557);
+    public static readonly RecordType WMI1 = new(0x31494D57);
+    public static readonly RecordType WNAM = new(0x4D414E57);
     public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);
     public static readonly RecordType YNAM = new(0x4D414E59);

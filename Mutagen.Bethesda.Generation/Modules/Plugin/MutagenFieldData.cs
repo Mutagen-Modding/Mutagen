@@ -33,6 +33,8 @@ public class MutagenFieldData
     public ushort? CustomVersion;
     public List<(ushort Version, VersionAction Action)> Versioning = new();
     public bool HasVersioning => Versioning.Count > 0;
+    public List<(float Version, VersionAction Action)> ModHeaderVersioning = new();
+    public bool HasModHeaderVersioning => ModHeaderVersioning.Count > 0;
     public bool IsAfterBreak;
     public bool Circular;
     public bool NotDuplicate;

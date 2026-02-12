@@ -100,6 +100,8 @@ public partial class RecordTypeInts
     public const int VTCK = 0x4B435456;
     public const int VTYP = 0x50595456;
     public const int WEAP = 0x50414557;
+    public const int WMI1 = 0x31494D57;
+    public const int WNAM = 0x4D414E57;
     public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;
     public const int YNAM = 0x4D414E59;

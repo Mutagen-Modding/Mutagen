@@ -4,6 +4,9 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <String name="File" recordType="FNAM" />
+      <UInt8 name="RandomChancePercent" recordType="RNAM">
+        <ModHeaderVersioning version="1.32" />
+      </UInt8>
       <RefDirect name="Data" refName="SoundData" />
       <Array name="AttenuationCurve" fixedSize="5" recordType="ANAM" >
         <Int16 />

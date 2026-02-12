@@ -3,9 +3,20 @@
   <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="Fallout3MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <FormLink name="LoopingSound" refName="Sound" recordType="SNAM" />
+      <CustomLogic name="SoundLoop" recordType="SNAM" />
+      <FormLink name="DawnDefaultLoop" refName="Sound" binary="NoGeneration" />
+      <FormLink name="Afternoon" refName="Sound" binary="NoGeneration" />
+      <FormLink name="Dusk" refName="Sound" binary="NoGeneration" />
+      <FormLink name="Night" refName="Sound" binary="NoGeneration" />
+      <FormLink name="Walla" refName="Sound" binary="NoGeneration" />
+      <UInt32 name="WallaTriggerCount" recordType="WNAM">
+        <ModHeaderVersioning version="1.32" />
+      </UInt32>
       <FormLink name="UseSoundFromRegion" refName="Region" recordType="RDAT" />
       <Enum name="EnvironmentType" enumName="AcousticSpace.EnvironmentTypeEnum" recordType="ANAM" />
+      <Bool name="IsInterior" recordType="INAM" byteLength="4">
+        <ModHeaderVersioning version="1.32" />
+      </Bool>
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IReferenceableObject</LinkInterface>

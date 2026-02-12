@@ -172,9 +172,18 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
                 throw new NotImplementedException();
         }
 
-        if (dataType == null && data.HasVersioning && !typeGen.Nullable)
+        if (dataType == null && (data.HasVersioning || data.HasModHeaderVersioning) && !typeGen.Nullable)
         {
-            sb.AppendLine($"private bool _{typeGen.Name}_IsSet => {VersioningModule.GetVersionIfCheck(data, "_package.FormVersion!.FormVersion!.Value")};");
+            var checks = new List<string>();
+            if (data.HasVersioning)
+            {
+                checks.Add(VersioningModule.GetVersionIfCheck(data, "_package.FormVersion!.FormVersion!.Value"));
+            }
+            if (data.HasModHeaderVersioning)
+            {
+                checks.Add(VersioningModule.GetModHeaderVersionIfCheck(data, "_package.MetaData.ModHeaderVersion!.Value"));
+            }
+            sb.AppendLine($"private bool _{typeGen.Name}_IsSet => {string.Join(" && ", checks)};");
         }
         if (data.HasTrigger)
         {
@@ -198,7 +207,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
         }
 
-        bool isSetCheck = dataType != null || data.HasVersioning;
+        bool isSetCheck = dataType != null || data.HasVersioning || data.HasModHeaderVersioning;
 
         if (eType.NullableFallbackInt != null)
         {

@@ -75,15 +75,60 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region LoopingSound
-        private readonly IFormLinkNullable<ISoundGetter> _LoopingSound = new FormLinkNullable<ISoundGetter>();
-        public IFormLinkNullable<ISoundGetter> LoopingSound
+        #region DawnDefaultLoop
+        private readonly IFormLink<ISoundGetter> _DawnDefaultLoop = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> DawnDefaultLoop
         {
-            get => _LoopingSound;
-            set => _LoopingSound.SetTo(value);
+            get => _DawnDefaultLoop;
+            set => _DawnDefaultLoop.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundGetter> IAcousticSpaceGetter.LoopingSound => this.LoopingSound;
+        IFormLinkGetter<ISoundGetter> IAcousticSpaceGetter.DawnDefaultLoop => this.DawnDefaultLoop;
+        #endregion
+        #region Afternoon
+        private readonly IFormLink<ISoundGetter> _Afternoon = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Afternoon
+        {
+            get => _Afternoon;
+            set => _Afternoon.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IAcousticSpaceGetter.Afternoon => this.Afternoon;
+        #endregion
+        #region Dusk
+        private readonly IFormLink<ISoundGetter> _Dusk = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Dusk
+        {
+            get => _Dusk;
+            set => _Dusk.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IAcousticSpaceGetter.Dusk => this.Dusk;
+        #endregion
+        #region Night
+        private readonly IFormLink<ISoundGetter> _Night = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Night
+        {
+            get => _Night;
+            set => _Night.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IAcousticSpaceGetter.Night => this.Night;
+        #endregion
+        #region Walla
+        private readonly IFormLink<ISoundGetter> _Walla = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Walla
+        {
+            get => _Walla;
+            set => _Walla.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IAcousticSpaceGetter.Walla => this.Walla;
+        #endregion
+        #region WallaTriggerCount
+        public UInt32? WallaTriggerCount { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IAcousticSpaceGetter.WallaTriggerCount => this.WallaTriggerCount;
         #endregion
         #region UseSoundFromRegion
         private readonly IFormLinkNullable<IRegionGetter> _UseSoundFromRegion = new FormLinkNullable<IRegionGetter>();
@@ -99,6 +144,11 @@ namespace Mutagen.Bethesda.Fallout3
         public AcousticSpace.EnvironmentTypeEnum? EnvironmentType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         AcousticSpace.EnvironmentTypeEnum? IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType;
+        #endregion
+        #region IsInterior
+        public Boolean? IsInterior { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IAcousticSpaceGetter.IsInterior => this.IsInterior;
         #endregion
 
         #region To String
@@ -126,9 +176,15 @@ namespace Mutagen.Bethesda.Fallout3
             : base(initialValue)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.LoopingSound = initialValue;
+                this.DawnDefaultLoop = initialValue;
+                this.Afternoon = initialValue;
+                this.Dusk = initialValue;
+                this.Night = initialValue;
+                this.Walla = initialValue;
+                this.WallaTriggerCount = initialValue;
                 this.UseSoundFromRegion = initialValue;
                 this.EnvironmentType = initialValue;
+                this.IsInterior = initialValue;
             }
 
             public Mask(
@@ -140,9 +196,15 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
                 TItem ObjectBounds,
-                TItem LoopingSound,
+                TItem DawnDefaultLoop,
+                TItem Afternoon,
+                TItem Dusk,
+                TItem Night,
+                TItem Walla,
+                TItem WallaTriggerCount,
                 TItem UseSoundFromRegion,
-                TItem EnvironmentType)
+                TItem EnvironmentType,
+                TItem IsInterior)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -153,9 +215,15 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.LoopingSound = LoopingSound;
+                this.DawnDefaultLoop = DawnDefaultLoop;
+                this.Afternoon = Afternoon;
+                this.Dusk = Dusk;
+                this.Night = Night;
+                this.Walla = Walla;
+                this.WallaTriggerCount = WallaTriggerCount;
                 this.UseSoundFromRegion = UseSoundFromRegion;
                 this.EnvironmentType = EnvironmentType;
+                this.IsInterior = IsInterior;
             }
 
             #pragma warning disable CS8618
@@ -168,9 +236,15 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem LoopingSound;
+            public TItem DawnDefaultLoop;
+            public TItem Afternoon;
+            public TItem Dusk;
+            public TItem Night;
+            public TItem Walla;
+            public TItem WallaTriggerCount;
             public TItem UseSoundFromRegion;
             public TItem EnvironmentType;
+            public TItem IsInterior;
             #endregion
 
             #region Equals
@@ -185,18 +259,30 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
+                if (!object.Equals(this.DawnDefaultLoop, rhs.DawnDefaultLoop)) return false;
+                if (!object.Equals(this.Afternoon, rhs.Afternoon)) return false;
+                if (!object.Equals(this.Dusk, rhs.Dusk)) return false;
+                if (!object.Equals(this.Night, rhs.Night)) return false;
+                if (!object.Equals(this.Walla, rhs.Walla)) return false;
+                if (!object.Equals(this.WallaTriggerCount, rhs.WallaTriggerCount)) return false;
                 if (!object.Equals(this.UseSoundFromRegion, rhs.UseSoundFromRegion)) return false;
                 if (!object.Equals(this.EnvironmentType, rhs.EnvironmentType)) return false;
+                if (!object.Equals(this.IsInterior, rhs.IsInterior)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.LoopingSound);
+                hash.Add(this.DawnDefaultLoop);
+                hash.Add(this.Afternoon);
+                hash.Add(this.Dusk);
+                hash.Add(this.Night);
+                hash.Add(this.Walla);
+                hash.Add(this.WallaTriggerCount);
                 hash.Add(this.UseSoundFromRegion);
                 hash.Add(this.EnvironmentType);
+                hash.Add(this.IsInterior);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -212,9 +298,15 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.LoopingSound)) return false;
+                if (!eval(this.DawnDefaultLoop)) return false;
+                if (!eval(this.Afternoon)) return false;
+                if (!eval(this.Dusk)) return false;
+                if (!eval(this.Night)) return false;
+                if (!eval(this.Walla)) return false;
+                if (!eval(this.WallaTriggerCount)) return false;
                 if (!eval(this.UseSoundFromRegion)) return false;
                 if (!eval(this.EnvironmentType)) return false;
+                if (!eval(this.IsInterior)) return false;
                 return true;
             }
             #endregion
@@ -228,9 +320,15 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.LoopingSound)) return true;
+                if (eval(this.DawnDefaultLoop)) return true;
+                if (eval(this.Afternoon)) return true;
+                if (eval(this.Dusk)) return true;
+                if (eval(this.Night)) return true;
+                if (eval(this.Walla)) return true;
+                if (eval(this.WallaTriggerCount)) return true;
                 if (eval(this.UseSoundFromRegion)) return true;
                 if (eval(this.EnvironmentType)) return true;
+                if (eval(this.IsInterior)) return true;
                 return false;
             }
             #endregion
@@ -247,9 +345,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.LoopingSound = eval(this.LoopingSound);
+                obj.DawnDefaultLoop = eval(this.DawnDefaultLoop);
+                obj.Afternoon = eval(this.Afternoon);
+                obj.Dusk = eval(this.Dusk);
+                obj.Night = eval(this.Night);
+                obj.Walla = eval(this.Walla);
+                obj.WallaTriggerCount = eval(this.WallaTriggerCount);
                 obj.UseSoundFromRegion = eval(this.UseSoundFromRegion);
                 obj.EnvironmentType = eval(this.EnvironmentType);
+                obj.IsInterior = eval(this.IsInterior);
             }
             #endregion
 
@@ -272,9 +376,29 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.LoopingSound ?? true)
+                    if (printMask?.DawnDefaultLoop ?? true)
                     {
-                        sb.AppendItem(LoopingSound, "LoopingSound");
+                        sb.AppendItem(DawnDefaultLoop, "DawnDefaultLoop");
+                    }
+                    if (printMask?.Afternoon ?? true)
+                    {
+                        sb.AppendItem(Afternoon, "Afternoon");
+                    }
+                    if (printMask?.Dusk ?? true)
+                    {
+                        sb.AppendItem(Dusk, "Dusk");
+                    }
+                    if (printMask?.Night ?? true)
+                    {
+                        sb.AppendItem(Night, "Night");
+                    }
+                    if (printMask?.Walla ?? true)
+                    {
+                        sb.AppendItem(Walla, "Walla");
+                    }
+                    if (printMask?.WallaTriggerCount ?? true)
+                    {
+                        sb.AppendItem(WallaTriggerCount, "WallaTriggerCount");
                     }
                     if (printMask?.UseSoundFromRegion ?? true)
                     {
@@ -283,6 +407,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.EnvironmentType ?? true)
                     {
                         sb.AppendItem(EnvironmentType, "EnvironmentType");
+                    }
+                    if (printMask?.IsInterior ?? true)
+                    {
+                        sb.AppendItem(IsInterior, "IsInterior");
                     }
                 }
             }
@@ -296,9 +424,15 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? LoopingSound;
+            public Exception? DawnDefaultLoop;
+            public Exception? Afternoon;
+            public Exception? Dusk;
+            public Exception? Night;
+            public Exception? Walla;
+            public Exception? WallaTriggerCount;
             public Exception? UseSoundFromRegion;
             public Exception? EnvironmentType;
+            public Exception? IsInterior;
             #endregion
 
             #region IErrorMask
@@ -309,12 +443,24 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case AcousticSpace_FieldIndex.LoopingSound:
-                        return LoopingSound;
+                    case AcousticSpace_FieldIndex.DawnDefaultLoop:
+                        return DawnDefaultLoop;
+                    case AcousticSpace_FieldIndex.Afternoon:
+                        return Afternoon;
+                    case AcousticSpace_FieldIndex.Dusk:
+                        return Dusk;
+                    case AcousticSpace_FieldIndex.Night:
+                        return Night;
+                    case AcousticSpace_FieldIndex.Walla:
+                        return Walla;
+                    case AcousticSpace_FieldIndex.WallaTriggerCount:
+                        return WallaTriggerCount;
                     case AcousticSpace_FieldIndex.UseSoundFromRegion:
                         return UseSoundFromRegion;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         return EnvironmentType;
+                    case AcousticSpace_FieldIndex.IsInterior:
+                        return IsInterior;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -328,14 +474,32 @@ namespace Mutagen.Bethesda.Fallout3
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case AcousticSpace_FieldIndex.LoopingSound:
-                        this.LoopingSound = ex;
+                    case AcousticSpace_FieldIndex.DawnDefaultLoop:
+                        this.DawnDefaultLoop = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.Afternoon:
+                        this.Afternoon = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.Dusk:
+                        this.Dusk = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.Night:
+                        this.Night = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.Walla:
+                        this.Walla = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.WallaTriggerCount:
+                        this.WallaTriggerCount = ex;
                         break;
                     case AcousticSpace_FieldIndex.UseSoundFromRegion:
                         this.UseSoundFromRegion = ex;
                         break;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         this.EnvironmentType = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.IsInterior:
+                        this.IsInterior = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -351,14 +515,32 @@ namespace Mutagen.Bethesda.Fallout3
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.LoopingSound:
-                        this.LoopingSound = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.DawnDefaultLoop:
+                        this.DawnDefaultLoop = (Exception?)obj;
+                        break;
+                    case AcousticSpace_FieldIndex.Afternoon:
+                        this.Afternoon = (Exception?)obj;
+                        break;
+                    case AcousticSpace_FieldIndex.Dusk:
+                        this.Dusk = (Exception?)obj;
+                        break;
+                    case AcousticSpace_FieldIndex.Night:
+                        this.Night = (Exception?)obj;
+                        break;
+                    case AcousticSpace_FieldIndex.Walla:
+                        this.Walla = (Exception?)obj;
+                        break;
+                    case AcousticSpace_FieldIndex.WallaTriggerCount:
+                        this.WallaTriggerCount = (Exception?)obj;
                         break;
                     case AcousticSpace_FieldIndex.UseSoundFromRegion:
                         this.UseSoundFromRegion = (Exception?)obj;
                         break;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         this.EnvironmentType = (Exception?)obj;
+                        break;
+                    case AcousticSpace_FieldIndex.IsInterior:
+                        this.IsInterior = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -370,9 +552,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
-                if (LoopingSound != null) return true;
+                if (DawnDefaultLoop != null) return true;
+                if (Afternoon != null) return true;
+                if (Dusk != null) return true;
+                if (Night != null) return true;
+                if (Walla != null) return true;
+                if (WallaTriggerCount != null) return true;
                 if (UseSoundFromRegion != null) return true;
                 if (EnvironmentType != null) return true;
+                if (IsInterior != null) return true;
                 return false;
             }
             #endregion
@@ -401,13 +589,31 @@ namespace Mutagen.Bethesda.Fallout3
                 base.PrintFillInternal(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(LoopingSound, "LoopingSound");
+                    sb.AppendItem(DawnDefaultLoop, "DawnDefaultLoop");
+                }
+                {
+                    sb.AppendItem(Afternoon, "Afternoon");
+                }
+                {
+                    sb.AppendItem(Dusk, "Dusk");
+                }
+                {
+                    sb.AppendItem(Night, "Night");
+                }
+                {
+                    sb.AppendItem(Walla, "Walla");
+                }
+                {
+                    sb.AppendItem(WallaTriggerCount, "WallaTriggerCount");
                 }
                 {
                     sb.AppendItem(UseSoundFromRegion, "UseSoundFromRegion");
                 }
                 {
                     sb.AppendItem(EnvironmentType, "EnvironmentType");
+                }
+                {
+                    sb.AppendItem(IsInterior, "IsInterior");
                 }
             }
             #endregion
@@ -418,9 +624,15 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
+                ret.DawnDefaultLoop = this.DawnDefaultLoop.Combine(rhs.DawnDefaultLoop);
+                ret.Afternoon = this.Afternoon.Combine(rhs.Afternoon);
+                ret.Dusk = this.Dusk.Combine(rhs.Dusk);
+                ret.Night = this.Night.Combine(rhs.Night);
+                ret.Walla = this.Walla.Combine(rhs.Walla);
+                ret.WallaTriggerCount = this.WallaTriggerCount.Combine(rhs.WallaTriggerCount);
                 ret.UseSoundFromRegion = this.UseSoundFromRegion.Combine(rhs.UseSoundFromRegion);
                 ret.EnvironmentType = this.EnvironmentType.Combine(rhs.EnvironmentType);
+                ret.IsInterior = this.IsInterior.Combine(rhs.IsInterior);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -444,9 +656,15 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool LoopingSound;
+            public bool DawnDefaultLoop;
+            public bool Afternoon;
+            public bool Dusk;
+            public bool Night;
+            public bool Walla;
+            public bool WallaTriggerCount;
             public bool UseSoundFromRegion;
             public bool EnvironmentType;
+            public bool IsInterior;
             #endregion
 
             #region Ctors
@@ -455,9 +673,15 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.LoopingSound = defaultOn;
+                this.DawnDefaultLoop = defaultOn;
+                this.Afternoon = defaultOn;
+                this.Dusk = defaultOn;
+                this.Night = defaultOn;
+                this.Walla = defaultOn;
+                this.WallaTriggerCount = defaultOn;
                 this.UseSoundFromRegion = defaultOn;
                 this.EnvironmentType = defaultOn;
+                this.IsInterior = defaultOn;
             }
 
             #endregion
@@ -466,9 +690,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((LoopingSound, null));
+                ret.Add((DawnDefaultLoop, null));
+                ret.Add((Afternoon, null));
+                ret.Add((Dusk, null));
+                ret.Add((Night, null));
+                ret.Add((Walla, null));
+                ret.Add((WallaTriggerCount, null));
                 ret.Add((UseSoundFromRegion, null));
                 ret.Add((EnvironmentType, null));
+                ret.Add((IsInterior, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -613,9 +843,15 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new IFormLinkNullable<ISoundGetter> LoopingSound { get; set; }
+        new IFormLink<ISoundGetter> DawnDefaultLoop { get; set; }
+        new IFormLink<ISoundGetter> Afternoon { get; set; }
+        new IFormLink<ISoundGetter> Dusk { get; set; }
+        new IFormLink<ISoundGetter> Night { get; set; }
+        new IFormLink<ISoundGetter> Walla { get; set; }
+        new UInt32? WallaTriggerCount { get; set; }
         new IFormLinkNullable<IRegionGetter> UseSoundFromRegion { get; set; }
         new AcousticSpace.EnvironmentTypeEnum? EnvironmentType { get; set; }
+        new Boolean? IsInterior { get; set; }
     }
 
     public partial interface IAcousticSpaceInternal :
@@ -644,9 +880,15 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        IFormLinkNullableGetter<ISoundGetter> LoopingSound { get; }
+        IFormLinkGetter<ISoundGetter> DawnDefaultLoop { get; }
+        IFormLinkGetter<ISoundGetter> Afternoon { get; }
+        IFormLinkGetter<ISoundGetter> Dusk { get; }
+        IFormLinkGetter<ISoundGetter> Night { get; }
+        IFormLinkGetter<ISoundGetter> Walla { get; }
+        UInt32? WallaTriggerCount { get; }
         IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion { get; }
         AcousticSpace.EnvironmentTypeEnum? EnvironmentType { get; }
+        Boolean? IsInterior { get; }
 
     }
 
@@ -824,9 +1066,15 @@ namespace Mutagen.Bethesda.Fallout3
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
         ObjectBounds = 7,
-        LoopingSound = 8,
-        UseSoundFromRegion = 9,
-        EnvironmentType = 10,
+        DawnDefaultLoop = 8,
+        Afternoon = 9,
+        Dusk = 10,
+        Night = 11,
+        Walla = 12,
+        WallaTriggerCount = 13,
+        UseSoundFromRegion = 14,
+        EnvironmentType = 15,
+        IsInterior = 16,
     }
     #endregion
 
@@ -837,9 +1085,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(AcousticSpace.Mask<>);
 
@@ -874,8 +1122,10 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.ASPC,
                 RecordTypes.OBND,
                 RecordTypes.SNAM,
+                RecordTypes.WNAM,
                 RecordTypes.RDAT,
-                RecordTypes.ANAM);
+                RecordTypes.ANAM,
+                RecordTypes.INAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -921,9 +1171,15 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.LoopingSound.Clear();
+            item.DawnDefaultLoop.Clear();
+            item.Afternoon.Clear();
+            item.Dusk.Clear();
+            item.Night.Clear();
+            item.Walla.Clear();
+            item.WallaTriggerCount = default;
             item.UseSoundFromRegion.Clear();
             item.EnvironmentType = default;
+            item.IsInterior = default;
             base.Clear(item);
         }
         
@@ -941,7 +1197,11 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IAcousticSpace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.LoopingSound.Relink(mapping);
+            obj.DawnDefaultLoop.Relink(mapping);
+            obj.Afternoon.Relink(mapping);
+            obj.Dusk.Relink(mapping);
+            obj.Night.Relink(mapping);
+            obj.Walla.Relink(mapping);
             obj.UseSoundFromRegion.Relink(mapping);
         }
         
@@ -1011,9 +1271,15 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
+            ret.DawnDefaultLoop = item.DawnDefaultLoop.Equals(rhs.DawnDefaultLoop);
+            ret.Afternoon = item.Afternoon.Equals(rhs.Afternoon);
+            ret.Dusk = item.Dusk.Equals(rhs.Dusk);
+            ret.Night = item.Night.Equals(rhs.Night);
+            ret.Walla = item.Walla.Equals(rhs.Walla);
+            ret.WallaTriggerCount = item.WallaTriggerCount == rhs.WallaTriggerCount;
             ret.UseSoundFromRegion = item.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion);
             ret.EnvironmentType = item.EnvironmentType == rhs.EnvironmentType;
+            ret.IsInterior = item.IsInterior == rhs.IsInterior;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1067,9 +1333,30 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if (printMask?.LoopingSound ?? true)
+            if (printMask?.DawnDefaultLoop ?? true)
             {
-                sb.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
+                sb.AppendItem(item.DawnDefaultLoop.FormKey, "DawnDefaultLoop");
+            }
+            if (printMask?.Afternoon ?? true)
+            {
+                sb.AppendItem(item.Afternoon.FormKey, "Afternoon");
+            }
+            if (printMask?.Dusk ?? true)
+            {
+                sb.AppendItem(item.Dusk.FormKey, "Dusk");
+            }
+            if (printMask?.Night ?? true)
+            {
+                sb.AppendItem(item.Night.FormKey, "Night");
+            }
+            if (printMask?.Walla ?? true)
+            {
+                sb.AppendItem(item.Walla.FormKey, "Walla");
+            }
+            if ((printMask?.WallaTriggerCount ?? true)
+                && item.WallaTriggerCount is {} WallaTriggerCountItem)
+            {
+                sb.AppendItem(WallaTriggerCountItem, "WallaTriggerCount");
             }
             if (printMask?.UseSoundFromRegion ?? true)
             {
@@ -1079,6 +1366,11 @@ namespace Mutagen.Bethesda.Fallout3
                 && item.EnvironmentType is {} EnvironmentTypeItem)
             {
                 sb.AppendItem(EnvironmentTypeItem, "EnvironmentType");
+            }
+            if ((printMask?.IsInterior ?? true)
+                && item.IsInterior is {} IsInteriorItem)
+            {
+                sb.AppendItem(IsInteriorItem, "IsInterior");
             }
         }
         
@@ -1138,9 +1430,29 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DawnDefaultLoop) ?? true))
             {
-                if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
+                if (!lhs.DawnDefaultLoop.Equals(rhs.DawnDefaultLoop)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Afternoon) ?? true))
+            {
+                if (!lhs.Afternoon.Equals(rhs.Afternoon)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Dusk) ?? true))
+            {
+                if (!lhs.Dusk.Equals(rhs.Dusk)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Night) ?? true))
+            {
+                if (!lhs.Night.Equals(rhs.Night)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Walla) ?? true))
+            {
+                if (!lhs.Walla.Equals(rhs.Walla)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WallaTriggerCount) ?? true))
+            {
+                if (lhs.WallaTriggerCount != rhs.WallaTriggerCount) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
@@ -1149,6 +1461,10 @@ namespace Mutagen.Bethesda.Fallout3
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
                 if (lhs.EnvironmentType != rhs.EnvironmentType) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.IsInterior) ?? true))
+            {
+                if (lhs.IsInterior != rhs.IsInterior) return false;
             }
             return true;
         }
@@ -1179,11 +1495,23 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            hash.Add(item.LoopingSound);
+            hash.Add(item.DawnDefaultLoop);
+            hash.Add(item.Afternoon);
+            hash.Add(item.Dusk);
+            hash.Add(item.Night);
+            hash.Add(item.Walla);
+            if (item.WallaTriggerCount is {} WallaTriggerCountitem)
+            {
+                hash.Add(WallaTriggerCountitem);
+            }
             hash.Add(item.UseSoundFromRegion);
             if (item.EnvironmentType is {} EnvironmentTypeitem)
             {
                 hash.Add(EnvironmentTypeitem);
+            }
+            if (item.IsInterior is {} IsInterioritem)
+            {
+                hash.Add(IsInterioritem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1214,10 +1542,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.LoopingSound, out var LoopingSoundInfo))
-            {
-                yield return LoopingSoundInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.DawnDefaultLoop);
+            yield return FormLinkInformation.Factory(obj.Afternoon);
+            yield return FormLinkInformation.Factory(obj.Dusk);
+            yield return FormLinkInformation.Factory(obj.Night);
+            yield return FormLinkInformation.Factory(obj.Walla);
             if (FormLinkInformation.TryFactory(obj.UseSoundFromRegion, out var UseSoundFromRegionInfo))
             {
                 yield return UseSoundFromRegionInfo;
@@ -1318,9 +1647,29 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DawnDefaultLoop) ?? true))
             {
-                item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
+                item.DawnDefaultLoop.SetTo(rhs.DawnDefaultLoop.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Afternoon) ?? true))
+            {
+                item.Afternoon.SetTo(rhs.Afternoon.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Dusk) ?? true))
+            {
+                item.Dusk.SetTo(rhs.Dusk.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Night) ?? true))
+            {
+                item.Night.SetTo(rhs.Night.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Walla) ?? true))
+            {
+                item.Walla.SetTo(rhs.Walla.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WallaTriggerCount) ?? true))
+            {
+                item.WallaTriggerCount = rhs.WallaTriggerCount;
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
             {
@@ -1329,6 +1678,10 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
                 item.EnvironmentType = rhs.EnvironmentType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.IsInterior) ?? true))
+            {
+                item.IsInterior = rhs.IsInterior;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1490,6 +1843,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly AcousticSpaceBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IAcousticSpaceGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IAcousticSpaceGetter item,
             MutagenWriter writer,
@@ -1504,10 +1866,16 @@ namespace Mutagen.Bethesda.Fallout3
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            AcousticSpaceBinaryWriteTranslation.WriteBinarySoundLoop(
                 writer: writer,
-                item: item.LoopingSound,
-                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+                item: item);
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.WallaTriggerCount,
+                    header: translationParams.ConvertToCustom(RecordTypes.WNAM));
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UseSoundFromRegion,
@@ -1517,6 +1885,27 @@ namespace Mutagen.Bethesda.Fallout3
                 item.EnvironmentType,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.IsInterior,
+                    header: translationParams.ConvertToCustom(RecordTypes.INAM),
+                    byteLength: 4);
+            }
+        }
+
+        public static partial void WriteBinarySoundLoopCustom(
+            MutagenWriter writer,
+            IAcousticSpaceGetter item);
+
+        public static void WriteBinarySoundLoop(
+            MutagenWriter writer,
+            IAcousticSpaceGetter item)
+        {
+            WriteBinarySoundLoopCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1573,6 +1962,15 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASPC;
+        public static void FillBinaryStructs(
+            IAcousticSpaceInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IAcousticSpaceInternal item,
             MutagenFrame frame,
@@ -1592,9 +1990,19 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AcousticSpace_FieldIndex.LoopingSound;
+                    return AcousticSpaceBinaryCreateTranslation.FillBinarySoundLoopCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.WallaTriggerCount = frame.ReadUInt32();
+                    }
+                    return (int)AcousticSpace_FieldIndex.WallaTriggerCount;
                 }
                 case RecordTypeInts.RDAT:
                 {
@@ -1610,6 +2018,17 @@ namespace Mutagen.Bethesda.Fallout3
                         length: contentLength);
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
+                case RecordTypeInts.INAM:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.IsInterior = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 4);
+                    }
+                    return (int)AcousticSpace_FieldIndex.IsInterior;
+                }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1621,6 +2040,11 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial ParseResult FillBinarySoundLoopCustom(
+            MutagenFrame frame,
+            IAcousticSpaceInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1674,9 +2098,15 @@ namespace Mutagen.Bethesda.Fallout3
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region LoopingSound
-        private int? _LoopingSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> LoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _LoopingSoundLocation);
+        #region SoundLoop
+        public partial ParseResult SoundLoopCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
+        #region WallaTriggerCount
+        private int? _WallaTriggerCountLocation;
+        public UInt32? WallaTriggerCount => _WallaTriggerCountLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WallaTriggerCountLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
@@ -1685,6 +2115,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
         public AcousticSpace.EnvironmentTypeEnum? EnvironmentType => EnumBinaryTranslation<AcousticSpace.EnvironmentTypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EnvironmentTypeLocation, _recordData, _package, 4);
+        #endregion
+        #region IsInterior
+        private int? _IsInteriorLocation;
+        public Boolean? IsInterior => _IsInteriorLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IsInteriorLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1762,8 +2196,15 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.LoopingSound;
+                    return SoundLoopCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    _WallaTriggerCountLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.WallaTriggerCount;
                 }
                 case RecordTypeInts.RDAT:
                 {
@@ -1774,6 +2215,11 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _EnvironmentTypeLocation = (stream.Position - offset);
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _IsInteriorLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
                 default:
                     return base.FillRecordType(

@@ -109,6 +109,16 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
+        #region Reputation
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _Reputation = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> Reputation
+        {
+            get => _Reputation;
+            set => _Reputation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IFactionGetter.Reputation => this.Reputation;
+        #endregion
 
         #region To String
 
@@ -139,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = initialValue;
                 this.CrimeGoldMultiplier = initialValue;
                 this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, []);
+                this.Reputation = initialValue;
             }
 
             public Mask(
@@ -153,7 +164,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Relations,
                 TItem Flags,
                 TItem CrimeGoldMultiplier,
-                TItem Ranks)
+                TItem Ranks,
+                TItem Reputation)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -168,6 +180,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = Flags;
                 this.CrimeGoldMultiplier = CrimeGoldMultiplier;
                 this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, []);
+                this.Reputation = Reputation;
             }
 
             #pragma warning disable CS8618
@@ -184,6 +197,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Flags;
             public TItem CrimeGoldMultiplier;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
+            public TItem Reputation;
             #endregion
 
             #region Equals
@@ -202,6 +216,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.CrimeGoldMultiplier, rhs.CrimeGoldMultiplier)) return false;
                 if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
+                if (!object.Equals(this.Reputation, rhs.Reputation)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -212,6 +227,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Flags);
                 hash.Add(this.CrimeGoldMultiplier);
                 hash.Add(this.Ranks);
+                hash.Add(this.Reputation);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -249,6 +265,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (!eval(this.Reputation)) return false;
                 return true;
             }
             #endregion
@@ -284,6 +301,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (eval(this.Reputation)) return true;
                 return false;
             }
             #endregion
@@ -332,6 +350,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                obj.Reputation = eval(this.Reputation);
             }
             #endregion
 
@@ -400,6 +419,10 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
+                    if (printMask?.Reputation ?? true)
+                    {
+                        sb.AppendItem(Reputation, "Reputation");
+                    }
                 }
             }
             #endregion
@@ -416,6 +439,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Flags;
             public Exception? CrimeGoldMultiplier;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
+            public Exception? Reputation;
             #endregion
 
             #region IErrorMask
@@ -434,6 +458,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return CrimeGoldMultiplier;
                     case Faction_FieldIndex.Ranks:
                         return Ranks;
+                    case Faction_FieldIndex.Reputation:
+                        return Reputation;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -458,6 +484,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.Reputation:
+                        this.Reputation = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -485,6 +514,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
                         break;
+                    case Faction_FieldIndex.Reputation:
+                        this.Reputation = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -499,6 +531,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Flags != null) return true;
                 if (CrimeGoldMultiplier != null) return true;
                 if (Ranks != null) return true;
+                if (Reputation != null) return true;
                 return false;
             }
             #endregion
@@ -570,6 +603,9 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                {
+                    sb.AppendItem(Reputation, "Reputation");
+                }
             }
             #endregion
 
@@ -583,6 +619,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.CrimeGoldMultiplier = this.CrimeGoldMultiplier.Combine(rhs.CrimeGoldMultiplier);
                 ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
+                ret.Reputation = this.Reputation.Combine(rhs.Reputation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -610,6 +647,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Flags;
             public bool CrimeGoldMultiplier;
             public Rank.TranslationMask? Ranks;
+            public bool Reputation;
             #endregion
 
             #region Ctors
@@ -621,6 +659,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
                 this.CrimeGoldMultiplier = defaultOn;
+                this.Reputation = defaultOn;
             }
 
             #endregion
@@ -633,6 +672,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Flags, null));
                 ret.Add((CrimeGoldMultiplier, null));
                 ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
+                ret.Add((Reputation, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -780,6 +820,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Faction.FactionFlag Flags { get; set; }
         new Single? CrimeGoldMultiplier { get; set; }
         new ExtendedList<Rank> Ranks { get; }
+        new IFormLinkNullable<IFallout3MajorRecordGetter> Reputation { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -811,6 +852,7 @@ namespace Mutagen.Bethesda.Fallout3
         Faction.FactionFlag Flags { get; }
         Single? CrimeGoldMultiplier { get; }
         IReadOnlyList<IRankGetter> Ranks { get; }
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> Reputation { get; }
 
     }
 
@@ -992,6 +1034,7 @@ namespace Mutagen.Bethesda.Fallout3
         Flags = 9,
         CrimeGoldMultiplier = 10,
         Ranks = 11,
+        Reputation = 12,
     }
     #endregion
 
@@ -1002,9 +1045,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -1044,7 +1087,8 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.RNAM,
                 RecordTypes.MNAM,
                 RecordTypes.FNAM,
-                RecordTypes.INAM);
+                RecordTypes.INAM,
+                RecordTypes.WMI1);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1094,6 +1138,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Flags = default(Faction.FactionFlag);
             item.CrimeGoldMultiplier = default;
             item.Ranks.Clear();
+            item.Reputation.Clear();
             base.Clear(item);
         }
         
@@ -1112,6 +1157,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             base.RemapLinks(obj, mapping);
             obj.Relations.RemapLinks(mapping);
+            obj.Reputation.Relink(mapping);
         }
         
         #endregion
@@ -1190,6 +1236,7 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.Reputation = item.Reputation.Equals(rhs.Reputation);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1281,6 +1328,10 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
+            if (printMask?.Reputation ?? true)
+            {
+                sb.AppendItem(item.Reputation.FormKeyNullable, "Reputation");
+            }
         }
         
         public static Faction_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -1351,6 +1402,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Reputation) ?? true))
+            {
+                if (!lhs.Reputation.Equals(rhs.Reputation)) return false;
+            }
             return true;
         }
         
@@ -1390,6 +1445,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(CrimeGoldMultiplieritem);
             }
             hash.Add(item.Ranks);
+            hash.Add(item.Reputation);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1422,6 +1478,10 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.Reputation, out var ReputationInfo))
+            {
+                yield return ReputationInfo;
             }
             yield break;
         }
@@ -1556,6 +1616,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Reputation) ?? true))
+            {
+                item.Reputation.SetTo(rhs.Reputation.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1762,6 +1826,13 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.Reputation,
+                    header: translationParams.ConvertToCustom(RecordTypes.WMI1));
+            }
         }
 
         public void Write(
@@ -1876,6 +1947,15 @@ namespace Mutagen.Bethesda.Fallout3
                             transl: Rank.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Ranks;
                 }
+                case RecordTypeInts.WMI1:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Reputation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    return (int)Faction_FieldIndex.Reputation;
+                }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1953,6 +2033,10 @@ namespace Mutagen.Bethesda.Fallout3
         public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = [];
+        #region Reputation
+        private int? _ReputationLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> Reputation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _ReputationLocation);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2063,6 +2147,11 @@ namespace Mutagen.Bethesda.Fallout3
                         trigger: Rank_Registration.TriggerSpecs,
                         factory: RankBinaryOverlay.RankFactory);
                     return (int)Faction_FieldIndex.Ranks;
+                }
+                case RecordTypeInts.WMI1:
+                {
+                    _ReputationLocation = (stream.Position - offset);
+                    return (int)Faction_FieldIndex.Reputation;
                 }
                 default:
                     return base.FillRecordType(

@@ -100,6 +100,7 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 forOverlay: true)
             .ToListAsync();
         TypeGeneration lastVersionedField = null;
+        TypeGeneration lastModHeaderVersionedField = null;
         foreach (var field in dataType.IterateFieldsWithMeta())
         {
             if (!field.Field.Enabled) continue;
@@ -117,8 +118,8 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 if (passIn == null)
                 {
                     passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)}";
-                } 
-                else if (passIn == null 
+                }
+                else if (passIn == null
                          || length.PassedType == BinaryTranslationModule.PassedType.Direct)
                 {
                     passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value.{nameof(RangeInt32.Min)} + {passIn}";
@@ -137,6 +138,11 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
                 {
                     VersioningModule.AddVersionOffset(sb, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                     lastVersionedField = field.Field;
+                }
+                if (fieldData.HasModHeaderVersioning)
+                {
+                    VersioningModule.AddModHeaderVersionOffset(sb, field.Field, length.FieldLength.Value, lastModHeaderVersionedField, $"_package.MetaData.ModHeaderVersion!.Value");
+                    lastModHeaderVersionedField = field.Field;
                 }
                 if (length.CurLength == null)
                 {
@@ -253,6 +259,10 @@ public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
         if (fieldData.HasVersioning)
         {
             extraChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, "_package.FormVersion!.FormVersion!.Value"));
+        }
+        if (fieldData.HasModHeaderVersioning)
+        {
+            extraChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, "_package.MetaData.ModHeaderVersion!.Value"));
         }
         sb.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
         switch (typeGen.GetFieldData().BinaryOverlayFallback)

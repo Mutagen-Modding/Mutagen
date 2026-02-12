@@ -7,6 +7,9 @@
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" nullable="False" />
       <Float name="CrimeGoldMultiplier" recordType="CNAM" nullable="True" />
       <RefList name="Ranks" refName="Rank" />
+      <FormLink name="Reputation" recordType="WMI1" refName="Fallout3MajorRecord">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
   </Object>

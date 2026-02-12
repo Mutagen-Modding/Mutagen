@@ -4948,7 +4948,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride,
-                Header = item
+                Header = item,
+                ModHeaderVersion = item.ModHeader.Stats.Version
             };
             if (param.Encodings != null)
             {
@@ -4984,7 +4985,7 @@ namespace Mutagen.Bethesda.Fallout3
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.Fallout3Release.ToGameRelease()),
+                new WritingBundle(item.Fallout3Release.ToGameRelease()) { ModHeaderVersion = item.ModHeader.Stats.Version },
                 dispose: false))
             {
                 Fallout3ModBinaryWriteTranslation.Instance.Write(

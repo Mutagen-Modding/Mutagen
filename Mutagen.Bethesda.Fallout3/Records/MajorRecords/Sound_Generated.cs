@@ -77,6 +77,11 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISoundGetter.File => this.File;
         #endregion
+        #region RandomChancePercent
+        public Byte? RandomChancePercent { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? ISoundGetter.RandomChancePercent => this.RandomChancePercent;
+        #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoundData? _Data;
@@ -139,6 +144,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.File = initialValue;
+                this.RandomChancePercent = initialValue;
                 this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(initialValue, new SoundData.Mask<TItem>(initialValue));
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ReverbAttenuationControl = initialValue;
@@ -155,6 +161,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Fallout3MajorRecordFlags,
                 TItem ObjectBounds,
                 TItem File,
+                TItem RandomChancePercent,
                 TItem Data,
                 TItem AttenuationCurve,
                 TItem ReverbAttenuationControl,
@@ -170,6 +177,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.File = File;
+                this.RandomChancePercent = RandomChancePercent;
                 this.Data = new MaskItem<TItem, SoundData.Mask<TItem>?>(Data, new SoundData.Mask<TItem>(Data));
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, []);
                 this.ReverbAttenuationControl = ReverbAttenuationControl;
@@ -187,6 +195,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem File;
+            public TItem RandomChancePercent;
             public MaskItem<TItem, SoundData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttenuationCurve;
             public TItem ReverbAttenuationControl;
@@ -206,6 +215,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.File, rhs.File)) return false;
+                if (!object.Equals(this.RandomChancePercent, rhs.RandomChancePercent)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.AttenuationCurve, rhs.AttenuationCurve)) return false;
                 if (!object.Equals(this.ReverbAttenuationControl, rhs.ReverbAttenuationControl)) return false;
@@ -217,6 +227,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.File);
+                hash.Add(this.RandomChancePercent);
                 hash.Add(this.Data);
                 hash.Add(this.AttenuationCurve);
                 hash.Add(this.ReverbAttenuationControl);
@@ -237,6 +248,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.File)) return false;
+                if (!eval(this.RandomChancePercent)) return false;
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
@@ -269,6 +281,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.File)) return true;
+                if (eval(this.RandomChancePercent)) return true;
                 if (Data != null)
                 {
                     if (eval(this.Data.Overall)) return true;
@@ -304,6 +317,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.File = eval(this.File);
+                obj.RandomChancePercent = eval(this.RandomChancePercent);
                 obj.Data = this.Data == null ? null : new MaskItem<R, SoundData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (AttenuationCurve != null)
                 {
@@ -346,6 +360,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.File ?? true)
                     {
                         sb.AppendItem(File, "File");
+                    }
+                    if (printMask?.RandomChancePercent ?? true)
+                    {
+                        sb.AppendItem(RandomChancePercent, "RandomChancePercent");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -393,6 +411,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? File;
+            public Exception? RandomChancePercent;
             public MaskItem<Exception?, SoundData.ErrorMask?>? Data;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttenuationCurve;
             public Exception? ReverbAttenuationControl;
@@ -409,6 +428,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return ObjectBounds;
                     case Sound_FieldIndex.File:
                         return File;
+                    case Sound_FieldIndex.RandomChancePercent:
+                        return RandomChancePercent;
                     case Sound_FieldIndex.Data:
                         return Data;
                     case Sound_FieldIndex.AttenuationCurve:
@@ -432,6 +453,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Sound_FieldIndex.File:
                         this.File = ex;
+                        break;
+                    case Sound_FieldIndex.RandomChancePercent:
+                        this.RandomChancePercent = ex;
                         break;
                     case Sound_FieldIndex.Data:
                         this.Data = new MaskItem<Exception?, SoundData.ErrorMask?>(ex, null);
@@ -462,6 +486,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Sound_FieldIndex.File:
                         this.File = (Exception?)obj;
                         break;
+                    case Sound_FieldIndex.RandomChancePercent:
+                        this.RandomChancePercent = (Exception?)obj;
+                        break;
                     case Sound_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, SoundData.ErrorMask?>?)obj;
                         break;
@@ -485,6 +512,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (File != null) return true;
+                if (RandomChancePercent != null) return true;
                 if (Data != null) return true;
                 if (AttenuationCurve != null) return true;
                 if (ReverbAttenuationControl != null) return true;
@@ -518,6 +546,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(File, "File");
+                }
+                {
+                    sb.AppendItem(RandomChancePercent, "RandomChancePercent");
                 }
                 Data?.Print(sb);
                 if (AttenuationCurve is {} AttenuationCurveItem)
@@ -556,6 +587,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.File = this.File.Combine(rhs.File);
+                ret.RandomChancePercent = this.RandomChancePercent.Combine(rhs.RandomChancePercent);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.AttenuationCurve = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Overall, rhs.AttenuationCurve?.Overall), Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Specific, rhs.AttenuationCurve?.Specific));
                 ret.ReverbAttenuationControl = this.ReverbAttenuationControl.Combine(rhs.ReverbAttenuationControl);
@@ -584,6 +616,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool File;
+            public bool RandomChancePercent;
             public SoundData.TranslationMask? Data;
             public bool AttenuationCurve;
             public bool ReverbAttenuationControl;
@@ -597,6 +630,7 @@ namespace Mutagen.Bethesda.Fallout3
                 : base(defaultOn, onOverall)
             {
                 this.File = defaultOn;
+                this.RandomChancePercent = defaultOn;
                 this.AttenuationCurve = defaultOn;
                 this.ReverbAttenuationControl = defaultOn;
                 this.Priority = defaultOn;
@@ -609,6 +643,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((File, null));
+                ret.Add((RandomChancePercent, null));
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((AttenuationCurve, null));
                 ret.Add((ReverbAttenuationControl, null));
@@ -752,6 +787,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         new String? File { get; set; }
+        new Byte? RandomChancePercent { get; set; }
         new SoundData? Data { get; set; }
         new Int16[]? AttenuationCurve { get; set; }
         new Int16? ReverbAttenuationControl { get; set; }
@@ -781,6 +817,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         String? File { get; }
+        Byte? RandomChancePercent { get; }
         ISoundDataInternalGetter? Data { get; }
         ReadOnlyMemorySlice<Int16>? AttenuationCurve { get; }
         Int16? ReverbAttenuationControl { get; }
@@ -963,10 +1000,11 @@ namespace Mutagen.Bethesda.Fallout3
         Fallout3MajorRecordFlags = 6,
         ObjectBounds = 7,
         File = 8,
-        Data = 9,
-        AttenuationCurve = 10,
-        ReverbAttenuationControl = 11,
-        Priority = 12,
+        RandomChancePercent = 9,
+        Data = 10,
+        AttenuationCurve = 11,
+        ReverbAttenuationControl = 12,
+        Priority = 13,
     }
     #endregion
 
@@ -977,9 +1015,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Sound.Mask<>);
 
@@ -1014,6 +1052,7 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.SOUN,
                 RecordTypes.OBND,
                 RecordTypes.FNAM,
+                RecordTypes.RNAM,
                 RecordTypes.SNDX,
                 RecordTypes.SNDD,
                 RecordTypes.ANAM,
@@ -1065,6 +1104,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.ObjectBounds = null;
             item.File = default;
+            item.RandomChancePercent = default;
             item.Data = null;
             item.AttenuationCurve = null;
             item.ReverbAttenuationControl = default;
@@ -1159,6 +1199,7 @@ namespace Mutagen.Bethesda.Fallout3
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.File = string.Equals(item.File, rhs.File);
+            ret.RandomChancePercent = item.RandomChancePercent == rhs.RandomChancePercent;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1229,6 +1270,11 @@ namespace Mutagen.Bethesda.Fallout3
                 && item.File is {} FileItem)
             {
                 sb.AppendItem(FileItem, "File");
+            }
+            if ((printMask?.RandomChancePercent ?? true)
+                && item.RandomChancePercent is {} RandomChancePercentItem)
+            {
+                sb.AppendItem(RandomChancePercentItem, "RandomChancePercent");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
@@ -1322,6 +1368,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!string.Equals(lhs.File, rhs.File)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Sound_FieldIndex.RandomChancePercent) ?? true))
+            {
+                if (lhs.RandomChancePercent != rhs.RandomChancePercent) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
@@ -1378,6 +1428,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (item.File is {} Fileitem)
             {
                 hash.Add(Fileitem);
+            }
+            if (item.RandomChancePercent is {} RandomChancePercentitem)
+            {
+                hash.Add(RandomChancePercentitem);
             }
             if (item.Data is {} Dataitem)
             {
@@ -1524,6 +1578,10 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.File) ?? true))
             {
                 item.File = rhs.File;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.RandomChancePercent) ?? true))
+            {
+                item.RandomChancePercent = rhs.RandomChancePercent;
             }
             if ((copyMask?.GetShouldTranslate((int)Sound_FieldIndex.Data) ?? true))
             {
@@ -1744,6 +1802,13 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.File,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.RandomChancePercent,
+                    header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+            }
             if (item.Data is {} DataItem)
             {
                 ((SoundDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
@@ -1846,6 +1911,15 @@ namespace Mutagen.Bethesda.Fallout3
                         parseWhole: true);
                     return (int)Sound_FieldIndex.File;
                 }
+                case RecordTypeInts.RNAM:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.RandomChancePercent = frame.ReadUInt8();
+                    }
+                    return (int)Sound_FieldIndex.RandomChancePercent;
+                }
                 case RecordTypeInts.SNDX:
                 {
                     item.Data = Mutagen.Bethesda.Fallout3.SoundData.CreateFromBinary(frame: frame);
@@ -1944,6 +2018,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region File
         private int? _FileLocation;
         public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region RandomChancePercent
+        private int? _RandomChancePercentLocation;
+        public Byte? RandomChancePercent => _RandomChancePercentLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RandomChancePercentLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region Data
         private RecordType _DataType;
@@ -2055,6 +2133,11 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _FileLocation = (stream.Position - offset);
                     return (int)Sound_FieldIndex.File;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _RandomChancePercentLocation = (stream.Position - offset);
+                    return (int)Sound_FieldIndex.RandomChancePercent;
                 }
                 case RecordTypeInts.SNDX:
                 {

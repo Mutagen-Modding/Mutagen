@@ -155,6 +155,7 @@
             <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
             <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="RecordTypeVersioning" type="RecordTypeVersioningType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="ModHeaderVersioning" type="ModHeaderVersioningType" minOccurs="0" maxOccurs="unbounded" />
           </xs:sequence>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
@@ -684,6 +685,11 @@
   <xs:complexType name="RecordTypeVersioningType" >
     <xs:attribute name="formVersion" type="xs:unsignedShort" use="required" />
     <xs:attribute name="recordType" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="ModHeaderVersioningType" >
+    <xs:attribute name="version" type="xs:float" use="required" />
+    <xs:attribute name="action" type="MutagenVersionAction" />
   </xs:complexType>
 
   <xs:complexType name="NBuffer" >

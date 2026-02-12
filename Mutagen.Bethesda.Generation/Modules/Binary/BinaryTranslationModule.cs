@@ -528,6 +528,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         };
         TypeGeneration lastUnknownField = null;
         TypeGeneration lastVersionedField = null;
+        TypeGeneration lastModHeaderVersionedField = null;
         foreach (var field in fields)
         {
             lengths.Field = field;
@@ -548,6 +549,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     lastUnknownField = field;
                     lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos";
                     lastVersionedField = null;
+                    lastModHeaderVersionedField = null;
                     lengths.CurType = PassedType.Relative;
                 }
                 else
@@ -564,11 +566,19 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     {
                         lastVersionedField = field;
                     }
+                    if (field.GetFieldData().HasModHeaderVersioning)
+                    {
+                        lastModHeaderVersionedField = field;
+                    }
                     lengths.CurType = PassedType.Direct;
                     lengths.CurAccessor = $"0x{lengths.CurLength:X}";
                     if (lastVersionedField != null)
                     {
                         lengths.CurAccessor = $"{passedLenPrefix}{lastVersionedField.Name}VersioningOffset + {lengths.CurAccessor}";
+                    }
+                    if (lastModHeaderVersionedField != null)
+                    {
+                        lengths.CurAccessor = $"{passedLenPrefix}{lastModHeaderVersionedField.Name}ModHeaderVersioningOffset + {lengths.CurAccessor}";
                     }
                     if (lastUnknownField != null)
                     {

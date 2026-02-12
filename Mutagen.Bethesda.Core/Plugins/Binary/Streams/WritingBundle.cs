@@ -39,6 +39,11 @@ public sealed record WritingBundle(GameConstants Constants)
     public ushort? FormVersion { get; set; }
 
     /// <summary>
+    /// Mod header HEDR version (e.g. 0.94 for FO3, 1.34 for FNV)
+    /// </summary>
+    public float? ModHeaderVersion { get; set; }
+
+    /// <summary>
     /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.
     /// </summary>
     public bool CleanNulls { get; set; } = true;
