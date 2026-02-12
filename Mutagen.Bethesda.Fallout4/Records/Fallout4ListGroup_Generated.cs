@@ -132,8 +132,10 @@ namespace Mutagen.Bethesda.Fallout4
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -853,6 +855,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public void Remove(
             IFallout4ListGroup<T> obj,
             HashSet<FormKey> keys)
@@ -888,6 +891,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4ListGroup<T> obj)
         {
             foreach (var item in obj.Records.WhereCastable<T, IAssetLinkContainer>()

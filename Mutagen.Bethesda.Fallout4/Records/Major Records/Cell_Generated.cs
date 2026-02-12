@@ -2543,8 +2543,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -3506,6 +3508,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public void Remove(
             ICellInternal obj,
             HashSet<FormKey> keys)
@@ -3627,6 +3630,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICell obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))

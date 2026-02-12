@@ -281,7 +281,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     }
                     else
                     {
-                        string passed = int.TryParse(passedLengthAccessor.TrimStart("0x"), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expectedLen.Value).ToString() : $"({passedLengthAccessor} + {expectedLen.Value})";
+                        string passed = int.TryParse(passedLengthAccessor.TrimStart("0x", StringComparison.Ordinal), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expectedLen.Value).ToString() : $"({passedLengthAccessor} + {expectedLen.Value})";
                         sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {structDataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
                     }
                 }

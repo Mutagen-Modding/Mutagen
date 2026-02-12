@@ -55,7 +55,9 @@ public sealed class RecordTypeInfoCacheReader
             }
 
             // If we can't resolve it as type T, check if the record exists at all
+#pragma warning disable CS0618 // Type or member is obsolete
             if (!_linkCache.TryResolve(formKey, out var _))
+#pragma warning restore CS0618
             {
                 throw new MissingRecordException(formKey, typeof(T));
             }

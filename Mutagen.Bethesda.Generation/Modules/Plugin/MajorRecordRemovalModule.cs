@@ -29,8 +29,10 @@ public class MajorRecordRemovalModule : GenerationModule
         {
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey) => this.Remove(formKey);");
+            sb.AppendLine("#pragma warning disable CS0618 // Type or member is obsolete");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
+            sb.AppendLine("#pragma warning restore CS0618");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
             sb.AppendLine("[DebuggerStepThrough]");
@@ -344,6 +346,7 @@ public class MajorRecordRemovalModule : GenerationModule
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
         var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
+        sb.AppendLine("#pragma warning disable CS0618 // Type or member is obsolete");
         using (var args = sb.Function(
                    $"public{overrideStr}void Remove"))
         {
@@ -787,6 +790,7 @@ public class MajorRecordRemovalModule : GenerationModule
                 sb.AppendLine();
             }
         }
+        sb.AppendLine("#pragma warning restore CS0618");
     }
 
     async Task ApplyRemovalLines(

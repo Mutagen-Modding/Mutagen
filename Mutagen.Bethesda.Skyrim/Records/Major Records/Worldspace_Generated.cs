@@ -1812,8 +1812,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -2739,6 +2741,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public void Remove(
             IWorldspaceInternal obj,
             HashSet<FormKey> keys)
@@ -2974,6 +2977,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWorldspace obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))

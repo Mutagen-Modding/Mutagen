@@ -127,8 +127,10 @@ namespace Mutagen.Bethesda.Oblivion
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -844,6 +846,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public void Remove(
             IOblivionGroup<T> obj,
             HashSet<FormKey> keys)
@@ -881,6 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IOblivionGroup<T> obj)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainer>()
