@@ -41,7 +41,7 @@ public abstract class PassthroughTest
     public Target Target { get; }
     public ModPath ExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_NormalExport"));
     public ModPath ObservableExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_ObservableExport"));
-    public ModPath TrimmedFileName(DirectoryPath path) => Settings.Trimming.Enabled ? new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed")) : FilePath;
+    public ModPath TrimmedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed"));
     public ModPath MergedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Merged"));
     public ModPath UncompressedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Uncompressed"));
     public ModPath AlignedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Aligned"));
@@ -201,56 +201,54 @@ public abstract class PassthroughTest
     private async Task<ModPath> ExecuteTrimming(DirectoryPath tempFolder)
     {
         var trimmedPath = TrimmedFileName(tempFolder);
-        if (!Settings.CacheReuse.ReuseTrimming
-            || !File.Exists(trimmedPath))
+
+        if (Settings.CacheReuse.ReuseTrimming && File.Exists(trimmedPath))
         {
+            return trimmedPath;
+        }
+
+        try
+        {
+            ModPath source = FilePath;
+
             if (Settings.Trimming.Enabled)
             {
-                try
+                var trimmedGroups = new ModPath(ModKey, trimmedPath.Path + "Groups");
+                using (var outStream = new FileStream(trimmedGroups, FileMode.Create, FileAccess.Write))
                 {
-                    var processor = ProcessorFactory();
-                    Dictionary<RecordType, HashSet<FormKey>> trimRecords = processor.TrimmedRecords
-                        .GroupBy(x => x.Key)
-                        .ToDictionary(x => x.Key, x => x.Select(x => x.Value).ToHashSet());
-                    var trimmedGroups = trimmedPath + "Groups";
-                    using (var outStream = new FileStream(trimmedGroups, FileMode.Create, FileAccess.Write))
-                    {
-                        ModTrimmer.TrimGroups(
-                            streamCreator: () =>
-                            {
-                                return new MutagenBinaryReadStream(FilePath, GameRelease, MasterFlagsLookup);
-                            },
-                            outputStream: outStream,
-                            interest: new RecordInterest(
-                                interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
-                                uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
-                    }
-
-                    using (var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write))
-                    {
-                        var modPath = new ModPath(ModKey, trimmedGroups);
-                        TrimRecords(
-                            modPath: modPath,
-                            streamCreator: () => new MutagenBinaryReadStream(modPath, GameRelease, MasterFlagsLookup),
-                            outStream,
-                            trimRecords);
-                    }
-                    
+                    ModTrimmer.TrimGroups(
+                        streamCreator: () => new MutagenBinaryReadStream(FilePath, GameRelease, MasterFlagsLookup),
+                        outputStream: outStream,
+                        interest: new RecordInterest(
+                            interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
+                            uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
                 }
-                catch (Exception)
-                {
-                    if (File.Exists(trimmedPath))
-                    {
-                        File.Delete(trimmedPath);
-                    }
 
-                    throw;
-                }
+                source = trimmedGroups;
             }
-            else
+
+            var processor = ProcessorFactory();
+            var trimRecords = processor.TrimmedRecords
+                .GroupBy(x => x.Key)
+                .ToDictionary(x => x.Key, x => x.Select(x => x.Value).ToHashSet());
+
+            using (var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write))
             {
-                trimmedPath = FilePath;
+                TrimRecords(
+                    modPath: source,
+                    streamCreator: () => new MutagenBinaryReadStream(source, GameRelease, MasterFlagsLookup),
+                    outStream,
+                    trimRecords);
             }
+        }
+        catch (Exception)
+        {
+            if (File.Exists(trimmedPath))
+            {
+                File.Delete(trimmedPath);
+            }
+
+            throw;
         }
 
         return trimmedPath;
