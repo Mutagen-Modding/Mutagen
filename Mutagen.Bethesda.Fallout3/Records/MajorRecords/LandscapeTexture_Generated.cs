@@ -76,14 +76,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region TextureSet
-        private readonly IFormLink<ITextureSetGetter> _TextureSet = new FormLink<ITextureSetGetter>();
-        public IFormLink<ITextureSetGetter> TextureSet
+        private readonly IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet
         {
             get => _TextureSet;
             set => _TextureSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
+        IFormLinkNullableGetter<ITextureSetGetter> ILandscapeTextureGetter.TextureSet => this.TextureSet;
         #endregion
         #region Havok
         public HavokData Havok { get; set; } = new HavokData();
@@ -724,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
-        new IFormLink<ITextureSetGetter> TextureSet { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new HavokData Havok { get; set; }
         new Byte TextureSpecularExponent { get; set; }
         new ExtendedList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion
-        IFormLinkGetter<ITextureSetGetter> TextureSet { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IHavokDataGetter Havok { get; }
         Byte TextureSpecularExponent { get; }
         IReadOnlyList<IFormLinkGetter<IGrassGetter>> Grasses { get; }
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.TextureSet ?? true)
             {
-                sb.AppendItem(item.TextureSet.FormKey, "TextureSet");
+                sb.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.Havok?.Overall ?? true)
             {
@@ -1385,7 +1385,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.TextureSet);
+            if (FormLinkInformation.TryFactory(obj.TextureSet, out var TextureSetInfo))
+            {
+                yield return TextureSetInfo;
+            }
             foreach (var item in obj.Grasses)
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1508,7 +1511,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet.SetTo(rhs.TextureSet.FormKey);
+                item.TextureSet.SetTo(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.Havok) ?? true))
             {
@@ -1731,7 +1734,7 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSet,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
@@ -1918,7 +1921,7 @@ namespace Mutagen.Bethesda.Fallout3
         public IIconsGetter? Icons { get; private set; }
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITextureSetGetter>(_package, _recordData, _TextureSetLocation);
         #endregion
         #region Havok
         private RangeInt32? _HavokLocation;
