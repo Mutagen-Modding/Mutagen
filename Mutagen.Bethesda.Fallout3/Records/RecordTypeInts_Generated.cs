@@ -55,6 +55,7 @@ public partial class RecordTypeInts
     public const int ICON = 0x4E4F4349;
     public const int INAM = 0x4D414E49;
     public const int INDX = 0x58444E49;
+    public const int ITXT = 0x54585449;
     public const int LIGH = 0x4847494C;
     public const int LTEX = 0x5845544C;
     public const int MAST = 0x5453414D;
@@ -71,6 +72,7 @@ public partial class RecordTypeInts
     public const int NAM1 = 0x314D414E;
     public const int NAM2 = 0x324D414E;
     public const int NAME = 0x454D414E;
+    public const int NOTE = 0x45544F4E;
     public const int NPC_ = 0x5F43504E;
     public const int OBND = 0x444E424F;
     public const int OFST = 0x5453464F;
@@ -99,6 +101,7 @@ public partial class RecordTypeInts
     public const int SPEL = 0x4C455053;
     public const int SPIT = 0x54495053;
     public const int TACT = 0x54434154;
+    public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int TX00 = 0x30305854;

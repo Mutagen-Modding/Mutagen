@@ -57,6 +57,7 @@ public partial class RecordTypes
     public static readonly RecordType ICON = new(0x4E4F4349);
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INDX = new(0x58444E49);
+    public static readonly RecordType ITXT = new(0x54585449);
     public static readonly RecordType LIGH = new(0x4847494C);
     public static readonly RecordType LTEX = new(0x5845544C);
     public static readonly RecordType MAST = new(0x5453414D);
@@ -73,6 +74,7 @@ public partial class RecordTypes
     public static readonly RecordType NAM1 = new(0x314D414E);
     public static readonly RecordType NAM2 = new(0x324D414E);
     public static readonly RecordType NAME = new(0x454D414E);
+    public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType OBND = new(0x444E424F);
     public static readonly RecordType OFST = new(0x5453464F);
@@ -101,6 +103,7 @@ public partial class RecordTypes
     public static readonly RecordType SPEL = new(0x4C455053);
     public static readonly RecordType SPIT = new(0x54495053);
     public static readonly RecordType TACT = new(0x54434154);
+    public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TX00 = new(0x30305854);

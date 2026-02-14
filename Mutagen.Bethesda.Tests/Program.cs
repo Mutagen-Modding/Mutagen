@@ -15,7 +15,8 @@ class Program
                 typeof(InspectGrupCommand),
                 typeof(InspectRecordCommand),
                 typeof(InspectBytesCommand),
-                typeof(ListGrupsCommand))
+                typeof(ListGrupsCommand),
+                typeof(SearchSubrecordsCommand))
             .MapResult(
                 (RunConfigCommand cmd) => cmd.Run(),
                 (RunSinglePassthrough cmd) => cmd.Run(),
@@ -24,6 +25,7 @@ class Program
                 (InspectRecordCommand cmd) => Task.FromResult(cmd.Run()),
                 (InspectBytesCommand cmd) => Task.FromResult(cmd.Run()),
                 (ListGrupsCommand cmd) => Task.FromResult(cmd.Run()),
+                (SearchSubrecordsCommand cmd) => Task.FromResult(cmd.Run()),
                 async _ => -1);
     }
 }

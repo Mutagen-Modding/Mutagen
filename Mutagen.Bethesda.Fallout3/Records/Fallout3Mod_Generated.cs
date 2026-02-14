@@ -80,6 +80,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Spells_Object = new Fallout3Group<Spell>(this);
             _Activators_Object = new Fallout3Group<Activator>(this);
             _TalkingActivators_Object = new Fallout3Group<TalkingActivator>(this);
+            _Terminals_Object = new Fallout3Group<Terminal>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -225,6 +226,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ITalkingActivatorGetter> IFallout3ModGetter.TalkingActivators => _TalkingActivators_Object;
         #endregion
+        #region Terminals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Terminal> _Terminals_Object;
+        public Fallout3Group<Terminal> Terminals => _Terminals_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ITerminalGetter> IFallout3ModGetter.Terminals => _Terminals_Object;
+        #endregion
 
         #region To String
 
@@ -284,6 +292,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Spells = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Activators = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.TalkingActivators = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Terminals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -306,7 +315,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ObjectEffects,
                 TItem Spells,
                 TItem Activators,
-                TItem TalkingActivators)
+                TItem TalkingActivators,
+                TItem Terminals)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -328,6 +338,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Spells = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Spells, new Fallout3Group.Mask<TItem>(Spells));
                 this.Activators = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Activators, new Fallout3Group.Mask<TItem>(Activators));
                 this.TalkingActivators = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(TalkingActivators, new Fallout3Group.Mask<TItem>(TalkingActivators));
+                this.Terminals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Terminals, new Fallout3Group.Mask<TItem>(Terminals));
             }
 
             #pragma warning disable CS8618
@@ -359,6 +370,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Spells { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Activators { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? TalkingActivators { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Terminals { get; set; }
             #endregion
 
             #region Equals
@@ -391,6 +403,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Spells, rhs.Spells)) return false;
                 if (!object.Equals(this.Activators, rhs.Activators)) return false;
                 if (!object.Equals(this.TalkingActivators, rhs.TalkingActivators)) return false;
+                if (!object.Equals(this.Terminals, rhs.Terminals)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -416,6 +429,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Spells);
                 hash.Add(this.Activators);
                 hash.Add(this.TalkingActivators);
+                hash.Add(this.Terminals);
                 return hash.ToHashCode();
             }
 
@@ -524,6 +538,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.TalkingActivators.Overall)) return false;
                     if (this.TalkingActivators.Specific != null && !this.TalkingActivators.Specific.All(eval)) return false;
                 }
+                if (Terminals != null)
+                {
+                    if (!eval(this.Terminals.Overall)) return false;
+                    if (this.Terminals.Specific != null && !this.Terminals.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -631,6 +650,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.TalkingActivators.Overall)) return true;
                     if (this.TalkingActivators.Specific != null && this.TalkingActivators.Specific.Any(eval)) return true;
                 }
+                if (Terminals != null)
+                {
+                    if (eval(this.Terminals.Overall)) return true;
+                    if (this.Terminals.Specific != null && this.Terminals.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -665,6 +689,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Spells = this.Spells == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
                 obj.Activators = this.Activators == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
                 obj.TalkingActivators = this.TalkingActivators == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.TalkingActivators.Overall), this.TalkingActivators.Specific?.Translate(eval));
+                obj.Terminals = this.Terminals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Terminals.Overall), this.Terminals.Specific?.Translate(eval));
             }
             #endregion
 
@@ -763,6 +788,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         TalkingActivators?.Print(sb);
                     }
+                    if (printMask?.Terminals?.Overall ?? true)
+                    {
+                        Terminals?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -807,6 +836,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Spell.ErrorMask>?>? Spells;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Activator.ErrorMask>?>? Activators;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<TalkingActivator.ErrorMask>?>? TalkingActivators;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Terminal.ErrorMask>?>? Terminals;
             #endregion
 
             #region IErrorMask
@@ -855,6 +885,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Activators;
                     case Fallout3Mod_FieldIndex.TalkingActivators:
                         return TalkingActivators;
+                    case Fallout3Mod_FieldIndex.Terminals:
+                        return Terminals;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -924,6 +956,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.TalkingActivators:
                         this.TalkingActivators = new MaskItem<Exception?, Fallout3Group.ErrorMask<TalkingActivator.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Terminals:
+                        this.Terminals = new MaskItem<Exception?, Fallout3Group.ErrorMask<Terminal.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -995,6 +1030,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.TalkingActivators:
                         this.TalkingActivators = (MaskItem<Exception?, Fallout3Group.ErrorMask<TalkingActivator.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Terminals:
+                        this.Terminals = (MaskItem<Exception?, Fallout3Group.ErrorMask<Terminal.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1023,6 +1061,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Spells != null) return true;
                 if (Activators != null) return true;
                 if (TalkingActivators != null) return true;
+                if (Terminals != null) return true;
                 return false;
             }
             #endregion
@@ -1068,6 +1107,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Spells?.Print(sb);
                 Activators?.Print(sb);
                 TalkingActivators?.Print(sb);
+                Terminals?.Print(sb);
             }
             #endregion
 
@@ -1096,6 +1136,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Spells = this.Spells.Combine(rhs.Spells, (l, r) => l.Combine(r));
                 ret.Activators = this.Activators.Combine(rhs.Activators, (l, r) => l.Combine(r));
                 ret.TalkingActivators = this.TalkingActivators.Combine(rhs.TalkingActivators, (l, r) => l.Combine(r));
+                ret.Terminals = this.Terminals.Combine(rhs.Terminals, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1139,6 +1180,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Spell.TranslationMask>? Spells;
             public Fallout3Group.TranslationMask<Activator.TranslationMask>? Activators;
             public Fallout3Group.TranslationMask<TalkingActivator.TranslationMask>? TalkingActivators;
+            public Fallout3Group.TranslationMask<Terminal.TranslationMask>? Terminals;
             #endregion
 
             #region Ctors
@@ -1183,6 +1225,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Spells != null ? Spells.OnOverall : DefaultOn, Spells?.GetCrystal()));
                 ret.Add((Activators != null ? Activators.OnOverall : DefaultOn, Activators?.GetCrystal()));
                 ret.Add((TalkingActivators != null ? TalkingActivators.OnOverall : DefaultOn, TalkingActivators?.GetCrystal()));
+                ret.Add((Terminals != null ? Terminals.OnOverall : DefaultOn, Terminals?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1262,6 +1305,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Spells_Object = new Fallout3Group<Spell>(this);
             _Activators_Object = new Fallout3Group<Activator>(this);
             _TalkingActivators_Object = new Fallout3Group<TalkingActivator>(this);
+            _Terminals_Object = new Fallout3Group<Terminal>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1343,6 +1387,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.TalkingActivators ?? true)
             {
                 this.TalkingActivators.RecordCache.Set(rhsMod.TalkingActivators.RecordCache.Items);
+            }
+            if (mask?.Terminals ?? true)
+            {
+                this.Terminals.RecordCache.Set(rhsMod.Terminals.RecordCache.Items);
             }
         }
 
@@ -1624,6 +1672,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Spell> Spells { get; }
         new Fallout3Group<Activator> Activators { get; }
         new Fallout3Group<TalkingActivator> TalkingActivators { get; }
+        new Fallout3Group<Terminal> Terminals { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1663,6 +1712,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ISpellGetter> Spells { get; }
         IFallout3GroupGetter<IActivatorGetter> Activators { get; }
         IFallout3GroupGetter<ITalkingActivatorGetter> TalkingActivators { get; }
+        IFallout3GroupGetter<ITerminalGetter> Terminals { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2233,6 +2283,7 @@ namespace Mutagen.Bethesda.Fallout3
         Spells = 17,
         Activators = 18,
         TalkingActivators = 19,
+        Terminals = 20,
     }
     #endregion
 
@@ -2243,9 +2294,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2331,6 +2382,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Spells.Clear();
             item.Activators.Clear();
             item.TalkingActivators.Clear();
+            item.Terminals.Clear();
         }
         
         #region Mutagen
@@ -2349,6 +2401,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Spells.RemapLinks(mapping);
             obj.Activators.RemapLinks(mapping);
             obj.TalkingActivators.RemapLinks(mapping);
+            obj.Terminals.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2428,6 +2481,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Spells.Remove(keys);
             obj.Activators.Remove(keys);
             obj.TalkingActivators.Remove(keys);
+            obj.Terminals.Remove(keys);
         }
         
         public void Remove(
@@ -2627,6 +2681,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    obj.Terminals.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -2767,6 +2829,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Spells = MaskItemExt.Factory(item.Spells.GetEqualsMask(rhs.Spells, include), include);
             ret.Activators = MaskItemExt.Factory(item.Activators.GetEqualsMask(rhs.Activators, include), include);
             ret.TalkingActivators = MaskItemExt.Factory(item.TalkingActivators.GetEqualsMask(rhs.TalkingActivators, include), include);
+            ret.Terminals = MaskItemExt.Factory(item.Terminals.GetEqualsMask(rhs.Terminals, include), include);
         }
         
         public string Print(
@@ -2890,6 +2953,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.TalkingActivators?.Overall ?? true)
             {
                 item.TalkingActivators?.Print(sb, "TalkingActivators");
+            }
+            if (printMask?.Terminals?.Overall ?? true)
+            {
+                item.Terminals?.Print(sb, "Terminals");
             }
         }
         
@@ -3060,6 +3127,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isTalkingActivatorsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Terminals) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Terminals, rhs.Terminals, out var lhsTerminals, out var rhsTerminals, out var isTerminalsEqual))
+                {
+                    if (!object.Equals(lhsTerminals, rhsTerminals)) return false;
+                }
+                else if (!isTerminalsEqual) return false;
+            }
             return true;
         }
         
@@ -3086,6 +3161,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Spells);
             hash.Add(item.Activators);
             hash.Add(item.TalkingActivators);
+            hash.Add(item.Terminals);
             return hash.ToHashCode();
         }
         
@@ -3227,6 +3303,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ITalkingActivator":
                 case "ITalkingActivatorInternal":
                     return obj.TalkingActivators;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    return obj.Terminals;
                 default:
                     return null;
             }
@@ -3244,7 +3325,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[19];
+            Stream[] outputStreams = new Stream[20];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -3265,6 +3346,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Spells, 16, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Activators, 17, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TalkingActivators, 18, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Terminals, 19, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -3329,6 +3411,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Spells.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Activators.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.TalkingActivators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Terminals.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -3389,6 +3472,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.TalkingActivators.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Terminals.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -3480,6 +3567,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.TalkingActivators.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Terminals.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3705,6 +3796,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    foreach (var item in obj.Terminals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -3897,6 +3997,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.TalkingActivators,
                 groupGetter: (m) => m.TalkingActivators))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Terminal, ITerminalGetter>(
+                srcGroup: obj.Terminals,
+                type: typeof(ITerminalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Terminals,
+                groupGetter: (m) => m.Terminals))
             {
                 yield return item;
             }
@@ -4193,6 +4302,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.TalkingActivators,
                         groupGetter: (m) => m.TalkingActivators))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Terminal, ITerminalGetter>(
+                        srcGroup: obj.Terminals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Terminals,
+                        groupGetter: (m) => m.Terminals))
                     {
                         yield return item;
                     }
@@ -4662,6 +4785,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Terminals) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Terminals);
+                try
+                {
+                    item.Terminals.DeepCopyIn(
+                        rhs: rhs.Terminals,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Terminals));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -4784,6 +4927,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Spells;
         public bool Activators;
         public bool TalkingActivators;
+        public bool Terminals;
         public GroupMask()
         {
         }
@@ -4808,6 +4952,7 @@ namespace Mutagen.Bethesda.Fallout3
             Spells = defaultValue;
             Activators = defaultValue;
             TalkingActivators = defaultValue;
+            Terminals = defaultValue;
         }
     }
 
@@ -5075,6 +5220,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)TalkingActivatorsItem).BinaryWriteTranslator).Write<ITalkingActivatorGetter>(
                         item: TalkingActivatorsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Terminals ?? true)
+            {
+                var TerminalsItem = item.Terminals;
+                if (TerminalsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)TerminalsItem).BinaryWriteTranslator).Write<ITerminalGetter>(
+                        item: TerminalsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -5415,6 +5571,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.TalkingActivators;
                 }
+                case RecordTypeInts.TERM:
+                {
+                    if (importMask?.Terminals ?? true)
+                    {
+                        item.Terminals.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Terminals;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -5675,6 +5845,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? Fallout3GroupBinaryOverlay<ITalkingActivatorGetter>.Fallout3GroupFactory(_stream, _TalkingActivatorsLocations, _package) : default;
         public IFallout3GroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new Fallout3Group<TalkingActivator>(this);
         #endregion
+        #region Terminals
+        private List<RangeInt64>? _TerminalsLocations;
+        private IFallout3GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? Fallout3GroupBinaryOverlay<ITerminalGetter>.Fallout3GroupFactory(_stream, _TerminalsLocations, _package) : default;
+        public IFallout3GroupGetter<ITerminalGetter> Terminals => _Terminals ?? new Fallout3Group<Terminal>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5862,6 +6037,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _TalkingActivatorsLocations ??= new();
                     _TalkingActivatorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.TalkingActivators;
+                }
+                case RecordTypeInts.TERM:
+                {
+                    _TerminalsLocations ??= new();
+                    _TerminalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Terminals;
                 }
                 default:
                     return default(int?);

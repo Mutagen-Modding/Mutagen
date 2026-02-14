@@ -30,6 +30,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.FACT, ProcessFactions);
         AddDynamicProcessing(RecordTypes.ACTI, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -62,6 +63,43 @@ public class Fallout3Processor : Processor
         }
     }
 
+    private void ProcessTerminals(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+        // Trim all-null RNAM/ITXT subrecords to 1 byte (standard null terminator)
+        // FO3/FNV terminal menu items with empty text store these as 00 00 00 00
+        // Mutagen normalizes to a single 00 on write
+        //
+        // Must accumulate total and call record-level ProcessLengths once,
+        // because the (MajorRecordFrame, SubrecordPinFrame, int, long) overload
+        // writes original_size + amount each call, overwriting previous adjustments.
+        int totalTrimmed = 0;
+        foreach (var sub in majorFrame.FindEnumerateSubrecords(new RecordType("RNAM")))
+        {
+            var trimmed = ProcessStringTermination(sub, fileOffset);
+            if (trimmed > 0)
+            {
+                totalTrimmed += trimmed;
+                ProcessLengths(sub, -trimmed, fileOffset);
+            }
+        }
+        foreach (var sub in majorFrame.FindEnumerateSubrecords(new RecordType("ITXT")))
+        {
+            var trimmed = ProcessStringTermination(sub, fileOffset);
+            if (trimmed > 0)
+            {
+                totalTrimmed += trimmed;
+                ProcessLengths(sub, -trimmed, fileOffset);
+            }
+        }
+        if (totalTrimmed > 0)
+        {
+            ProcessLengths(majorFrame, -totalTrimmed, fileOffset);
+        }
+    }
+
     private void ProcessFactions(
         IMutagenReadStream stream,
         MajorRecordFrame majorFrame,
@@ -82,4 +120,5 @@ public class Fallout3Processor : Processor
             }
         }
     }
+
 }

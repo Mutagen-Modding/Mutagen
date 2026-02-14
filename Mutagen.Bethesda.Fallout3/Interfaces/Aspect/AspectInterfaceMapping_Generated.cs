@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     TalkingActivator_Registration.Instance,
+                    Terminal_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasDestructible),
@@ -68,6 +69,7 @@ namespace Mutagen.Bethesda.Fallout3
                     HeadPartItem_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     TalkingActivator_Registration.Instance,
+                    Terminal_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IModeled),
@@ -87,6 +89,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Race_Registration.Instance,
                     Spell_Registration.Instance,
                     TalkingActivator_Registration.Instance,
+                    Terminal_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamed),
@@ -109,6 +112,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Race_Registration.Instance,
                     Spell_Registration.Instance,
                     TalkingActivator_Registration.Instance,
+                    Terminal_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),
@@ -158,6 +162,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Activator_Registration.Instance,
                     Sound_Registration.Instance,
                     TalkingActivator_Registration.Instance,
+                    Terminal_Registration.Instance,
                     TextureSet_Registration.Instance,
                 },
                 new InterfaceMappingTypes(

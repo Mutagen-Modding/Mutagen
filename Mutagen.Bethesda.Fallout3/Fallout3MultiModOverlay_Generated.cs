@@ -46,6 +46,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<ISpellGetter>? _spells;
     private MergedGroup<IActivatorGetter>? _activators;
     private MergedGroup<ITalkingActivatorGetter>? _talkingActivators;
+    private MergedGroup<ITerminalGetter>? _terminals;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -138,6 +139,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<ITalkingActivatorGetter> TalkingActivators =>
         _talkingActivators ??= new MergedGroup<ITalkingActivatorGetter>(
             _sourceMods.Select(m => m.TalkingActivators));
+    public IFallout3GroupGetter<ITerminalGetter> Terminals =>
+        _terminals ??= new MergedGroup<ITerminalGetter>(
+            _sourceMods.Select(m => m.Terminals));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

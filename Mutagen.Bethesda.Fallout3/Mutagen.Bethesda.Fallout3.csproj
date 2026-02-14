@@ -471,8 +471,23 @@
     <Compile Include="Records\MajorRecords\TalkingActivator_Generated.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Terminal.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\TerminalMenuItem.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Water_Generated.cs">
       <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Note_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Terminal_Generated.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\TerminalMenuItem_Generated.cs">
+      <DependentUpon>Terminal.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
