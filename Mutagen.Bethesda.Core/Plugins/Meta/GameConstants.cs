@@ -311,6 +311,13 @@ public sealed record GameConstants
         IniName = "Enderal",
     };
 
+    public static readonly GameConstants EnderalSEGog = SkyrimSE with
+    {
+        Release = GameRelease.EnderalSEGog,
+        MyDocumentsString = "Enderal Special Edition GOG",
+        IniName = "Enderal",
+    };
+
     /// <summary> 
     /// Readonly singleton of Fallout4 game constants 
     /// </summary> 
