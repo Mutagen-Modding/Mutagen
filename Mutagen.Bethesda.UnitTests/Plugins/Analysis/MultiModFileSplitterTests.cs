@@ -341,4 +341,149 @@ public class MultiModFileSplitterTests
             sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
         });
     }
+
+    [Theory, MutagenModAutoData]
+    public void DialogResponsesFromManyMods_ShouldSplitSuccessfully(SkyrimMod inputMod)
+    {
+        // Simulates a patcher like "Conversations Raise Speechcraft" that overrides
+        // DialogResponses from many different mods. Each response's FormKey comes from
+        // a different mod, but each individual response only needs a small number of masters.
+        // The parent DialogTopic's EnumerateFormLinks() aggregates child response FormLinks,
+        // which inflates the topic's apparent master count beyond the limit.
+        // The splitter should handle this by not treating the topic's aggregated masters
+        // as a single unsplittable record.
+
+        var topicModKey = new ModKey("Skyrim", ModType.Master);
+        var topic = new DialogTopic(new FormKey(topicModKey, 0x100), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "TestTopic"
+        };
+
+        // Add 20 responses, each from a different mod (simulates overrides from many mods)
+        for (uint i = 0; i < 20; i++)
+        {
+            var responseModKey = new ModKey($"ResponseMod_{i}", ModType.Plugin);
+            var response = new DialogResponses(new FormKey(responseModKey, 0x800 + i), SkyrimRelease.SkyrimSE)
+            {
+                EditorID = $"Response_{i}"
+            };
+            topic.Responses.Add(response);
+        }
+
+        inputMod.DialogTopics.Add(topic);
+
+        var sut = new MultiModFileSplitter();
+
+        // With a limit of 10, this SHOULD be splittable because each individual response
+        // only needs ~1 master. But the DialogTopic's EnumerateFormLinks() aggregates all
+        // 20 response FormKeys, making the topic appear to need 20+ masters.
+        // The splitter should not throw here - it should split the responses across files.
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
+
+        // Verify all responses are present across the split files
+        var allResponses = outputList
+            .SelectMany(m => m.EnumerateMajorRecords<IDialogResponsesGetter>())
+            .ToList();
+        allResponses.Count.ShouldBe(20);
+
+        // Verify each split file respects the master limit
+        foreach (var mod in outputList)
+        {
+            var modMasters = GetAllMasters(mod);
+            modMasters.Count.ShouldBeLessThanOrEqualTo(10);
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void DialogResponsesOverrides_ShouldSplitAcrossFiles(SkyrimMod inputMod)
+    {
+        // Tests that dialog response overrides from many different mods can be split
+        // across multiple output files, similar to the Conversations Raise Speechcraft patcher.
+        // Each response is an override (FormKey from another mod) stored under a shared topic.
+
+        var topicModKey = new ModKey("Skyrim", ModType.Master);
+        var topic = new DialogTopic(new FormKey(topicModKey, 0x100), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "SharedTopic",
+            Quest = new FormKey(topicModKey, 0x200).ToNullableLink<IQuestGetter>()
+        };
+
+        // 15 responses from 15 different mods, limit of 5
+        for (uint i = 0; i < 15; i++)
+        {
+            var modKey = new ModKey($"Mod_{i}", ModType.Plugin);
+            var response = new DialogResponses(new FormKey(modKey, 0x800 + i), SkyrimRelease.SkyrimSE)
+            {
+                EditorID = $"Override_{i}"
+            };
+            topic.Responses.Add(response);
+        }
+
+        inputMod.DialogTopics.Add(topic);
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 5);
+
+        // Should have multiple split files
+        outputList.Count.ShouldBeGreaterThan(1);
+
+        // All 15 responses should be present
+        var allResponses = outputList
+            .SelectMany(m => m.EnumerateMajorRecords<IDialogResponsesGetter>())
+            .ToList();
+        allResponses.Count.ShouldBe(15);
+
+        // Each file should respect the master limit
+        foreach (var mod in outputList)
+        {
+            var modMasters = GetAllMasters(mod);
+            modMasters.Count.ShouldBeLessThanOrEqualTo(5);
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void MultipleDialogTopics_ResponsesFromManyMods_ShouldSplit(SkyrimMod inputMod)
+    {
+        // Tests multiple dialog topics each with responses from various mods.
+        // This more closely simulates a real patcher scenario.
+
+        for (uint t = 0; t < 3; t++)
+        {
+            var topicModKey = new ModKey("Skyrim", ModType.Master);
+            var topic = new DialogTopic(new FormKey(topicModKey, 0x100 + t), SkyrimRelease.SkyrimSE)
+            {
+                EditorID = $"Topic_{t}"
+            };
+
+            for (uint i = 0; i < 8; i++)
+            {
+                var modKey = new ModKey($"Mod_{t}_{i}", ModType.Plugin);
+                var response = new DialogResponses(new FormKey(modKey, 0x800 + i), SkyrimRelease.SkyrimSE)
+                {
+                    EditorID = $"Response_{t}_{i}"
+                };
+                topic.Responses.Add(response);
+            }
+
+            inputMod.DialogTopics.Add(topic);
+        }
+
+        var sut = new MultiModFileSplitter();
+
+        // Limit of 10 with 24 unique mod references across responses
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
+
+        // All 24 responses should be present
+        var allResponses = outputList
+            .SelectMany(m => m.EnumerateMajorRecords<IDialogResponsesGetter>())
+            .ToList();
+        allResponses.Count.ShouldBe(24);
+
+        // Each file should respect the master limit
+        foreach (var mod in outputList)
+        {
+            var modMasters = GetAllMasters(mod);
+            modMasters.Count.ShouldBeLessThanOrEqualTo(10);
+        }
+    }
 }
