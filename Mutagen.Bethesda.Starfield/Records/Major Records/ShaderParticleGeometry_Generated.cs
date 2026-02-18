@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IShaderParticleGeometryGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region GravityVelocity
         public Single GravityVelocity { get; set; } = default(Single);
         #endregion
@@ -155,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.GravityVelocity = initialValue;
                 this.Unknown1 = initialValue;
                 this.RotationVelocity = initialValue;
@@ -190,6 +213,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem GravityVelocity,
                 TItem Unknown1,
                 TItem RotationVelocity,
@@ -224,6 +248,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.GravityVelocity = GravityVelocity;
                 this.Unknown1 = Unknown1;
                 this.RotationVelocity = RotationVelocity;
@@ -260,6 +285,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem GravityVelocity;
             public TItem Unknown1;
             public TItem RotationVelocity;
@@ -298,6 +324,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.GravityVelocity, rhs.GravityVelocity)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.RotationVelocity, rhs.RotationVelocity)) return false;
@@ -328,6 +355,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.GravityVelocity);
                 hash.Add(this.Unknown1);
                 hash.Add(this.RotationVelocity);
@@ -363,6 +391,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.GravityVelocity)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.RotationVelocity)) return false;
@@ -396,6 +429,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.GravityVelocity)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.RotationVelocity)) return true;
@@ -436,6 +474,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.GravityVelocity = eval(this.GravityVelocity);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.RotationVelocity = eval(this.RotationVelocity);
@@ -479,6 +518,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ShaderParticleGeometry.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.GravityVelocity ?? true)
                     {
                         sb.AppendItem(GravityVelocity, "GravityVelocity");
@@ -590,6 +633,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? GravityVelocity;
             public Exception? Unknown1;
             public Exception? RotationVelocity;
@@ -623,6 +667,8 @@ namespace Mutagen.Bethesda.Starfield
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case ShaderParticleGeometry_FieldIndex.GravityVelocity:
                         return GravityVelocity;
                     case ShaderParticleGeometry_FieldIndex.Unknown1:
@@ -683,6 +729,9 @@ namespace Mutagen.Bethesda.Starfield
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case ShaderParticleGeometry_FieldIndex.GravityVelocity:
                         this.GravityVelocity = ex;
                         break;
@@ -769,6 +818,9 @@ namespace Mutagen.Bethesda.Starfield
                 ShaderParticleGeometry_FieldIndex enu = (ShaderParticleGeometry_FieldIndex)index;
                 switch (enu)
                 {
+                    case ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case ShaderParticleGeometry_FieldIndex.GravityVelocity:
                         this.GravityVelocity = (Exception?)obj;
                         break;
@@ -853,6 +905,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (GravityVelocity != null) return true;
                 if (Unknown1 != null) return true;
                 if (RotationVelocity != null) return true;
@@ -904,6 +957,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(GravityVelocity, "GravityVelocity");
                 }
@@ -987,6 +1041,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.GravityVelocity = this.GravityVelocity.Combine(rhs.GravityVelocity);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
                 ret.RotationVelocity = this.RotationVelocity.Combine(rhs.RotationVelocity);
@@ -1034,6 +1089,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool GravityVelocity;
             public bool Unknown1;
             public bool RotationVelocity;
@@ -1099,6 +1155,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((GravityVelocity, null));
                 ret.Add((Unknown1, null));
                 ret.Add((RotationVelocity, null));
@@ -1136,6 +1193,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ShaderParticleGeometry_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ShaderParticleGeometryCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShaderParticleGeometrySetterCommon.Instance.RemapLinks(this, mapping);
         public ShaderParticleGeometry(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -1264,10 +1323,17 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IShaderParticleGeometry :
+        IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IShaderParticleGeometryInternal>,
+        IScripted,
         IShaderParticleGeometryGetter,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new Single GravityVelocity { get; set; }
         new Single Unknown1 { get; set; }
         new Single RotationVelocity { get; set; }
@@ -1306,10 +1372,19 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IShaderParticleGeometryGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IShaderParticleGeometryGetter>,
-        IMapsToGetter<IShaderParticleGeometryGetter>
+        IMapsToGetter<IShaderParticleGeometryGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => ShaderParticleGeometry_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Single GravityVelocity { get; }
         Single Unknown1 { get; }
         Single RotationVelocity { get; }
@@ -1511,31 +1586,32 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        GravityVelocity = 7,
-        Unknown1 = 8,
-        RotationVelocity = 9,
-        Unknown2 = 10,
-        ParticleSizeX = 11,
-        Unknown3 = 12,
-        ParticleSizeY = 13,
-        Unknown4 = 14,
-        CenterOffsetMin = 15,
-        Unknown5 = 16,
-        CenterOffsetMax = 17,
-        Unknown6 = 18,
-        InitialRotation = 19,
-        Unknown7 = 20,
-        NumSubtexturesX = 21,
-        Unknown8 = 22,
-        NumSubtexturesY = 23,
-        Unknown9 = 24,
-        Type = 25,
-        Unknown10 = 26,
-        BoxSize = 27,
-        Unknown11 = 28,
-        ParticleDensity = 29,
-        Unknown12 = 30,
-        ParticleTexture = 31,
+        VirtualMachineAdapter = 7,
+        GravityVelocity = 8,
+        Unknown1 = 9,
+        RotationVelocity = 10,
+        Unknown2 = 11,
+        ParticleSizeX = 12,
+        Unknown3 = 13,
+        ParticleSizeY = 14,
+        Unknown4 = 15,
+        CenterOffsetMin = 16,
+        Unknown5 = 17,
+        CenterOffsetMax = 18,
+        Unknown6 = 19,
+        InitialRotation = 20,
+        Unknown7 = 21,
+        NumSubtexturesX = 22,
+        Unknown8 = 23,
+        NumSubtexturesY = 24,
+        Unknown9 = 25,
+        Type = 26,
+        Unknown10 = 27,
+        BoxSize = 28,
+        Unknown11 = 29,
+        ParticleDensity = 30,
+        Unknown12 = 31,
+        ParticleTexture = 32,
     }
     #endregion
 
@@ -1546,9 +1622,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 25;
+        public const ushort AdditionalFieldCount = 26;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(ShaderParticleGeometry.Mask<>);
 
@@ -1581,6 +1657,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.SPGD);
             var all = RecordCollection.Factory(
                 RecordTypes.SPGD,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.DATA,
                 RecordTypes.MNAM);
             return new RecordTriggerSpecs(
@@ -1627,6 +1705,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IShaderParticleGeometryInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.GravityVelocity = default(Single);
             item.Unknown1 = default(Single);
             item.RotationVelocity = default(Single);
@@ -1669,6 +1748,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IShaderParticleGeometry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1736,6 +1816,11 @@ namespace Mutagen.Bethesda.Starfield
             ShaderParticleGeometry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.GravityVelocity = item.GravityVelocity.EqualsWithin(rhs.GravityVelocity);
             ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
             ret.RotationVelocity = item.RotationVelocity.EqualsWithin(rhs.RotationVelocity);
@@ -1810,6 +1895,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if (printMask?.GravityVelocity ?? true)
             {
                 sb.AppendItem(item.GravityVelocity, "GravityVelocity");
@@ -1961,6 +2051,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
             {
                 if (!lhs.GravityVelocity.EqualsWithin(rhs.GravityVelocity)) return false;
@@ -2089,6 +2187,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IShaderParticleGeometryGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.GravityVelocity);
             hash.Add(item.Unknown1);
             hash.Add(item.RotationVelocity);
@@ -2145,6 +2247,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2220,6 +2329,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)ShaderParticleGeometry_FieldIndex.GravityVelocity) ?? true))
             {
                 item.GravityVelocity = rhs.GravityVelocity;
@@ -2489,6 +2624,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2636,6 +2778,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2701,6 +2850,11 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2745,6 +2899,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ShaderParticleGeometryCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ShaderParticleGeometryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2759,6 +2914,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IShaderParticleGeometryGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         private RangeInt32? _DATALocation;
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value.Min;
@@ -2953,6 +3114,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)ShaderParticleGeometry_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
@@ -2962,6 +3133,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ParticleTextureLocation = (stream.Position - offset);
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

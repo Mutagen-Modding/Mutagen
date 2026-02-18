@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -57,6 +58,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ILandscapeTextureGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region MaterialPath
         public AssetLink<StarfieldMaterialAssetType>? MaterialPath { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,6 +129,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.MaterialPath = initialValue;
                 this.MaterialType = initialValue;
                 this.HavokFriction = initialValue;
@@ -123,6 +145,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem MaterialPath,
                 TItem MaterialType,
                 TItem HavokFriction,
@@ -137,6 +160,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.MaterialPath = MaterialPath;
                 this.MaterialType = MaterialType;
                 this.HavokFriction = HavokFriction;
@@ -153,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem MaterialPath;
             public TItem MaterialType;
             public TItem HavokFriction;
@@ -171,6 +196,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.MaterialPath, rhs.MaterialPath)) return false;
                 if (!object.Equals(this.MaterialType, rhs.MaterialType)) return false;
                 if (!object.Equals(this.HavokFriction, rhs.HavokFriction)) return false;
@@ -181,6 +207,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.MaterialPath);
                 hash.Add(this.MaterialType);
                 hash.Add(this.HavokFriction);
@@ -196,6 +223,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.MaterialPath)) return false;
                 if (!eval(this.MaterialType)) return false;
                 if (!eval(this.HavokFriction)) return false;
@@ -209,6 +241,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.MaterialPath)) return true;
                 if (eval(this.MaterialType)) return true;
                 if (eval(this.HavokFriction)) return true;
@@ -229,6 +266,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.MaterialPath = eval(this.MaterialPath);
                 obj.MaterialType = eval(this.MaterialType);
                 obj.HavokFriction = eval(this.HavokFriction);
@@ -252,6 +290,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LandscapeTexture.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.MaterialPath ?? true)
                     {
                         sb.AppendItem(MaterialPath, "MaterialPath");
@@ -283,6 +325,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? MaterialPath;
             public Exception? MaterialType;
             public Exception? HavokFriction;
@@ -296,6 +339,8 @@ namespace Mutagen.Bethesda.Starfield
                 LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
                 switch (enu)
                 {
+                    case LandscapeTexture_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case LandscapeTexture_FieldIndex.MaterialPath:
                         return MaterialPath;
                     case LandscapeTexture_FieldIndex.MaterialType:
@@ -316,6 +361,9 @@ namespace Mutagen.Bethesda.Starfield
                 LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
                 switch (enu)
                 {
+                    case LandscapeTexture_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case LandscapeTexture_FieldIndex.MaterialPath:
                         this.MaterialPath = ex;
                         break;
@@ -342,6 +390,9 @@ namespace Mutagen.Bethesda.Starfield
                 LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
                 switch (enu)
                 {
+                    case LandscapeTexture_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case LandscapeTexture_FieldIndex.MaterialPath:
                         this.MaterialPath = (Exception?)obj;
                         break;
@@ -366,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (MaterialPath != null) return true;
                 if (MaterialType != null) return true;
                 if (HavokFriction != null) return true;
@@ -397,6 +449,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(MaterialPath, "MaterialPath");
                 }
@@ -420,6 +473,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.MaterialPath = this.MaterialPath.Combine(rhs.MaterialPath);
                 ret.MaterialType = this.MaterialType.Combine(rhs.MaterialType);
                 ret.HavokFriction = this.HavokFriction.Combine(rhs.HavokFriction);
@@ -447,6 +501,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool MaterialPath;
             public bool MaterialType;
             public bool HavokFriction;
@@ -472,6 +527,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((MaterialPath, null));
                 ret.Add((MaterialType, null));
                 ret.Add((HavokFriction, null));
@@ -625,10 +681,16 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILandscapeTexture :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILandscapeTextureGetter,
         ILoquiObjectSetter<ILandscapeTextureInternal>,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new AssetLink<StarfieldMaterialAssetType>? MaterialPath { get; set; }
         new IFormLink<IMaterialTypeGetter> MaterialType { get; set; }
         new Byte HavokFriction { get; set; }
@@ -649,10 +711,18 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ILandscapeTextureGetter>,
-        IMapsToGetter<ILandscapeTextureGetter>
+        IMapsToGetter<ILandscapeTextureGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => LandscapeTexture_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         AssetLinkGetter<StarfieldMaterialAssetType>? MaterialPath { get; }
         IFormLinkGetter<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }
@@ -834,11 +904,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        MaterialPath = 7,
-        MaterialType = 8,
-        HavokFriction = 9,
-        HavokRestitution = 10,
-        Dirtiness = 11,
+        VirtualMachineAdapter = 7,
+        MaterialPath = 8,
+        MaterialType = 9,
+        HavokFriction = 10,
+        HavokRestitution = 11,
+        Dirtiness = 12,
     }
     #endregion
 
@@ -849,9 +920,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(LandscapeTexture.Mask<>);
 
@@ -884,6 +955,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LTEX);
             var all = RecordCollection.Factory(
                 RecordTypes.LTEX,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.BNAM,
                 RecordTypes.MNAM,
                 RecordTypes.HNAM,
@@ -932,6 +1005,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILandscapeTextureInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.MaterialPath = default;
             item.MaterialType.Clear();
             item.HavokFriction = default(Byte);
@@ -954,6 +1028,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILandscapeTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.MaterialType.Relink(mapping);
         }
         
@@ -1048,6 +1123,11 @@ namespace Mutagen.Bethesda.Starfield
             LandscapeTexture.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.MaterialPath = object.Equals(item.MaterialPath, rhs.MaterialPath);
             ret.MaterialType = item.MaterialType.Equals(rhs.MaterialType);
             ret.HavokFriction = item.HavokFriction == rhs.HavokFriction;
@@ -1102,6 +1182,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.MaterialPath ?? true)
                 && item.MaterialPath is {} MaterialPathItem)
             {
@@ -1174,6 +1259,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)LandscapeTexture_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialPath) ?? true))
             {
                 if (!object.Equals(lhs.MaterialPath, rhs.MaterialPath)) return false;
@@ -1222,6 +1315,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILandscapeTextureGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             if (item.MaterialPath is {} MaterialPathitem)
             {
                 hash.Add(MaterialPathitem);
@@ -1261,6 +1358,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield return FormLinkInformation.Factory(obj.MaterialType);
             yield break;
@@ -1353,6 +1457,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LandscapeTexture_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             item.MaterialPath = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.MaterialPath, rhs.MaterialPath);
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.MaterialType) ?? true))
             {
@@ -1539,6 +1669,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaterialPath?.GivenPath,
@@ -1626,6 +1763,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)LandscapeTexture_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1655,6 +1799,11 @@ namespace Mutagen.Bethesda.Starfield
                         reader: frame,
                         integerType: FloatIntegerType.UInt);
                     return (int)LandscapeTexture_FieldIndex.Dirtiness;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1716,6 +1865,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILandscapeTextureGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region MaterialPath
         private int? _MaterialPathLocation;
         public AssetLinkGetter<StarfieldMaterialAssetType>? MaterialPath => _MaterialPathLocation.HasValue ? new AssetLinkGetter<StarfieldMaterialAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<StarfieldMaterialAssetType>?);
@@ -1808,6 +1963,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)LandscapeTexture_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.BNAM:
                 {
                     _MaterialPathLocation = (stream.Position - offset);
@@ -1827,6 +1992,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _DirtinessLocation = (stream.Position - offset);
                     return (int)LandscapeTexture_FieldIndex.Dirtiness;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

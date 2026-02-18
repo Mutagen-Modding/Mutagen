@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IClimateGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<WeatherType>? _Weathers;
@@ -122,6 +143,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, []);
                 this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(initialValue, []);
                 this.SunriseBegin = initialValue;
@@ -139,6 +161,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem Weathers,
                 TItem WeatherSettings,
                 TItem SunriseBegin,
@@ -155,6 +178,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Weathers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(Weathers, []);
                 this.WeatherSettings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>(WeatherSettings, []);
                 this.SunriseBegin = SunriseBegin;
@@ -173,6 +197,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>? Weathers;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ClimateWeatherSettings.Mask<TItem>?>>?>? WeatherSettings;
             public TItem SunriseBegin;
@@ -193,6 +218,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
                 if (!object.Equals(this.WeatherSettings, rhs.WeatherSettings)) return false;
                 if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
@@ -205,6 +231,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Weathers);
                 hash.Add(this.WeatherSettings);
                 hash.Add(this.SunriseBegin);
@@ -222,6 +249,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (this.Weathers != null)
                 {
                     if (!eval(this.Weathers.Overall)) return false;
@@ -259,6 +291,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (this.Weathers != null)
                 {
                     if (eval(this.Weathers.Overall)) return true;
@@ -303,6 +340,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Weathers != null)
                 {
                     obj.Weathers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherType.Mask<R>?>>?>(eval(this.Weathers.Overall), []);
@@ -356,6 +394,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if ((printMask?.Weathers?.Overall ?? true)
                         && Weathers is {} WeathersItem)
                     {
@@ -425,6 +467,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>? Weathers;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ClimateWeatherSettings.ErrorMask?>>?>? WeatherSettings;
             public Exception? SunriseBegin;
@@ -440,6 +483,8 @@ namespace Mutagen.Bethesda.Starfield
                 Climate_FieldIndex enu = (Climate_FieldIndex)index;
                 switch (enu)
                 {
+                    case Climate_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case Climate_FieldIndex.Weathers:
                         return Weathers;
                     case Climate_FieldIndex.WeatherSettings:
@@ -464,6 +509,9 @@ namespace Mutagen.Bethesda.Starfield
                 Climate_FieldIndex enu = (Climate_FieldIndex)index;
                 switch (enu)
                 {
+                    case Climate_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case Climate_FieldIndex.Weathers:
                         this.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ex, null);
                         break;
@@ -496,6 +544,9 @@ namespace Mutagen.Bethesda.Starfield
                 Climate_FieldIndex enu = (Climate_FieldIndex)index;
                 switch (enu)
                 {
+                    case Climate_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case Climate_FieldIndex.Weathers:
                         this.Weathers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>)obj;
                         break;
@@ -526,6 +577,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (Weathers != null) return true;
                 if (WeatherSettings != null) return true;
                 if (SunriseBegin != null) return true;
@@ -559,6 +611,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 if (Weathers is {} WeathersItem)
                 {
                     sb.AppendLine("Weathers =>");
@@ -618,6 +671,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Weathers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Weathers?.Overall, rhs.Weathers?.Overall), Noggog.ExceptionExt.Combine(this.Weathers?.Specific, rhs.Weathers?.Specific));
                 ret.WeatherSettings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ClimateWeatherSettings.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WeatherSettings?.Overall, rhs.WeatherSettings?.Overall), Noggog.ExceptionExt.Combine(this.WeatherSettings?.Specific, rhs.WeatherSettings?.Specific));
                 ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
@@ -647,6 +701,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public WeatherType.TranslationMask? Weathers;
             public ClimateWeatherSettings.TranslationMask? WeatherSettings;
             public bool SunriseBegin;
@@ -674,6 +729,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Weathers == null ? DefaultOn : !Weathers.GetCrystal().CopyNothing, Weathers?.GetCrystal()));
                 ret.Add((WeatherSettings == null ? DefaultOn : !WeatherSettings.GetCrystal().CopyNothing, WeatherSettings?.GetCrystal()));
                 ret.Add((SunriseBegin, null));
@@ -825,9 +881,15 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IClimate :
         IClimateGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IClimateInternal>,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<WeatherType>? Weathers { get; set; }
         new ExtendedList<ClimateWeatherSettings>? WeatherSettings { get; set; }
         new TimeOnly SunriseBegin { get; set; }
@@ -849,10 +911,18 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IClimateGetter>,
-        IMapsToGetter<IClimateGetter>
+        IMapsToGetter<IClimateGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
         IReadOnlyList<IClimateWeatherSettingsGetter>? WeatherSettings { get; }
         TimeOnly SunriseBegin { get; }
@@ -1036,13 +1106,14 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Weathers = 7,
-        WeatherSettings = 8,
-        SunriseBegin = 9,
-        SunriseEnd = 10,
-        SunsetBegin = 11,
-        SunsetEnd = 12,
-        Volatility = 13,
+        VirtualMachineAdapter = 7,
+        Weathers = 8,
+        WeatherSettings = 9,
+        SunriseBegin = 10,
+        SunriseEnd = 11,
+        SunsetBegin = 12,
+        SunsetEnd = 13,
+        Volatility = 14,
     }
     #endregion
 
@@ -1053,9 +1124,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Climate.Mask<>);
 
@@ -1088,6 +1159,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.CLMT);
             var all = RecordCollection.Factory(
                 RecordTypes.CLMT,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.WLST,
                 RecordTypes.WSLT,
                 RecordTypes.TNAM);
@@ -1135,6 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IClimateInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.Weathers = null;
             item.WeatherSettings = null;
             item.SunriseBegin = default(TimeOnly);
@@ -1159,6 +1233,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IClimate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Weathers?.RemapLinks(mapping);
             obj.WeatherSettings?.RemapLinks(mapping);
         }
@@ -1228,6 +1303,11 @@ namespace Mutagen.Bethesda.Starfield
             Climate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Weathers = item.Weathers.CollectionEqualsHelper(
                 rhs.Weathers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1290,6 +1370,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.Weathers?.Overall ?? true)
                 && item.Weathers is {} WeathersItem)
             {
@@ -1390,6 +1475,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
             {
                 if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Climate_FieldIndex.Weathers)))) return false;
@@ -1446,6 +1539,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IClimateGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.Weathers);
             hash.Add(item.WeatherSettings);
             hash.Add(item.SunriseBegin);
@@ -1481,6 +1578,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.Weathers is {} WeathersItem)
             {
@@ -1570,6 +1674,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Climate_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Climate_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Weathers) ?? true))
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Weathers);
@@ -1823,6 +1953,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.Weathers,
@@ -1983,6 +2120,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Climate_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.WLST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2022,6 +2166,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 1) return null;
                     item.Volatility = dataFrame.ReadUInt8();
                     return (int)Climate_FieldIndex.Volatility;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2098,6 +2247,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IClimateGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
         public IReadOnlyList<IClimateWeatherSettingsGetter>? WeatherSettings { get; private set; }
         private RangeInt32? _TNAMLocation;
@@ -2195,6 +2350,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Climate_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.WLST:
                 {
                     this.Weathers = BinaryOverlayList.FactoryByStartIndexWithTrigger<IWeatherTypeGetter>(
@@ -2219,6 +2384,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _TNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Climate_FieldIndex.Volatility;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

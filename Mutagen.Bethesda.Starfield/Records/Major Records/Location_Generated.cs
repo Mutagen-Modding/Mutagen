@@ -57,6 +57,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ILocationGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<ObjectProperty>? _Properties;
@@ -486,6 +506,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, []);
                 this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, []);
                 this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, []);
@@ -528,6 +549,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem Properties,
                 TItem AddedPersistLocationReferences,
                 TItem MasterPersistLocationReferences,
@@ -569,6 +591,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, []);
                 this.AddedPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(AddedPersistLocationReferences, []);
                 this.MasterPersistLocationReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(MasterPersistLocationReferences, []);
@@ -612,6 +635,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? AddedPersistLocationReferences;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? MasterPersistLocationReferences;
@@ -657,6 +681,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.AddedPersistLocationReferences, rhs.AddedPersistLocationReferences)) return false;
                 if (!object.Equals(this.MasterPersistLocationReferences, rhs.MasterPersistLocationReferences)) return false;
@@ -694,6 +719,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Properties);
                 hash.Add(this.AddedPersistLocationReferences);
                 hash.Add(this.MasterPersistLocationReferences);
@@ -736,6 +762,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (this.Properties != null)
                 {
                     if (!eval(this.Properties.Overall)) return false;
@@ -993,6 +1024,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (this.Properties != null)
                 {
                     if (eval(this.Properties.Overall)) return true;
@@ -1257,6 +1293,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Properties != null)
                 {
                     obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), []);
@@ -1580,6 +1617,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if ((printMask?.Properties?.Overall ?? true)
                         && Properties is {} PropertiesItem)
                     {
@@ -2033,6 +2074,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? AddedPersistLocationReferences;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? MasterPersistLocationReferences;
@@ -2073,6 +2115,8 @@ namespace Mutagen.Bethesda.Starfield
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
+                    case Location_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case Location_FieldIndex.Properties:
                         return Properties;
                     case Location_FieldIndex.AddedPersistLocationReferences:
@@ -2147,6 +2191,9 @@ namespace Mutagen.Bethesda.Starfield
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
+                    case Location_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case Location_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
@@ -2254,6 +2301,9 @@ namespace Mutagen.Bethesda.Starfield
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
+                    case Location_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case Location_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
@@ -2359,6 +2409,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (Properties != null) return true;
                 if (AddedPersistLocationReferences != null) return true;
                 if (MasterPersistLocationReferences != null) return true;
@@ -2417,6 +2468,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 if (Properties is {} PropertiesItem)
                 {
                     sb.AppendLine("Properties =>");
@@ -2833,6 +2885,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.AddedPersistLocationReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AddedPersistLocationReferences?.Overall, rhs.AddedPersistLocationReferences?.Overall), Noggog.ExceptionExt.Combine(this.AddedPersistLocationReferences?.Specific, rhs.AddedPersistLocationReferences?.Specific));
                 ret.MasterPersistLocationReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterPersistLocationReferences?.Overall, rhs.MasterPersistLocationReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterPersistLocationReferences?.Specific, rhs.MasterPersistLocationReferences?.Specific));
@@ -2887,6 +2940,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectProperty.TranslationMask? Properties;
             public LocationReference.TranslationMask? AddedPersistLocationReferences;
             public LocationReference.TranslationMask? MasterPersistLocationReferences;
@@ -2952,6 +3006,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((AddedPersistLocationReferences == null ? DefaultOn : !AddedPersistLocationReferences.GetCrystal().CopyNothing, AddedPersistLocationReferences?.GetCrystal()));
                 ret.Add((MasterPersistLocationReferences == null ? DefaultOn : !MasterPersistLocationReferences.GetCrystal().CopyNothing, MasterPersistLocationReferences?.GetCrystal()));
@@ -3132,15 +3187,21 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ILocation :
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILocationGetter,
         ILoquiObjectSetter<ILocationInternal>,
         INamed,
         INamedRequired,
+        IScripted,
         IStarfieldMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<LocationReference>? AddedPersistLocationReferences { get; set; }
         new ExtendedList<LocationReference>? MasterPersistLocationReferences { get; set; }
@@ -3197,15 +3258,23 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ILocationGetter>,
         IMapsToGetter<ILocationGetter>,
         INamedGetter,
         INamedRequiredGetter,
+        IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Location_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<ILocationReferenceGetter>? AddedPersistLocationReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? MasterPersistLocationReferences { get; }
@@ -3428,38 +3497,39 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Properties = 7,
-        AddedPersistLocationReferences = 8,
-        MasterPersistLocationReferences = 9,
-        RemovedPersistLocationReferences = 10,
-        AddedUniqueBaseForms = 11,
-        LocationCellUniqueReferences = 12,
-        RemovedUniqueBaseForms = 13,
-        AddedUniqueNpcs = 14,
-        MasterUniqueNpcs = 15,
-        RemovedUniqueNpcs = 16,
-        AddedSpecialReferences = 17,
-        MasterSpecialReferences = 18,
-        RemovedSpecialReferences = 19,
-        MasterWorldspaceCells = 20,
-        AddedInitiallyDisabledReferences = 21,
-        MasterInitiallyDisabledReferences = 22,
-        AddedEnablePointReferences = 23,
-        MasterEnablePointReferences = 24,
-        Name = 25,
-        Keywords = 26,
-        Properties2 = 27,
-        Owner = 28,
-        ParentLocation = 29,
-        MusicType = 30,
-        UnreportedCrimeFaction = 31,
-        WorldLocationMarkerRef = 32,
-        WorldLocationRadius = 33,
-        ActorFadeMult = 34,
-        RandomConversionTimer = 35,
-        Color = 36,
-        StarID = 37,
-        PlanetID = 38,
+        VirtualMachineAdapter = 7,
+        Properties = 8,
+        AddedPersistLocationReferences = 9,
+        MasterPersistLocationReferences = 10,
+        RemovedPersistLocationReferences = 11,
+        AddedUniqueBaseForms = 12,
+        LocationCellUniqueReferences = 13,
+        RemovedUniqueBaseForms = 14,
+        AddedUniqueNpcs = 15,
+        MasterUniqueNpcs = 16,
+        RemovedUniqueNpcs = 17,
+        AddedSpecialReferences = 18,
+        MasterSpecialReferences = 19,
+        RemovedSpecialReferences = 20,
+        MasterWorldspaceCells = 21,
+        AddedInitiallyDisabledReferences = 22,
+        MasterInitiallyDisabledReferences = 23,
+        AddedEnablePointReferences = 24,
+        MasterEnablePointReferences = 25,
+        Name = 26,
+        Keywords = 27,
+        Properties2 = 28,
+        Owner = 29,
+        ParentLocation = 30,
+        MusicType = 31,
+        UnreportedCrimeFaction = 32,
+        WorldLocationMarkerRef = 33,
+        WorldLocationRadius = 34,
+        ActorFadeMult = 35,
+        RandomConversionTimer = 36,
+        Color = 37,
+        StarID = 38,
+        PlanetID = 39,
     }
     #endregion
 
@@ -3470,9 +3540,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(Location.Mask<>);
 
@@ -3505,6 +3575,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LCTN);
             var all = RecordCollection.Factory(
                 RecordTypes.LCTN,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.PRPS,
                 RecordTypes.ACPR,
                 RecordTypes.LCPR,
@@ -3580,6 +3652,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILocationInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.Properties = null;
             item.AddedPersistLocationReferences = null;
             item.MasterPersistLocationReferences = null;
@@ -3629,6 +3702,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Properties?.RemapLinks(mapping);
             obj.AddedPersistLocationReferences?.RemapLinks(mapping);
             obj.MasterPersistLocationReferences?.RemapLinks(mapping);
@@ -3721,6 +3795,11 @@ namespace Mutagen.Bethesda.Starfield
             Location.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3866,6 +3945,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.Properties?.Overall ?? true)
                 && item.Properties is {} PropertiesItem)
             {
@@ -4271,6 +4355,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Location_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Properties) ?? true))
             {
                 if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.Properties)))) return false;
@@ -4431,6 +4523,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILocationGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.Properties);
             hash.Add(item.AddedPersistLocationReferences);
             hash.Add(item.MasterPersistLocationReferences);
@@ -4515,6 +4611,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.Properties is {} PropertiesItem)
             {
@@ -4750,6 +4853,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Location_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Properties) ?? true))
             {
                 errorMask?.PushIndex((int)Location_FieldIndex.Properties);
@@ -5586,6 +5715,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
                 writer: writer,
                 items: item.Properties,
@@ -5937,10 +6073,17 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Location_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.PRPS:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)MajorRecord_FieldIndex.EditorID)
+                        || lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.VirtualMachineAdapter)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.Properties = 
@@ -6273,6 +6416,11 @@ namespace Mutagen.Bethesda.Starfield
                     item.PlanetID = frame.ReadInt32();
                     return (int)Location_FieldIndex.PlanetID;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -6333,6 +6481,12 @@ namespace Mutagen.Bethesda.Starfield
 
         public Location.MajorFlag MajorFlags => (Location.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? AddedPersistLocationReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? MasterPersistLocationReferences { get; private set; }
@@ -6481,10 +6635,20 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Location_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.PRPS:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)MajorRecord_FieldIndex.EditorID)
+                        || lastParsed.ParsedIndex.Value <= (int)Location_FieldIndex.VirtualMachineAdapter)
                     {
                         this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
                             stream: stream,
@@ -6807,6 +6971,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _PlanetIDLocation = (stream.Position - offset);
                     return (int)Location_FieldIndex.PlanetID;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

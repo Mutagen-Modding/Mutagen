@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Water" recordType="WATR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
       <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" nullable="False" />

@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IMusicTrackGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region Type
         public MusicTrack.TypeEnum Type { get; set; } = default(MusicTrack.TypeEnum);
         #endregion
@@ -156,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Type = initialValue;
                 this.Duration = initialValue;
                 this.FadeOut = initialValue;
@@ -174,6 +196,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem Type,
                 TItem Duration,
                 TItem FadeOut,
@@ -191,6 +214,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Type = Type;
                 this.Duration = Duration;
                 this.FadeOut = FadeOut;
@@ -210,6 +234,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem Type;
             public TItem Duration;
             public TItem FadeOut;
@@ -231,6 +256,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Duration, rhs.Duration)) return false;
                 if (!object.Equals(this.FadeOut, rhs.FadeOut)) return false;
@@ -244,6 +270,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Type);
                 hash.Add(this.Duration);
                 hash.Add(this.FadeOut);
@@ -262,6 +289,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Type)) return false;
                 if (!eval(this.Duration)) return false;
                 if (!eval(this.FadeOut)) return false;
@@ -313,6 +345,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Type)) return true;
                 if (eval(this.Duration)) return true;
                 if (eval(this.FadeOut)) return true;
@@ -371,6 +408,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.Type = eval(this.Type);
                 obj.Duration = eval(this.Duration);
                 obj.FadeOut = eval(this.FadeOut);
@@ -437,6 +475,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.Type ?? true)
                     {
                         sb.AppendItem(Type, "Type");
@@ -529,6 +571,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? Type;
             public Exception? Duration;
             public Exception? FadeOut;
@@ -545,6 +588,8 @@ namespace Mutagen.Bethesda.Starfield
                 MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicTrack_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case MusicTrack_FieldIndex.Type:
                         return Type;
                     case MusicTrack_FieldIndex.Duration:
@@ -571,6 +616,9 @@ namespace Mutagen.Bethesda.Starfield
                 MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicTrack_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case MusicTrack_FieldIndex.Type:
                         this.Type = ex;
                         break;
@@ -606,6 +654,9 @@ namespace Mutagen.Bethesda.Starfield
                 MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicTrack_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case MusicTrack_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
@@ -639,6 +690,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (Type != null) return true;
                 if (Duration != null) return true;
                 if (FadeOut != null) return true;
@@ -673,6 +725,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(Type, "Type");
                 }
@@ -752,6 +805,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Duration = this.Duration.Combine(rhs.Duration);
                 ret.FadeOut = this.FadeOut.Combine(rhs.FadeOut);
@@ -782,6 +836,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Type;
             public bool Duration;
             public bool FadeOut;
@@ -811,6 +866,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Type, null));
                 ret.Add((Duration, null));
                 ret.Add((FadeOut, null));
@@ -962,10 +1018,16 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IMusicTrack :
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IMusicTrackInternal>,
         IMusicTrackGetter,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
         new Single? FadeOut { get; set; }
@@ -988,10 +1050,18 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IMusicTrackGetter>,
-        IMapsToGetter<IMusicTrackGetter>
+        IMapsToGetter<IMusicTrackGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }
@@ -1176,14 +1246,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Type = 7,
-        Duration = 8,
-        FadeOut = 9,
-        MTSH = 10,
-        CuePoints = 11,
-        MSTF = 12,
-        Conditions = 13,
-        Tracks = 14,
+        VirtualMachineAdapter = 7,
+        Type = 8,
+        Duration = 9,
+        FadeOut = 10,
+        MTSH = 11,
+        CuePoints = 12,
+        MSTF = 13,
+        Conditions = 14,
+        Tracks = 15,
     }
     #endregion
 
@@ -1194,9 +1265,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(MusicTrack.Mask<>);
 
@@ -1229,6 +1300,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.MUST);
             var all = RecordCollection.Factory(
                 RecordTypes.MUST,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.CNAM,
                 RecordTypes.FLTV,
                 RecordTypes.DNAM,
@@ -1284,6 +1357,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMusicTrackInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.Type = default(MusicTrack.TypeEnum);
             item.Duration = default;
             item.FadeOut = default;
@@ -1309,6 +1383,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IMusicTrack obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.MTSH?.RemapLinks(mapping);
             obj.Conditions?.RemapLinks(mapping);
             obj.Tracks?.RemapLinks(mapping);
@@ -1379,6 +1454,11 @@ namespace Mutagen.Bethesda.Starfield
             MusicTrack.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Type = item.Type == rhs.Type;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
             ret.FadeOut = item.FadeOut.EqualsWithin(rhs.FadeOut);
@@ -1449,6 +1529,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if (printMask?.Type ?? true)
             {
                 sb.AppendItem(item.Type, "Type");
@@ -1568,6 +1653,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)MusicTrack_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
@@ -1632,6 +1725,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMusicTrackGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.Type);
             if (item.Duration is {} Durationitem)
             {
@@ -1680,6 +1777,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.MTSH is {} MTSHItems)
             {
@@ -1776,6 +1880,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicTrack_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MusicTrack_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
@@ -2079,6 +2209,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             EnumBinaryTranslation<MusicTrack.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
@@ -2202,6 +2339,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)MusicTrack_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2268,6 +2412,11 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<IMusicTrackGetter>>();
                     return (int)MusicTrack_FieldIndex.Tracks;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -2327,6 +2476,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IMusicTrackGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region Type
         private int? _TypeLocation;
         public MusicTrack.TypeEnum Type => EnumBinaryTranslation<MusicTrack.TypeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 4);
@@ -2416,6 +2571,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)MusicTrack_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.CNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
@@ -2478,6 +2643,11 @@ namespace Mutagen.Bethesda.Starfield
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMusicTrackGetter>(p, s));
                     return (int)MusicTrack_FieldIndex.Tracks;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

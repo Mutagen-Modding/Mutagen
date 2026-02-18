@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LoadScreen" recordType="LSCR" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
       <RefList name="Conditions" refName="Condition" />
       <String name="Loadscreen" recordType="ICON" />

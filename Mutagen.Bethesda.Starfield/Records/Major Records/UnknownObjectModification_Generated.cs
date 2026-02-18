@@ -111,6 +111,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem Components,
                 TItem Name,
                 TItem Description,
@@ -136,6 +137,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormVersion: FormVersion,
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags,
+                VirtualMachineAdapter: VirtualMachineAdapter,
                 Components: Components,
                 Name: Name,
                 Description: Description,
@@ -617,10 +619,12 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IUnknownObjectModification :
         IAObjectModificationInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IUnknownObjectModificationInternal>,
         IModeled,
         INamed,
         INamedRequired,
+        IScripted,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IUnknownObjectModificationGetter
@@ -641,11 +645,13 @@ namespace Mutagen.Bethesda.Starfield
         IAObjectModificationGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IUnknownObjectModificationGetter>,
         IMapsToGetter<IUnknownObjectModificationGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
+        IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
@@ -828,23 +834,24 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Components = 7,
-        Name = 8,
-        Description = 9,
-        Model = 10,
-        Unknown = 11,
-        Unknown2 = 12,
-        AttachPoint = 13,
-        AttachParentSlots = 14,
-        Unknown3 = 15,
-        Includes = 16,
-        TargetOmodKeywords = 17,
-        FilterKeywords = 18,
-        LooseMod = 19,
-        Priority = 20,
-        Filter = 21,
-        Properties = 22,
-        ObjectModificationTargetName = 23,
+        VirtualMachineAdapter = 7,
+        Components = 8,
+        Name = 9,
+        Description = 10,
+        Model = 11,
+        Unknown = 12,
+        Unknown2 = 13,
+        AttachPoint = 14,
+        AttachParentSlots = 15,
+        Unknown3 = 16,
+        Includes = 17,
+        TargetOmodKeywords = 18,
+        FilterKeywords = 19,
+        LooseMod = 20,
+        Priority = 21,
+        Filter = 22,
+        Properties = 23,
+        ObjectModificationTargetName = 24,
     }
     #endregion
 
@@ -857,7 +864,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(UnknownObjectModification.Mask<>);
 
@@ -1125,6 +1132,8 @@ namespace Mutagen.Bethesda.Starfield
                 case AObjectModification_FieldIndex.Version2:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.StarfieldMajorRecordFlags:
+                    return (UnknownObjectModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.VirtualMachineAdapter:
                     return (UnknownObjectModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Components:
                     return (UnknownObjectModification_FieldIndex)((int)index);

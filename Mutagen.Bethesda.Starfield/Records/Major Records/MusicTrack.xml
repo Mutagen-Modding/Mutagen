@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" nullable="False" />
       <Float name="Duration" recordType="FLTV" />
       <Float name="FadeOut" recordType="DNAM" />

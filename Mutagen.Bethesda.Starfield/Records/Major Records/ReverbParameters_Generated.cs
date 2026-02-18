@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IReverbParametersGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region AudioBus
         public Guid? AudioBus { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,6 +108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.AudioBus = initialValue;
                 this.ReverbClass = initialValue;
             }
@@ -98,6 +121,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem AudioBus,
                 TItem ReverbClass)
             : base(
@@ -109,6 +133,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.AudioBus = AudioBus;
                 this.ReverbClass = ReverbClass;
             }
@@ -122,6 +147,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem AudioBus;
             public TItem ReverbClass;
             #endregion
@@ -137,6 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.AudioBus, rhs.AudioBus)) return false;
                 if (!object.Equals(this.ReverbClass, rhs.ReverbClass)) return false;
                 return true;
@@ -144,6 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.AudioBus);
                 hash.Add(this.ReverbClass);
                 hash.Add(base.GetHashCode());
@@ -156,6 +184,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.AudioBus)) return false;
                 if (!eval(this.ReverbClass)) return false;
                 return true;
@@ -166,6 +199,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.AudioBus)) return true;
                 if (eval(this.ReverbClass)) return true;
                 return false;
@@ -183,6 +221,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.AudioBus = eval(this.AudioBus);
                 obj.ReverbClass = eval(this.ReverbClass);
             }
@@ -203,6 +242,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ReverbParameters.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.AudioBus ?? true)
                     {
                         sb.AppendItem(AudioBus, "AudioBus");
@@ -222,6 +265,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? AudioBus;
             public Exception? ReverbClass;
             #endregion
@@ -232,6 +276,8 @@ namespace Mutagen.Bethesda.Starfield
                 ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
                 switch (enu)
                 {
+                    case ReverbParameters_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case ReverbParameters_FieldIndex.AudioBus:
                         return AudioBus;
                     case ReverbParameters_FieldIndex.ReverbClass:
@@ -246,6 +292,9 @@ namespace Mutagen.Bethesda.Starfield
                 ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
                 switch (enu)
                 {
+                    case ReverbParameters_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case ReverbParameters_FieldIndex.AudioBus:
                         this.AudioBus = ex;
                         break;
@@ -263,6 +312,9 @@ namespace Mutagen.Bethesda.Starfield
                 ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
                 switch (enu)
                 {
+                    case ReverbParameters_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case ReverbParameters_FieldIndex.AudioBus:
                         this.AudioBus = (Exception?)obj;
                         break;
@@ -278,6 +330,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (AudioBus != null) return true;
                 if (ReverbClass != null) return true;
                 return false;
@@ -306,6 +359,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(AudioBus, "AudioBus");
                 }
@@ -320,6 +374,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.AudioBus = this.AudioBus.Combine(rhs.AudioBus);
                 ret.ReverbClass = this.ReverbClass.Combine(rhs.ReverbClass);
                 return ret;
@@ -344,6 +399,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool AudioBus;
             public bool ReverbClass;
             #endregion
@@ -363,6 +419,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((AudioBus, null));
                 ret.Add((ReverbClass, null));
             }
@@ -377,6 +434,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ReverbParameters_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ReverbParametersCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ReverbParametersSetterCommon.Instance.RemapLinks(this, mapping);
         public ReverbParameters(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -505,10 +564,17 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IReverbParameters :
+        IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IReverbParametersInternal>,
         IReverbParametersGetter,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new Guid? AudioBus { get; set; }
         new ReverbParameters.Class ReverbClass { get; set; }
     }
@@ -524,10 +590,19 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IReverbParametersGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IReverbParametersGetter>,
-        IMapsToGetter<IReverbParametersGetter>
+        IMapsToGetter<IReverbParametersGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Guid? AudioBus { get; }
         ReverbParameters.Class ReverbClass { get; }
 
@@ -706,8 +781,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        AudioBus = 7,
-        ReverbClass = 8,
+        VirtualMachineAdapter = 7,
+        AudioBus = 8,
+        ReverbClass = 9,
     }
     #endregion
 
@@ -718,9 +794,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ReverbParameters.Mask<>);
 
@@ -753,6 +829,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.REVB);
             var all = RecordCollection.Factory(
                 RecordTypes.REVB,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.RABG,
                 RecordTypes.ANAM);
             return new RecordTriggerSpecs(
@@ -799,6 +877,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IReverbParametersInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.AudioBus = default;
             item.ReverbClass = default(ReverbParameters.Class);
             base.Clear(item);
@@ -818,6 +897,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IReverbParameters obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
         }
         
         #endregion
@@ -885,6 +965,11 @@ namespace Mutagen.Bethesda.Starfield
             ReverbParameters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.AudioBus = item.AudioBus == rhs.AudioBus;
             ret.ReverbClass = item.ReverbClass == rhs.ReverbClass;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -936,6 +1021,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.AudioBus ?? true)
                 && item.AudioBus is {} AudioBusItem)
             {
@@ -995,6 +1085,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)ReverbParameters_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.AudioBus) ?? true))
             {
                 if (lhs.AudioBus != rhs.AudioBus) return false;
@@ -1031,6 +1129,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IReverbParametersGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             if (item.AudioBus is {} AudioBusitem)
             {
                 hash.Add(AudioBusitem);
@@ -1064,6 +1166,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1139,6 +1248,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)ReverbParameters_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ReverbParameters_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.AudioBus) ?? true))
             {
                 item.AudioBus = rhs.AudioBus;
@@ -1316,6 +1451,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             GuidBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AudioBus,
@@ -1393,6 +1535,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)ReverbParameters_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.RABG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1406,6 +1555,11 @@ namespace Mutagen.Bethesda.Starfield
                         reader: frame,
                         length: contentLength);
                     return (int)ReverbParameters_FieldIndex.ReverbClass;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1451,6 +1605,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ReverbParametersCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1465,6 +1620,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IReverbParametersGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region AudioBus
         private int? _AudioBusLocation;
         public Guid? AudioBus => _AudioBusLocation.HasValue ? new Guid(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AudioBusLocation.Value, _package.MetaData.Constants).Slice(0, 16)) : default(Guid?);
@@ -1542,6 +1703,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)ReverbParameters_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.RABG:
                 {
                     _AudioBusLocation = (stream.Position - offset);
@@ -1551,6 +1722,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ReverbClassLocation = (stream.Position - offset);
                     return (int)ReverbParameters_FieldIndex.ReverbClass;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

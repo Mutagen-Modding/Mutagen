@@ -55,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ISpeechChallengeGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region QuestStageOnWin
         public Int16? QuestStageOnWin { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -152,6 +172,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.QuestStageOnWin = initialValue;
                 this.QuestStageOnLoss = initialValue;
                 this.SRAN = initialValue;
@@ -170,6 +191,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem QuestStageOnWin,
                 TItem QuestStageOnLoss,
                 TItem SRAN,
@@ -187,6 +209,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.QuestStageOnWin = QuestStageOnWin;
                 this.QuestStageOnLoss = QuestStageOnLoss;
                 this.SRAN = SRAN;
@@ -206,6 +229,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem QuestStageOnWin;
             public TItem QuestStageOnLoss;
             public TItem SRAN;
@@ -227,6 +251,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.QuestStageOnWin, rhs.QuestStageOnWin)) return false;
                 if (!object.Equals(this.QuestStageOnLoss, rhs.QuestStageOnLoss)) return false;
                 if (!object.Equals(this.SRAN, rhs.SRAN)) return false;
@@ -240,6 +265,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.QuestStageOnWin);
                 hash.Add(this.QuestStageOnLoss);
                 hash.Add(this.SRAN);
@@ -258,6 +284,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.QuestStageOnWin)) return false;
                 if (!eval(this.QuestStageOnLoss)) return false;
                 if (!eval(this.SRAN)) return false;
@@ -294,6 +325,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.QuestStageOnWin)) return true;
                 if (eval(this.QuestStageOnLoss)) return true;
                 if (eval(this.SRAN)) return true;
@@ -337,6 +373,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.QuestStageOnWin = eval(this.QuestStageOnWin);
                 obj.QuestStageOnLoss = eval(this.QuestStageOnLoss);
                 obj.SRAN = eval(this.SRAN);
@@ -389,6 +426,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SpeechChallenge.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.QuestStageOnWin ?? true)
                     {
                         sb.AppendItem(QuestStageOnWin, "QuestStageOnWin");
@@ -466,6 +507,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? QuestStageOnWin;
             public Exception? QuestStageOnLoss;
             public Exception? SRAN;
@@ -482,6 +524,8 @@ namespace Mutagen.Bethesda.Starfield
                 SpeechChallenge_FieldIndex enu = (SpeechChallenge_FieldIndex)index;
                 switch (enu)
                 {
+                    case SpeechChallenge_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case SpeechChallenge_FieldIndex.QuestStageOnWin:
                         return QuestStageOnWin;
                     case SpeechChallenge_FieldIndex.QuestStageOnLoss:
@@ -508,6 +552,9 @@ namespace Mutagen.Bethesda.Starfield
                 SpeechChallenge_FieldIndex enu = (SpeechChallenge_FieldIndex)index;
                 switch (enu)
                 {
+                    case SpeechChallenge_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case SpeechChallenge_FieldIndex.QuestStageOnWin:
                         this.QuestStageOnWin = ex;
                         break;
@@ -543,6 +590,9 @@ namespace Mutagen.Bethesda.Starfield
                 SpeechChallenge_FieldIndex enu = (SpeechChallenge_FieldIndex)index;
                 switch (enu)
                 {
+                    case SpeechChallenge_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case SpeechChallenge_FieldIndex.QuestStageOnWin:
                         this.QuestStageOnWin = (Exception?)obj;
                         break;
@@ -576,6 +626,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (QuestStageOnWin != null) return true;
                 if (QuestStageOnLoss != null) return true;
                 if (SRAN != null) return true;
@@ -610,6 +661,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(QuestStageOnWin, "QuestStageOnWin");
                 }
@@ -676,6 +728,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.QuestStageOnWin = this.QuestStageOnWin.Combine(rhs.QuestStageOnWin);
                 ret.QuestStageOnLoss = this.QuestStageOnLoss.Combine(rhs.QuestStageOnLoss);
                 ret.SRAN = this.SRAN.Combine(rhs.SRAN);
@@ -706,6 +759,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool QuestStageOnWin;
             public bool QuestStageOnLoss;
             public bool SRAN;
@@ -737,6 +791,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((QuestStageOnWin, null));
                 ret.Add((QuestStageOnLoss, null));
                 ret.Add((SRAN, null));
@@ -888,11 +943,17 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ISpeechChallenge :
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ISpeechChallengeInternal>,
+        IScripted,
         ISpeechChallengeGetter,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new Int16? QuestStageOnWin { get; set; }
         new Int16? QuestStageOnLoss { get; set; }
         new Boolean SRAN { get; set; }
@@ -918,11 +979,19 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<ISpeechChallengeGetter>,
-        IMapsToGetter<ISpeechChallengeGetter>
+        IMapsToGetter<ISpeechChallengeGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => SpeechChallenge_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Int16? QuestStageOnWin { get; }
         Int16? QuestStageOnLoss { get; }
         Boolean SRAN { get; }
@@ -1112,14 +1181,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        QuestStageOnWin = 7,
-        QuestStageOnLoss = 8,
-        SRAN = 9,
-        SGEN = 10,
-        Quest = 11,
-        Keywords = 12,
-        Scenes = 13,
-        DIFF = 14,
+        VirtualMachineAdapter = 7,
+        QuestStageOnWin = 8,
+        QuestStageOnLoss = 9,
+        SRAN = 10,
+        SGEN = 11,
+        Quest = 12,
+        Keywords = 13,
+        Scenes = 14,
+        DIFF = 15,
     }
     #endregion
 
@@ -1130,9 +1200,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(SpeechChallenge.Mask<>);
 
@@ -1165,6 +1235,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.SPCH);
             var all = RecordCollection.Factory(
                 RecordTypes.SPCH,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.SPWI,
                 RecordTypes.SPLO,
                 RecordTypes.SRAN,
@@ -1218,6 +1290,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISpeechChallengeInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.QuestStageOnWin = default;
             item.QuestStageOnLoss = default;
             item.SRAN = default(Boolean);
@@ -1243,6 +1316,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISpeechChallenge obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Quest.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Scenes?.RemapLinks(mapping);
@@ -1313,6 +1387,11 @@ namespace Mutagen.Bethesda.Starfield
             SpeechChallenge.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.QuestStageOnWin = item.QuestStageOnWin == rhs.QuestStageOnWin;
             ret.QuestStageOnLoss = item.QuestStageOnLoss == rhs.QuestStageOnLoss;
             ret.SRAN = item.SRAN == rhs.SRAN;
@@ -1376,6 +1455,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.QuestStageOnWin ?? true)
                 && item.QuestStageOnWin is {} QuestStageOnWinItem)
             {
@@ -1483,6 +1567,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)SpeechChallenge_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.QuestStageOnWin) ?? true))
             {
                 if (lhs.QuestStageOnWin != rhs.QuestStageOnWin) return false;
@@ -1543,6 +1635,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISpeechChallengeGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             if (item.QuestStageOnWin is {} QuestStageOnWinitem)
             {
                 hash.Add(QuestStageOnWinitem);
@@ -1588,6 +1684,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
@@ -1681,6 +1784,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)SpeechChallenge_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SpeechChallenge_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)SpeechChallenge_FieldIndex.QuestStageOnWin) ?? true))
             {
                 item.QuestStageOnWin = rhs.QuestStageOnWin;
@@ -1935,6 +2064,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.QuestStageOnWin,
@@ -2049,6 +2185,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)SpeechChallenge_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.SPWI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2105,6 +2248,11 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DIFF = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SpeechChallenge_FieldIndex.DIFF;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2165,6 +2313,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISpeechChallengeGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region QuestStageOnWin
         private int? _QuestStageOnWinLocation;
         public Int16? QuestStageOnWin => _QuestStageOnWinLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestStageOnWinLocation.Value, _package.MetaData.Constants)) : default(Int16?);
@@ -2263,6 +2417,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)SpeechChallenge_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.SPWI:
                 {
                     _QuestStageOnWinLocation = (stream.Position - offset);
@@ -2315,6 +2479,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _DIFFLocation = (stream.Position - offset);
                     return (int)SpeechChallenge_FieldIndex.DIFF;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

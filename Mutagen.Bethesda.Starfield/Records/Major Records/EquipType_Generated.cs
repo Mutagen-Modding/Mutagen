@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IEquipTypeGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region SlotParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? _SlotParents;
@@ -108,6 +129,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Flag = initialValue;
                 this.ConditionActorValue = initialValue;
@@ -121,6 +143,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem SlotParents,
                 TItem Flag,
                 TItem ConditionActorValue)
@@ -133,6 +156,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, []);
                 this.Flag = Flag;
                 this.ConditionActorValue = ConditionActorValue;
@@ -147,6 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SlotParents;
             public TItem Flag;
             public TItem ConditionActorValue;
@@ -163,6 +188,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.SlotParents, rhs.SlotParents)) return false;
                 if (!object.Equals(this.Flag, rhs.Flag)) return false;
                 if (!object.Equals(this.ConditionActorValue, rhs.ConditionActorValue)) return false;
@@ -171,6 +197,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.SlotParents);
                 hash.Add(this.Flag);
                 hash.Add(this.ConditionActorValue);
@@ -184,6 +211,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (this.SlotParents != null)
                 {
                     if (!eval(this.SlotParents.Overall)) return false;
@@ -205,6 +237,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (this.SlotParents != null)
                 {
                     if (eval(this.SlotParents.Overall)) return true;
@@ -233,6 +270,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (SlotParents != null)
                 {
                     obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), []);
@@ -267,6 +305,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(EquipType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if ((printMask?.SlotParents?.Overall ?? true)
                         && SlotParents is {} SlotParentsItem)
                     {
@@ -307,6 +349,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SlotParents;
             public Exception? Flag;
             public Exception? ConditionActorValue;
@@ -318,6 +361,8 @@ namespace Mutagen.Bethesda.Starfield
                 EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
                 switch (enu)
                 {
+                    case EquipType_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case EquipType_FieldIndex.SlotParents:
                         return SlotParents;
                     case EquipType_FieldIndex.Flag:
@@ -334,6 +379,9 @@ namespace Mutagen.Bethesda.Starfield
                 EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
                 switch (enu)
                 {
+                    case EquipType_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case EquipType_FieldIndex.SlotParents:
                         this.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
@@ -354,6 +402,9 @@ namespace Mutagen.Bethesda.Starfield
                 EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
                 switch (enu)
                 {
+                    case EquipType_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case EquipType_FieldIndex.SlotParents:
                         this.SlotParents = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -372,6 +423,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (SlotParents != null) return true;
                 if (Flag != null) return true;
                 if (ConditionActorValue != null) return true;
@@ -401,6 +453,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 if (SlotParents is {} SlotParentsItem)
                 {
                     sb.AppendLine("SlotParents =>");
@@ -435,6 +488,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), Noggog.ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
                 ret.Flag = this.Flag.Combine(rhs.Flag);
                 ret.ConditionActorValue = this.ConditionActorValue.Combine(rhs.ConditionActorValue);
@@ -460,6 +514,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool SlotParents;
             public bool Flag;
             public bool ConditionActorValue;
@@ -481,6 +536,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((SlotParents, null));
                 ret.Add((Flag, null));
                 ret.Add((ConditionActorValue, null));
@@ -628,9 +684,15 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IEquipType :
         IEquipTypeGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IEquipTypeInternal>,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; set; }
         new EquipType.Flags? Flag { get; set; }
         new IFormLinkNullable<IActorValueInformationGetter> ConditionActorValue { get; set; }
@@ -648,10 +710,18 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IEquipTypeGetter>,
-        IMapsToGetter<IEquipTypeGetter>
+        IMapsToGetter<IEquipTypeGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => EquipType_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; }
         EquipType.Flags? Flag { get; }
         IFormLinkNullableGetter<IActorValueInformationGetter> ConditionActorValue { get; }
@@ -831,9 +901,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        SlotParents = 7,
-        Flag = 8,
-        ConditionActorValue = 9,
+        VirtualMachineAdapter = 7,
+        SlotParents = 8,
+        Flag = 9,
+        ConditionActorValue = 10,
     }
     #endregion
 
@@ -844,9 +915,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(EquipType.Mask<>);
 
@@ -879,6 +950,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.EQUP);
             var all = RecordCollection.Factory(
                 RecordTypes.EQUP,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.PNAM,
                 RecordTypes.DATA,
                 RecordTypes.ANAM);
@@ -926,6 +999,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IEquipTypeInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.SlotParents = null;
             item.Flag = default;
             item.ConditionActorValue.Clear();
@@ -946,6 +1020,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IEquipType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.SlotParents?.RemapLinks(mapping);
             obj.ConditionActorValue.Relink(mapping);
         }
@@ -1015,6 +1090,11 @@ namespace Mutagen.Bethesda.Starfield
             EquipType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.SlotParents = item.SlotParents.CollectionEqualsHelper(
                 rhs.SlotParents,
                 (l, r) => object.Equals(l, r),
@@ -1070,6 +1150,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.SlotParents?.Overall ?? true)
                 && item.SlotParents is {} SlotParentsItem)
             {
@@ -1144,6 +1229,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EquipType_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)EquipType_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
             {
                 if (!lhs.SlotParents.SequenceEqualNullable(rhs.SlotParents)) return false;
@@ -1184,6 +1277,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IEquipTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.SlotParents);
             if (item.Flag is {} Flagitem)
             {
@@ -1218,6 +1315,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.SlotParents is {} SlotParentsItem)
             {
@@ -1304,6 +1408,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)EquipType_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)EquipType_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
             {
                 errorMask?.PushIndex((int)EquipType_FieldIndex.SlotParents);
@@ -1508,6 +1638,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SlotParents,
@@ -1595,6 +1732,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)EquipType_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1621,6 +1765,11 @@ namespace Mutagen.Bethesda.Starfield
                             reader: frame,
                             maxIsNone: true));
                     return (int)EquipType_FieldIndex.ConditionActorValue;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1681,6 +1830,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IEquipTypeGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? SlotParents { get; private set; }
         #region Flag
         private int? _FlagLocation;
@@ -1759,6 +1914,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)EquipType_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.PNAM:
                 {
                     this.SlotParents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IEquipTypeGetter>>(
@@ -1778,6 +1943,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ConditionActorValueLocation = (stream.Position - offset);
                     return (int)EquipType_FieldIndex.ConditionActorValue;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

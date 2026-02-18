@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <Enum name="Flags" enumName="MusicType.Flag" byteLength="4" recordType="FNAM" nullable="False" />
       <RefDirect name="Data" refName="MusicTypeData" />
       <Float name="FadeDuration" recordType="WNAM" />

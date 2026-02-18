@@ -56,6 +56,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ICollisionLayerGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region Description
         public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -122,6 +142,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Description = initialValue;
                 this.ContextNotes = initialValue;
                 this.Index = initialValue;
@@ -139,6 +160,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem Description,
                 TItem ContextNotes,
                 TItem Index,
@@ -155,6 +177,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Description = Description;
                 this.ContextNotes = ContextNotes;
                 this.Index = Index;
@@ -173,6 +196,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem Description;
             public TItem ContextNotes;
             public TItem Index;
@@ -193,6 +217,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.ContextNotes, rhs.ContextNotes)) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
@@ -205,6 +230,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Description);
                 hash.Add(this.ContextNotes);
                 hash.Add(this.Index);
@@ -222,6 +248,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Description)) return false;
                 if (!eval(this.ContextNotes)) return false;
                 if (!eval(this.Index)) return false;
@@ -247,6 +278,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Description)) return true;
                 if (eval(this.ContextNotes)) return true;
                 if (eval(this.Index)) return true;
@@ -279,6 +315,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.Description = eval(this.Description);
                 obj.ContextNotes = eval(this.ContextNotes);
                 obj.Index = eval(this.Index);
@@ -317,6 +354,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(CollisionLayer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.Description ?? true)
                     {
                         sb.AppendItem(Description, "Description");
@@ -373,6 +414,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? Description;
             public Exception? ContextNotes;
             public Exception? Index;
@@ -388,6 +430,8 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case CollisionLayer_FieldIndex.Description:
                         return Description;
                     case CollisionLayer_FieldIndex.ContextNotes:
@@ -412,6 +456,9 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case CollisionLayer_FieldIndex.Description:
                         this.Description = ex;
                         break;
@@ -444,6 +491,9 @@ namespace Mutagen.Bethesda.Starfield
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case CollisionLayer_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
@@ -474,6 +524,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (Description != null) return true;
                 if (ContextNotes != null) return true;
                 if (Index != null) return true;
@@ -507,6 +558,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(Description, "Description");
                 }
@@ -553,6 +605,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.ContextNotes = this.ContextNotes.Combine(rhs.ContextNotes);
                 ret.Index = this.Index.Combine(rhs.Index);
@@ -582,6 +635,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool Description;
             public bool ContextNotes;
             public bool Index;
@@ -611,6 +665,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((ContextNotes, null));
                 ret.Add((Index, null));
@@ -762,10 +817,16 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ICollisionLayer :
         ICollisionLayerGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<ICollisionLayerInternal>,
         INamedRequired,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new String? Description { get; set; }
         new String? ContextNotes { get; set; }
         new UInt32 Index { get; set; }
@@ -790,11 +851,19 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ICollisionLayerGetter>,
         IMapsToGetter<ICollisionLayerGetter>,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => CollisionLayer_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         String? Description { get; }
         String? ContextNotes { get; }
         UInt32 Index { get; }
@@ -983,13 +1052,14 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Description = 7,
-        ContextNotes = 8,
-        Index = 9,
-        DebugColor = 10,
-        Flags = 11,
-        Name = 12,
-        CollidesWith = 13,
+        VirtualMachineAdapter = 7,
+        Description = 8,
+        ContextNotes = 9,
+        Index = 10,
+        DebugColor = 11,
+        Flags = 12,
+        Name = 13,
+        CollidesWith = 14,
     }
     #endregion
 
@@ -1000,9 +1070,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -1035,6 +1105,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.COLL);
             var all = RecordCollection.Factory(
                 RecordTypes.COLL,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.DESC,
                 RecordTypes.NLDT,
                 RecordTypes.BNAM,
@@ -1086,6 +1158,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICollisionLayerInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.Description = default;
             item.ContextNotes = default;
             item.Index = default(UInt32);
@@ -1110,6 +1183,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ICollisionLayer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.CollidesWith?.RemapLinks(mapping);
         }
         
@@ -1178,6 +1252,11 @@ namespace Mutagen.Bethesda.Starfield
             CollisionLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.ContextNotes = string.Equals(item.ContextNotes, rhs.ContextNotes);
             ret.Index = item.Index == rhs.Index;
@@ -1237,6 +1316,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
@@ -1329,6 +1413,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)CollisionLayer_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
             {
                 if (!string.Equals(lhs.Description, rhs.Description)) return false;
@@ -1385,6 +1477,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ICollisionLayerGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
@@ -1429,6 +1525,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.CollidesWith is {} CollidesWithItem)
             {
@@ -1511,6 +1614,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)CollisionLayer_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CollisionLayer_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
             {
                 item.Description = rhs.Description;
@@ -1731,6 +1860,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
@@ -1837,6 +1973,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)CollisionLayer_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1893,6 +2036,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ICollisionLayerGetter>>();
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1953,6 +2101,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ICollisionLayerGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region Description
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2047,6 +2201,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)CollisionLayer_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
@@ -2086,6 +2250,11 @@ namespace Mutagen.Bethesda.Starfield
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(p, s));
                     return (int)CollisionLayer_FieldIndex.CollidesWith;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

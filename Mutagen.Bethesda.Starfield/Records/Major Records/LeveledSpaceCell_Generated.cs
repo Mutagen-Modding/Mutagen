@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ILeveledSpaceCellGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region ChanceNone
         public Single ChanceNone { get; set; } = default(Single);
         #endregion
@@ -126,6 +147,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ChanceNone = initialValue;
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
@@ -142,6 +164,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem ChanceNone,
                 TItem MaxCount,
                 TItem Flags,
@@ -157,6 +180,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ChanceNone = ChanceNone;
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
@@ -174,6 +198,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem ChanceNone;
             public TItem MaxCount;
             public TItem Flags;
@@ -193,6 +218,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
                 if (!object.Equals(this.MaxCount, rhs.MaxCount)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
@@ -204,6 +230,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ChanceNone);
                 hash.Add(this.MaxCount);
                 hash.Add(this.Flags);
@@ -220,6 +247,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.ChanceNone)) return false;
                 if (!eval(this.MaxCount)) return false;
                 if (!eval(this.Flags)) return false;
@@ -256,6 +288,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.ChanceNone)) return true;
                 if (eval(this.MaxCount)) return true;
                 if (eval(this.Flags)) return true;
@@ -299,6 +336,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ChanceNone = eval(this.ChanceNone);
                 obj.MaxCount = eval(this.MaxCount);
                 obj.Flags = eval(this.Flags);
@@ -351,6 +389,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LeveledSpaceCell.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.ChanceNone ?? true)
                     {
                         sb.AppendItem(ChanceNone, "ChanceNone");
@@ -416,6 +458,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? ChanceNone;
             public Exception? MaxCount;
             public Exception? Flags;
@@ -430,6 +473,8 @@ namespace Mutagen.Bethesda.Starfield
                 LeveledSpaceCell_FieldIndex enu = (LeveledSpaceCell_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledSpaceCell_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case LeveledSpaceCell_FieldIndex.ChanceNone:
                         return ChanceNone;
                     case LeveledSpaceCell_FieldIndex.MaxCount:
@@ -452,6 +497,9 @@ namespace Mutagen.Bethesda.Starfield
                 LeveledSpaceCell_FieldIndex enu = (LeveledSpaceCell_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledSpaceCell_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case LeveledSpaceCell_FieldIndex.ChanceNone:
                         this.ChanceNone = ex;
                         break;
@@ -481,6 +529,9 @@ namespace Mutagen.Bethesda.Starfield
                 LeveledSpaceCell_FieldIndex enu = (LeveledSpaceCell_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledSpaceCell_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case LeveledSpaceCell_FieldIndex.ChanceNone:
                         this.ChanceNone = (Exception?)obj;
                         break;
@@ -508,6 +559,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (ChanceNone != null) return true;
                 if (MaxCount != null) return true;
                 if (Flags != null) return true;
@@ -540,6 +592,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(ChanceNone, "ChanceNone");
                 }
@@ -596,6 +649,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
@@ -624,6 +678,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool ChanceNone;
             public bool MaxCount;
             public bool Flags;
@@ -649,6 +704,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ChanceNone, null));
                 ret.Add((MaxCount, null));
                 ret.Add((Flags, null));
@@ -798,11 +854,17 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ILeveledSpaceCell :
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILeveledSpaceCellGetter,
         ILoquiObjectSetter<ILeveledSpaceCellInternal>,
+        IScripted,
         ISpaceCellSpawn,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new Single ChanceNone { get; set; }
         new Byte MaxCount { get; set; }
         new LeveledSpaceCell.Flag Flags { get; set; }
@@ -823,11 +885,19 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ILeveledSpaceCellGetter>,
         IMapsToGetter<ILeveledSpaceCellGetter>,
+        IScriptedGetter,
         ISpaceCellSpawnGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledSpaceCell_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Single ChanceNone { get; }
         Byte MaxCount { get; }
         LeveledSpaceCell.Flag Flags { get; }
@@ -1010,12 +1080,13 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        ChanceNone = 7,
-        MaxCount = 8,
-        Flags = 9,
-        Conditions = 10,
-        UseGlobal = 11,
-        Entries = 12,
+        VirtualMachineAdapter = 7,
+        ChanceNone = 8,
+        MaxCount = 9,
+        Flags = 10,
+        Conditions = 11,
+        UseGlobal = 12,
+        Entries = 13,
     }
     #endregion
 
@@ -1026,9 +1097,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(LeveledSpaceCell.Mask<>);
 
@@ -1061,6 +1132,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LVSC);
             var all = RecordCollection.Factory(
                 RecordTypes.LVSC,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.LVLD,
                 RecordTypes.LVLM,
                 RecordTypes.LVLF,
@@ -1116,6 +1189,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILeveledSpaceCellInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.ChanceNone = default(Single);
             item.MaxCount = default(Byte);
             item.Flags = default(LeveledSpaceCell.Flag);
@@ -1139,6 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILeveledSpaceCell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.UseGlobal.Relink(mapping);
             obj.Entries?.RemapLinks(mapping);
@@ -1209,6 +1284,11 @@ namespace Mutagen.Bethesda.Starfield
             LeveledSpaceCell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.ChanceNone = item.ChanceNone.EqualsWithin(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1270,6 +1350,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if (printMask?.ChanceNone ?? true)
             {
                 sb.AppendItem(item.ChanceNone, "ChanceNone");
@@ -1365,6 +1450,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.ChanceNone) ?? true))
             {
                 if (!lhs.ChanceNone.EqualsWithin(rhs.ChanceNone)) return false;
@@ -1417,6 +1510,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILeveledSpaceCellGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.ChanceNone);
             hash.Add(item.MaxCount);
             hash.Add(item.Flags);
@@ -1451,6 +1548,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -1541,6 +1645,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpaceCell_FieldIndex.ChanceNone) ?? true))
             {
                 item.ChanceNone = rhs.ChanceNone;
@@ -1782,6 +1912,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             LeveledSpaceCellBinaryWriteTranslation.WriteBinaryChanceNone(
                 writer: writer,
                 item: item);
@@ -1903,6 +2040,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.LVLD:
                 {
                     LeveledSpaceCellBinaryCreateTranslation.FillBinaryChanceNoneCustom(
@@ -1954,6 +2098,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: LeveledNpcEntry.TryCreateFromBinary)
                         .CastExtendedList<LeveledNpcEntry>();
                     return (int)LeveledSpaceCell_FieldIndex.Entries;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2019,6 +2168,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILeveledSpaceCellGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region ChanceNone
         partial void ChanceNoneCustomParse(
             OverlayStream stream,
@@ -2110,6 +2265,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)LeveledSpaceCell_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.LVLD:
                 {
                     ChanceNoneCustomParse(
@@ -2161,6 +2326,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => LeveledNpcEntryBinaryOverlay.LeveledNpcEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)LeveledSpaceCell_FieldIndex.Entries;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

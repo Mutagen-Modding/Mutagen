@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IAnimationSoundTagSetGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region Tags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<AnimationSoundTag>? _Tags;
@@ -93,6 +114,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(initialValue, []);
             }
 
@@ -104,6 +126,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem Tags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -114,6 +137,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Tags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>(Tags, []);
             }
 
@@ -126,6 +150,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSoundTag.Mask<TItem>?>>?>? Tags;
             #endregion
 
@@ -140,12 +165,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Tags, rhs.Tags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Tags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -157,6 +184,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (this.Tags != null)
                 {
                     if (!eval(this.Tags.Overall)) return false;
@@ -177,6 +209,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (this.Tags != null)
                 {
                     if (eval(this.Tags.Overall)) return true;
@@ -204,6 +241,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (Tags != null)
                 {
                     obj.Tags = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AnimationSoundTag.Mask<R>?>>?>(eval(this.Tags.Overall), []);
@@ -237,6 +275,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AnimationSoundTagSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if ((printMask?.Tags?.Overall ?? true)
                         && Tags is {} TagsItem)
                     {
@@ -267,6 +309,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>? Tags;
             #endregion
 
@@ -276,6 +319,8 @@ namespace Mutagen.Bethesda.Starfield
                 AnimationSoundTagSet_FieldIndex enu = (AnimationSoundTagSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case AnimationSoundTagSet_FieldIndex.Tags:
                         return Tags;
                     default:
@@ -288,6 +333,9 @@ namespace Mutagen.Bethesda.Starfield
                 AnimationSoundTagSet_FieldIndex enu = (AnimationSoundTagSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case AnimationSoundTagSet_FieldIndex.Tags:
                         this.Tags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>(ex, null);
                         break;
@@ -302,6 +350,9 @@ namespace Mutagen.Bethesda.Starfield
                 AnimationSoundTagSet_FieldIndex enu = (AnimationSoundTagSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case AnimationSoundTagSet_FieldIndex.Tags:
                         this.Tags = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>)obj;
                         break;
@@ -314,6 +365,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (Tags != null) return true;
                 return false;
             }
@@ -341,6 +393,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 if (Tags is {} TagsItem)
                 {
                     sb.AppendLine("Tags =>");
@@ -367,6 +420,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Tags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSoundTag.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Tags?.Overall, rhs.Tags?.Overall), Noggog.ExceptionExt.Combine(this.Tags?.Specific, rhs.Tags?.Specific));
                 return ret;
             }
@@ -390,6 +444,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public AnimationSoundTag.TranslationMask? Tags;
             #endregion
 
@@ -406,6 +461,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Tags == null ? DefaultOn : !Tags.GetCrystal().CopyNothing, Tags?.GetCrystal()));
             }
 
@@ -551,9 +607,15 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAnimationSoundTagSet :
         IAnimationSoundTagSetGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IAnimationSoundTagSetInternal>,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<AnimationSoundTag>? Tags { get; set; }
     }
 
@@ -569,10 +631,18 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IAnimationSoundTagSetGetter>,
-        IMapsToGetter<IAnimationSoundTagSetGetter>
+        IMapsToGetter<IAnimationSoundTagSetGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => AnimationSoundTagSet_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IReadOnlyList<IAnimationSoundTagGetter>? Tags { get; }
 
     }
@@ -750,7 +820,8 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Tags = 7,
+        VirtualMachineAdapter = 7,
+        Tags = 8,
     }
     #endregion
 
@@ -761,9 +832,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(AnimationSoundTagSet.Mask<>);
 
@@ -796,6 +867,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.STAG);
             var all = RecordCollection.Factory(
                 RecordTypes.STAG,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.STAE,
                 RecordTypes.STMS,
                 RecordTypes.STAD);
@@ -843,6 +916,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAnimationSoundTagSetInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.Tags = null;
             base.Clear(item);
         }
@@ -861,6 +935,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IAnimationSoundTagSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Tags?.RemapLinks(mapping);
         }
         
@@ -929,6 +1004,11 @@ namespace Mutagen.Bethesda.Starfield
             AnimationSoundTagSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Tags = item.Tags.CollectionEqualsHelper(
                 rhs.Tags,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -982,6 +1062,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if ((printMask?.Tags?.Overall ?? true)
                 && item.Tags is {} TagsItem)
             {
@@ -1047,6 +1132,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTagSet_FieldIndex.Tags) ?? true))
             {
                 if (!lhs.Tags.SequenceEqualNullable(rhs.Tags, (l, r) => ((AnimationSoundTagCommon)((IAnimationSoundTagGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AnimationSoundTagSet_FieldIndex.Tags)))) return false;
@@ -1079,6 +1172,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAnimationSoundTagSetGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.Tags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1108,6 +1205,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.Tags is {} TagsItem)
             {
@@ -1190,6 +1294,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)AnimationSoundTagSet_FieldIndex.Tags) ?? true))
             {
                 errorMask?.PushIndex((int)AnimationSoundTagSet_FieldIndex.Tags);
@@ -1391,6 +1521,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAnimationSoundTagGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Tags,
@@ -1472,6 +1609,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.STAE:
                 case RecordTypeInts.STMS:
                 {
@@ -1485,6 +1629,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: AnimationSoundTag.TryCreateFromBinary)
                         .CastExtendedList<AnimationSoundTag>();
                     return (int)AnimationSoundTagSet_FieldIndex.Tags;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1545,6 +1694,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAnimationSoundTagSetGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         public IReadOnlyList<IAnimationSoundTagGetter>? Tags { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1615,6 +1770,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)AnimationSoundTagSet_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.STAE:
                 case RecordTypeInts.STMS:
                 {
@@ -1628,6 +1793,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => AnimationSoundTagBinaryOverlay.AnimationSoundTagFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)AnimationSoundTagSet_FieldIndex.Tags;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

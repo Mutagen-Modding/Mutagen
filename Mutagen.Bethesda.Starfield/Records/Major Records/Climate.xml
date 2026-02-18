@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Climate" recordType="CLMT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefList name="Weathers" refName="WeatherType" recordType="WLST" />
       <RefList name="WeatherSettings" refName="ClimateWeatherSettings" recordType="WSLT" />
       <Data recordType="TNAM">

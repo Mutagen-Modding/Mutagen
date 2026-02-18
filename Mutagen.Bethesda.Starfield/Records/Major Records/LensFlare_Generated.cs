@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ILensFlareGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region ColorInfluence
         public Single ColorInfluence { get; set; } = default(Single);
         #endregion
@@ -107,6 +129,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ColorInfluence = initialValue;
                 this.FadeDistanceRadiusScale = initialValue;
                 this.ExposureInfluence = initialValue;
@@ -123,6 +146,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem ColorInfluence,
                 TItem FadeDistanceRadiusScale,
                 TItem ExposureInfluence,
@@ -138,6 +162,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ColorInfluence = ColorInfluence;
                 this.FadeDistanceRadiusScale = FadeDistanceRadiusScale;
                 this.ExposureInfluence = ExposureInfluence;
@@ -155,6 +180,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem ColorInfluence;
             public TItem FadeDistanceRadiusScale;
             public TItem ExposureInfluence;
@@ -174,6 +200,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ColorInfluence, rhs.ColorInfluence)) return false;
                 if (!object.Equals(this.FadeDistanceRadiusScale, rhs.FadeDistanceRadiusScale)) return false;
                 if (!object.Equals(this.ExposureInfluence, rhs.ExposureInfluence)) return false;
@@ -185,6 +212,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ColorInfluence);
                 hash.Add(this.FadeDistanceRadiusScale);
                 hash.Add(this.ExposureInfluence);
@@ -201,6 +229,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (!eval(this.ColorInfluence)) return false;
                 if (!eval(this.FadeDistanceRadiusScale)) return false;
                 if (!eval(this.ExposureInfluence)) return false;
@@ -226,6 +259,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (eval(this.ColorInfluence)) return true;
                 if (eval(this.FadeDistanceRadiusScale)) return true;
                 if (eval(this.ExposureInfluence)) return true;
@@ -258,6 +296,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ColorInfluence = eval(this.ColorInfluence);
                 obj.FadeDistanceRadiusScale = eval(this.FadeDistanceRadiusScale);
                 obj.ExposureInfluence = eval(this.ExposureInfluence);
@@ -296,6 +335,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LensFlare.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if (printMask?.ColorInfluence ?? true)
                     {
                         sb.AppendItem(ColorInfluence, "ColorInfluence");
@@ -346,6 +389,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? ColorInfluence;
             public Exception? FadeDistanceRadiusScale;
             public Exception? ExposureInfluence;
@@ -360,6 +404,8 @@ namespace Mutagen.Bethesda.Starfield
                 LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
                 switch (enu)
                 {
+                    case LensFlare_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case LensFlare_FieldIndex.ColorInfluence:
                         return ColorInfluence;
                     case LensFlare_FieldIndex.FadeDistanceRadiusScale:
@@ -382,6 +428,9 @@ namespace Mutagen.Bethesda.Starfield
                 LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
                 switch (enu)
                 {
+                    case LensFlare_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case LensFlare_FieldIndex.ColorInfluence:
                         this.ColorInfluence = ex;
                         break;
@@ -411,6 +460,9 @@ namespace Mutagen.Bethesda.Starfield
                 LensFlare_FieldIndex enu = (LensFlare_FieldIndex)index;
                 switch (enu)
                 {
+                    case LensFlare_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case LensFlare_FieldIndex.ColorInfluence:
                         this.ColorInfluence = (Exception?)obj;
                         break;
@@ -438,6 +490,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (ColorInfluence != null) return true;
                 if (FadeDistanceRadiusScale != null) return true;
                 if (ExposureInfluence != null) return true;
@@ -470,6 +523,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 {
                     sb.AppendItem(ColorInfluence, "ColorInfluence");
                 }
@@ -511,6 +565,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ColorInfluence = this.ColorInfluence.Combine(rhs.ColorInfluence);
                 ret.FadeDistanceRadiusScale = this.FadeDistanceRadiusScale.Combine(rhs.FadeDistanceRadiusScale);
                 ret.ExposureInfluence = this.ExposureInfluence.Combine(rhs.ExposureInfluence);
@@ -539,6 +594,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool ColorInfluence;
             public bool FadeDistanceRadiusScale;
             public bool ExposureInfluence;
@@ -565,6 +621,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ColorInfluence, null));
                 ret.Add((FadeDistanceRadiusScale, null));
                 ret.Add((ExposureInfluence, null));
@@ -583,6 +640,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LensFlare_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LensFlareCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LensFlareSetterCommon.Instance.RemapLinks(this, mapping);
         public LensFlare(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -711,10 +770,17 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILensFlare :
+        IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILensFlareGetter,
         ILoquiObjectSetter<ILensFlareInternal>,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new Single ColorInfluence { get; set; }
         new Single FadeDistanceRadiusScale { get; set; }
         new Single ExposureInfluence { get; set; }
@@ -734,10 +800,19 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILensFlareGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ILensFlareGetter>,
-        IMapsToGetter<ILensFlareGetter>
+        IMapsToGetter<ILensFlareGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => LensFlare_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         Single ColorInfluence { get; }
         Single FadeDistanceRadiusScale { get; }
         Single ExposureInfluence { get; }
@@ -920,12 +995,13 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        ColorInfluence = 7,
-        FadeDistanceRadiusScale = 8,
-        ExposureInfluence = 9,
-        MinEV100 = 10,
-        MaxEV100 = 11,
-        Sprites = 12,
+        VirtualMachineAdapter = 7,
+        ColorInfluence = 8,
+        FadeDistanceRadiusScale = 9,
+        ExposureInfluence = 10,
+        MinEV100 = 11,
+        MaxEV100 = 12,
+        Sprites = 13,
     }
     #endregion
 
@@ -936,9 +1012,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(LensFlare.Mask<>);
 
@@ -971,6 +1047,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LENS);
             var all = RecordCollection.Factory(
                 RecordTypes.LENS,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,
                 RecordTypes.ENAM,
@@ -1023,6 +1101,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILensFlareInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.ColorInfluence = default(Single);
             item.FadeDistanceRadiusScale = default(Single);
             item.ExposureInfluence = default(Single);
@@ -1046,6 +1125,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILensFlare obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1113,6 +1193,11 @@ namespace Mutagen.Bethesda.Starfield
             LensFlare.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.ColorInfluence = item.ColorInfluence.EqualsWithin(rhs.ColorInfluence);
             ret.FadeDistanceRadiusScale = item.FadeDistanceRadiusScale.EqualsWithin(rhs.FadeDistanceRadiusScale);
             ret.ExposureInfluence = item.ExposureInfluence.EqualsWithin(rhs.ExposureInfluence);
@@ -1171,6 +1256,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if (printMask?.ColorInfluence ?? true)
             {
                 sb.AppendItem(item.ColorInfluence, "ColorInfluence");
@@ -1256,6 +1346,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)LensFlare_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
             {
                 if (!lhs.ColorInfluence.EqualsWithin(rhs.ColorInfluence)) return false;
@@ -1308,6 +1406,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILensFlareGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.ColorInfluence);
             hash.Add(item.FadeDistanceRadiusScale);
             hash.Add(item.ExposureInfluence);
@@ -1342,6 +1444,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1417,6 +1526,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)LensFlare_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LensFlare_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)LensFlare_FieldIndex.ColorInfluence) ?? true))
             {
                 item.ColorInfluence = rhs.ColorInfluence;
@@ -1638,6 +1773,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ColorInfluence,
@@ -1739,6 +1881,13 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)LensFlare_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1781,6 +1930,11 @@ namespace Mutagen.Bethesda.Starfield
                             transl: LensFlareSprite.TryCreateFromBinary)
                         .CastExtendedList<LensFlareSprite>();
                     return (int)LensFlare_FieldIndex.Sprites;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1826,6 +1980,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LensFlareCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LensFlareBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1840,6 +1995,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILensFlareGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region ColorInfluence
         private int? _ColorInfluenceLocation;
         public Single ColorInfluence => _ColorInfluenceLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorInfluenceLocation.Value, _package.MetaData.Constants).Float() : default(Single);
@@ -1930,6 +2091,16 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)LensFlare_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.CNAM:
                 {
                     _ColorInfluenceLocation = (stream.Position - offset);
@@ -1967,6 +2138,11 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => LensFlareSpriteBinaryOverlay.LensFlareSpriteFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)LensFlare_FieldIndex.Sprites;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

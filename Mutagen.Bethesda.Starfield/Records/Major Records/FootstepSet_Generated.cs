@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,6 +55,26 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IFootstepSetGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
         #region WalkFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
@@ -149,6 +170,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
@@ -164,6 +186,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
                 TItem WalkFootsteps,
                 TItem RunFootsteps,
                 TItem SprintFootsteps,
@@ -178,6 +201,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.WalkFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkFootsteps, []);
                 this.RunFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunFootsteps, []);
                 this.SprintFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SprintFootsteps, []);
@@ -194,6 +218,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkFootsteps;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunFootsteps;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SprintFootsteps;
@@ -212,6 +237,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.WalkFootsteps, rhs.WalkFootsteps)) return false;
                 if (!object.Equals(this.RunFootsteps, rhs.RunFootsteps)) return false;
                 if (!object.Equals(this.SprintFootsteps, rhs.SprintFootsteps)) return false;
@@ -222,6 +248,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.WalkFootsteps);
                 hash.Add(this.RunFootsteps);
                 hash.Add(this.SprintFootsteps);
@@ -237,6 +264,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
                 if (this.WalkFootsteps != null)
                 {
                     if (!eval(this.WalkFootsteps.Overall)) return false;
@@ -300,6 +332,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
                 if (this.WalkFootsteps != null)
                 {
                     if (eval(this.WalkFootsteps.Overall)) return true;
@@ -370,6 +407,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 if (WalkFootsteps != null)
                 {
                     obj.WalkFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkFootsteps.Overall), []);
@@ -458,6 +496,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(FootstepSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
                     if ((printMask?.WalkFootsteps?.Overall ?? true)
                         && WalkFootsteps is {} WalkFootstepsItem)
                     {
@@ -574,6 +616,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkFootsteps;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunFootsteps;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SprintFootsteps;
@@ -587,6 +630,8 @@ namespace Mutagen.Bethesda.Starfield
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
                     case FootstepSet_FieldIndex.WalkFootsteps:
                         return WalkFootsteps;
                     case FootstepSet_FieldIndex.RunFootsteps:
@@ -607,6 +652,9 @@ namespace Mutagen.Bethesda.Starfield
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
                     case FootstepSet_FieldIndex.WalkFootsteps:
                         this.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
@@ -633,6 +681,9 @@ namespace Mutagen.Bethesda.Starfield
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
                     case FootstepSet_FieldIndex.WalkFootsteps:
                         this.WalkFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -657,6 +708,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
                 if (WalkFootsteps != null) return true;
                 if (RunFootsteps != null) return true;
                 if (SprintFootsteps != null) return true;
@@ -688,6 +740,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
                 if (WalkFootsteps is {} WalkFootstepsItem)
                 {
                     sb.AppendLine("WalkFootsteps =>");
@@ -796,6 +849,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.WalkFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Overall, rhs.WalkFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.WalkFootsteps?.Specific, rhs.WalkFootsteps?.Specific));
                 ret.RunFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RunFootsteps?.Overall, rhs.RunFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.RunFootsteps?.Specific, rhs.RunFootsteps?.Specific));
                 ret.SprintFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Overall, rhs.SprintFootsteps?.Overall), Noggog.ExceptionExt.Combine(this.SprintFootsteps?.Specific, rhs.SprintFootsteps?.Specific));
@@ -823,6 +877,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool WalkFootsteps;
             public bool RunFootsteps;
             public bool SprintFootsteps;
@@ -848,6 +903,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((WalkFootsteps, null));
                 ret.Add((RunFootsteps, null));
                 ret.Add((SprintFootsteps, null));
@@ -997,9 +1053,15 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFootstepSet :
         IFootstepSetGetter,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IFootstepSetInternal>,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; }
         new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; }
         new ExtendedList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; }
@@ -1019,10 +1081,18 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IFootstepSetGetter>,
-        IMapsToGetter<IFootstepSetGetter>
+        IMapsToGetter<IFootstepSetGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => FootstepSet_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkFootsteps { get; }
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunFootsteps { get; }
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> SprintFootsteps { get; }
@@ -1204,11 +1274,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        WalkFootsteps = 7,
-        RunFootsteps = 8,
-        SprintFootsteps = 9,
-        SneakFootsteps = 10,
-        SwimFootsteps = 11,
+        VirtualMachineAdapter = 7,
+        WalkFootsteps = 8,
+        RunFootsteps = 9,
+        SprintFootsteps = 10,
+        SneakFootsteps = 11,
+        SwimFootsteps = 12,
     }
     #endregion
 
@@ -1219,9 +1290,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -1254,6 +1325,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.FSTS);
             var all = RecordCollection.Factory(
                 RecordTypes.FSTS,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
                 RecordTypes.XCNT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1299,6 +1372,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFootstepSetInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
             item.WalkFootsteps.Clear();
             item.RunFootsteps.Clear();
             item.SprintFootsteps.Clear();
@@ -1321,6 +1395,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IFootstepSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.WalkFootsteps.RemapLinks(mapping);
             obj.RunFootsteps.RemapLinks(mapping);
             obj.SprintFootsteps.RemapLinks(mapping);
@@ -1393,6 +1468,11 @@ namespace Mutagen.Bethesda.Starfield
             FootstepSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.WalkFootsteps = item.WalkFootsteps.CollectionEqualsHelper(
                 rhs.WalkFootsteps,
                 (l, r) => object.Equals(l, r),
@@ -1462,6 +1542,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
             if (printMask?.WalkFootsteps?.Overall ?? true)
             {
                 sb.AppendLine("WalkFootsteps =>");
@@ -1582,6 +1667,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)FootstepSet_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
             {
                 if (!lhs.WalkFootsteps.SequenceEqualNullable(rhs.WalkFootsteps)) return false;
@@ -1630,6 +1723,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IFootstepSetGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
             hash.Add(item.WalkFootsteps);
             hash.Add(item.RunFootsteps);
             hash.Add(item.SprintFootsteps);
@@ -1663,6 +1760,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.WalkFootsteps)
             {
@@ -1758,6 +1862,32 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)FootstepSet_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkFootsteps) ?? true))
             {
                 errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkFootsteps);
@@ -2031,6 +2161,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
             FootstepSetBinaryWriteTranslation.WriteBinaryCount(
                 writer: writer,
                 item: item);
@@ -2124,12 +2261,24 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)FootstepSet_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.XCNT:
                 {
                     return FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
                         lastParsed: lastParsed);
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2195,6 +2344,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFootstepSetGetter);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #region Count
         public partial ParseResult CountCustomParse(
             OverlayStream stream,
@@ -2270,12 +2425,27 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)FootstepSet_FieldIndex.VirtualMachineAdapter;
+                }
                 case RecordTypeInts.XCNT:
                 {
                     return CountCustomParse(
                         stream,
                         offset,
                         lastParsed: lastParsed);
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

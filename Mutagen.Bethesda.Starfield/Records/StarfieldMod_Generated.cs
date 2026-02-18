@@ -10533,6 +10533,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Keywords.RemapLinks(mapping);
             obj.LocationReferenceTypes.RemapLinks(mapping);
             obj.Actions.RemapLinks(mapping);
+            obj.TextureSets.RemapLinks(mapping);
             obj.Globals.RemapLinks(mapping);
             obj.DamageTypes.RemapLinks(mapping);
             obj.Classes.RemapLinks(mapping);
@@ -10582,6 +10583,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Weathers.RemapLinks(mapping);
             obj.WeatherSettings.RemapLinks(mapping);
             obj.Climates.RemapLinks(mapping);
+            obj.ShaderParticleGeometries.RemapLinks(mapping);
             obj.Regions.RemapLinks(mapping);
             obj.NavigationMeshInfoMaps.RemapLinks(mapping);
             obj.Cells.RemapLinks(mapping);
@@ -10600,6 +10602,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Perks.RemapLinks(mapping);
             obj.BodyParts.RemapLinks(mapping);
             obj.AddonNodes.RemapLinks(mapping);
+            obj.ActorValueInformation.RemapLinks(mapping);
             obj.CameraShots.RemapLinks(mapping);
             obj.CameraPaths.RemapLinks(mapping);
             obj.VoiceTypes.RemapLinks(mapping);
@@ -10623,6 +10626,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ArtObjects.RemapLinks(mapping);
             obj.CollisionLayers.RemapLinks(mapping);
             obj.Colors.RemapLinks(mapping);
+            obj.ReverbParameters.RemapLinks(mapping);
             obj.ReferenceGroups.RemapLinks(mapping);
             obj.Layers.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
@@ -10630,16 +10634,20 @@ namespace Mutagen.Bethesda.Starfield
             obj.Zooms.RemapLinks(mapping);
             obj.InstanceNamingRules.RemapLinks(mapping);
             obj.SoundKeywordMappings.RemapLinks(mapping);
+            obj.AttractionRules.RemapLinks(mapping);
             obj.SceneCollections.RemapLinks(mapping);
             obj.AnimationSoundTagSets.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.Biomes.RemapLinks(mapping);
+            obj.LensFlares.RemapLinks(mapping);
             obj.ObjectVisibilityManagers.RemapLinks(mapping);
             obj.SnapTemplateNodes.RemapLinks(mapping);
             obj.SnapTemplates.RemapLinks(mapping);
             obj.GroundCovers.RemapLinks(mapping);
             obj.MorphableObjects.RemapLinks(mapping);
+            obj.Traversals.RemapLinks(mapping);
             obj.ResourceGenerationData.RemapLinks(mapping);
+            obj.ObjectSwaps.RemapLinks(mapping);
             obj.Atmospheres.RemapLinks(mapping);
             obj.LeveledSpaceCells.RemapLinks(mapping);
             obj.SpeechChallenges.RemapLinks(mapping);
@@ -17459,6 +17467,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.TextureSets is IFormLinkContainerGetter TextureSetslinkCont)
+            {
+                foreach (var item in TextureSetslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Globals is IFormLinkContainerGetter GlobalslinkCont)
             {
                 foreach (var item in GlobalslinkCont.EnumerateFormLinks())
@@ -17466,13 +17481,19 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            foreach (var item in obj.DamageTypes.EnumerateFormLinks())
+            if (obj.DamageTypes is IFormLinkContainerGetter DamageTypeslinkCont)
             {
-                yield return item;
+                foreach (var item in DamageTypeslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
-            foreach (var item in obj.Classes.EnumerateFormLinks())
+            if (obj.Classes is IFormLinkContainerGetter ClasseslinkCont)
             {
-                yield return item;
+                foreach (var item in ClasseslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Factions.EnumerateFormLinks())
             {
@@ -17494,9 +17515,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.SoundEchoMarkers.EnumerateFormLinks())
+            if (obj.SoundEchoMarkers is IFormLinkContainerGetter SoundEchoMarkerslinkCont)
             {
-                yield return item;
+                foreach (var item in SoundEchoMarkerslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.AcousticSpaces.EnumerateFormLinks())
             {
@@ -17514,9 +17538,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.ObjectEffects.EnumerateFormLinks())
+            if (obj.ObjectEffects is IFormLinkContainerGetter ObjectEffectslinkCont)
             {
-                yield return item;
+                foreach (var item in ObjectEffectslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Spells.EnumerateFormLinks())
             {
@@ -17660,9 +17687,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.Climates.EnumerateFormLinks())
+            if (obj.Climates is IFormLinkContainerGetter ClimateslinkCont)
             {
-                yield return item;
+                foreach (var item in ClimateslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ShaderParticleGeometries is IFormLinkContainerGetter ShaderParticleGeometrieslinkCont)
+            {
+                foreach (var item in ShaderParticleGeometrieslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Regions.EnumerateFormLinks())
             {
@@ -17696,9 +17733,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.LoadScreens.EnumerateFormLinks())
+            if (obj.LoadScreens is IFormLinkContainerGetter LoadScreenslinkCont)
             {
-                yield return item;
+                foreach (var item in LoadScreenslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.AnimatedObjects is IFormLinkContainerGetter AnimatedObjectslinkCont)
             {
@@ -17741,6 +17781,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.AddonNodes.EnumerateFormLinks())
             {
                 yield return item;
+            }
+            if (obj.ActorValueInformation is IFormLinkContainerGetter ActorValueInformationlinkCont)
+            {
+                foreach (var item in ActorValueInformationlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.CameraShots.EnumerateFormLinks())
             {
@@ -17830,9 +17877,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.Colors.EnumerateFormLinks())
+            if (obj.Colors is IFormLinkContainerGetter ColorslinkCont)
             {
-                yield return item;
+                foreach (var item in ColorslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReverbParameters is IFormLinkContainerGetter ReverbParameterslinkCont)
+            {
+                foreach (var item in ReverbParameterslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.ReferenceGroups.EnumerateFormLinks())
             {
@@ -17865,13 +17922,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.AttractionRules is IFormLinkContainerGetter AttractionRuleslinkCont)
+            {
+                foreach (var item in AttractionRuleslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.SceneCollections.EnumerateFormLinks())
             {
                 yield return item;
             }
-            foreach (var item in obj.AnimationSoundTagSets.EnumerateFormLinks())
+            if (obj.AnimationSoundTagSets is IFormLinkContainerGetter AnimationSoundTagSetslinkCont)
             {
-                yield return item;
+                foreach (var item in AnimationSoundTagSetslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Resources.EnumerateFormLinks())
             {
@@ -17880,6 +17947,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.Biomes.EnumerateFormLinks())
             {
                 yield return item;
+            }
+            if (obj.LensFlares is IFormLinkContainerGetter LensFlareslinkCont)
+            {
+                foreach (var item in LensFlareslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.ObjectVisibilityManagers.EnumerateFormLinks())
             {
@@ -17897,13 +17971,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.MorphableObjects.EnumerateFormLinks())
+            if (obj.MorphableObjects is IFormLinkContainerGetter MorphableObjectslinkCont)
             {
-                yield return item;
+                foreach (var item in MorphableObjectslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Traversals is IFormLinkContainerGetter TraversalslinkCont)
+            {
+                foreach (var item in TraversalslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.ResourceGenerationData.EnumerateFormLinks())
             {
                 yield return item;
+            }
+            if (obj.ObjectSwaps is IFormLinkContainerGetter ObjectSwapslinkCont)
+            {
+                foreach (var item in ObjectSwapslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.Atmospheres.EnumerateFormLinks())
             {
