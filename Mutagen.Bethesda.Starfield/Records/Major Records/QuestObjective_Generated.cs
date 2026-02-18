@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestObjectiveCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => QuestObjectiveCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestObjectiveSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1079,9 +1079,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestObjectiveGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestObjectiveGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Targets.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Targets.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestObjectiveCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => QuestObjectiveCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestObjectiveBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

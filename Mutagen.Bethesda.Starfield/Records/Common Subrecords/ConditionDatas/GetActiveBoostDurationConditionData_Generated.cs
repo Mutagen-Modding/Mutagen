@@ -1023,9 +1023,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetActiveBoostDurationConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetActiveBoostDurationConditionDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }

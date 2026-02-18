@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ArmorAddonCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSetterCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
             FormKey formKey,
@@ -2056,9 +2056,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -2068,14 +2068,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
-                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2844,7 +2844,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ArmorAddonCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

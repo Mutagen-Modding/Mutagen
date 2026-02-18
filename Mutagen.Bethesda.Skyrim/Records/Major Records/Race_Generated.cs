@@ -3932,7 +3932,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Race(
             FormKey formKey,
@@ -6064,9 +6064,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -6091,7 +6091,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
                 foreach (var item in SkeletalModelItem.WhereNotNull().WhereCastable<ISimpleModelGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateFormLinks()))
+                    .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -6118,11 +6118,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return AttackRaceInfo;
             }
-            foreach (var item in obj.Attacks.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Attacks.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6144,7 +6144,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return BodyPartDataInfo;
             }
-            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6168,7 +6168,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return CloseLootSoundInfo;
             }
-            foreach (var item in obj.MovementTypes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.MovementTypes.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6206,7 +6206,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -8257,7 +8257,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;

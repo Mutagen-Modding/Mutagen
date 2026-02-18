@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ANoteDataCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ANoteDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANoteDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IANoteDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IANoteDataGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ANoteDataCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ANoteDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANoteDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

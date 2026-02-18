@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Fallout4
             Break0 = 1,
             Break1 = 2
         }
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureMarkerParametersCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FurnitureMarkerParametersCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerParametersSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFurnitureMarkerParametersGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFurnitureMarkerParametersGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.Keyword);
             yield break;
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureMarkerParametersCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FurnitureMarkerParametersCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FurnitureMarkerParametersBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

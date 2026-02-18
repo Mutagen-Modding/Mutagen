@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetFactionRankDifferenceConditionDataCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => GetFactionRankDifferenceConditionDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetFactionRankDifferenceConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         object? IConditionParameters.Parameter1
         {
@@ -1046,17 +1046,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetFactionRankDifferenceConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetFactionRankDifferenceConditionDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var l in obj.Faction.EnumerateFormLinks())
+            foreach (var l in obj.Faction.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return l;
             }
-            foreach (var l in obj.TargetNpc.EnumerateFormLinks())
+            foreach (var l in obj.TargetNpc.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return l;
             }

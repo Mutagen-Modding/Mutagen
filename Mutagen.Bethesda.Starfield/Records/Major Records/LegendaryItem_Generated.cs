@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LegendaryItem_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryItemCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LegendaryItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LegendaryItemSetterCommon.Instance.RemapLinks(this, mapping);
         public LegendaryItem(
             FormKey formKey,
@@ -2208,34 +2208,34 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILegendaryItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILegendaryItemGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Transforms is {} TransformsItems)
             {
-                foreach (var item in TransformsItems.EnumerateFormLinks())
+                foreach (var item in TransformsItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2250,21 +2250,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.LegendaryMods is {} LegendaryModsItem)
             {
-                foreach (var item in LegendaryModsItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in LegendaryModsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.IncludeFilters is {} IncludeFiltersItem)
             {
-                foreach (var item in IncludeFiltersItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in IncludeFiltersItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.ExcludeFilters is {} ExcludeFiltersItem)
             {
-                foreach (var item in ExcludeFiltersItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in ExcludeFiltersItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3122,7 +3122,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryItemCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LegendaryItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LegendaryItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LegendaryItemBinaryWriteTranslation.Instance;

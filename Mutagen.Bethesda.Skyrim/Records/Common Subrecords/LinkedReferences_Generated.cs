@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LinkedReferencesCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LinkedReferencesCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILinkedReferencesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILinkedReferencesGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.KeywordOrReference);
             if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) yield break;
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LinkedReferencesCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LinkedReferencesCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LinkedReferencesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

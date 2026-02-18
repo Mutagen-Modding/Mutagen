@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetPCIsRaceConditionDataCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => GetPCIsRaceConditionDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetPCIsRaceConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         object? IConditionParameters.Parameter1
         {
@@ -1040,13 +1040,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetPCIsRaceConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetPCIsRaceConditionDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var l in obj.Race.EnumerateFormLinks())
+            foreach (var l in obj.Race.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return l;
             }

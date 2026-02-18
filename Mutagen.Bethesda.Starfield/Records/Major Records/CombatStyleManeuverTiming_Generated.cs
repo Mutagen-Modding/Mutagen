@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleManeuverTimingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleManeuverTimingGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

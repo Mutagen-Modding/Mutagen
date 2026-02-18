@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WWiseKeywordMappingItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WWiseKeywordMappingItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WWiseKeywordMappingItemSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -904,11 +904,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWWiseKeywordMappingItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWWiseKeywordMappingItemGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.Sound is {} SoundItems)
             {
-                foreach (var item in SoundItems.EnumerateFormLinks())
+                foreach (var item in SoundItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WWiseKeywordMappingItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WWiseKeywordMappingItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WWiseKeywordMappingItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

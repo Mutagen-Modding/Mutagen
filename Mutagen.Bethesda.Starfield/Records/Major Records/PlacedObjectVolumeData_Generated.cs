@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectVolumeDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlacedObjectVolumeDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectVolumeDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectVolumeDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectVolumeDataGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.ImageSpace);
             yield return FormLinkInformation.Factory(obj.FogVolume);
@@ -2280,7 +2280,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectVolumeDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlacedObjectVolumeDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlacedObjectVolumeDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

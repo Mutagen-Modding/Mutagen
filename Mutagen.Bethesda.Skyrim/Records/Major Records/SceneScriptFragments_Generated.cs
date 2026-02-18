@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISceneScriptFragmentsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISceneScriptFragmentsGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

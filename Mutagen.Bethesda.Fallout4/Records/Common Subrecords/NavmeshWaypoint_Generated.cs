@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshWaypointGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshWaypointGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

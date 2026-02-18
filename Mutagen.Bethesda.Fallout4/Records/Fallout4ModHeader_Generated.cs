@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4ModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4ModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4ModHeaderGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Fallout4
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2509,7 +2509,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Fallout4ModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

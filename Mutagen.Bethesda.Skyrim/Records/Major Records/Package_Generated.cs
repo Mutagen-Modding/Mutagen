@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Package_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PackageCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageSetterCommon.Instance.RemapLinks(this, mapping);
         public Package(
             FormKey formKey,
@@ -2840,26 +2840,26 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.IdleAnimations is {} IdleAnimationsItems)
             {
-                foreach (var item in IdleAnimationsItems.EnumerateFormLinks())
+                foreach (var item in IdleAnimationsItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2874,31 +2874,31 @@ namespace Mutagen.Bethesda.Skyrim
             }
             yield return FormLinkInformation.Factory(obj.PackageTemplate);
             foreach (var item in obj.Data.Values.WhereCastable<IAPackageDataGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
-            foreach (var item in obj.ProcedureTree.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.ProcedureTree.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.OnBegin is {} OnBeginItems)
             {
-                foreach (var item in OnBeginItems.EnumerateFormLinks())
+                foreach (var item in OnBeginItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.OnEnd is {} OnEndItems)
             {
-                foreach (var item in OnEndItems.EnumerateFormLinks())
+                foreach (var item in OnEndItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.OnChange is {} OnChangeItems)
             {
-                foreach (var item in OnChangeItems.EnumerateFormLinks())
+                foreach (var item in OnChangeItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -3843,7 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PackageCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PackageCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageBinaryWriteTranslation.Instance;

@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ChargenAndSkintonesCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ChargenAndSkintonesCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ChargenAndSkintonesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1066,11 +1066,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IChargenAndSkintonesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IChargenAndSkintonesGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.Chargen is {} ChargenItems)
             {
-                foreach (var item in ChargenItems.EnumerateFormLinks())
+                foreach (var item in ChargenItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ChargenAndSkintonesCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ChargenAndSkintonesCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ChargenAndSkintonesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -152,11 +152,11 @@ public class MergedListGroup<TBlock, TListGroup> : ILoquiObject, IListGroupGette
     object IBinaryItem.BinaryWriteTranslator => this;
 
     // IFormLinkContainerGetter
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var block in Cache)
         {
-            foreach (var link in block.EnumerateFormLinks())
+            foreach (var link in block.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return link;
             }

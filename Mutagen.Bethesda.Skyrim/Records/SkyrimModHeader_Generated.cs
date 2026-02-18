@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SkyrimModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SkyrimModHeaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkyrimModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkyrimModHeaderGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SkyrimModHeaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SkyrimModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

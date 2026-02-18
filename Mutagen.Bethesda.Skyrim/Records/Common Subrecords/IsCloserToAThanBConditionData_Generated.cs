@@ -472,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IsCloserToAThanBConditionDataCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => IsCloserToAThanBConditionDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IsCloserToAThanBConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         object? IConditionParameters.Parameter1
         {
@@ -1046,17 +1046,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIsCloserToAThanBConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIsCloserToAThanBConditionDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var l in obj.TargetA.EnumerateFormLinks())
+            foreach (var l in obj.TargetA.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return l;
             }
-            foreach (var l in obj.TargetB.EnumerateFormLinks())
+            foreach (var l in obj.TargetB.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return l;
             }

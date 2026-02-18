@@ -108,7 +108,7 @@ public abstract class AListGroup<TObject> : IListGroup<TObject>
     IEnumerator IEnumerable.GetEnumerator() => ProtectedList.GetEnumerator();
     
     /// <inheritdoc />
-    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true);
 
     /// <inheritdoc />
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories,

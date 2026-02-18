@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMusicTrackLoopDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMusicTrackLoopDataGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

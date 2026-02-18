@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimationCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AnimationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1798,7 +1798,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.NpcAnimation);
             if (FormLinkInformation.TryFactory(obj.BodyArchetype, out var BodyArchetypeInfo))
@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FlavorInfo;
             }
-            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2329,7 +2329,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimationCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AnimationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AnimationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

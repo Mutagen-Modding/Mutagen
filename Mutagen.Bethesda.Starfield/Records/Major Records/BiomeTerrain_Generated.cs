@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeTerrainCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BiomeTerrainCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BiomeTerrainSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1248,18 +1248,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeTerrainGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeTerrainGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.Main is {} MainItems)
             {
-                foreach (var item in MainItems.EnumerateFormLinks())
+                foreach (var item in MainItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Alternate is {} AlternateItems)
             {
-                foreach (var item in AlternateItems.EnumerateFormLinks())
+                foreach (var item in AlternateItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1687,7 +1687,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeTerrainCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BiomeTerrainCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BiomeTerrainBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

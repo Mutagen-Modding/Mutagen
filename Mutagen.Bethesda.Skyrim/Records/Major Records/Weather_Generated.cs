@@ -2894,7 +2894,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeatherCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSetterCommon.Instance.RemapLinks(this, mapping);
         public Weather(
             FormKey formKey,
@@ -4676,9 +4676,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -4687,7 +4687,7 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return PrecipitationInfo;
             }
             yield return FormLinkInformation.Factory(obj.VisualEffect);
-            foreach (var item in obj.Sounds.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Sounds.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4697,21 +4697,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.ImageSpaces is {} ImageSpacesItems)
             {
-                foreach (var item in ImageSpacesItems.EnumerateFormLinks())
+                foreach (var item in ImageSpacesItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.VolumetricLighting is {} VolumetricLightingItems)
             {
-                foreach (var item in VolumetricLightingItems.EnumerateFormLinks())
+                foreach (var item in VolumetricLightingItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Aurora is {} AuroraItems)
             {
-                foreach (var item in AuroraItems.EnumerateFormLinks())
+                foreach (var item in AuroraItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -6577,7 +6577,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeatherCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;

@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APerkEffectCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => APerkEffectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1167,9 +1167,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAPerkEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAPerkEffectGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APerkEffectCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => APerkEffectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => APerkEffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

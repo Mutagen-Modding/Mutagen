@@ -393,7 +393,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcRaceOverrideUnarmedWeaponCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NpcRaceOverrideUnarmedWeaponCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcRaceOverrideUnarmedWeaponSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcRaceOverrideUnarmedWeaponGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcRaceOverrideUnarmedWeaponGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.UnarmedWeapon);
             yield break;
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcRaceOverrideUnarmedWeaponCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NpcRaceOverrideUnarmedWeaponCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcRaceOverrideUnarmedWeaponBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

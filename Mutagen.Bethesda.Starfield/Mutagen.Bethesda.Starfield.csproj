@@ -6507,9 +6507,6 @@
     <Compile Include="Records\Common Subrecords\UniquePatternPlacementInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlanetWorldspace_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>

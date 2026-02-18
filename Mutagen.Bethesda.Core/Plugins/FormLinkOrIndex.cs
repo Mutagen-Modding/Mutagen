@@ -43,7 +43,7 @@ public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajor
         return _parent.UsePackageData;
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         if (UsesLink())
         {
@@ -128,7 +128,7 @@ public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
         return _parent.UsePackageData;
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         if (UsesLink())
         {

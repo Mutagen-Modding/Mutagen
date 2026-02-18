@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledNpc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LeveledNpcCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledNpc(
             FormKey formKey,
@@ -1629,9 +1629,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledNpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledNpcGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1642,21 +1642,21 @@ namespace Mutagen.Bethesda.Fallout4
             if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledNpcEntryGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateFormLinks()))
+                    .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FilterKeywordChances is {} FilterKeywordChancesItem)
             {
-                foreach (var item in FilterKeywordChancesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in FilterKeywordChancesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2267,7 +2267,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LeveledNpcCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

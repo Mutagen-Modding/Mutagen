@@ -1023,9 +1023,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEPGetLastCombatHitCriticalConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEPGetLastCombatHitCriticalConditionDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }

@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIDataGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

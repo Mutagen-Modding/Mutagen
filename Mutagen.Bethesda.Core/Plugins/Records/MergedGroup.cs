@@ -119,13 +119,13 @@ public class MergedGroup<TMod, TModGetter> : ILoquiObject, IGroupGetter<TModGett
     object IBinaryItem.BinaryWriteTranslator => this;
 
     // IFormLinkContainerGetter
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var record in Cache.Values)
         {
             if (record is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }

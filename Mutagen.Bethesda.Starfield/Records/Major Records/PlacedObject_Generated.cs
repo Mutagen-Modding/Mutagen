@@ -4566,7 +4566,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlacedObjectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(
             FormKey formKey,
@@ -7160,21 +7160,21 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7193,19 +7193,19 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.XTRV is {} XTRVItems)
             {
-                foreach (var item in XTRVItems.EnumerateFormLinks())
+                foreach (var item in XTRVItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.VolumeData is {} VolumeDataItems)
             {
-                foreach (var item in VolumeDataItems.EnumerateFormLinks())
+                foreach (var item in VolumeDataItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.PlacedObjectXCZRXCZA.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.PlacedObjectXCZRXCZA.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7215,21 +7215,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.CurrentZoneCell is {} CurrentZoneCellItems)
             {
-                foreach (var item in CurrentZoneCellItems.EnumerateFormLinks())
+                foreach (var item in CurrentZoneCellItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Patrol is {} PatrolItems)
             {
-                foreach (var item in PatrolItems.EnumerateFormLinks())
+                foreach (var item in PatrolItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.TeleportDestination is {} TeleportDestinationItems)
             {
-                foreach (var item in TeleportDestinationItems.EnumerateFormLinks())
+                foreach (var item in TeleportDestinationItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -7277,25 +7277,25 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.Collision is {} CollisionItems)
             {
-                foreach (var item in CollisionItems.EnumerateFormLinks())
+                foreach (var item in CollisionItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.PowerLinks.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.PowerLinks.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.Ownership is {} OwnershipItems)
             {
-                foreach (var item in OwnershipItems.EnumerateFormLinks())
+                foreach (var item in OwnershipItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.GroupedPackIn is {} GroupedPackInItems)
             {
-                foreach (var item in GroupedPackInItems.EnumerateFormLinks())
+                foreach (var item in GroupedPackInItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -7312,7 +7312,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return LocationInfo;
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7322,7 +7322,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.SnapLinks is {} SnapLinksItem)
             {
-                foreach (var item in SnapLinksItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in SnapLinksItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -7333,14 +7333,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.Lock is {} LockItems)
             {
-                foreach (var item in LockItems.EnumerateFormLinks())
+                foreach (var item in LockItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Properties is {} PropertiesItem)
             {
-                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -7355,21 +7355,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.EnumerateFormLinks())
+                foreach (var item in EnableParentItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Traversals is {} TraversalsItem)
             {
-                foreach (var item in TraversalsItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in TraversalsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.NavigationDoorLink is {} NavigationDoorLinkItems)
             {
-                foreach (var item in NavigationDoorLinkItems.EnumerateFormLinks())
+                foreach (var item in NavigationDoorLinkItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -10050,7 +10050,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlacedObjectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlacedObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;

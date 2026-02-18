@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EffectCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => EffectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -917,15 +917,15 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Data.EnumerateFormLinks())
+            foreach (var item in obj.Data.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.ScriptEffect is {} ScriptEffectItems)
             {
-                foreach (var item in ScriptEffectItems.EnumerateFormLinks())
+                foreach (var item in ScriptEffectItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EffectCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => EffectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

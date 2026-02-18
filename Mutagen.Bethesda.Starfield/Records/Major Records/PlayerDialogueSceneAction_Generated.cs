@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlayerDialogueSceneActionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlayerDialogueSceneActionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlayerDialogueSceneActionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1313,20 +1313,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlayerDialogueSceneActionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlayerDialogueSceneActionGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.WED0 is {} WED0Items)
             {
-                foreach (var item in WED0Items.EnumerateFormLinks())
+                foreach (var item in WED0Items.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.DialogueList.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.DialogueList.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlayerDialogueSceneActionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlayerDialogueSceneActionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlayerDialogueSceneActionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

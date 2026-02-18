@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterNoisePropertiesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterNoisePropertiesGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

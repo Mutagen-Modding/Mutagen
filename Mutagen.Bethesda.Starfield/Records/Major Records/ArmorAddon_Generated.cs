@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ArmorAddonCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSetterCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
             FormKey formKey,
@@ -2801,21 +2801,21 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2825,28 +2825,28 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
-                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.SkinTexture is {} SkinTextureItem)
             {
-                foreach (var item in SkinTextureItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in SkinTextureItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Morphs is {} MorphsItem)
             {
-                foreach (var item in MorphsItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in MorphsItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3891,7 +3891,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ArmorAddonCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ArmorAddonCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;

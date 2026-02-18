@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetModelComponentXMPMGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetModelComponentXMPMGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

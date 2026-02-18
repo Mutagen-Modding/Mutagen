@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
             Break0 = 1,
             Break1 = 2
         }
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEffectDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ScriptEffectDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptEffectDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptEffectDataGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.Script);
             yield break;
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEffectDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ScriptEffectDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEffectDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

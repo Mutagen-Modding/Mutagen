@@ -19,5 +19,6 @@ public interface IFormLinkContainerGetter
     /// <summary>
     /// Enumerate of all contained FormKeys within object and subobjects
     /// </summary>
-    IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+    /// <param name="iterateNestedRecords">If true, recurse into nested major records. If false, only return links from this record's own fields and sub-records.</param>
+    IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true);
 }

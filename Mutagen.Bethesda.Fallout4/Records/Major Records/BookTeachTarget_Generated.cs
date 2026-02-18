@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookTeachTargetCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BookTeachTargetCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookTeachTargetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookTeachTargetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookTeachTargetGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -938,7 +938,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookTeachTargetCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BookTeachTargetCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => BookTeachTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

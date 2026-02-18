@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeNoiseGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeNoiseGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

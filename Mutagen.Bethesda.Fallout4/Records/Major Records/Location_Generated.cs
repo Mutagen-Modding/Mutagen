@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LocationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationSetterCommon.Instance.RemapLinks(this, mapping);
         public Location(
             FormKey formKey,
@@ -3857,22 +3857,22 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.PersistentActorReferencesAdded is {} PersistentActorReferencesAddedItem)
             {
-                foreach (var item in PersistentActorReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in PersistentActorReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.PersistentActorReferencesStatic is {} PersistentActorReferencesStaticItem)
             {
-                foreach (var item in PersistentActorReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in PersistentActorReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3886,14 +3886,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.UniqueActorReferencesAdded is {} UniqueActorReferencesAddedItem)
             {
-                foreach (var item in UniqueActorReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in UniqueActorReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.UniqueActorReferencesStatic is {} UniqueActorReferencesStaticItem)
             {
-                foreach (var item in UniqueActorReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in UniqueActorReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3907,14 +3907,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.LocationRefTypeReferencesAdded is {} LocationRefTypeReferencesAddedItem)
             {
-                foreach (var item in LocationRefTypeReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in LocationRefTypeReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationRefTypeReferencesStatic is {} LocationRefTypeReferencesStaticItem)
             {
-                foreach (var item in LocationRefTypeReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in LocationRefTypeReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3926,15 +3926,15 @@ namespace Mutagen.Bethesda.Fallout4
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.WorldspaceCellsAdded.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.WorldspaceCellsAdded.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.WorldspaceCellsStatic.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.WorldspaceCellsStatic.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.WorldspaceCellsRemoved.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.WorldspaceCellsRemoved.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3954,14 +3954,14 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.EnableParentReferencesAdded is {} EnableParentReferencesAddedItem)
             {
-                foreach (var item in EnableParentReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in EnableParentReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.EnableParentReferencesStatic is {} EnableParentReferencesStaticItem)
             {
-                foreach (var item in EnableParentReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in EnableParentReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5335,7 +5335,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LocationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

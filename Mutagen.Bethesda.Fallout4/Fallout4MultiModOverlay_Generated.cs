@@ -583,11 +583,11 @@ internal class Fallout4MultiModOverlay : IFallout4ModDisposableGetter
         }
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var mod in _sourceMods)
         {
-            foreach (var link in mod.EnumerateFormLinks())
+            foreach (var link in mod.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return link;
             }
@@ -857,13 +857,13 @@ internal class MergedGroup<TGetter> : IFallout4GroupGetter<TGetter>, IReadOnlyCa
 
     object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException("Merged groups do not support binary writing.");
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var record in Cache.Values)
         {
             if (record is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }
@@ -1059,13 +1059,13 @@ internal class MergedListGroup : IFallout4ListGroupGetter<ICellBlockGetter>
 
     object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException("Merged groups do not support binary writing.");
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var block in Cache)
         {
             if (block is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }
@@ -1192,13 +1192,13 @@ internal class MergedCellBlock : ICellBlockGetter
         }
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var subBlock in SubBlocks)
         {
             if (subBlock is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }

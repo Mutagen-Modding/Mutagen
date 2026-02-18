@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MajorRecordCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
         {
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMajorRecordGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MajorRecordCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();

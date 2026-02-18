@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcRaceOverrideCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NpcRaceOverrideCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcRaceOverrideSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1359,18 +1359,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcRaceOverrideGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcRaceOverrideGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.UnarmedWeapon is {} UnarmedWeaponItems)
             {
-                foreach (var item in UnarmedWeaponItems.EnumerateFormLinks())
+                foreach (var item in UnarmedWeaponItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.General is {} GeneralItems)
             {
-                foreach (var item in GeneralItems.EnumerateFormLinks())
+                foreach (var item in GeneralItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcRaceOverrideCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NpcRaceOverrideCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcRaceOverrideBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

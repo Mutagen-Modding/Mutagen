@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Biome_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BiomeCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BiomeSetterCommon.Instance.RemapLinks(this, mapping);
         public Biome(
             FormKey formKey,
@@ -3456,9 +3456,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -3480,7 +3480,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.ProceduralObjectGeneration.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.ProceduralObjectGeneration.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3496,7 +3496,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ClimateInfo;
             }
-            foreach (var item in obj.Water.EnumerateFormLinks())
+            foreach (var item in obj.Water.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -3520,11 +3520,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return PatternStyleInfo;
             }
-            foreach (var item in obj.MarkerObjectKeywords.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.MarkerObjectKeywords.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Terrain.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Terrain.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4680,7 +4680,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BiomeCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BiomeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

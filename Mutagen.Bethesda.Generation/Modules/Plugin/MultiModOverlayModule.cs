@@ -244,7 +244,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var block in Cache)");
@@ -253,7 +253,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (block is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -429,7 +429,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var subBlock in SubBlocks)");
@@ -438,7 +438,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (subBlock is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -643,7 +643,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var record in Cache.Values)");
@@ -652,7 +652,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (record is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -924,13 +924,13 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine();
 
         // EnumerateFormLinks
-        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
         using (sb.CurlyBrace())
         {
             sb.AppendLine("foreach (var mod in _sourceMods)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var link in mod.EnumerateFormLinks())");
+                sb.AppendLine("foreach (var link in mod.EnumerateFormLinks(iterateNestedRecords))");
                 using (sb.CurlyBrace())
                 {
                     sb.AppendLine("yield return link;");

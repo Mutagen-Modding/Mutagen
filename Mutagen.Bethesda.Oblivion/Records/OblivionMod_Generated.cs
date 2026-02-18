@@ -3128,7 +3128,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => OblivionModCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -6496,180 +6496,180 @@ namespace Mutagen.Bethesda.Oblivion
         
         partial void GetCustomRecordCount(IOblivionModGetter item, Action<uint> setter);
         
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOblivionModGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOblivionModGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Factions.EnumerateFormLinks())
+            foreach (var item in obj.Factions.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Races.EnumerateFormLinks())
+            foreach (var item in obj.Races.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.MagicEffects.EnumerateFormLinks())
+            foreach (var item in obj.MagicEffects.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Scripts is IFormLinkContainerGetter ScriptslinkCont)
             {
-                foreach (var item in ScriptslinkCont.EnumerateFormLinks())
+                foreach (var item in ScriptslinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.LandTextures.EnumerateFormLinks())
+            foreach (var item in obj.LandTextures.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Enchantments.EnumerateFormLinks())
+            foreach (var item in obj.Enchantments.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Spells.EnumerateFormLinks())
+            foreach (var item in obj.Spells.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Birthsigns.EnumerateFormLinks())
+            foreach (var item in obj.Birthsigns.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Activators.EnumerateFormLinks())
+            foreach (var item in obj.Activators.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.AlchemicalApparatus.EnumerateFormLinks())
+            foreach (var item in obj.AlchemicalApparatus.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Armors.EnumerateFormLinks())
+            foreach (var item in obj.Armors.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Books.EnumerateFormLinks())
+            foreach (var item in obj.Books.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Clothes.EnumerateFormLinks())
+            foreach (var item in obj.Clothes.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Containers.EnumerateFormLinks())
+            foreach (var item in obj.Containers.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Doors.EnumerateFormLinks())
+            foreach (var item in obj.Doors.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Ingredients.EnumerateFormLinks())
+            foreach (var item in obj.Ingredients.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Lights.EnumerateFormLinks())
+            foreach (var item in obj.Lights.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Miscellaneous.EnumerateFormLinks())
+            foreach (var item in obj.Miscellaneous.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Flora.EnumerateFormLinks())
+            foreach (var item in obj.Flora.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Furniture.EnumerateFormLinks())
+            foreach (var item in obj.Furniture.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Weapons.EnumerateFormLinks())
+            foreach (var item in obj.Weapons.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Ammunitions.EnumerateFormLinks())
+            foreach (var item in obj.Ammunitions.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Npcs.EnumerateFormLinks())
+            foreach (var item in obj.Npcs.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Creatures.EnumerateFormLinks())
+            foreach (var item in obj.Creatures.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LeveledCreatures.EnumerateFormLinks())
+            foreach (var item in obj.LeveledCreatures.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.SoulGems.EnumerateFormLinks())
+            foreach (var item in obj.SoulGems.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Keys.EnumerateFormLinks())
+            foreach (var item in obj.Keys.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Potions.EnumerateFormLinks())
+            foreach (var item in obj.Potions.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.SigilStones.EnumerateFormLinks())
+            foreach (var item in obj.SigilStones.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LeveledItems.EnumerateFormLinks())
+            foreach (var item in obj.LeveledItems.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Weathers.EnumerateFormLinks())
+            foreach (var item in obj.Weathers.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Climates.EnumerateFormLinks())
+            foreach (var item in obj.Climates.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Regions.EnumerateFormLinks())
+            foreach (var item in obj.Regions.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Cells.EnumerateFormLinks())
+            foreach (var item in obj.Cells.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Worldspaces.EnumerateFormLinks())
+            foreach (var item in obj.Worldspaces.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.DialogTopics.EnumerateFormLinks())
+            foreach (var item in obj.DialogTopics.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Quests.EnumerateFormLinks())
+            foreach (var item in obj.Quests.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.IdleAnimations.EnumerateFormLinks())
+            foreach (var item in obj.IdleAnimations.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.AIPackages.EnumerateFormLinks())
+            foreach (var item in obj.AIPackages.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LoadScreens.EnumerateFormLinks())
+            foreach (var item in obj.LoadScreens.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LeveledSpells.EnumerateFormLinks())
+            foreach (var item in obj.LeveledSpells.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.AnimatedObjects.EnumerateFormLinks())
+            foreach (var item in obj.AnimatedObjects.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Waters.EnumerateFormLinks())
+            foreach (var item in obj.Waters.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -12202,7 +12202,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => OblivionModCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => OblivionModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IOblivionMod, IOblivionModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
