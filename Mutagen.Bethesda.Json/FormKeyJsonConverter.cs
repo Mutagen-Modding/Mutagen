@@ -32,7 +32,7 @@ public sealed class FormKeyJsonConverter : JsonConverter
             }
             if (!objectType.Name.Contains("FormLink"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException($"Object type name did not contain FormLink: {objectType.Name}");
             }
 
             if (IsNullableLink(objectType))
@@ -76,7 +76,7 @@ public sealed class FormKeyJsonConverter : JsonConverter
 
             if (!objectType.Name.Contains("FormLink"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException($"Object type name did not contain FormLink: {objectType.Name}");
             }
 
             if (objectType.IsGenericType)
@@ -95,12 +95,18 @@ public sealed class FormKeyJsonConverter : JsonConverter
                     }
                 }
                 
+                if (objectType.GenericTypeArguments.Length > 0 && !str.Contains('<'))
+                {
+                    key = FormKey.Factory(str);
+                    return GetFormLink(objectType.GenericTypeArguments[0], key);
+                }
+
                 (key, var regis) = ParseFormKeyAndType(str);
-                
+
                 var type = objectType.GenericTypeArguments.Length == 0
                     ? regis.GetterType
                     : objectType.GenericTypeArguments[0];
-                
+
                 return GetFormLink(type, key);
             }
             else
