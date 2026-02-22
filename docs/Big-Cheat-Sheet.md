@@ -131,7 +131,7 @@ if (formLink.TryResolve(linkCache, out var foundRecord))
     Using the [FormKey Generator](https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys) project is a good alternative to hand constructing FormLinks"
 
 ## Convert FormKey to FormID
-=== MasterReferenceCollection
+=== "MasterReferenceCollection"
     ``` { .cs hl_lines="4" }
     FormKey formKey = ...;
     IMasterReferenceCollection masterCollection = ...;
@@ -162,14 +162,14 @@ if (!npc.Race.IsNull)
 [:octicons-arrow-right-24: FormLink Nullability](best-practices/FormLink-Nullability.md/#checking-if-formlink-is-null)
 
 ## Convert FormLink to NullableFormLink
-=== SetTo
+=== "SetTo"
     ``` { .cs hl_lines="4" }
     IFormLinkGetter<IEquipTypeGetter> link = ...;
     IFormLinkNullableGetter<IEquipTypeGetter> nullableLink = ...;
     
     nullableLink.SetTo(link);
     ```
-=== AsNullable
+=== "AsNullable"
     ``` { .cs hl_lines="3" }
     IFormLinkGetter<IEquipTypeGetter> link = ...;
 	
@@ -407,6 +407,51 @@ foreach (var placedObjectContext in loadOrder.PriorityOrder.PlacedObject().Winni
 ```
 
 [:octicons-arrow-right-24: Mod Context Parents](linkcache/ModContexts.md/#parent-concepts)
+
+## Keyword Checks
+=== "By FormLink"
+    ```cs
+    INpcGetter npc = ...;
+    IFormLinkGetter<IKeywordGetter> armorHeavyKeyword = ...;
+
+    if (npc.HasKeyword(armorHeavyKeyword))
+    {
+        // NPC has the keyword
+    }
+    ```
+=== "By EditorID"
+    ```cs
+    INpcGetter npc = ...;
+    ILinkCache linkCache = ...;
+
+    if (npc.HasKeyword("ArmorHeavy", linkCache))
+    {
+        // NPC has the keyword
+    }
+    ```
+=== "Any of Multiple"
+    ```cs
+    IWeaponGetter weapon = ...;
+    IEnumerable<IFormLinkGetter<IKeywordGetter>> swordKeywords = ...;
+
+    if (weapon.HasAnyKeyword(swordKeywords))
+    {
+        // Weapon matches at least one of the keywords
+    }
+    ```
+=== "Resolve Keyword"
+    ```cs
+    IArmorGetter armor = ...;
+    IFormLinkGetter<IKeywordGetter> keywordLink = ...;
+    ILinkCache linkCache = ...;
+
+    if (armor.TryResolveKeyword(keywordLink, linkCache, out var keyword))
+    {
+        Console.WriteLine($"Found keyword: {keyword.EditorID}");
+    }
+    ```
+
+[:octicons-arrow-right-24: Keywords](plugins/specific/Keywords.md)
 
 ## Call Generic Function by Mod Type
 ```cs

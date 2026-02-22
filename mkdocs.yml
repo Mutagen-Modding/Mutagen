@@ -77,17 +77,6 @@ nav:
     - Printing: plugins/Printing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
     - Exceeding Master Limits: plugins/Exceeding-Master-Limits.md
-    - Specific Records:
-      - plugins/specific/index.md
-      - ExtraData: plugins/specific/ExtraData.md
-      - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
-      - Oblivion:
-        - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
-        - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
-      - Skyrim:
-        - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
-        - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
-        - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
     # - Perks:
     # - Magic Effects:
     # - Conditions:
@@ -110,6 +99,19 @@ nav:
     - Winning Override Iteration: loadorder/Winning-Overrides.md
     # - Has Mod Assertions
     # - Live File Monitoring
+  - Specific Records:
+    - plugins/specific/index.md
+    - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
+    - Keywords: plugins/specific/Keywords.md
+    - Placed Objects: plugins/specific/Placed.md
+    - ExtraData: plugins/specific/ExtraData.md
+    - Oblivion:
+      - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
+      - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
+    - Skyrim:
+      - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
+      - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
+      - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Archives (BSAs): Archives.md
   - Strings: Strings.md
   - Getting Familiar with C#:
