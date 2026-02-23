@@ -383,4 +383,108 @@ public class ModFactoryMultiFileTests
         // Verify it's mutable (implements IMod)
         Assert.IsAssignableFrom<IMod>(result);
     }
+
+    [Theory, MutagenAutoData]
+    public void ImportMultiFileGetter_SplitFileReferencesBaseMod_DoesNotThrowSelfReference(
+        ModKey modKey,
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        // Scenario: Mod.esp is split into Mod.esp and Mod_2.esp
+        // Mod_2.esp references a record in Mod.esp, creating a master dependency
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
+        var extension = Path.GetExtension(modKey.FileName);
+        var mod2Key = new ModKey($"{fileNameWithoutExtension}_2", modKey.Type);
+
+        // Create first split file with a record
+        var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
+        var flst1 = mod1.FormLists.AddNew();
+        flst1.EditorID = "TestFormList1";
+
+        // Create second split file that references mod1's FormList, creating a cross-mod master
+        var mod2 = new SkyrimMod(mod2Key, SkyrimRelease.SkyrimSE);
+        var flst2 = mod2.FormLists.AddNew();
+        flst2.EditorID = "TestFormList2";
+        flst2.Items.Add(flst1.ToLink());
+
+        var splitFile1 = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
+        var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
+
+        // Write split files
+        mod1.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem });
+        mod2.WriteToBinary(splitFile2, BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        // This should NOT throw SelfReferenceException
+        var result = ModFactory.ImportMultiFileGetter(
+            modKey,
+            new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
+            Array.Empty<IModMasterStyledGetter>(),
+            GameRelease.SkyrimSE,
+            BinaryReadParameters.Default with { FileSystem = fileSystem });
+
+        Assert.NotNull(result);
+        Assert.Equal(modKey, result.ModKey);
+
+        // Verify the self-reference was filtered out of masters
+        Assert.DoesNotContain(result.MasterReferences, m => m.Master == modKey);
+    }
+
+    [Theory, MutagenAutoData]
+    public void ImportMultiFileGetter_SplitFilesCrossReference_FiltersAllSplitModKeys(
+        ModKey modKey,
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        // Scenario: Mod.esp is split into Mod.esp, Mod_2.esp, and Mod_3.esp
+        // Mod_2.esp references a record in Mod.esp
+        // Mod_3.esp references records in both Mod.esp and Mod_2.esp
+        // All cross-references between split files should be filtered out
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
+        var extension = Path.GetExtension(modKey.FileName);
+        var mod2Key = new ModKey($"{fileNameWithoutExtension}_2", modKey.Type);
+        var mod3Key = new ModKey($"{fileNameWithoutExtension}_3", modKey.Type);
+
+        // Create first split file with a record
+        var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
+        var flst1 = mod1.FormLists.AddNew();
+        flst1.EditorID = "TestFormList1";
+
+        // Create second split file referencing mod1's record
+        var mod2 = new SkyrimMod(mod2Key, SkyrimRelease.SkyrimSE);
+        var flst2 = mod2.FormLists.AddNew();
+        flst2.EditorID = "TestFormList2";
+        flst2.Items.Add(flst1.ToLink());
+
+        // Create third split file referencing records in both mod1 and mod2
+        var mod3 = new SkyrimMod(mod3Key, SkyrimRelease.SkyrimSE);
+        var flst3 = mod3.FormLists.AddNew();
+        flst3.EditorID = "TestFormList3";
+        flst3.Items.Add(flst1.ToLink());
+        flst3.Items.Add(flst2.ToLink());
+
+        var splitFile1 = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
+        var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
+        var splitFile3 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_3{extension}");
+
+        // Write split files
+        mod1.WriteToBinary(splitFile1, BinaryWriteParameters.Default with { FileSystem = fileSystem });
+        mod2.WriteToBinary(splitFile2, BinaryWriteParameters.Default with { FileSystem = fileSystem });
+        mod3.WriteToBinary(splitFile3, BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        // This should NOT throw
+        var result = ModFactory.ImportMultiFileGetter(
+            modKey,
+            new[] { (ModPath)splitFile1, (ModPath)splitFile2, (ModPath)splitFile3 },
+            Array.Empty<IModMasterStyledGetter>(),
+            GameRelease.SkyrimSE,
+            BinaryReadParameters.Default with { FileSystem = fileSystem });
+
+        Assert.NotNull(result);
+        Assert.Equal(modKey, result.ModKey);
+
+        // Verify all split file cross-references were filtered out
+        Assert.DoesNotContain(result.MasterReferences, m => m.Master == modKey);
+        Assert.DoesNotContain(result.MasterReferences, m => m.Master == mod2Key);
+        Assert.DoesNotContain(result.MasterReferences, m => m.Master == mod3Key);
+    }
 }

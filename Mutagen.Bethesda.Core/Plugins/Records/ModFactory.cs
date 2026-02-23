@@ -266,7 +266,10 @@ namespace Mutagen.Bethesda.Plugins.Records
             ValidateNoDuplicates(overlays, targetModKey);
 
             // Merge masters from all overlays according to load order
-            var mergedMasters = MergeMasters(overlays, loadOrder);
+            // Filter out targetModKey and all split file ModKeys, since split files may
+            // cross-reference each other as masters (e.g. Mod_3.esp mastering Mod_2.esp)
+            var splitModKeys = new HashSet<ModKey>(overlays.Select(o => o.ModKey)) { targetModKey };
+            var mergedMasters = MergeMasters(overlays, loadOrder, splitModKeys);
 
             // Create multi-file overlay that presents all the split files as one unified mod
             return CreateMultiFileOverlay(targetModKey, release, overlays, mergedMasters);
@@ -274,15 +277,21 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         private static IReadOnlyList<IMasterReferenceGetter> MergeMasters(
             List<IModDisposeGetter> overlays,
-            IEnumerable<IModMasterStyledGetter> loadOrder)
+            IEnumerable<IModMasterStyledGetter> loadOrder,
+            HashSet<ModKey> excludedModKeys)
         {
             // Collect all unique masters from all overlays
+            // Exclude the target mod and all split file ModKeys, since split files may
+            // cross-reference each other as masters (e.g. Mod_3.esp mastering Mod_2.esp)
             var allMasters = new HashSet<ModKey>();
             foreach (var overlay in overlays)
             {
                 foreach (var master in overlay.MasterReferences)
                 {
-                    allMasters.Add(master.Master);
+                    if (!excludedModKeys.Contains(master.Master))
+                    {
+                        allMasters.Add(master.Master);
+                    }
                 }
             }
 
