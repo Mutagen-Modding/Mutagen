@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda.Plugins.Records
     {
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
         public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, BinaryReadParameters? param = null);
-        public delegate TMod ImportMultiFileGetterDelegate(ModKey targetModKey, IEnumerable<ModPath> splitFiles, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
-        public delegate TMod ImportGetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
-        public delegate TMod ImportSetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportMultiFileGetterDelegate(ModKey targetModKey, IEnumerable<ModPath> splitFiles, IEnumerable<ModKey> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportGetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<ModKey> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportSetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<ModKey> loadOrder, GameRelease release, BinaryReadParameters? param = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <returns>Mod getter, either single file overlay or multi-file overlay depending on detection</returns>
         public static IModDisposeGetter ImportGetterWithMultiFileDetection(
             ModPath modPath,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease release,
             BinaryReadParameters? param = null)
         {
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <returns>Mutable mod, deep copied from overlay</returns>
         public static IMod ImportSetterWithMultiFileDetection(
             ModPath modPath,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease release,
             BinaryReadParameters? param = null)
         {
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IModDisposeGetter ImportMultiFileGetter(
             ModKey targetModKey,
             IEnumerable<ModPath> splitFiles,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease release,
             BinaryReadParameters? param = null)
         {
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         private static IReadOnlyList<IMasterReferenceGetter> MergeMasters(
             List<IModDisposeGetter> overlays,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             HashSet<ModKey> excludedModKeys)
         {
             // Collect all unique masters from all overlays
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             // Create a dictionary for quick load order lookup
             var loadOrderList = loadOrder.ToList();
             var loadOrderDict = loadOrderList
-                .Select((m, i) => new { ModKey = m.ModKey, Index = i })
+                .Select((m, i) => new { ModKey = m, Index = i })
                 .ToDictionary(x => x.ModKey, x => x.Index);
 
             // Order masters according to the provided load order

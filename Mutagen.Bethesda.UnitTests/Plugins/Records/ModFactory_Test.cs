@@ -2,7 +2,6 @@ using Loqui;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -122,7 +121,7 @@ public class ModFactoryMultiFileTests
         var result = ModFactory<ISkyrimModDisposableGetter>.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -155,7 +154,7 @@ public class ModFactoryMultiFileTests
         var result = ModFactory.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -183,7 +182,7 @@ public class ModFactoryMultiFileTests
         // Import using ImportGetterWithMultiFileDetection
         var result = ModFactory.ImportGetterWithMultiFileDetection(
             (ModPath)modPath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -217,7 +216,7 @@ public class ModFactoryMultiFileTests
         // Import using ImportGetterWithMultiFileDetection with base path
         var result = ModFactory.ImportGetterWithMultiFileDetection(
             (ModPath)basePath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -251,7 +250,7 @@ public class ModFactoryMultiFileTests
         // Import using generic ModFactory
         var result = ModFactory<ISkyrimModDisposableGetter>.ImportGetterWithMultiFileDetection(
             (ModPath)basePath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -279,7 +278,7 @@ public class ModFactoryMultiFileTests
         // Import using generic ModFactory
         var result = ModFactory<ISkyrimModDisposableGetter>.ImportGetterWithMultiFileDetection(
             (ModPath)modPath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -307,7 +306,7 @@ public class ModFactoryMultiFileTests
         // Import using ImportSetterWithMultiFileDetection
         var result = ModFactory.ImportSetterWithMultiFileDetection(
             (ModPath)modPath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -340,7 +339,7 @@ public class ModFactoryMultiFileTests
         // Import using ImportSetterWithMultiFileDetection with base path
         var result = ModFactory.ImportSetterWithMultiFileDetection(
             (ModPath)basePath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -373,7 +372,7 @@ public class ModFactoryMultiFileTests
         // Import using generic ModFactory
         var result = ModFactory<ISkyrimMod>.ImportSetterWithMultiFileDetection(
             (ModPath)basePath,
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -418,7 +417,7 @@ public class ModFactoryMultiFileTests
         var result = ModFactory.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -475,7 +474,7 @@ public class ModFactoryMultiFileTests
         var result = ModFactory.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2, (ModPath)splitFile3 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 

@@ -2,13 +2,11 @@ using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
 
@@ -57,10 +55,10 @@ public class MultiModFileReaderTests
         fileSystem.File.Exists(splitFile2).ShouldBeTrue();
 
         // Create a simple load order with all the masters
-        var loadOrder = new List<IModMasterStyledGetter>();
+        var loadOrder = new List<ModKey>();
         foreach (var master in mod.ModHeader.MasterReferences)
         {
-            loadOrder.Add(new KeyedMasterStyle(master.Master, MasterStyle.Full));
+            loadOrder.Add(master.Master);
         }
 
         // Read back using MultiModFileReader (returns read-only overlay)
@@ -99,7 +97,7 @@ public class MultiModFileReaderTests
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("NonExistent", ModType.Plugin);
-        var loadOrder = new List<IModMasterStyledGetter>();
+        var loadOrder = new List<ModKey>();
 
         var reader = new MultiModFileReader();
 
@@ -132,7 +130,7 @@ public class MultiModFileReaderTests
         // Keep this test but expect "No split files found" since detection returns empty
         fileSystem.File.WriteAllText(baseFile, "dummy content");
 
-        var loadOrder = new List<IModMasterStyledGetter>();
+        var loadOrder = new List<ModKey>();
         var reader = new MultiModFileReader();
 
         Should.Throw<SplitModException>(() =>

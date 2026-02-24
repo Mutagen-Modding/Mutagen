@@ -23,7 +23,7 @@ public interface IModImporter
     TMod ImportMultiFile<TMod>(
         ModKey targetModKey,
         IEnumerable<ModPath> splitFiles,
-        IEnumerable<IModMasterStyledGetter> loadOrder,
+        IEnumerable<ModKey> loadOrder,
         BinaryReadParameters? param = null)
         where TMod : IModDisposeGetter;
 }
@@ -69,7 +69,7 @@ public sealed class ModImporter : IModImporter, IModImporter<IModGetter>
     public TMod ImportMultiFile<TMod>(
         ModKey targetModKey,
         IEnumerable<ModPath> splitFiles,
-        IEnumerable<IModMasterStyledGetter> loadOrder,
+        IEnumerable<ModKey> loadOrder,
         BinaryReadParameters? param = null)
         where TMod : IModDisposeGetter
     {
