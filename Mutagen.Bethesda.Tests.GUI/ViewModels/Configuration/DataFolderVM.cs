@@ -6,7 +6,7 @@ public class DataFolderVM : ViewModel
 {
     public GameRelease GameRelease { get; }
 
-    public PathPickerVM DataFolder { get; } = new PathPickerVM()
+    public PathPickerVM DataFolder { get; } = new PathPickerVM(new SchedulerProvider())
     {
         PathType = PathPickerVM.PathTypeOptions.Folder,
         ExistCheckOption = PathPickerVM.CheckOptions.IfPathNotEmpty
