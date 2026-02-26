@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Tests.GUI;
 public class MainVM : ViewModel
 {
     [JsonProperty]
-    public PathPickerVM SelectedConfigPath { get; } = new()
+    public PathPickerVM SelectedConfigPath { get; } = new(new SchedulerProvider())
     {
         PathType = PathPickerVM.PathTypeOptions.File,
         ExistCheckOption = PathPickerVM.CheckOptions.On,

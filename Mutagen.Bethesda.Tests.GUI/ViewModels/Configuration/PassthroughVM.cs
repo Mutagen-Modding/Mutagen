@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Tests.GUI;
 
 public class PassthroughVM : ViewModel
 {
-    public PathPickerVM Path { get; } = new()
+    public PathPickerVM Path { get; } = new(new SchedulerProvider())
     {
         ExistCheckOption = PathPickerVM.CheckOptions.On,
         PathType = PathPickerVM.PathTypeOptions.File,
