@@ -109,6 +109,12 @@
     <Compile Include="Records\MajorRecords\Armor_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Book.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Book_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\FormList_Generated.cs">
       <DependentUpon>FormList.xml</DependentUpon>
     </Compile>

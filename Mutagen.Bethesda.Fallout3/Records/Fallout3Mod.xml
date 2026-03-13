@@ -24,6 +24,7 @@
       <Group name="TalkingActivators" refName="TalkingActivator" />
       <Group name="Terminals" refName="Terminal" />
       <Group name="Armors" refName="Armor" />
+      <Group name="Books" refName="Book" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

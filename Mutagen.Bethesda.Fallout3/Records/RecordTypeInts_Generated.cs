@@ -13,6 +13,7 @@ public partial class RecordTypeInts
     public const int BMCT = 0x54434D42;
     public const int BMDT = 0x54444D42;
     public const int BNAM = 0x4D414E42;
+    public const int BOOK = 0x4B4F4F42;
     public const int CELL = 0x4C4C4543;
     public const int CLAS = 0x53414C43;
     public const int CNAM = 0x4D414E43;

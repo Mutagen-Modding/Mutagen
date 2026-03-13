@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     Armor_Registration.Instance,
+                    Book_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                 },
@@ -49,6 +50,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     BodyPartItem_Registration.Instance,
+                    Book_Registration.Instance,
                     HeadPartItem_Registration.Instance,
                     LandscapeTexture_Registration.Instance,
                     MenuIcon_Registration.Instance,
@@ -64,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Activator_Registration.Instance,
                     BodyData_Registration.Instance,
                     BodyPartItem_Registration.Instance,
+                    Book_Registration.Instance,
                     DestructionStage_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
@@ -82,6 +85,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     Armor_Registration.Instance,
+                    Book_Registration.Instance,
                     Class_Registration.Instance,
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
@@ -104,6 +108,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Activator_Registration.Instance,
                     AlternateTexture_Registration.Instance,
                     Armor_Registration.Instance,
+                    Book_Registration.Instance,
                     Class_Registration.Instance,
                     Eyes_Registration.Instance,
                     Faction_Registration.Instance,
@@ -154,6 +159,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     AcousticSpace_Registration.Instance,
                     Armor_Registration.Instance,
+                    Book_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IObjectBounded),

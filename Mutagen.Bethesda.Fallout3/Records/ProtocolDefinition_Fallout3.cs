@@ -19,6 +19,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             BipedData_Registration.Instance,
             BodyData_Registration.Instance,
             BodyPartItem_Registration.Instance,
+            Book_Registration.Instance,
             Cell_Registration.Instance,
             CellBlock_Registration.Instance,
             CellSubBlock_Registration.Instance,

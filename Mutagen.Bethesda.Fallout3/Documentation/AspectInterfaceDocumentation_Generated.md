@@ -6,6 +6,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IHasDestructible
 - Activator
 - Armor
+- Book
 - TalkingActivator
 - Terminal
 ### IHasEffects
@@ -13,6 +14,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 ### IHasIcons
 - BodyPartItem
+- Book
 - HeadPartItem
 - LandscapeTexture
 - MenuIcon
@@ -20,6 +22,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - BodyData
 - BodyPartItem
+- Book
 - DestructionStage
 - Hair
 - HeadPart
@@ -31,6 +34,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - AlternateTexture
 - Armor
+- Book
 - Class
 - Eyes
 - Faction
@@ -47,6 +51,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - AcousticSpace
 - Activator
 - Armor
+- Book
 - Sound
 - TalkingActivator
 - Terminal
@@ -70,6 +75,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### BodyPartItem
 - IHasIcons
 - IModeled
+### Book
+- IHasDestructible
+- IHasIcons
+- IModeled
+- INamed
+- IObjectBounded
 ### Class
 - INamed
 ### DestructionStage
