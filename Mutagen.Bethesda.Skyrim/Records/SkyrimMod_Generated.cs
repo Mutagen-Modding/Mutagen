@@ -19881,7 +19881,8 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimSEGog = 7,
         SkyrimVR = 3,
         EnderalLE = 5,
-        EnderalSE = 6
+        EnderalSE = 6,
+        EnderalSEGog = 8
     }
 
     public static class SkyrimReleaseExt
