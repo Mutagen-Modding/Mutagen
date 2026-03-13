@@ -28,6 +28,7 @@
       <Group name="Containers" refName="Container" />
       <Group name="Doors" refName="Door" />
       <Group name="Ingredients" refName="Ingredient" />
+      <Group name="Lights" refName="Light" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

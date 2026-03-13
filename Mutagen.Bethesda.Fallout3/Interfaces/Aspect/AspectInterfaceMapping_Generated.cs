@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Book_Registration.Instance,
                     Container_Registration.Instance,
                     Door_Registration.Instance,
+                    Light_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                 },
@@ -57,6 +58,7 @@ namespace Mutagen.Bethesda.Fallout3
                     HeadPartItem_Registration.Instance,
                     Ingredient_Registration.Instance,
                     LandscapeTexture_Registration.Instance,
+                    Light_Registration.Instance,
                     MenuIcon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
@@ -78,6 +80,7 @@ namespace Mutagen.Bethesda.Fallout3
                     HeadPart_Registration.Instance,
                     HeadPartItem_Registration.Instance,
                     Ingredient_Registration.Instance,
+                    Light_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
@@ -100,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
                     Ingredient_Registration.Instance,
+                    Light_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
@@ -127,6 +131,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
                     Ingredient_Registration.Instance,
+                    Light_Registration.Instance,
                     LocalVariable_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     ObjectEffect_Registration.Instance,
@@ -186,6 +191,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Activator_Registration.Instance,
                     Door_Registration.Instance,
                     Ingredient_Registration.Instance,
+                    Light_Registration.Instance,
                     Sound_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
@@ -195,6 +201,16 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(IObjectBoundedOptional),
                     Getter: typeof(IObjectBoundedOptionalGetter)));
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
+            dict[typeof(IWeightValue)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Light_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IWeightValue),
+                    Getter: typeof(IWeightValueGetter)));
+            dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }
