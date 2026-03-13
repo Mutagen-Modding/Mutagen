@@ -38,6 +38,7 @@ public partial class RecordTypes
     public static readonly RecordType DMDT = new(0x54444D44);
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
+    public static readonly RecordType DOOR = new(0x524F4F44);
     public static readonly RecordType DSTD = new(0x44545344);
     public static readonly RecordType DSTF = new(0x46545344);
     public static readonly RecordType EDID = new(0x44494445);

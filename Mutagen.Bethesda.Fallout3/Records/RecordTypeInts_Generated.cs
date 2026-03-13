@@ -36,6 +36,7 @@ public partial class RecordTypeInts
     public const int DMDT = 0x54444D44;
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
+    public const int DOOR = 0x524F4F44;
     public const int DSTD = 0x44545344;
     public const int DSTF = 0x46545344;
     public const int EDID = 0x44494445;

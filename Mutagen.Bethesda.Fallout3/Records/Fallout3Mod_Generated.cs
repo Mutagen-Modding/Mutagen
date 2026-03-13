@@ -84,6 +84,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Armors_Object = new Fallout3Group<Armor>(this);
             _Books_Object = new Fallout3Group<Book>(this);
             _Containers_Object = new Fallout3Group<Container>(this);
+            _Doors_Object = new Fallout3Group<Door>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -257,6 +258,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IContainerGetter> IFallout3ModGetter.Containers => _Containers_Object;
         #endregion
+        #region Doors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Door> _Doors_Object;
+        public Fallout3Group<Door> Doors => _Doors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IDoorGetter> IFallout3ModGetter.Doors => _Doors_Object;
+        #endregion
 
         #region To String
 
@@ -320,6 +328,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Armors = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Books = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Containers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Doors = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -346,7 +355,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Terminals,
                 TItem Armors,
                 TItem Books,
-                TItem Containers)
+                TItem Containers,
+                TItem Doors)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -372,6 +382,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Armors = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Armors, new Fallout3Group.Mask<TItem>(Armors));
                 this.Books = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Books, new Fallout3Group.Mask<TItem>(Books));
                 this.Containers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Containers, new Fallout3Group.Mask<TItem>(Containers));
+                this.Doors = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Doors, new Fallout3Group.Mask<TItem>(Doors));
             }
 
             #pragma warning disable CS8618
@@ -407,6 +418,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Armors { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Books { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Containers { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Doors { get; set; }
             #endregion
 
             #region Equals
@@ -443,6 +455,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Armors, rhs.Armors)) return false;
                 if (!object.Equals(this.Books, rhs.Books)) return false;
                 if (!object.Equals(this.Containers, rhs.Containers)) return false;
+                if (!object.Equals(this.Doors, rhs.Doors)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -472,6 +485,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Armors);
                 hash.Add(this.Books);
                 hash.Add(this.Containers);
+                hash.Add(this.Doors);
                 return hash.ToHashCode();
             }
 
@@ -600,6 +614,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Containers.Overall)) return false;
                     if (this.Containers.Specific != null && !this.Containers.Specific.All(eval)) return false;
                 }
+                if (Doors != null)
+                {
+                    if (!eval(this.Doors.Overall)) return false;
+                    if (this.Doors.Specific != null && !this.Doors.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -727,6 +746,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Containers.Overall)) return true;
                     if (this.Containers.Specific != null && this.Containers.Specific.Any(eval)) return true;
                 }
+                if (Doors != null)
+                {
+                    if (eval(this.Doors.Overall)) return true;
+                    if (this.Doors.Specific != null && this.Doors.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -765,6 +789,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Armors = this.Armors == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
                 obj.Books = this.Books == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
                 obj.Containers = this.Containers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
+                obj.Doors = this.Doors == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
             }
             #endregion
 
@@ -879,6 +904,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Containers?.Print(sb);
                     }
+                    if (printMask?.Doors?.Overall ?? true)
+                    {
+                        Doors?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -927,6 +956,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Armor.ErrorMask>?>? Armors;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Book.ErrorMask>?>? Books;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Container.ErrorMask>?>? Containers;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Door.ErrorMask>?>? Doors;
             #endregion
 
             #region IErrorMask
@@ -983,6 +1013,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Books;
                     case Fallout3Mod_FieldIndex.Containers:
                         return Containers;
+                    case Fallout3Mod_FieldIndex.Doors:
+                        return Doors;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1064,6 +1096,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Containers:
                         this.Containers = new MaskItem<Exception?, Fallout3Group.ErrorMask<Container.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Doors:
+                        this.Doors = new MaskItem<Exception?, Fallout3Group.ErrorMask<Door.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1147,6 +1182,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Containers:
                         this.Containers = (MaskItem<Exception?, Fallout3Group.ErrorMask<Container.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Doors:
+                        this.Doors = (MaskItem<Exception?, Fallout3Group.ErrorMask<Door.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1179,6 +1217,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Armors != null) return true;
                 if (Books != null) return true;
                 if (Containers != null) return true;
+                if (Doors != null) return true;
                 return false;
             }
             #endregion
@@ -1228,6 +1267,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Armors?.Print(sb);
                 Books?.Print(sb);
                 Containers?.Print(sb);
+                Doors?.Print(sb);
             }
             #endregion
 
@@ -1260,6 +1300,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Armors = this.Armors.Combine(rhs.Armors, (l, r) => l.Combine(r));
                 ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
                 ret.Containers = this.Containers.Combine(rhs.Containers, (l, r) => l.Combine(r));
+                ret.Doors = this.Doors.Combine(rhs.Doors, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1307,6 +1348,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Armor.TranslationMask>? Armors;
             public Fallout3Group.TranslationMask<Book.TranslationMask>? Books;
             public Fallout3Group.TranslationMask<Container.TranslationMask>? Containers;
+            public Fallout3Group.TranslationMask<Door.TranslationMask>? Doors;
             #endregion
 
             #region Ctors
@@ -1355,6 +1397,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Armors != null ? Armors.OnOverall : DefaultOn, Armors?.GetCrystal()));
                 ret.Add((Books != null ? Books.OnOverall : DefaultOn, Books?.GetCrystal()));
                 ret.Add((Containers != null ? Containers.OnOverall : DefaultOn, Containers?.GetCrystal()));
+                ret.Add((Doors != null ? Doors.OnOverall : DefaultOn, Doors?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1438,6 +1481,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Armors_Object = new Fallout3Group<Armor>(this);
             _Books_Object = new Fallout3Group<Book>(this);
             _Containers_Object = new Fallout3Group<Container>(this);
+            _Doors_Object = new Fallout3Group<Door>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1535,6 +1579,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Containers ?? true)
             {
                 this.Containers.RecordCache.Set(rhsMod.Containers.RecordCache.Items);
+            }
+            if (mask?.Doors ?? true)
+            {
+                this.Doors.RecordCache.Set(rhsMod.Doors.RecordCache.Items);
             }
         }
 
@@ -1820,6 +1868,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Armor> Armors { get; }
         new Fallout3Group<Book> Books { get; }
         new Fallout3Group<Container> Containers { get; }
+        new Fallout3Group<Door> Doors { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1863,6 +1912,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IArmorGetter> Armors { get; }
         IFallout3GroupGetter<IBookGetter> Books { get; }
         IFallout3GroupGetter<IContainerGetter> Containers { get; }
+        IFallout3GroupGetter<IDoorGetter> Doors { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2437,6 +2487,7 @@ namespace Mutagen.Bethesda.Fallout3
         Armors = 21,
         Books = 22,
         Containers = 23,
+        Doors = 24,
     }
     #endregion
 
@@ -2447,9 +2498,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 24;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2539,6 +2590,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Armors.Clear();
             item.Books.Clear();
             item.Containers.Clear();
+            item.Doors.Clear();
         }
         
         #region Mutagen
@@ -2561,6 +2613,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Armors.RemapLinks(mapping);
             obj.Books.RemapLinks(mapping);
             obj.Containers.RemapLinks(mapping);
+            obj.Doors.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2644,6 +2697,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Armors.Remove(keys);
             obj.Books.Remove(keys);
             obj.Containers.Remove(keys);
+            obj.Doors.Remove(keys);
         }
         
         public void Remove(
@@ -2875,6 +2929,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    obj.Doors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3035,6 +3097,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Armors = MaskItemExt.Factory(item.Armors.GetEqualsMask(rhs.Armors, include), include);
             ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
             ret.Containers = MaskItemExt.Factory(item.Containers.GetEqualsMask(rhs.Containers, include), include);
+            ret.Doors = MaskItemExt.Factory(item.Doors.GetEqualsMask(rhs.Doors, include), include);
         }
         
         public string Print(
@@ -3174,6 +3237,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Containers?.Overall ?? true)
             {
                 item.Containers?.Print(sb, "Containers");
+            }
+            if (printMask?.Doors?.Overall ?? true)
+            {
+                item.Doors?.Print(sb, "Doors");
             }
         }
         
@@ -3376,6 +3443,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isContainersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Doors) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Doors, rhs.Doors, out var lhsDoors, out var rhsDoors, out var isDoorsEqual))
+                {
+                    if (!object.Equals(lhsDoors, rhsDoors)) return false;
+                }
+                else if (!isDoorsEqual) return false;
+            }
             return true;
         }
         
@@ -3406,6 +3481,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Armors);
             hash.Add(item.Books);
             hash.Add(item.Containers);
+            hash.Add(item.Doors);
             return hash.ToHashCode();
         }
         
@@ -3567,6 +3643,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IContainer":
                 case "IContainerInternal":
                     return obj.Containers;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    return obj.Doors;
                 default:
                     return null;
             }
@@ -3584,7 +3665,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[23];
+            Stream[] outputStreams = new Stream[24];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -3609,6 +3690,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Armors, 20, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Books, 21, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Containers, 22, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Doors, 23, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -3677,6 +3759,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Armors.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Books.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Containers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Doors.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -3753,6 +3836,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Containers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Doors.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -3860,6 +3947,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Containers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Doors.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4121,6 +4212,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -4349,6 +4449,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Containers,
                 groupGetter: (m) => m.Containers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Door, IDoorGetter>(
+                srcGroup: obj.Doors,
+                type: typeof(IDoorGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Doors,
+                groupGetter: (m) => m.Doors))
             {
                 yield return item;
             }
@@ -4701,6 +4810,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Containers,
                         groupGetter: (m) => m.Containers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Door, IDoorGetter>(
+                        srcGroup: obj.Doors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Doors,
+                        groupGetter: (m) => m.Doors))
                     {
                         yield return item;
                     }
@@ -5254,6 +5377,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Doors) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Doors);
+                try
+                {
+                    item.Doors.DeepCopyIn(
+                        rhs: rhs.Doors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Doors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -5380,6 +5523,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Armors;
         public bool Books;
         public bool Containers;
+        public bool Doors;
         public GroupMask()
         {
         }
@@ -5408,6 +5552,7 @@ namespace Mutagen.Bethesda.Fallout3
             Armors = defaultValue;
             Books = defaultValue;
             Containers = defaultValue;
+            Doors = defaultValue;
         }
     }
 
@@ -5719,6 +5864,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
                         item: ContainersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Doors ?? true)
+            {
+                var DoorsItem = item.Doors;
+                if (DoorsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
+                        item: DoorsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -6115,6 +6271,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Containers;
                 }
+                case RecordTypeInts.DOOR:
+                {
+                    if (importMask?.Doors ?? true)
+                    {
+                        item.Doors.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Doors;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -6395,6 +6565,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? Fallout3GroupBinaryOverlay<IContainerGetter>.Fallout3GroupFactory(_stream, _ContainersLocations, _package) : default;
         public IFallout3GroupGetter<IContainerGetter> Containers => _Containers ?? new Fallout3Group<Container>(this);
         #endregion
+        #region Doors
+        private List<RangeInt64>? _DoorsLocations;
+        private IFallout3GroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? Fallout3GroupBinaryOverlay<IDoorGetter>.Fallout3GroupFactory(_stream, _DoorsLocations, _package) : default;
+        public IFallout3GroupGetter<IDoorGetter> Doors => _Doors ?? new Fallout3Group<Door>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -6606,6 +6781,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _ContainersLocations ??= new();
                     _ContainersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Containers;
+                }
+                case RecordTypeInts.DOOR:
+                {
+                    _DoorsLocations ??= new();
+                    _DoorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Doors;
                 }
                 default:
                     return default(int?);

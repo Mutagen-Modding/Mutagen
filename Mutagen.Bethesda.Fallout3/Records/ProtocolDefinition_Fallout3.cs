@@ -39,6 +39,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Destructible_Registration.Instance,
             DestructionStage_Registration.Instance,
             DestructionStageData_Registration.Instance,
+            Door_Registration.Instance,
             Effect_Registration.Instance,
             EffectData_Registration.Instance,
             EffectShader_Registration.Instance,
