@@ -7,13 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
-using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -43,14 +41,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class Book :
+    public partial class Container :
         Fallout3MajorRecord,
-        IBookInternal,
-        IEquatable<IBookGetter>,
-        ILoquiObjectSetter<Book>
+        IContainerInternal,
+        IEquatable<IContainerGetter>,
+        ILoquiObjectSetter<Container>
     {
         #region Ctor
-        protected Book()
+        protected Container()
         {
             CustomCtor();
         }
@@ -63,7 +61,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IBookGetter.ObjectBounds => ObjectBounds;
+        IObjectBoundsGetter IContainerGetter.ObjectBounds => ObjectBounds;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ObjectBounds? IObjectBoundedOptional.ObjectBounds
@@ -83,7 +81,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IBookGetter.Name => this.Name;
+        String? IContainerGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -107,28 +105,10 @@ namespace Mutagen.Bethesda.Fallout3
             set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IBookGetter.Model => this.Model;
+        IModelGetter? IContainerGetter.Model => this.Model;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
-        #endregion
-        #endregion
-        #region Icons
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Icons? _Icons;
-        /// <summary>
-        /// Aspects: IHasIcons
-        /// </summary>
-        public Icons? Icons
-        {
-            get => _Icons;
-            set => _Icons = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIconsGetter? IBookGetter.Icons => this.Icons;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
         #endregion
         #region Script
@@ -139,10 +119,21 @@ namespace Mutagen.Bethesda.Fallout3
             set => _Script.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IScriptGetter> IBookGetter.Script => this.Script;
+        IFormLinkNullableGetter<IScriptGetter> IContainerGetter.Script => this.Script;
         #endregion
-        #region Description
-        public String Description { get; set; } = string.Empty;
+        #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ContainerEntry> _Items = new ExtendedList<ContainerEntry>();
+        public ExtendedList<ContainerEntry> Items
+        {
+            get => this._Items;
+            init => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IContainerEntryGetter> IContainerGetter.Items => _Items;
+        #endregion
+
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -156,45 +147,47 @@ namespace Mutagen.Bethesda.Fallout3
             set => _Destructible = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDestructibleGetter? IBookGetter.Destructible => this.Destructible;
+        IDestructibleGetter? IContainerGetter.Destructible => this.Destructible;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
         #endregion
         #endregion
-        #region PickUpSound
-        private readonly IFormLinkNullable<ISoundGetter> _PickUpSound = new FormLinkNullable<ISoundGetter>();
-        public IFormLinkNullable<ISoundGetter> PickUpSound
-        {
-            get => _PickUpSound;
-            set => _PickUpSound.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundGetter> IBookGetter.PickUpSound => this.PickUpSound;
-        #endregion
-        #region DropSound
-        private readonly IFormLinkNullable<ISoundGetter> _DropSound = new FormLinkNullable<ISoundGetter>();
-        public IFormLinkNullable<ISoundGetter> DropSound
-        {
-            get => _DropSound;
-            set => _DropSound.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundGetter> IBookGetter.DropSound => this.DropSound;
-        #endregion
         #region Flags
-        public Book.BookFlag Flags { get; set; } = default(Book.BookFlag);
-        #endregion
-        #region Skill
-        public Skill? Skill { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Skill? IBookGetter.Skill => this.Skill;
-        #endregion
-        #region Value
-        public Int32 Value { get; set; } = default(Int32);
+        public Container.ContainerFlag Flags { get; set; } = default(Container.ContainerFlag);
         #endregion
         #region Weight
         public Single Weight { get; set; } = default(Single);
+        #endregion
+        #region OpenSound
+        private readonly IFormLinkNullable<ISoundGetter> _OpenSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> OpenSound
+        {
+            get => _OpenSound;
+            set => _OpenSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IContainerGetter.OpenSound => this.OpenSound;
+        #endregion
+        #region CloseSound
+        private readonly IFormLinkNullable<ISoundGetter> _CloseSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> CloseSound
+        {
+            get => _CloseSound;
+            set => _CloseSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IContainerGetter.CloseSound => this.CloseSound;
+        #endregion
+        #region RandomLoopingSound
+        private readonly IFormLinkNullable<ISoundGetter> _RandomLoopingSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> RandomLoopingSound
+        {
+            get => _RandomLoopingSound;
+            set => _RandomLoopingSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IContainerGetter.RandomLoopingSound => this.RandomLoopingSound;
         #endregion
 
         #region To String
@@ -203,7 +196,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BookMixIn.Print(
+            ContainerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -224,16 +217,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Script = initialValue;
-                this.Description = initialValue;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
-                this.PickUpSound = initialValue;
-                this.DropSound = initialValue;
                 this.Flags = initialValue;
-                this.Skill = initialValue;
-                this.Value = initialValue;
                 this.Weight = initialValue;
+                this.OpenSound = initialValue;
+                this.CloseSound = initialValue;
+                this.RandomLoopingSound = initialValue;
             }
 
             public Mask(
@@ -247,16 +238,14 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
-                TItem Icons,
                 TItem Script,
-                TItem Description,
+                TItem Items,
                 TItem Destructible,
-                TItem PickUpSound,
-                TItem DropSound,
                 TItem Flags,
-                TItem Skill,
-                TItem Value,
-                TItem Weight)
+                TItem Weight,
+                TItem OpenSound,
+                TItem CloseSound,
+                TItem RandomLoopingSound)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -269,16 +258,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Script = Script;
-                this.Description = Description;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(Items, []);
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
-                this.PickUpSound = PickUpSound;
-                this.DropSound = DropSound;
                 this.Flags = Flags;
-                this.Skill = Skill;
-                this.Value = Value;
                 this.Weight = Weight;
+                this.OpenSound = OpenSound;
+                this.CloseSound = CloseSound;
+                this.RandomLoopingSound = RandomLoopingSound;
             }
 
             #pragma warning disable CS8618
@@ -293,16 +280,14 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public TItem Script;
-            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>? Items;
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
-            public TItem PickUpSound;
-            public TItem DropSound;
             public TItem Flags;
-            public TItem Skill;
-            public TItem Value;
             public TItem Weight;
+            public TItem OpenSound;
+            public TItem CloseSound;
+            public TItem RandomLoopingSound;
             #endregion
 
             #region Equals
@@ -319,16 +304,14 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
-                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
-                if (!object.Equals(this.DropSound, rhs.DropSound)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Skill, rhs.Skill)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
+                if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
+                if (!object.Equals(this.RandomLoopingSound, rhs.RandomLoopingSound)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -337,16 +320,14 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
-                hash.Add(this.Icons);
                 hash.Add(this.Script);
-                hash.Add(this.Description);
+                hash.Add(this.Items);
                 hash.Add(this.Destructible);
-                hash.Add(this.PickUpSound);
-                hash.Add(this.DropSound);
                 hash.Add(this.Flags);
-                hash.Add(this.Skill);
-                hash.Add(this.Value);
                 hash.Add(this.Weight);
+                hash.Add(this.OpenSound);
+                hash.Add(this.CloseSound);
+                hash.Add(this.RandomLoopingSound);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -368,24 +349,29 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (Icons != null)
-                {
-                    if (!eval(this.Icons.Overall)) return false;
-                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
-                }
                 if (!eval(this.Script)) return false;
-                if (!eval(this.Description)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (Destructible != null)
                 {
                     if (!eval(this.Destructible.Overall)) return false;
                     if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
                 }
-                if (!eval(this.PickUpSound)) return false;
-                if (!eval(this.DropSound)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Skill)) return false;
-                if (!eval(this.Value)) return false;
                 if (!eval(this.Weight)) return false;
+                if (!eval(this.OpenSound)) return false;
+                if (!eval(this.CloseSound)) return false;
+                if (!eval(this.RandomLoopingSound)) return false;
                 return true;
             }
             #endregion
@@ -405,24 +391,29 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (Icons != null)
-                {
-                    if (eval(this.Icons.Overall)) return true;
-                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
-                }
                 if (eval(this.Script)) return true;
-                if (eval(this.Description)) return true;
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (Destructible != null)
                 {
                     if (eval(this.Destructible.Overall)) return true;
                     if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
                 }
-                if (eval(this.PickUpSound)) return true;
-                if (eval(this.DropSound)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Skill)) return true;
-                if (eval(this.Value)) return true;
                 if (eval(this.Weight)) return true;
+                if (eval(this.OpenSound)) return true;
+                if (eval(this.CloseSound)) return true;
+                if (eval(this.RandomLoopingSound)) return true;
                 return false;
             }
             #endregion
@@ -430,7 +421,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Book.Mask<R>();
+                var ret = new Container.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -441,32 +432,44 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.Script = eval(this.Script);
-                obj.Description = eval(this.Description);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.Items.Overall), []);
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
-                obj.PickUpSound = eval(this.PickUpSound);
-                obj.DropSound = eval(this.DropSound);
                 obj.Flags = eval(this.Flags);
-                obj.Skill = eval(this.Skill);
-                obj.Value = eval(this.Value);
                 obj.Weight = eval(this.Weight);
+                obj.OpenSound = eval(this.OpenSound);
+                obj.CloseSound = eval(this.CloseSound);
+                obj.RandomLoopingSound = eval(this.RandomLoopingSound);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Book.Mask<bool>? printMask = null)
+            public string Print(Container.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Book.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Container.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Book.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(Container.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
@@ -481,45 +484,52 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.Icons?.Overall ?? true)
-                    {
-                        Icons?.Print(sb);
-                    }
                     if (printMask?.Script ?? true)
                     {
                         sb.AppendItem(Script, "Script");
                     }
-                    if (printMask?.Description ?? true)
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
                     {
-                        sb.AppendItem(Description, "Description");
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
                         Destructible?.Print(sb);
                     }
-                    if (printMask?.PickUpSound ?? true)
-                    {
-                        sb.AppendItem(PickUpSound, "PickUpSound");
-                    }
-                    if (printMask?.DropSound ?? true)
-                    {
-                        sb.AppendItem(DropSound, "DropSound");
-                    }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Skill ?? true)
-                    {
-                        sb.AppendItem(Skill, "Skill");
-                    }
-                    if (printMask?.Value ?? true)
-                    {
-                        sb.AppendItem(Value, "Value");
-                    }
                     if (printMask?.Weight ?? true)
                     {
                         sb.AppendItem(Weight, "Weight");
+                    }
+                    if (printMask?.OpenSound ?? true)
+                    {
+                        sb.AppendItem(OpenSound, "OpenSound");
+                    }
+                    if (printMask?.CloseSound ?? true)
+                    {
+                        sb.AppendItem(CloseSound, "CloseSound");
+                    }
+                    if (printMask?.RandomLoopingSound ?? true)
+                    {
+                        sb.AppendItem(RandomLoopingSound, "RandomLoopingSound");
                     }
                 }
             }
@@ -535,50 +545,44 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public Exception? Script;
-            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>? Items;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
-            public Exception? PickUpSound;
-            public Exception? DropSound;
             public Exception? Flags;
-            public Exception? Skill;
-            public Exception? Value;
             public Exception? Weight;
+            public Exception? OpenSound;
+            public Exception? CloseSound;
+            public Exception? RandomLoopingSound;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Book_FieldIndex enu = (Book_FieldIndex)index;
+                Container_FieldIndex enu = (Container_FieldIndex)index;
                 switch (enu)
                 {
-                    case Book_FieldIndex.ObjectBounds:
+                    case Container_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case Book_FieldIndex.Name:
+                    case Container_FieldIndex.Name:
                         return Name;
-                    case Book_FieldIndex.Model:
+                    case Container_FieldIndex.Model:
                         return Model;
-                    case Book_FieldIndex.Icons:
-                        return Icons;
-                    case Book_FieldIndex.Script:
+                    case Container_FieldIndex.Script:
                         return Script;
-                    case Book_FieldIndex.Description:
-                        return Description;
-                    case Book_FieldIndex.Destructible:
+                    case Container_FieldIndex.Items:
+                        return Items;
+                    case Container_FieldIndex.Destructible:
                         return Destructible;
-                    case Book_FieldIndex.PickUpSound:
-                        return PickUpSound;
-                    case Book_FieldIndex.DropSound:
-                        return DropSound;
-                    case Book_FieldIndex.Flags:
+                    case Container_FieldIndex.Flags:
                         return Flags;
-                    case Book_FieldIndex.Skill:
-                        return Skill;
-                    case Book_FieldIndex.Value:
-                        return Value;
-                    case Book_FieldIndex.Weight:
+                    case Container_FieldIndex.Weight:
                         return Weight;
+                    case Container_FieldIndex.OpenSound:
+                        return OpenSound;
+                    case Container_FieldIndex.CloseSound:
+                        return CloseSound;
+                    case Container_FieldIndex.RandomLoopingSound:
+                        return RandomLoopingSound;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -586,47 +590,41 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Book_FieldIndex enu = (Book_FieldIndex)index;
+                Container_FieldIndex enu = (Container_FieldIndex)index;
                 switch (enu)
                 {
-                    case Book_FieldIndex.ObjectBounds:
+                    case Container_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case Book_FieldIndex.Name:
+                    case Container_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Book_FieldIndex.Model:
+                    case Container_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Book_FieldIndex.Icons:
-                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
-                        break;
-                    case Book_FieldIndex.Script:
+                    case Container_FieldIndex.Script:
                         this.Script = ex;
                         break;
-                    case Book_FieldIndex.Description:
-                        this.Description = ex;
+                    case Container_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ex, null);
                         break;
-                    case Book_FieldIndex.Destructible:
+                    case Container_FieldIndex.Destructible:
                         this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
                         break;
-                    case Book_FieldIndex.PickUpSound:
-                        this.PickUpSound = ex;
-                        break;
-                    case Book_FieldIndex.DropSound:
-                        this.DropSound = ex;
-                        break;
-                    case Book_FieldIndex.Flags:
+                    case Container_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case Book_FieldIndex.Skill:
-                        this.Skill = ex;
-                        break;
-                    case Book_FieldIndex.Value:
-                        this.Value = ex;
-                        break;
-                    case Book_FieldIndex.Weight:
+                    case Container_FieldIndex.Weight:
                         this.Weight = ex;
+                        break;
+                    case Container_FieldIndex.OpenSound:
+                        this.OpenSound = ex;
+                        break;
+                    case Container_FieldIndex.CloseSound:
+                        this.CloseSound = ex;
+                        break;
+                    case Container_FieldIndex.RandomLoopingSound:
+                        this.RandomLoopingSound = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -636,47 +634,41 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Book_FieldIndex enu = (Book_FieldIndex)index;
+                Container_FieldIndex enu = (Container_FieldIndex)index;
                 switch (enu)
                 {
-                    case Book_FieldIndex.ObjectBounds:
+                    case Container_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case Book_FieldIndex.Name:
+                    case Container_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.Model:
+                    case Container_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Book_FieldIndex.Icons:
-                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
-                        break;
-                    case Book_FieldIndex.Script:
+                    case Container_FieldIndex.Script:
                         this.Script = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.Description:
-                        this.Description = (Exception?)obj;
+                    case Container_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>)obj;
                         break;
-                    case Book_FieldIndex.Destructible:
+                    case Container_FieldIndex.Destructible:
                         this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
                         break;
-                    case Book_FieldIndex.PickUpSound:
-                        this.PickUpSound = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.DropSound:
-                        this.DropSound = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.Flags:
+                    case Container_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.Skill:
-                        this.Skill = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
-                        break;
-                    case Book_FieldIndex.Weight:
+                    case Container_FieldIndex.Weight:
                         this.Weight = (Exception?)obj;
+                        break;
+                    case Container_FieldIndex.OpenSound:
+                        this.OpenSound = (Exception?)obj;
+                        break;
+                    case Container_FieldIndex.CloseSound:
+                        this.CloseSound = (Exception?)obj;
+                        break;
+                    case Container_FieldIndex.RandomLoopingSound:
+                        this.RandomLoopingSound = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -690,16 +682,14 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ObjectBounds != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
-                if (Icons != null) return true;
                 if (Script != null) return true;
-                if (Description != null) return true;
+                if (Items != null) return true;
                 if (Destructible != null) return true;
-                if (PickUpSound != null) return true;
-                if (DropSound != null) return true;
                 if (Flags != null) return true;
-                if (Skill != null) return true;
-                if (Value != null) return true;
                 if (Weight != null) return true;
+                if (OpenSound != null) return true;
+                if (CloseSound != null) return true;
+                if (RandomLoopingSound != null) return true;
                 return false;
             }
             #endregion
@@ -731,31 +721,42 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Name, "Name");
                 }
                 Model?.Print(sb);
-                Icons?.Print(sb);
                 {
                     sb.AppendItem(Script, "Script");
                 }
+                if (Items is {} ItemsItem)
                 {
-                    sb.AppendItem(Description, "Description");
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 Destructible?.Print(sb);
-                {
-                    sb.AppendItem(PickUpSound, "PickUpSound");
-                }
-                {
-                    sb.AppendItem(DropSound, "DropSound");
-                }
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(Skill, "Skill");
-                }
-                {
-                    sb.AppendItem(Value, "Value");
-                }
-                {
                     sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(OpenSound, "OpenSound");
+                }
+                {
+                    sb.AppendItem(CloseSound, "CloseSound");
+                }
+                {
+                    sb.AppendItem(RandomLoopingSound, "RandomLoopingSound");
                 }
             }
             #endregion
@@ -768,16 +769,14 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Script = this.Script.Combine(rhs.Script);
-                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
-                ret.DropSound = this.DropSound.Combine(rhs.DropSound);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Skill = this.Skill.Combine(rhs.Skill);
-                ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound);
+                ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound);
+                ret.RandomLoopingSound = this.RandomLoopingSound.Combine(rhs.RandomLoopingSound);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -803,16 +802,14 @@ namespace Mutagen.Bethesda.Fallout3
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool Name;
             public Model.TranslationMask? Model;
-            public Icons.TranslationMask? Icons;
             public bool Script;
-            public bool Description;
+            public ContainerEntry.TranslationMask? Items;
             public Destructible.TranslationMask? Destructible;
-            public bool PickUpSound;
-            public bool DropSound;
             public bool Flags;
-            public bool Skill;
-            public bool Value;
             public bool Weight;
+            public bool OpenSound;
+            public bool CloseSound;
+            public bool RandomLoopingSound;
             #endregion
 
             #region Ctors
@@ -823,13 +820,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = defaultOn;
                 this.Script = defaultOn;
-                this.Description = defaultOn;
-                this.PickUpSound = defaultOn;
-                this.DropSound = defaultOn;
                 this.Flags = defaultOn;
-                this.Skill = defaultOn;
-                this.Value = defaultOn;
                 this.Weight = defaultOn;
+                this.OpenSound = defaultOn;
+                this.CloseSound = defaultOn;
+                this.RandomLoopingSound = defaultOn;
             }
 
             #endregion
@@ -840,16 +835,14 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Script, null));
-                ret.Add((Description, null));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
-                ret.Add((PickUpSound, null));
-                ret.Add((DropSound, null));
                 ret.Add((Flags, null));
-                ret.Add((Skill, null));
-                ret.Add((Value, null));
                 ret.Add((Weight, null));
+                ret.Add((OpenSound, null));
+                ret.Add((CloseSound, null));
+                ret.Add((RandomLoopingSound, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -861,10 +854,10 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSetterCommon.Instance.RemapLinks(this, mapping);
-        public Book(
+        public static readonly RecordType GrupRecordType = Container_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ContainerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerSetterCommon.Instance.RemapLinks(this, mapping);
+        public Container(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -872,7 +865,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Book(
+        private Container(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -880,14 +873,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Book(IFallout3Mod mod)
+        public Container(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Book(IFallout3Mod mod, string editorID)
+        public Container(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -897,15 +890,16 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Book>.ToString(this);
+            return MajorRecordPrinter<Container>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IBook);
+        protected override Type LinkType => typeof(IContainer);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BookCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BookSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BookSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BookSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -913,16 +907,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IBookGetter rhs) return false;
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IContainerGetter rhs) return false;
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBookGetter? obj)
+        public bool Equals(IContainerGetter? obj)
         {
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -930,23 +924,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ContainerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BookBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ContainerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Book CreateFromBinary(
+        public new static Container CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Book();
-            ((BookSetterCommon)((IBookGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Container();
+            ((ContainerSetterCommon)((IContainerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -957,7 +951,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Book item,
+            out Container item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -972,27 +966,24 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((BookSetterCommon)((IBookGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ContainerSetterCommon)((IContainerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Book GetNew()
+        internal static new Container GetNew()
         {
-            return new Book();
+            return new Container();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBook :
-        IAssetLinkContainer,
-        IBookGetter,
+    public partial interface IContainer :
+        IContainerGetter,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
-        IHasIcons,
-        IItem,
-        ILoquiObjectSetter<IBookInternal>,
+        ILoquiObjectSetter<IContainerInternal>,
         IModeled,
         INamed,
         INamedRequired,
@@ -1010,48 +1001,44 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        /// <summary>
-        /// Aspects: IHasIcons
-        /// </summary>
-        new Icons? Icons { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
-        new String Description { get; set; }
+        new ExtendedList<ContainerEntry> Items { get; }
         /// <summary>
         /// Aspects: IHasDestructible
         /// </summary>
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<ISoundGetter> PickUpSound { get; set; }
-        new IFormLinkNullable<ISoundGetter> DropSound { get; set; }
-        new Book.BookFlag Flags { get; set; }
-        new Skill? Skill { get; set; }
-        new Int32 Value { get; set; }
+        new Container.ContainerFlag Flags { get; set; }
         new Single Weight { get; set; }
+        new IFormLinkNullable<ISoundGetter> OpenSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> CloseSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> RandomLoopingSound { get; set; }
+        #region Mutagen
+        new Container.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
-    public partial interface IBookInternal :
+    public partial interface IContainerInternal :
         IFallout3MajorRecordInternal,
-        IBook,
-        IBookGetter
+        IContainer,
+        IContainerGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.BOOK)]
-    public partial interface IBookGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.CONT)]
+    public partial interface IContainerGetter :
         IFallout3MajorRecordGetter,
-        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
-        IHasIconsGetter,
-        IItemGetter,
-        ILoquiObject<IBookGetter>,
-        IMapsToGetter<IBookGetter>,
+        ILoquiObject<IContainerGetter>,
+        IMapsToGetter<IContainerGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter
     {
-        static new ILoquiRegistration StaticRegistration => Book_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter
@@ -1070,68 +1057,65 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        #region Icons
-        /// <summary>
-        /// Aspects: IHasIconsGetter
-        /// </summary>
-        IIconsGetter? Icons { get; }
-        #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        String Description { get; }
+        IReadOnlyList<IContainerEntryGetter> Items { get; }
         #region Destructible
         /// <summary>
         /// Aspects: IHasDestructibleGetter
         /// </summary>
         IDestructibleGetter? Destructible { get; }
         #endregion
-        IFormLinkNullableGetter<ISoundGetter> PickUpSound { get; }
-        IFormLinkNullableGetter<ISoundGetter> DropSound { get; }
-        Book.BookFlag Flags { get; }
-        Skill? Skill { get; }
-        Int32 Value { get; }
+        Container.ContainerFlag Flags { get; }
         Single Weight { get; }
+        IFormLinkNullableGetter<ISoundGetter> OpenSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> CloseSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> RandomLoopingSound { get; }
+
+        #region Mutagen
+        Container.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BookMixIn
+    public static partial class ContainerMixIn
     {
-        public static void Clear(this IBookInternal item)
+        public static void Clear(this IContainerInternal item)
         {
-            ((BookSetterCommon)((IBookGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ContainerSetterCommon)((IContainerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Book.Mask<bool> GetEqualsMask(
-            this IBookGetter item,
-            IBookGetter rhs,
+        public static Container.Mask<bool> GetEqualsMask(
+            this IContainerGetter item,
+            IContainerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BookCommon)((IBookGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBookGetter item,
+            this IContainerGetter item,
             string? name = null,
-            Book.Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
-            return ((BookCommon)((IBookGetter)item).CommonInstance()!).Print(
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBookGetter item,
+            this IContainerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Book.Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
-            ((BookCommon)((IBookGetter)item).CommonInstance()!).Print(
+            ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1139,39 +1123,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IBookGetter item,
-            IBookGetter rhs,
-            Book.TranslationMask? equalsMask = null)
+            this IContainerGetter item,
+            IContainerGetter rhs,
+            Container.TranslationMask? equalsMask = null)
         {
-            return ((BookCommon)((IBookGetter)item).CommonInstance()!).Equals(
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBookInternal lhs,
-            IBookGetter rhs,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? copyMask = null)
+            this IContainerInternal lhs,
+            IContainerGetter rhs,
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BookSetterTranslationCommon)((IBookGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Book.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Container.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBookInternal lhs,
-            IBookGetter rhs,
+            this IContainerInternal lhs,
+            IContainerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BookSetterTranslationCommon)((IBookGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ContainerSetterTranslationCommon)((IContainerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1179,55 +1163,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Book DeepCopy(
-            this IBookGetter item,
-            Book.TranslationMask? copyMask = null)
+        public static Container DeepCopy(
+            this IContainerGetter item,
+            Container.TranslationMask? copyMask = null)
         {
-            return ((BookSetterTranslationCommon)((IBookGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ContainerSetterTranslationCommon)((IContainerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Book DeepCopy(
-            this IBookGetter item,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? copyMask = null)
+        public static Container DeepCopy(
+            this IContainerGetter item,
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? copyMask = null)
         {
-            return ((BookSetterTranslationCommon)((IBookGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ContainerSetterTranslationCommon)((IContainerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Book DeepCopy(
-            this IBookGetter item,
+        public static Container DeepCopy(
+            this IContainerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BookSetterTranslationCommon)((IBookGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ContainerSetterTranslationCommon)((IContainerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Book Duplicate(
-            this IBookGetter item,
+        public static Container Duplicate(
+            this IContainerGetter item,
             FormKey formKey,
-            Book.TranslationMask? copyMask = null)
+            Container.TranslationMask? copyMask = null)
         {
-            return ((BookCommon)((IBookGetter)item).CommonInstance()!).Duplicate(
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Book Duplicate(
-            this IBookGetter item,
+        public static Container Duplicate(
+            this IContainerGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((BookCommon)((IBookGetter)item).CommonInstance()!).Duplicate(
+            return ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -1237,11 +1221,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBookInternal item,
+            this IContainerInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BookSetterCommon)((IBookGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ContainerSetterCommon)((IContainerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1257,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Book_FieldIndex
+    internal enum Container_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1269,47 +1253,45 @@ namespace Mutagen.Bethesda.Fallout3
         ObjectBounds = 7,
         Name = 8,
         Model = 9,
-        Icons = 10,
-        Script = 11,
-        Description = 12,
-        Destructible = 13,
-        PickUpSound = 14,
-        DropSound = 15,
-        Flags = 16,
-        Skill = 17,
-        Value = 18,
-        Weight = 19,
+        Script = 10,
+        Items = 11,
+        Destructible = 12,
+        Flags = 13,
+        Weight = 14,
+        OpenSound = 15,
+        CloseSound = 16,
+        RandomLoopingSound = 17,
     }
     #endregion
 
     #region Registration
-    internal partial class Book_Registration : ILoquiRegistration
+    internal partial class Container_Registration : ILoquiRegistration
     {
-        public static readonly Book_Registration Instance = new Book_Registration();
+        public static readonly Container_Registration Instance = new Container_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 18;
 
-        public static readonly Type MaskType = typeof(Book.Mask<>);
+        public static readonly Type MaskType = typeof(Container.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Book.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Container.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Book);
+        public static readonly Type ClassType = typeof(Container);
 
-        public static readonly Type GetterType = typeof(IBookGetter);
+        public static readonly Type GetterType = typeof(IContainerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBook);
+        public static readonly Type SetterType = typeof(IContainer);
 
-        public static readonly Type? InternalSetterType = typeof(IBookInternal);
+        public static readonly Type? InternalSetterType = typeof(IContainerInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Book";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.Container";
 
-        public const string Name = "Book";
+        public const string Name = "Container";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -1317,13 +1299,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BOOK;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CONT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.BOOK);
+            var triggers = RecordCollection.Factory(RecordTypes.CONT);
             var all = RecordCollection.Factory(
-                RecordTypes.BOOK,
+                RecordTypes.CONT,
                 RecordTypes.OBND,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -1331,19 +1313,20 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.MODT,
                 RecordTypes.MODS,
                 RecordTypes.MODD,
-                RecordTypes.ICON,
                 RecordTypes.SCRI,
-                RecordTypes.DESC,
+                RecordTypes.CNTO,
+                RecordTypes.COED,
                 RecordTypes.DEST,
                 RecordTypes.DSTD,
-                RecordTypes.YNAM,
-                RecordTypes.ZNAM,
-                RecordTypes.DATA);
+                RecordTypes.DATA,
+                RecordTypes.SNAM,
+                RecordTypes.QNAM,
+                RecordTypes.RNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ContainerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -1374,92 +1357,66 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class BookSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class ContainerSetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly BookSetterCommon Instance = new BookSetterCommon();
+        public new static readonly ContainerSetterCommon Instance = new ContainerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBookInternal item)
+        public void Clear(IContainerInternal item)
         {
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
-            item.Icons = null;
             item.Script.Clear();
-            item.Description = string.Empty;
+            item.Items.Clear();
             item.Destructible = null;
-            item.PickUpSound.Clear();
-            item.DropSound.Clear();
-            item.Flags = default(Book.BookFlag);
-            item.Skill = default;
-            item.Value = default(Int32);
+            item.Flags = default(Container.ContainerFlag);
             item.Weight = default(Single);
+            item.OpenSound.Clear();
+            item.CloseSound.Clear();
+            item.RandomLoopingSound.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (IBookInternal)item);
+            Clear(item: (IContainerInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IBookInternal)item);
+            Clear(item: (IContainerInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IBook obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IContainer obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Script.Relink(mapping);
+            obj.Items.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
-            obj.PickUpSound.Relink(mapping);
-            obj.DropSound.Relink(mapping);
-        }
-        
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBook obj)
-        {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
-            {
-                yield return item;
-            }
-            if (obj.Icons is {} IconsItems)
-            {
-                foreach (var item in IconsItems.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            yield break;
-        }
-        
-        public void RemapAssetLinks(
-            IBook obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories)
-        {
-            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Icons?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.OpenSound.Relink(mapping);
+            obj.CloseSound.Relink(mapping);
+            obj.RandomLoopingSound.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBookInternal item,
+            IContainerInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IBookInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IContainerInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BookBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: BookBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ContainerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ContainerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1468,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Book)item,
+                item: (Container)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1479,7 +1436,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Book)item,
+                item: (Container)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1487,17 +1444,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class BookCommon : Fallout3MajorRecordCommon
+    internal partial class ContainerCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly BookCommon Instance = new BookCommon();
+        public new static readonly ContainerCommon Instance = new ContainerCommon();
 
-        public Book.Mask<bool> GetEqualsMask(
-            IBookGetter item,
-            IBookGetter rhs,
+        public Container.Mask<bool> GetEqualsMask(
+            IContainerGetter item,
+            IContainerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Book.Mask<bool>(false);
-            ((BookCommon)((IBookGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Container.Mask<bool>(false);
+            ((ContainerCommon)((IContainerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1506,9 +1463,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IBookGetter item,
-            IBookGetter rhs,
-            Book.Mask<bool> ret,
+            IContainerGetter item,
+            IContainerGetter rhs,
+            Container.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
@@ -1518,31 +1475,28 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Icons = EqualsMaskHelper.EqualsHelper(
-                item.Icons,
-                rhs.Icons,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
             ret.Script = item.Script.Equals(rhs.Script);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
-            ret.DropSound = item.DropSound.Equals(rhs.DropSound);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Skill = item.Skill == rhs.Skill;
-            ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.OpenSound = item.OpenSound.Equals(rhs.OpenSound);
+            ret.CloseSound = item.CloseSound.Equals(rhs.CloseSound);
+            ret.RandomLoopingSound = item.RandomLoopingSound.Equals(rhs.RandomLoopingSound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IBookGetter item,
+            IContainerGetter item,
             string? name = null,
-            Book.Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1554,18 +1508,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IBookGetter item,
+            IContainerGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Book.Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Book =>");
+                sb.AppendLine($"Container =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Book) =>");
+                sb.AppendLine($"{name} (Container) =>");
             }
             using (sb.Brace())
             {
@@ -1577,9 +1531,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IBookGetter item,
+            IContainerGetter item,
             StructuredStringBuilder sb,
-            Book.Mask<bool>? printMask = null)
+            Container.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
@@ -1599,86 +1553,86 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if ((printMask?.Icons?.Overall ?? true)
-                && item.Icons is {} IconsItem)
-            {
-                IconsItem?.Print(sb, "Icons");
-            }
             if (printMask?.Script ?? true)
             {
                 sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
-            if (printMask?.Description ?? true)
+            if (printMask?.Items?.Overall ?? true)
             {
-                sb.AppendItem(item.Description, "Description");
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
                 DestructibleItem?.Print(sb, "Destructible");
             }
-            if (printMask?.PickUpSound ?? true)
-            {
-                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
-            }
-            if (printMask?.DropSound ?? true)
-            {
-                sb.AppendItem(item.DropSound.FormKeyNullable, "DropSound");
-            }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
-            }
-            if ((printMask?.Skill ?? true)
-                && item.Skill is {} SkillItem)
-            {
-                sb.AppendItem(SkillItem, "Skill");
-            }
-            if (printMask?.Value ?? true)
-            {
-                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
                 sb.AppendItem(item.Weight, "Weight");
             }
+            if (printMask?.OpenSound ?? true)
+            {
+                sb.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+            }
+            if (printMask?.CloseSound ?? true)
+            {
+                sb.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
+            }
+            if (printMask?.RandomLoopingSound ?? true)
+            {
+                sb.AppendItem(item.RandomLoopingSound.FormKeyNullable, "RandomLoopingSound");
+            }
         }
         
-        public static Book_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static Container_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormVersion:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Version2:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Book_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Container_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Book_FieldIndex)((int)index);
+                    return (Container_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1686,79 +1640,67 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBookGetter? lhs,
-            IBookGetter? rhs,
+            IContainerGetter? lhs,
+            IContainerGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Container_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Model))) return false;
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
-                {
-                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Icons))) return false;
-                }
-                else if (!isIconsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Script) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
             {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Items)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Destructible) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
                 {
-                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Destructible))) return false;
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Container_FieldIndex.Destructible))) return false;
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
-            {
-                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DropSound) ?? true))
-            {
-                if (!lhs.DropSound.Equals(rhs.DropSound)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Skill) ?? true))
-            {
-                if (lhs.Skill != rhs.Skill) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
-            {
-                if (lhs.Value != rhs.Value) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
+            {
+                if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
+            {
+                if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.RandomLoopingSound) ?? true))
+            {
+                if (!lhs.RandomLoopingSound.Equals(rhs.RandomLoopingSound)) return false;
             }
             return true;
         }
@@ -1769,8 +1711,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IBookGetter?)lhs,
-                rhs: rhs as IBookGetter,
+                lhs: (IContainerGetter?)lhs,
+                rhs: rhs as IContainerGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1780,12 +1722,12 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IBookGetter?)lhs,
-                rhs: rhs as IBookGetter,
+                lhs: (IContainerGetter?)lhs,
+                rhs: rhs as IContainerGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IBookGetter item)
+        public virtual int GetHashCode(IContainerGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
@@ -1797,37 +1739,29 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Modelitem);
             }
-            if (item.Icons is {} Iconsitem)
-            {
-                hash.Add(Iconsitem);
-            }
             hash.Add(item.Script);
-            hash.Add(item.Description);
+            hash.Add(item.Items);
             if (item.Destructible is {} Destructibleitem)
             {
                 hash.Add(Destructibleitem);
             }
-            hash.Add(item.PickUpSound);
-            hash.Add(item.DropSound);
             hash.Add(item.Flags);
-            if (item.Skill is {} Skillitem)
-            {
-                hash.Add(Skillitem);
-            }
-            hash.Add(item.Value);
             hash.Add(item.Weight);
+            hash.Add(item.OpenSound);
+            hash.Add(item.CloseSound);
+            hash.Add(item.RandomLoopingSound);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (IBookGetter)item);
+            return GetHashCode(item: (IContainerGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IBookGetter)item);
+            return GetHashCode(item: (IContainerGetter)item);
         }
         
         #endregion
@@ -1835,11 +1769,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Book.GetNew();
+            return Container.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IContainerGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1856,6 +1790,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return ScriptInfo;
             }
+            foreach (var item in obj.Items.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             if (obj.Destructible is {} DestructibleItems)
             {
                 foreach (var item in DestructibleItems.EnumerateFormLinks())
@@ -1863,40 +1802,28 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
-            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return PickUpSoundInfo;
+                yield return OpenSoundInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.DropSound, out var DropSoundInfo))
+            if (FormLinkInformation.TryFactory(obj.CloseSound, out var CloseSoundInfo))
             {
-                yield return DropSoundInfo;
+                yield return CloseSoundInfo;
             }
-            yield break;
-        }
-        
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBookGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
-        {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            if (FormLinkInformation.TryFactory(obj.RandomLoopingSound, out var RandomLoopingSoundInfo))
             {
-                yield return item;
-            }
-            if (obj.Icons is {} IconsItems)
-            {
-                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
+                yield return RandomLoopingSoundInfo;
             }
             yield break;
         }
         
         #region Duplicate
-        public Book Duplicate(
-            IBookGetter item,
+        public Container Duplicate(
+            IContainerGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Book(formKey, default(Fallout3Release));
+            var newRec = new Container(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1907,7 +1834,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IBookGetter)item,
+                item: (IContainerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1918,7 +1845,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IBookGetter)item,
+                item: (IContainerGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1928,14 +1855,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class BookSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class ContainerSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly BookSetterTranslationCommon Instance = new BookSetterTranslationCommon();
+        public new static readonly ContainerSetterTranslationCommon Instance = new ContainerSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBookInternal item,
-            IBookGetter rhs,
+            IContainerInternal item,
+            IContainerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1949,8 +1876,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void DeepCopyIn(
-            IBook item,
-            IBookGetter rhs,
+            IContainer item,
+            IContainerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1961,15 +1888,15 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.ObjectBounds) ?? true))
             {
-                errorMask?.PushIndex((int)Book_FieldIndex.ObjectBounds);
+                errorMask?.PushIndex((int)Container_FieldIndex.ObjectBounds);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.ObjectBounds) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.ObjectBounds) ?? true))
                     {
                         item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Book_FieldIndex.ObjectBounds),
+                            copyMask: copyMask?.GetSubCrystal((int)Container_FieldIndex.ObjectBounds),
                             errorMask: errorMask);
                     }
                 }
@@ -1983,20 +1910,20 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Model) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Model) ?? true))
             {
-                errorMask?.PushIndex((int)Book_FieldIndex.Model);
+                errorMask?.PushIndex((int)Container_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model is {} rhsModel)
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Book_FieldIndex.Model));
+                            copyMask?.GetSubCrystal((int)Container_FieldIndex.Model));
                     }
                     else
                     {
@@ -2013,21 +1940,23 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Icons) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Script) ?? true))
             {
-                errorMask?.PushIndex((int)Book_FieldIndex.Icons);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Items) ?? true))
+            {
+                errorMask?.PushIndex((int)Container_FieldIndex.Items);
                 try
                 {
-                    if(rhs.Icons is {} rhsIcons)
-                    {
-                        item.Icons = rhsIcons.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Book_FieldIndex.Icons));
-                    }
-                    else
-                    {
-                        item.Icons = default;
-                    }
+                    item.Items.SetTo(
+                        rhs.Items
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2039,24 +1968,16 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Script) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Destructible) ?? true))
             {
-                item.Script.SetTo(rhs.Script.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
-            {
-                item.Description = rhs.Description;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
-            {
-                errorMask?.PushIndex((int)Book_FieldIndex.Destructible);
+                errorMask?.PushIndex((int)Container_FieldIndex.Destructible);
                 try
                 {
                     if(rhs.Destructible is {} rhsDestructible)
                     {
                         item.Destructible = rhsDestructible.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Book_FieldIndex.Destructible));
+                            copyMask?.GetSubCrystal((int)Container_FieldIndex.Destructible));
                     }
                     else
                     {
@@ -2073,29 +1994,25 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.PickUpSound) ?? true))
-            {
-                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DropSound) ?? true))
-            {
-                item.DropSound.SetTo(rhs.DropSound.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Skill) ?? true))
-            {
-                item.Skill = rhs.Skill;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
-            {
-                item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
+            {
+                item.OpenSound.SetTo(rhs.OpenSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
+            {
+                item.CloseSound.SetTo(rhs.CloseSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.RandomLoopingSound) ?? true))
+            {
+                item.RandomLoopingSound.SetTo(rhs.RandomLoopingSound.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -2106,8 +2023,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IBook item,
-            IBookGetter rhs,
+            IContainer item,
+            IContainerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -2119,8 +2036,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBookInternal)item,
-                rhs: (IBookGetter)rhs,
+                item: (IContainerInternal)item,
+                rhs: (IContainerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2134,8 +2051,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBook)item,
-                rhs: (IBookGetter)rhs,
+                item: (IContainer)item,
+                rhs: (IContainerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2149,8 +2066,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBookInternal)item,
-                rhs: (IBookGetter)rhs,
+                item: (IContainerInternal)item,
+                rhs: (IContainerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2164,8 +2081,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBook)item,
-                rhs: (IBookGetter)rhs,
+                item: (IContainer)item,
+                rhs: (IContainerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -2173,12 +2090,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Book DeepCopy(
-            IBookGetter item,
-            Book.TranslationMask? copyMask = null)
+        public Container DeepCopy(
+            IContainerGetter item,
+            Container.TranslationMask? copyMask = null)
         {
-            Book ret = (Book)((BookCommon)((IBookGetter)item).CommonInstance()!).GetNew();
-            ((BookSetterTranslationCommon)((IBookGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Container ret = (Container)((ContainerCommon)((IContainerGetter)item).CommonInstance()!).GetNew();
+            ((ContainerSetterTranslationCommon)((IContainerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -2187,30 +2104,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Book DeepCopy(
-            IBookGetter item,
-            out Book.ErrorMask errorMask,
-            Book.TranslationMask? copyMask = null)
+        public Container DeepCopy(
+            IContainerGetter item,
+            out Container.ErrorMask errorMask,
+            Container.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Book ret = (Book)((BookCommon)((IBookGetter)item).CommonInstance()!).GetNew();
-            ((BookSetterTranslationCommon)((IBookGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Container ret = (Container)((ContainerCommon)((IContainerGetter)item).CommonInstance()!).GetNew();
+            ((ContainerSetterTranslationCommon)((IContainerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Book.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Container.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Book DeepCopy(
-            IBookGetter item,
+        public Container DeepCopy(
+            IContainerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Book ret = (Book)((BookCommon)((IBookGetter)item).CommonInstance()!).GetNew();
-            ((BookSetterTranslationCommon)((IBookGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Container ret = (Container)((ContainerCommon)((IContainerGetter)item).CommonInstance()!).GetNew();
+            ((ContainerSetterTranslationCommon)((IContainerGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -2226,21 +2143,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Book
+    public partial class Container
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Book_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BookCommon.Instance;
+        protected override object CommonInstance() => ContainerCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return BookSetterCommon.Instance;
+            return ContainerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BookSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ContainerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2251,14 +2168,14 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class BookBinaryWriteTranslation :
+    public partial class ContainerBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BookBinaryWriteTranslation Instance = new();
+        public new static readonly ContainerBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IBookGetter item,
+            IContainerGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -2283,22 +2200,21 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.Icons is {} IconsItem)
-            {
-                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
-                    item: IconsItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
                 header: translationParams.ConvertToCustom(RecordTypes.SCRI));
-            StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IContainerEntryGetter>.Instance.Write(
                 writer: writer,
-                item: item.Description,
-                header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                items: item.Items,
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -2306,41 +2222,43 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.PickUpSound,
-                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.DropSound,
-                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
-                EnumBinaryTranslation<Book.BookFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<Container.ContainerFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
-                EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    ((int?)item.Skill) ?? -1,
-                    length: 1);
-                writer.Write(item.Value);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Weight);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OpenSound,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CloseSound,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.RandomLoopingSound,
+                    header: translationParams.ConvertToCustom(RecordTypes.RNAM));
             }
         }
 
         public void Write(
             MutagenWriter writer,
-            IBookGetter item,
+            IContainerGetter item,
             TypedWriteParams translationParams)
         {
             PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
                 item: item,
                 translationParams: translationParams,
-                type: RecordTypes.BOOK,
+                type: RecordTypes.CONT,
                 writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
                 writeRecordTypes: WriteRecordTypes);
         }
@@ -2351,7 +2269,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBookGetter)item,
+                item: (IContainerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -2362,7 +2280,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IBookGetter)item,
+                item: (IContainerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -2373,20 +2291,20 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IBookGetter)item,
+                item: (IContainerGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BookBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class ContainerBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
+        public new static readonly ContainerBinaryCreateTranslation Instance = new ContainerBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.BOOK;
+        public override RecordType RecordType => RecordTypes.CONT;
         public static ParseResult FillBinaryRecordTypes(
-            IBookInternal item,
+            IContainerInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -2400,7 +2318,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
-                    return (int)Book_FieldIndex.ObjectBounds;
+                    return (int)Container_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -2409,7 +2327,7 @@ namespace Mutagen.Bethesda.Fallout3
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Book_FieldIndex.Name;
+                    return (int)Container_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODB:
@@ -2420,29 +2338,23 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Book_FieldIndex.Model;
-                }
-                case RecordTypeInts.ICON:
-                {
-                    item.Icons = Mutagen.Bethesda.Fallout3.Icons.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Book_FieldIndex.Icons;
+                    return (int)Container_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Book_FieldIndex.Script;
+                    return (int)Container_FieldIndex.Script;
                 }
-                case RecordTypeInts.DESC:
+                case RecordTypeInts.CNTO:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)Book_FieldIndex.Description;
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: ContainerEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ContainerEntry.TryCreateFromBinary));
+                    return (int)Container_FieldIndex.Items;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -2450,37 +2362,40 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Destructible = Mutagen.Bethesda.Fallout3.Destructible.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Book_FieldIndex.Destructible;
-                }
-                case RecordTypeInts.YNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Book_FieldIndex.PickUpSound;
-                }
-                case RecordTypeInts.ZNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Book_FieldIndex.DropSound;
+                    return (int)Container_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
-                    item.Flags = EnumBinaryTranslation<Book.BookFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<Container.ContainerFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Skill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.Value = dataFrame.ReadInt32();
                     if (dataFrame.Remaining < 4) return null;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)Book_FieldIndex.Weight;
+                    return (int)Container_FieldIndex.Weight;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Container_FieldIndex.OpenSound;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CloseSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Container_FieldIndex.CloseSound;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.RandomLoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    return (int)Container_FieldIndex.RandomLoopingSound;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2500,7 +2415,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class BookBinaryTranslationMixIn
+    public static class ContainerBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2509,38 +2424,38 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class BookBinaryOverlay :
+    internal partial class ContainerBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        IBookGetter
+        IContainerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Book_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Book_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BookCommon.Instance;
+        protected override object CommonInstance() => ContainerCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BookSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ContainerSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookCommon.Instance.EnumerateFormLinks(this);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BookCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ContainerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BookBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ContainerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BookBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ContainerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBookGetter);
+        protected override Type LinkType => typeof(IContainerGetter);
 
+        public Container.MajorFlag MajorFlags => (Container.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
@@ -2556,52 +2471,34 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
-        public IIconsGetter? Icons { get; private set; }
         #region Script
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
-        #region Description
-        private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
-        #endregion
+        public IReadOnlyList<IContainerEntryGetter> Items { get; private set; } = [];
         public IDestructibleGetter? Destructible { get; private set; }
-        #region PickUpSound
-        private int? _PickUpSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _PickUpSoundLocation);
-        #endregion
-        #region DropSound
-        private int? _DropSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> DropSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _DropSoundLocation);
-        #endregion
         private RangeInt32? _DATALocation;
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Book.BookFlag Flags => _Flags_IsSet ? (Book.BookFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
-        #endregion
-        #region Skill
-        private int _SkillLocation => _DATALocation!.Value.Min + 0x1;
-        private bool _Skill_IsSet => _DATALocation.HasValue;
-        public Skill? Skill
-        {
-            get
-            {
-                var val = (Skill)_recordData.Span.Slice(_SkillLocation, 0x1)[0];
-                if (((int)val) == -1) return null;
-                return val;
-            }
-        }
-        #endregion
-        #region Value
-        private int _ValueLocation => _DATALocation!.Value.Min + 0x2;
-        private bool _Value_IsSet => _DATALocation.HasValue;
-        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(Int32);
+        public Container.ContainerFlag Flags => _Flags_IsSet ? (Container.ContainerFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value.Min + 0x6;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default(Single);
+        #endregion
+        #region OpenSound
+        private int? _OpenSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> OpenSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _OpenSoundLocation);
+        #endregion
+        #region CloseSound
+        private int? _CloseSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> CloseSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _CloseSoundLocation);
+        #endregion
+        #region RandomLoopingSound
+        private int? _RandomLoopingSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> RandomLoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _RandomLoopingSoundLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2609,7 +2506,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected BookBinaryOverlay(
+        protected ContainerBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2619,7 +2516,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static IBookGetter BookFactory(
+        public static IContainerGetter ContainerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -2631,7 +2528,7 @@ namespace Mutagen.Bethesda.Fallout3
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BookBinaryOverlay(
+            var ret = new ContainerBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -2649,12 +2546,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static IBookGetter BookFactory(
+        public static IContainerGetter ContainerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BookFactory(
+            return ContainerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -2675,12 +2572,12 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Book_FieldIndex.ObjectBounds;
+                    return (int)Container_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.Name;
+                    return (int)Container_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODB:
@@ -2692,25 +2589,21 @@ namespace Mutagen.Bethesda.Fallout3
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Book_FieldIndex.Model;
-                }
-                case RecordTypeInts.ICON:
-                {
-                    this.Icons = IconsBinaryOverlay.IconsFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Book_FieldIndex.Icons;
+                    return (int)Container_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.Script;
+                    return (int)Container_FieldIndex.Script;
                 }
-                case RecordTypeInts.DESC:
+                case RecordTypeInts.CNTO:
                 {
-                    _DescriptionLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.Description;
+                    this.Items = this.ParseRepeatedTypelessSubrecord<IContainerEntryGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: ContainerEntry_Registration.TriggerSpecs,
+                        factory: ContainerEntryBinaryOverlay.ContainerEntryFactory);
+                    return (int)Container_FieldIndex.Items;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -2719,22 +2612,27 @@ namespace Mutagen.Bethesda.Fallout3
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Book_FieldIndex.Destructible;
-                }
-                case RecordTypeInts.YNAM:
-                {
-                    _PickUpSoundLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.PickUpSound;
-                }
-                case RecordTypeInts.ZNAM:
-                {
-                    _DropSoundLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.DropSound;
+                    return (int)Container_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Book_FieldIndex.Weight;
+                    return (int)Container_FieldIndex.Weight;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _OpenSoundLocation = (stream.Position - offset);
+                    return (int)Container_FieldIndex.OpenSound;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _CloseSoundLocation = (stream.Position - offset);
+                    return (int)Container_FieldIndex.CloseSound;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _RandomLoopingSoundLocation = (stream.Position - offset);
+                    return (int)Container_FieldIndex.RandomLoopingSound;
                 }
                 default:
                     return base.FillRecordType(
@@ -2753,7 +2651,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BookMixIn.Print(
+            ContainerMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -2763,7 +2661,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Book>.ToString(this);
+            return MajorRecordPrinter<Container>.ToString(this);
         }
 
         #region Equals and Hash
@@ -2773,16 +2671,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IBookGetter rhs) return false;
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IContainerGetter rhs) return false;
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBookGetter? obj)
+        public bool Equals(IContainerGetter? obj)
         {
-            return ((BookCommon)((IBookGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BookCommon)((IBookGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ContainerCommon)((IContainerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

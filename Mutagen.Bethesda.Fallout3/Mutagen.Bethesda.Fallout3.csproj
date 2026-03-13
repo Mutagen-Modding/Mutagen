@@ -511,5 +511,69 @@
     <Compile Include="Records\MajorRecords\ArmorAnimationSound_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Container.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ExtraData.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ContainerEntry_Generated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ContainerItem_Generated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ExtraData_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\OwnerTarget_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NpcOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\FactionOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Ammunition_Generated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CaravanCard_Generated.cs">
+      <DependentUpon>CaravanCard.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CaravanMoney_Generated.cs">
+      <DependentUpon>CaravanMoney.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CasinoChip_Generated.cs">
+      <DependentUpon>CasinoChip.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Container_Generated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Ingestible_Generated.cs">
+      <DependentUpon>Ingestible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ItemMod_Generated.cs">
+      <DependentUpon>ItemMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Key_Generated.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LeveledItem_Generated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MiscItem_Generated.cs">
+      <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\MoveableStatic_Generated.cs">
+      <DependentUpon>MoveableStatic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Static_Generated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IItem_Generated.cs" />
   </ItemGroup>
 </Project>

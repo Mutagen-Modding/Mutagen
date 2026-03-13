@@ -4,5 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>IBoundItem</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

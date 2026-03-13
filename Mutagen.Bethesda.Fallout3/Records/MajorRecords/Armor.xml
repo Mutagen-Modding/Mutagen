@@ -76,6 +76,7 @@
       </FormLink>
     </Fields>
     <LinkInterface>IBoundItem</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="ArmorAnimationSound" objType="Subrecord" recordType="SNAM">
     <Fields>

@@ -83,6 +83,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Terminals_Object = new Fallout3Group<Terminal>(this);
             _Armors_Object = new Fallout3Group<Armor>(this);
             _Books_Object = new Fallout3Group<Book>(this);
+            _Containers_Object = new Fallout3Group<Container>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -249,6 +250,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IBookGetter> IFallout3ModGetter.Books => _Books_Object;
         #endregion
+        #region Containers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Container> _Containers_Object;
+        public Fallout3Group<Container> Containers => _Containers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IContainerGetter> IFallout3ModGetter.Containers => _Containers_Object;
+        #endregion
 
         #region To String
 
@@ -311,6 +319,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Terminals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Armors = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Books = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Containers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -336,7 +345,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem TalkingActivators,
                 TItem Terminals,
                 TItem Armors,
-                TItem Books)
+                TItem Books,
+                TItem Containers)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -361,6 +371,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Terminals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Terminals, new Fallout3Group.Mask<TItem>(Terminals));
                 this.Armors = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Armors, new Fallout3Group.Mask<TItem>(Armors));
                 this.Books = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Books, new Fallout3Group.Mask<TItem>(Books));
+                this.Containers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Containers, new Fallout3Group.Mask<TItem>(Containers));
             }
 
             #pragma warning disable CS8618
@@ -395,6 +406,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Terminals { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Armors { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Books { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Containers { get; set; }
             #endregion
 
             #region Equals
@@ -430,6 +442,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Terminals, rhs.Terminals)) return false;
                 if (!object.Equals(this.Armors, rhs.Armors)) return false;
                 if (!object.Equals(this.Books, rhs.Books)) return false;
+                if (!object.Equals(this.Containers, rhs.Containers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -458,6 +471,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Terminals);
                 hash.Add(this.Armors);
                 hash.Add(this.Books);
+                hash.Add(this.Containers);
                 return hash.ToHashCode();
             }
 
@@ -581,6 +595,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Books.Overall)) return false;
                     if (this.Books.Specific != null && !this.Books.Specific.All(eval)) return false;
                 }
+                if (Containers != null)
+                {
+                    if (!eval(this.Containers.Overall)) return false;
+                    if (this.Containers.Specific != null && !this.Containers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -703,6 +722,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Books.Overall)) return true;
                     if (this.Books.Specific != null && this.Books.Specific.Any(eval)) return true;
                 }
+                if (Containers != null)
+                {
+                    if (eval(this.Containers.Overall)) return true;
+                    if (this.Containers.Specific != null && this.Containers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -740,6 +764,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Terminals = this.Terminals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Terminals.Overall), this.Terminals.Specific?.Translate(eval));
                 obj.Armors = this.Armors == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
                 obj.Books = this.Books == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
+                obj.Containers = this.Containers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -850,6 +875,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Books?.Print(sb);
                     }
+                    if (printMask?.Containers?.Overall ?? true)
+                    {
+                        Containers?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -897,6 +926,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Terminal.ErrorMask>?>? Terminals;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Armor.ErrorMask>?>? Armors;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Book.ErrorMask>?>? Books;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Container.ErrorMask>?>? Containers;
             #endregion
 
             #region IErrorMask
@@ -951,6 +981,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Armors;
                     case Fallout3Mod_FieldIndex.Books:
                         return Books;
+                    case Fallout3Mod_FieldIndex.Containers:
+                        return Containers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1029,6 +1061,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Books:
                         this.Books = new MaskItem<Exception?, Fallout3Group.ErrorMask<Book.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Containers:
+                        this.Containers = new MaskItem<Exception?, Fallout3Group.ErrorMask<Container.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1109,6 +1144,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Books:
                         this.Books = (MaskItem<Exception?, Fallout3Group.ErrorMask<Book.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Containers:
+                        this.Containers = (MaskItem<Exception?, Fallout3Group.ErrorMask<Container.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1140,6 +1178,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Terminals != null) return true;
                 if (Armors != null) return true;
                 if (Books != null) return true;
+                if (Containers != null) return true;
                 return false;
             }
             #endregion
@@ -1188,6 +1227,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Terminals?.Print(sb);
                 Armors?.Print(sb);
                 Books?.Print(sb);
+                Containers?.Print(sb);
             }
             #endregion
 
@@ -1219,6 +1259,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Terminals = this.Terminals.Combine(rhs.Terminals, (l, r) => l.Combine(r));
                 ret.Armors = this.Armors.Combine(rhs.Armors, (l, r) => l.Combine(r));
                 ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
+                ret.Containers = this.Containers.Combine(rhs.Containers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1265,6 +1306,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Terminal.TranslationMask>? Terminals;
             public Fallout3Group.TranslationMask<Armor.TranslationMask>? Armors;
             public Fallout3Group.TranslationMask<Book.TranslationMask>? Books;
+            public Fallout3Group.TranslationMask<Container.TranslationMask>? Containers;
             #endregion
 
             #region Ctors
@@ -1312,6 +1354,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Terminals != null ? Terminals.OnOverall : DefaultOn, Terminals?.GetCrystal()));
                 ret.Add((Armors != null ? Armors.OnOverall : DefaultOn, Armors?.GetCrystal()));
                 ret.Add((Books != null ? Books.OnOverall : DefaultOn, Books?.GetCrystal()));
+                ret.Add((Containers != null ? Containers.OnOverall : DefaultOn, Containers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1394,6 +1437,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Terminals_Object = new Fallout3Group<Terminal>(this);
             _Armors_Object = new Fallout3Group<Armor>(this);
             _Books_Object = new Fallout3Group<Book>(this);
+            _Containers_Object = new Fallout3Group<Container>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1487,6 +1531,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Books ?? true)
             {
                 this.Books.RecordCache.Set(rhsMod.Books.RecordCache.Items);
+            }
+            if (mask?.Containers ?? true)
+            {
+                this.Containers.RecordCache.Set(rhsMod.Containers.RecordCache.Items);
             }
         }
 
@@ -1771,6 +1819,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Terminal> Terminals { get; }
         new Fallout3Group<Armor> Armors { get; }
         new Fallout3Group<Book> Books { get; }
+        new Fallout3Group<Container> Containers { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1813,6 +1862,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ITerminalGetter> Terminals { get; }
         IFallout3GroupGetter<IArmorGetter> Armors { get; }
         IFallout3GroupGetter<IBookGetter> Books { get; }
+        IFallout3GroupGetter<IContainerGetter> Containers { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2386,6 +2436,7 @@ namespace Mutagen.Bethesda.Fallout3
         Terminals = 20,
         Armors = 21,
         Books = 22,
+        Containers = 23,
     }
     #endregion
 
@@ -2396,9 +2447,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 23;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2487,6 +2538,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Terminals.Clear();
             item.Armors.Clear();
             item.Books.Clear();
+            item.Containers.Clear();
         }
         
         #region Mutagen
@@ -2508,6 +2560,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Terminals.RemapLinks(mapping);
             obj.Armors.RemapLinks(mapping);
             obj.Books.RemapLinks(mapping);
+            obj.Containers.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2590,6 +2643,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Terminals.Remove(keys);
             obj.Armors.Remove(keys);
             obj.Books.Remove(keys);
+            obj.Containers.Remove(keys);
         }
         
         public void Remove(
@@ -2813,6 +2867,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    obj.Containers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -2824,6 +2886,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IExplodeSpawn":
                 case "IExplodeSpawnGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IItem":
+                case "IItemGetter":
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IBoundItem":
                 case "IBoundItemGetter":
@@ -2967,6 +3034,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Terminals = MaskItemExt.Factory(item.Terminals.GetEqualsMask(rhs.Terminals, include), include);
             ret.Armors = MaskItemExt.Factory(item.Armors.GetEqualsMask(rhs.Armors, include), include);
             ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
+            ret.Containers = MaskItemExt.Factory(item.Containers.GetEqualsMask(rhs.Containers, include), include);
         }
         
         public string Print(
@@ -3102,6 +3170,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Books?.Overall ?? true)
             {
                 item.Books?.Print(sb, "Books");
+            }
+            if (printMask?.Containers?.Overall ?? true)
+            {
+                item.Containers?.Print(sb, "Containers");
             }
         }
         
@@ -3296,6 +3368,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isBooksEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Containers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Containers, rhs.Containers, out var lhsContainers, out var rhsContainers, out var isContainersEqual))
+                {
+                    if (!object.Equals(lhsContainers, rhsContainers)) return false;
+                }
+                else if (!isContainersEqual) return false;
+            }
             return true;
         }
         
@@ -3325,6 +3405,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Terminals);
             hash.Add(item.Armors);
             hash.Add(item.Books);
+            hash.Add(item.Containers);
             return hash.ToHashCode();
         }
         
@@ -3481,6 +3562,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IBook":
                 case "IBookInternal":
                     return obj.Books;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    return obj.Containers;
                 default:
                     return null;
             }
@@ -3498,7 +3584,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[22];
+            Stream[] outputStreams = new Stream[23];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -3522,6 +3608,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Terminals, 19, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Armors, 20, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Books, 21, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Containers, 22, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -3589,6 +3676,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Terminals.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Armors.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Books.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Containers.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -3661,6 +3749,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Books.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Containers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -3764,6 +3856,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Books.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Containers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4016,6 +4112,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -4235,6 +4340,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Books,
                 groupGetter: (m) => m.Books))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Container, IContainerGetter>(
+                srcGroup: obj.Containers,
+                type: typeof(IContainerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Containers,
+                groupGetter: (m) => m.Containers))
             {
                 yield return item;
             }
@@ -4573,6 +4687,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Books,
                         groupGetter: (m) => m.Books))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Container, IContainerGetter>(
+                        srcGroup: obj.Containers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Containers,
+                        groupGetter: (m) => m.Containers))
                     {
                         yield return item;
                     }
@@ -5106,6 +5234,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Containers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Containers);
+                try
+                {
+                    item.Containers.DeepCopyIn(
+                        rhs: rhs.Containers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Containers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -5231,6 +5379,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Terminals;
         public bool Armors;
         public bool Books;
+        public bool Containers;
         public GroupMask()
         {
         }
@@ -5258,6 +5407,7 @@ namespace Mutagen.Bethesda.Fallout3
             Terminals = defaultValue;
             Armors = defaultValue;
             Books = defaultValue;
+            Containers = defaultValue;
         }
     }
 
@@ -5558,6 +5708,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
                         item: BooksItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Containers ?? true)
+            {
+                var ContainersItem = item.Containers;
+                if (ContainersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ContainersItem).BinaryWriteTranslator).Write<IContainerGetter>(
+                        item: ContainersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -5940,6 +6101,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Books;
                 }
+                case RecordTypeInts.CONT:
+                {
+                    if (importMask?.Containers ?? true)
+                    {
+                        item.Containers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Containers;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -6215,6 +6390,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IBookGetter>? _Books => _BooksLocations != null ? Fallout3GroupBinaryOverlay<IBookGetter>.Fallout3GroupFactory(_stream, _BooksLocations, _package) : default;
         public IFallout3GroupGetter<IBookGetter> Books => _Books ?? new Fallout3Group<Book>(this);
         #endregion
+        #region Containers
+        private List<RangeInt64>? _ContainersLocations;
+        private IFallout3GroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? Fallout3GroupBinaryOverlay<IContainerGetter>.Fallout3GroupFactory(_stream, _ContainersLocations, _package) : default;
+        public IFallout3GroupGetter<IContainerGetter> Containers => _Containers ?? new Fallout3Group<Container>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -6420,6 +6600,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _BooksLocations ??= new();
                     _BooksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Books;
+                }
+                case RecordTypeInts.CONT:
+                {
+                    _ContainersLocations ??= new();
+                    _ContainersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Containers;
                 }
                 default:
                     return default(int?);

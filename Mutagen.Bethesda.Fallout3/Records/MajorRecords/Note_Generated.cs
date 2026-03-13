@@ -413,6 +413,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface INote :
         IFallout3MajorRecordInternal,
+        IItem,
         ILoquiObjectSetter<INoteInternal>,
         INoteGetter
     {
@@ -429,6 +430,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface INoteGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<INoteGetter>,
         IMapsToGetter<INoteGetter>
     {

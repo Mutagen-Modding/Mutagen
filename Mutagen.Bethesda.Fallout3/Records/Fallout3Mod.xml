@@ -25,6 +25,7 @@
       <Group name="Terminals" refName="Terminal" />
       <Group name="Armors" refName="Armor" />
       <Group name="Books" refName="Book" />
+      <Group name="Containers" refName="Container" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

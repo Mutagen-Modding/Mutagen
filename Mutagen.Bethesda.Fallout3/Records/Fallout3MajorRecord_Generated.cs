@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, Armor, Book, Cell, Class, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, FormList, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Note, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TalkingActivator, Terminal, TextureSet, VoiceType, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Cell, Class, Container, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, FormList, GameSetting, Global, Grass, Hair, HeadPart, Ingestible, ItemMod, Key, LandscapeTexture, LeveledItem, Light, MagicEffect, MenuIcon, MiscItem, MoveableStatic, Note, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, Static, TalkingActivator, Terminal, TextureSet, VoiceType, Water, Weapon]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, Armor, Book, Cell, Class, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, FormList, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Note, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TalkingActivator, Terminal, TextureSet, VoiceType, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Cell, Class, Container, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, FormList, GameSetting, Global, Grass, Hair, HeadPart, Ingestible, ItemMod, Key, LandscapeTexture, LeveledItem, Light, MagicEffect, MenuIcon, MiscItem, MoveableStatic, Note, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, Static, TalkingActivator, Terminal, TextureSet, VoiceType, Water, Weapon]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, Armor, Book, Cell, Class, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, FormList, GameSetting, Global, Grass, Hair, HeadPart, LandscapeTexture, Light, MagicEffect, MenuIcon, Note, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, TalkingActivator, Terminal, TextureSet, VoiceType, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Cell, Class, Container, Creature, Debris, EffectShader, Explosion, Eye, Eyes, Faction, FormList, GameSetting, Global, Grass, Hair, HeadPart, Ingestible, ItemMod, Key, LandscapeTexture, LeveledItem, Light, MagicEffect, MenuIcon, MiscItem, MoveableStatic, Note, Npc, ObjectEffect, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Script, Sound, Spell, Static, TalkingActivator, Terminal, TextureSet, VoiceType, Water, Weapon]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Note" objType="Record" baseClass="Fallout3MajorRecord"
-          recordType="NOTE">
+  <Object name="CasinoChip" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="CHIP">
     <Fields />
     <LinkInterface>IItem</LinkInterface>
   </Object>

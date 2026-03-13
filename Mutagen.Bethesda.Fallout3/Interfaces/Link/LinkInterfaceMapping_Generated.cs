@@ -49,6 +49,31 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IExplodeSpawn),
                 Getter: typeof(IExplodeSpawnGetter)));
         dict[typeof(IExplodeSpawnGetter)] = dict[typeof(IExplodeSpawn)] with { Setter = false };
+        dict[typeof(IItem)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                CaravanCard_Registration.Instance,
+                CaravanMoney_Registration.Instance,
+                CasinoChip_Registration.Instance,
+                Ingestible_Registration.Instance,
+                ItemMod_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Note_Registration.Instance,
+                Static_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IItem),
+                Getter: typeof(IItemGetter)));
+        dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
         dict[typeof(IBoundItem)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

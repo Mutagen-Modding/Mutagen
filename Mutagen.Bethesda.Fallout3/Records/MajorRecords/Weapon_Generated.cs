@@ -414,6 +414,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IWeapon :
         IBoundItem,
         IFallout3MajorRecordInternal,
+        IItem,
         ILoquiObjectSetter<IWeaponInternal>,
         IWeaponGetter
     {
@@ -431,6 +432,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         IBoundItemGetter,
+        IItemGetter,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>
     {

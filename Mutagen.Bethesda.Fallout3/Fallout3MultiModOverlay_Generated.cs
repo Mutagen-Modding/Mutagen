@@ -49,6 +49,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<ITerminalGetter>? _terminals;
     private MergedGroup<IArmorGetter>? _armors;
     private MergedGroup<IBookGetter>? _books;
+    private MergedGroup<IContainerGetter>? _containers;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -150,6 +151,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IBookGetter> Books =>
         _books ??= new MergedGroup<IBookGetter>(
             _sourceMods.Select(m => m.Books));
+    public IFallout3GroupGetter<IContainerGetter> Containers =>
+        _containers ??= new MergedGroup<IContainerGetter>(
+            _sourceMods.Select(m => m.Containers));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

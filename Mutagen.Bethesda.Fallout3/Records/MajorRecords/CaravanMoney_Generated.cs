@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class Light :
+    public partial class CaravanMoney :
         Fallout3MajorRecord,
-        IEquatable<ILightGetter>,
-        ILightInternal,
-        ILoquiObjectSetter<Light>
+        ICaravanMoneyInternal,
+        IEquatable<ICaravanMoneyGetter>,
+        ILoquiObjectSetter<CaravanMoney>
     {
         #region Ctor
-        protected Light()
+        protected CaravanMoney()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LightMixIn.Print(
+            CaravanMoneyMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Light.Mask<R>();
+                var ret = new CaravanMoney.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Light.Mask<bool>? printMask = null)
+            public string Print(CaravanMoney.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Light.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CaravanMoney.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Light.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(CaravanMoney.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Light_FieldIndex enu = (Light_FieldIndex)index;
+                CaravanMoney_FieldIndex enu = (CaravanMoney_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Light_FieldIndex enu = (Light_FieldIndex)index;
+                CaravanMoney_FieldIndex enu = (CaravanMoney_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Light_FieldIndex enu = (Light_FieldIndex)index;
+                CaravanMoney_FieldIndex enu = (CaravanMoney_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,8 +294,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Light_Registration.TriggeringRecordType;
-        public Light(
+        public static readonly RecordType GrupRecordType = CaravanMoney_Registration.TriggeringRecordType;
+        public CaravanMoney(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Light(
+        private CaravanMoney(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,14 +311,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Light(IFallout3Mod mod)
+        public CaravanMoney(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Light(IFallout3Mod mod, string editorID)
+        public CaravanMoney(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -328,10 +328,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Light>.ToString(this);
+            return MajorRecordPrinter<CaravanMoney>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ILight);
+        protected override Type LinkType => typeof(ICaravanMoney);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -340,16 +340,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILightGetter rhs) return false;
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ICaravanMoneyGetter rhs) return false;
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILightGetter? obj)
+        public bool Equals(ICaravanMoneyGetter? obj)
         {
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LightCommon)((ILightGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CaravanMoneyCommon)((ICaravanMoneyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -357,23 +357,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CaravanMoneyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CaravanMoneyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Light CreateFromBinary(
+        public new static CaravanMoney CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Light();
-            ((LightSetterCommon)((ILightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new CaravanMoney();
+            ((CaravanMoneySetterCommon)((ICaravanMoneyGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Light item,
+            out CaravanMoney item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -399,84 +399,84 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((LightSetterCommon)((ILightGetter)this).CommonSetterInstance()!).Clear(this);
+            ((CaravanMoneySetterCommon)((ICaravanMoneyGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Light GetNew()
+        internal static new CaravanMoney GetNew()
         {
-            return new Light();
+            return new CaravanMoney();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILight :
+    public partial interface ICaravanMoney :
+        ICaravanMoneyGetter,
         IFallout3MajorRecordInternal,
         IItem,
-        ILightGetter,
-        ILoquiObjectSetter<ILightInternal>
+        ILoquiObjectSetter<ICaravanMoneyInternal>
     {
     }
 
-    public partial interface ILightInternal :
+    public partial interface ICaravanMoneyInternal :
         IFallout3MajorRecordInternal,
-        ILight,
-        ILightGetter
+        ICaravanMoney,
+        ICaravanMoneyGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.LIGH)]
-    public partial interface ILightGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.CMNY)]
+    public partial interface ICaravanMoneyGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
         IItemGetter,
-        ILoquiObject<ILightGetter>,
-        IMapsToGetter<ILightGetter>
+        ILoquiObject<ICaravanMoneyGetter>,
+        IMapsToGetter<ICaravanMoneyGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CaravanMoney_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LightMixIn
+    public static partial class CaravanMoneyMixIn
     {
-        public static void Clear(this ILightInternal item)
+        public static void Clear(this ICaravanMoneyInternal item)
         {
-            ((LightSetterCommon)((ILightGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((CaravanMoneySetterCommon)((ICaravanMoneyGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Light.Mask<bool> GetEqualsMask(
-            this ILightGetter item,
-            ILightGetter rhs,
+        public static CaravanMoney.Mask<bool> GetEqualsMask(
+            this ICaravanMoneyGetter item,
+            ICaravanMoneyGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LightCommon)((ILightGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILightGetter item,
+            this ICaravanMoneyGetter item,
             string? name = null,
-            Light.Mask<bool>? printMask = null)
+            CaravanMoney.Mask<bool>? printMask = null)
         {
-            return ((LightCommon)((ILightGetter)item).CommonInstance()!).Print(
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILightGetter item,
+            this ICaravanMoneyGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Light.Mask<bool>? printMask = null)
+            CaravanMoney.Mask<bool>? printMask = null)
         {
-            ((LightCommon)((ILightGetter)item).CommonInstance()!).Print(
+            ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -484,39 +484,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this ILightGetter item,
-            ILightGetter rhs,
-            Light.TranslationMask? equalsMask = null)
+            this ICaravanMoneyGetter item,
+            ICaravanMoneyGetter rhs,
+            CaravanMoney.TranslationMask? equalsMask = null)
         {
-            return ((LightCommon)((ILightGetter)item).CommonInstance()!).Equals(
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILightInternal lhs,
-            ILightGetter rhs,
-            out Light.ErrorMask errorMask,
-            Light.TranslationMask? copyMask = null)
+            this ICaravanMoneyInternal lhs,
+            ICaravanMoneyGetter rhs,
+            out CaravanMoney.ErrorMask errorMask,
+            CaravanMoney.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Light.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CaravanMoney.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILightInternal lhs,
-            ILightGetter rhs,
+            this ICaravanMoneyInternal lhs,
+            ICaravanMoneyGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LightSetterTranslationCommon)((ILightGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -524,55 +524,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Light DeepCopy(
-            this ILightGetter item,
-            Light.TranslationMask? copyMask = null)
+        public static CaravanMoney DeepCopy(
+            this ICaravanMoneyGetter item,
+            CaravanMoney.TranslationMask? copyMask = null)
         {
-            return ((LightSetterTranslationCommon)((ILightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Light DeepCopy(
-            this ILightGetter item,
-            out Light.ErrorMask errorMask,
-            Light.TranslationMask? copyMask = null)
+        public static CaravanMoney DeepCopy(
+            this ICaravanMoneyGetter item,
+            out CaravanMoney.ErrorMask errorMask,
+            CaravanMoney.TranslationMask? copyMask = null)
         {
-            return ((LightSetterTranslationCommon)((ILightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Light DeepCopy(
-            this ILightGetter item,
+        public static CaravanMoney DeepCopy(
+            this ICaravanMoneyGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LightSetterTranslationCommon)((ILightGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Light Duplicate(
-            this ILightGetter item,
+        public static CaravanMoney Duplicate(
+            this ICaravanMoneyGetter item,
             FormKey formKey,
-            Light.TranslationMask? copyMask = null)
+            CaravanMoney.TranslationMask? copyMask = null)
         {
-            return ((LightCommon)((ILightGetter)item).CommonInstance()!).Duplicate(
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Light Duplicate(
-            this ILightGetter item,
+        public static CaravanMoney Duplicate(
+            this ICaravanMoneyGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((LightCommon)((ILightGetter)item).CommonInstance()!).Duplicate(
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -582,11 +582,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILightInternal item,
+            this ICaravanMoneyInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((LightSetterCommon)((ILightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CaravanMoneySetterCommon)((ICaravanMoneyGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Light_FieldIndex
+    internal enum CaravanMoney_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,9 +615,9 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Registration
-    internal partial class Light_Registration : ILoquiRegistration
+    internal partial class CaravanMoney_Registration : ILoquiRegistration
     {
-        public static readonly Light_Registration Instance = new Light_Registration();
+        public static readonly CaravanMoney_Registration Instance = new CaravanMoney_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -625,23 +625,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Light.Mask<>);
+        public static readonly Type MaskType = typeof(CaravanMoney.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Light.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CaravanMoney.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Light);
+        public static readonly Type ClassType = typeof(CaravanMoney);
 
-        public static readonly Type GetterType = typeof(ILightGetter);
+        public static readonly Type GetterType = typeof(ICaravanMoneyGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILight);
+        public static readonly Type SetterType = typeof(ICaravanMoney);
 
-        public static readonly Type? InternalSetterType = typeof(ILightInternal);
+        public static readonly Type? InternalSetterType = typeof(ICaravanMoneyInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Light";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.CaravanMoney";
 
-        public const string Name = "Light";
+        public const string Name = "CaravanMoney";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -649,14 +649,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.LIGH;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CMNY;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LIGH);
+            var all = RecordCollection.Factory(RecordTypes.CMNY);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(CaravanMoneyBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -687,13 +687,13 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class LightSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class CaravanMoneySetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly LightSetterCommon Instance = new LightSetterCommon();
+        public new static readonly CaravanMoneySetterCommon Instance = new CaravanMoneySetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILightInternal item)
+        public void Clear(ICaravanMoneyInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -701,16 +701,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (ILightInternal)item);
+            Clear(item: (ICaravanMoneyInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ILightInternal)item);
+            Clear(item: (ICaravanMoneyInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ILight obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ICaravanMoney obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -719,16 +719,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILightInternal item,
+            ICaravanMoneyInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<ILightInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ICaravanMoneyInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LightBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: LightBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: CaravanMoneyBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CaravanMoneyBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Light)item,
+                item: (CaravanMoney)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Light)item,
+                item: (CaravanMoney)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -756,17 +756,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class LightCommon : Fallout3MajorRecordCommon
+    internal partial class CaravanMoneyCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly LightCommon Instance = new LightCommon();
+        public new static readonly CaravanMoneyCommon Instance = new CaravanMoneyCommon();
 
-        public Light.Mask<bool> GetEqualsMask(
-            ILightGetter item,
-            ILightGetter rhs,
+        public CaravanMoney.Mask<bool> GetEqualsMask(
+            ICaravanMoneyGetter item,
+            ICaravanMoneyGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Light.Mask<bool>(false);
-            ((LightCommon)((ILightGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new CaravanMoney.Mask<bool>(false);
+            ((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -775,18 +775,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            ILightGetter item,
-            ILightGetter rhs,
-            Light.Mask<bool> ret,
+            ICaravanMoneyGetter item,
+            ICaravanMoneyGetter rhs,
+            CaravanMoney.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            ILightGetter item,
+            ICaravanMoneyGetter item,
             string? name = null,
-            Light.Mask<bool>? printMask = null)
+            CaravanMoney.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -798,18 +798,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            ILightGetter item,
+            ICaravanMoneyGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Light.Mask<bool>? printMask = null)
+            CaravanMoney.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Light =>");
+                sb.AppendLine($"CaravanMoney =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Light) =>");
+                sb.AppendLine($"{name} (CaravanMoney) =>");
             }
             using (sb.Brace())
             {
@@ -821,9 +821,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            ILightGetter item,
+            ICaravanMoneyGetter item,
             StructuredStringBuilder sb,
-            Light.Mask<bool>? printMask = null)
+            CaravanMoney.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
@@ -831,41 +831,41 @@ namespace Mutagen.Bethesda.Fallout3
                 printMask: printMask);
         }
         
-        public static Light_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static CaravanMoney_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormVersion:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Version2:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Light_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new CaravanMoney_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Light_FieldIndex)((int)index);
+                    return (CaravanMoney_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -873,8 +873,8 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILightGetter? lhs,
-            ILightGetter? rhs,
+            ICaravanMoneyGetter? lhs,
+            ICaravanMoneyGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -888,8 +888,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ILightGetter?)lhs,
-                rhs: rhs as ILightGetter,
+                lhs: (ICaravanMoneyGetter?)lhs,
+                rhs: rhs as ICaravanMoneyGetter,
                 equalsMask: equalsMask);
         }
         
@@ -899,12 +899,12 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ILightGetter?)lhs,
-                rhs: rhs as ILightGetter,
+                lhs: (ICaravanMoneyGetter?)lhs,
+                rhs: rhs as ICaravanMoneyGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(ILightGetter item)
+        public virtual int GetHashCode(ICaravanMoneyGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -913,12 +913,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (ILightGetter)item);
+            return GetHashCode(item: (ICaravanMoneyGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ILightGetter)item);
+            return GetHashCode(item: (ICaravanMoneyGetter)item);
         }
         
         #endregion
@@ -926,11 +926,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Light.GetNew();
+            return CaravanMoney.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILightGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICaravanMoneyGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -940,12 +940,12 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Duplicate
-        public Light Duplicate(
-            ILightGetter item,
+        public CaravanMoney Duplicate(
+            ICaravanMoneyGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Light(formKey, default(Fallout3Release));
+            var newRec = new CaravanMoney(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILightGetter)item,
+                item: (ICaravanMoneyGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILightGetter)item,
+                item: (ICaravanMoneyGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -977,14 +977,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class LightSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class CaravanMoneySetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly LightSetterTranslationCommon Instance = new LightSetterTranslationCommon();
+        public new static readonly CaravanMoneySetterTranslationCommon Instance = new CaravanMoneySetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILightInternal item,
-            ILightGetter rhs,
+            ICaravanMoneyInternal item,
+            ICaravanMoneyGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -998,8 +998,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void DeepCopyIn(
-            ILight item,
-            ILightGetter rhs,
+            ICaravanMoney item,
+            ICaravanMoneyGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1019,8 +1019,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            ILight item,
-            ILightGetter rhs,
+            ICaravanMoney item,
+            ICaravanMoneyGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1032,8 +1032,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILightInternal)item,
-                rhs: (ILightGetter)rhs,
+                item: (ICaravanMoneyInternal)item,
+                rhs: (ICaravanMoneyGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILight)item,
-                rhs: (ILightGetter)rhs,
+                item: (ICaravanMoney)item,
+                rhs: (ICaravanMoneyGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1062,8 +1062,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILightInternal)item,
-                rhs: (ILightGetter)rhs,
+                item: (ICaravanMoneyInternal)item,
+                rhs: (ICaravanMoneyGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1077,8 +1077,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ILight)item,
-                rhs: (ILightGetter)rhs,
+                item: (ICaravanMoney)item,
+                rhs: (ICaravanMoneyGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1086,12 +1086,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Light DeepCopy(
-            ILightGetter item,
-            Light.TranslationMask? copyMask = null)
+        public CaravanMoney DeepCopy(
+            ICaravanMoneyGetter item,
+            CaravanMoney.TranslationMask? copyMask = null)
         {
-            Light ret = (Light)((LightCommon)((ILightGetter)item).CommonInstance()!).GetNew();
-            ((LightSetterTranslationCommon)((ILightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CaravanMoney ret = (CaravanMoney)((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).GetNew();
+            ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1100,30 +1100,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Light DeepCopy(
-            ILightGetter item,
-            out Light.ErrorMask errorMask,
-            Light.TranslationMask? copyMask = null)
+        public CaravanMoney DeepCopy(
+            ICaravanMoneyGetter item,
+            out CaravanMoney.ErrorMask errorMask,
+            CaravanMoney.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Light ret = (Light)((LightCommon)((ILightGetter)item).CommonInstance()!).GetNew();
-            ((LightSetterTranslationCommon)((ILightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CaravanMoney ret = (CaravanMoney)((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).GetNew();
+            ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Light.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CaravanMoney.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Light DeepCopy(
-            ILightGetter item,
+        public CaravanMoney DeepCopy(
+            ICaravanMoneyGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Light ret = (Light)((LightCommon)((ILightGetter)item).CommonInstance()!).GetNew();
-            ((LightSetterTranslationCommon)((ILightGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CaravanMoney ret = (CaravanMoney)((CaravanMoneyCommon)((ICaravanMoneyGetter)item).CommonInstance()!).GetNew();
+            ((CaravanMoneySetterTranslationCommon)((ICaravanMoneyGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1139,21 +1139,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Light
+    public partial class CaravanMoney
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Light_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CaravanMoney_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CaravanMoney_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LightCommon.Instance;
+        protected override object CommonInstance() => CaravanMoneyCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return LightSetterCommon.Instance;
+            return CaravanMoneySetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LightSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CaravanMoneySetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1164,22 +1164,22 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class LightBinaryWriteTranslation :
+    public partial class CaravanMoneyBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly LightBinaryWriteTranslation Instance = new();
+        public new static readonly CaravanMoneyBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            ILightGetter item,
+            ICaravanMoneyGetter item,
             TypedWriteParams translationParams)
         {
             PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
                 item: item,
                 translationParams: translationParams,
-                type: RecordTypes.LIGH,
+                type: RecordTypes.CMNY,
                 writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
                 writeRecordTypes: WriteRecordTypes);
         }
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ILightGetter)item,
+                item: (ICaravanMoneyGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ILightGetter)item,
+                item: (ICaravanMoneyGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1212,25 +1212,25 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ILightGetter)item,
+                item: (ICaravanMoneyGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LightBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class CaravanMoneyBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly LightBinaryCreateTranslation Instance = new LightBinaryCreateTranslation();
+        public new static readonly CaravanMoneyBinaryCreateTranslation Instance = new CaravanMoneyBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.LIGH;
+        public override RecordType RecordType => RecordTypes.CMNY;
     }
 
 }
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class LightBinaryTranslationMixIn
+    public static class CaravanMoneyBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1239,35 +1239,35 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class LightBinaryOverlay :
+    internal partial class CaravanMoneyBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        ILightGetter
+        ICaravanMoneyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Light_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CaravanMoney_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CaravanMoney_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LightCommon.Instance;
+        protected override object CommonInstance() => CaravanMoneyCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LightSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CaravanMoneySetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CaravanMoneyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CaravanMoneyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ILightGetter);
+        protected override Type LinkType => typeof(ICaravanMoneyGetter);
 
 
         partial void CustomFactoryEnd(
@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected LightBinaryOverlay(
+        protected CaravanMoneyBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1286,7 +1286,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static ILightGetter LightFactory(
+        public static ICaravanMoneyGetter CaravanMoneyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout3
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new LightBinaryOverlay(
+            var ret = new CaravanMoneyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1316,12 +1316,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static ILightGetter LightFactory(
+        public static ICaravanMoneyGetter CaravanMoneyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return LightFactory(
+            return CaravanMoneyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LightMixIn.Print(
+            CaravanMoneyMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Light>.ToString(this);
+            return MajorRecordPrinter<CaravanMoney>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1353,16 +1353,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ILightGetter rhs) return false;
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ICaravanMoneyGetter rhs) return false;
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILightGetter? obj)
+        public bool Equals(ICaravanMoneyGetter? obj)
         {
-            return ((LightCommon)((ILightGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((CaravanMoneyCommon)((ICaravanMoneyGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LightCommon)((ILightGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CaravanMoneyCommon)((ICaravanMoneyGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
