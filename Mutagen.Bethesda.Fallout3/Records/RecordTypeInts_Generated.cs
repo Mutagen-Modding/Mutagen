@@ -74,6 +74,7 @@ public partial class RecordTypeInts
     public const int IMOD = 0x444F4D49;
     public const int INAM = 0x4D414E49;
     public const int INDX = 0x58444E49;
+    public const int INGR = 0x52474E49;
     public const int ITXT = 0x54585449;
     public const int KEYM = 0x4D59454B;
     public const int LIGH = 0x4847494C;

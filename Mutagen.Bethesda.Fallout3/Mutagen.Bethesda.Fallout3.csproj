@@ -559,6 +559,12 @@
     <Compile Include="Records\MajorRecords\Door_Generated.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Ingredient.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Ingredient_Generated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Ingestible_Generated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>

@@ -76,6 +76,7 @@ public partial class RecordTypes
     public static readonly RecordType IMOD = new(0x444F4D49);
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INDX = new(0x58444E49);
+    public static readonly RecordType INGR = new(0x52474E49);
     public static readonly RecordType ITXT = new(0x54585449);
     public static readonly RecordType KEYM = new(0x4D59454B);
     public static readonly RecordType LIGH = new(0x4847494C);

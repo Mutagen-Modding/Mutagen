@@ -27,6 +27,7 @@
       <Group name="Books" refName="Book" />
       <Group name="Containers" refName="Container" />
       <Group name="Doors" refName="Door" />
+      <Group name="Ingredients" refName="Ingredient" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

@@ -40,6 +40,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Ingredient_Registration.Instance,
                     ObjectEffect_Registration.Instance,
                     Spell_Registration.Instance,
                 },
@@ -54,6 +55,7 @@ namespace Mutagen.Bethesda.Fallout3
                     BodyPartItem_Registration.Instance,
                     Book_Registration.Instance,
                     HeadPartItem_Registration.Instance,
+                    Ingredient_Registration.Instance,
                     LandscapeTexture_Registration.Instance,
                     MenuIcon_Registration.Instance,
                 },
@@ -75,6 +77,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
                     HeadPartItem_Registration.Instance,
+                    Ingredient_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
@@ -96,6 +99,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    Ingredient_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     ObjectEffect_Registration.Instance,
                     Race_Registration.Instance,
@@ -122,6 +126,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
                     HeadPart_Registration.Instance,
+                    Ingredient_Registration.Instance,
                     LocalVariable_Registration.Instance,
                     MagicEffect_Registration.Instance,
                     ObjectEffect_Registration.Instance,
@@ -180,6 +185,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     Door_Registration.Instance,
+                    Ingredient_Registration.Instance,
                     Sound_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,

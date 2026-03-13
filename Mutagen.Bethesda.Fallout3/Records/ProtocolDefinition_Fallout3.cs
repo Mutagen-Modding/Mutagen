@@ -73,6 +73,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             HeadPartItem_Registration.Instance,
             Icons_Registration.Instance,
             Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
             ItemMod_Registration.Instance,
             Key_Registration.Instance,
             LandscapeTexture_Registration.Instance,
