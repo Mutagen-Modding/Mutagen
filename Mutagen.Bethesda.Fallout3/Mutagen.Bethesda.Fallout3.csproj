@@ -24,6 +24,7 @@
     <Compile Include="Enum\GroupTypeEnum.cs" />
     <Compile Include="Enum\CompareOperator.cs" />
     <Compile Include="Enum\Function.cs" />
+    <Compile Include="Enum\EquipType.cs" />
     <Compile Include="Enum\Skill.cs" />
     <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -102,8 +103,20 @@
     <Compile Include="Records\MajorRecords\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Armor.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Armor_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\FormList_Generated.cs">
+      <DependentUpon>FormList.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BipedData.cs">
+      <DependentUpon>BipedData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BipedData_Generated.cs">
+      <DependentUpon>BipedData.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\Cell.cs">
       <DependentUpon>Cell.xml</DependentUpon>
@@ -488,6 +501,9 @@
     </Compile>
     <Compile Include="Records\MajorRecords\TerminalMenuItem_Generated.cs">
       <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ArmorAnimationSound_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

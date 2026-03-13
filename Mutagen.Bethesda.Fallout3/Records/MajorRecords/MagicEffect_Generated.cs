@@ -1629,6 +1629,10 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.DESC,
                 RecordTypes.ICON,
                 RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
                 RecordTypes.DATA,
                 RecordTypes.ESCE);
             return new RecordTriggerSpecs(
@@ -2814,6 +2818,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)MagicEffect_FieldIndex.Icon;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
                         frame: frame,
@@ -3135,6 +3143,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)MagicEffect_FieldIndex.Icon;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

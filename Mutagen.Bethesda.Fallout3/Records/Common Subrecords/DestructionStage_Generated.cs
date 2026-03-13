@@ -730,7 +730,10 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.DSTD,
                 RecordTypes.DSTF,
                 RecordTypes.DMDL,
-                RecordTypes.DMDT);
+                RecordTypes.DMDT,
+                RecordTypes.MODB,
+                RecordTypes.MODS,
+                RecordTypes.MODD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,
@@ -1193,6 +1196,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
                         frame: frame,
@@ -1349,6 +1356,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.DMDT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

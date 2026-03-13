@@ -5,6 +5,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IHasDestructible
 - Activator
+- Armor
 - TalkingActivator
 - Terminal
 ### IHasEffects
@@ -29,6 +30,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - Activator
 - AlternateTexture
+- Armor
 - Class
 - Eyes
 - Faction
@@ -44,6 +46,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AcousticSpace
 - Activator
+- Armor
 - Sound
 - TalkingActivator
 - Terminal
@@ -58,6 +61,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### AlternateTexture
 - INamed
+### Armor
+- IHasDestructible
+- INamed
+- IObjectBounded
 ### BodyData
 - IModeled
 ### BodyPartItem

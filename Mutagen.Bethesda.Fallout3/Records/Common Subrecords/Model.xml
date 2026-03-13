@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Model" objType="Subrecord">
     <Fields>
-      <String name="File" recordType="MODL" nullable="False" />
+      <String name="File" recordType="MODL" />
       <Float name="MODB" recordType="MODB" />
       <ByteArray name="Hashes" recordType="MODT" nullable="True" />
       <RefList name="AlternateTextures" refName="AlternateTexture" counterLength="4" recordType="MODS" />

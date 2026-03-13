@@ -839,6 +839,10 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.INDX,
                 RecordTypes.HEAD,
                 RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
                 RecordTypes.ICON);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
@@ -1391,6 +1395,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)HeadPartItem_FieldIndex.Head;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartItem_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
@@ -1562,6 +1570,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)HeadPartItem_FieldIndex.Head;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartItem_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(

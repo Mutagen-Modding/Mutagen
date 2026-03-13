@@ -1247,6 +1247,10 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.OBND,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
                 RecordTypes.SCRI,
                 RecordTypes.DEST,
                 RecordTypes.DSTD,
@@ -2248,6 +2252,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)Activator_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
                         frame: frame,
@@ -2495,6 +2503,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)Activator_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

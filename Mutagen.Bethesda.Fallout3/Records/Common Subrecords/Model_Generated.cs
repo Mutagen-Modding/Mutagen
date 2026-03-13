@@ -53,7 +53,9 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region File
-        public String File { get; set; } = string.Empty;
+        public String? File { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IModelGetter.File => this.File;
         #endregion
         #region MODB
         public Single? MODB { get; set; }
@@ -641,7 +643,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IModel>,
         IModelGetter
     {
-        new String File { get; set; }
+        new String? File { get; set; }
         new Single? MODB { get; set; }
         new MemorySlice<Byte>? Hashes { get; set; }
         new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
@@ -661,7 +663,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
-        String File { get; }
+        String? File { get; }
         Single? MODB { get; }
         ReadOnlyMemorySlice<Byte>? Hashes { get; }
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
@@ -878,20 +880,16 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.MODL);
             var all = RecordCollection.Factory(
                 RecordTypes.MODL,
                 RecordTypes.MODB,
                 RecordTypes.MODT,
                 RecordTypes.MODS,
                 RecordTypes.MODD);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
         #region Interface
@@ -933,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IModel item)
         {
             ClearPartial();
-            item.File = string.Empty;
+            item.File = default;
             item.MODB = default;
             item.Hashes = default;
             item.AlternateTextures = null;
@@ -1040,9 +1038,10 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             Model.Mask<bool>? printMask = null)
         {
-            if (printMask?.File ?? true)
+            if ((printMask?.File ?? true)
+                && item.File is {} FileItem)
             {
-                sb.AppendItem(item.File, "File");
+                sb.AppendItem(FileItem, "File");
             }
             if ((printMask?.MODB ?? true)
                 && item.MODB is {} MODBItem)
@@ -1109,7 +1108,10 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IModelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.File);
+            if (item.File is {} Fileitem)
+            {
+                hash.Add(Fileitem);
+            }
             if (item.MODB is {} MODBitem)
             {
                 hash.Add(MODBitem);
@@ -1326,7 +1328,7 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
@@ -1411,18 +1413,21 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.MODB:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.MODB, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MODB = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Model_FieldIndex.MODB;
                 }
                 case RecordTypeInts.MODT:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Hashes, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hashes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Model_FieldIndex.Hashes;
                 }
                 case RecordTypeInts.MODS:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.AlternateTextures, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlternateTextures = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
@@ -1434,6 +1439,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.MODD:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.FaceGenFlags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FaceGenFlags = EnumBinaryTranslation<Model.FaceGenFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1511,7 +1517,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region File
         private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region MODB
         private int? _MODBLocation;
@@ -1597,16 +1603,19 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.MODB:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.MODB, translationParams)) return ParseResult.Stop;
                     _MODBLocation = (stream.Position - offset);
                     return (int)Model_FieldIndex.MODB;
                 }
                 case RecordTypeInts.MODT:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Hashes, translationParams)) return ParseResult.Stop;
                     _HashesLocation = (stream.Position - offset);
                     return (int)Model_FieldIndex.Hashes;
                 }
                 case RecordTypeInts.MODS:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.AlternateTextures, translationParams)) return ParseResult.Stop;
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();
                     this.AlternateTextures = BinaryOverlayList.FactoryByCount<IAlternateTextureGetter>(
@@ -1618,6 +1627,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.MODD:
                 {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.FaceGenFlags, translationParams)) return ParseResult.Stop;
                     _FaceGenFlagsLocation = (stream.Position - offset);
                     return (int)Model_FieldIndex.FaceGenFlags;
                 }

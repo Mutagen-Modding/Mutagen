@@ -60,9 +60,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Armor</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter> Armor(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter> Armor(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -72,9 +72,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Armor</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter> Armor(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter> Armor(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IArmor, IArmorGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -317,6 +317,30 @@ namespace Mutagen.Bethesda.Fallout3
             return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFallout3MajorRecord, IFallout3MajorRecordGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IFallout3MajorRecordGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IFallout3MajorRecord, IFallout3MajorRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to FormList
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on FormList</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFormList, IFormListGetter> FormList(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFormList, IFormListGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IFormList, IFormListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to FormList
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on FormList</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFormList, IFormListGetter> FormList(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFormList, IFormListGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IFormList, IFormListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

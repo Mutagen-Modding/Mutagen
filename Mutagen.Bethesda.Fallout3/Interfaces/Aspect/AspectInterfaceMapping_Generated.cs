@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
+                    Armor_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                 },
@@ -80,6 +81,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
+                    Armor_Registration.Instance,
                     Class_Registration.Instance,
                     Faction_Registration.Instance,
                     Hair_Registration.Instance,
@@ -101,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     AlternateTexture_Registration.Instance,
+                    Armor_Registration.Instance,
                     Class_Registration.Instance,
                     Eyes_Registration.Instance,
                     Faction_Registration.Instance,
@@ -150,6 +153,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     AcousticSpace_Registration.Instance,
+                    Armor_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IObjectBounded),

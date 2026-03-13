@@ -802,6 +802,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var all = RecordCollection.Factory(
                 RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
                 RecordTypes.INDX,
                 RecordTypes.ICON);
             return new RecordTriggerSpecs(allRecordTypes: all);
@@ -1293,6 +1297,10 @@ namespace Mutagen.Bethesda.Fallout3
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {
@@ -1485,6 +1493,10 @@ namespace Mutagen.Bethesda.Fallout3
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue)
                     {

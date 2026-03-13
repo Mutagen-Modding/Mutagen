@@ -731,6 +731,10 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.INDX,
                 RecordTypes.HEAD,
                 RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
                 RecordTypes.ICON);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
@@ -1159,6 +1163,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.HEAD:
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 case RecordTypeInts.ICON:
                 {
                     if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HeadParts, translationParams)) return ParseResult.Stop;
@@ -1307,6 +1315,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.HEAD:
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
                 case RecordTypeInts.ICON:
                 {
                     if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HeadParts, translationParams)) return ParseResult.Stop;
