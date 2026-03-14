@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MiscItem" objType="Record" baseClass="Fallout3MajorRecord"
-          recordType="MISC">
-    <Fields />
+          recordType="MISC" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <AssetLink name="LargeIconFilename" recordType="ICON" assetType="Fallout3Texture" />
+      <AssetLink name="SmallIconFilename" recordType="MICO" assetType="Fallout3Texture" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <FormLink name="SoundRandomLooping" recordType="RNAM" refName="Sound">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+    </Fields>
     <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

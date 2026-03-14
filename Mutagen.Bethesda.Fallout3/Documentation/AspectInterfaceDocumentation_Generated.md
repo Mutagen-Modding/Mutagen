@@ -10,6 +10,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - Door
 - Light
+- MiscItem
 - TalkingActivator
 - Terminal
 ### IHasEffects
@@ -38,6 +39,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingredient
 - Light
 - MagicEffect
+- MiscItem
 - TalkingActivator
 - Terminal
 ### INamed
@@ -56,6 +58,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - LocalVariable
 - MagicEffect
+- MiscItem
 - ObjectEffect
 - Race
 - Spell
@@ -70,6 +73,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Door
 - Ingredient
 - Light
+- MiscItem
 - Sound
 - TalkingActivator
 - Terminal
@@ -150,6 +154,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### MenuIcon
 - IHasIcons
+### MiscItem
+- IHasDestructible
+- IModeled
+- INamed
+- IObjectBounded
 ### ObjectEffect
 - IHasEffects
 - INamed

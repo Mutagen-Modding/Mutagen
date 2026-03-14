@@ -29,6 +29,7 @@
       <Group name="Doors" refName="Door" />
       <Group name="Ingredients" refName="Ingredient" />
       <Group name="Lights" refName="Light" />
+      <Group name="MiscItems" refName="MiscItem" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
