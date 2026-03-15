@@ -147,6 +147,7 @@ public partial class RecordTypes
     public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
+    public static readonly RecordType TREE = new(0x45455254);
     public static readonly RecordType TX00 = new(0x30305854);
     public static readonly RecordType TX01 = new(0x31305854);
     public static readonly RecordType TX02 = new(0x32305854);

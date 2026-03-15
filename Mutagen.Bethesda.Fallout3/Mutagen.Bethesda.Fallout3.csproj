@@ -444,6 +444,12 @@
     <Compile Include="Records\MajorRecords\Grass_Generated.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Tree.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Tree_Generated.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Condition_Generated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>

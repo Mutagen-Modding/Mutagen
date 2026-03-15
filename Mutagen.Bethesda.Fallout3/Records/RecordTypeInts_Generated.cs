@@ -145,6 +145,7 @@ public partial class RecordTypeInts
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
+    public const int TREE = 0x45455254;
     public const int TX00 = 0x30305854;
     public const int TX01 = 0x31305854;
     public const int TX02 = 0x32305854;

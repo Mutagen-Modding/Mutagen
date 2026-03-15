@@ -128,6 +128,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Terminal_Registration.Instance,
             TerminalMenuItem_Registration.Instance,
             TextureSet_Registration.Instance,
+            Tree_Registration.Instance,
             UntypedOwner_Registration.Instance,
             VoiceType_Registration.Instance,
             Water_Registration.Instance,

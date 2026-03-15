@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Fallout3
                     MoveableStatic_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
+                    Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasDestructible),
@@ -62,6 +63,7 @@ namespace Mutagen.Bethesda.Fallout3
                     LandscapeTexture_Registration.Instance,
                     Light_Registration.Instance,
                     MenuIcon_Registration.Instance,
+                    Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasIcons),
@@ -92,6 +94,7 @@ namespace Mutagen.Bethesda.Fallout3
                     StaticCollection_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
+                    Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IModeled),
@@ -194,6 +197,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Grass_Registration.Instance,
                     MiscItem_Registration.Instance,
                     PlaceableWater_Registration.Instance,
+                    Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IObjectBounded),

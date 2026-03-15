@@ -14,6 +14,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MoveableStatic
 - TalkingActivator
 - Terminal
+- Tree
 ### IHasEffects
 - Ingredient
 - ObjectEffect
@@ -26,6 +27,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LandscapeTexture
 - Light
 - MenuIcon
+- Tree
 ### IModeled
 - Activator
 - BodyData
@@ -48,6 +50,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticCollection
 - TalkingActivator
 - Terminal
+- Tree
 ### INamed
 - Activator
 - AlternateTexture
@@ -90,6 +93,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TalkingActivator
 - Terminal
 - TextureSet
+- Tree
 ### IPositionRotation
 - StaticPlacement
 ### IWeightValue
@@ -213,4 +217,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 ### TextureSet
+- IObjectBounded
+### Tree
+- IHasDestructible
+- IHasIcons
+- IModeled
 - IObjectBounded
