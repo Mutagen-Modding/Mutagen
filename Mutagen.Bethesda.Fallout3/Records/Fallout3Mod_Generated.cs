@@ -92,6 +92,7 @@ namespace Mutagen.Bethesda.Fallout3
             _StaticCollections_Object = new Fallout3Group<StaticCollection>(this);
             _MoveableStatics_Object = new Fallout3Group<MoveableStatic>(this);
             _PlaceableWaters_Object = new Fallout3Group<PlaceableWater>(this);
+            _Grasses_Object = new Fallout3Group<Grass>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -321,6 +322,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IPlaceableWaterGetter> IFallout3ModGetter.PlaceableWaters => _PlaceableWaters_Object;
         #endregion
+        #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Grass> _Grasses_Object;
+        public Fallout3Group<Grass> Grasses => _Grasses_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IGrassGetter> IFallout3ModGetter.Grasses => _Grasses_Object;
+        #endregion
 
         #region To String
 
@@ -392,6 +400,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.StaticCollections = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MoveableStatics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.PlaceableWaters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -426,7 +435,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Statics,
                 TItem StaticCollections,
                 TItem MoveableStatics,
-                TItem PlaceableWaters)
+                TItem PlaceableWaters,
+                TItem Grasses)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -460,6 +470,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.StaticCollections = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(StaticCollections, new Fallout3Group.Mask<TItem>(StaticCollections));
                 this.MoveableStatics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MoveableStatics, new Fallout3Group.Mask<TItem>(MoveableStatics));
                 this.PlaceableWaters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(PlaceableWaters, new Fallout3Group.Mask<TItem>(PlaceableWaters));
+                this.Grasses = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Grasses, new Fallout3Group.Mask<TItem>(Grasses));
             }
 
             #pragma warning disable CS8618
@@ -503,6 +514,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? StaticCollections { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MoveableStatics { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? PlaceableWaters { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Grasses { get; set; }
             #endregion
 
             #region Equals
@@ -547,6 +559,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 if (!object.Equals(this.MoveableStatics, rhs.MoveableStatics)) return false;
                 if (!object.Equals(this.PlaceableWaters, rhs.PlaceableWaters)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -584,6 +597,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.StaticCollections);
                 hash.Add(this.MoveableStatics);
                 hash.Add(this.PlaceableWaters);
+                hash.Add(this.Grasses);
                 return hash.ToHashCode();
             }
 
@@ -752,6 +766,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.PlaceableWaters.Overall)) return false;
                     if (this.PlaceableWaters.Specific != null && !this.PlaceableWaters.Specific.All(eval)) return false;
                 }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -919,6 +938,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.PlaceableWaters.Overall)) return true;
                     if (this.PlaceableWaters.Specific != null && this.PlaceableWaters.Specific.Any(eval)) return true;
                 }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -965,6 +989,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
                 obj.MoveableStatics = this.MoveableStatics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MoveableStatics.Overall), this.MoveableStatics.Specific?.Translate(eval));
                 obj.PlaceableWaters = this.PlaceableWaters == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.PlaceableWaters.Overall), this.PlaceableWaters.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1111,6 +1136,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         PlaceableWaters?.Print(sb);
                     }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1167,6 +1196,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>? MoveableStatics;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<PlaceableWater.ErrorMask>?>? PlaceableWaters;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
             #endregion
 
             #region IErrorMask
@@ -1239,6 +1269,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MoveableStatics;
                     case Fallout3Mod_FieldIndex.PlaceableWaters:
                         return PlaceableWaters;
+                    case Fallout3Mod_FieldIndex.Grasses:
+                        return Grasses;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1344,6 +1376,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.PlaceableWaters:
                         this.PlaceableWaters = new MaskItem<Exception?, Fallout3Group.ErrorMask<PlaceableWater.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, Fallout3Group.ErrorMask<Grass.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1451,6 +1486,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.PlaceableWaters:
                         this.PlaceableWaters = (MaskItem<Exception?, Fallout3Group.ErrorMask<PlaceableWater.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, Fallout3Group.ErrorMask<Grass.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1491,6 +1529,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (StaticCollections != null) return true;
                 if (MoveableStatics != null) return true;
                 if (PlaceableWaters != null) return true;
+                if (Grasses != null) return true;
                 return false;
             }
             #endregion
@@ -1548,6 +1587,7 @@ namespace Mutagen.Bethesda.Fallout3
                 StaticCollections?.Print(sb);
                 MoveableStatics?.Print(sb);
                 PlaceableWaters?.Print(sb);
+                Grasses?.Print(sb);
             }
             #endregion
 
@@ -1588,6 +1628,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 ret.MoveableStatics = this.MoveableStatics.Combine(rhs.MoveableStatics, (l, r) => l.Combine(r));
                 ret.PlaceableWaters = this.PlaceableWaters.Combine(rhs.PlaceableWaters, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1643,6 +1684,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             public Fallout3Group.TranslationMask<MoveableStatic.TranslationMask>? MoveableStatics;
             public Fallout3Group.TranslationMask<PlaceableWater.TranslationMask>? PlaceableWaters;
+            public Fallout3Group.TranslationMask<Grass.TranslationMask>? Grasses;
             #endregion
 
             #region Ctors
@@ -1699,6 +1741,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
                 ret.Add((MoveableStatics != null ? MoveableStatics.OnOverall : DefaultOn, MoveableStatics?.GetCrystal()));
                 ret.Add((PlaceableWaters != null ? PlaceableWaters.OnOverall : DefaultOn, PlaceableWaters?.GetCrystal()));
+                ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1790,6 +1833,7 @@ namespace Mutagen.Bethesda.Fallout3
             _StaticCollections_Object = new Fallout3Group<StaticCollection>(this);
             _MoveableStatics_Object = new Fallout3Group<MoveableStatic>(this);
             _PlaceableWaters_Object = new Fallout3Group<PlaceableWater>(this);
+            _Grasses_Object = new Fallout3Group<Grass>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1919,6 +1963,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.PlaceableWaters ?? true)
             {
                 this.PlaceableWaters.RecordCache.Set(rhsMod.PlaceableWaters.RecordCache.Items);
+            }
+            if (mask?.Grasses ?? true)
+            {
+                this.Grasses.RecordCache.Set(rhsMod.Grasses.RecordCache.Items);
             }
         }
 
@@ -2212,6 +2260,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<StaticCollection> StaticCollections { get; }
         new Fallout3Group<MoveableStatic> MoveableStatics { get; }
         new Fallout3Group<PlaceableWater> PlaceableWaters { get; }
+        new Fallout3Group<Grass> Grasses { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2263,6 +2312,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IStaticCollectionGetter> StaticCollections { get; }
         IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics { get; }
         IFallout3GroupGetter<IPlaceableWaterGetter> PlaceableWaters { get; }
+        IFallout3GroupGetter<IGrassGetter> Grasses { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2845,6 +2895,7 @@ namespace Mutagen.Bethesda.Fallout3
         StaticCollections = 29,
         MoveableStatics = 30,
         PlaceableWaters = 31,
+        Grasses = 32,
     }
     #endregion
 
@@ -2855,9 +2906,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2955,6 +3006,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.StaticCollections.Clear();
             item.MoveableStatics.Clear();
             item.PlaceableWaters.Clear();
+            item.Grasses.Clear();
         }
         
         #region Mutagen
@@ -2985,6 +3037,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.StaticCollections.RemapLinks(mapping);
             obj.MoveableStatics.RemapLinks(mapping);
             obj.PlaceableWaters.RemapLinks(mapping);
+            obj.Grasses.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3076,6 +3129,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.StaticCollections.Remove(keys);
             obj.MoveableStatics.Remove(keys);
             obj.PlaceableWaters.Remove(keys);
+            obj.Grasses.Remove(keys);
         }
         
         public void Remove(
@@ -3371,6 +3425,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    obj.Grasses.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3564,6 +3626,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
             ret.MoveableStatics = MaskItemExt.Factory(item.MoveableStatics.GetEqualsMask(rhs.MoveableStatics, include), include);
             ret.PlaceableWaters = MaskItemExt.Factory(item.PlaceableWaters.GetEqualsMask(rhs.PlaceableWaters, include), include);
+            ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
         }
         
         public string Print(
@@ -3735,6 +3798,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.PlaceableWaters?.Overall ?? true)
             {
                 item.PlaceableWaters?.Print(sb, "PlaceableWaters");
+            }
+            if (printMask?.Grasses?.Overall ?? true)
+            {
+                item.Grasses?.Print(sb, "Grasses");
             }
         }
         
@@ -4001,6 +4068,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isPlaceableWatersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Grasses) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
+                {
+                    if (!object.Equals(lhsGrasses, rhsGrasses)) return false;
+                }
+                else if (!isGrassesEqual) return false;
+            }
             return true;
         }
         
@@ -4039,6 +4114,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.StaticCollections);
             hash.Add(item.MoveableStatics);
             hash.Add(item.PlaceableWaters);
+            hash.Add(item.Grasses);
             return hash.ToHashCode();
         }
         
@@ -4240,6 +4316,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IPlaceableWater":
                 case "IPlaceableWaterInternal":
                     return obj.PlaceableWaters;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    return obj.Grasses;
                 default:
                     return null;
             }
@@ -4257,7 +4338,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[31];
+            Stream[] outputStreams = new Stream[32];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -4290,6 +4371,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.StaticCollections, 28, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MoveableStatics, 29, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.PlaceableWaters, 30, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, 31, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -4366,6 +4448,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.PlaceableWaters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Grasses.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -4474,6 +4557,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.PlaceableWaters.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4613,6 +4700,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.PlaceableWaters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4946,6 +5037,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -5246,6 +5346,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.PlaceableWaters,
                 groupGetter: (m) => m.PlaceableWaters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Grass, IGrassGetter>(
+                srcGroup: obj.Grasses,
+                type: typeof(IGrassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Grasses,
+                groupGetter: (m) => m.Grasses))
             {
                 yield return item;
             }
@@ -5710,6 +5819,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.PlaceableWaters,
                         groupGetter: (m) => m.PlaceableWaters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Grass, IGrassGetter>(
+                        srcGroup: obj.Grasses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Grasses,
+                        groupGetter: (m) => m.Grasses))
                     {
                         yield return item;
                     }
@@ -6435,6 +6558,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Grasses) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Grasses);
+                try
+                {
+                    item.Grasses.DeepCopyIn(
+                        rhs: rhs.Grasses,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Grasses));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -6569,6 +6712,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool StaticCollections;
         public bool MoveableStatics;
         public bool PlaceableWaters;
+        public bool Grasses;
         public GroupMask()
         {
         }
@@ -6605,6 +6749,7 @@ namespace Mutagen.Bethesda.Fallout3
             StaticCollections = defaultValue;
             MoveableStatics = defaultValue;
             PlaceableWaters = defaultValue;
+            Grasses = defaultValue;
         }
     }
 
@@ -7004,6 +7149,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)PlaceableWatersItem).BinaryWriteTranslator).Write<IPlaceableWaterGetter>(
                         item: PlaceableWatersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Grasses ?? true)
+            {
+                var GrassesItem = item.Grasses;
+                if (GrassesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
+                        item: GrassesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7512,6 +7668,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.PlaceableWaters;
                 }
+                case RecordTypeInts.GRAS:
+                {
+                    if (importMask?.Grasses ?? true)
+                    {
+                        item.Grasses.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Grasses;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -7832,6 +8002,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IPlaceableWaterGetter>? _PlaceableWaters => _PlaceableWatersLocations != null ? Fallout3GroupBinaryOverlay<IPlaceableWaterGetter>.Fallout3GroupFactory(_stream, _PlaceableWatersLocations, _package) : default;
         public IFallout3GroupGetter<IPlaceableWaterGetter> PlaceableWaters => _PlaceableWaters ?? new Fallout3Group<PlaceableWater>(this);
         #endregion
+        #region Grasses
+        private List<RangeInt64>? _GrassesLocations;
+        private IFallout3GroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? Fallout3GroupBinaryOverlay<IGrassGetter>.Fallout3GroupFactory(_stream, _GrassesLocations, _package) : default;
+        public IFallout3GroupGetter<IGrassGetter> Grasses => _Grasses ?? new Fallout3Group<Grass>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -8091,6 +8266,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _PlaceableWatersLocations ??= new();
                     _PlaceableWatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.PlaceableWaters;
+                }
+                case RecordTypeInts.GRAS:
+                {
+                    _GrassesLocations ??= new();
+                    _GrassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Grasses;
                 }
                 default:
                     return default(int?);

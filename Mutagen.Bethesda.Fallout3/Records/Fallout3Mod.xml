@@ -34,6 +34,7 @@
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="MoveableStatics" refName="MoveableStatic" />
       <Group name="PlaceableWaters" refName="PlaceableWater" />
+      <Group name="Grasses" refName="Grass" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

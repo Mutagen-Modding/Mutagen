@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,80 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IGrassGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IGrassGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Density
+        public Byte Density { get; set; } = default(Byte);
+        #endregion
+        #region MinSlope
+        public Byte MinSlope { get; set; } = default(Byte);
+        #endregion
+        #region MaxSlope
+        public Byte MaxSlope { get; set; } = default(Byte);
+        #endregion
+        #region Unused
+        public Byte Unused { get; set; } = default(Byte);
+        #endregion
+        #region UnitFromWaterAmount
+        public UInt16 UnitFromWaterAmount { get; set; } = default(UInt16);
+        #endregion
+        #region Unused2
+        public UInt16 Unused2 { get; set; } = default(UInt16);
+        #endregion
+        #region UnitFromWaterMode
+        public Grass.UnitFromWaterType UnitFromWaterMode { get; set; } = default(Grass.UnitFromWaterType);
+        #endregion
+        #region PositionRange
+        public Single PositionRange { get; set; } = default(Single);
+        #endregion
+        #region HeightRange
+        public Single HeightRange { get; set; } = default(Single);
+        #endregion
+        #region ColorRange
+        public Single ColorRange { get; set; } = default(Single);
+        #endregion
+        #region WavePeriod
+        public Single WavePeriod { get; set; } = default(Single);
+        #endregion
+        #region Flags
+        public Grass.GrassFlag Flags { get; set; } = default(Grass.GrassFlag);
+        #endregion
 
         #region To String
 
@@ -78,6 +154,20 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Density = initialValue;
+                this.MinSlope = initialValue;
+                this.MaxSlope = initialValue;
+                this.Unused = initialValue;
+                this.UnitFromWaterAmount = initialValue;
+                this.Unused2 = initialValue;
+                this.UnitFromWaterMode = initialValue;
+                this.PositionRange = initialValue;
+                this.HeightRange = initialValue;
+                this.ColorRange = initialValue;
+                this.WavePeriod = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -87,7 +177,21 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem Model,
+                TItem Density,
+                TItem MinSlope,
+                TItem MaxSlope,
+                TItem Unused,
+                TItem UnitFromWaterAmount,
+                TItem Unused2,
+                TItem UnitFromWaterMode,
+                TItem PositionRange,
+                TItem HeightRange,
+                TItem ColorRange,
+                TItem WavePeriod,
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +201,20 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Density = Density;
+                this.MinSlope = MinSlope;
+                this.MaxSlope = MaxSlope;
+                this.Unused = Unused;
+                this.UnitFromWaterAmount = UnitFromWaterAmount;
+                this.Unused2 = Unused2;
+                this.UnitFromWaterMode = UnitFromWaterMode;
+                this.PositionRange = PositionRange;
+                this.HeightRange = HeightRange;
+                this.ColorRange = ColorRange;
+                this.WavePeriod = WavePeriod;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +223,23 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Density;
+            public TItem MinSlope;
+            public TItem MaxSlope;
+            public TItem Unused;
+            public TItem UnitFromWaterAmount;
+            public TItem Unused2;
+            public TItem UnitFromWaterMode;
+            public TItem PositionRange;
+            public TItem HeightRange;
+            public TItem ColorRange;
+            public TItem WavePeriod;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -118,11 +253,39 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Density, rhs.Density)) return false;
+                if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
+                if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.UnitFromWaterAmount, rhs.UnitFromWaterAmount)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.UnitFromWaterMode, rhs.UnitFromWaterMode)) return false;
+                if (!object.Equals(this.PositionRange, rhs.PositionRange)) return false;
+                if (!object.Equals(this.HeightRange, rhs.HeightRange)) return false;
+                if (!object.Equals(this.ColorRange, rhs.ColorRange)) return false;
+                if (!object.Equals(this.WavePeriod, rhs.WavePeriod)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Model);
+                hash.Add(this.Density);
+                hash.Add(this.MinSlope);
+                hash.Add(this.MaxSlope);
+                hash.Add(this.Unused);
+                hash.Add(this.UnitFromWaterAmount);
+                hash.Add(this.Unused2);
+                hash.Add(this.UnitFromWaterMode);
+                hash.Add(this.PositionRange);
+                hash.Add(this.HeightRange);
+                hash.Add(this.ColorRange);
+                hash.Add(this.WavePeriod);
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +296,28 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Density)) return false;
+                if (!eval(this.MinSlope)) return false;
+                if (!eval(this.MaxSlope)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.UnitFromWaterAmount)) return false;
+                if (!eval(this.Unused2)) return false;
+                if (!eval(this.UnitFromWaterMode)) return false;
+                if (!eval(this.PositionRange)) return false;
+                if (!eval(this.HeightRange)) return false;
+                if (!eval(this.ColorRange)) return false;
+                if (!eval(this.WavePeriod)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +326,28 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Density)) return true;
+                if (eval(this.MinSlope)) return true;
+                if (eval(this.MaxSlope)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.UnitFromWaterAmount)) return true;
+                if (eval(this.Unused2)) return true;
+                if (eval(this.UnitFromWaterMode)) return true;
+                if (eval(this.PositionRange)) return true;
+                if (eval(this.HeightRange)) return true;
+                if (eval(this.ColorRange)) return true;
+                if (eval(this.WavePeriod)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +363,20 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Density = eval(this.Density);
+                obj.MinSlope = eval(this.MinSlope);
+                obj.MaxSlope = eval(this.MaxSlope);
+                obj.Unused = eval(this.Unused);
+                obj.UnitFromWaterAmount = eval(this.UnitFromWaterAmount);
+                obj.Unused2 = eval(this.Unused2);
+                obj.UnitFromWaterMode = eval(this.UnitFromWaterMode);
+                obj.PositionRange = eval(this.PositionRange);
+                obj.HeightRange = eval(this.HeightRange);
+                obj.ColorRange = eval(this.ColorRange);
+                obj.WavePeriod = eval(this.WavePeriod);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -174,6 +395,62 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Grass.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Density ?? true)
+                    {
+                        sb.AppendItem(Density, "Density");
+                    }
+                    if (printMask?.MinSlope ?? true)
+                    {
+                        sb.AppendItem(MinSlope, "MinSlope");
+                    }
+                    if (printMask?.MaxSlope ?? true)
+                    {
+                        sb.AppendItem(MaxSlope, "MaxSlope");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.UnitFromWaterAmount ?? true)
+                    {
+                        sb.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
+                    }
+                    if (printMask?.Unused2 ?? true)
+                    {
+                        sb.AppendItem(Unused2, "Unused2");
+                    }
+                    if (printMask?.UnitFromWaterMode ?? true)
+                    {
+                        sb.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
+                    }
+                    if (printMask?.PositionRange ?? true)
+                    {
+                        sb.AppendItem(PositionRange, "PositionRange");
+                    }
+                    if (printMask?.HeightRange ?? true)
+                    {
+                        sb.AppendItem(HeightRange, "HeightRange");
+                    }
+                    if (printMask?.ColorRange ?? true)
+                    {
+                        sb.AppendItem(ColorRange, "ColorRange");
+                    }
+                    if (printMask?.WavePeriod ?? true)
+                    {
+                        sb.AppendItem(WavePeriod, "WavePeriod");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
                 }
             }
             #endregion
@@ -184,12 +461,57 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Density;
+            public Exception? MinSlope;
+            public Exception? MaxSlope;
+            public Exception? Unused;
+            public Exception? UnitFromWaterAmount;
+            public Exception? Unused2;
+            public Exception? UnitFromWaterMode;
+            public Exception? PositionRange;
+            public Exception? HeightRange;
+            public Exception? ColorRange;
+            public Exception? WavePeriod;
+            public Exception? Flags;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Grass_FieldIndex enu = (Grass_FieldIndex)index;
                 switch (enu)
                 {
+                    case Grass_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Grass_FieldIndex.Model:
+                        return Model;
+                    case Grass_FieldIndex.Density:
+                        return Density;
+                    case Grass_FieldIndex.MinSlope:
+                        return MinSlope;
+                    case Grass_FieldIndex.MaxSlope:
+                        return MaxSlope;
+                    case Grass_FieldIndex.Unused:
+                        return Unused;
+                    case Grass_FieldIndex.UnitFromWaterAmount:
+                        return UnitFromWaterAmount;
+                    case Grass_FieldIndex.Unused2:
+                        return Unused2;
+                    case Grass_FieldIndex.UnitFromWaterMode:
+                        return UnitFromWaterMode;
+                    case Grass_FieldIndex.PositionRange:
+                        return PositionRange;
+                    case Grass_FieldIndex.HeightRange:
+                        return HeightRange;
+                    case Grass_FieldIndex.ColorRange:
+                        return ColorRange;
+                    case Grass_FieldIndex.WavePeriod:
+                        return WavePeriod;
+                    case Grass_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +522,48 @@ namespace Mutagen.Bethesda.Fallout3
                 Grass_FieldIndex enu = (Grass_FieldIndex)index;
                 switch (enu)
                 {
+                    case Grass_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Grass_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Grass_FieldIndex.Density:
+                        this.Density = ex;
+                        break;
+                    case Grass_FieldIndex.MinSlope:
+                        this.MinSlope = ex;
+                        break;
+                    case Grass_FieldIndex.MaxSlope:
+                        this.MaxSlope = ex;
+                        break;
+                    case Grass_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterAmount:
+                        this.UnitFromWaterAmount = ex;
+                        break;
+                    case Grass_FieldIndex.Unused2:
+                        this.Unused2 = ex;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterMode:
+                        this.UnitFromWaterMode = ex;
+                        break;
+                    case Grass_FieldIndex.PositionRange:
+                        this.PositionRange = ex;
+                        break;
+                    case Grass_FieldIndex.HeightRange:
+                        this.HeightRange = ex;
+                        break;
+                    case Grass_FieldIndex.ColorRange:
+                        this.ColorRange = ex;
+                        break;
+                    case Grass_FieldIndex.WavePeriod:
+                        this.WavePeriod = ex;
+                        break;
+                    case Grass_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +575,48 @@ namespace Mutagen.Bethesda.Fallout3
                 Grass_FieldIndex enu = (Grass_FieldIndex)index;
                 switch (enu)
                 {
+                    case Grass_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Grass_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Grass_FieldIndex.Density:
+                        this.Density = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.MinSlope:
+                        this.MinSlope = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.MaxSlope:
+                        this.MaxSlope = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterAmount:
+                        this.UnitFromWaterAmount = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.UnitFromWaterMode:
+                        this.UnitFromWaterMode = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.PositionRange:
+                        this.PositionRange = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.HeightRange:
+                        this.HeightRange = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.ColorRange:
+                        this.ColorRange = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.WavePeriod:
+                        this.WavePeriod = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +626,20 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Model != null) return true;
+                if (Density != null) return true;
+                if (MinSlope != null) return true;
+                if (MaxSlope != null) return true;
+                if (Unused != null) return true;
+                if (UnitFromWaterAmount != null) return true;
+                if (Unused2 != null) return true;
+                if (UnitFromWaterMode != null) return true;
+                if (PositionRange != null) return true;
+                if (HeightRange != null) return true;
+                if (ColorRange != null) return true;
+                if (WavePeriod != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +666,44 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Density, "Density");
+                }
+                {
+                    sb.AppendItem(MinSlope, "MinSlope");
+                }
+                {
+                    sb.AppendItem(MaxSlope, "MaxSlope");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                {
+                    sb.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
+                }
+                {
+                    sb.AppendItem(PositionRange, "PositionRange");
+                }
+                {
+                    sb.AppendItem(HeightRange, "HeightRange");
+                }
+                {
+                    sb.AppendItem(ColorRange, "ColorRange");
+                }
+                {
+                    sb.AppendItem(WavePeriod, "WavePeriod");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -254,6 +712,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Density = this.Density.Combine(rhs.Density);
+                ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
+                ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.UnitFromWaterAmount = this.UnitFromWaterAmount.Combine(rhs.UnitFromWaterAmount);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.UnitFromWaterMode = this.UnitFromWaterMode.Combine(rhs.UnitFromWaterMode);
+                ret.PositionRange = this.PositionRange.Combine(rhs.PositionRange);
+                ret.HeightRange = this.HeightRange.Combine(rhs.HeightRange);
+                ret.ColorRange = this.ColorRange.Combine(rhs.ColorRange);
+                ret.WavePeriod = this.WavePeriod.Combine(rhs.WavePeriod);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +747,63 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
+            public bool Density;
+            public bool MinSlope;
+            public bool MaxSlope;
+            public bool Unused;
+            public bool UnitFromWaterAmount;
+            public bool Unused2;
+            public bool UnitFromWaterMode;
+            public bool PositionRange;
+            public bool HeightRange;
+            public bool ColorRange;
+            public bool WavePeriod;
+            public bool Flags;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Density = defaultOn;
+                this.MinSlope = defaultOn;
+                this.MaxSlope = defaultOn;
+                this.Unused = defaultOn;
+                this.UnitFromWaterAmount = defaultOn;
+                this.Unused2 = defaultOn;
+                this.UnitFromWaterMode = defaultOn;
+                this.PositionRange = defaultOn;
+                this.HeightRange = defaultOn;
+                this.ColorRange = defaultOn;
+                this.WavePeriod = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Density, null));
+                ret.Add((MinSlope, null));
+                ret.Add((MaxSlope, null));
+                ret.Add((Unused, null));
+                ret.Add((UnitFromWaterAmount, null));
+                ret.Add((Unused2, null));
+                ret.Add((UnitFromWaterMode, null));
+                ret.Add((PositionRange, null));
+                ret.Add((HeightRange, null));
+                ret.Add((ColorRange, null));
+                ret.Add((WavePeriod, null));
+                ret.Add((Flags, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +815,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GrassCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GrassSetterCommon.Instance.RemapLinks(this, mapping);
         public Grass(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,9 +935,32 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IGrass :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         IGrassGetter,
-        ILoquiObjectSetter<IGrassInternal>
+        ILoquiObjectSetter<IGrassInternal>,
+        IModeled,
+        IObjectBounded
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new Byte Density { get; set; }
+        new Byte MinSlope { get; set; }
+        new Byte MaxSlope { get; set; }
+        new Byte Unused { get; set; }
+        new UInt16 UnitFromWaterAmount { get; set; }
+        new UInt16 Unused2 { get; set; }
+        new Grass.UnitFromWaterType UnitFromWaterMode { get; set; }
+        new Single PositionRange { get; set; }
+        new Single HeightRange { get; set; }
+        new Single ColorRange { get; set; }
+        new Single WavePeriod { get; set; }
+        new Grass.GrassFlag Flags { get; set; }
     }
 
     public partial interface IGrassInternal :
@@ -429,10 +974,37 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IGrassGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IGrassGetter>,
-        IMapsToGetter<IGrassGetter>
+        IMapsToGetter<IGrassGetter>,
+        IModeledGetter,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        Byte Density { get; }
+        Byte MinSlope { get; }
+        Byte MaxSlope { get; }
+        Byte Unused { get; }
+        UInt16 UnitFromWaterAmount { get; }
+        UInt16 Unused2 { get; }
+        Grass.UnitFromWaterType UnitFromWaterMode { get; }
+        Single PositionRange { get; }
+        Single HeightRange { get; }
+        Single ColorRange { get; }
+        Single WavePeriod { get; }
+        Grass.GrassFlag Flags { get; }
 
     }
 
@@ -609,6 +1181,20 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Model = 8,
+        Density = 9,
+        MinSlope = 10,
+        MaxSlope = 11,
+        Unused = 12,
+        UnitFromWaterAmount = 13,
+        Unused2 = 14,
+        UnitFromWaterMode = 15,
+        PositionRange = 16,
+        HeightRange = 17,
+        ColorRange = 18,
+        WavePeriod = 19,
+        Flags = 20,
     }
     #endregion
 
@@ -619,9 +1205,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Grass.Mask<>);
 
@@ -651,8 +1237,19 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.GRAS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.GRAS);
+            var all = RecordCollection.Factory(
+                RecordTypes.GRAS,
+                RecordTypes.OBND,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);
         #region Interface
@@ -694,6 +1291,20 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IGrassInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Model = null;
+            item.Density = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Unused = default(Byte);
+            item.UnitFromWaterAmount = default(UInt16);
+            item.Unused2 = default(UInt16);
+            item.UnitFromWaterMode = default(Grass.UnitFromWaterType);
+            item.PositionRange = default(Single);
+            item.HeightRange = default(Single);
+            item.ColorRange = default(Single);
+            item.WavePeriod = default(Single);
+            item.Flags = default(Grass.GrassFlag);
             base.Clear(item);
         }
         
@@ -711,6 +1322,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IGrass obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +1390,24 @@ namespace Mutagen.Bethesda.Fallout3
             Grass.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Density = item.Density == rhs.Density;
+            ret.MinSlope = item.MinSlope == rhs.MinSlope;
+            ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.UnitFromWaterAmount = item.UnitFromWaterAmount == rhs.UnitFromWaterAmount;
+            ret.Unused2 = item.Unused2 == rhs.Unused2;
+            ret.UnitFromWaterMode = item.UnitFromWaterMode == rhs.UnitFromWaterMode;
+            ret.PositionRange = item.PositionRange.EqualsWithin(rhs.PositionRange);
+            ret.HeightRange = item.HeightRange.EqualsWithin(rhs.HeightRange);
+            ret.ColorRange = item.ColorRange.EqualsWithin(rhs.ColorRange);
+            ret.WavePeriod = item.WavePeriod.EqualsWithin(rhs.WavePeriod);
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1457,63 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.Density ?? true)
+            {
+                sb.AppendItem(item.Density, "Density");
+            }
+            if (printMask?.MinSlope ?? true)
+            {
+                sb.AppendItem(item.MinSlope, "MinSlope");
+            }
+            if (printMask?.MaxSlope ?? true)
+            {
+                sb.AppendItem(item.MaxSlope, "MaxSlope");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendItem(item.Unused, "Unused");
+            }
+            if (printMask?.UnitFromWaterAmount ?? true)
+            {
+                sb.AppendItem(item.UnitFromWaterAmount, "UnitFromWaterAmount");
+            }
+            if (printMask?.Unused2 ?? true)
+            {
+                sb.AppendItem(item.Unused2, "Unused2");
+            }
+            if (printMask?.UnitFromWaterMode ?? true)
+            {
+                sb.AppendItem(item.UnitFromWaterMode, "UnitFromWaterMode");
+            }
+            if (printMask?.PositionRange ?? true)
+            {
+                sb.AppendItem(item.PositionRange, "PositionRange");
+            }
+            if (printMask?.HeightRange ?? true)
+            {
+                sb.AppendItem(item.HeightRange, "HeightRange");
+            }
+            if (printMask?.ColorRange ?? true)
+            {
+                sb.AppendItem(item.ColorRange, "ColorRange");
+            }
+            if (printMask?.WavePeriod ?? true)
+            {
+                sb.AppendItem(item.WavePeriod, "WavePeriod");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
         }
         
         public static Grass_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1564,70 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Grass_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
+            {
+                if (lhs.Density != rhs.Density) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+            {
+                if (lhs.MinSlope != rhs.MinSlope) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+            {
+                if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
+            {
+                if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Unused2) ?? true))
+            {
+                if (lhs.Unused2 != rhs.Unused2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
+            {
+                if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
+            {
+                if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+            {
+                if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+            {
+                if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
+            {
+                if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -905,6 +1656,23 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IGrassGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Density);
+            hash.Add(item.MinSlope);
+            hash.Add(item.MaxSlope);
+            hash.Add(item.Unused);
+            hash.Add(item.UnitFromWaterAmount);
+            hash.Add(item.Unused2);
+            hash.Add(item.UnitFromWaterMode);
+            hash.Add(item.PositionRange);
+            hash.Add(item.HeightRange);
+            hash.Add(item.ColorRange);
+            hash.Add(item.WavePeriod);
+            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,6 +1701,13 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1008,6 +1783,102 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
+            {
+                item.Density = rhs.Density;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+            {
+                item.MinSlope = rhs.MinSlope;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+            {
+                item.MaxSlope = rhs.MaxSlope;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterAmount) ?? true))
+            {
+                item.UnitFromWaterAmount = rhs.UnitFromWaterAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Unused2) ?? true))
+            {
+                item.Unused2 = rhs.Unused2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.UnitFromWaterMode) ?? true))
+            {
+                item.UnitFromWaterMode = rhs.UnitFromWaterMode;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
+            {
+                item.PositionRange = rhs.PositionRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+            {
+                item.HeightRange = rhs.HeightRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+            {
+                item.ColorRange = rhs.ColorRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
+            {
+                item.WavePeriod = rhs.WavePeriod;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +2039,58 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly GrassBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IGrassGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                writer.Write(item.Density);
+                writer.Write(item.MinSlope);
+                writer.Write(item.MaxSlope);
+                writer.Write(item.Unused);
+                writer.Write(item.UnitFromWaterAmount);
+                writer.Write(item.Unused2);
+                EnumBinaryTranslation<Grass.UnitFromWaterType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.UnitFromWaterMode,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PositionRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.HeightRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ColorRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WavePeriod);
+                EnumBinaryTranslation<Grass.GrassFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IGrassGetter item,
@@ -1222,6 +2145,80 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly GrassBinaryCreateTranslation Instance = new GrassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GRAS;
+        public static ParseResult FillBinaryRecordTypes(
+            IGrassInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Grass_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Grass_FieldIndex.Model;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Density = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.MinSlope = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.MaxSlope = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Unused = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.UnitFromWaterAmount = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Unused2 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.PositionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ColorRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WavePeriod = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<Grass.GrassFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)Grass_FieldIndex.Flags;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +2251,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GrassCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GrassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +2266,73 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IGrassGetter);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        private RangeInt32? _DATALocation;
+        #region Density
+        private int _DensityLocation => _DATALocation!.Value.Min;
+        private bool _Density_IsSet => _DATALocation.HasValue;
+        public Byte Density => _Density_IsSet ? _recordData.Span[_DensityLocation] : default;
+        #endregion
+        #region MinSlope
+        private int _MinSlopeLocation => _DATALocation!.Value.Min + 0x1;
+        private bool _MinSlope_IsSet => _DATALocation.HasValue;
+        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default;
+        #endregion
+        #region MaxSlope
+        private int _MaxSlopeLocation => _DATALocation!.Value.Min + 0x2;
+        private bool _MaxSlope_IsSet => _DATALocation.HasValue;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DATALocation!.Value.Min + 0x3;
+        private bool _Unused_IsSet => _DATALocation.HasValue;
+        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
+        #endregion
+        #region UnitFromWaterAmount
+        private int _UnitFromWaterAmountLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _UnitFromWaterAmount_IsSet => _DATALocation.HasValue;
+        public UInt16 UnitFromWaterAmount => _UnitFromWaterAmount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnitFromWaterAmountLocation, 2)) : default(UInt16);
+        #endregion
+        #region Unused2
+        private int _Unused2Location => _DATALocation!.Value.Min + 0x6;
+        private bool _Unused2_IsSet => _DATALocation.HasValue;
+        public UInt16 Unused2 => _Unused2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unused2Location, 2)) : default(UInt16);
+        #endregion
+        #region UnitFromWaterMode
+        private int _UnitFromWaterModeLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _UnitFromWaterMode_IsSet => _DATALocation.HasValue;
+        public Grass.UnitFromWaterType UnitFromWaterMode => _UnitFromWaterMode_IsSet ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_UnitFromWaterModeLocation, 0x4)) : default;
+        #endregion
+        #region PositionRange
+        private int _PositionRangeLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _PositionRange_IsSet => _DATALocation.HasValue;
+        public Single PositionRange => _PositionRange_IsSet ? _recordData.Slice(_PositionRangeLocation, 4).Float() : default(Single);
+        #endregion
+        #region HeightRange
+        private int _HeightRangeLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _HeightRange_IsSet => _DATALocation.HasValue;
+        public Single HeightRange => _HeightRange_IsSet ? _recordData.Slice(_HeightRangeLocation, 4).Float() : default(Single);
+        #endregion
+        #region ColorRange
+        private int _ColorRangeLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _ColorRange_IsSet => _DATALocation.HasValue;
+        public Single ColorRange => _ColorRange_IsSet ? _recordData.Slice(_ColorRangeLocation, 4).Float() : default(Single);
+        #endregion
+        #region WavePeriod
+        private int _WavePeriodLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _WavePeriod_IsSet => _DATALocation.HasValue;
+        public Single WavePeriod => _WavePeriod_IsSet ? _recordData.Slice(_WavePeriodLocation, 4).Float() : default(Single);
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +2390,51 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Grass_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Grass_FieldIndex.Model;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Grass_FieldIndex.Flags;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

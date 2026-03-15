@@ -34,6 +34,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - DestructionStage
 - Door
+- Grass
 - Hair
 - HeadPart
 - HeadPartItem
@@ -77,6 +78,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - Door
+- Grass
 - Ingredient
 - Light
 - MiscItem
@@ -135,6 +137,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Faction
 - INamed
+### Grass
+- IModeled
+- IObjectBounded
 ### Hair
 - IModeled
 - INamed

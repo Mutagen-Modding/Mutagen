@@ -58,6 +58,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IStaticCollectionGetter>? _staticCollections;
     private MergedGroup<IMoveableStaticGetter>? _moveableStatics;
     private MergedGroup<IPlaceableWaterGetter>? _placeableWaters;
+    private MergedGroup<IGrassGetter>? _grasses;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -186,6 +187,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IPlaceableWaterGetter> PlaceableWaters =>
         _placeableWaters ??= new MergedGroup<IPlaceableWaterGetter>(
             _sourceMods.Select(m => m.PlaceableWaters));
+    public IFallout3GroupGetter<IGrassGetter> Grasses =>
+        _grasses ??= new MergedGroup<IGrassGetter>(
+            _sourceMods.Select(m => m.Grasses));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);
