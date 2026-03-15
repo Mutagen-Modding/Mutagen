@@ -41,6 +41,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - Static
+- StaticCollection
 - TalkingActivator
 - Terminal
 ### INamed
@@ -77,9 +78,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - Sound
 - Static
+- StaticCollection
 - TalkingActivator
 - Terminal
 - TextureSet
+### IPositionRotation
+- StaticPlacement
 ### IWeightValue
 - Light
 ## Concrete Classes to Interfaces
@@ -174,6 +178,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Static
 - IModeled
 - IObjectBounded
+### StaticCollection
+- IModeled
+- IObjectBounded
+### StaticPlacement
+- IPositionRotation
 ### TalkingActivator
 - IHasDestructible
 - IModeled

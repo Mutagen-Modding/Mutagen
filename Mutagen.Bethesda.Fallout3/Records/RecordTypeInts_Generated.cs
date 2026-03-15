@@ -125,6 +125,7 @@ public partial class RecordTypeInts
     public const int RNAM = 0x4D414E52;
     public const int SCDA = 0x41444353;
     public const int SCHR = 0x52484353;
+    public const int SCOL = 0x4C4F4353;
     public const int SCPT = 0x54504353;
     public const int SCRI = 0x49524353;
     public const int SCRO = 0x4F524353;

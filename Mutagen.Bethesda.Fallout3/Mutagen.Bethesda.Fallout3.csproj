@@ -51,6 +51,11 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IPositionRotation.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\Decal.cs">
       <DependentUpon>Decal.xml</DependentUpon>
@@ -594,6 +599,18 @@
     </Compile>
     <Compile Include="Records\MajorRecords\Static_Generated.cs">
       <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\StaticCollection.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\StaticCollection_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\StaticPart_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\StaticPlacement_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
   </ItemGroup>

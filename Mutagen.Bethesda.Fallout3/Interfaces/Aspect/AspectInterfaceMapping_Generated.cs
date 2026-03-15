@@ -85,6 +85,7 @@ namespace Mutagen.Bethesda.Fallout3
                     MagicEffect_Registration.Instance,
                     MiscItem_Registration.Instance,
                     Static_Registration.Instance,
+                    StaticCollection_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                 },
@@ -200,6 +201,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Light_Registration.Instance,
                     Sound_Registration.Instance,
                     Static_Registration.Instance,
+                    StaticCollection_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                     TextureSet_Registration.Instance,
@@ -208,6 +210,16 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(IObjectBoundedOptional),
                     Getter: typeof(IObjectBoundedOptionalGetter)));
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
+            dict[typeof(IPositionRotation)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    StaticPlacement_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IPositionRotation),
+                    Getter: typeof(IPositionRotationGetter)));
+            dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

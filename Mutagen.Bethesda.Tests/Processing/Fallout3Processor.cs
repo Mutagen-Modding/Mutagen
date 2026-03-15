@@ -30,6 +30,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.FACT, ProcessFactions);
         AddDynamicProcessing(RecordTypes.ACTI, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
     }
 
@@ -49,6 +50,18 @@ public class Fallout3Processor : Processor
         {
             var dataIndex = dataRec.EndLocation;
             ProcessZeroFloat(majorFrame, fileOffset, ref dataIndex);
+        }
+    }
+
+    private void ProcessStaticCollections(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+        foreach (var frame in majorFrame.FindEnumerateSubrecords(RecordTypes.DATA))
+        {
+            int offset = 0;
+            ProcessZeroFloats(frame, fileOffset, ref offset);
         }
     }
 
