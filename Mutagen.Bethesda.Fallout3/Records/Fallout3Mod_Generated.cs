@@ -88,6 +88,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Ingredients_Object = new Fallout3Group<Ingredient>(this);
             _Lights_Object = new Fallout3Group<Light>(this);
             _MiscItems_Object = new Fallout3Group<MiscItem>(this);
+            _Statics_Object = new Fallout3Group<Static>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -289,6 +290,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IMiscItemGetter> IFallout3ModGetter.MiscItems => _MiscItems_Object;
         #endregion
+        #region Statics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Static> _Statics_Object;
+        public Fallout3Group<Static> Statics => _Statics_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IStaticGetter> IFallout3ModGetter.Statics => _Statics_Object;
+        #endregion
 
         #region To String
 
@@ -356,6 +364,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Ingredients = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Lights = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MiscItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Statics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -386,7 +395,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Doors,
                 TItem Ingredients,
                 TItem Lights,
-                TItem MiscItems)
+                TItem MiscItems,
+                TItem Statics)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -416,6 +426,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Ingredients = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Ingredients, new Fallout3Group.Mask<TItem>(Ingredients));
                 this.Lights = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Lights, new Fallout3Group.Mask<TItem>(Lights));
                 this.MiscItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MiscItems, new Fallout3Group.Mask<TItem>(MiscItems));
+                this.Statics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Statics, new Fallout3Group.Mask<TItem>(Statics));
             }
 
             #pragma warning disable CS8618
@@ -455,6 +466,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Ingredients { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Lights { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MiscItems { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Statics { get; set; }
             #endregion
 
             #region Equals
@@ -495,6 +507,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
                 if (!object.Equals(this.Lights, rhs.Lights)) return false;
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
+                if (!object.Equals(this.Statics, rhs.Statics)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -528,6 +541,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Ingredients);
                 hash.Add(this.Lights);
                 hash.Add(this.MiscItems);
+                hash.Add(this.Statics);
                 return hash.ToHashCode();
             }
 
@@ -676,6 +690,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.MiscItems.Overall)) return false;
                     if (this.MiscItems.Specific != null && !this.MiscItems.Specific.All(eval)) return false;
                 }
+                if (Statics != null)
+                {
+                    if (!eval(this.Statics.Overall)) return false;
+                    if (this.Statics.Specific != null && !this.Statics.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -823,6 +842,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.MiscItems.Overall)) return true;
                     if (this.MiscItems.Specific != null && this.MiscItems.Specific.Any(eval)) return true;
                 }
+                if (Statics != null)
+                {
+                    if (eval(this.Statics.Overall)) return true;
+                    if (this.Statics.Specific != null && this.Statics.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -865,6 +889,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
                 obj.Lights = this.Lights == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
+                obj.Statics = this.Statics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
             }
             #endregion
 
@@ -995,6 +1020,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         MiscItems?.Print(sb);
                     }
+                    if (printMask?.Statics?.Overall ?? true)
+                    {
+                        Statics?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1047,6 +1076,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Light.ErrorMask>?>? Lights;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Static.ErrorMask>?>? Statics;
             #endregion
 
             #region IErrorMask
@@ -1111,6 +1141,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Lights;
                     case Fallout3Mod_FieldIndex.MiscItems:
                         return MiscItems;
+                    case Fallout3Mod_FieldIndex.Statics:
+                        return Statics;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1204,6 +1236,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.MiscItems:
                         this.MiscItems = new MaskItem<Exception?, Fallout3Group.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Statics:
+                        this.Statics = new MaskItem<Exception?, Fallout3Group.ErrorMask<Static.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1299,6 +1334,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.MiscItems:
                         this.MiscItems = (MaskItem<Exception?, Fallout3Group.ErrorMask<MiscItem.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Statics:
+                        this.Statics = (MaskItem<Exception?, Fallout3Group.ErrorMask<Static.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1335,6 +1373,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Ingredients != null) return true;
                 if (Lights != null) return true;
                 if (MiscItems != null) return true;
+                if (Statics != null) return true;
                 return false;
             }
             #endregion
@@ -1388,6 +1427,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Ingredients?.Print(sb);
                 Lights?.Print(sb);
                 MiscItems?.Print(sb);
+                Statics?.Print(sb);
             }
             #endregion
 
@@ -1424,6 +1464,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Ingredients = this.Ingredients.Combine(rhs.Ingredients, (l, r) => l.Combine(r));
                 ret.Lights = this.Lights.Combine(rhs.Lights, (l, r) => l.Combine(r));
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
+                ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1475,6 +1516,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Ingredient.TranslationMask>? Ingredients;
             public Fallout3Group.TranslationMask<Light.TranslationMask>? Lights;
             public Fallout3Group.TranslationMask<MiscItem.TranslationMask>? MiscItems;
+            public Fallout3Group.TranslationMask<Static.TranslationMask>? Statics;
             #endregion
 
             #region Ctors
@@ -1527,6 +1569,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Ingredients != null ? Ingredients.OnOverall : DefaultOn, Ingredients?.GetCrystal()));
                 ret.Add((Lights != null ? Lights.OnOverall : DefaultOn, Lights?.GetCrystal()));
                 ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
+                ret.Add((Statics != null ? Statics.OnOverall : DefaultOn, Statics?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1614,6 +1657,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Ingredients_Object = new Fallout3Group<Ingredient>(this);
             _Lights_Object = new Fallout3Group<Light>(this);
             _MiscItems_Object = new Fallout3Group<MiscItem>(this);
+            _Statics_Object = new Fallout3Group<Static>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1727,6 +1771,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.MiscItems ?? true)
             {
                 this.MiscItems.RecordCache.Set(rhsMod.MiscItems.RecordCache.Items);
+            }
+            if (mask?.Statics ?? true)
+            {
+                this.Statics.RecordCache.Set(rhsMod.Statics.RecordCache.Items);
             }
         }
 
@@ -2016,6 +2064,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Ingredient> Ingredients { get; }
         new Fallout3Group<Light> Lights { get; }
         new Fallout3Group<MiscItem> MiscItems { get; }
+        new Fallout3Group<Static> Statics { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2063,6 +2112,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IIngredientGetter> Ingredients { get; }
         IFallout3GroupGetter<ILightGetter> Lights { get; }
         IFallout3GroupGetter<IMiscItemGetter> MiscItems { get; }
+        IFallout3GroupGetter<IStaticGetter> Statics { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2641,6 +2691,7 @@ namespace Mutagen.Bethesda.Fallout3
         Ingredients = 25,
         Lights = 26,
         MiscItems = 27,
+        Statics = 28,
     }
     #endregion
 
@@ -2651,9 +2702,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 28;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2747,6 +2798,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Ingredients.Clear();
             item.Lights.Clear();
             item.MiscItems.Clear();
+            item.Statics.Clear();
         }
         
         #region Mutagen
@@ -2773,6 +2825,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ingredients.RemapLinks(mapping);
             obj.Lights.RemapLinks(mapping);
             obj.MiscItems.RemapLinks(mapping);
+            obj.Statics.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2860,6 +2913,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ingredients.Remove(keys);
             obj.Lights.Remove(keys);
             obj.MiscItems.Remove(keys);
+            obj.Statics.Remove(keys);
         }
         
         public void Remove(
@@ -3123,6 +3177,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    obj.Statics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3141,6 +3203,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IBoundItem":
                 case "IBoundItemGetter":
@@ -3310,6 +3373,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Ingredients = MaskItemExt.Factory(item.Ingredients.GetEqualsMask(rhs.Ingredients, include), include);
             ret.Lights = MaskItemExt.Factory(item.Lights.GetEqualsMask(rhs.Lights, include), include);
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
+            ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
         }
         
         public string Print(
@@ -3465,6 +3529,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.MiscItems?.Overall ?? true)
             {
                 item.MiscItems?.Print(sb, "MiscItems");
+            }
+            if (printMask?.Statics?.Overall ?? true)
+            {
+                item.Statics?.Print(sb, "Statics");
             }
         }
         
@@ -3699,6 +3767,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isMiscItemsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Statics) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Statics, rhs.Statics, out var lhsStatics, out var rhsStatics, out var isStaticsEqual))
+                {
+                    if (!object.Equals(lhsStatics, rhsStatics)) return false;
+                }
+                else if (!isStaticsEqual) return false;
+            }
             return true;
         }
         
@@ -3733,6 +3809,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Ingredients);
             hash.Add(item.Lights);
             hash.Add(item.MiscItems);
+            hash.Add(item.Statics);
             return hash.ToHashCode();
         }
         
@@ -3914,6 +3991,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IMiscItem":
                 case "IMiscItemInternal":
                     return obj.MiscItems;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    return obj.Statics;
                 default:
                     return null;
             }
@@ -3931,7 +4013,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[27];
+            Stream[] outputStreams = new Stream[28];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -3960,6 +4042,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Ingredients, 24, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Lights, 25, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MiscItems, 26, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Statics, 27, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -4032,6 +4115,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Lights.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -4124,6 +4208,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.MiscItems.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Statics.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4247,6 +4335,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.MiscItems.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Statics.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4544,6 +4636,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -4808,6 +4909,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.MiscItems,
                 groupGetter: (m) => m.MiscItems))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Static, IStaticGetter>(
+                srcGroup: obj.Statics,
+                type: typeof(IStaticGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Statics,
+                groupGetter: (m) => m.Statics))
             {
                 yield return item;
             }
@@ -5216,6 +5326,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.MiscItems,
                         groupGetter: (m) => m.MiscItems))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Static, IStaticGetter>(
+                        srcGroup: obj.Statics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Statics,
+                        groupGetter: (m) => m.Statics))
                     {
                         yield return item;
                     }
@@ -5861,6 +5985,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Statics) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Statics);
+                try
+                {
+                    item.Statics.DeepCopyIn(
+                        rhs: rhs.Statics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Statics));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -5991,6 +6135,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Ingredients;
         public bool Lights;
         public bool MiscItems;
+        public bool Statics;
         public GroupMask()
         {
         }
@@ -6023,6 +6168,7 @@ namespace Mutagen.Bethesda.Fallout3
             Ingredients = defaultValue;
             Lights = defaultValue;
             MiscItems = defaultValue;
+            Statics = defaultValue;
         }
     }
 
@@ -6378,6 +6524,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
                         item: MiscItemsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Statics ?? true)
+            {
+                var StaticsItem = item.Statics;
+                if (StaticsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
+                        item: StaticsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -6830,6 +6987,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.MiscItems;
                 }
+                case RecordTypeInts.STAT:
+                {
+                    if (importMask?.Statics ?? true)
+                    {
+                        item.Statics.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Statics;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -7130,6 +7301,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? Fallout3GroupBinaryOverlay<IMiscItemGetter>.Fallout3GroupFactory(_stream, _MiscItemsLocations, _package) : default;
         public IFallout3GroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Fallout3Group<MiscItem>(this);
         #endregion
+        #region Statics
+        private List<RangeInt64>? _StaticsLocations;
+        private IFallout3GroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? Fallout3GroupBinaryOverlay<IStaticGetter>.Fallout3GroupFactory(_stream, _StaticsLocations, _package) : default;
+        public IFallout3GroupGetter<IStaticGetter> Statics => _Statics ?? new Fallout3Group<Static>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -7365,6 +7541,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _MiscItemsLocations ??= new();
                     _MiscItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.MiscItems;
+                }
+                case RecordTypeInts.STAT:
+                {
+                    _StaticsLocations ??= new();
+                    _StaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Statics;
                 }
                 default:
                     return default(int?);

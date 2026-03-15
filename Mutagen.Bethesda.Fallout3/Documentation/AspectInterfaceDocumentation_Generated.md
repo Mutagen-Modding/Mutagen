@@ -40,6 +40,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MagicEffect
 - MiscItem
+- Static
 - TalkingActivator
 - Terminal
 ### INamed
@@ -75,6 +76,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - Sound
+- Static
 - TalkingActivator
 - Terminal
 - TextureSet
@@ -169,6 +171,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Spell
 - IHasEffects
 - INamed
+### Static
+- IModeled
+- IObjectBounded
 ### TalkingActivator
 - IHasDestructible
 - IModeled

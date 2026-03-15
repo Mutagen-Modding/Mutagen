@@ -16,6 +16,7 @@ public partial class RecordTypeInts
     public const int BMDT = 0x54444D42;
     public const int BNAM = 0x4D414E42;
     public const int BOOK = 0x4B4F4F42;
+    public const int BRUS = 0x53555242;
     public const int CCRD = 0x44524343;
     public const int CELL = 0x4C4C4543;
     public const int CHIP = 0x50494843;

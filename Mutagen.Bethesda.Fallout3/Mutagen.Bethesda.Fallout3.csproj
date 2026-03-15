@@ -589,6 +589,9 @@
     <Compile Include="Records\MajorRecords\MoveableStatic_Generated.cs">
       <DependentUpon>MoveableStatic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Static.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Static_Generated.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>

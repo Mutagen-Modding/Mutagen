@@ -30,6 +30,7 @@
       <Group name="Ingredients" refName="Ingredient" />
       <Group name="Lights" refName="Light" />
       <Group name="MiscItems" refName="MiscItem" />
+      <Group name="Statics" refName="Static" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

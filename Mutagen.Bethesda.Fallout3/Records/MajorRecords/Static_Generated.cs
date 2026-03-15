@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,57 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IStaticGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IStaticGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region PassthroughSound
+        public Static.PassthroughSoundType? PassthroughSound { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Static.PassthroughSoundType? IStaticGetter.PassthroughSound => this.PassthroughSound;
+        #endregion
+        #region LoopingSound
+        private readonly IFormLinkNullable<ISoundGetter> _LoopingSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> LoopingSound
+        {
+            get => _LoopingSound;
+            set => _LoopingSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IStaticGetter.LoopingSound => this.LoopingSound;
+        #endregion
 
         #region To String
 
@@ -78,6 +131,10 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.PassthroughSound = initialValue;
+                this.LoopingSound = initialValue;
             }
 
             public Mask(
@@ -87,7 +144,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem Model,
+                TItem PassthroughSound,
+                TItem LoopingSound)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +158,10 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.PassthroughSound = PassthroughSound;
+                this.LoopingSound = LoopingSound;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +170,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem PassthroughSound;
+            public TItem LoopingSound;
             #endregion
 
             #region Equals
@@ -118,11 +190,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.PassthroughSound, rhs.PassthroughSound)) return false;
+                if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Model);
+                hash.Add(this.PassthroughSound);
+                hash.Add(this.LoopingSound);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +213,18 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PassthroughSound)) return false;
+                if (!eval(this.LoopingSound)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +233,18 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PassthroughSound)) return true;
+                if (eval(this.LoopingSound)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +260,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.PassthroughSound = eval(this.PassthroughSound);
+                obj.LoopingSound = eval(this.LoopingSound);
             }
             #endregion
 
@@ -174,6 +282,22 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Static.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.PassthroughSound ?? true)
+                    {
+                        sb.AppendItem(PassthroughSound, "PassthroughSound");
+                    }
+                    if (printMask?.LoopingSound ?? true)
+                    {
+                        sb.AppendItem(LoopingSound, "LoopingSound");
+                    }
                 }
             }
             #endregion
@@ -184,12 +308,27 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? PassthroughSound;
+            public Exception? LoopingSound;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Static_FieldIndex.Model:
+                        return Model;
+                    case Static_FieldIndex.PassthroughSound:
+                        return PassthroughSound;
+                    case Static_FieldIndex.LoopingSound:
+                        return LoopingSound;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +339,18 @@ namespace Mutagen.Bethesda.Fallout3
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.PassthroughSound:
+                        this.PassthroughSound = ex;
+                        break;
+                    case Static_FieldIndex.LoopingSound:
+                        this.LoopingSound = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +362,18 @@ namespace Mutagen.Bethesda.Fallout3
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.PassthroughSound:
+                        this.PassthroughSound = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.LoopingSound:
+                        this.LoopingSound = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +383,10 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Model != null) return true;
+                if (PassthroughSound != null) return true;
+                if (LoopingSound != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +413,14 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(PassthroughSound, "PassthroughSound");
+                }
+                {
+                    sb.AppendItem(LoopingSound, "LoopingSound");
+                }
             }
             #endregion
 
@@ -254,6 +429,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.PassthroughSound = this.PassthroughSound.Combine(rhs.PassthroughSound);
+                ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +454,33 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public Model.TranslationMask? Model;
+            public bool PassthroughSound;
+            public bool LoopingSound;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.PassthroughSound = defaultOn;
+                this.LoopingSound = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((PassthroughSound, null));
+                ret.Add((LoopingSound, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +492,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Static_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StaticCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticSetterCommon.Instance.RemapLinks(this, mapping);
         public Static(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -333,6 +532,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IStatic);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -413,10 +617,27 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IStatic :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         IItem,
         ILoquiObjectSetter<IStaticInternal>,
+        IModeled,
+        IObjectBoundedOptional,
         IStaticGetter
     {
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        new ObjectBounds? ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new Static.PassthroughSoundType? PassthroughSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> LoopingSound { get; set; }
+        #region Mutagen
+        new Static.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IStaticInternal :
@@ -430,11 +651,32 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IStaticGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         IItemGetter,
         ILoquiObject<IStaticGetter>,
-        IMapsToGetter<IStaticGetter>
+        IMapsToGetter<IStaticGetter>,
+        IModeledGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedOptionalGetter
+        /// </summary>
+        IObjectBoundsGetter? ObjectBounds { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        Static.PassthroughSoundType? PassthroughSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> LoopingSound { get; }
+
+        #region Mutagen
+        Static.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -611,6 +853,10 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Model = 8,
+        PassthroughSound = 9,
+        LoopingSound = 10,
     }
     #endregion
 
@@ -621,9 +867,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Static.Mask<>);
 
@@ -653,8 +899,20 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.STAT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.STAT);
+            var all = RecordCollection.Factory(
+                RecordTypes.STAT,
+                RecordTypes.OBND,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.BRUS,
+                RecordTypes.RNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
@@ -696,6 +954,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IStaticInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = null;
+            item.Model = null;
+            item.PassthroughSound = default;
+            item.LoopingSound.Clear();
             base.Clear(item);
         }
         
@@ -713,6 +975,8 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IStatic obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.LoopingSound.Relink(mapping);
         }
         
         #endregion
@@ -780,6 +1044,18 @@ namespace Mutagen.Bethesda.Fallout3
             Static.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PassthroughSound = item.PassthroughSound == rhs.PassthroughSound;
+            ret.LoopingSound = item.LoopingSound.Equals(rhs.LoopingSound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1105,25 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.PassthroughSound ?? true)
+                && item.PassthroughSound is {} PassthroughSoundItem)
+            {
+                sb.AppendItem(PassthroughSoundItem, "PassthroughSound");
+            }
+            if (printMask?.LoopingSound ?? true)
+            {
+                sb.AppendItem(item.LoopingSound.FormKeyNullable, "LoopingSound");
+            }
         }
         
         public static Static_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +1174,30 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Static_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Static_FieldIndex.PassthroughSound) ?? true))
+            {
+                if (lhs.PassthroughSound != rhs.PassthroughSound) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Static_FieldIndex.LoopingSound) ?? true))
+            {
+                if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
+            }
             return true;
         }
         
@@ -907,6 +1226,19 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IStaticGetter item)
         {
             var hash = new HashCode();
+            if (item.ObjectBounds is {} ObjectBoundsitem)
+            {
+                hash.Add(ObjectBoundsitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.PassthroughSound is {} PassthroughSounditem)
+            {
+                hash.Add(PassthroughSounditem);
+            }
+            hash.Add(item.LoopingSound);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -935,6 +1267,17 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.LoopingSound, out var LoopingSoundInfo))
+            {
+                yield return LoopingSoundInfo;
             }
             yield break;
         }
@@ -1010,6 +1353,66 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.ObjectBounds);
+                try
+                {
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.PassthroughSound) ?? true))
+            {
+                item.PassthroughSound = rhs.PassthroughSound;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.LoopingSound) ?? true))
+            {
+                item.LoopingSound.SetTo(rhs.LoopingSound.FormKeyNullable);
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +1573,46 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly StaticBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IStaticGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                EnumBinaryTranslation<Static.PassthroughSoundType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                    writer,
+                    item.PassthroughSound,
+                    length: 1,
+                    header: translationParams.ConvertToCustom(RecordTypes.BRUS));
+            }
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.LoopingSound,
+                    header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IStaticGetter item,
@@ -1224,6 +1667,66 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly StaticBinaryCreateTranslation Instance = new StaticBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.STAT;
+        public static ParseResult FillBinaryRecordTypes(
+            IStaticInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Static_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Static_FieldIndex.Model;
+                }
+                case RecordTypeInts.BRUS:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.PassthroughSound = EnumBinaryTranslation<Static.PassthroughSoundType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            length: contentLength);
+                    }
+                    return (int)Static_FieldIndex.PassthroughSound;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    return (int)Static_FieldIndex.LoopingSound;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +1759,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StaticCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StaticBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1269,7 +1773,21 @@ namespace Mutagen.Bethesda.Fallout3
         }
         protected override Type LinkType => typeof(IStaticGetter);
 
+        public Static.MajorFlag MajorFlags => (Static.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region PassthroughSound
+        private int? _PassthroughSoundLocation;
+        public Static.PassthroughSoundType? PassthroughSound => EnumBinaryTranslation<Static.PassthroughSoundType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_PassthroughSoundLocation, _recordData, _package, 1);
+        #endregion
+        #region LoopingSound
+        private int? _LoopingSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> LoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _LoopingSoundLocation);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +1845,56 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Static_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Static_FieldIndex.Model;
+                }
+                case RecordTypeInts.BRUS:
+                {
+                    _PassthroughSoundLocation = (stream.Position - offset);
+                    return (int)Static_FieldIndex.PassthroughSound;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _LoopingSoundLocation = (stream.Position - offset);
+                    return (int)Static_FieldIndex.LoopingSound;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

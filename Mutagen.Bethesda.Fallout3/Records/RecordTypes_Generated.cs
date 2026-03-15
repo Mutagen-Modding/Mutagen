@@ -18,6 +18,7 @@ public partial class RecordTypes
     public static readonly RecordType BMDT = new(0x54444D42);
     public static readonly RecordType BNAM = new(0x4D414E42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
+    public static readonly RecordType BRUS = new(0x53555242);
     public static readonly RecordType CCRD = new(0x44524343);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CHIP = new(0x50494843);
