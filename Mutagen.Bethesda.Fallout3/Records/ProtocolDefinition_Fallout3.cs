@@ -56,6 +56,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Fallout3Mod_Registration.Instance,
             Fallout3ModHeader_Registration.Instance,
             FormList_Registration.Instance,
+            Furniture_Registration.Instance,
             GameSetting_Registration.Instance,
             GameSettingFloat_Registration.Instance,
             GameSettingInt_Registration.Instance,

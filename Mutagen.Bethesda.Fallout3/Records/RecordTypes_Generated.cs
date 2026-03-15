@@ -62,6 +62,7 @@ public partial class RecordTypes
     public static readonly RecordType FLTV = new(0x56544C46);
     public static readonly RecordType FNAM = new(0x4D414E46);
     public static readonly RecordType FULL = new(0x4C4C5546);
+    public static readonly RecordType FURN = new(0x4E525546);
     public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GNAM = new(0x4D414E47);

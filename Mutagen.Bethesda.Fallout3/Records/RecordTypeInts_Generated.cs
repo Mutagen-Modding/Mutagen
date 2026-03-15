@@ -60,6 +60,7 @@ public partial class RecordTypeInts
     public const int FLTV = 0x56544C46;
     public const int FNAM = 0x4D414E46;
     public const int FULL = 0x4C4C5546;
+    public const int FURN = 0x4E525546;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GNAM = 0x4D414E47;

@@ -213,7 +213,10 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("STAT"),
             new RecordType("SCOL"),
             new RecordType("MSTT"),
-            new RecordType("PWAT"));
+            new RecordType("PWAT"),
+            new RecordType("GRAS"),
+            new RecordType("TREE"),
+            new RecordType("FURN"));
         return ret;
     }
 }

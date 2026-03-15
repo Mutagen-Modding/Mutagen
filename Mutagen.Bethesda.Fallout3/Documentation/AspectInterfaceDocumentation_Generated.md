@@ -9,6 +9,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - Door
+- Furniture
 - Light
 - MiscItem
 - MoveableStatic
@@ -36,6 +37,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - DestructionStage
 - Door
+- Furniture
 - Grass
 - Hair
 - HeadPart
@@ -61,6 +63,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Door
 - Eyes
 - Faction
+- Furniture
 - Hair
 - HeadPart
 - Ingredient
@@ -81,6 +84,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Container
 - Door
+- Furniture
 - Grass
 - Ingredient
 - Light
@@ -141,6 +145,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Faction
 - INamed
+### Furniture
+- IHasDestructible
+- IModeled
+- INamed
+- IObjectBounded
 ### Grass
 - IModeled
 - IObjectBounded

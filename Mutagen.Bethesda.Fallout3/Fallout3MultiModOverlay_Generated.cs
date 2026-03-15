@@ -60,6 +60,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IPlaceableWaterGetter>? _placeableWaters;
     private MergedGroup<IGrassGetter>? _grasses;
     private MergedGroup<ITreeGetter>? _trees;
+    private MergedGroup<IFurnitureGetter>? _furniture;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -194,6 +195,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<ITreeGetter> Trees =>
         _trees ??= new MergedGroup<ITreeGetter>(
             _sourceMods.Select(m => m.Trees));
+    public IFallout3GroupGetter<IFurnitureGetter> Furniture =>
+        _furniture ??= new MergedGroup<IFurnitureGetter>(
+            _sourceMods.Select(m => m.Furniture));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

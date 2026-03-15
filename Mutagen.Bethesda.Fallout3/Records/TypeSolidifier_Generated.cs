@@ -512,6 +512,30 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
+        /// Scope a load order query to Furniture
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on Furniture</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFurniture, IFurnitureGetter> Furniture(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFurniture, IFurnitureGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IFurniture, IFurnitureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to Furniture
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on Furniture</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFurniture, IFurnitureGetter> Furniture(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IFurniture, IFurnitureGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IFurniture, IFurnitureGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to GameSetting
         /// </summary>
         /// <param name="listings">ModListings to query</param>

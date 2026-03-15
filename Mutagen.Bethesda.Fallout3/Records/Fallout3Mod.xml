@@ -36,6 +36,7 @@
       <Group name="PlaceableWaters" refName="PlaceableWater" />
       <Group name="Grasses" refName="Grass" />
       <Group name="Trees" refName="Tree" />
+      <Group name="Furniture" refName="Furniture" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
