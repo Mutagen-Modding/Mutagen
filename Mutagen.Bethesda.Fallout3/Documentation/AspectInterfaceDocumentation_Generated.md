@@ -42,6 +42,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MoveableStatic
+- PlaceableWater
 - Static
 - StaticCollection
 - TalkingActivator
@@ -80,6 +81,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - MoveableStatic
+- PlaceableWater
 - Sound
 - Static
 - StaticCollection
@@ -177,6 +179,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ObjectEffect
 - IHasEffects
 - INamed
+### PlaceableWater
+- IModeled
+- IObjectBounded
 ### Race
 - INamed
 ### Sound

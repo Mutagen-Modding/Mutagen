@@ -968,6 +968,30 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
+        /// Scope a load order query to PlaceableWater
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on PlaceableWater</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableWater, IPlaceableWaterGetter> PlaceableWater(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableWater, IPlaceableWaterGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPlaceableWaterGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaceableWater, IPlaceableWaterGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to PlaceableWater
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on PlaceableWater</returns>
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableWater, IPlaceableWaterGetter> PlaceableWater(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableWater, IPlaceableWaterGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPlaceableWaterGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaceableWater, IPlaceableWaterGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to PlacedBeam
         /// </summary>
         /// <param name="listings">ModListings to query</param>

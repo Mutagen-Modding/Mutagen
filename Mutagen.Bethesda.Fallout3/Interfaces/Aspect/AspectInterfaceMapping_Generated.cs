@@ -86,6 +86,7 @@ namespace Mutagen.Bethesda.Fallout3
                     MagicEffect_Registration.Instance,
                     MiscItem_Registration.Instance,
                     MoveableStatic_Registration.Instance,
+                    PlaceableWater_Registration.Instance,
                     Static_Registration.Instance,
                     StaticCollection_Registration.Instance,
                     TalkingActivator_Registration.Instance,
@@ -190,6 +191,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Book_Registration.Instance,
                     Container_Registration.Instance,
                     MiscItem_Registration.Instance,
+                    PlaceableWater_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IObjectBounded),

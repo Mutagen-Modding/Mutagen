@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Statics_Object = new Fallout3Group<Static>(this);
             _StaticCollections_Object = new Fallout3Group<StaticCollection>(this);
             _MoveableStatics_Object = new Fallout3Group<MoveableStatic>(this);
+            _PlaceableWaters_Object = new Fallout3Group<PlaceableWater>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -313,6 +314,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IMoveableStaticGetter> IFallout3ModGetter.MoveableStatics => _MoveableStatics_Object;
         #endregion
+        #region PlaceableWaters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<PlaceableWater> _PlaceableWaters_Object;
+        public Fallout3Group<PlaceableWater> PlaceableWaters => _PlaceableWaters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IPlaceableWaterGetter> IFallout3ModGetter.PlaceableWaters => _PlaceableWaters_Object;
+        #endregion
 
         #region To String
 
@@ -383,6 +391,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Statics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MoveableStatics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.PlaceableWaters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -416,7 +425,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MiscItems,
                 TItem Statics,
                 TItem StaticCollections,
-                TItem MoveableStatics)
+                TItem MoveableStatics,
+                TItem PlaceableWaters)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -449,6 +459,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Statics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Statics, new Fallout3Group.Mask<TItem>(Statics));
                 this.StaticCollections = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(StaticCollections, new Fallout3Group.Mask<TItem>(StaticCollections));
                 this.MoveableStatics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MoveableStatics, new Fallout3Group.Mask<TItem>(MoveableStatics));
+                this.PlaceableWaters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(PlaceableWaters, new Fallout3Group.Mask<TItem>(PlaceableWaters));
             }
 
             #pragma warning disable CS8618
@@ -491,6 +502,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Statics { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? StaticCollections { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MoveableStatics { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? PlaceableWaters { get; set; }
             #endregion
 
             #region Equals
@@ -534,6 +546,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Statics, rhs.Statics)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 if (!object.Equals(this.MoveableStatics, rhs.MoveableStatics)) return false;
+                if (!object.Equals(this.PlaceableWaters, rhs.PlaceableWaters)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -570,6 +583,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Statics);
                 hash.Add(this.StaticCollections);
                 hash.Add(this.MoveableStatics);
+                hash.Add(this.PlaceableWaters);
                 return hash.ToHashCode();
             }
 
@@ -733,6 +747,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.MoveableStatics.Overall)) return false;
                     if (this.MoveableStatics.Specific != null && !this.MoveableStatics.Specific.All(eval)) return false;
                 }
+                if (PlaceableWaters != null)
+                {
+                    if (!eval(this.PlaceableWaters.Overall)) return false;
+                    if (this.PlaceableWaters.Specific != null && !this.PlaceableWaters.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -895,6 +914,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.MoveableStatics.Overall)) return true;
                     if (this.MoveableStatics.Specific != null && this.MoveableStatics.Specific.Any(eval)) return true;
                 }
+                if (PlaceableWaters != null)
+                {
+                    if (eval(this.PlaceableWaters.Overall)) return true;
+                    if (this.PlaceableWaters.Specific != null && this.PlaceableWaters.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -940,6 +964,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Statics = this.Statics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
                 obj.MoveableStatics = this.MoveableStatics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MoveableStatics.Overall), this.MoveableStatics.Specific?.Translate(eval));
+                obj.PlaceableWaters = this.PlaceableWaters == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.PlaceableWaters.Overall), this.PlaceableWaters.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1082,6 +1107,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         MoveableStatics?.Print(sb);
                     }
+                    if (printMask?.PlaceableWaters?.Overall ?? true)
+                    {
+                        PlaceableWaters?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1137,6 +1166,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Static.ErrorMask>?>? Statics;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>? MoveableStatics;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<PlaceableWater.ErrorMask>?>? PlaceableWaters;
             #endregion
 
             #region IErrorMask
@@ -1207,6 +1237,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return StaticCollections;
                     case Fallout3Mod_FieldIndex.MoveableStatics:
                         return MoveableStatics;
+                    case Fallout3Mod_FieldIndex.PlaceableWaters:
+                        return PlaceableWaters;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1309,6 +1341,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.MoveableStatics:
                         this.MoveableStatics = new MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.PlaceableWaters:
+                        this.PlaceableWaters = new MaskItem<Exception?, Fallout3Group.ErrorMask<PlaceableWater.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1413,6 +1448,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.MoveableStatics:
                         this.MoveableStatics = (MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.PlaceableWaters:
+                        this.PlaceableWaters = (MaskItem<Exception?, Fallout3Group.ErrorMask<PlaceableWater.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1452,6 +1490,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Statics != null) return true;
                 if (StaticCollections != null) return true;
                 if (MoveableStatics != null) return true;
+                if (PlaceableWaters != null) return true;
                 return false;
             }
             #endregion
@@ -1508,6 +1547,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Statics?.Print(sb);
                 StaticCollections?.Print(sb);
                 MoveableStatics?.Print(sb);
+                PlaceableWaters?.Print(sb);
             }
             #endregion
 
@@ -1547,6 +1587,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 ret.MoveableStatics = this.MoveableStatics.Combine(rhs.MoveableStatics, (l, r) => l.Combine(r));
+                ret.PlaceableWaters = this.PlaceableWaters.Combine(rhs.PlaceableWaters, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1601,6 +1642,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Static.TranslationMask>? Statics;
             public Fallout3Group.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             public Fallout3Group.TranslationMask<MoveableStatic.TranslationMask>? MoveableStatics;
+            public Fallout3Group.TranslationMask<PlaceableWater.TranslationMask>? PlaceableWaters;
             #endregion
 
             #region Ctors
@@ -1656,6 +1698,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Statics != null ? Statics.OnOverall : DefaultOn, Statics?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
                 ret.Add((MoveableStatics != null ? MoveableStatics.OnOverall : DefaultOn, MoveableStatics?.GetCrystal()));
+                ret.Add((PlaceableWaters != null ? PlaceableWaters.OnOverall : DefaultOn, PlaceableWaters?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1746,6 +1789,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Statics_Object = new Fallout3Group<Static>(this);
             _StaticCollections_Object = new Fallout3Group<StaticCollection>(this);
             _MoveableStatics_Object = new Fallout3Group<MoveableStatic>(this);
+            _PlaceableWaters_Object = new Fallout3Group<PlaceableWater>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1871,6 +1915,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.MoveableStatics ?? true)
             {
                 this.MoveableStatics.RecordCache.Set(rhsMod.MoveableStatics.RecordCache.Items);
+            }
+            if (mask?.PlaceableWaters ?? true)
+            {
+                this.PlaceableWaters.RecordCache.Set(rhsMod.PlaceableWaters.RecordCache.Items);
             }
         }
 
@@ -2163,6 +2211,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Static> Statics { get; }
         new Fallout3Group<StaticCollection> StaticCollections { get; }
         new Fallout3Group<MoveableStatic> MoveableStatics { get; }
+        new Fallout3Group<PlaceableWater> PlaceableWaters { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2213,6 +2262,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IStaticGetter> Statics { get; }
         IFallout3GroupGetter<IStaticCollectionGetter> StaticCollections { get; }
         IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics { get; }
+        IFallout3GroupGetter<IPlaceableWaterGetter> PlaceableWaters { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2794,6 +2844,7 @@ namespace Mutagen.Bethesda.Fallout3
         Statics = 28,
         StaticCollections = 29,
         MoveableStatics = 30,
+        PlaceableWaters = 31,
     }
     #endregion
 
@@ -2804,9 +2855,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2903,6 +2954,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Statics.Clear();
             item.StaticCollections.Clear();
             item.MoveableStatics.Clear();
+            item.PlaceableWaters.Clear();
         }
         
         #region Mutagen
@@ -2932,6 +2984,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Statics.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
             obj.MoveableStatics.RemapLinks(mapping);
+            obj.PlaceableWaters.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3022,6 +3075,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Statics.Remove(keys);
             obj.StaticCollections.Remove(keys);
             obj.MoveableStatics.Remove(keys);
+            obj.PlaceableWaters.Remove(keys);
         }
         
         public void Remove(
@@ -3309,6 +3363,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    obj.PlaceableWaters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3501,6 +3563,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
             ret.MoveableStatics = MaskItemExt.Factory(item.MoveableStatics.GetEqualsMask(rhs.MoveableStatics, include), include);
+            ret.PlaceableWaters = MaskItemExt.Factory(item.PlaceableWaters.GetEqualsMask(rhs.PlaceableWaters, include), include);
         }
         
         public string Print(
@@ -3668,6 +3731,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.MoveableStatics?.Overall ?? true)
             {
                 item.MoveableStatics?.Print(sb, "MoveableStatics");
+            }
+            if (printMask?.PlaceableWaters?.Overall ?? true)
+            {
+                item.PlaceableWaters?.Print(sb, "PlaceableWaters");
             }
         }
         
@@ -3926,6 +3993,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isMoveableStaticsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.PlaceableWaters) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PlaceableWaters, rhs.PlaceableWaters, out var lhsPlaceableWaters, out var rhsPlaceableWaters, out var isPlaceableWatersEqual))
+                {
+                    if (!object.Equals(lhsPlaceableWaters, rhsPlaceableWaters)) return false;
+                }
+                else if (!isPlaceableWatersEqual) return false;
+            }
             return true;
         }
         
@@ -3963,6 +4038,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Statics);
             hash.Add(item.StaticCollections);
             hash.Add(item.MoveableStatics);
+            hash.Add(item.PlaceableWaters);
             return hash.ToHashCode();
         }
         
@@ -4159,6 +4235,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IMoveableStatic":
                 case "IMoveableStaticInternal":
                     return obj.MoveableStatics;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    return obj.PlaceableWaters;
                 default:
                     return null;
             }
@@ -4176,7 +4257,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[30];
+            Stream[] outputStreams = new Stream[31];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -4208,6 +4289,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Statics, 27, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.StaticCollections, 28, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MoveableStatics, 29, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.PlaceableWaters, 30, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -4283,6 +4365,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.PlaceableWaters.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -4387,6 +4470,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.MoveableStatics.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PlaceableWaters.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4522,6 +4609,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.MoveableStatics.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PlaceableWaters.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4846,6 +4937,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    foreach (var item in obj.PlaceableWaters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -5137,6 +5237,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.MoveableStatics,
                 groupGetter: (m) => m.MoveableStatics))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, PlaceableWater, IPlaceableWaterGetter>(
+                srcGroup: obj.PlaceableWaters,
+                type: typeof(IPlaceableWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.PlaceableWaters,
+                groupGetter: (m) => m.PlaceableWaters))
             {
                 yield return item;
             }
@@ -5587,6 +5696,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.MoveableStatics,
                         groupGetter: (m) => m.MoveableStatics))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, PlaceableWater, IPlaceableWaterGetter>(
+                        srcGroup: obj.PlaceableWaters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.PlaceableWaters,
+                        groupGetter: (m) => m.PlaceableWaters))
                     {
                         yield return item;
                     }
@@ -6292,6 +6415,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.PlaceableWaters) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.PlaceableWaters);
+                try
+                {
+                    item.PlaceableWaters.DeepCopyIn(
+                        rhs: rhs.PlaceableWaters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.PlaceableWaters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -6425,6 +6568,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Statics;
         public bool StaticCollections;
         public bool MoveableStatics;
+        public bool PlaceableWaters;
         public GroupMask()
         {
         }
@@ -6460,6 +6604,7 @@ namespace Mutagen.Bethesda.Fallout3
             Statics = defaultValue;
             StaticCollections = defaultValue;
             MoveableStatics = defaultValue;
+            PlaceableWaters = defaultValue;
         }
     }
 
@@ -6848,6 +6993,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MoveableStaticsItem).BinaryWriteTranslator).Write<IMoveableStaticGetter>(
                         item: MoveableStaticsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.PlaceableWaters ?? true)
+            {
+                var PlaceableWatersItem = item.PlaceableWaters;
+                if (PlaceableWatersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)PlaceableWatersItem).BinaryWriteTranslator).Write<IPlaceableWaterGetter>(
+                        item: PlaceableWatersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7342,6 +7498,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.MoveableStatics;
                 }
+                case RecordTypeInts.PWAT:
+                {
+                    if (importMask?.PlaceableWaters ?? true)
+                    {
+                        item.PlaceableWaters.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.PlaceableWaters;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -7657,6 +7827,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? Fallout3GroupBinaryOverlay<IMoveableStaticGetter>.Fallout3GroupFactory(_stream, _MoveableStaticsLocations, _package) : default;
         public IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new Fallout3Group<MoveableStatic>(this);
         #endregion
+        #region PlaceableWaters
+        private List<RangeInt64>? _PlaceableWatersLocations;
+        private IFallout3GroupGetter<IPlaceableWaterGetter>? _PlaceableWaters => _PlaceableWatersLocations != null ? Fallout3GroupBinaryOverlay<IPlaceableWaterGetter>.Fallout3GroupFactory(_stream, _PlaceableWatersLocations, _package) : default;
+        public IFallout3GroupGetter<IPlaceableWaterGetter> PlaceableWaters => _PlaceableWaters ?? new Fallout3Group<PlaceableWater>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -7910,6 +8085,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _MoveableStaticsLocations ??= new();
                     _MoveableStaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.MoveableStatics;
+                }
+                case RecordTypeInts.PWAT:
+                {
+                    _PlaceableWatersLocations ??= new();
+                    _PlaceableWatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.PlaceableWaters;
                 }
                 default:
                     return default(int?);

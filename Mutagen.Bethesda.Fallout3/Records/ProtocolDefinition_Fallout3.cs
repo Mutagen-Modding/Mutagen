@@ -97,6 +97,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             ObjectBounds_Registration.Instance,
             ObjectEffect_Registration.Instance,
             OwnerTarget_Registration.Instance,
+            PlaceableWater_Registration.Instance,
             PlacedBeam_Registration.Instance,
             PlacedCreature_Registration.Instance,
             PlacedGrenade_Registration.Instance,

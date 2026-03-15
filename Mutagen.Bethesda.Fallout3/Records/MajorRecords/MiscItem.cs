@@ -10,3 +10,4 @@ public partial class MiscItem
         QuestItem = 0x0000_0400,
     }
 }
+ 

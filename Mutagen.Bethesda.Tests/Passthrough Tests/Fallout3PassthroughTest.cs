@@ -182,6 +182,38 @@ public class Fallout3PassthroughTest : PassthroughTest
             (int)GroupTypeEnum.CellTemporaryChildren,
             new RecordType("LAND"),
             new RecordType("PGRD"));
+        ret.SetTopLevelGroupOrder(
+            new RecordType("GMST"),
+            new RecordType("TXST"),
+            new RecordType("MICN"),
+            new RecordType("GLOB"),
+            new RecordType("CLAS"),
+            new RecordType("FACT"),
+            new RecordType("HDPT"),
+            new RecordType("HAIR"),
+            new RecordType("EYES"),
+            new RecordType("RACE"),
+            new RecordType("SOUN"),
+            new RecordType("ASPC"),
+            new RecordType("MGEF"),
+            new RecordType("SCPT"),
+            new RecordType("LTEX"),
+            new RecordType("ENCH"),
+            new RecordType("SPEL"),
+            new RecordType("ACTI"),
+            new RecordType("TACT"),
+            new RecordType("TERM"),
+            new RecordType("ARMO"),
+            new RecordType("BOOK"),
+            new RecordType("CONT"),
+            new RecordType("DOOR"),
+            new RecordType("INGR"),
+            new RecordType("LIGH"),
+            new RecordType("MISC"),
+            new RecordType("STAT"),
+            new RecordType("SCOL"),
+            new RecordType("MSTT"),
+            new RecordType("PWAT"));
         return ret;
     }
 }

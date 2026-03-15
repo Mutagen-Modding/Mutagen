@@ -117,6 +117,7 @@ public partial class RecordTypeInts
     public const int PGRE = 0x45524750;
     public const int PMIS = 0x53494D50;
     public const int PNAM = 0x4D414E50;
+    public const int PWAT = 0x54415750;
     public const int QNAM = 0x4D414E51;
     public const int RACE = 0x45434152;
     public const int RDAT = 0x54414452;

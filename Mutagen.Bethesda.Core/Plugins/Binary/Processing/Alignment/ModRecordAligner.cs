@@ -27,6 +27,17 @@ public static class ModRecordAligner
         interest.InterestingTypes.Add("QUST");
         interest.InterestingTypes.Add("REFR");
 
+        if (alignmentRules.TopLevelGroupOrder != null)
+        {
+            var alignedTopLevelFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedTopLevel"));
+            using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
+            {
+                using var writer = new MutagenWriter(alignedTopLevelFile, meta.Constants);
+                AlignTopLevelGroups(inputStream, writer, alignmentRules.TopLevelGroupOrder);
+            }
+            inputPath = alignedTopLevelFile;
+        }
+
         using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
         {
             var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
@@ -350,6 +361,60 @@ public static class ModRecordAligner
         } 
     } 
  
+    private static void AlignTopLevelGroups(
+        IMutagenReadStream inputStream,
+        MutagenWriter writer,
+        List<RecordType> topLevelOrder)
+    {
+        // Write the TES4 header record first (it's always the first record, not a GRUP)
+        var tes4Header = inputStream.GetMajorRecordHeader();
+        inputStream.WriteTo(writer.BaseStream, checked((int)tes4Header.TotalLength));
+
+        // Read all remaining top-level GRUPs
+        var groups = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>();
+        var ungroupedOrder = new List<RecordType>();
+        while (!inputStream.Complete)
+        {
+            var grupHeader = inputStream.GetGroupHeader();
+            var containedType = grupHeader.ContainedRecordType;
+            var bytes = inputStream.ReadMemory(checked((int)grupHeader.TotalLength));
+            if (!groups.ContainsKey(containedType))
+            {
+                groups[containedType] = new List<ReadOnlyMemorySlice<byte>>();
+                if (!topLevelOrder.Contains(containedType))
+                {
+                    ungroupedOrder.Add(containedType);
+                }
+            }
+            groups[containedType].Add(bytes);
+        }
+
+        // Write in canonical order
+        foreach (var type in topLevelOrder)
+        {
+            if (groups.TryGetValue(type, out var entries))
+            {
+                foreach (var entry in entries)
+                {
+                    writer.Write(entry);
+                }
+                groups.Remove(type);
+            }
+        }
+
+        // Write any remaining GRUPs not in the canonical order
+        foreach (var type in ungroupedOrder)
+        {
+            if (groups.TryGetValue(type, out var entries))
+            {
+                foreach (var entry in entries)
+                {
+                    writer.Write(entry);
+                }
+            }
+        }
+    }
+
     private static void AlignCellChildren( 
         IMutagenReadStream mutaReader, 
         MutagenWriter writer) 

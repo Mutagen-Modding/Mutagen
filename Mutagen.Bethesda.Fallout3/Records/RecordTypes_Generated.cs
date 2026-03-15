@@ -119,6 +119,7 @@ public partial class RecordTypes
     public static readonly RecordType PGRE = new(0x45524750);
     public static readonly RecordType PMIS = new(0x53494D50);
     public static readonly RecordType PNAM = new(0x4D414E50);
+    public static readonly RecordType PWAT = new(0x54415750);
     public static readonly RecordType QNAM = new(0x4D414E51);
     public static readonly RecordType RACE = new(0x45434152);
     public static readonly RecordType RDAT = new(0x54414452);
