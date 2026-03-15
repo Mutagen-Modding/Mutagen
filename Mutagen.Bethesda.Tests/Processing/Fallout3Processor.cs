@@ -30,6 +30,15 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.FACT, ProcessFactions);
         AddDynamicProcessing(RecordTypes.ACTI, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.TACT, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.ARMO, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.BOOK, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.CONT, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.DOOR, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.LIGH, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.MISC, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.MSTT, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.TERM, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
     }

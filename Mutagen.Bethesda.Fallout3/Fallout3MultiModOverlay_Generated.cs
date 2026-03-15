@@ -56,6 +56,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IMiscItemGetter>? _miscItems;
     private MergedGroup<IStaticGetter>? _statics;
     private MergedGroup<IStaticCollectionGetter>? _staticCollections;
+    private MergedGroup<IMoveableStaticGetter>? _moveableStatics;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -178,6 +179,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IStaticCollectionGetter> StaticCollections =>
         _staticCollections ??= new MergedGroup<IStaticCollectionGetter>(
             _sourceMods.Select(m => m.StaticCollections));
+    public IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics =>
+        _moveableStatics ??= new MergedGroup<IMoveableStaticGetter>(
+            _sourceMods.Select(m => m.MoveableStatics));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

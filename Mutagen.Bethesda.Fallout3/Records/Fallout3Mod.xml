@@ -32,6 +32,7 @@
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="Statics" refName="Static" />
       <Group name="StaticCollections" refName="StaticCollection" />
+      <Group name="MoveableStatics" refName="MoveableStatic" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

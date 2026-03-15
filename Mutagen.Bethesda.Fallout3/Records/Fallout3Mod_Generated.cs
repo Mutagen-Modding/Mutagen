@@ -90,6 +90,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MiscItems_Object = new Fallout3Group<MiscItem>(this);
             _Statics_Object = new Fallout3Group<Static>(this);
             _StaticCollections_Object = new Fallout3Group<StaticCollection>(this);
+            _MoveableStatics_Object = new Fallout3Group<MoveableStatic>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -305,6 +306,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IStaticCollectionGetter> IFallout3ModGetter.StaticCollections => _StaticCollections_Object;
         #endregion
+        #region MoveableStatics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<MoveableStatic> _MoveableStatics_Object;
+        public Fallout3Group<MoveableStatic> MoveableStatics => _MoveableStatics_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IMoveableStaticGetter> IFallout3ModGetter.MoveableStatics => _MoveableStatics_Object;
+        #endregion
 
         #region To String
 
@@ -374,6 +382,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MiscItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Statics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.MoveableStatics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -406,7 +415,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Lights,
                 TItem MiscItems,
                 TItem Statics,
-                TItem StaticCollections)
+                TItem StaticCollections,
+                TItem MoveableStatics)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -438,6 +448,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MiscItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MiscItems, new Fallout3Group.Mask<TItem>(MiscItems));
                 this.Statics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Statics, new Fallout3Group.Mask<TItem>(Statics));
                 this.StaticCollections = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(StaticCollections, new Fallout3Group.Mask<TItem>(StaticCollections));
+                this.MoveableStatics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MoveableStatics, new Fallout3Group.Mask<TItem>(MoveableStatics));
             }
 
             #pragma warning disable CS8618
@@ -479,6 +490,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Statics { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? StaticCollections { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MoveableStatics { get; set; }
             #endregion
 
             #region Equals
@@ -521,6 +533,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.Statics, rhs.Statics)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
+                if (!object.Equals(this.MoveableStatics, rhs.MoveableStatics)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -556,6 +569,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MiscItems);
                 hash.Add(this.Statics);
                 hash.Add(this.StaticCollections);
+                hash.Add(this.MoveableStatics);
                 return hash.ToHashCode();
             }
 
@@ -714,6 +728,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.StaticCollections.Overall)) return false;
                     if (this.StaticCollections.Specific != null && !this.StaticCollections.Specific.All(eval)) return false;
                 }
+                if (MoveableStatics != null)
+                {
+                    if (!eval(this.MoveableStatics.Overall)) return false;
+                    if (this.MoveableStatics.Specific != null && !this.MoveableStatics.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -871,6 +890,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.StaticCollections.Overall)) return true;
                     if (this.StaticCollections.Specific != null && this.StaticCollections.Specific.Any(eval)) return true;
                 }
+                if (MoveableStatics != null)
+                {
+                    if (eval(this.MoveableStatics.Overall)) return true;
+                    if (this.MoveableStatics.Specific != null && this.MoveableStatics.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -915,6 +939,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.Statics = this.Statics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
+                obj.MoveableStatics = this.MoveableStatics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MoveableStatics.Overall), this.MoveableStatics.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1053,6 +1078,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         StaticCollections?.Print(sb);
                     }
+                    if (printMask?.MoveableStatics?.Overall ?? true)
+                    {
+                        MoveableStatics?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1107,6 +1136,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Static.ErrorMask>?>? Statics;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>? MoveableStatics;
             #endregion
 
             #region IErrorMask
@@ -1175,6 +1205,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Statics;
                     case Fallout3Mod_FieldIndex.StaticCollections:
                         return StaticCollections;
+                    case Fallout3Mod_FieldIndex.MoveableStatics:
+                        return MoveableStatics;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1274,6 +1306,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.StaticCollections:
                         this.StaticCollections = new MaskItem<Exception?, Fallout3Group.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.MoveableStatics:
+                        this.MoveableStatics = new MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1375,6 +1410,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.StaticCollections:
                         this.StaticCollections = (MaskItem<Exception?, Fallout3Group.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.MoveableStatics:
+                        this.MoveableStatics = (MaskItem<Exception?, Fallout3Group.ErrorMask<MoveableStatic.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1413,6 +1451,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MiscItems != null) return true;
                 if (Statics != null) return true;
                 if (StaticCollections != null) return true;
+                if (MoveableStatics != null) return true;
                 return false;
             }
             #endregion
@@ -1468,6 +1507,7 @@ namespace Mutagen.Bethesda.Fallout3
                 MiscItems?.Print(sb);
                 Statics?.Print(sb);
                 StaticCollections?.Print(sb);
+                MoveableStatics?.Print(sb);
             }
             #endregion
 
@@ -1506,6 +1546,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
+                ret.MoveableStatics = this.MoveableStatics.Combine(rhs.MoveableStatics, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1559,6 +1600,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<MiscItem.TranslationMask>? MiscItems;
             public Fallout3Group.TranslationMask<Static.TranslationMask>? Statics;
             public Fallout3Group.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
+            public Fallout3Group.TranslationMask<MoveableStatic.TranslationMask>? MoveableStatics;
             #endregion
 
             #region Ctors
@@ -1613,6 +1655,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
                 ret.Add((Statics != null ? Statics.OnOverall : DefaultOn, Statics?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
+                ret.Add((MoveableStatics != null ? MoveableStatics.OnOverall : DefaultOn, MoveableStatics?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1702,6 +1745,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MiscItems_Object = new Fallout3Group<MiscItem>(this);
             _Statics_Object = new Fallout3Group<Static>(this);
             _StaticCollections_Object = new Fallout3Group<StaticCollection>(this);
+            _MoveableStatics_Object = new Fallout3Group<MoveableStatic>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1823,6 +1867,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.StaticCollections ?? true)
             {
                 this.StaticCollections.RecordCache.Set(rhsMod.StaticCollections.RecordCache.Items);
+            }
+            if (mask?.MoveableStatics ?? true)
+            {
+                this.MoveableStatics.RecordCache.Set(rhsMod.MoveableStatics.RecordCache.Items);
             }
         }
 
@@ -2114,6 +2162,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<MiscItem> MiscItems { get; }
         new Fallout3Group<Static> Statics { get; }
         new Fallout3Group<StaticCollection> StaticCollections { get; }
+        new Fallout3Group<MoveableStatic> MoveableStatics { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2163,6 +2212,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IMiscItemGetter> MiscItems { get; }
         IFallout3GroupGetter<IStaticGetter> Statics { get; }
         IFallout3GroupGetter<IStaticCollectionGetter> StaticCollections { get; }
+        IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2743,6 +2793,7 @@ namespace Mutagen.Bethesda.Fallout3
         MiscItems = 27,
         Statics = 28,
         StaticCollections = 29,
+        MoveableStatics = 30,
     }
     #endregion
 
@@ -2753,9 +2804,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -2851,6 +2902,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.MiscItems.Clear();
             item.Statics.Clear();
             item.StaticCollections.Clear();
+            item.MoveableStatics.Clear();
         }
         
         #region Mutagen
@@ -2879,6 +2931,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.MiscItems.RemapLinks(mapping);
             obj.Statics.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
+            obj.MoveableStatics.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -2968,6 +3021,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.MiscItems.Remove(keys);
             obj.Statics.Remove(keys);
             obj.StaticCollections.Remove(keys);
+            obj.MoveableStatics.Remove(keys);
         }
         
         public void Remove(
@@ -3247,6 +3301,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    obj.MoveableStatics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3265,6 +3327,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IBoundItem":
@@ -3437,6 +3500,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
+            ret.MoveableStatics = MaskItemExt.Factory(item.MoveableStatics.GetEqualsMask(rhs.MoveableStatics, include), include);
         }
         
         public string Print(
@@ -3600,6 +3664,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.StaticCollections?.Overall ?? true)
             {
                 item.StaticCollections?.Print(sb, "StaticCollections");
+            }
+            if (printMask?.MoveableStatics?.Overall ?? true)
+            {
+                item.MoveableStatics?.Print(sb, "MoveableStatics");
             }
         }
         
@@ -3850,6 +3918,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isStaticCollectionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MoveableStatics) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MoveableStatics, rhs.MoveableStatics, out var lhsMoveableStatics, out var rhsMoveableStatics, out var isMoveableStaticsEqual))
+                {
+                    if (!object.Equals(lhsMoveableStatics, rhsMoveableStatics)) return false;
+                }
+                else if (!isMoveableStaticsEqual) return false;
+            }
             return true;
         }
         
@@ -3886,6 +3962,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MiscItems);
             hash.Add(item.Statics);
             hash.Add(item.StaticCollections);
+            hash.Add(item.MoveableStatics);
             return hash.ToHashCode();
         }
         
@@ -4077,6 +4154,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     return obj.StaticCollections;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    return obj.MoveableStatics;
                 default:
                     return null;
             }
@@ -4094,7 +4176,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[29];
+            Stream[] outputStreams = new Stream[30];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -4125,6 +4207,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.MiscItems, 26, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Statics, 27, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.StaticCollections, 28, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, 29, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -4199,6 +4282,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -4299,6 +4383,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.StaticCollections.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MoveableStatics.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4430,6 +4518,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.StaticCollections.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MoveableStatics.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4745,6 +4837,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -5027,6 +5128,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.StaticCollections,
                 groupGetter: (m) => m.StaticCollections))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MoveableStatic, IMoveableStaticGetter>(
+                srcGroup: obj.MoveableStatics,
+                type: typeof(IMoveableStaticGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MoveableStatics,
+                groupGetter: (m) => m.MoveableStatics))
             {
                 yield return item;
             }
@@ -5463,6 +5573,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.StaticCollections,
                         groupGetter: (m) => m.StaticCollections))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MoveableStatic, IMoveableStaticGetter>(
+                        srcGroup: obj.MoveableStatics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MoveableStatics,
+                        groupGetter: (m) => m.MoveableStatics))
                     {
                         yield return item;
                     }
@@ -6148,6 +6272,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MoveableStatics) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.MoveableStatics);
+                try
+                {
+                    item.MoveableStatics.DeepCopyIn(
+                        rhs: rhs.MoveableStatics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.MoveableStatics));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -6280,6 +6424,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool MiscItems;
         public bool Statics;
         public bool StaticCollections;
+        public bool MoveableStatics;
         public GroupMask()
         {
         }
@@ -6314,6 +6459,7 @@ namespace Mutagen.Bethesda.Fallout3
             MiscItems = defaultValue;
             Statics = defaultValue;
             StaticCollections = defaultValue;
+            MoveableStatics = defaultValue;
         }
     }
 
@@ -6691,6 +6837,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)StaticCollectionsItem).BinaryWriteTranslator).Write<IStaticCollectionGetter>(
                         item: StaticCollectionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MoveableStatics ?? true)
+            {
+                var MoveableStaticsItem = item.MoveableStatics;
+                if (MoveableStaticsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MoveableStaticsItem).BinaryWriteTranslator).Write<IMoveableStaticGetter>(
+                        item: MoveableStaticsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7171,6 +7328,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.StaticCollections;
                 }
+                case RecordTypeInts.MSTT:
+                {
+                    if (importMask?.MoveableStatics ?? true)
+                    {
+                        item.MoveableStatics.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.MoveableStatics;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -7481,6 +7652,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? Fallout3GroupBinaryOverlay<IStaticCollectionGetter>.Fallout3GroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
         public IFallout3GroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new Fallout3Group<StaticCollection>(this);
         #endregion
+        #region MoveableStatics
+        private List<RangeInt64>? _MoveableStaticsLocations;
+        private IFallout3GroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? Fallout3GroupBinaryOverlay<IMoveableStaticGetter>.Fallout3GroupFactory(_stream, _MoveableStaticsLocations, _package) : default;
+        public IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new Fallout3Group<MoveableStatic>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -7728,6 +7904,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _StaticCollectionsLocations ??= new();
                     _StaticCollectionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.StaticCollections;
+                }
+                case RecordTypeInts.MSTT:
+                {
+                    _MoveableStaticsLocations ??= new();
+                    _MoveableStaticsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.MoveableStatics;
                 }
                 default:
                     return default(int?);
