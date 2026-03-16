@@ -412,6 +412,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IAmmunition :
+        IAmmoOrList,
         IAmmunitionGetter,
         IFallout3MajorRecordInternal,
         IItem,
@@ -429,6 +430,7 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.AMMO)]
     public partial interface IAmmunitionGetter :
         IFallout3MajorRecordGetter,
+        IAmmoOrListGetter,
         IBinaryItem,
         IItemGetter,
         ILoquiObject<IAmmunitionGetter>,

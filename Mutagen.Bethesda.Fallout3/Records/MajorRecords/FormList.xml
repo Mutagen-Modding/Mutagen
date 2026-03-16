@@ -3,5 +3,6 @@
   <Object name="FormList" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="FLST">
     <Fields />
+    <LinkInterface>IAmmoOrList</LinkInterface>
   </Object>
 </Loqui>

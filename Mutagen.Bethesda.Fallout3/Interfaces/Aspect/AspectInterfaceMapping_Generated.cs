@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Fallout3
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                     Tree_Registration.Instance,
+                    Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IHasDestructible),
@@ -97,6 +98,7 @@ namespace Mutagen.Bethesda.Fallout3
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                     Tree_Registration.Instance,
+                    Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IModeled),
@@ -126,6 +128,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Spell_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
+                    Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamed),
@@ -158,6 +161,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Spell_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
+                    Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),
@@ -223,6 +227,7 @@ namespace Mutagen.Bethesda.Fallout3
                     TalkingActivator_Registration.Instance,
                     Terminal_Registration.Instance,
                     TextureSet_Registration.Instance,
+                    Weapon_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IObjectBoundedOptional),

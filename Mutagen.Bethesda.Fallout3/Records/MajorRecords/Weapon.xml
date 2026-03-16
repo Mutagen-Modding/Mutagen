@@ -1,9 +1,241 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" baseClass="Fallout3MajorRecord" objType="Record" recordType="WEAP">
+  <Object name="Weapon" recordType="WEAP" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="LargeIconFilename" recordType="ICON" />
+      <String name="SmallIconFilename" recordType="MICO" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
+      <UInt16 name="EnchantmentChargeAmount" recordType="EAMT" />
+      <FormLink name="Ammo" recordType="NAM0">
+        <Interface>IAmmoOrList</Interface>
+      </FormLink>
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="RepairList" recordType="REPL" refName="FormList" />
+      <Enum name="EquipmentType" recordType="ETYP" enumName="EquipType" byteLength="4" nullable="False" />
+      <FormLink name="BipedModelList" recordType="BIPL" refName="FormList" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+
+      <RefDirect name="ShellCasingModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODT" To="MO2T" />
+          <Mapping From="MODS" To="MO2S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+
+      <RefDirect name="ScopeModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD3" />
+          <Mapping From="MODT" To="MO3T" />
+          <Mapping From="MODS" To="MO3S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+
+      <FormLink name="ScopeEffect" recordType="EFSD" refName="EffectShader" />
+
+      <RefDirect name="WorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODS" To="MO4S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+
+      <String name="ModelMod1" recordType="MWD1">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <String name="ModelMod2" recordType="MWD2">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <String name="ModelMod1And2" recordType="MWD3">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <String name="ModelMod3" recordType="MWD4">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <String name="ModelMod1And3" recordType="MWD5">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <String name="ModelMod2And3" recordType="MWD6">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <String name="ModelMod1And2And3" recordType="MWD7">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+
+      <String name="VatsAttackName" recordType="VANM">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+
+      <String name="EmbeddedWeaponNode" recordType="NNAM" />
+      <FormLink name="ImpactDataSet" recordType="INAM" refName="ImpactDataSet" />
+      <FormLink name="FirstPersonModel" recordType="WNAM" refName="Static" />
+
+      <FormLink name="FirstPersonModelMod1" recordType="WNM1" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="FirstPersonModelMod2" recordType="WNM2" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="FirstPersonModelMod1And2" recordType="WNM3" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="FirstPersonModelMod3" recordType="WNM4" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="FirstPersonModelMod1And3" recordType="WNM5" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="FirstPersonModelMod2And3" recordType="WNM6" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="FirstPersonModelMod1And2And3" recordType="WNM7" refName="Static">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+
+      <FormLink name="WeaponMod1" recordType="WMI1" refName="ItemMod">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="WeaponMod2" recordType="WMI2" refName="ItemMod">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="WeaponMod3" recordType="WMI3" refName="ItemMod">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+
+      <FormLink name="SoundGunShoot3D" recordType="SNAM" refName="Sound" />
+      <FormLink name="SoundGunShootDist" recordType="SNAM" refName="Sound" />
+      <FormLink name="SoundGunShoot2D" recordType="XNAM" refName="Sound" />
+      <FormLink name="SoundGunShoot3DLooping" recordType="NAM7" refName="Sound" />
+      <FormLink name="SoundMeleeSwingGunNoAmmo" recordType="TNAM" refName="Sound" />
+      <FormLink name="SoundBlock" recordType="NAM6" refName="Sound" />
+      <FormLink name="SoundIdle" recordType="UNAM" refName="Sound" />
+      <FormLink name="SoundEquip" recordType="NAM9" refName="Sound" />
+      <FormLink name="SoundUnequip" recordType="NAM8" refName="Sound" />
+
+      <FormLink name="SoundMod1Shoot3D" recordType="WMS1" refName="Sound" />
+      <FormLink name="SoundMod1ShootDist" recordType="WMS1" refName="Sound" />
+      <FormLink name="SoundMod1Shoot2D" recordType="WMS2" refName="Sound">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Int32 name="Value" />
+          <Int32 name="Health" />
+          <Float name="Weight" />
+          <Int16 name="BaseDamage" />
+          <UInt8 name="ClipSize" />
+        </Fields>
+      </Data>
+
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <Enum name="AnimationType" enumName="Weapon.WeaponAnimationType" byteLength="4" />
+          <Float name="AnimationMultiplier" />
+          <Float name="Reach" />
+          <Enum name="Flags" enumName="Weapon.WeaponFlag" byteLength="1" binary="Custom" />
+          <UInt8 name="GripAnimation" />
+          <UInt8 name="AmmoUse" />
+          <Enum name="ReloadAnimation" enumName="Weapon.ReloadAnim" byteLength="1" />
+          <Float name="MinSpread" />
+          <Float name="Spread" />
+          <UInt32 name="DnamUnused1" />
+          <Float name="SightFov" />
+          <UInt32 name="DnamUnused2" />
+          <FormLink name="Projectile" refName="Projectile" />
+          <UInt8 name="BaseVatsToHitChance" />
+          <Enum name="AttackAnimation" enumName="Weapon.AttackAnim" byteLength="1" />
+          <UInt8 name="ProjectileCount" />
+          <Enum name="EmbeddedWeaponActorValue" enumName="Weapon.EmbeddedWeaponAV" byteLength="1" />
+          <Float name="MinRange" />
+          <Float name="MaxRange" />
+          <Enum name="OnHit" enumName="Weapon.WeaponOnHit" byteLength="4" />
+          <CustomLogic name="Flags2" byteLength="4" />
+          <Float name="AnimationAttackMultiplier" />
+          <Float name="FireRate" />
+          <Float name="OverrideActionPoints" />
+          <Float name="RumbleLeftMotorStrength" />
+          <Float name="RumbleRightMotorStrength" />
+          <Float name="RumbleDuration" />
+          <Float name="OverrideDamageToWeaponMult" />
+          <Float name="AttackShotsPerSec" />
+          <Float name="ReloadTime" />
+          <Float name="JamTime" />
+          <Float name="AimArc" />
+          <Int32 name="Skill" />
+          <Enum name="RumblePattern" enumName="Weapon.WeaponRumblePattern" byteLength="4" />
+          <Float name="RumbleWavelength" />
+          <Float name="LimbDamageMult" />
+          <Break />
+          <Int32 name="ResistType" />
+          <Break />
+          <Float name="SightUsage" />
+          <Float name="SemiAutomaticFireDelayMin" />
+          <Float name="SemiAutomaticFireDelayMax" />
+          <Break />
+          <!-- FNV extended fields -->
+          <Float name="DnamUnknownFloat" />
+          <Enum name="EffectMod1" enumName="Weapon.ModEffect" byteLength="4" />
+          <Enum name="EffectMod2" enumName="Weapon.ModEffect" byteLength="4" />
+          <Enum name="EffectMod3" enumName="Weapon.ModEffect" byteLength="4" />
+          <Float name="ValueAMod1" />
+          <Float name="ValueAMod2" />
+          <Float name="ValueAMod3" />
+          <Break />
+          <Enum name="PowerAttackAnimationOverride" enumName="Weapon.PowerAttackAnim" byteLength="4" default="Weapon.PowerAttackAnim.Default" />
+          <UInt32 name="StrengthReq" />
+          <Break />
+          <UInt8 name="DnamUnknown1" />
+          <Enum name="ReloadAnimationMod" enumName="Weapon.ReloadAnim" byteLength="1" />
+          <UInt16 name="DnamUnknown2" />
+          <Float name="RegenRate" />
+          <Break />
+          <Float name="KillImpulse" />
+          <Float name="ValueBMod1" />
+          <Float name="ValueBMod2" />
+          <Float name="ValueBMod3" />
+          <Break />
+          <Float name="ImpulseDist" />
+          <Break />
+          <UInt32 name="SkillReq" />
+        </Fields>
+      </Data>
+
+      <Data recordType="CRDT" nullable="False">
+        <Fields>
+          <UInt16 name="CriticalDamage" />
+          <UInt16 name="CrdtUnused1" />
+          <Float name="CriticalPercentMult" />
+          <Bool name="CriticalOnDeath" byteLength="4" importantByteLength="1" />
+          <FormLink name="CriticalEffect" refName="Spell" />
+        </Fields>
+      </Data>
+
+      <RefDirect name="Vats" refName="WeaponVats" binary="Custom" >
+        <ModHeaderVersioning version="1.32" />
+      </RefDirect>
+
+      <Enum name="SoundLevel" recordType="VNAM" enumName="SoundLevel" byteLength="4" nullable="False" />
     </Fields>
     <LinkInterface>IBoundItem</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+  </Object>
+  <Object name="WeaponVats" objType="Subrecord" recordType="VATS">
+    <Fields>
+      <FormLink name="VatsEffect" refName="Spell" />
+      <Float name="VatsSkill" />
+      <Float name="VatsDamageMult" />
+      <Float name="VatsAp" />
+      <Bool name="VatsSilent" byteLength="1" />
+      <Bool name="VatsModRequired" byteLength="1" />
+      <UInt16 name="VatsUnused" />
+    </Fields>
   </Object>
 </Loqui>

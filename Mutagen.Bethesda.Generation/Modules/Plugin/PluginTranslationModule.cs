@@ -1471,14 +1471,33 @@ public class PluginTranslationModule : BinaryTranslationModule
             case BinaryGenerationType.CustomWrite:
                 return;
             case BinaryGenerationType.Custom:
-                CustomLogic.GenerateFill(
-                    sb,
-                    obj,
-                    field,
-                    frameAccessor,
-                    isAsync: false,
-                    useReturnValue: false);
+            {
+                var hasAnyCustomVersioning = data.HasVersioning || data.HasModHeaderVersioning;
+                if (hasAnyCustomVersioning)
+                {
+                    var customChecks = new List<string>();
+                    if (data.HasVersioning)
+                    {
+                        customChecks.Add(VersioningModule.GetVersionIfCheck(data, $"{frameAccessor}.MetaData.FormVersion!.Value"));
+                    }
+                    if (data.HasModHeaderVersioning)
+                    {
+                        customChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(data, $"{frameAccessor}.MetaData.ModHeaderVersion!.Value"));
+                    }
+                    sb.AppendLine($"if ({string.Join(" && ", customChecks)})");
+                }
+                using (sb.CurlyBrace(doIt: hasAnyCustomVersioning))
+                {
+                    CustomLogic.GenerateFill(
+                        sb,
+                        obj,
+                        field,
+                        frameAccessor,
+                        isAsync: false,
+                        useReturnValue: false);
+                }
                 return;
+            }
             default:
                 throw new NotImplementedException();
         }
@@ -3520,11 +3539,28 @@ public class PluginTranslationModule : BinaryTranslationModule
                         var maskType = Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (fieldData.Binary == BinaryGenerationType.Custom)
                         {
-                            CustomLogic.GenerateWrite(
-                                sb: sb,
-                                obj: obj,
-                                field: field,
-                                writerAccessor: WriterMemberName);
+                            var hasAnyCustomVersioning = fieldData.HasVersioning || fieldData.HasModHeaderVersioning;
+                            if (hasAnyCustomVersioning)
+                            {
+                                var customChecks = new List<string>();
+                                if (fieldData.HasVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value"));
+                                }
+                                if (fieldData.HasModHeaderVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.ModHeaderVersion!.Value"));
+                                }
+                                sb.AppendLine($"if ({string.Join(" && ", customChecks)})");
+                            }
+                            using (sb.CurlyBrace(doIt: hasAnyCustomVersioning))
+                            {
+                                CustomLogic.GenerateWrite(
+                                    sb: sb,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: WriterMemberName);
+                            }
                             continue;
                         }
                         if (!TryGetTypeGeneration(field.GetType(), out var generator))
@@ -3629,12 +3665,31 @@ public class PluginTranslationModule : BinaryTranslationModule
                             continue;
                         case BinaryGenerationType.Custom:
                         case BinaryGenerationType.CustomWrite:
-                            CustomLogic.GenerateWrite(
-                                sb: sb,
-                                obj: obj,
-                                field: field,
-                                writerAccessor: WriterMemberName);
+                        {
+                            var hasAnyCustomVersioning = fieldData.HasVersioning || fieldData.HasModHeaderVersioning;
+                            if (hasAnyCustomVersioning)
+                            {
+                                var customChecks = new List<string>();
+                                if (fieldData.HasVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value"));
+                                }
+                                if (fieldData.HasModHeaderVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.ModHeaderVersion!.Value"));
+                                }
+                                sb.AppendLine($"if ({string.Join(" && ", customChecks)})");
+                            }
+                            using (sb.CurlyBrace(doIt: hasAnyCustomVersioning))
+                            {
+                                CustomLogic.GenerateWrite(
+                                    sb: sb,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: WriterMemberName);
+                            }
                             continue;
+                        }
                         default:
                             throw new NotImplementedException();
                     }

@@ -73,6 +73,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             HeadPart_Registration.Instance,
             HeadPartItem_Registration.Instance,
             Icons_Registration.Instance,
+            ImpactDataSet_Registration.Instance,
             Ingestible_Registration.Instance,
             Ingredient_Registration.Instance,
             ItemMod_Registration.Instance,
@@ -105,6 +106,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             PlacedMissile_Registration.Instance,
             PlacedNpc_Registration.Instance,
             PlacedObject_Registration.Instance,
+            Projectile_Registration.Instance,
             Race_Registration.Instance,
             RaceData_Registration.Instance,
             RaceRelation_Registration.Instance,
@@ -133,7 +135,8 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             UntypedOwner_Registration.Instance,
             VoiceType_Registration.Instance,
             Water_Registration.Instance,
-            Weapon_Registration.Instance
+            Weapon_Registration.Instance,
+            WeaponVats_Registration.Instance
         );
     }
 }

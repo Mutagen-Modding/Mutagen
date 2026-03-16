@@ -39,6 +39,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.MISC, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.MSTT, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.TERM, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
     }
@@ -119,6 +120,56 @@ public class Fallout3Processor : Processor
         if (totalTrimmed > 0)
         {
             ProcessLengths(majorFrame, -totalTrimmed, fileOffset);
+        }
+    }
+
+    private void ProcessWeapons(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+
+        ProcessDestructible(majorFrame, fileOffset);
+        
+        if (majorFrame.TryFindSubrecord(new RecordType("DNAM"), out var dnam))
+        {
+            int[] floatOffsets = [4, 8, 16, 20, 28, 44, 48, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 112, 116, 124, 128, 132];
+            foreach (var off in floatOffsets)
+            {
+                if (off + 4 > dnam.ContentLength) break;
+                int loc = off;
+                ProcessZeroFloat(dnam, fileOffset, ref loc);
+            }
+            if (dnam.ContentLength > 136)
+            {
+                int[] fnvFloatOffsets = [136, 152, 156, 160, 176, 180, 184, 188, 192, 196];
+                foreach (var off in fnvFloatOffsets)
+                {
+                    if (off + 4 > dnam.ContentLength) break;
+                    int loc = off;
+                    ProcessZeroFloat(dnam, fileOffset, ref loc);
+                }
+            }
+        }
+
+        if (majorFrame.TryFindSubrecord(new RecordType("CRDT"), out var crdt))
+        {
+            int loc = 8;
+            ProcessBool(crdt, fileOffset, ref loc, 4, 1);
+        }
+
+        // VATS: FNV only — pad 16-byte variants to 20 so all fields are present.
+        // FO3 VATS (if it existed) would stay at 16 bytes since the writer only emits 16 for FO3.
+        if (majorFrame.TryFindSubrecord(new RecordType("VATS"), out var vats))
+        {
+            if (vats.ContentLength == 16)
+            {
+                var padPos = fileOffset + vats.Location + Meta.SubConstants.HeaderLength + 16;
+                Instructions.SetAddition(padPos, new byte[] { 0, 0, 0, 0 });
+                var vatsLenPos = fileOffset + vats.Location + 4;
+                Instructions.SetSubstitution(vatsLenPos, BitConverter.GetBytes((ushort)20));
+                ProcessLengths(majorFrame, 4, fileOffset);
+            }
         }
     }
 

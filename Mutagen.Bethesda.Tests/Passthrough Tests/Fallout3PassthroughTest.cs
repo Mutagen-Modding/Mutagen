@@ -178,6 +178,24 @@ public class Fallout3PassthroughTest : PassthroughTest
         {
             new("DATA"),
         };
+        ret.AddAlignments(
+            RecordTypes.WEAP,
+            new AlignmentSubRule(
+                new RecordType("MWD1"),
+                new RecordType("MWD2"),
+                new RecordType("MWD3"),
+                new RecordType("MWD4"),
+                new RecordType("MWD5"),
+                new RecordType("MWD6"),
+                new RecordType("MWD7")),
+            new AlignmentSubRule(
+                new RecordType("WNM1"),
+                new RecordType("WNM2"),
+                new RecordType("WNM3"),
+                new RecordType("WNM4"),
+                new RecordType("WNM5"),
+                new RecordType("WNM6"),
+                new RecordType("WNM7")));
         ret.SetGroupAlignment(
             (int)GroupTypeEnum.CellTemporaryChildren,
             new RecordType("LAND"),
@@ -216,7 +234,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("PWAT"),
             new RecordType("GRAS"),
             new RecordType("TREE"),
-            new RecordType("FURN"));
+            new RecordType("FURN"),
+            new RecordType("WEAP"));
         return ret;
     }
 }

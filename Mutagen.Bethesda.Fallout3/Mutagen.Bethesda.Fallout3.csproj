@@ -26,6 +26,7 @@
     <Compile Include="Enum\Function.cs" />
     <Compile Include="Enum\EquipType.cs" />
     <Compile Include="Enum\Skill.cs" />
+    <Compile Include="Enum\SoundLevel.cs" />
     <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -222,8 +223,17 @@
     <Compile Include="Records\MajorRecords\SoundData.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Weapon.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Weapon_Generated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ImpactDataSet_Generated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Projectile_Generated.cs">
+      <DependentUpon>Projectile.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
@@ -637,5 +647,11 @@
       <DependentUpon>StaticCollection.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
+    <Compile Include="Interfaces\Link\IAmmoOrList_Generated.cs" />
+    <Compile Include="Records\MajorRecords\WeaponVats_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+
+
   </ItemGroup>
 </Project>

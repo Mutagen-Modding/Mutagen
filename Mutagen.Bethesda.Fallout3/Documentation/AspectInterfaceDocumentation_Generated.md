@@ -16,6 +16,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TalkingActivator
 - Terminal
 - Tree
+- Weapon
 ### IHasEffects
 - Ingredient
 - ObjectEffect
@@ -53,6 +54,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - TalkingActivator
 - Terminal
 - Tree
+- Weapon
 ### INamed
 - Activator
 - AlternateTexture
@@ -77,6 +79,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 - TalkingActivator
 - Terminal
+- Weapon
 ### IObjectBounded
 - AcousticSpace
 - Activator
@@ -98,6 +101,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Terminal
 - TextureSet
 - Tree
+- Weapon
 ### IPositionRotation
 - StaticPlacement
 ### IWeightValue
@@ -231,4 +235,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHasDestructible
 - IHasIcons
 - IModeled
+- IObjectBounded
+### Weapon
+- IHasDestructible
+- IModeled
+- INamed
 - IObjectBounded

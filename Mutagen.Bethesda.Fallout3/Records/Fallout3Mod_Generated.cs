@@ -95,6 +95,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Grasses_Object = new Fallout3Group<Grass>(this);
             _Trees_Object = new Fallout3Group<Tree>(this);
             _Furniture_Object = new Fallout3Group<Furniture>(this);
+            _Weapons_Object = new Fallout3Group<Weapon>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -345,6 +346,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IFurnitureGetter> IFallout3ModGetter.Furniture => _Furniture_Object;
         #endregion
+        #region Weapons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Weapon> _Weapons_Object;
+        public Fallout3Group<Weapon> Weapons => _Weapons_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IWeaponGetter> IFallout3ModGetter.Weapons => _Weapons_Object;
+        #endregion
 
         #region To String
 
@@ -419,6 +427,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Grasses = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Trees = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Furniture = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Weapons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -456,7 +465,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem PlaceableWaters,
                 TItem Grasses,
                 TItem Trees,
-                TItem Furniture)
+                TItem Furniture,
+                TItem Weapons)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -493,6 +503,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Grasses = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Grasses, new Fallout3Group.Mask<TItem>(Grasses));
                 this.Trees = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Trees, new Fallout3Group.Mask<TItem>(Trees));
                 this.Furniture = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Furniture, new Fallout3Group.Mask<TItem>(Furniture));
+                this.Weapons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Weapons, new Fallout3Group.Mask<TItem>(Weapons));
             }
 
             #pragma warning disable CS8618
@@ -539,6 +550,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Grasses { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Trees { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Furniture { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Weapons { get; set; }
             #endregion
 
             #region Equals
@@ -586,6 +598,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.Trees, rhs.Trees)) return false;
                 if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
+                if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -626,6 +639,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Grasses);
                 hash.Add(this.Trees);
                 hash.Add(this.Furniture);
+                hash.Add(this.Weapons);
                 return hash.ToHashCode();
             }
 
@@ -809,6 +823,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Furniture.Overall)) return false;
                     if (this.Furniture.Specific != null && !this.Furniture.Specific.All(eval)) return false;
                 }
+                if (Weapons != null)
+                {
+                    if (!eval(this.Weapons.Overall)) return false;
+                    if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -991,6 +1010,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Furniture.Overall)) return true;
                     if (this.Furniture.Specific != null && this.Furniture.Specific.Any(eval)) return true;
                 }
+                if (Weapons != null)
+                {
+                    if (eval(this.Weapons.Overall)) return true;
+                    if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1040,6 +1064,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
                 obj.Trees = this.Trees == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
                 obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
+                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1198,6 +1223,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Furniture?.Print(sb);
                     }
+                    if (printMask?.Weapons?.Overall ?? true)
+                    {
+                        Weapons?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1257,6 +1286,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Tree.ErrorMask>?>? Trees;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
             #endregion
 
             #region IErrorMask
@@ -1335,6 +1365,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Trees;
                     case Fallout3Mod_FieldIndex.Furniture:
                         return Furniture;
+                    case Fallout3Mod_FieldIndex.Weapons:
+                        return Weapons;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1449,6 +1481,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Furniture:
                         this.Furniture = new MaskItem<Exception?, Fallout3Group.ErrorMask<Furniture.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Weapons:
+                        this.Weapons = new MaskItem<Exception?, Fallout3Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1565,6 +1600,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Furniture:
                         this.Furniture = (MaskItem<Exception?, Fallout3Group.ErrorMask<Furniture.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Weapons:
+                        this.Weapons = (MaskItem<Exception?, Fallout3Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1608,6 +1646,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Grasses != null) return true;
                 if (Trees != null) return true;
                 if (Furniture != null) return true;
+                if (Weapons != null) return true;
                 return false;
             }
             #endregion
@@ -1668,6 +1707,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Grasses?.Print(sb);
                 Trees?.Print(sb);
                 Furniture?.Print(sb);
+                Weapons?.Print(sb);
             }
             #endregion
 
@@ -1711,6 +1751,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
                 ret.Trees = this.Trees.Combine(rhs.Trees, (l, r) => l.Combine(r));
                 ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
+                ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1769,6 +1810,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Grass.TranslationMask>? Grasses;
             public Fallout3Group.TranslationMask<Tree.TranslationMask>? Trees;
             public Fallout3Group.TranslationMask<Furniture.TranslationMask>? Furniture;
+            public Fallout3Group.TranslationMask<Weapon.TranslationMask>? Weapons;
             #endregion
 
             #region Ctors
@@ -1828,6 +1870,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
                 ret.Add((Trees != null ? Trees.OnOverall : DefaultOn, Trees?.GetCrystal()));
                 ret.Add((Furniture != null ? Furniture.OnOverall : DefaultOn, Furniture?.GetCrystal()));
+                ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1922,6 +1965,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Grasses_Object = new Fallout3Group<Grass>(this);
             _Trees_Object = new Fallout3Group<Tree>(this);
             _Furniture_Object = new Fallout3Group<Furniture>(this);
+            _Weapons_Object = new Fallout3Group<Weapon>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2063,6 +2107,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Furniture ?? true)
             {
                 this.Furniture.RecordCache.Set(rhsMod.Furniture.RecordCache.Items);
+            }
+            if (mask?.Weapons ?? true)
+            {
+                this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
             }
         }
 
@@ -2359,6 +2407,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Grass> Grasses { get; }
         new Fallout3Group<Tree> Trees { get; }
         new Fallout3Group<Furniture> Furniture { get; }
+        new Fallout3Group<Weapon> Weapons { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2413,6 +2462,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IGrassGetter> Grasses { get; }
         IFallout3GroupGetter<ITreeGetter> Trees { get; }
         IFallout3GroupGetter<IFurnitureGetter> Furniture { get; }
+        IFallout3GroupGetter<IWeaponGetter> Weapons { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -2998,6 +3048,7 @@ namespace Mutagen.Bethesda.Fallout3
         Grasses = 32,
         Trees = 33,
         Furniture = 34,
+        Weapons = 35,
     }
     #endregion
 
@@ -3008,9 +3059,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 35;
+        public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -3111,6 +3162,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Grasses.Clear();
             item.Trees.Clear();
             item.Furniture.Clear();
+            item.Weapons.Clear();
         }
         
         #region Mutagen
@@ -3144,6 +3196,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Grasses.RemapLinks(mapping);
             obj.Trees.RemapLinks(mapping);
             obj.Furniture.RemapLinks(mapping);
+            obj.Weapons.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3238,6 +3291,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Grasses.Remove(keys);
             obj.Trees.Remove(keys);
             obj.Furniture.Remove(keys);
+            obj.Weapons.Remove(keys);
         }
         
         public void Remove(
@@ -3557,6 +3611,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    obj.Weapons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3577,10 +3639,12 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IBoundItem":
                 case "IBoundItemGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IRelatable":
                 case "IRelatableGetter":
@@ -3760,6 +3824,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
             ret.Trees = MaskItemExt.Factory(item.Trees.GetEqualsMask(rhs.Trees, include), include);
             ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
+            ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
         }
         
         public string Print(
@@ -3943,6 +4008,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Furniture?.Overall ?? true)
             {
                 item.Furniture?.Print(sb, "Furniture");
+            }
+            if (printMask?.Weapons?.Overall ?? true)
+            {
+                item.Weapons?.Print(sb, "Weapons");
             }
         }
         
@@ -4233,6 +4302,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isFurnitureEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Weapons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
+                {
+                    if (!object.Equals(lhsWeapons, rhsWeapons)) return false;
+                }
+                else if (!isWeaponsEqual) return false;
+            }
             return true;
         }
         
@@ -4274,6 +4351,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Grasses);
             hash.Add(item.Trees);
             hash.Add(item.Furniture);
+            hash.Add(item.Weapons);
             return hash.ToHashCode();
         }
         
@@ -4490,6 +4568,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IFurniture":
                 case "IFurnitureInternal":
                     return obj.Furniture;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    return obj.Weapons;
                 default:
                     return null;
             }
@@ -4507,7 +4590,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[34];
+            Stream[] outputStreams = new Stream[35];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -4543,6 +4626,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Grasses, 31, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Trees, 32, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Furniture, 33, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 34, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -4622,6 +4706,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Grasses.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Trees.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Furniture.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weapons.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -4742,6 +4827,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Furniture.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weapons.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4893,6 +4982,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Furniture.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weapons.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5253,6 +5346,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -5580,6 +5682,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Furniture,
                 groupGetter: (m) => m.Furniture))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weapon, IWeaponGetter>(
+                srcGroup: obj.Weapons,
+                type: typeof(IWeaponGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weapons,
+                groupGetter: (m) => m.Weapons))
             {
                 yield return item;
             }
@@ -6086,6 +6197,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Furniture,
                         groupGetter: (m) => m.Furniture))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weapon, IWeaponGetter>(
+                        srcGroup: obj.Weapons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weapons,
+                        groupGetter: (m) => m.Weapons))
                     {
                         yield return item;
                     }
@@ -6875,6 +7000,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Weapons) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Weapons);
+                try
+                {
+                    item.Weapons.DeepCopyIn(
+                        rhs: rhs.Weapons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Weapons));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -7012,6 +7157,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Grasses;
         public bool Trees;
         public bool Furniture;
+        public bool Weapons;
         public GroupMask()
         {
         }
@@ -7051,6 +7197,7 @@ namespace Mutagen.Bethesda.Fallout3
             Grasses = defaultValue;
             Trees = defaultValue;
             Furniture = defaultValue;
+            Weapons = defaultValue;
         }
     }
 
@@ -7483,6 +7630,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
                         item: FurnitureItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Weapons ?? true)
+            {
+                var WeaponsItem = item.Weapons;
+                if (WeaponsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
+                        item: WeaponsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -8033,6 +8191,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Furniture;
                 }
+                case RecordTypeInts.WEAP:
+                {
+                    if (importMask?.Weapons ?? true)
+                    {
+                        item.Weapons.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Weapons;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -8368,6 +8540,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? Fallout3GroupBinaryOverlay<IFurnitureGetter>.Fallout3GroupFactory(_stream, _FurnitureLocations, _package) : default;
         public IFallout3GroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Fallout3Group<Furniture>(this);
         #endregion
+        #region Weapons
+        private List<RangeInt64>? _WeaponsLocations;
+        private IFallout3GroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? Fallout3GroupBinaryOverlay<IWeaponGetter>.Fallout3GroupFactory(_stream, _WeaponsLocations, _package) : default;
+        public IFallout3GroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Fallout3Group<Weapon>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -8645,6 +8822,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _FurnitureLocations ??= new();
                     _FurnitureLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Furniture;
+                }
+                case RecordTypeInts.WEAP:
+                {
+                    _WeaponsLocations ??= new();
+                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Weapons;
                 }
                 default:
                     return default(int?);

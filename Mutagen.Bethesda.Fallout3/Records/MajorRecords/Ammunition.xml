@@ -4,5 +4,6 @@
           recordType="AMMO">
     <Fields />
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IAmmoOrList</LinkInterface>
   </Object>
 </Loqui>

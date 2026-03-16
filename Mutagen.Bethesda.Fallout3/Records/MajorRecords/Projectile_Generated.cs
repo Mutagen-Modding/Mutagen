@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class FormList :
+    public partial class Projectile :
         Fallout3MajorRecord,
-        IEquatable<IFormListGetter>,
-        IFormListInternal,
-        ILoquiObjectSetter<FormList>
+        IEquatable<IProjectileGetter>,
+        ILoquiObjectSetter<Projectile>,
+        IProjectileInternal
     {
         #region Ctor
-        protected FormList()
+        protected Projectile()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FormListMixIn.Print(
+            ProjectileMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FormList.Mask<R>();
+                var ret = new Projectile.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FormList.Mask<bool>? printMask = null)
+            public string Print(Projectile.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FormList.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Projectile.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FormList.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(Projectile.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                FormList_FieldIndex enu = (FormList_FieldIndex)index;
+                Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                FormList_FieldIndex enu = (FormList_FieldIndex)index;
+                Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                FormList_FieldIndex enu = (FormList_FieldIndex)index;
+                Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,8 +294,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = FormList_Registration.TriggeringRecordType;
-        public FormList(
+        public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
+        public Projectile(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private FormList(
+        private Projectile(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,14 +311,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public FormList(IFallout3Mod mod)
+        public Projectile(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public FormList(IFallout3Mod mod, string editorID)
+        public Projectile(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -328,10 +328,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<FormList>.ToString(this);
+            return MajorRecordPrinter<Projectile>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IFormList);
+        protected override Type LinkType => typeof(IProjectile);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -340,16 +340,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IFormListGetter rhs) return false;
-            return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IProjectileGetter rhs) return false;
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFormListGetter? obj)
+        public bool Equals(IProjectileGetter? obj)
         {
-            return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FormListCommon)((IFormListGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -357,23 +357,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FormListBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ProjectileBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static FormList CreateFromBinary(
+        public new static Projectile CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FormList();
-            ((FormListSetterCommon)((IFormListGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Projectile();
+            ((ProjectileSetterCommon)((IProjectileGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FormList item,
+            out Projectile item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -399,84 +399,82 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((FormListSetterCommon)((IFormListGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ProjectileSetterCommon)((IProjectileGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new FormList GetNew()
+        internal static new Projectile GetNew()
         {
-            return new FormList();
+            return new Projectile();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFormList :
-        IAmmoOrList,
+    public partial interface IProjectile :
         IFallout3MajorRecordInternal,
-        IFormListGetter,
-        ILoquiObjectSetter<IFormListInternal>
+        ILoquiObjectSetter<IProjectileInternal>,
+        IProjectileGetter
     {
     }
 
-    public partial interface IFormListInternal :
+    public partial interface IProjectileInternal :
         IFallout3MajorRecordInternal,
-        IFormList,
-        IFormListGetter
+        IProjectile,
+        IProjectileGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.FLST)]
-    public partial interface IFormListGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.PROJ)]
+    public partial interface IProjectileGetter :
         IFallout3MajorRecordGetter,
-        IAmmoOrListGetter,
         IBinaryItem,
-        ILoquiObject<IFormListGetter>,
-        IMapsToGetter<IFormListGetter>
+        ILoquiObject<IProjectileGetter>,
+        IMapsToGetter<IProjectileGetter>
     {
-        static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class FormListMixIn
+    public static partial class ProjectileMixIn
     {
-        public static void Clear(this IFormListInternal item)
+        public static void Clear(this IProjectileInternal item)
         {
-            ((FormListSetterCommon)((IFormListGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ProjectileSetterCommon)((IProjectileGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FormList.Mask<bool> GetEqualsMask(
-            this IFormListGetter item,
-            IFormListGetter rhs,
+        public static Projectile.Mask<bool> GetEqualsMask(
+            this IProjectileGetter item,
+            IProjectileGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFormListGetter item,
+            this IProjectileGetter item,
             string? name = null,
-            FormList.Mask<bool>? printMask = null)
+            Projectile.Mask<bool>? printMask = null)
         {
-            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Print(
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFormListGetter item,
+            this IProjectileGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FormList.Mask<bool>? printMask = null)
+            Projectile.Mask<bool>? printMask = null)
         {
-            ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Print(
+            ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -484,39 +482,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IFormListGetter item,
-            IFormListGetter rhs,
-            FormList.TranslationMask? equalsMask = null)
+            this IProjectileGetter item,
+            IProjectileGetter rhs,
+            Projectile.TranslationMask? equalsMask = null)
         {
-            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Equals(
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFormListInternal lhs,
-            IFormListGetter rhs,
-            out FormList.ErrorMask errorMask,
-            FormList.TranslationMask? copyMask = null)
+            this IProjectileInternal lhs,
+            IProjectileGetter rhs,
+            out Projectile.ErrorMask errorMask,
+            Projectile.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ProjectileSetterTranslationCommon)((IProjectileGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FormList.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Projectile.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFormListInternal lhs,
-            IFormListGetter rhs,
+            this IProjectileInternal lhs,
+            IProjectileGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FormListSetterTranslationCommon)((IFormListGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ProjectileSetterTranslationCommon)((IProjectileGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -524,55 +522,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static FormList DeepCopy(
-            this IFormListGetter item,
-            FormList.TranslationMask? copyMask = null)
+        public static Projectile DeepCopy(
+            this IProjectileGetter item,
+            Projectile.TranslationMask? copyMask = null)
         {
-            return ((FormListSetterTranslationCommon)((IFormListGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ProjectileSetterTranslationCommon)((IProjectileGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FormList DeepCopy(
-            this IFormListGetter item,
-            out FormList.ErrorMask errorMask,
-            FormList.TranslationMask? copyMask = null)
+        public static Projectile DeepCopy(
+            this IProjectileGetter item,
+            out Projectile.ErrorMask errorMask,
+            Projectile.TranslationMask? copyMask = null)
         {
-            return ((FormListSetterTranslationCommon)((IFormListGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ProjectileSetterTranslationCommon)((IProjectileGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FormList DeepCopy(
-            this IFormListGetter item,
+        public static Projectile DeepCopy(
+            this IProjectileGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FormListSetterTranslationCommon)((IFormListGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ProjectileSetterTranslationCommon)((IProjectileGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static FormList Duplicate(
-            this IFormListGetter item,
+        public static Projectile Duplicate(
+            this IProjectileGetter item,
             FormKey formKey,
-            FormList.TranslationMask? copyMask = null)
+            Projectile.TranslationMask? copyMask = null)
         {
-            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Duplicate(
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static FormList Duplicate(
-            this IFormListGetter item,
+        public static Projectile Duplicate(
+            this IProjectileGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Duplicate(
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -582,11 +580,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFormListInternal item,
+            this IProjectileInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FormListSetterCommon)((IFormListGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ProjectileSetterCommon)((IProjectileGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -602,7 +600,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum FormList_FieldIndex
+    internal enum Projectile_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -615,9 +613,9 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Registration
-    internal partial class FormList_Registration : ILoquiRegistration
+    internal partial class Projectile_Registration : ILoquiRegistration
     {
-        public static readonly FormList_Registration Instance = new FormList_Registration();
+        public static readonly Projectile_Registration Instance = new Projectile_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -625,23 +623,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(FormList.Mask<>);
+        public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FormList.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Projectile.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FormList);
+        public static readonly Type ClassType = typeof(Projectile);
 
-        public static readonly Type GetterType = typeof(IFormListGetter);
+        public static readonly Type GetterType = typeof(IProjectileGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFormList);
+        public static readonly Type SetterType = typeof(IProjectile);
 
-        public static readonly Type? InternalSetterType = typeof(IFormListInternal);
+        public static readonly Type? InternalSetterType = typeof(IProjectileInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.FormList";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.Projectile";
 
-        public const string Name = "FormList";
+        public const string Name = "Projectile";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -649,14 +647,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.FLST;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PROJ;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FLST);
+            var all = RecordCollection.Factory(RecordTypes.PROJ);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FormListBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -687,13 +685,13 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class FormListSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class ProjectileSetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly FormListSetterCommon Instance = new FormListSetterCommon();
+        public new static readonly ProjectileSetterCommon Instance = new ProjectileSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFormListInternal item)
+        public void Clear(IProjectileInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -701,16 +699,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (IFormListInternal)item);
+            Clear(item: (IProjectileInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IFormListInternal)item);
+            Clear(item: (IProjectileInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IFormList obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IProjectile obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -719,16 +717,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFormListInternal item,
+            IProjectileInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IFormListInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IProjectileInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: FormListBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: FormListBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ProjectileBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ProjectileBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -737,7 +735,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (FormList)item,
+                item: (Projectile)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -748,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (FormList)item,
+                item: (Projectile)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -756,17 +754,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class FormListCommon : Fallout3MajorRecordCommon
+    internal partial class ProjectileCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly FormListCommon Instance = new FormListCommon();
+        public new static readonly ProjectileCommon Instance = new ProjectileCommon();
 
-        public FormList.Mask<bool> GetEqualsMask(
-            IFormListGetter item,
-            IFormListGetter rhs,
+        public Projectile.Mask<bool> GetEqualsMask(
+            IProjectileGetter item,
+            IProjectileGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FormList.Mask<bool>(false);
-            ((FormListCommon)((IFormListGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Projectile.Mask<bool>(false);
+            ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -775,18 +773,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IFormListGetter item,
-            IFormListGetter rhs,
-            FormList.Mask<bool> ret,
+            IProjectileGetter item,
+            IProjectileGetter rhs,
+            Projectile.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IFormListGetter item,
+            IProjectileGetter item,
             string? name = null,
-            FormList.Mask<bool>? printMask = null)
+            Projectile.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -798,18 +796,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IFormListGetter item,
+            IProjectileGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FormList.Mask<bool>? printMask = null)
+            Projectile.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FormList =>");
+                sb.AppendLine($"Projectile =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FormList) =>");
+                sb.AppendLine($"{name} (Projectile) =>");
             }
             using (sb.Brace())
             {
@@ -821,9 +819,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IFormListGetter item,
+            IProjectileGetter item,
             StructuredStringBuilder sb,
-            FormList.Mask<bool>? printMask = null)
+            Projectile.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
@@ -831,41 +829,41 @@ namespace Mutagen.Bethesda.Fallout3
                 printMask: printMask);
         }
         
-        public static FormList_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static Projectile_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormVersion:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Version2:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new FormList_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Projectile_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (FormList_FieldIndex)((int)index);
+                    return (Projectile_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -873,8 +871,8 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFormListGetter? lhs,
-            IFormListGetter? rhs,
+            IProjectileGetter? lhs,
+            IProjectileGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -888,8 +886,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IFormListGetter?)lhs,
-                rhs: rhs as IFormListGetter,
+                lhs: (IProjectileGetter?)lhs,
+                rhs: rhs as IProjectileGetter,
                 equalsMask: equalsMask);
         }
         
@@ -899,12 +897,12 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IFormListGetter?)lhs,
-                rhs: rhs as IFormListGetter,
+                lhs: (IProjectileGetter?)lhs,
+                rhs: rhs as IProjectileGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IFormListGetter item)
+        public virtual int GetHashCode(IProjectileGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -913,12 +911,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (IFormListGetter)item);
+            return GetHashCode(item: (IProjectileGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IFormListGetter)item);
+            return GetHashCode(item: (IProjectileGetter)item);
         }
         
         #endregion
@@ -926,11 +924,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return FormList.GetNew();
+            return Projectile.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFormListGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProjectileGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -940,12 +938,12 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Duplicate
-        public FormList Duplicate(
-            IFormListGetter item,
+        public Projectile Duplicate(
+            IProjectileGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new FormList(formKey, default(Fallout3Release));
+            var newRec = new Projectile(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -956,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFormListGetter)item,
+                item: (IProjectileGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -967,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFormListGetter)item,
+                item: (IProjectileGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -977,14 +975,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class FormListSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class ProjectileSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly FormListSetterTranslationCommon Instance = new FormListSetterTranslationCommon();
+        public new static readonly ProjectileSetterTranslationCommon Instance = new ProjectileSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFormListInternal item,
-            IFormListGetter rhs,
+            IProjectileInternal item,
+            IProjectileGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -998,8 +996,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void DeepCopyIn(
-            IFormList item,
-            IFormListGetter rhs,
+            IProjectile item,
+            IProjectileGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1019,8 +1017,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IFormList item,
-            IFormListGetter rhs,
+            IProjectile item,
+            IProjectileGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1032,8 +1030,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFormListInternal)item,
-                rhs: (IFormListGetter)rhs,
+                item: (IProjectileInternal)item,
+                rhs: (IProjectileGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1047,8 +1045,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFormList)item,
-                rhs: (IFormListGetter)rhs,
+                item: (IProjectile)item,
+                rhs: (IProjectileGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1062,8 +1060,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFormListInternal)item,
-                rhs: (IFormListGetter)rhs,
+                item: (IProjectileInternal)item,
+                rhs: (IProjectileGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1077,8 +1075,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFormList)item,
-                rhs: (IFormListGetter)rhs,
+                item: (IProjectile)item,
+                rhs: (IProjectileGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1086,12 +1084,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public FormList DeepCopy(
-            IFormListGetter item,
-            FormList.TranslationMask? copyMask = null)
+        public Projectile DeepCopy(
+            IProjectileGetter item,
+            Projectile.TranslationMask? copyMask = null)
         {
-            FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
-            ((FormListSetterTranslationCommon)((IFormListGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Projectile ret = (Projectile)((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).GetNew();
+            ((ProjectileSetterTranslationCommon)((IProjectileGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1100,30 +1098,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public FormList DeepCopy(
-            IFormListGetter item,
-            out FormList.ErrorMask errorMask,
-            FormList.TranslationMask? copyMask = null)
+        public Projectile DeepCopy(
+            IProjectileGetter item,
+            out Projectile.ErrorMask errorMask,
+            Projectile.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
-            ((FormListSetterTranslationCommon)((IFormListGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Projectile ret = (Projectile)((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).GetNew();
+            ((ProjectileSetterTranslationCommon)((IProjectileGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FormList.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Projectile.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FormList DeepCopy(
-            IFormListGetter item,
+        public Projectile DeepCopy(
+            IProjectileGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FormList ret = (FormList)((FormListCommon)((IFormListGetter)item).CommonInstance()!).GetNew();
-            ((FormListSetterTranslationCommon)((IFormListGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Projectile ret = (Projectile)((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).GetNew();
+            ((ProjectileSetterTranslationCommon)((IProjectileGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1139,21 +1137,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class FormList
+    public partial class Projectile
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => FormListCommon.Instance;
+        protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return FormListSetterCommon.Instance;
+            return ProjectileSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => FormListSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ProjectileSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1164,22 +1162,22 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class FormListBinaryWriteTranslation :
+    public partial class ProjectileBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FormListBinaryWriteTranslation Instance = new();
+        public new static readonly ProjectileBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IFormListGetter item,
+            IProjectileGetter item,
             TypedWriteParams translationParams)
         {
             PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
                 item: item,
                 translationParams: translationParams,
-                type: RecordTypes.FLST,
+                type: RecordTypes.PROJ,
                 writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
                 writeRecordTypes: WriteRecordTypes);
         }
@@ -1190,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFormListGetter)item,
+                item: (IProjectileGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1201,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IFormListGetter)item,
+                item: (IProjectileGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1212,25 +1210,25 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IFormListGetter)item,
+                item: (IProjectileGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FormListBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class ProjectileBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
+        public new static readonly ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.FLST;
+        public override RecordType RecordType => RecordTypes.PROJ;
     }
 
 }
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class FormListBinaryTranslationMixIn
+    public static class ProjectileBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1239,35 +1237,35 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class FormListBinaryOverlay :
+    internal partial class ProjectileBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        IFormListGetter
+        IProjectileGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => FormListCommon.Instance;
+        protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => FormListSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ProjectileSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FormListBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ProjectileBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFormListGetter);
+        protected override Type LinkType => typeof(IProjectileGetter);
 
 
         partial void CustomFactoryEnd(
@@ -1276,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected FormListBinaryOverlay(
+        protected ProjectileBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1286,7 +1284,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static IFormListGetter FormListFactory(
+        public static IProjectileGetter ProjectileFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1298,7 +1296,7 @@ namespace Mutagen.Bethesda.Fallout3
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new FormListBinaryOverlay(
+            var ret = new ProjectileBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1316,12 +1314,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static IFormListGetter FormListFactory(
+        public static IProjectileGetter ProjectileFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FormListFactory(
+            return ProjectileFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1333,7 +1331,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FormListMixIn.Print(
+            ProjectileMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1343,7 +1341,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<FormList>.ToString(this);
+            return MajorRecordPrinter<Projectile>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1353,16 +1351,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IFormListGetter rhs) return false;
-            return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IProjectileGetter rhs) return false;
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFormListGetter? obj)
+        public bool Equals(IProjectileGetter? obj)
         {
-            return ((FormListCommon)((IFormListGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FormListCommon)((IFormListGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -74,6 +74,17 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IItem),
                 Getter: typeof(IItemGetter)));
         dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
+        dict[typeof(IAmmoOrList)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Ammunition_Registration.Instance,
+                FormList_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IAmmoOrList),
+                Getter: typeof(IAmmoOrListGetter)));
+        dict[typeof(IAmmoOrListGetter)] = dict[typeof(IAmmoOrList)] with { Setter = false };
         dict[typeof(IBoundItem)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
