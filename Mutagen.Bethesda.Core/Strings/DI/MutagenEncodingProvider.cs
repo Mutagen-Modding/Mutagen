@@ -78,6 +78,7 @@ public static class MutagenEncoding
             case GameRelease.SkyrimSEGog:
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalSE:
+            case GameRelease.EnderalSEGog:
             case GameRelease.Fallout4:
             case GameRelease.Fallout4VR:
             case GameRelease.Starfield:

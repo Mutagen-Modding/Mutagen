@@ -37,6 +37,7 @@ public sealed class PluginListingsProvider : IPluginListingsProvider
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalLE:
             case GameRelease.EnderalSE:
+            case GameRelease.EnderalSEGog:
             case GameRelease.Fallout4:
             case GameRelease.Fallout4VR:
             case GameRelease.Starfield:

@@ -44,6 +44,7 @@ public static class GameCategoryExt
                 yield return GameRelease.SkyrimVR;
                 yield return GameRelease.EnderalLE;
                 yield return GameRelease.EnderalSE;
+                yield return GameRelease.EnderalSEGog;
                 yield break;
             case GameCategory.Fallout4:
                 yield return GameRelease.Fallout4;

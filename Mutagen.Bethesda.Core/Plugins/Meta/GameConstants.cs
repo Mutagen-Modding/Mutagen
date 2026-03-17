@@ -521,6 +521,7 @@ public sealed record GameConstants
             GameRelease.SkyrimSE => SkyrimSE,
             GameRelease.SkyrimSEGog => SkyrimSEGog,
             GameRelease.EnderalSE => EnderalSE,
+            GameRelease.EnderalSEGog => EnderalSEGog,
             GameRelease.SkyrimVR => SkyrimVR,
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4VR,
