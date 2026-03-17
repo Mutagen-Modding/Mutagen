@@ -11,7 +11,7 @@
       <Int32 name="Health" />
       <UInt8 name="DESTCount" />
       <Bool name="VATSTargetable" byteLength="1" />
-      <ByteArray name="Unused" byteLength="2" nullable="False" />
+      <UInt16 name="Unused" />
     </Fields>
   </Object>
   <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF">

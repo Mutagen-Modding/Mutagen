@@ -2,8 +2,8 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
+using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Noggog.WorkEngine;
 
@@ -79,7 +79,7 @@ public class Fallout3Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryFindSubrecord(new RecordType("DEST"), out var dest))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DEST, out var dest))
         {
             // DEST layout: Int32 Health (4), UInt8 DESTCount (1), Bool VATSTargetable (1), ByteArray Unused (2)
             ProcessBool(dest, fileOffset, 5, 1, 1);
@@ -99,7 +99,7 @@ public class Fallout3Processor : Processor
         // because the (MajorRecordFrame, SubrecordPinFrame, int, long) overload
         // writes original_size + amount each call, overwriting previous adjustments.
         int totalTrimmed = 0;
-        foreach (var sub in majorFrame.FindEnumerateSubrecords(new RecordType("RNAM")))
+        foreach (var sub in majorFrame.FindEnumerateSubrecords(RecordTypes.RNAM))
         {
             var trimmed = ProcessStringTermination(sub, fileOffset);
             if (trimmed > 0)
@@ -108,7 +108,7 @@ public class Fallout3Processor : Processor
                 ProcessLengths(sub, -trimmed, fileOffset);
             }
         }
-        foreach (var sub in majorFrame.FindEnumerateSubrecords(new RecordType("ITXT")))
+        foreach (var sub in majorFrame.FindEnumerateSubrecords(RecordTypes.ITXT))
         {
             var trimmed = ProcessStringTermination(sub, fileOffset);
             if (trimmed > 0)
@@ -131,7 +131,7 @@ public class Fallout3Processor : Processor
 
         ProcessDestructible(majorFrame, fileOffset);
         
-        if (majorFrame.TryFindSubrecord(new RecordType("DNAM"), out var dnam))
+        if (majorFrame.TryFindSubrecord(RecordTypes.DNAM, out var dnam))
         {
             int[] floatOffsets = [4, 8, 16, 20, 28, 44, 48, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 112, 116, 124, 128, 132];
             foreach (var off in floatOffsets)
@@ -152,7 +152,7 @@ public class Fallout3Processor : Processor
             }
         }
 
-        if (majorFrame.TryFindSubrecord(new RecordType("CRDT"), out var crdt))
+        if (majorFrame.TryFindSubrecord(RecordTypes.CRDT, out var crdt))
         {
             int loc = 8;
             ProcessBool(crdt, fileOffset, ref loc, 4, 1);
@@ -160,7 +160,7 @@ public class Fallout3Processor : Processor
 
         // VATS: FNV only — pad 16-byte variants to 20 so all fields are present.
         // FO3 VATS (if it existed) would stay at 16 bytes since the writer only emits 16 for FO3.
-        if (majorFrame.TryFindSubrecord(new RecordType("VATS"), out var vats))
+        if (majorFrame.TryFindSubrecord(RecordTypes.VATS, out var vats))
         {
             if (vats.ContentLength == 16)
             {

@@ -16,7 +16,7 @@
   </Object>
   <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR">
     <Fields>
-      <ByteArray name="Unknown" byteLength="4" nullable="False" />
+      <UInt32 name="Unknown" />
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" binary="Custom" byteLength="4" />
       <UInt32 name="VariableCount" />

@@ -63,7 +63,7 @@
           <Break />
           <Float name="DamageThreshold" />
           <UInt16 name="DnamSlot2" />
-          <ByteArray name="DnamUnused" byteLength="2" nullable="False" />
+          <UInt16 name="DnamUnused" />
         </Fields>
       </Data>
 
