@@ -5,6 +5,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IHasDestructible
 - Activator
+- Ammunition
 - Armor
 - Book
 - Container
@@ -22,6 +23,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ObjectEffect
 - Spell
 ### IHasIcons
+- Ammunition
 - BodyPartItem
 - Book
 - HeadPartItem
@@ -32,6 +34,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Tree
 ### IModeled
 - Activator
+- Ammunition
 - BodyData
 - BodyPartItem
 - Book
@@ -58,6 +61,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - Activator
 - AlternateTexture
+- Ammunition
 - Armor
 - Book
 - Class
@@ -83,6 +87,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AcousticSpace
 - Activator
+- Ammunition
 - Armor
 - Book
 - Container
@@ -116,6 +121,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### AlternateTexture
 - INamed
+### Ammunition
+- IHasDestructible
+- IHasIcons
+- IModeled
+- INamed
+- IObjectBounded
 ### Armor
 - IHasDestructible
 - INamed

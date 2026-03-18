@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
+                    Ammunition_Registration.Instance,
                     Armor_Registration.Instance,
                     Book_Registration.Instance,
                     Container_Registration.Instance,
@@ -58,6 +59,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Ammunition_Registration.Instance,
                     BodyPartItem_Registration.Instance,
                     Book_Registration.Instance,
                     HeadPartItem_Registration.Instance,
@@ -76,6 +78,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
+                    Ammunition_Registration.Instance,
                     BodyData_Registration.Instance,
                     BodyPartItem_Registration.Instance,
                     Book_Registration.Instance,
@@ -140,6 +143,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Activator_Registration.Instance,
                     AlternateTexture_Registration.Instance,
+                    Ammunition_Registration.Instance,
                     Armor_Registration.Instance,
                     Book_Registration.Instance,
                     Class_Registration.Instance,
@@ -199,6 +203,7 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     AcousticSpace_Registration.Instance,
+                    Ammunition_Registration.Instance,
                     Armor_Registration.Instance,
                     Book_Registration.Instance,
                     Container_Registration.Instance,

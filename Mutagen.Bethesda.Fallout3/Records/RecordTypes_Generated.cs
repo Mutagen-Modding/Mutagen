@@ -8,6 +8,7 @@ public partial class RecordTypes
     public static readonly RecordType ACRE = new(0x45524341);
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ALCH = new(0x48434C41);
+    public static readonly RecordType AMEF = new(0x46454D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);
     public static readonly RecordType ANAM = new(0x4D414E41);
     public static readonly RecordType ARMO = new(0x4F4D5241);
@@ -31,6 +32,7 @@ public partial class RecordTypes
     public static readonly RecordType CRDT = new(0x54445243);
     public static readonly RecordType CREA = new(0x41455243);
     public static readonly RecordType CTDA = new(0x41445443);
+    public static readonly RecordType DAT2 = new(0x32544144);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DEBR = new(0x52424544);
     public static readonly RecordType DELE = new(0x454C4544);
@@ -140,6 +142,7 @@ public partial class RecordTypes
     public static readonly RecordType PWAT = new(0x54415750);
     public static readonly RecordType QNAM = new(0x4D414E51);
     public static readonly RecordType RACE = new(0x45434152);
+    public static readonly RecordType RCIL = new(0x4C494352);
     public static readonly RecordType RDAT = new(0x54414452);
     public static readonly RecordType REFR = new(0x52464552);
     public static readonly RecordType REPL = new(0x4C504552);

@@ -56,13 +56,37 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
+        /// Scope a load order query to AmmoEffect
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on AmmoEffect</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmoEffect, IAmmoEffectGetter> AmmoEffect(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmoEffect, IAmmoEffectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IAmmoEffectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IAmmoEffect, IAmmoEffectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to AmmoEffect
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on AmmoEffect</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmoEffect, IAmmoEffectGetter> AmmoEffect(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmoEffect, IAmmoEffectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IAmmoEffectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IAmmoEffect, IAmmoEffectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to Ammunition
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Ammunition</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter> Ammunition(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter> Ammunition(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -72,9 +96,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Ammunition</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter> Ammunition(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter> Ammunition(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IAmmunition, IAmmunitionGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

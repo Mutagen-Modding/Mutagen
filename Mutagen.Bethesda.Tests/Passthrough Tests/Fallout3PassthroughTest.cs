@@ -235,7 +235,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("GRAS"),
             new RecordType("TREE"),
             new RecordType("FURN"),
-            new RecordType("WEAP"));
+            new RecordType("WEAP"),
+            new RecordType("AMMO"));
         return ret;
     }
 }

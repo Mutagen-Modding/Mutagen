@@ -571,6 +571,12 @@
     <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\AmmoEffect_Generated.cs">
+      <DependentUpon>AmmoEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Ammunition.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Ammunition_Generated.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
@@ -651,7 +657,8 @@
     <Compile Include="Records\MajorRecords\WeaponVats_Generated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
-
-
+    <Compile Include="Records\MajorRecords\AmmunitionExtraData_Generated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

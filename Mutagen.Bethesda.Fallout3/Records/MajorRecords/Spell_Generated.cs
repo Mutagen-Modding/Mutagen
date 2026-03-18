@@ -77,40 +77,13 @@ namespace Mutagen.Bethesda.Fallout3
         public Spell.SpellType Type { get; set; } = default(Spell.SpellType);
         #endregion
         #region Unused1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused1 = new byte[4];
-        public MemorySlice<Byte> Unused1
-        {
-            get => _Unused1;
-            set => this._Unused1 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ISpellGetter.Unused1 => this.Unused1;
+        public UInt32 Unused1 { get; set; } = default(UInt32);
         #endregion
         #region Unused2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused2 = new byte[4];
-        public MemorySlice<Byte> Unused2
-        {
-            get => _Unused2;
-            set => this._Unused2 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ISpellGetter.Unused2 => this.Unused2;
+        public UInt32 Unused2 { get; set; } = default(UInt32);
         #endregion
         #region Flags
         public Spell.SpellFlag Flags { get; set; } = default(Spell.SpellFlag);
-        #endregion
-        #region Unused3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused3 = new byte[3];
-        public MemorySlice<Byte> Unused3
-        {
-            get => _Unused3;
-            set => this._Unused3 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ISpellGetter.Unused3 => this.Unused3;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -156,7 +129,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Unused1 = initialValue;
                 this.Unused2 = initialValue;
                 this.Flags = initialValue;
-                this.Unused3 = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, []);
             }
 
@@ -173,7 +145,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Unused1,
                 TItem Unused2,
                 TItem Flags,
-                TItem Unused3,
                 TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -189,7 +160,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Unused1 = Unused1;
                 this.Unused2 = Unused2;
                 this.Flags = Flags;
-                this.Unused3 = Unused3;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, []);
             }
 
@@ -207,7 +177,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Unused1;
             public TItem Unused2;
             public TItem Flags;
-            public TItem Unused3;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
 
@@ -227,7 +196,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
                 if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
@@ -239,7 +207,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Unused1);
                 hash.Add(this.Unused2);
                 hash.Add(this.Flags);
-                hash.Add(this.Unused3);
                 hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -256,7 +223,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Unused1)) return false;
                 if (!eval(this.Unused2)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Unused3)) return false;
                 if (this.Effects != null)
                 {
                     if (!eval(this.Effects.Overall)) return false;
@@ -282,7 +248,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Unused1)) return true;
                 if (eval(this.Unused2)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Unused3)) return true;
                 if (this.Effects != null)
                 {
                     if (eval(this.Effects.Overall)) return true;
@@ -315,7 +280,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Unused1 = eval(this.Unused1);
                 obj.Unused2 = eval(this.Unused2);
                 obj.Flags = eval(this.Flags);
-                obj.Unused3 = eval(this.Unused3);
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
@@ -369,10 +333,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Unused3 ?? true)
-                    {
-                        sb.AppendItem(Unused3, "Unused3");
-                    }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
                     {
@@ -408,7 +368,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Unused1;
             public Exception? Unused2;
             public Exception? Flags;
-            public Exception? Unused3;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
             #endregion
 
@@ -428,8 +387,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return Unused2;
                     case Spell_FieldIndex.Flags:
                         return Flags;
-                    case Spell_FieldIndex.Unused3:
-                        return Unused3;
                     case Spell_FieldIndex.Effects:
                         return Effects;
                     default:
@@ -456,9 +413,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Spell_FieldIndex.Flags:
                         this.Flags = ex;
-                        break;
-                    case Spell_FieldIndex.Unused3:
-                        this.Unused3 = ex;
                         break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
@@ -489,9 +443,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case Spell_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Unused3:
-                        this.Unused3 = (Exception?)obj;
-                        break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
@@ -509,7 +460,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Unused1 != null) return true;
                 if (Unused2 != null) return true;
                 if (Flags != null) return true;
-                if (Unused3 != null) return true;
                 if (Effects != null) return true;
                 return false;
             }
@@ -552,9 +502,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
-                {
-                    sb.AppendItem(Unused3, "Unused3");
-                }
                 if (Effects is {} EffectsItem)
                 {
                     sb.AppendLine("Effects =>");
@@ -586,7 +533,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
@@ -615,7 +561,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Unused1;
             public bool Unused2;
             public bool Flags;
-            public bool Unused3;
             public Effect.TranslationMask? Effects;
             #endregion
 
@@ -630,7 +575,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Unused1 = defaultOn;
                 this.Unused2 = defaultOn;
                 this.Flags = defaultOn;
-                this.Unused3 = defaultOn;
             }
 
             #endregion
@@ -643,7 +587,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Unused1, null));
                 ret.Add((Unused2, null));
                 ret.Add((Flags, null));
-                ret.Add((Unused3, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
             }
 
@@ -789,10 +732,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         new String? Name { get; set; }
         new Spell.SpellType Type { get; set; }
-        new MemorySlice<Byte> Unused1 { get; set; }
-        new MemorySlice<Byte> Unused2 { get; set; }
+        new UInt32 Unused1 { get; set; }
+        new UInt32 Unused2 { get; set; }
         new Spell.SpellFlag Flags { get; set; }
-        new MemorySlice<Byte> Unused3 { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
@@ -822,10 +764,9 @@ namespace Mutagen.Bethesda.Fallout3
         String? Name { get; }
         #endregion
         Spell.SpellType Type { get; }
-        ReadOnlyMemorySlice<Byte> Unused1 { get; }
-        ReadOnlyMemorySlice<Byte> Unused2 { get; }
+        UInt32 Unused1 { get; }
+        UInt32 Unused2 { get; }
         Spell.SpellFlag Flags { get; }
-        ReadOnlyMemorySlice<Byte> Unused3 { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
@@ -1008,8 +949,7 @@ namespace Mutagen.Bethesda.Fallout3
         Unused1 = 9,
         Unused2 = 10,
         Flags = 11,
-        Unused3 = 12,
-        Effects = 13,
+        Effects = 12,
     }
     #endregion
 
@@ -1020,9 +960,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Spell.Mask<>);
 
@@ -1106,10 +1046,9 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Name = default;
             item.Type = default(Spell.SpellType);
-            item.Unused1 = new byte[4];
-            item.Unused2 = new byte[4];
+            item.Unused1 = default(UInt32);
+            item.Unused2 = default(UInt32);
             item.Flags = default(Spell.SpellFlag);
-            item.Unused3 = new byte[3];
             item.Effects.Clear();
             base.Clear(item);
         }
@@ -1198,10 +1137,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
-            ret.Unused1 = MemoryExtensions.SequenceEqual(item.Unused1.Span, rhs.Unused1.Span);
-            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
+            ret.Unused1 = item.Unused1 == rhs.Unused1;
+            ret.Unused2 = item.Unused2 == rhs.Unused2;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1266,19 +1204,15 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused1 ?? true)
             {
-                sb.AppendLine($"Unused1 => {SpanExt.ToHexString(item.Unused1)}");
+                sb.AppendItem(item.Unused1, "Unused1");
             }
             if (printMask?.Unused2 ?? true)
             {
-                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+                sb.AppendItem(item.Unused2, "Unused2");
             }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Unused3 ?? true)
-            {
-                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1354,19 +1288,15 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Unused1) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused1.Span, rhs.Unused1.Span)) return false;
+                if (lhs.Unused1 != rhs.Unused1) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Unused2) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+                if (lhs.Unused2 != rhs.Unused2) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Unused3) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -1408,7 +1338,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Unused1);
             hash.Add(item.Unused2);
             hash.Add(item.Flags);
-            hash.Add(item.Unused3);
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1527,19 +1456,15 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Unused1) ?? true))
             {
-                item.Unused1 = rhs.Unused1.ToArray();
+                item.Unused1 = rhs.Unused1;
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Unused2) ?? true))
             {
-                item.Unused2 = rhs.Unused2.ToArray();
+                item.Unused2 = rhs.Unused2;
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Unused3) ?? true))
-            {
-                item.Unused3 = rhs.Unused3.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -1745,19 +1670,12 @@ namespace Mutagen.Bethesda.Fallout3
                     writer,
                     item.Type,
                     length: 4);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused1);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused2);
+                writer.Write(item.Unused1);
+                writer.Write(item.Unused2);
                 EnumBinaryTranslation<Spell.SpellFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
-                    length: 1);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused3);
+                    length: 4);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
@@ -1855,14 +1773,15 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Type = EnumBinaryTranslation<Spell.SpellType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.Unused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    if (dataFrame.Remaining < 1) return null;
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unused1 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unused2 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<Spell.SpellFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 1);
-                    item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
-                    return (int)Spell_FieldIndex.Unused3;
+                        length: 4);
+                    return (int)Spell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -1951,22 +1870,17 @@ namespace Mutagen.Bethesda.Fallout3
         #region Unused1
         private int _Unused1Location => _SPITLocation!.Value.Min + 0x4;
         private bool _Unused1_IsSet => _SPITLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused1 => _Unused1_IsSet ? _recordData.Span.Slice(_Unused1Location, 4).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        public UInt32 Unused1 => _Unused1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_Unused1Location, 4)) : default(UInt32);
         #endregion
         #region Unused2
         private int _Unused2Location => _SPITLocation!.Value.Min + 0x8;
         private bool _Unused2_IsSet => _SPITLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused2 => _Unused2_IsSet ? _recordData.Span.Slice(_Unused2Location, 4).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        public UInt32 Unused2 => _Unused2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_Unused2Location, 4)) : default(UInt32);
         #endregion
         #region Flags
         private int _FlagsLocation => _SPITLocation!.Value.Min + 0xC;
         private bool _Flags_IsSet => _SPITLocation.HasValue;
-        public Spell.SpellFlag Flags => _Flags_IsSet ? (Spell.SpellFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
-        #endregion
-        #region Unused3
-        private int _Unused3Location => _SPITLocation!.Value.Min + 0xD;
-        private bool _Unused3_IsSet => _SPITLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused3 => _Unused3_IsSet ? _recordData.Span.Slice(_Unused3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        public Spell.SpellFlag Flags => _Flags_IsSet ? (Spell.SpellFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(
@@ -2046,7 +1960,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SPIT:
                 {
                     _SPITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Spell_FieldIndex.Unused3;
+                    return (int)Spell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:

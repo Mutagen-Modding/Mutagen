@@ -51,15 +51,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[4];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IScriptMetaSummaryGetter.Unknown => this.Unknown;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region RefCount
         public UInt32 RefCount { get; set; } = default(UInt32);
@@ -586,7 +578,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IScriptMetaSummary>,
         IScriptMetaSummaryGetter
     {
-        new MemorySlice<Byte> Unknown { get; set; }
+        new UInt32 Unknown { get; set; }
         new UInt32 RefCount { get; set; }
         new UInt32 VariableCount { get; set; }
         new ScriptFields.ScriptType Type { get; set; }
@@ -605,7 +597,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ScriptMetaSummary_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        UInt32 Unknown { get; }
         UInt32 RefCount { get; }
         Int32 CompiledSize { get; }
         UInt32 VariableCount { get; }
@@ -871,7 +863,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IScriptMetaSummary item)
         {
             ClearPartial();
-            item.Unknown = new byte[4];
+            item.Unknown = default(UInt32);
             item.RefCount = default(UInt32);
             item.VariableCount = default(UInt32);
             item.Type = default(ScriptFields.ScriptType);
@@ -929,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout3
             ScriptMetaSummary.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
             ret.VariableCount = item.VariableCount == rhs.VariableCount;
@@ -981,7 +973,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.RefCount ?? true)
             {
@@ -1014,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
             {
@@ -1082,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if ((copyMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
             {
@@ -1208,9 +1200,7 @@ namespace Mutagen.Bethesda.Fallout3
             IScriptMetaSummaryGetter item,
             MutagenWriter writer)
         {
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
+            writer.Write(item.Unknown);
             writer.Write(item.RefCount);
             ScriptMetaSummaryBinaryWriteTranslation.WriteBinaryCompiledSize(
                 writer: writer,
@@ -1274,7 +1264,7 @@ namespace Mutagen.Bethesda.Fallout3
             IScriptMetaSummary item,
             MutagenFrame frame)
         {
-            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Unknown = frame.ReadUInt32();
             item.RefCount = frame.ReadUInt32();
             ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustom(
                 frame: frame,
@@ -1353,7 +1343,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x0, 0x4).ToArray();
+        public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         #region CompiledSize
         public partial Int32 GetCompiledSizeCustom(int location);

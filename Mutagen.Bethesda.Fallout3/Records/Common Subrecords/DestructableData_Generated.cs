@@ -60,15 +60,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Boolean VATSTargetable { get; set; } = default(Boolean);
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[2];
-        public MemorySlice<Byte> Unused
-        {
-            get => _Unused;
-            set => this._Unused = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDestructableDataGetter.Unused => this.Unused;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -523,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Int32 Health { get; set; }
         new Byte DESTCount { get; set; }
         new Boolean VATSTargetable { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
+        new UInt16 Unused { get; set; }
     }
 
     public partial interface IDestructableDataGetter :
@@ -541,7 +533,7 @@ namespace Mutagen.Bethesda.Fallout3
         Int32 Health { get; }
         Byte DESTCount { get; }
         Boolean VATSTargetable { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        UInt16 Unused { get; }
 
     }
 
@@ -803,7 +795,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Health = default(Int32);
             item.DESTCount = default(Byte);
             item.VATSTargetable = default(Boolean);
-            item.Unused = new byte[2];
+            item.Unused = default(UInt16);
         }
         
         #region Mutagen
@@ -860,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Health = item.Health == rhs.Health;
             ret.DESTCount = item.DESTCount == rhs.DESTCount;
             ret.VATSTargetable = item.VATSTargetable == rhs.VATSTargetable;
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Unused = item.Unused == rhs.Unused;
         }
         
         public string Print(
@@ -919,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendItem(item.Unused, "Unused");
             }
         }
         
@@ -944,7 +936,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)DestructableData_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             return true;
         }
@@ -1002,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)DestructableData_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.Unused = rhs.Unused;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1115,9 +1107,7 @@ namespace Mutagen.Bethesda.Fallout3
             writer.Write(item.Health);
             writer.Write(item.DESTCount);
             writer.Write(item.VATSTargetable);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused);
+            writer.Write(item.Unused);
         }
 
         public void Write(
@@ -1161,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Health = frame.ReadInt32();
             item.DESTCount = frame.ReadUInt8();
             item.VATSTargetable = frame.ReadBoolean();
-            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Unused = frame.ReadUInt16();
         }
 
     }
@@ -1230,7 +1220,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Int32 Health => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public Byte DESTCount => _structData.Span[0x4];
         public Boolean VATSTargetable => _structData.Slice(0x5, 0x1)[0] >= 1;
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x6, 0x2).ToArray();
+        public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

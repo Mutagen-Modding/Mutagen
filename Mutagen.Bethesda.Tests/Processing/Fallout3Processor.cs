@@ -40,6 +40,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.MSTT, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.TERM, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
+        AddDynamicProcessing(RecordTypes.AMMO, ProcessAmmunition);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
     }
@@ -169,6 +170,28 @@ public class Fallout3Processor : Processor
                 var vatsLenPos = fileOffset + vats.Location + 4;
                 Instructions.SetSubstitution(vatsLenPos, BitConverter.GetBytes((ushort)20));
                 ProcessLengths(majorFrame, 4, fileOffset);
+            }
+        }
+    }
+
+    private void ProcessAmmunition(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+        ProcessDestructible(majorFrame, fileOffset);
+
+        // DAT2: FNV only — pad 12-byte variants to 20 so all 5 fields are present.
+        // Mutagen always writes all 5 fields (20 bytes); processor normalizes short variants.
+        if (majorFrame.TryFindSubrecord(RecordTypes.DAT2, out var dat2))
+        {
+            if (dat2.ContentLength == 12)
+            {
+                var padPos = fileOffset + dat2.Location + Meta.SubConstants.HeaderLength + 12;
+                Instructions.SetAddition(padPos, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+                var dat2LenPos = fileOffset + dat2.Location + 4;
+                Instructions.SetSubstitution(dat2LenPos, BitConverter.GetBytes((ushort)20));
+                ProcessLengths(majorFrame, 8, fileOffset);
             }
         }
     }

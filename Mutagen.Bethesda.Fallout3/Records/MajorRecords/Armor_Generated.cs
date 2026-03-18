@@ -291,14 +291,16 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region DnamUnused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _DnamUnused = new byte[2];
-        public MemorySlice<Byte> DnamUnused
+        private UInt16 _DnamUnused;
+        public UInt16 DnamUnused
         {
-            get => _DnamUnused;
-            set => this._DnamUnused = value;
+            get => this._DnamUnused;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._DnamUnused = value;
+            }
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IArmorGetter.DnamUnused => this.DnamUnused;
         #endregion
         #region OverridesAnimationSounds
         public Boolean? OverridesAnimationSounds { get; set; }
@@ -1824,7 +1826,7 @@ namespace Mutagen.Bethesda.Fallout3
         new UInt16 DnamSlot1 { get; set; }
         new Single DamageThreshold { get; set; }
         new UInt16 DnamSlot2 { get; set; }
-        new MemorySlice<Byte> DnamUnused { get; set; }
+        new UInt16 DnamUnused { get; set; }
         new Boolean? OverridesAnimationSounds { get; set; }
         new ExtendedList<ArmorAnimationSound> AnimationSounds { get; }
         new IFormLinkNullable<IArmorGetter> AnimationSoundsTemplate { get; set; }
@@ -1899,7 +1901,7 @@ namespace Mutagen.Bethesda.Fallout3
         UInt16 DnamSlot1 { get; }
         Single DamageThreshold { get; }
         UInt16 DnamSlot2 { get; }
-        ReadOnlyMemorySlice<Byte> DnamUnused { get; }
+        UInt16 DnamUnused { get; }
         Boolean? OverridesAnimationSounds { get; }
         IReadOnlyList<IArmorAnimationSoundGetter> AnimationSounds { get; }
         IFormLinkNullableGetter<IArmorGetter> AnimationSoundsTemplate { get; }
@@ -2302,7 +2304,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.DnamSlot1 = default(UInt16);
             item.DamageThreshold = default(Single);
             item.DnamSlot2 = default(UInt16);
-            item.DnamUnused = new byte[2];
+            item.DnamUnused = default(UInt16);
             item.OverridesAnimationSounds = default;
             item.AnimationSounds.Clear();
             item.AnimationSoundsTemplate.Clear();
@@ -2451,7 +2453,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.DnamSlot1 = item.DnamSlot1 == rhs.DnamSlot1;
             ret.DamageThreshold = item.DamageThreshold.EqualsWithin(rhs.DamageThreshold);
             ret.DnamSlot2 = item.DnamSlot2 == rhs.DnamSlot2;
-            ret.DnamUnused = MemoryExtensions.SequenceEqual(item.DnamUnused.Span, rhs.DnamUnused.Span);
+            ret.DnamUnused = item.DnamUnused == rhs.DnamUnused;
             ret.OverridesAnimationSounds = item.OverridesAnimationSounds == rhs.OverridesAnimationSounds;
             ret.AnimationSounds = item.AnimationSounds.CollectionEqualsHelper(
                 rhs.AnimationSounds,
@@ -2629,7 +2631,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.DnamUnused ?? true)
             {
-                sb.AppendLine($"DnamUnused => {SpanExt.ToHexString(item.DnamUnused)}");
+                sb.AppendItem(item.DnamUnused, "DnamUnused");
             }
             if ((printMask?.OverridesAnimationSounds ?? true)
                 && item.OverridesAnimationSounds is {} OverridesAnimationSoundsItem)
@@ -2846,7 +2848,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.DnamUnused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.DnamUnused.Span, rhs.DnamUnused.Span)) return false;
+                if (lhs.DnamUnused != rhs.DnamUnused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.OverridesAnimationSounds) ?? true))
             {
@@ -3386,7 +3388,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DnamUnused) ?? true))
             {
-                item.DnamUnused = rhs.DnamUnused.ToArray();
+                item.DnamUnused = rhs.DnamUnused;
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.OverridesAnimationSounds) ?? true))
             {
@@ -3724,9 +3726,7 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: writer,
                         item: item.DamageThreshold);
                     writer.Write(item.DnamSlot2);
-                    ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.DnamUnused);
+                    writer.Write(item.DnamUnused);
                 }
             }
             if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
@@ -4069,7 +4069,8 @@ namespace Mutagen.Bethesda.Fallout3
                     item.DamageThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 2) return null;
                     item.DnamSlot2 = dataFrame.ReadUInt16();
-                    item.DnamUnused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    if (dataFrame.Remaining < 2) return null;
+                    item.DnamUnused = dataFrame.ReadUInt16();
                     return (int)Armor_FieldIndex.DnamUnused;
                 }
                 case RecordTypeInts.BNAM:
@@ -4274,7 +4275,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region DnamUnused
         private int _DnamUnusedLocation => _DNAMLocation!.Value.Min + 0xA;
         private bool _DnamUnused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Armor.DNAMDataType.Break0);
-        public ReadOnlyMemorySlice<Byte> DnamUnused => _DnamUnused_IsSet ? _recordData.Span.Slice(_DnamUnusedLocation, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        public UInt16 DnamUnused => _DnamUnused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DnamUnusedLocation, 2)) : default(UInt16);
         #endregion
         #region OverridesAnimationSounds
         private int? _OverridesAnimationSoundsLocation;

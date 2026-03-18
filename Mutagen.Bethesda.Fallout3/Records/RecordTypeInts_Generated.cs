@@ -6,6 +6,7 @@ public partial class RecordTypeInts
     public const int ACRE = 0x45524341;
     public const int ACTI = 0x49544341;
     public const int ALCH = 0x48434C41;
+    public const int AMEF = 0x46454D41;
     public const int AMMO = 0x4F4D4D41;
     public const int ANAM = 0x4D414E41;
     public const int ARMO = 0x4F4D5241;
@@ -29,6 +30,7 @@ public partial class RecordTypeInts
     public const int CRDT = 0x54445243;
     public const int CREA = 0x41455243;
     public const int CTDA = 0x41445443;
+    public const int DAT2 = 0x32544144;
     public const int DATA = 0x41544144;
     public const int DEBR = 0x52424544;
     public const int DELE = 0x454C4544;
@@ -138,6 +140,7 @@ public partial class RecordTypeInts
     public const int PWAT = 0x54415750;
     public const int QNAM = 0x4D414E51;
     public const int RACE = 0x45434152;
+    public const int RCIL = 0x4C494352;
     public const int RDAT = 0x54414452;
     public const int REFR = 0x52464552;
     public const int REPL = 0x4C504552;

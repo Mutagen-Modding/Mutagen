@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammunition" objType="Record" baseClass="Fallout3MajorRecord"
-          recordType="AMMO">
-    <Fields />
+  <Object name="Ammunition" recordType="AMMO" objType="Record"
+          baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="Script" recordType="SCRI" refName="Script">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Float name="Speed" />
+          <Enum name="Flags" enumName="Ammunition.AmmoFlag" byteLength="4" />
+          <Int32 name="Value" />
+          <UInt8 name="ClipRounds" />
+        </Fields>
+      </Data>
+      <RefDirect name="ExtraData" refName="AmmunitionExtraData" binary="Custom">
+        <ModHeaderVersioning version="1.32" />
+      </RefDirect>
+      <String name="ShortName" recordType="ONAM" />
+      <String name="Abbreviation" recordType="QNAM">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <List name="AmmoEffects">
+        <FormLink recordType="RCIL" refName="AmmoEffect" />
+      </List>
+    </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IAmmoOrList</LinkInterface>
+  </Object>
+  <Object name="AmmunitionExtraData" objType="Subrecord" recordType="DAT2">
+    <Fields>
+      <UInt32 name="ProjectilesPerShot" />
+      <FormLink name="Projectile" refName="Projectile" />
+      <Float name="Weight" />
+      <FormLink name="ConsumedAmmo">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Float name="ConsumedPercentage" />
+    </Fields>
   </Object>
 </Loqui>

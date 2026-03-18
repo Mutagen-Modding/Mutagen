@@ -7,14 +7,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +57,163 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IAmmunitionGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
+        public String Name { get; set; } = string.Empty;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IAmmunitionGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Icons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IAmmunitionGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
+        #endregion
+        #region Script
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> IAmmunitionGetter.Script => this.Script;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IAmmunitionGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
+        #endregion
+        #region PickUpSound
+        private readonly IFormLinkNullable<ISoundGetter> _PickUpSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IAmmunitionGetter.PickUpSound => this.PickUpSound;
+        #endregion
+        #region DropSound
+        private readonly IFormLinkNullable<ISoundGetter> _DropSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> DropSound
+        {
+            get => _DropSound;
+            set => _DropSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IAmmunitionGetter.DropSound => this.DropSound;
+        #endregion
+        #region Speed
+        public Single Speed { get; set; } = default(Single);
+        #endregion
+        #region Flags
+        public Ammunition.AmmoFlag Flags { get; set; } = default(Ammunition.AmmoFlag);
+        #endregion
+        #region Value
+        public Int32 Value { get; set; } = default(Int32);
+        #endregion
+        #region ClipRounds
+        public Byte ClipRounds { get; set; } = default(Byte);
+        #endregion
+        #region ExtraData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AmmunitionExtraData? _ExtraData;
+        public AmmunitionExtraData? ExtraData
+        {
+            get => _ExtraData;
+            set => _ExtraData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAmmunitionExtraDataGetter? IAmmunitionGetter.ExtraData => this.ExtraData;
+        #endregion
+        #region ShortName
+        public String? ShortName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAmmunitionGetter.ShortName => this.ShortName;
+        #endregion
+        #region Abbreviation
+        public String? Abbreviation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAmmunitionGetter.Abbreviation => this.Abbreviation;
+        #endregion
+        #region AmmoEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IAmmoEffectGetter>> _AmmoEffects = new ExtendedList<IFormLinkGetter<IAmmoEffectGetter>>();
+        public ExtendedList<IFormLinkGetter<IAmmoEffectGetter>> AmmoEffects
+        {
+            get => this._AmmoEffects;
+            init => this._AmmoEffects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IAmmoEffectGetter>> IAmmunitionGetter.AmmoEffects => _AmmoEffects;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +239,22 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
+                this.Script = initialValue;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.PickUpSound = initialValue;
+                this.DropSound = initialValue;
+                this.Speed = initialValue;
+                this.Flags = initialValue;
+                this.Value = initialValue;
+                this.ClipRounds = initialValue;
+                this.ExtraData = new MaskItem<TItem, AmmunitionExtraData.Mask<TItem>?>(initialValue, new AmmunitionExtraData.Mask<TItem>(initialValue));
+                this.ShortName = initialValue;
+                this.Abbreviation = initialValue;
+                this.AmmoEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -87,7 +264,23 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem Icons,
+                TItem Script,
+                TItem Destructible,
+                TItem PickUpSound,
+                TItem DropSound,
+                TItem Speed,
+                TItem Flags,
+                TItem Value,
+                TItem ClipRounds,
+                TItem ExtraData,
+                TItem ShortName,
+                TItem Abbreviation,
+                TItem AmmoEffects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +290,22 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
+                this.Script = Script;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.PickUpSound = PickUpSound;
+                this.DropSound = DropSound;
+                this.Speed = Speed;
+                this.Flags = Flags;
+                this.Value = Value;
+                this.ClipRounds = ClipRounds;
+                this.ExtraData = new MaskItem<TItem, AmmunitionExtraData.Mask<TItem>?>(ExtraData, new AmmunitionExtraData.Mask<TItem>(ExtraData));
+                this.ShortName = ShortName;
+                this.Abbreviation = Abbreviation;
+                this.AmmoEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AmmoEffects, []);
             }
 
             #pragma warning disable CS8618
@@ -105,6 +314,25 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
+            public TItem Script;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem PickUpSound;
+            public TItem DropSound;
+            public TItem Speed;
+            public TItem Flags;
+            public TItem Value;
+            public TItem ClipRounds;
+            public MaskItem<TItem, AmmunitionExtraData.Mask<TItem>?>? ExtraData { get; set; }
+            public TItem ShortName;
+            public TItem Abbreviation;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AmmoEffects;
             #endregion
 
             #region Equals
@@ -118,11 +346,43 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.DropSound, rhs.DropSound)) return false;
+                if (!object.Equals(this.Speed, rhs.Speed)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.ClipRounds, rhs.ClipRounds)) return false;
+                if (!object.Equals(this.ExtraData, rhs.ExtraData)) return false;
+                if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
+                if (!object.Equals(this.Abbreviation, rhs.Abbreviation)) return false;
+                if (!object.Equals(this.AmmoEffects, rhs.AmmoEffects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Icons);
+                hash.Add(this.Script);
+                hash.Add(this.Destructible);
+                hash.Add(this.PickUpSound);
+                hash.Add(this.DropSound);
+                hash.Add(this.Speed);
+                hash.Add(this.Flags);
+                hash.Add(this.Value);
+                hash.Add(this.ClipRounds);
+                hash.Add(this.ExtraData);
+                hash.Add(this.ShortName);
+                hash.Add(this.Abbreviation);
+                hash.Add(this.AmmoEffects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +393,52 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.DropSound)) return false;
+                if (!eval(this.Speed)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.ClipRounds)) return false;
+                if (ExtraData != null)
+                {
+                    if (!eval(this.ExtraData.Overall)) return false;
+                    if (this.ExtraData.Specific != null && !this.ExtraData.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ShortName)) return false;
+                if (!eval(this.Abbreviation)) return false;
+                if (this.AmmoEffects != null)
+                {
+                    if (!eval(this.AmmoEffects.Overall)) return false;
+                    if (this.AmmoEffects.Specific != null)
+                    {
+                        foreach (var item in this.AmmoEffects.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +447,52 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Script)) return true;
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.DropSound)) return true;
+                if (eval(this.Speed)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Value)) return true;
+                if (eval(this.ClipRounds)) return true;
+                if (ExtraData != null)
+                {
+                    if (eval(this.ExtraData.Overall)) return true;
+                    if (this.ExtraData.Specific != null && this.ExtraData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ShortName)) return true;
+                if (eval(this.Abbreviation)) return true;
+                if (this.AmmoEffects != null)
+                {
+                    if (eval(this.AmmoEffects.Overall)) return true;
+                    if (this.AmmoEffects.Specific != null)
+                    {
+                        foreach (var item in this.AmmoEffects.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +508,35 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.DropSound = eval(this.DropSound);
+                obj.Speed = eval(this.Speed);
+                obj.Flags = eval(this.Flags);
+                obj.Value = eval(this.Value);
+                obj.ClipRounds = eval(this.ClipRounds);
+                obj.ExtraData = this.ExtraData == null ? null : new MaskItem<R, AmmunitionExtraData.Mask<R>?>(eval(this.ExtraData.Overall), this.ExtraData.Specific?.Translate(eval));
+                obj.ShortName = eval(this.ShortName);
+                obj.Abbreviation = eval(this.Abbreviation);
+                if (AmmoEffects != null)
+                {
+                    obj.AmmoEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AmmoEffects.Overall), []);
+                    if (AmmoEffects.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AmmoEffects.Specific = l;
+                        foreach (var item in AmmoEffects.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +555,87 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Ammunition.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Icons?.Overall ?? true)
+                    {
+                        Icons?.Print(sb);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        sb.AppendItem(Script, "Script");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
+                    if (printMask?.PickUpSound ?? true)
+                    {
+                        sb.AppendItem(PickUpSound, "PickUpSound");
+                    }
+                    if (printMask?.DropSound ?? true)
+                    {
+                        sb.AppendItem(DropSound, "DropSound");
+                    }
+                    if (printMask?.Speed ?? true)
+                    {
+                        sb.AppendItem(Speed, "Speed");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        sb.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.ClipRounds ?? true)
+                    {
+                        sb.AppendItem(ClipRounds, "ClipRounds");
+                    }
+                    if (printMask?.ExtraData?.Overall ?? true)
+                    {
+                        ExtraData?.Print(sb);
+                    }
+                    if (printMask?.ShortName ?? true)
+                    {
+                        sb.AppendItem(ShortName, "ShortName");
+                    }
+                    if (printMask?.Abbreviation ?? true)
+                    {
+                        sb.AppendItem(Abbreviation, "Abbreviation");
+                    }
+                    if ((printMask?.AmmoEffects?.Overall ?? true)
+                        && AmmoEffects is {} AmmoEffectsItem)
+                    {
+                        sb.AppendLine("AmmoEffects =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AmmoEffectsItem.Overall);
+                            if (AmmoEffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in AmmoEffectsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +646,63 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
+            public Exception? Script;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? PickUpSound;
+            public Exception? DropSound;
+            public Exception? Speed;
+            public Exception? Flags;
+            public Exception? Value;
+            public Exception? ClipRounds;
+            public MaskItem<Exception?, AmmunitionExtraData.ErrorMask?>? ExtraData;
+            public Exception? ShortName;
+            public Exception? Abbreviation;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AmmoEffects;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
                 switch (enu)
                 {
+                    case Ammunition_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Ammunition_FieldIndex.Name:
+                        return Name;
+                    case Ammunition_FieldIndex.Model:
+                        return Model;
+                    case Ammunition_FieldIndex.Icons:
+                        return Icons;
+                    case Ammunition_FieldIndex.Script:
+                        return Script;
+                    case Ammunition_FieldIndex.Destructible:
+                        return Destructible;
+                    case Ammunition_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case Ammunition_FieldIndex.DropSound:
+                        return DropSound;
+                    case Ammunition_FieldIndex.Speed:
+                        return Speed;
+                    case Ammunition_FieldIndex.Flags:
+                        return Flags;
+                    case Ammunition_FieldIndex.Value:
+                        return Value;
+                    case Ammunition_FieldIndex.ClipRounds:
+                        return ClipRounds;
+                    case Ammunition_FieldIndex.ExtraData:
+                        return ExtraData;
+                    case Ammunition_FieldIndex.ShortName:
+                        return ShortName;
+                    case Ammunition_FieldIndex.Abbreviation:
+                        return Abbreviation;
+                    case Ammunition_FieldIndex.AmmoEffects:
+                        return AmmoEffects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +713,54 @@ namespace Mutagen.Bethesda.Fallout3
                 Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
                 switch (enu)
                 {
+                    case Ammunition_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Ammunition_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Ammunition_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Ammunition_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
+                        break;
+                    case Ammunition_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Ammunition_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Ammunition_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
+                        break;
+                    case Ammunition_FieldIndex.DropSound:
+                        this.DropSound = ex;
+                        break;
+                    case Ammunition_FieldIndex.Speed:
+                        this.Speed = ex;
+                        break;
+                    case Ammunition_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Ammunition_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Ammunition_FieldIndex.ClipRounds:
+                        this.ClipRounds = ex;
+                        break;
+                    case Ammunition_FieldIndex.ExtraData:
+                        this.ExtraData = new MaskItem<Exception?, AmmunitionExtraData.ErrorMask?>(ex, null);
+                        break;
+                    case Ammunition_FieldIndex.ShortName:
+                        this.ShortName = ex;
+                        break;
+                    case Ammunition_FieldIndex.Abbreviation:
+                        this.Abbreviation = ex;
+                        break;
+                    case Ammunition_FieldIndex.AmmoEffects:
+                        this.AmmoEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +772,54 @@ namespace Mutagen.Bethesda.Fallout3
                 Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
                 switch (enu)
                 {
+                    case Ammunition_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Script:
+                        this.Script = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Ammunition_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.DropSound:
+                        this.DropSound = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Speed:
+                        this.Speed = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.ClipRounds:
+                        this.ClipRounds = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.ExtraData:
+                        this.ExtraData = (MaskItem<Exception?, AmmunitionExtraData.ErrorMask?>?)obj;
+                        break;
+                    case Ammunition_FieldIndex.ShortName:
+                        this.ShortName = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Abbreviation:
+                        this.Abbreviation = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.AmmoEffects:
+                        this.AmmoEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +829,22 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icons != null) return true;
+                if (Script != null) return true;
+                if (Destructible != null) return true;
+                if (PickUpSound != null) return true;
+                if (DropSound != null) return true;
+                if (Speed != null) return true;
+                if (Flags != null) return true;
+                if (Value != null) return true;
+                if (ClipRounds != null) return true;
+                if (ExtraData != null) return true;
+                if (ShortName != null) return true;
+                if (Abbreviation != null) return true;
+                if (AmmoEffects != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +871,61 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                Icons?.Print(sb);
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                Destructible?.Print(sb);
+                {
+                    sb.AppendItem(PickUpSound, "PickUpSound");
+                }
+                {
+                    sb.AppendItem(DropSound, "DropSound");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(ClipRounds, "ClipRounds");
+                }
+                ExtraData?.Print(sb);
+                {
+                    sb.AppendItem(ShortName, "ShortName");
+                }
+                {
+                    sb.AppendItem(Abbreviation, "Abbreviation");
+                }
+                if (AmmoEffects is {} AmmoEffectsItem)
+                {
+                    sb.AppendLine("AmmoEffects =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AmmoEffectsItem.Overall);
+                        if (AmmoEffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in AmmoEffectsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +934,22 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.DropSound = this.DropSound.Combine(rhs.DropSound);
+                ret.Speed = this.Speed.Combine(rhs.Speed);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.ClipRounds = this.ClipRounds.Combine(rhs.ClipRounds);
+                ret.ExtraData = this.ExtraData.Combine(rhs.ExtraData, (l, r) => l.Combine(r));
+                ret.ShortName = this.ShortName.Combine(rhs.ShortName);
+                ret.Abbreviation = this.Abbreviation.Combine(rhs.Abbreviation);
+                ret.AmmoEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AmmoEffects?.Overall, rhs.AmmoEffects?.Overall), Noggog.ExceptionExt.Combine(this.AmmoEffects?.Specific, rhs.AmmoEffects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +971,66 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public Icons.TranslationMask? Icons;
+            public bool Script;
+            public Destructible.TranslationMask? Destructible;
+            public bool PickUpSound;
+            public bool DropSound;
+            public bool Speed;
+            public bool Flags;
+            public bool Value;
+            public bool ClipRounds;
+            public AmmunitionExtraData.TranslationMask? ExtraData;
+            public bool ShortName;
+            public bool Abbreviation;
+            public bool AmmoEffects;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Script = defaultOn;
+                this.PickUpSound = defaultOn;
+                this.DropSound = defaultOn;
+                this.Speed = defaultOn;
+                this.Flags = defaultOn;
+                this.Value = defaultOn;
+                this.ClipRounds = defaultOn;
+                this.ShortName = defaultOn;
+                this.Abbreviation = defaultOn;
+                this.AmmoEffects = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((PickUpSound, null));
+                ret.Add((DropSound, null));
+                ret.Add((Speed, null));
+                ret.Add((Flags, null));
+                ret.Add((Value, null));
+                ret.Add((ClipRounds, null));
+                ret.Add((ExtraData != null ? ExtraData.OnOverall : DefaultOn, ExtraData?.GetCrystal()));
+                ret.Add((ShortName, null));
+                ret.Add((Abbreviation, null));
+                ret.Add((AmmoEffects, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1042,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AmmunitionCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionSetterCommon.Instance.RemapLinks(this, mapping);
         public Ammunition(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -333,6 +1082,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IAmmunition);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AmmunitionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AmmunitionSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AmmunitionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AmmunitionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -414,10 +1167,48 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IAmmunition :
         IAmmoOrList,
         IAmmunitionGetter,
+        IAssetLinkContainer,
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
+        IHasDestructible,
+        IHasIcons,
         IItem,
-        ILoquiObjectSetter<IAmmunitionInternal>
+        ILoquiObjectSetter<IAmmunitionInternal>,
+        IModeled,
+        INamedRequired,
+        IObjectBounded
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
+        new String Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons? Icons { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
+        new IFormLinkNullable<ISoundGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> DropSound { get; set; }
+        new Single Speed { get; set; }
+        new Ammunition.AmmoFlag Flags { get; set; }
+        new Int32 Value { get; set; }
+        new Byte ClipRounds { get; set; }
+        new AmmunitionExtraData? ExtraData { get; set; }
+        new String? ShortName { get; set; }
+        new String? Abbreviation { get; set; }
+        new ExtendedList<IFormLinkGetter<IAmmoEffectGetter>> AmmoEffects { get; }
     }
 
     public partial interface IAmmunitionInternal :
@@ -431,12 +1222,60 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IAmmunitionGetter :
         IFallout3MajorRecordGetter,
         IAmmoOrListGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHasDestructibleGetter,
+        IHasIconsGetter,
         IItemGetter,
         ILoquiObject<IAmmunitionGetter>,
-        IMapsToGetter<IAmmunitionGetter>
+        IMapsToGetter<IAmmunitionGetter>,
+        IModeledGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter
+        /// </summary>
+        String Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter? Icons { get; }
+        #endregion
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
+        #endregion
+        IFormLinkNullableGetter<ISoundGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> DropSound { get; }
+        Single Speed { get; }
+        Ammunition.AmmoFlag Flags { get; }
+        Int32 Value { get; }
+        Byte ClipRounds { get; }
+        IAmmunitionExtraDataGetter? ExtraData { get; }
+        String? ShortName { get; }
+        String? Abbreviation { get; }
+        IReadOnlyList<IFormLinkGetter<IAmmoEffectGetter>> AmmoEffects { get; }
 
     }
 
@@ -613,6 +1452,22 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Icons = 10,
+        Script = 11,
+        Destructible = 12,
+        PickUpSound = 13,
+        DropSound = 14,
+        Speed = 15,
+        Flags = 16,
+        Value = 17,
+        ClipRounds = 18,
+        ExtraData = 19,
+        ShortName = 20,
+        Abbreviation = 21,
+        AmmoEffects = 22,
     }
     #endregion
 
@@ -623,9 +1478,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -655,8 +1510,30 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.AMMO);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.AMMO);
+            var all = RecordCollection.Factory(
+                RecordTypes.AMMO,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.ICON,
+                RecordTypes.SCRI,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.YNAM,
+                RecordTypes.ZNAM,
+                RecordTypes.DATA,
+                RecordTypes.DAT2,
+                RecordTypes.ONAM,
+                RecordTypes.QNAM,
+                RecordTypes.RCIL);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
@@ -698,6 +1575,22 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IAmmunitionInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Name = string.Empty;
+            item.Model = null;
+            item.Icons = null;
+            item.Script.Clear();
+            item.Destructible = null;
+            item.PickUpSound.Clear();
+            item.DropSound.Clear();
+            item.Speed = default(Single);
+            item.Flags = default(Ammunition.AmmoFlag);
+            item.Value = default(Int32);
+            item.ClipRounds = default(Byte);
+            item.ExtraData = null;
+            item.ShortName = default;
+            item.Abbreviation = default;
+            item.AmmoEffects.Clear();
             base.Clear(item);
         }
         
@@ -715,6 +1608,39 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IAmmunition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Script.Relink(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.DropSound.Relink(mapping);
+            obj.ExtraData?.RemapLinks(mapping);
+            obj.AmmoEffects.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAmmunition obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAmmunition obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Icons?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -782,6 +1708,41 @@ namespace Mutagen.Bethesda.Fallout3
             Ammunition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.DropSound = item.DropSound.Equals(rhs.DropSound);
+            ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Value = item.Value == rhs.Value;
+            ret.ClipRounds = item.ClipRounds == rhs.ClipRounds;
+            ret.ExtraData = EqualsMaskHelper.EqualsHelper(
+                item.ExtraData,
+                rhs.ExtraData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
+            ret.Abbreviation = string.Equals(item.Abbreviation, rhs.Abbreviation);
+            ret.AmmoEffects = item.AmmoEffects.CollectionEqualsHelper(
+                rhs.AmmoEffects,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -831,6 +1792,86 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if (printMask?.Name ?? true)
+            {
+                sb.AppendItem(item.Name, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons is {} IconsItem)
+            {
+                IconsItem?.Print(sb, "Icons");
+            }
+            if (printMask?.Script ?? true)
+            {
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
+            if (printMask?.PickUpSound ?? true)
+            {
+                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
+            }
+            if (printMask?.DropSound ?? true)
+            {
+                sb.AppendItem(item.DropSound.FormKeyNullable, "DropSound");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                sb.AppendItem(item.Speed, "Speed");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Value ?? true)
+            {
+                sb.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.ClipRounds ?? true)
+            {
+                sb.AppendItem(item.ClipRounds, "ClipRounds");
+            }
+            if ((printMask?.ExtraData?.Overall ?? true)
+                && item.ExtraData is {} ExtraDataItem)
+            {
+                ExtraDataItem?.Print(sb, "ExtraData");
+            }
+            if ((printMask?.ShortName ?? true)
+                && item.ShortName is {} ShortNameItem)
+            {
+                sb.AppendItem(ShortNameItem, "ShortName");
+            }
+            if ((printMask?.Abbreviation ?? true)
+                && item.Abbreviation is {} AbbreviationItem)
+            {
+                sb.AppendItem(AbbreviationItem, "Abbreviation");
+            }
+            if (printMask?.AmmoEffects?.Overall ?? true)
+            {
+                sb.AppendLine("AmmoEffects =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.AmmoEffects)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static Ammunition_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -881,6 +1922,90 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Icons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DropSound) ?? true))
+            {
+                if (!lhs.DropSound.Equals(rhs.DropSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Speed) ?? true))
+            {
+                if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ClipRounds) ?? true))
+            {
+                if (lhs.ClipRounds != rhs.ClipRounds) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ExtraData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ExtraData, rhs.ExtraData, out var lhsExtraData, out var rhsExtraData, out var isExtraDataEqual))
+                {
+                    if (!((AmmunitionExtraDataCommon)((IAmmunitionExtraDataGetter)lhsExtraData).CommonInstance()!).Equals(lhsExtraData, rhsExtraData, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.ExtraData))) return false;
+                }
+                else if (!isExtraDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
+            {
+                if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Abbreviation) ?? true))
+            {
+                if (!string.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.AmmoEffects) ?? true))
+            {
+                if (!lhs.AmmoEffects.SequenceEqualNullable(rhs.AmmoEffects)) return false;
+            }
             return true;
         }
         
@@ -909,6 +2034,40 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IAmmunitionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            hash.Add(item.Name);
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Icons is {} Iconsitem)
+            {
+                hash.Add(Iconsitem);
+            }
+            hash.Add(item.Script);
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.PickUpSound);
+            hash.Add(item.DropSound);
+            hash.Add(item.Speed);
+            hash.Add(item.Flags);
+            hash.Add(item.Value);
+            hash.Add(item.ClipRounds);
+            if (item.ExtraData is {} ExtraDataitem)
+            {
+                hash.Add(ExtraDataitem);
+            }
+            if (item.ShortName is {} ShortNameitem)
+            {
+                hash.Add(ShortNameitem);
+            }
+            if (item.Abbreviation is {} Abbreviationitem)
+            {
+                hash.Add(Abbreviationitem);
+            }
+            hash.Add(item.AmmoEffects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -937,6 +2096,59 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
+            {
+                yield return ScriptInfo;
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
+            {
+                yield return PickUpSoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.DropSound, out var DropSoundInfo))
+            {
+                yield return DropSoundInfo;
+            }
+            if (obj.ExtraData is {} ExtraDataItems)
+            {
+                foreach (var item in ExtraDataItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.AmmoEffects)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAmmunitionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1012,6 +2224,191 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Icons) ?? true))
+            {
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons is {} rhsIcons)
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Script) ?? true))
+            {
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
+            {
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DropSound) ?? true))
+            {
+                item.DropSound.SetTo(rhs.DropSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Speed) ?? true))
+            {
+                item.Speed = rhs.Speed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ClipRounds) ?? true))
+            {
+                item.ClipRounds = rhs.ClipRounds;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ExtraData) ?? true))
+            {
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.ExtraData);
+                try
+                {
+                    if(rhs.ExtraData is {} rhsExtraData)
+                    {
+                        item.ExtraData = rhsExtraData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.ExtraData));
+                    }
+                    else
+                    {
+                        item.ExtraData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
+            {
+                item.ShortName = rhs.ShortName;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Abbreviation) ?? true))
+            {
+                item.Abbreviation = rhs.Abbreviation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.AmmoEffects) ?? true))
+            {
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.AmmoEffects);
+                try
+                {
+                    item.AmmoEffects.SetTo(
+                        rhs.AmmoEffects
+                            .Select(b => (IFormLinkGetter<IAmmoEffectGetter>)new FormLink<IAmmoEffectGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1172,6 +2569,117 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly AmmunitionBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IAmmunitionGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Icons is {} IconsItem)
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.Script,
+                    header: translationParams.ConvertToCustom(RecordTypes.SCRI));
+            }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PickUpSound,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DropSound,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Speed);
+                EnumBinaryTranslation<Ammunition.AmmoFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                writer.Write(item.Value);
+                writer.Write(item.ClipRounds);
+            }
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                AmmunitionBinaryWriteTranslation.WriteBinaryExtraData(
+                    writer: writer,
+                    item: item);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ShortName,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM),
+                binaryType: StringBinaryType.NullTerminate);
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                StringBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.Abbreviation,
+                    header: translationParams.ConvertToCustom(RecordTypes.QNAM),
+                    binaryType: StringBinaryType.NullTerminate);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IAmmoEffectGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AmmoEffects,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IAmmoEffectGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.RCIL));
+                });
+        }
+
+        public static partial void WriteBinaryExtraDataCustom(
+            MutagenWriter writer,
+            IAmmunitionGetter item);
+
+        public static void WriteBinaryExtraData(
+            MutagenWriter writer,
+            IAmmunitionGetter item)
+        {
+            WriteBinaryExtraDataCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IAmmunitionGetter item,
@@ -1226,6 +2734,153 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly AmmunitionBinaryCreateTranslation Instance = new AmmunitionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AMMO;
+        public static ParseResult FillBinaryRecordTypes(
+            IAmmunitionInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Ammunition_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Ammunition_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ammunition_FieldIndex.Model;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    item.Icons = Mutagen.Bethesda.Fallout3.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ammunition_FieldIndex.Icons;
+                }
+                case RecordTypeInts.SCRI:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    return (int)Ammunition_FieldIndex.Script;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Fallout3.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ammunition_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Ammunition_FieldIndex.PickUpSound;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Ammunition_FieldIndex.DropSound;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<Ammunition.AmmoFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Value = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ClipRounds = dataFrame.ReadUInt8();
+                    return (int)Ammunition_FieldIndex.ClipRounds;
+                }
+                case RecordTypeInts.DAT2:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        AmmunitionBinaryCreateTranslation.FillBinaryExtraDataCustom(
+                            frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                            item: item,
+                            lastParsed: lastParsed);
+                    }
+                    return (int)Ammunition_FieldIndex.ExtraData;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ShortName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Ammunition_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Abbreviation = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                    }
+                    return (int)Ammunition_FieldIndex.Abbreviation;
+                }
+                case RecordTypeInts.RCIL:
+                {
+                    item.AmmoEffects.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IAmmoEffectGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.RCIL),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Ammunition_FieldIndex.AmmoEffects;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinaryExtraDataCustom(
+            MutagenFrame frame,
+            IAmmunitionInternal item,
+            PreviousParse lastParsed);
+
     }
 
 }
@@ -1258,6 +2913,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AmmunitionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AmmunitionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1272,6 +2929,68 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IAmmunitionGetter);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IIconsGetter? Icons { get; private set; }
+        #region Script
+        private int? _ScriptLocation;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
+        #endregion
+        public IDestructibleGetter? Destructible { get; private set; }
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _PickUpSoundLocation);
+        #endregion
+        #region DropSound
+        private int? _DropSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> DropSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _DropSoundLocation);
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Speed
+        private int _SpeedLocation => _DATALocation!.Value.Min;
+        private bool _Speed_IsSet => _DATALocation.HasValue;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default(Single);
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Ammunition.AmmoFlag Flags => _Flags_IsSet ? (Ammunition.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default(Int32);
+        #endregion
+        #region ClipRounds
+        private int _ClipRoundsLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _ClipRounds_IsSet => _DATALocation.HasValue;
+        public Byte ClipRounds => _ClipRounds_IsSet ? _recordData.Span[_ClipRoundsLocation] : default;
+        #endregion
+        #region ExtraData
+        partial void ExtraDataCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        public partial IAmmunitionExtraDataGetter? GetExtraDataCustom();
+        public IAmmunitionExtraDataGetter? ExtraData => GetExtraDataCustom();
+        #endregion
+        #region ShortName
+        private int? _ShortNameLocation;
+        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Abbreviation
+        private int? _AbbreviationLocation;
+        public String? Abbreviation => _AbbreviationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IAmmoEffectGetter>> AmmoEffects { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1329,6 +3048,120 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Ammunition_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Ammunition_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ammunition_FieldIndex.Model;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ammunition_FieldIndex.Icons;
+                }
+                case RecordTypeInts.SCRI:
+                {
+                    _ScriptLocation = (stream.Position - offset);
+                    return (int)Ammunition_FieldIndex.Script;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ammunition_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    _PickUpSoundLocation = (stream.Position - offset);
+                    return (int)Ammunition_FieldIndex.PickUpSound;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _DropSoundLocation = (stream.Position - offset);
+                    return (int)Ammunition_FieldIndex.DropSound;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Ammunition_FieldIndex.ClipRounds;
+                }
+                case RecordTypeInts.DAT2:
+                {
+                    ExtraDataCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)Ammunition_FieldIndex.ExtraData;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _ShortNameLocation = (stream.Position - offset);
+                    return (int)Ammunition_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _AbbreviationLocation = (stream.Position - offset);
+                    return (int)Ammunition_FieldIndex.Abbreviation;
+                }
+                case RecordTypeInts.RCIL:
+                {
+                    this.AmmoEffects = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IAmmoEffectGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IAmmoEffectGetter>(p, s),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.RCIL,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Ammunition_FieldIndex.AmmoEffects;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -38,6 +38,7 @@
       <Group name="Trees" refName="Tree" />
       <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
+      <Group name="Ammunitions" refName="Ammunition" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
