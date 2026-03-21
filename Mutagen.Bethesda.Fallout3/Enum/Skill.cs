@@ -14,5 +14,6 @@ public enum Skill
     SmallGuns = 9,
     Sneak = 10,
     Speech = 11,
+    Survival = 12,
     Unarmed = 13,
 }

@@ -719,6 +719,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IObjectEffect :
+        IEffectRecord,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasEffects,
@@ -749,6 +750,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IObjectEffectGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IEffectRecordGetter,
         IFormLinkContainerGetter,
         IHasEffectsGetter,
         ILoquiObject<IObjectEffectGetter>,

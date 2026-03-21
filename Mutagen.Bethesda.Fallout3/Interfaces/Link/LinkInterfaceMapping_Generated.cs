@@ -107,6 +107,28 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IRelatable),
                 Getter: typeof(IRelatableGetter)));
         dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
+        dict[typeof(INpcSpawn)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                LeveledNpc_Registration.Instance,
+                Npc_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(INpcSpawn),
+                Getter: typeof(INpcSpawnGetter)));
+        dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
+        dict[typeof(IEffectRecord)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                ObjectEffect_Registration.Instance,
+                Spell_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IEffectRecord),
+                Getter: typeof(IEffectRecordGetter)));
+        dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

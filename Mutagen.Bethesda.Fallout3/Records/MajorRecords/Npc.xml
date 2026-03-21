@@ -1,8 +1,129 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" baseClass="Fallout3MajorRecord" objType="Record" recordType="NPC_">
+  <Object name="Npc" recordType="NPC_" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
     <Fields>
-      <FormLink name="Race" refName="Race" recordType="RNAM" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Configuration" refName="NpcConfiguration" nullable="False" />
+      <List name="Factions">
+        <RefDirect refName="RankPlacement" />
+      </List>
+      <FormLink name="DeathItem" recordType="INAM" refName="LeveledItem" />
+      <FormLink name="Voice" recordType="VTCK" refName="VoiceType" nullable="False" />
+      <FormLink name="Template" recordType="TPLT">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="Race" recordType="RNAM" refName="Race" nullable="False" />
+      <List name="ActorEffects">
+        <FormLink recordType="SPLO" refName="Spell" />
+      </List>
+      <FormLink name="UnarmedAttackEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <Enum name="UnarmedAttackAnimation" recordType="EAMT" enumName="AttackAnimation" byteLength="2" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefList name="Items" refName="ContainerEntry" />
+      <RefDirect name="AIData" refName="NpcAIData" nullable="False" />
+      <List name="Packages">
+        <FormLink recordType="PKID" refName="Package" />
+      </List>
+      <List name="Animations" recordType="KFFZ">
+        <String />
+      </List>
+      <FormLink name="Class" recordType="CNAM" refName="Class" nullable="False" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Int32 name="BaseHealth" />
+          <UInt8 name="Strength" />
+          <UInt8 name="Perception" />
+          <UInt8 name="Endurance" />
+          <UInt8 name="Charisma" />
+          <UInt8 name="Intelligence" />
+          <UInt8 name="Agility" />
+          <UInt8 name="Luck" />
+          <Break />
+          <UInt32 name="Unused1" />
+          <UInt32 name="Unused2" />
+          <UInt32 name="Unused3" />
+          <UInt16 name="Unused4" />
+        </Fields>
+      </Data>
+      <RefDirect name="PlayerSkills" refName="PlayerSkills" />
+      <List name="HeadParts">
+        <FormLink recordType="PNAM" refName="HeadPart" />
+      </List>
+      <FormLink name="Hair" recordType="HNAM" refName="Hair" />
+      <Float name="HairLength" recordType="LNAM" />
+      <FormLink name="Eyes" recordType="ENAM" refName="Eyes" />
+      <Color name="HairColor" recordType="HCLR" binaryType="Alpha" nullable="False" />
+      <FormLink name="CombatStyle" recordType="ZNAM" refName="CombatStyle" />
+      <Enum name="ImpactMaterialType" recordType="NAM4" enumName="Npc.ImpactMaterial" byteLength="4" nullable="False" />
+      <ByteArray name="FaceGenGeometrySymmetric" recordType="FGGS" />
+      <ByteArray name="FaceGenGeometryAsymmetric" recordType="FGGA" />
+      <ByteArray name="FaceGenTextureSymmetric" recordType="FGTS" />
+      <UInt16 name="NAM5" recordType="NAM5" nullable="False" />
+      <Float name="Height" recordType="NAM6" nullable="False" />
+      <Float name="Weight" recordType="NAM7" nullable="False" />
+    </Fields>
+    <LinkInterface>INpcSpawn</LinkInterface>
+  </Object>
+  <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS">
+    <Fields>
+      <Enum name="Flags" enumName="Npc.NpcFlag" byteLength="4" />
+      <UInt16 name="Fatigue" />
+      <UInt16 name="BarterGold" />
+      <UInt16 name="Level" />
+      <UInt16 name="CalcMin" />
+      <UInt16 name="CalcMax" />
+      <UInt16 name="SpeedMultiplier" />
+      <Float name="Karma" />
+      <Int16 name="DispositionBase" />
+      <Enum name="TemplateFlags" enumName="Npc.TemplateFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="NpcAIData" objType="Subrecord" recordType="AIDT">
+    <Fields>
+      <Enum name="Aggression" enumName="Aggression" byteLength="1" />
+      <Enum name="Confidence" enumName="Confidence" byteLength="1" />
+      <UInt8 name="EnergyLevel" />
+      <UInt8 name="Responsibility" />
+      <Enum name="Mood" enumName="Mood" byteLength="4" importantLength="1" />
+      <Enum name="BuySellServices" enumName="ServiceFlag" byteLength="4" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
+      <UInt8 name="MaximumTrainingLevel" />
+      <Enum name="Assistance" enumName="Assistance" byteLength="1" />
+      <Bool name="AggroRadiusBehavior" byteLength="1" />
+      <Int32 name="AggroRadius" />
+    </Fields>
+  </Object>
+  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM">
+    <Fields>
+      <FormLink name="Faction" refName="Faction" />
+      <Int8 name="Rank" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="PlayerSkills" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <Dict name="SkillValues" numEnumKeys="14">
+        <Key>
+          <Enum enumName="Skill" />
+        </Key>
+        <Value>
+          <UInt8 />
+        </Value>
+      </Dict>
+      <Dict name="SkillOffsets" numEnumKeys="14">
+        <Key>
+          <Enum enumName="Skill" />
+        </Key>
+        <Value>
+          <UInt8 />
+        </Value>
+      </Dict>
     </Fields>
   </Object>
 </Loqui>

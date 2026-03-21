@@ -27,6 +27,13 @@
     <Compile Include="Enum\EquipType.cs" />
     <Compile Include="Enum\Skill.cs" />
     <Compile Include="Enum\SoundLevel.cs" />
+    <Compile Include="Enum\Aggression.cs" />
+    <Compile Include="Enum\Assistance.cs" />
+    <Compile Include="Enum\AttackAnimation.cs" />
+    <Compile Include="Enum\Confidence.cs" />
+    <Compile Include="Enum\Mood.cs" />
+    <Compile Include="Enum\MoodFnv.cs" />
+    <Compile Include="Enum\ServiceFlag.cs" />
     <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -580,6 +587,36 @@
     <Compile Include="Records\MajorRecords\Ammunition_Generated.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Npc.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Npc_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\NpcConfiguration_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\NpcAIData.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\NpcAIData_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\RankPlacement_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlayerSkills_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LeveledNpc_Generated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Package_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CombatStyle_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\CaravanCard_Generated.cs">
       <DependentUpon>CaravanCard.xml</DependentUpon>
     </Compile>
@@ -660,5 +697,7 @@
     <Compile Include="Records\MajorRecords\AmmunitionExtraData_Generated.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
+    <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
   </ItemGroup>
 </Project>

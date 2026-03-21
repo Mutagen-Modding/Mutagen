@@ -11,6 +11,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IBoundItem
 - Armor
 - Weapon
+### IEffectRecord
+- ObjectEffect
+- Spell
 ### IExplodeSpawn
 - AcousticSpace
 ### IItem
@@ -30,6 +33,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Note
 - Static
 - Weapon
+### INpcSpawn
+- LeveledNpc
+- Npc
 ### IPlaceableObject
 - AcousticSpace
 ### IPlaced
@@ -75,6 +81,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### LeveledItem
 - IItem
+### LeveledNpc
+- INpcSpawn
 ### Light
 - IItem
 ### MiscItem
@@ -83,6 +91,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Note
 - IItem
+### Npc
+- INpcSpawn
+### ObjectEffect
+- IEffectRecord
 ### PlacedBeam
 - IPlaced
 ### PlacedCreature
@@ -97,6 +109,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 ### Race
 - IRelatable
+### Spell
+- IEffectRecord
 ### Static
 - IItem
 ### Weapon

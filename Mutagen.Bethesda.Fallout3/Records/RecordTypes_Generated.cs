@@ -4,9 +4,11 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypes
 {
+    public static readonly RecordType ACBS = new(0x53424341);
     public static readonly RecordType ACHR = new(0x52484341);
     public static readonly RecordType ACRE = new(0x45524341);
     public static readonly RecordType ACTI = new(0x49544341);
+    public static readonly RecordType AIDT = new(0x54444941);
     public static readonly RecordType ALCH = new(0x48434C41);
     public static readonly RecordType AMEF = new(0x46454D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);
@@ -31,6 +33,7 @@ public partial class RecordTypes
     public static readonly RecordType CONT = new(0x544E4F43);
     public static readonly RecordType CRDT = new(0x54445243);
     public static readonly RecordType CREA = new(0x41455243);
+    public static readonly RecordType CSTY = new(0x59545343);
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType DAT2 = new(0x32544144);
     public static readonly RecordType DATA = new(0x41544144);
@@ -74,6 +77,7 @@ public partial class RecordTypes
     public static readonly RecordType GRAS = new(0x53415247);
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HAIR = new(0x52494148);
+    public static readonly RecordType HCLR = new(0x524C4348);
     public static readonly RecordType HDPT = new(0x54504448);
     public static readonly RecordType HEAD = new(0x44414548);
     public static readonly RecordType HEDR = new(0x52444548);
@@ -87,9 +91,12 @@ public partial class RecordTypes
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType ITXT = new(0x54585449);
     public static readonly RecordType KEYM = new(0x4D59454B);
+    public static readonly RecordType KFFZ = new(0x5A46464B);
     public static readonly RecordType LIGH = new(0x4847494C);
+    public static readonly RecordType LNAM = new(0x4D414E4C);
     public static readonly RecordType LTEX = new(0x5845544C);
     public static readonly RecordType LVLI = new(0x494C564C);
+    public static readonly RecordType LVLN = new(0x4E4C564C);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MIC2 = new(0x3243494D);
@@ -123,6 +130,8 @@ public partial class RecordTypes
     public static readonly RecordType NAM0 = new(0x304D414E);
     public static readonly RecordType NAM1 = new(0x314D414E);
     public static readonly RecordType NAM2 = new(0x324D414E);
+    public static readonly RecordType NAM4 = new(0x344D414E);
+    public static readonly RecordType NAM5 = new(0x354D414E);
     public static readonly RecordType NAM6 = new(0x364D414E);
     public static readonly RecordType NAM7 = new(0x374D414E);
     public static readonly RecordType NAM8 = new(0x384D414E);
@@ -134,8 +143,10 @@ public partial class RecordTypes
     public static readonly RecordType OBND = new(0x444E424F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
+    public static readonly RecordType PACK = new(0x4B434150);
     public static readonly RecordType PBEA = new(0x41454250);
     public static readonly RecordType PGRE = new(0x45524750);
+    public static readonly RecordType PKID = new(0x44494B50);
     public static readonly RecordType PMIS = new(0x53494D50);
     public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType PROJ = new(0x4A4F5250);
@@ -163,11 +174,13 @@ public partial class RecordTypes
     public static readonly RecordType SOUN = new(0x4E554F53);
     public static readonly RecordType SPEL = new(0x4C455053);
     public static readonly RecordType SPIT = new(0x54495053);
+    public static readonly RecordType SPLO = new(0x4F4C5053);
     public static readonly RecordType STAT = new(0x54415453);
     public static readonly RecordType TACT = new(0x54434154);
     public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
+    public static readonly RecordType TPLT = new(0x544C5054);
     public static readonly RecordType TREE = new(0x45455254);
     public static readonly RecordType TX00 = new(0x30305854);
     public static readonly RecordType TX01 = new(0x31305854);

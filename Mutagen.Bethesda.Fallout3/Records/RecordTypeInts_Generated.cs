@@ -2,9 +2,11 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int ACBS = 0x53424341;
     public const int ACHR = 0x52484341;
     public const int ACRE = 0x45524341;
     public const int ACTI = 0x49544341;
+    public const int AIDT = 0x54444941;
     public const int ALCH = 0x48434C41;
     public const int AMEF = 0x46454D41;
     public const int AMMO = 0x4F4D4D41;
@@ -29,6 +31,7 @@ public partial class RecordTypeInts
     public const int CONT = 0x544E4F43;
     public const int CRDT = 0x54445243;
     public const int CREA = 0x41455243;
+    public const int CSTY = 0x59545343;
     public const int CTDA = 0x41445443;
     public const int DAT2 = 0x32544144;
     public const int DATA = 0x41544144;
@@ -72,6 +75,7 @@ public partial class RecordTypeInts
     public const int GRAS = 0x53415247;
     public const int GRUP = 0x50555247;
     public const int HAIR = 0x52494148;
+    public const int HCLR = 0x524C4348;
     public const int HDPT = 0x54504448;
     public const int HEAD = 0x44414548;
     public const int HEDR = 0x52444548;
@@ -85,9 +89,12 @@ public partial class RecordTypeInts
     public const int IPDS = 0x53445049;
     public const int ITXT = 0x54585449;
     public const int KEYM = 0x4D59454B;
+    public const int KFFZ = 0x5A46464B;
     public const int LIGH = 0x4847494C;
+    public const int LNAM = 0x4D414E4C;
     public const int LTEX = 0x5845544C;
     public const int LVLI = 0x494C564C;
+    public const int LVLN = 0x4E4C564C;
     public const int MAST = 0x5453414D;
     public const int MGEF = 0x4645474D;
     public const int MIC2 = 0x3243494D;
@@ -121,6 +128,8 @@ public partial class RecordTypeInts
     public const int NAM0 = 0x304D414E;
     public const int NAM1 = 0x314D414E;
     public const int NAM2 = 0x324D414E;
+    public const int NAM4 = 0x344D414E;
+    public const int NAM5 = 0x354D414E;
     public const int NAM6 = 0x364D414E;
     public const int NAM7 = 0x374D414E;
     public const int NAM8 = 0x384D414E;
@@ -132,8 +141,10 @@ public partial class RecordTypeInts
     public const int OBND = 0x444E424F;
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
+    public const int PACK = 0x4B434150;
     public const int PBEA = 0x41454250;
     public const int PGRE = 0x45524750;
+    public const int PKID = 0x44494B50;
     public const int PMIS = 0x53494D50;
     public const int PNAM = 0x4D414E50;
     public const int PROJ = 0x4A4F5250;
@@ -161,11 +172,13 @@ public partial class RecordTypeInts
     public const int SOUN = 0x4E554F53;
     public const int SPEL = 0x4C455053;
     public const int SPIT = 0x54495053;
+    public const int SPLO = 0x4F4C5053;
     public const int STAT = 0x54415453;
     public const int TACT = 0x54434154;
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
+    public const int TPLT = 0x544C5054;
     public const int TREE = 0x45455254;
     public const int TX00 = 0x30305854;
     public const int TX01 = 0x31305854;

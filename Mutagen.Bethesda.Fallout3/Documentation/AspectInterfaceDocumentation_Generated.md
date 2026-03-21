@@ -14,6 +14,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - MoveableStatic
+- Npc
 - TalkingActivator
 - Terminal
 - Tree
@@ -51,6 +52,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MoveableStatic
+- Npc
 - PlaceableWater
 - Static
 - StaticCollection
@@ -78,6 +80,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - MoveableStatic
+- Npc
 - ObjectEffect
 - Race
 - Spell
@@ -98,6 +101,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - MoveableStatic
+- Npc
 - PlaceableWater
 - Sound
 - Static
@@ -205,6 +209,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 ### MoveableStatic
+- IHasDestructible
+- IModeled
+- INamed
+- IObjectBounded
+### Npc
 - IHasDestructible
 - IModeled
 - INamed
