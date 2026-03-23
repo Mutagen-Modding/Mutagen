@@ -66,6 +66,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<INpcGetter>? _npcs;
     private MergedGroup<ICreatureGetter>? _creatures;
     private MergedGroup<ILeveledCreatureGetter>? _leveledCreatures;
+    private MergedGroup<ILeveledNpcGetter>? _leveledNpcs;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -218,6 +219,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<ILeveledCreatureGetter> LeveledCreatures =>
         _leveledCreatures ??= new MergedGroup<ILeveledCreatureGetter>(
             _sourceMods.Select(m => m.LeveledCreatures));
+    public IFallout3GroupGetter<ILeveledNpcGetter> LeveledNpcs =>
+        _leveledNpcs ??= new MergedGroup<ILeveledNpcGetter>(
+            _sourceMods.Select(m => m.LeveledNpcs));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

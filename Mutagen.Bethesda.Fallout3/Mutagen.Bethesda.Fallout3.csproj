@@ -635,6 +635,12 @@
     <Compile Include="Records\MajorRecords\LeveledNpc_Generated.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\LeveledNpcEntry_Generated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LeveledNpcEntryData_Generated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\LeveledCreature_Generated.cs">
       <DependentUpon>LeveledCreature.xml</DependentUpon>
     </Compile>

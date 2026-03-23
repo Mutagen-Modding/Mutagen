@@ -53,6 +53,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPartItem
 - Ingredient
 - LeveledCreature
+- LeveledNpc
 - Light
 - MagicEffect
 - MiscItem
@@ -106,6 +107,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Grass
 - Ingredient
 - LeveledCreature
+- LeveledNpc
 - Light
 - MiscItem
 - MoveableStatic
@@ -204,6 +206,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### LandscapeTexture
 - IHasIcons
 ### LeveledCreature
+- IModeled
+- IObjectBounded
+### LeveledNpc
 - IModeled
 - IObjectBounded
 ### Light
