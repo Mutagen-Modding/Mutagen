@@ -44,6 +44,7 @@
       <Group name="LeveledCreatures" refName="LeveledCreature" />
       <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="Keys" refName="Key" />
+      <Group name="Ingestibles" refName="Ingestible" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

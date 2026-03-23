@@ -677,6 +677,9 @@
     <Compile Include="Records\MajorRecords\Ingredient_Generated.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Ingestible.cs">
+      <DependentUpon>Ingestible.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Ingestible_Generated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>

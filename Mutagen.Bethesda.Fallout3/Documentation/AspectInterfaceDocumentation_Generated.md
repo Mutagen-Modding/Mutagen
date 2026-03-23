@@ -12,6 +12,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Creature
 - Door
 - Furniture
+- Ingestible
 - Key
 - Light
 - MiscItem
@@ -22,6 +23,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Tree
 - Weapon
 ### IHasEffects
+- Ingestible
 - Ingredient
 - ObjectEffect
 - Spell
@@ -30,6 +32,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BodyPartItem
 - Book
 - HeadPartItem
+- Ingestible
 - Ingredient
 - LandscapeTexture
 - Light
@@ -52,6 +55,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Hair
 - HeadPart
 - HeadPartItem
+- Ingestible
 - Ingredient
 - Key
 - LeveledCreature
@@ -83,6 +87,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - Hair
 - HeadPart
+- Ingestible
 - Ingredient
 - Key
 - Light
@@ -108,6 +113,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Door
 - Furniture
 - Grass
+- Ingestible
 - Ingredient
 - Key
 - LeveledCreature
@@ -201,6 +207,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPartItem
 - IHasIcons
 - IModeled
+### Ingestible
+- IHasDestructible
+- IHasEffects
+- IHasIcons
+- IModeled
+- INamed
+- IObjectBounded
 ### Ingredient
 - IHasEffects
 - IHasIcons

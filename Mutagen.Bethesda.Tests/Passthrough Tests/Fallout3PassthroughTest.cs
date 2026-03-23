@@ -255,7 +255,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("CREA"),
             new RecordType("LVLC"),
             new RecordType("LVLN"),
-            new RecordType("KEYM"));
+            new RecordType("KEYM"),
+            new RecordType("ALCH"));
         return ret;
     }
 }
