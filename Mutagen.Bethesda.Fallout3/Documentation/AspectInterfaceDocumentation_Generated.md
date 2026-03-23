@@ -12,6 +12,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Creature
 - Door
 - Furniture
+- Key
 - Light
 - MiscItem
 - MoveableStatic
@@ -52,6 +53,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - HeadPartItem
 - Ingredient
+- Key
 - LeveledCreature
 - LeveledNpc
 - Light
@@ -82,6 +84,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Hair
 - HeadPart
 - Ingredient
+- Key
 - Light
 - LocalVariable
 - MagicEffect
@@ -106,6 +109,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - Grass
 - Ingredient
+- Key
 - LeveledCreature
 - LeveledNpc
 - Light
@@ -200,6 +204,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Ingredient
 - IHasEffects
 - IHasIcons
+- IModeled
+- INamed
+- IObjectBounded
+### Key
+- IHasDestructible
 - IModeled
 - INamed
 - IObjectBounded

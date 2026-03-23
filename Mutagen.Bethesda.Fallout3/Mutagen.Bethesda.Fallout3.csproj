@@ -683,6 +683,9 @@
     <Compile Include="Records\MajorRecords\ItemMod_Generated.cs">
       <DependentUpon>ItemMod.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Key.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Key_Generated.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
