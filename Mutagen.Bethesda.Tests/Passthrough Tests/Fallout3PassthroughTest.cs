@@ -252,7 +252,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("WEAP"),
             new RecordType("AMMO"),
             new RecordType("NPC_"),
-            new RecordType("CREA"));
+            new RecordType("CREA"),
+            new RecordType("LVLC"));
         return ret;
     }
 }

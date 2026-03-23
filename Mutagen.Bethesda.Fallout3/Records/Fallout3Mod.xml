@@ -41,6 +41,7 @@
       <Group name="Ammunitions" refName="Ammunition" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Creatures" refName="Creature" />
+      <Group name="LeveledCreatures" refName="LeveledCreature" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

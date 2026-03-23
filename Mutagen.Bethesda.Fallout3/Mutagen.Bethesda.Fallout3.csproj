@@ -34,6 +34,7 @@
     <Compile Include="Enum\Mood.cs" />
     <Compile Include="Enum\MoodFnv.cs" />
     <Compile Include="Enum\ServiceFlag.cs" />
+    <Compile Include="Enum\LeveledFlag.cs" />
     <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -728,5 +729,11 @@
     </Compile>
     <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
     <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
+    <Compile Include="Records\MajorRecords\LeveledCreatureEntry_Generated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LeveledCreatureEntryData_Generated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

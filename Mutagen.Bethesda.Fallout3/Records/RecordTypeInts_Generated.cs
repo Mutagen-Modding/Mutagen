@@ -99,8 +99,11 @@ public partial class RecordTypeInts
     public const int LNAM = 0x4D414E4C;
     public const int LTEX = 0x5845544C;
     public const int LVLC = 0x434C564C;
+    public const int LVLD = 0x444C564C;
+    public const int LVLF = 0x464C564C;
     public const int LVLI = 0x494C564C;
     public const int LVLN = 0x4E4C564C;
+    public const int LVLO = 0x4F4C564C;
     public const int MAST = 0x5453414D;
     public const int MGEF = 0x4645474D;
     public const int MIC2 = 0x3243494D;

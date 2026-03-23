@@ -101,8 +101,11 @@ public partial class RecordTypes
     public static readonly RecordType LNAM = new(0x4D414E4C);
     public static readonly RecordType LTEX = new(0x5845544C);
     public static readonly RecordType LVLC = new(0x434C564C);
+    public static readonly RecordType LVLD = new(0x444C564C);
+    public static readonly RecordType LVLF = new(0x464C564C);
     public static readonly RecordType LVLI = new(0x494C564C);
     public static readonly RecordType LVLN = new(0x4E4C564C);
+    public static readonly RecordType LVLO = new(0x4F4C564C);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MIC2 = new(0x3243494D);
