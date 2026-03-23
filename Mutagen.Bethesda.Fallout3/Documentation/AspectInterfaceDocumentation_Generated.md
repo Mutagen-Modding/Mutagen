@@ -9,6 +9,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Creature
 - Door
 - Furniture
 - Light
@@ -33,6 +34,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MenuIcon
 - Tree
+### IHasVoiceType
+- Creature
 ### IModeled
 - Activator
 - Ammunition
@@ -40,6 +43,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BodyPartItem
 - Book
 - Container
+- Creature
 - DestructionStage
 - Door
 - Furniture
@@ -68,6 +72,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Class
 - Container
+- Creature
 - Door
 - Eyes
 - Faction
@@ -94,6 +99,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Creature
 - Door
 - Furniture
 - Grass
@@ -150,6 +156,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Container
 - IHasDestructible
+- IModeled
+- INamed
+- IObjectBounded
+### Creature
+- IHasDestructible
+- IHasVoiceType
 - IModeled
 - INamed
 - IObjectBounded

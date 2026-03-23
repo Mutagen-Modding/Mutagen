@@ -98,6 +98,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Weapons_Object = new Fallout3Group<Weapon>(this);
             _Ammunitions_Object = new Fallout3Group<Ammunition>(this);
             _Npcs_Object = new Fallout3Group<Npc>(this);
+            _Creatures_Object = new Fallout3Group<Creature>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -369,6 +370,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<INpcGetter> IFallout3ModGetter.Npcs => _Npcs_Object;
         #endregion
+        #region Creatures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Creature> _Creatures_Object;
+        public Fallout3Group<Creature> Creatures => _Creatures_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICreatureGetter> IFallout3ModGetter.Creatures => _Creatures_Object;
+        #endregion
 
         #region To String
 
@@ -446,6 +454,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Weapons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Ammunitions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Creatures = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -486,7 +495,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Furniture,
                 TItem Weapons,
                 TItem Ammunitions,
-                TItem Npcs)
+                TItem Npcs,
+                TItem Creatures)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -526,6 +536,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Weapons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Weapons, new Fallout3Group.Mask<TItem>(Weapons));
                 this.Ammunitions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Ammunitions, new Fallout3Group.Mask<TItem>(Ammunitions));
                 this.Npcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Npcs, new Fallout3Group.Mask<TItem>(Npcs));
+                this.Creatures = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Creatures, new Fallout3Group.Mask<TItem>(Creatures));
             }
 
             #pragma warning disable CS8618
@@ -575,6 +586,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Weapons { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Ammunitions { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Npcs { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Creatures { get; set; }
             #endregion
 
             #region Equals
@@ -625,6 +637,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
                 if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
+                if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -668,6 +681,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Weapons);
                 hash.Add(this.Ammunitions);
                 hash.Add(this.Npcs);
+                hash.Add(this.Creatures);
                 return hash.ToHashCode();
             }
 
@@ -866,6 +880,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Npcs.Overall)) return false;
                     if (this.Npcs.Specific != null && !this.Npcs.Specific.All(eval)) return false;
                 }
+                if (Creatures != null)
+                {
+                    if (!eval(this.Creatures.Overall)) return false;
+                    if (this.Creatures.Specific != null && !this.Creatures.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1063,6 +1082,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Npcs.Overall)) return true;
                     if (this.Npcs.Specific != null && this.Npcs.Specific.Any(eval)) return true;
                 }
+                if (Creatures != null)
+                {
+                    if (eval(this.Creatures.Overall)) return true;
+                    if (this.Creatures.Specific != null && this.Creatures.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1115,6 +1139,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
                 obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
+                obj.Creatures = this.Creatures == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1285,6 +1310,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Npcs?.Print(sb);
                     }
+                    if (printMask?.Creatures?.Overall ?? true)
+                    {
+                        Creatures?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1347,6 +1376,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Creature.ErrorMask>?>? Creatures;
             #endregion
 
             #region IErrorMask
@@ -1431,6 +1461,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Ammunitions;
                     case Fallout3Mod_FieldIndex.Npcs:
                         return Npcs;
+                    case Fallout3Mod_FieldIndex.Creatures:
+                        return Creatures;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1554,6 +1586,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Creatures:
+                        this.Creatures = new MaskItem<Exception?, Fallout3Group.ErrorMask<Creature.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1679,6 +1714,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Creatures:
+                        this.Creatures = (MaskItem<Exception?, Fallout3Group.ErrorMask<Creature.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1725,6 +1763,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Weapons != null) return true;
                 if (Ammunitions != null) return true;
                 if (Npcs != null) return true;
+                if (Creatures != null) return true;
                 return false;
             }
             #endregion
@@ -1788,6 +1827,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Weapons?.Print(sb);
                 Ammunitions?.Print(sb);
                 Npcs?.Print(sb);
+                Creatures?.Print(sb);
             }
             #endregion
 
@@ -1834,6 +1874,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
                 ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
+                ret.Creatures = this.Creatures.Combine(rhs.Creatures, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1895,6 +1936,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Weapon.TranslationMask>? Weapons;
             public Fallout3Group.TranslationMask<Ammunition.TranslationMask>? Ammunitions;
             public Fallout3Group.TranslationMask<Npc.TranslationMask>? Npcs;
+            public Fallout3Group.TranslationMask<Creature.TranslationMask>? Creatures;
             #endregion
 
             #region Ctors
@@ -1957,6 +1999,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
                 ret.Add((Ammunitions != null ? Ammunitions.OnOverall : DefaultOn, Ammunitions?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
+                ret.Add((Creatures != null ? Creatures.OnOverall : DefaultOn, Creatures?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2054,6 +2097,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Weapons_Object = new Fallout3Group<Weapon>(this);
             _Ammunitions_Object = new Fallout3Group<Ammunition>(this);
             _Npcs_Object = new Fallout3Group<Npc>(this);
+            _Creatures_Object = new Fallout3Group<Creature>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2207,6 +2251,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Npcs ?? true)
             {
                 this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
+            }
+            if (mask?.Creatures ?? true)
+            {
+                this.Creatures.RecordCache.Set(rhsMod.Creatures.RecordCache.Items);
             }
         }
 
@@ -2506,6 +2554,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Weapon> Weapons { get; }
         new Fallout3Group<Ammunition> Ammunitions { get; }
         new Fallout3Group<Npc> Npcs { get; }
+        new Fallout3Group<Creature> Creatures { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2563,6 +2612,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IWeaponGetter> Weapons { get; }
         IFallout3GroupGetter<IAmmunitionGetter> Ammunitions { get; }
         IFallout3GroupGetter<INpcGetter> Npcs { get; }
+        IFallout3GroupGetter<ICreatureGetter> Creatures { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -3151,6 +3201,7 @@ namespace Mutagen.Bethesda.Fallout3
         Weapons = 35,
         Ammunitions = 36,
         Npcs = 37,
+        Creatures = 38,
     }
     #endregion
 
@@ -3161,9 +3212,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 38;
+        public const ushort AdditionalFieldCount = 39;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -3267,6 +3318,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Weapons.Clear();
             item.Ammunitions.Clear();
             item.Npcs.Clear();
+            item.Creatures.Clear();
         }
         
         #region Mutagen
@@ -3303,6 +3355,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Weapons.RemapLinks(mapping);
             obj.Ammunitions.RemapLinks(mapping);
             obj.Npcs.RemapLinks(mapping);
+            obj.Creatures.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3400,6 +3453,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Weapons.Remove(keys);
             obj.Ammunitions.Remove(keys);
             obj.Npcs.Remove(keys);
+            obj.Creatures.Remove(keys);
         }
         
         public void Remove(
@@ -3743,6 +3797,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    obj.Creatures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -3775,14 +3837,15 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "INpcSpawn":
+                case "INpcSpawnGetter":
+                    Remove(obj, keys, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IRelatable":
                 case "IRelatableGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "INpcSpawn":
-                case "INpcSpawnGetter":
-                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
@@ -3972,6 +4035,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
             ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
+            ret.Creatures = MaskItemExt.Factory(item.Creatures.GetEqualsMask(rhs.Creatures, include), include);
         }
         
         public string Print(
@@ -4167,6 +4231,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Npcs?.Overall ?? true)
             {
                 item.Npcs?.Print(sb, "Npcs");
+            }
+            if (printMask?.Creatures?.Overall ?? true)
+            {
+                item.Creatures?.Print(sb, "Creatures");
             }
         }
         
@@ -4481,6 +4549,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isNpcsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Creatures) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Creatures, rhs.Creatures, out var lhsCreatures, out var rhsCreatures, out var isCreaturesEqual))
+                {
+                    if (!object.Equals(lhsCreatures, rhsCreatures)) return false;
+                }
+                else if (!isCreaturesEqual) return false;
+            }
             return true;
         }
         
@@ -4525,6 +4601,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Weapons);
             hash.Add(item.Ammunitions);
             hash.Add(item.Npcs);
+            hash.Add(item.Creatures);
             return hash.ToHashCode();
         }
         
@@ -4756,6 +4833,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "INpc":
                 case "INpcInternal":
                     return obj.Npcs;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    return obj.Creatures;
                 default:
                     return null;
             }
@@ -4773,7 +4855,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[37];
+            Stream[] outputStreams = new Stream[38];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -4812,6 +4894,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Weapons, 34, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Ammunitions, 35, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Npcs, 36, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Creatures, 37, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -4894,6 +4977,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Weapons.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Creatures.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -5026,6 +5110,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Npcs.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Creatures.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -5189,6 +5277,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Npcs.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Creatures.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5576,6 +5668,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    foreach (var item in obj.Creatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -5930,6 +6031,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Npcs,
                 groupGetter: (m) => m.Npcs))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Creature, ICreatureGetter>(
+                srcGroup: obj.Creatures,
+                type: typeof(ICreatureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Creatures,
+                groupGetter: (m) => m.Creatures))
             {
                 yield return item;
             }
@@ -6478,6 +6588,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Npcs,
                         groupGetter: (m) => m.Npcs))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Creature, ICreatureGetter>(
+                        srcGroup: obj.Creatures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Creatures,
+                        groupGetter: (m) => m.Creatures))
                     {
                         yield return item;
                     }
@@ -7331,6 +7455,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Creatures) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Creatures);
+                try
+                {
+                    item.Creatures.DeepCopyIn(
+                        rhs: rhs.Creatures,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Creatures));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -7471,6 +7615,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Weapons;
         public bool Ammunitions;
         public bool Npcs;
+        public bool Creatures;
         public GroupMask()
         {
         }
@@ -7513,6 +7658,7 @@ namespace Mutagen.Bethesda.Fallout3
             Weapons = defaultValue;
             Ammunitions = defaultValue;
             Npcs = defaultValue;
+            Creatures = defaultValue;
         }
     }
 
@@ -7978,6 +8124,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
                         item: NpcsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Creatures ?? true)
+            {
+                var CreaturesItem = item.Creatures;
+                if (CreaturesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CreaturesItem).BinaryWriteTranslator).Write<ICreatureGetter>(
+                        item: CreaturesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -8570,6 +8727,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Npcs;
                 }
+                case RecordTypeInts.CREA:
+                {
+                    if (importMask?.Creatures ?? true)
+                    {
+                        item.Creatures.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Creatures;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -8920,6 +9091,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout3GroupBinaryOverlay<INpcGetter>.Fallout3GroupFactory(_stream, _NpcsLocations, _package) : default;
         public IFallout3GroupGetter<INpcGetter> Npcs => _Npcs ?? new Fallout3Group<Npc>(this);
         #endregion
+        #region Creatures
+        private List<RangeInt64>? _CreaturesLocations;
+        private IFallout3GroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocations != null ? Fallout3GroupBinaryOverlay<ICreatureGetter>.Fallout3GroupFactory(_stream, _CreaturesLocations, _package) : default;
+        public IFallout3GroupGetter<ICreatureGetter> Creatures => _Creatures ?? new Fallout3Group<Creature>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -9215,6 +9391,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _NpcsLocations ??= new();
                     _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Npcs;
+                }
+                case RecordTypeInts.CREA:
+                {
+                    _CreaturesLocations ??= new();
+                    _CreaturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Creatures;
                 }
                 default:
                     return default(int?);

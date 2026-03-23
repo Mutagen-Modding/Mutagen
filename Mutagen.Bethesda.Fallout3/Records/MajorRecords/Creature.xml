@@ -1,7 +1,114 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Creature" baseClass="Fallout3MajorRecord" objType="Record" recordType="CREA">
+  <Object name="Creature" recordType="CREA" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="ActorEffects">
+        <FormLink recordType="SPLO" refName="Spell" />
+      </List>
+      <FormLink name="UnarmedAttackEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <Enum name="UnarmedAttackAnimation" recordType="EAMT" enumName="AttackAnimation" byteLength="2" nullable="False" />
+      <List name="Models" recordType="NIFZ">
+        <String />
+      </List>
+      <ByteArray name="ModelListTextures" recordType="NIFT" />
+      <RefDirect name="Configuration" refName="CreatureConfiguration" nullable="False" />
+      <List name="Factions">
+        <RefDirect refName="RankPlacement" />
+      </List>
+      <FormLink name="DeathItem" recordType="INAM" refName="LeveledItem" />
+      <FormLink name="Voice" recordType="VTCK" refName="VoiceType" />
+      <FormLink name="Template" recordType="TPLT">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefList name="Items" refName="ContainerEntry" />
+      <RefDirect name="AIData" refName="CreatureAIData" nullable="False" />
+      <List name="Packages">
+        <FormLink recordType="PKID" refName="Package" />
+      </List>
+      <List name="Animations" recordType="KFFZ">
+        <String />
+      </List>
+      <RefDirect name="Data" refName="CreatureData" nullable="False" />
+      <UInt8 name="AttackReach" recordType="RNAM" nullable="False" />
+      <FormLink name="CombatStyle" recordType="ZNAM" refName="CombatStyle" />
+      <FormLink name="BodyPartData" recordType="PNAM" refName="BodyPartData" nullable="False" />
+      <Float name="TurningSpeed" recordType="TNAM" nullable="False" />
+      <Float name="BaseScale" recordType="BNAM" nullable="False" />
+      <Float name="FootWeight" recordType="WNAM" nullable="False" />
+      <Enum name="ImpactMaterialType" recordType="NAM4" enumName="Creature.ImpactMaterial" byteLength="4" nullable="False" />
+      <Enum name="SoundLevel" recordType="NAM5" enumName="SoundLevel" byteLength="4" nullable="False" />
+      <FormLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
+      <RefList name="SoundTypes" refName="CreatureSoundType" />
+      <FormLink name="ImpactDataset" recordType="CNAM" refName="ImpactDataSet" />
+      <FormLink name="MeleeWeaponList" recordType="LNAM" refName="FormList" />
+    </Fields>
+    <LinkInterface>INpcSpawn</LinkInterface>
+  </Object>
+  <Object name="CreatureConfiguration" objType="Subrecord" recordType="ACBS">
+    <Fields>
+      <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
+      <UInt16 name="Fatigue" />
+      <UInt16 name="BarterGold" />
+      <UInt16 name="Level" />
+      <UInt16 name="CalcMin" />
+      <UInt16 name="CalcMax" />
+      <UInt16 name="SpeedMultiplier" />
+      <Float name="Karma" />
+      <Int16 name="DispositionBase" />
+      <Enum name="TemplateFlags" enumName="Creature.TemplateFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="CreatureAIData" objType="Subrecord" recordType="AIDT">
+    <Fields>
+      <Enum name="Aggression" enumName="Aggression" byteLength="1" />
+      <Enum name="Confidence" enumName="Confidence" byteLength="1" />
+      <UInt8 name="EnergyLevel" />
+      <UInt8 name="Responsibility" />
+      <Enum name="Mood" enumName="Mood" byteLength="4" importantLength="1" />
+      <Enum name="BuySellServices" enumName="ServiceFlag" byteLength="4" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
+      <UInt8 name="MaximumTrainingLevel" />
+      <Enum name="Assistance" enumName="Assistance" byteLength="1" />
+      <Bool name="AggroRadiusBehavior" byteLength="1" />
+      <Int32 name="AggroRadius" />
+    </Fields>
+  </Object>
+  <Object name="CreatureData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <Enum name="Type" enumName="Creature.CreatureType" byteLength="1" />
+      <UInt8 name="CombatSkill" />
+      <UInt8 name="MagicSkill" />
+      <UInt8 name="StealthSkill" />
+      <Int16 name="Health" />
+      <UInt16 name="Unused" />
+      <Int16 name="Damage" />
+      <UInt8 name="Strength" />
+      <UInt8 name="Perception" />
+      <UInt8 name="Endurance" />
+      <UInt8 name="Charisma" />
+      <UInt8 name="Intelligence" />
+      <UInt8 name="Agility" />
+      <UInt8 name="Luck" />
+    </Fields>
+  </Object>
+  <Object name="CreatureSoundType" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" recordType="CSDT" enumName="Creature.SoundType" byteLength="4" />
+      <RefList name="Sounds" refName="CreatureSoundItem" />
+    </Fields>
+  </Object>
+  <Object name="CreatureSoundItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="Sound" recordType="CSDI" refName="Sound" nullable="False" />
+      <UInt8 name="Chance" recordType="CSDC" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

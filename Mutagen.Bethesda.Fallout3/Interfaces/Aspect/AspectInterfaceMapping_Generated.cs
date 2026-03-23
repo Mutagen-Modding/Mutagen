@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Armor_Registration.Instance,
                     Book_Registration.Instance,
                     Container_Registration.Instance,
+                    Creature_Registration.Instance,
                     Door_Registration.Instance,
                     Furniture_Registration.Instance,
                     Light_Registration.Instance,
@@ -74,6 +75,16 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(IHasIcons),
                     Getter: typeof(IHasIconsGetter)));
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(IHasVoiceType)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Creature_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasVoiceType),
+                    Getter: typeof(IHasVoiceTypeGetter)));
+            dict[typeof(IHasVoiceTypeGetter)] = dict[typeof(IHasVoiceType)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
@@ -84,6 +95,7 @@ namespace Mutagen.Bethesda.Fallout3
                     BodyPartItem_Registration.Instance,
                     Book_Registration.Instance,
                     Container_Registration.Instance,
+                    Creature_Registration.Instance,
                     DestructionStage_Registration.Instance,
                     Door_Registration.Instance,
                     Furniture_Registration.Instance,
@@ -118,6 +130,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Book_Registration.Instance,
                     Class_Registration.Instance,
                     Container_Registration.Instance,
+                    Creature_Registration.Instance,
                     Door_Registration.Instance,
                     Faction_Registration.Instance,
                     Furniture_Registration.Instance,
@@ -151,6 +164,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Book_Registration.Instance,
                     Class_Registration.Instance,
                     Container_Registration.Instance,
+                    Creature_Registration.Instance,
                     Door_Registration.Instance,
                     Eyes_Registration.Instance,
                     Faction_Registration.Instance,
@@ -211,6 +225,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Armor_Registration.Instance,
                     Book_Registration.Instance,
                     Container_Registration.Instance,
+                    Creature_Registration.Instance,
                     Grass_Registration.Instance,
                     MiscItem_Registration.Instance,
                     Npc_Registration.Instance,

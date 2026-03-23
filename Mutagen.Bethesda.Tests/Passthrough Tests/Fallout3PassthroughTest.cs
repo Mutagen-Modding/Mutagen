@@ -151,29 +151,43 @@ public class Fallout3PassthroughTest : PassthroughTest
         ret.AddAlignments(
             RecordTypes.CREA,
             new RecordType("EDID"),
+            new RecordType("OBND"),
             new RecordType("FULL"),
             new RecordType("MODL"),
             new RecordType("MODB"),
             new RecordType("MODT"),
-            AlignmentRepeatedRule.Basic(new RecordType("CNTO")),
+            new RecordType("MODS"),
+            new RecordType("MODD"),
             AlignmentRepeatedRule.Basic(new RecordType("SPLO")),
-            AlignmentRepeatedRule.Basic(new RecordType("NIFZ")),
+            new RecordType("EITM"),
+            new RecordType("EAMT"),
+            new RecordType("NIFZ"),
             new RecordType("NIFT"),
             new RecordType("ACBS"),
             AlignmentRepeatedRule.Basic(new RecordType("SNAM")),
             new RecordType("INAM"),
+            new RecordType("VTCK"),
+            new RecordType("TPLT"),
             new RecordType("SCRI"),
+            AlignmentRepeatedRule.Basic(new RecordType("CNTO")),
             new RecordType("AIDT"),
             AlignmentRepeatedRule.Basic(new RecordType("PKID")),
-            AlignmentRepeatedRule.Basic(new RecordType("KFFZ")),
+            new RecordType("KFFZ"),
             new RecordType("DATA"),
             new RecordType("RNAM"),
             new RecordType("ZNAM"),
+            new RecordType("PNAM"),
             new RecordType("TNAM"),
             new RecordType("BNAM"),
             new RecordType("WNAM"),
-            new RecordType("NAM0"),
-            new RecordType("NAM1"));
+            new RecordType("NAM4"),
+            new RecordType("NAM5"),
+            new RecordType("CSCR"),
+            AlignmentRepeatedRule.Basic(new RecordType("CSDT")),
+            AlignmentRepeatedRule.Basic(new RecordType("CSDI")),
+            AlignmentRepeatedRule.Basic(new RecordType("CSDC")),
+            new RecordType("CNAM"),
+            new RecordType("LNAM"));
         ret.StopMarkers[RecordTypes.CREA] = new List<RecordType>()
         {
             new("DATA"),
@@ -237,7 +251,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("FURN"),
             new RecordType("WEAP"),
             new RecordType("AMMO"),
-            new RecordType("NPC_"));
+            new RecordType("NPC_"),
+            new RecordType("CREA"));
         return ret;
     }
 }

@@ -21,6 +21,7 @@ public partial class RecordTypes
     public static readonly RecordType BMDT = new(0x54444D42);
     public static readonly RecordType BNAM = new(0x4D414E42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
+    public static readonly RecordType BPTD = new(0x44545042);
     public static readonly RecordType BRUS = new(0x53555242);
     public static readonly RecordType CCRD = new(0x44524343);
     public static readonly RecordType CELL = new(0x4C4C4543);
@@ -33,6 +34,10 @@ public partial class RecordTypes
     public static readonly RecordType CONT = new(0x544E4F43);
     public static readonly RecordType CRDT = new(0x54445243);
     public static readonly RecordType CREA = new(0x41455243);
+    public static readonly RecordType CSCR = new(0x52435343);
+    public static readonly RecordType CSDC = new(0x43445343);
+    public static readonly RecordType CSDI = new(0x49445343);
+    public static readonly RecordType CSDT = new(0x54445343);
     public static readonly RecordType CSTY = new(0x59545343);
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType DAT2 = new(0x32544144);
@@ -95,6 +100,7 @@ public partial class RecordTypes
     public static readonly RecordType LIGH = new(0x4847494C);
     public static readonly RecordType LNAM = new(0x4D414E4C);
     public static readonly RecordType LTEX = new(0x5845544C);
+    public static readonly RecordType LVLC = new(0x434C564C);
     public static readonly RecordType LVLI = new(0x494C564C);
     public static readonly RecordType LVLN = new(0x4E4C564C);
     public static readonly RecordType MAST = new(0x5453414D);
@@ -137,6 +143,8 @@ public partial class RecordTypes
     public static readonly RecordType NAM8 = new(0x384D414E);
     public static readonly RecordType NAM9 = new(0x394D414E);
     public static readonly RecordType NAME = new(0x454D414E);
+    public static readonly RecordType NIFT = new(0x5446494E);
+    public static readonly RecordType NIFZ = new(0x5A46494E);
     public static readonly RecordType NNAM = new(0x4D414E4E);
     public static readonly RecordType NOTE = new(0x45544F4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);

@@ -44,6 +44,11 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IHasVoiceType.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Aspect\IHasIcons.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -146,7 +151,25 @@
     <Compile Include="Records\MajorRecords\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Creature.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Creature_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CreatureConfiguration_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CreatureAIData_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CreatureData_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CreatureSoundType_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CreatureSoundItem_Generated.cs">
       <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\Eyes.cs">
@@ -610,6 +633,12 @@
     </Compile>
     <Compile Include="Records\MajorRecords\LeveledNpc_Generated.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LeveledCreature_Generated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\BodyPartData_Generated.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\Package_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>

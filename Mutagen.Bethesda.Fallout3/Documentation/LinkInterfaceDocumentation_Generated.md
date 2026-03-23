@@ -34,6 +34,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Static
 - Weapon
 ### INpcSpawn
+- Creature
+- LeveledCreature
 - LeveledNpc
 - Npc
 ### IPlaceableObject
@@ -69,6 +71,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### CasinoChip
 - IItem
+### Creature
+- INpcSpawn
 ### Faction
 - IRelatable
 ### FormList
@@ -79,6 +83,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Key
 - IItem
+### LeveledCreature
+- INpcSpawn
 ### LeveledItem
 - IItem
 ### LeveledNpc

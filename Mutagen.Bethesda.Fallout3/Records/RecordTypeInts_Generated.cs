@@ -19,6 +19,7 @@ public partial class RecordTypeInts
     public const int BMDT = 0x54444D42;
     public const int BNAM = 0x4D414E42;
     public const int BOOK = 0x4B4F4F42;
+    public const int BPTD = 0x44545042;
     public const int BRUS = 0x53555242;
     public const int CCRD = 0x44524343;
     public const int CELL = 0x4C4C4543;
@@ -31,6 +32,10 @@ public partial class RecordTypeInts
     public const int CONT = 0x544E4F43;
     public const int CRDT = 0x54445243;
     public const int CREA = 0x41455243;
+    public const int CSCR = 0x52435343;
+    public const int CSDC = 0x43445343;
+    public const int CSDI = 0x49445343;
+    public const int CSDT = 0x54445343;
     public const int CSTY = 0x59545343;
     public const int CTDA = 0x41445443;
     public const int DAT2 = 0x32544144;
@@ -93,6 +98,7 @@ public partial class RecordTypeInts
     public const int LIGH = 0x4847494C;
     public const int LNAM = 0x4D414E4C;
     public const int LTEX = 0x5845544C;
+    public const int LVLC = 0x434C564C;
     public const int LVLI = 0x494C564C;
     public const int LVLN = 0x4E4C564C;
     public const int MAST = 0x5453414D;
@@ -135,6 +141,8 @@ public partial class RecordTypeInts
     public const int NAM8 = 0x384D414E;
     public const int NAM9 = 0x394D414E;
     public const int NAME = 0x454D414E;
+    public const int NIFT = 0x5446494E;
+    public const int NIFZ = 0x5A46494E;
     public const int NNAM = 0x4D414E4E;
     public const int NOTE = 0x45544F4E;
     public const int NPC_ = 0x5F43504E;
