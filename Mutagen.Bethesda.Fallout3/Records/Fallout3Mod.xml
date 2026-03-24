@@ -45,6 +45,7 @@
       <Group name="LeveledNpcs" refName="LeveledNpc" />
       <Group name="Keys" refName="Key" />
       <Group name="Ingestibles" refName="Ingestible" />
+      <Group name="IdleMarkers" refName="IdleMarker" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

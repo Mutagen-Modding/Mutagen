@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LeveledNpcs_Object = new Fallout3Group<LeveledNpc>(this);
             _Keys_Object = new Fallout3Group<Key>(this);
             _Ingestibles_Object = new Fallout3Group<Ingestible>(this);
+            _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -409,6 +410,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IIngestibleGetter> IFallout3ModGetter.Ingestibles => _Ingestibles_Object;
         #endregion
+        #region IdleMarkers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<IdleMarker> _IdleMarkers_Object;
+        public Fallout3Group<IdleMarker> IdleMarkers => _IdleMarkers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IIdleMarkerGetter> IFallout3ModGetter.IdleMarkers => _IdleMarkers_Object;
+        #endregion
 
         #region To String
 
@@ -491,6 +499,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LeveledNpcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Keys = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Ingestibles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -536,7 +545,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem LeveledCreatures,
                 TItem LeveledNpcs,
                 TItem Keys,
-                TItem Ingestibles)
+                TItem Ingestibles,
+                TItem IdleMarkers)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -581,6 +591,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LeveledNpcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LeveledNpcs, new Fallout3Group.Mask<TItem>(LeveledNpcs));
                 this.Keys = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Keys, new Fallout3Group.Mask<TItem>(Keys));
                 this.Ingestibles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Ingestibles, new Fallout3Group.Mask<TItem>(Ingestibles));
+                this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(IdleMarkers, new Fallout3Group.Mask<TItem>(IdleMarkers));
             }
 
             #pragma warning disable CS8618
@@ -635,6 +646,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LeveledNpcs { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Keys { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Ingestibles { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? IdleMarkers { get; set; }
             #endregion
 
             #region Equals
@@ -690,6 +702,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.LeveledNpcs, rhs.LeveledNpcs)) return false;
                 if (!object.Equals(this.Keys, rhs.Keys)) return false;
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
+                if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -738,6 +751,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.LeveledNpcs);
                 hash.Add(this.Keys);
                 hash.Add(this.Ingestibles);
+                hash.Add(this.IdleMarkers);
                 return hash.ToHashCode();
             }
 
@@ -961,6 +975,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Ingestibles.Overall)) return false;
                     if (this.Ingestibles.Specific != null && !this.Ingestibles.Specific.All(eval)) return false;
                 }
+                if (IdleMarkers != null)
+                {
+                    if (!eval(this.IdleMarkers.Overall)) return false;
+                    if (this.IdleMarkers.Specific != null && !this.IdleMarkers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1183,6 +1202,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Ingestibles.Overall)) return true;
                     if (this.Ingestibles.Specific != null && this.Ingestibles.Specific.Any(eval)) return true;
                 }
+                if (IdleMarkers != null)
+                {
+                    if (eval(this.IdleMarkers.Overall)) return true;
+                    if (this.IdleMarkers.Specific != null && this.IdleMarkers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1240,6 +1264,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
                 obj.Keys = this.Keys == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
+                obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1430,6 +1455,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Ingestibles?.Print(sb);
                     }
+                    if (printMask?.IdleMarkers?.Overall ?? true)
+                    {
+                        IdleMarkers?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1497,6 +1526,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Key.ErrorMask>?>? Keys;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             #endregion
 
             #region IErrorMask
@@ -1591,6 +1621,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Keys;
                     case Fallout3Mod_FieldIndex.Ingestibles:
                         return Ingestibles;
+                    case Fallout3Mod_FieldIndex.IdleMarkers:
+                        return IdleMarkers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1729,6 +1761,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Ingestibles:
                         this.Ingestibles = new MaskItem<Exception?, Fallout3Group.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.IdleMarkers:
+                        this.IdleMarkers = new MaskItem<Exception?, Fallout3Group.ErrorMask<IdleMarker.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1869,6 +1904,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Ingestibles:
                         this.Ingestibles = (MaskItem<Exception?, Fallout3Group.ErrorMask<Ingestible.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.IdleMarkers:
+                        this.IdleMarkers = (MaskItem<Exception?, Fallout3Group.ErrorMask<IdleMarker.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1920,6 +1958,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (LeveledNpcs != null) return true;
                 if (Keys != null) return true;
                 if (Ingestibles != null) return true;
+                if (IdleMarkers != null) return true;
                 return false;
             }
             #endregion
@@ -1988,6 +2027,7 @@ namespace Mutagen.Bethesda.Fallout3
                 LeveledNpcs?.Print(sb);
                 Keys?.Print(sb);
                 Ingestibles?.Print(sb);
+                IdleMarkers?.Print(sb);
             }
             #endregion
 
@@ -2039,6 +2079,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.LeveledNpcs = this.LeveledNpcs.Combine(rhs.LeveledNpcs, (l, r) => l.Combine(r));
                 ret.Keys = this.Keys.Combine(rhs.Keys, (l, r) => l.Combine(r));
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
+                ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2105,6 +2146,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<LeveledNpc.TranslationMask>? LeveledNpcs;
             public Fallout3Group.TranslationMask<Key.TranslationMask>? Keys;
             public Fallout3Group.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
+            public Fallout3Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             #endregion
 
             #region Ctors
@@ -2172,6 +2214,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((LeveledNpcs != null ? LeveledNpcs.OnOverall : DefaultOn, LeveledNpcs?.GetCrystal()));
                 ret.Add((Keys != null ? Keys.OnOverall : DefaultOn, Keys?.GetCrystal()));
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
+                ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2274,6 +2317,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LeveledNpcs_Object = new Fallout3Group<LeveledNpc>(this);
             _Keys_Object = new Fallout3Group<Key>(this);
             _Ingestibles_Object = new Fallout3Group<Ingestible>(this);
+            _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2447,6 +2491,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Ingestibles ?? true)
             {
                 this.Ingestibles.RecordCache.Set(rhsMod.Ingestibles.RecordCache.Items);
+            }
+            if (mask?.IdleMarkers ?? true)
+            {
+                this.IdleMarkers.RecordCache.Set(rhsMod.IdleMarkers.RecordCache.Items);
             }
         }
 
@@ -2751,6 +2799,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<LeveledNpc> LeveledNpcs { get; }
         new Fallout3Group<Key> Keys { get; }
         new Fallout3Group<Ingestible> Ingestibles { get; }
+        new Fallout3Group<IdleMarker> IdleMarkers { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2813,6 +2862,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
         IFallout3GroupGetter<IKeyGetter> Keys { get; }
         IFallout3GroupGetter<IIngestibleGetter> Ingestibles { get; }
+        IFallout3GroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -3406,6 +3456,7 @@ namespace Mutagen.Bethesda.Fallout3
         LeveledNpcs = 40,
         Keys = 41,
         Ingestibles = 42,
+        IdleMarkers = 43,
     }
     #endregion
 
@@ -3416,9 +3467,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 43;
+        public const ushort AdditionalFieldCount = 44;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -3527,6 +3578,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.LeveledNpcs.Clear();
             item.Keys.Clear();
             item.Ingestibles.Clear();
+            item.IdleMarkers.Clear();
         }
         
         #region Mutagen
@@ -3568,6 +3620,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LeveledNpcs.RemapLinks(mapping);
             obj.Keys.RemapLinks(mapping);
             obj.Ingestibles.RemapLinks(mapping);
+            obj.IdleMarkers.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3670,6 +3723,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LeveledNpcs.Remove(keys);
             obj.Keys.Remove(keys);
             obj.Ingestibles.Remove(keys);
+            obj.IdleMarkers.Remove(keys);
         }
         
         public void Remove(
@@ -4053,6 +4107,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    obj.IdleMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -4306,6 +4368,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.LeveledNpcs = MaskItemExt.Factory(item.LeveledNpcs.GetEqualsMask(rhs.LeveledNpcs, include), include);
             ret.Keys = MaskItemExt.Factory(item.Keys.GetEqualsMask(rhs.Keys, include), include);
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
+            ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
         }
         
         public string Print(
@@ -4521,6 +4584,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Ingestibles?.Overall ?? true)
             {
                 item.Ingestibles?.Print(sb, "Ingestibles");
+            }
+            if (printMask?.IdleMarkers?.Overall ?? true)
+            {
+                item.IdleMarkers?.Print(sb, "IdleMarkers");
             }
         }
         
@@ -4875,6 +4942,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isIngestiblesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.IdleMarkers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.IdleMarkers, rhs.IdleMarkers, out var lhsIdleMarkers, out var rhsIdleMarkers, out var isIdleMarkersEqual))
+                {
+                    if (!object.Equals(lhsIdleMarkers, rhsIdleMarkers)) return false;
+                }
+                else if (!isIdleMarkersEqual) return false;
+            }
             return true;
         }
         
@@ -4924,6 +4999,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.LeveledNpcs);
             hash.Add(item.Keys);
             hash.Add(item.Ingestibles);
+            hash.Add(item.IdleMarkers);
             return hash.ToHashCode();
         }
         
@@ -5180,6 +5256,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IIngestible":
                 case "IIngestibleInternal":
                     return obj.Ingestibles;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    return obj.IdleMarkers;
                 default:
                     return null;
             }
@@ -5197,7 +5278,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[42];
+            Stream[] outputStreams = new Stream[43];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -5241,6 +5322,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, 39, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keys, 40, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 41, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 42, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -5328,6 +5410,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Keys.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -5486,6 +5569,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Ingestibles.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -5669,6 +5756,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Ingestibles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6101,6 +6192,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -6500,6 +6600,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Ingestibles,
                 groupGetter: (m) => m.Ingestibles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleMarker, IIdleMarkerGetter>(
+                srcGroup: obj.IdleMarkers,
+                type: typeof(IIdleMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleMarkers,
+                groupGetter: (m) => m.IdleMarkers))
             {
                 yield return item;
             }
@@ -7118,6 +7227,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Ingestibles,
                         groupGetter: (m) => m.Ingestibles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleMarker, IIdleMarkerGetter>(
+                        srcGroup: obj.IdleMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleMarkers,
+                        groupGetter: (m) => m.IdleMarkers))
                     {
                         yield return item;
                     }
@@ -8079,6 +8202,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.IdleMarkers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.IdleMarkers);
+                try
+                {
+                    item.IdleMarkers.DeepCopyIn(
+                        rhs: rhs.IdleMarkers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.IdleMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -8224,6 +8367,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool LeveledNpcs;
         public bool Keys;
         public bool Ingestibles;
+        public bool IdleMarkers;
         public GroupMask()
         {
         }
@@ -8271,6 +8415,7 @@ namespace Mutagen.Bethesda.Fallout3
             LeveledNpcs = defaultValue;
             Keys = defaultValue;
             Ingestibles = defaultValue;
+            IdleMarkers = defaultValue;
         }
     }
 
@@ -8791,6 +8936,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
                         item: IngestiblesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.IdleMarkers ?? true)
+            {
+                var IdleMarkersItem = item.IdleMarkers;
+                if (IdleMarkersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)IdleMarkersItem).BinaryWriteTranslator).Write<IIdleMarkerGetter>(
+                        item: IdleMarkersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9453,6 +9609,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Ingestibles;
                 }
+                case RecordTypeInts.IDLM:
+                {
+                    if (importMask?.IdleMarkers ?? true)
+                    {
+                        item.IdleMarkers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.IdleMarkers;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -9828,6 +9998,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? Fallout3GroupBinaryOverlay<IIngestibleGetter>.Fallout3GroupFactory(_stream, _IngestiblesLocations, _package) : default;
         public IFallout3GroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new Fallout3Group<Ingestible>(this);
         #endregion
+        #region IdleMarkers
+        private List<RangeInt64>? _IdleMarkersLocations;
+        private IFallout3GroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? Fallout3GroupBinaryOverlay<IIdleMarkerGetter>.Fallout3GroupFactory(_stream, _IdleMarkersLocations, _package) : default;
+        public IFallout3GroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new Fallout3Group<IdleMarker>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -10153,6 +10328,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _IngestiblesLocations ??= new();
                     _IngestiblesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Ingestibles;
+                }
+                case RecordTypeInts.IDLM:
+                {
+                    _IdleMarkersLocations ??= new();
+                    _IdleMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.IdleMarkers;
                 }
                 default:
                     return default(int?);

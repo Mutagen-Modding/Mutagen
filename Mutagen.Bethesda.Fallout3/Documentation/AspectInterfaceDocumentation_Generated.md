@@ -113,6 +113,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Door
 - Furniture
 - Grass
+- IdleMarker
 - Ingestible
 - Ingredient
 - Key
@@ -207,6 +208,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPartItem
 - IHasIcons
 - IModeled
+### IdleMarker
+- IObjectBounded
 ### Ingestible
 - IHasDestructible
 - IHasEffects

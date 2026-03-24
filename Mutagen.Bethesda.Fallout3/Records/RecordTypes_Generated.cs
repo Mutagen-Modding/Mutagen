@@ -89,6 +89,12 @@ public partial class RecordTypes
     public static readonly RecordType HNAM = new(0x4D414E48);
     public static readonly RecordType ICO2 = new(0x324F4349);
     public static readonly RecordType ICON = new(0x4E4F4349);
+    public static readonly RecordType IDLA = new(0x414C4449);
+    public static readonly RecordType IDLC = new(0x434C4449);
+    public static readonly RecordType IDLE = new(0x454C4449);
+    public static readonly RecordType IDLF = new(0x464C4449);
+    public static readonly RecordType IDLM = new(0x4D4C4449);
+    public static readonly RecordType IDLT = new(0x544C4449);
     public static readonly RecordType IMOD = new(0x444F4D49);
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INDX = new(0x58444E49);

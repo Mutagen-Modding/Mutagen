@@ -87,6 +87,12 @@ public partial class RecordTypeInts
     public const int HNAM = 0x4D414E48;
     public const int ICO2 = 0x324F4349;
     public const int ICON = 0x4E4F4349;
+    public const int IDLA = 0x414C4449;
+    public const int IDLC = 0x434C4449;
+    public const int IDLE = 0x454C4449;
+    public const int IDLF = 0x464C4449;
+    public const int IDLM = 0x4D4C4449;
+    public const int IDLT = 0x544C4449;
     public const int IMOD = 0x444F4D49;
     public const int INAM = 0x4D414E49;
     public const int INDX = 0x58444E49;

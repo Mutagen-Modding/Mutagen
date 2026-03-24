@@ -683,6 +683,15 @@
     <Compile Include="Records\MajorRecords\Ingestible_Generated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\IdleAnimation_Generated.cs">
+      <DependentUpon>IdleAnimation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\IdleMarker.cs">
+      <DependentUpon>IdleMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\IdleMarker_Generated.cs">
+      <DependentUpon>IdleMarker.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\ItemMod_Generated.cs">
       <DependentUpon>ItemMod.xml</DependentUpon>
     </Compile>
