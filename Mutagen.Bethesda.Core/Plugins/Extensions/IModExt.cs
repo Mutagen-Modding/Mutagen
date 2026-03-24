@@ -2,7 +2,9 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 using Noggog.IO;
 
 namespace Mutagen.Bethesda;
@@ -141,5 +143,38 @@ public static class IModExt
             FileSystem = fileSystem
         });
         return duplicateInto;
+    }
+
+    /// <summary>
+    /// Converts a FormKey to a FormID representation, with its mod index calibrated
+    /// against the mod's master references.
+    /// <br/>
+    /// Note: This rebuilds a SeparatedMasterPackage on each call. If you need to convert
+    /// many FormKeys, it is more efficient to create a SeparatedMasterPackage once and call
+    /// <see cref="IReadOnlySeparatedMasterPackage.GetFormID"/> directly.
+    /// </summary>
+    /// <param name="mod">Mod to use as context for the conversion</param>
+    /// <param name="formKey">FormKey to convert</param>
+    /// <param name="masterFlagLookup">
+    /// Lookup providing master style information for each master.
+    /// Required for games with separated master load orders (e.g. Starfield).
+    /// Can be null for legacy games (e.g. Skyrim, Oblivion, Fallout 4).
+    /// </param>
+    /// <returns>FormID calibrated to the mod's master list</returns>
+    /// <exception cref="UnmappableFormIDException">If the FormKey's ModKey is not present in the mod's masters</exception>
+    public static FormID GetFormID(
+        this IModGetter mod,
+        FormKey formKey,
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup = null)
+    {
+        var masters = new MasterReferenceCollection(mod.ModKey, mod.MasterReferences);
+        var package = SeparatedMasterPackage.Factory(
+            mod.GameRelease,
+            mod.ModKey,
+            mod.GetMasterStyle(),
+            masters,
+            masterFlagLookup);
+
+        return package.GetFormID(formKey);
     }
 }

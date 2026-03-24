@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Translations.Binary;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 
@@ -84,10 +83,7 @@ public sealed class FormKeyBinaryTranslation
             item = FormLinkInformation.Null;
         }
 
-        var formID = FormIDTranslator.GetFormID(
-            writer.MetaData.SeparatedMasterPackage!, 
-            item,
-            reference: reference);
+        var formID = writer.MetaData.SeparatedMasterPackage!.GetFormID(item.FormKey);
 
         UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
             writer: writer,
