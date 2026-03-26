@@ -45,7 +45,7 @@ public static class ModRecordAligner
             inputPath = alignedGroupsFile;
         }
         
-        if (meta.Constants.Release is GameRelease.Oblivion or GameRelease.Fallout4 or GameRelease.Starfield)
+        if (meta.Constants.Release is GameRelease.Oblivion or GameRelease.Fallout3 or GameRelease.FalloutNV or GameRelease.Fallout4 or GameRelease.Starfield)
         {
             var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
             

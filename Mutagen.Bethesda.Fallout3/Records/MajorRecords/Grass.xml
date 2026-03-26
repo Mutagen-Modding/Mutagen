@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Grass" recordType="GRAS" objType="Record"
+          baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt8 name="Density" />
+          <UInt8 name="MinSlope" />
+          <UInt8 name="MaxSlope" />
+          <UInt8 name="Unused" />
+          <UInt16 name="UnitFromWaterAmount" />
+          <UInt16 name="Unused2" />
+          <Enum name="UnitFromWaterMode" enumName="WaterType" byteLength="4" />
+          <Float name="PositionRange" />
+          <Float name="HeightRange" />
+          <Float name="ColorRange" />
+          <Float name="WavePeriod" />
+          <UInt32 name="Flags" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

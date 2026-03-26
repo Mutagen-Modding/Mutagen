@@ -69,6 +69,8 @@ public sealed class TimestampAligner : ITimestampAligner
         switch (game)
         {
             case GameCategory.Oblivion:
+            case GameCategory.Fallout3:
+            case GameCategory.FalloutNV:
                 return true;
             case GameCategory.Skyrim:
                 return false;

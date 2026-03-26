@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TextureSet" baseClass="FalloutNVMajorRecord" objType="Record" recordType="TXST">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <AssetLink name="BaseImage" recordType="TX00" assetType="FalloutNVTexture" />
+      <AssetLink name="NormalMap" recordType="TX01" assetType="FalloutNVTexture" />
+      <AssetLink name="EnvironmentMapMask" recordType="TX02" assetType="FalloutNVTexture" />
+      <AssetLink name="GlowMap" recordType="TX03" assetType="FalloutNVTexture" />
+      <AssetLink name="ParallaxMap" recordType="TX04" assetType="FalloutNVTexture" />
+      <AssetLink name="EnvironmentMap" recordType="TX05" assetType="FalloutNVTexture" />
+      <RefDirect name="Decal" refName="Decal" />
+      <Bool name="NoSpecular" recordType="DNAM" byteLength="2" />
+    </Fields>
+  </Object>
+</Loqui>

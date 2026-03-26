@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Landscape" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="LAND">
+    <Fields>
+      <Enum name="Flags" enumName="Landscape.Flag" recordType="DATA" byteLength="4" />
+      <ByteArray name="VertexNormals" recordType="VNML" />
+      <RefDirect name="VertexHeightMap" refName="LandscapeVertexHeightMap" />
+      <ByteArray name="VertexColors" recordType="VCLR" />
+      <RefList name="Layers" refName="BaseLayer" />
+      <List name="Textures" recordType="VTEX">
+        <FormLink refName="LandscapeTexture" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="BaseLayer" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Header" refName="LayerHeader" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer">
+    <Fields>
+      <RefList name="AlphaLayerData" refName="AlphaLayerData" recordType="VTXT" />
+    </Fields>
+    <BaseRecordTypeOverrides>
+      <Mapping From="BTXT" To="ATXT" />
+    </BaseRecordTypeOverrides>
+  </Object>
+  <Object name="LayerHeader" recordType="BTXT" objType="Subrecord">
+    <Fields>
+      <FormLink name="Texture" refName="LandscapeTexture" />
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />
+      <UInt8 name="Unused" />
+      <UInt16 name="LayerNumber" />
+    </Fields>
+  </Object>
+  <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord">
+    <Fields>
+      <Float name="Offset" />
+      <ByteArray name="HeightMap" />
+      <P3UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayerData" objType="Subrecord">
+    <Fields>
+      <UInt16 name="Position" />
+      <UInt16 name="Unused" />
+      <Float name="Opacity" />
+    </Fields>
+  </Object>
+</Loqui>

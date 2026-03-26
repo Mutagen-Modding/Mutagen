@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Door" recordType="DOOR" objType="Record"
+          majorFlag="true" baseClass="FalloutNVMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="OpenSound" recordType="SNAM" refName="Sound" />
+      <FormLink name="CloseSound" recordType="ANAM" refName="Sound" />
+      <FormLink name="LoopingSound" recordType="BNAM" refName="Sound" />
+      <Enum name="Flags" recordType="FNAM" enumName="Door.Flag" byteLength="1" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

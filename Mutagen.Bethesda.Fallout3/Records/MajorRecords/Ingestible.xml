@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingestible" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="ALCH" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+      <Enum name="EquipmentType" recordType="ETYP" enumName="EquipType" byteLength="4" nullable="False" />
+      <Float name="Weight" recordType="DATA" nullable="False" />
+      <RefDirect name="EffectData" refName="IngestibleEffectData" nullable="False" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+  <Object name="IngestibleEffectData" objType="Subrecord" recordType="ENIT">
+    <Fields>
+      <Int32 name="Value" />
+      <UInt8 name="Flags" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
+      <FormLink name="WithdrawalEffect" refName="Spell" />
+      <Float name="AddictionChance" />
+      <FormLink name="ConsumeSound" refName="Sound" />
+    </Fields>
+  </Object>
+</Loqui>

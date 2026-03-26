@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MusicType" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="MUSC">
+    <Fields>
+      <String name="FileName" recordType="FNAM" />
+      <Float name="DecibelValue" recordType="ANAM" />
+    </Fields>
+  </Object>
+</Loqui>

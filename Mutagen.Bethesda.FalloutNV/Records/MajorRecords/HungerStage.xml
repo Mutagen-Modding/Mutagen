@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HungerStage" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="HUNG">
+    <Fields>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="TriggerThreshold" />
+          <FormLink name="ActorEffect" refName="Spell" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

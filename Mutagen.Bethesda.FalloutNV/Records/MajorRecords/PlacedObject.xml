@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedObject" baseClass="FalloutNVMajorRecord" recordType="REFR" objType="Record">
+    <Fields>
+      <!-- Unused / Linked Reference Color (Old Format) -->
+      <ByteArray name="RCLR" recordType="RCLR" />
+      <ByteArray name="XRGB" recordType="XRGB" />
+
+      <!-- Base -->
+      <FormLink name="Base" recordType="NAME" refName="FalloutNVMajorRecord" />
+
+      <!-- Display Name (FNV: some REFR records have a name override) -->
+      <String name="Name" recordType="FULL" nullable="True" />
+
+      <!-- Encounter Zone -->
+      <FormLink name="EncounterZone" recordType="XEZN" refName="FalloutNVMajorRecord" />
+
+      <!-- Ragdoll Data -->
+      <ByteArray name="RagdollData" recordType="XRGD" />
+
+      <!-- Primitive -->
+      <RefDirect name="Primitive" refName="PlacedPrimitive" />
+      <UInt32 name="CollisionLayer" recordType="XTRI" />
+      <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
+
+      <!-- Bound Half Extents -->
+      <P3Float name="BoundHalfExtents" recordType="XMBO" />
+
+      <!-- Teleport Destination -->
+      <RefDirect name="TeleportDestination" refName="TeleportDestination" />
+
+      <!-- Map Marker -->
+      <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
+
+      <!-- Audio Marker (FNV) -->
+      <Marker name="AudioMarker" recordType="MMRK" />
+      <FormLink name="AudioLocation" recordType="CNAM" refName="FalloutNVMajorRecord" />
+      <UInt32 name="AudioFlags" recordType="BNAM" />
+      <Float name="AudioLayer2TriggerPercent" recordType="MNAM" />
+      <Float name="AudioLayer3TriggerPercent" recordType="NNAM" />
+
+      <!-- Reputation (FNV) -->
+      <FormLink name="Reputation" recordType="WMI1" refName="FalloutNVMajorRecord" />
+
+      <!-- Special Rendering -->
+      <UInt32 name="SpecialRenderingFlags" recordType="XSRF" />
+      <ByteArray name="SpecialRenderingData" recordType="XSRD" />
+
+      <!-- Target -->
+      <FormLink name="Target" recordType="XTRG" refName="FalloutNVMajorRecord" />
+
+      <!-- Level Modifier -->
+      <Int32 name="LevelModifier" recordType="XLCM" />
+
+      <!-- Patrol Data -->
+      <Float name="PatrolIdleTime" recordType="XPRD" />
+      <Bool name="PatrolScriptMarker" boolAsMarker="XPPA" />
+      <FormLink name="PatrolIdle" recordType="INAM" refName="FalloutNVMajorRecord" />
+
+      <!-- Embedded Script (Patrol) -->
+      <ByteArray name="ScriptHeader" recordType="SCHR" />
+      <ByteArray name="CompiledScript" recordType="SCDA" />
+      <String name="ScriptSource" recordType="SCTX" />
+      <ByteArray name="LocalVariable" recordType="SLSD" />
+      <String name="LocalVariableName" recordType="SCVR" />
+      <FormLink name="ScriptReference" recordType="SCRO" refName="FalloutNVMajorRecord" />
+      <UInt32 name="ScriptReferenceVar" recordType="SCRV" />
+      <FormLink name="PatrolTopic" recordType="TNAM" refName="FalloutNVMajorRecord" />
+
+      <!-- Radio Data -->
+      <RefDirect name="RadioData" refName="RadioData" />
+
+      <!-- Ownership -->
+      <FormLink name="Owner" recordType="XOWN" refName="FalloutNVMajorRecord" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+
+      <!-- Lock Data -->
+      <RefDirect name="Lock" refName="LockData" />
+
+      <!-- Extra -->
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <Float name="Radiation" recordType="XRAD" />
+      <Float name="Charge" recordType="XCHG" />
+
+      <!-- Ammo -->
+      <FormLink name="AmmoType" recordType="XAMT" refName="FalloutNVMajorRecord" />
+      <Int32 name="AmmoCount" recordType="XAMC" />
+
+      <!-- Reflected/Refracted By Water -->
+      <RefList name="Reflections" refName="WaterReflection" />
+
+      <!-- Lit Water -->
+      <List name="LitWater">
+        <FormLink refName="FalloutNVMajorRecord" recordType="XLTW" />
+      </List>
+
+      <!-- Linked Decals -->
+      <ByteArray name="LinkedDecals" recordType="XDCR" />
+
+      <!-- Linked Reference -->
+      <FormLink name="LinkedReference" recordType="XLKR" refName="FalloutNVMajorRecord" />
+      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
+
+      <!-- Activate Parents -->
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+
+      <!-- Activation Prompt (FNV) -->
+      <String name="ActivationPrompt" recordType="XATO" />
+
+      <!-- Enable Parent -->
+      <RefDirect name="EnableParent" refName="EnableParent" />
+
+      <!-- Emittance -->
+      <FormLink name="Emittance" recordType="XEMI" refName="FalloutNVMajorRecord" />
+
+      <!-- MultiBound Reference -->
+      <FormLink name="MultiBoundReference" recordType="XMBR" refName="FalloutNVMajorRecord" />
+
+      <!-- Flags -->
+      <UInt32 name="ActionFlag" recordType="XACT" />
+      <Bool name="IsOpenByDefault" boolAsMarker="ONAM" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
+
+      <!-- Navmesh Door Link -->
+      <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
+
+      <!-- Portal Data -->
+      <RefList name="Portals" refName="Portal" recordType="XPOD" />
+      <ByteArray name="PortalData" recordType="XPTL" />
+
+      <!-- SpeedTree Seed -->
+      <UInt8 name="SpeedTreeSeed" recordType="XSED" />
+
+      <!-- Room Data -->
+      <CustomLogic name="BoundData" recordType="XRMR" />
+      <Int16 name="Unknown" binary="NoGeneration" />
+      <List name="LinkedRooms" binary="NoGeneration">
+        <FormLink recordType="XLRM" refName="PlacedObject" />
+      </List>
+
+      <!-- Occlusion -->
+      <ByteArray name="OcclusionPlaneData" recordType="XOCP" />
+      <ByteArray name="XORD" recordType="XORD" />
+
+      <!-- Distant LOD -->
+      <ByteArray name="DistantLodData" recordType="XLOD" />
+
+      <!-- 3D Data -->
+      <Float name="Scale" recordType="XSCL" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Float name="PositionX" />
+          <Float name="PositionY" />
+          <Float name="PositionZ" />
+          <Float name="RotationX" />
+          <Float name="RotationY" />
+          <Float name="RotationZ" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+  </Object>
+  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
+    <Fields>
+      <Float name="BoundsX" />
+      <Float name="BoundsY" />
+      <Float name="BoundsZ" />
+      <Float name="ColorRed" />
+      <Float name="ColorGreen" />
+      <Float name="ColorBlue" />
+      <ByteArray name="Unknown" byteLength="4" nullable="False" />
+      <UInt32 name="PrimitiveType" />
+    </Fields>
+  </Object>
+  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL">
+    <Fields>
+      <FormLink name="Door" refName="FalloutNVMajorRecord" />
+      <Float name="PositionX" />
+      <Float name="PositionY" />
+      <Float name="PositionZ" />
+      <Float name="RotationX" />
+      <Float name="RotationY" />
+      <Float name="RotationZ" />
+      <UInt32 name="NoAlarm" />
+    </Fields>
+  </Object>
+  <Object name="MapMarker" objType="Subrecord">
+    <Fields>
+      <UInt8 name="Flags" recordType="FNAM" nullable="False" />
+      <String name="Name" recordType="FULL" nullable="True" />
+      <Data recordType="TNAM" nullable="False">
+        <Fields>
+          <UInt8 name="IconType" />
+          <UInt8 name="Unused" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="RadioData" objType="Subrecord" recordType="XRDO">
+    <Fields>
+      <Float name="RangeRadius" />
+      <UInt32 name="BroadcastRangeType" />
+      <Float name="StaticPercentage" />
+      <FormLink name="PositionReference" refName="FalloutNVMajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="LockData" objType="Subrecord" recordType="XLOC">
+    <Fields>
+      <UInt8 name="Level" />
+      <ByteArray name="Unused1" byteLength="3" nullable="False" />
+      <FormLink name="Key" refName="FalloutNVMajorRecord" />
+      <UInt8 name="LockFlags" />
+      <ByteArray name="Unused2" byteLength="3" nullable="False" />
+      <ByteArray name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="WaterReflection" objType="Subrecord" recordType="XPWR">
+    <Fields>
+      <FormLink name="WaterReference" refName="FalloutNVMajorRecord" />
+      <UInt32 name="Flags" />
+    </Fields>
+  </Object>
+  <Object name="LinkedReferenceColor" objType="Subrecord" recordType="XCLP">
+    <Fields>
+      <UInt8 name="LinkStartColorRed" />
+      <UInt8 name="LinkStartColorGreen" />
+      <UInt8 name="LinkStartColorBlue" />
+      <UInt8 name="LinkStartColorAlpha" />
+      <UInt8 name="LinkEndColorRed" />
+      <UInt8 name="LinkEndColorGreen" />
+      <UInt8 name="LinkEndColorBlue" />
+      <UInt8 name="LinkEndColorAlpha" />
+    </Fields>
+  </Object>
+  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP">
+    <Fields>
+      <FormLink name="Navmesh" refName="FalloutNVMajorRecord" />
+      <Int16 name="TriangleIndex" />
+      <ByteArray name="Unused" byteLength="2" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="Portal" objType="Subrecord">
+    <Fields>
+      <FormLink name="Origin" refName="FalloutNVMajorRecord" />
+      <FormLink name="Destination" refName="FalloutNVMajorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

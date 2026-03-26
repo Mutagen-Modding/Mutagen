@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectEffect" recordType="ENCH" objType="Record"
+          baseClass="Fallout3MajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <Data recordType="ENIT">
+        <Fields>
+          <UInt32 name="Type" />
+          <UInt32 name="ChargeAmount" />
+          <UInt32 name="EnchantCost" />
+          <UInt8 name="Flags" />
+          <ByteArray name="Unused" byteLength="3" nullable="False" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+    <LinkInterface>IEffectRecord</LinkInterface>
+  </Object>
+</Loqui>

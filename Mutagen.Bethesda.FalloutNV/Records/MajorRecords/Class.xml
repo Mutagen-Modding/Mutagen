@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Class" recordType="CLAS" objType="Record" baseClass="FalloutNVMajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <RefDirect name="Icons" refName="Icons" />
+      <Data>
+        <Fields>
+          <Int32 name="TagSkill1" />
+          <Int32 name="TagSkill2" />
+          <Int32 name="TagSkill3" />
+          <Int32 name="TagSkill4" />
+          <UInt32 name="Flags" />
+          <UInt32 name="Services" />
+          <UInt8 name="Teaches" />
+          <UInt8 name="MaxTrainingLevel" />
+          <UInt16 name="Unknown" />
+        </Fields>
+      </Data>
+      <Data recordType="ATTR" >
+        <Fields>
+          <Dict name="Attributes" numEnumKeys="7" >
+            <Key>
+              <Enum enumName="Attribute" />
+            </Key>
+            <Value>
+              <UInt8 />
+            </Value>
+          </Dict>
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

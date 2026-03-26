@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CasinoChip" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="CHIP">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+    </Fields>
+    <LinkInterface>IBoundItem</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+</Loqui>

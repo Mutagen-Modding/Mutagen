@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FormList" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="FLST">
+    <Fields>
+      <List name="Items">
+        <FormLink refName="FalloutNVMajorRecord" recordType="LNAM" />
+      </List>
+    </Fields>
+    <LinkInterface>IAmmoOrList</LinkInterface>
+  </Object>
+</Loqui>

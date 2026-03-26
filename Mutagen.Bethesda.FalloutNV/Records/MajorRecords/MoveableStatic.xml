@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MoveableStatic" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="MSTT" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <Bool name="OnLocalMap" recordType="DATA" byteLength="1" />
+      <FormLink name="Sound" recordType="SNAM" refName="Sound" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+</Loqui>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedNpc" baseClass="FalloutNVMajorRecord" objType="Record"
+          recordType="ACHR">
+    <Fields>
+      <FormLink name="Base" refName="Npc" recordType="NAME" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <ByteArray name="XRGD" recordType="XRGD" />
+      <ByteArray name="XRGB" recordType="XRGB" />
+      <RefDirect name="Patrol" refName="Patrol" />
+      <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <RefList name="LinkedDecals" refName="LinkedDecal" />
+      <FormLink name="LinkedReference" recordType="XLKR" refName="PlacedObject" />
+      <RefDirect name="LinkedReferenceColor" refName="PlacedNpcLinkedReferenceColor" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <String name="ActivationPrompt" recordType="XATO" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
+      <Float name="Scale" recordType="XSCL" />
+      <RefDirect name="Placement" refName="Placement" />
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+  </Object>
+  <Object name="PlacedNpcLinkedReferenceColor" objType="Subrecord" recordType="XCLP">
+    <Fields>
+      <Color name="Start" binaryType="Alpha" />
+      <Color name="End" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="LinkedDecal" objType="Subrecord" recordType="XDCR">
+    <Fields>
+      <FormLink name="Reference" refName="PlacedObject" />
+      <ByteArray name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

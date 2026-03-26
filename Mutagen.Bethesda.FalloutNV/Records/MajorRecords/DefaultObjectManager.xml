@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DefaultObjectManager" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="DOBJ">
+    <Fields>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <FormLink name="Stimpak" refName="Ingestible" />
+          <FormLink name="SuperStimpak" refName="Ingestible" />
+          <FormLink name="RadX" refName="Ingestible" />
+          <FormLink name="RadAway" refName="Ingestible" />
+          <FormLink name="Morphine" refName="Ingestible" />
+          <FormLink name="PerkParalysis" refName="Spell" />
+          <FormLink name="PlayerFaction" refName="Faction" />
+          <FormLink name="MysteriousStrangerNpc" refName="Npc" />
+          <FormLink name="MysteriousStrangerFaction" refName="Faction" />
+          <FormLink name="DefaultMusic" refName="MusicType" />
+          <FormLink name="BattleMusic" refName="MusicType" />
+          <FormLink name="DeathMusic" refName="MusicType" />
+          <FormLink name="SuccessMusic" refName="MusicType" />
+          <FormLink name="LevelUpMusic" refName="MusicType" />
+          <FormLink name="PlayerVoiceMale" refName="VoiceType" />
+          <FormLink name="PlayerVoiceMaleChild" refName="VoiceType" />
+          <FormLink name="PlayerVoiceFemale" refName="VoiceType" />
+          <FormLink name="PlayerVoiceFemaleChild" refName="VoiceType" />
+          <FormLink name="EatPackageDefaultFood" refName="FormList" />
+          <FormLink name="EveryActorAbility" refName="Spell" />
+          <FormLink name="DrugWearsOffImageSpace" refName="ImageSpaceAdapter" />
+          <FormLink name="DoctorsBag" refName="Ingestible" />
+          <FormLink name="MissFortunNpc" refName="Npc" />
+          <FormLink name="MissFortuneFaction" refName="Faction" />
+          <FormLink name="MeltdownExplosion" refName="Explosion" />
+          <FormLink name="UnarmedForwardPa" refName="Spell" />
+          <FormLink name="UnarmedBackwardPa" refName="Spell" />
+          <FormLink name="UnarmedLeftPa" refName="Spell" />
+          <FormLink name="UnarmedRightPa" refName="Spell" />
+          <FormLink name="UnarmedCrouchPa" refName="Spell" />
+          <FormLink name="UnarmedCounterPa" refName="Spell" />
+          <FormLink name="SpotterEffect" refName="EffectShader" />
+          <FormLink name="ItemDetectedEffect" refName="EffectShader" />
+          <FormLink name="CateyeMobileEffect" refName="EffectShader" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

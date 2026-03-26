@@ -14,6 +14,8 @@ public static class GameCategoryExt
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
             GameCategory.Starfield => true,
+            GameCategory.Fallout3 => false,
+            GameCategory.FalloutNV => false,
         };
     }
 
@@ -25,6 +27,8 @@ public static class GameCategoryExt
             GameCategory.Skyrim => GameRelease.SkyrimSE,
             GameCategory.Fallout4 => GameRelease.Fallout4,
             GameCategory.Starfield => GameRelease.Starfield,
+            GameCategory.Fallout3 => GameRelease.Fallout3,
+            GameCategory.FalloutNV => GameRelease.FalloutNV,
             _ => throw new NotImplementedException(),
         };
     }
@@ -53,6 +57,12 @@ public static class GameCategoryExt
             case GameCategory.Starfield:
                 yield return GameRelease.Starfield;
                 yield break;
+            case GameCategory.Fallout3:
+                yield return GameRelease.Fallout3;
+                yield break;
+            case GameCategory.FalloutNV:
+                yield return GameRelease.FalloutNV;
+                yield break;
             default:
                 throw new NotImplementedException();
         }
@@ -63,6 +73,8 @@ public static class GameCategoryExt
         switch (category)
         {
             case GameCategory.Oblivion:
+            case GameCategory.Fallout3:
+            case GameCategory.FalloutNV:
                 return false;
             case GameCategory.Skyrim:
             case GameCategory.Fallout4:
@@ -80,6 +92,8 @@ public static class GameCategoryExt
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
             GameCategory.Starfield => false,
+            GameCategory.Fallout3 => true,
+            GameCategory.FalloutNV => true,
         };
     }
 

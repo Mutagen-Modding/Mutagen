@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Message" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="MESG">
+    <Fields>
+      <String name="Description" recordType="DESC" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <FormLink name="Icon" recordType="INAM" refName="MenuIcon" />
+      <ByteArray name="NAM0" recordType="NAM0" />
+      <ByteArray name="NAM1" recordType="NAM1" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <ByteArray name="NAM4" recordType="NAM4" />
+      <ByteArray name="NAM5" recordType="NAM5" />
+      <ByteArray name="NAM6" recordType="NAM6" />
+      <ByteArray name="NAM7" recordType="NAM7" />
+      <ByteArray name="NAM8" recordType="NAM8" />
+      <ByteArray name="NAM9" recordType="NAM9" />
+      <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
+      <UInt32 name="DisplayTime" recordType="TNAM" />
+      <RefList name="MenuButtons" refName="MessageButton" />
+    </Fields>
+  </Object>
+  <Object name="MessageButton" objType="Subrecord">
+    <Fields>
+      <String name="Text" recordType="ITXT" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="RadiationStage" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="RADS">
+    <Fields>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="TriggerThreshold" />
+          <FormLink name="ActorEffect" refName="Spell" />
+        </Fields>
+      </Data>
+      <FormLink name="Spell" refName="Spell" recordType="SPEL" />
+    </Fields>
+  </Object>
+</Loqui>

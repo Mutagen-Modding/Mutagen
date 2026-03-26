@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CaravanDeck" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="CDCK">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefList name="Cards" refName="CaravanDeckCard" />
+      <UInt32 name="Count" recordType="DATA" />
+    </Fields>
+  </Object>
+  <Object name="CaravanDeckCard" objType="Subrecord" recordType="CARD">
+    <Fields>
+      <FormLink name="Card" refName="CaravanCard" />
+    </Fields>
+  </Object>
+</Loqui>

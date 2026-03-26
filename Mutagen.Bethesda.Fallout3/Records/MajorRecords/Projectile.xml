@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Projectile" baseClass="Fallout3MajorRecord" objType="Record"
+          recordType="PROJ">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Enum name="Flags" enumName="Projectile.Flag" byteLength="2" />
+          <Enum name="Type" enumName="Projectile.TypeEnum" byteLength="2" />
+          <Float name="Gravity" />
+          <Float name="Speed" />
+          <Float name="Range" />
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="MuzzleFlashLight" refName="Light" />
+          <Float name="TracerChance" />
+          <Float name="ExplosionAltTriggerProximity" />
+          <Float name="ExplosionAltTriggerTimer" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Sound" refName="Sound" />
+          <Float name="MuzzleFlashDuration" />
+          <Float name="FadeDuration" />
+          <Float name="ImpactForce" />
+          <FormLink name="CountdownSound" refName="Sound" />
+          <FormLink name="DisableSound" refName="Sound" />
+          <FormLink name="DefaultWeaponSource" refName="Weapon" />
+        </Fields>
+      </Data>
+      <String name="MuzzleFlashModelFilename" recordType="NAM1" nullable="False" />
+      <ByteArray name="TextureFilesHashes" recordType="NAM2" />
+      <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" recordType="VNAM" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

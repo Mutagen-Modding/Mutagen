@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MagicEffect" objType="Record" baseClass="Fallout3MajorRecord" recordType="MGEF">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="Description" recordType="DESC" nullable="True" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Model" refName="Model" />
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
+          <Float name="BaseCost" />
+          <CustomLogic name="AssociatedItem" byteLength="4" />
+          <Int32 name="Unused" />
+          <Enum name="Resistance" enumName="ActorValue" byteLength="4" />
+          <UInt32 name="CounterEffectCount" />
+          <FormLink name="Light" refName="Light" />
+          <Float name="ProjectileSpeed" />
+          <FormLink name="EffectShader" refName="EffectShader" />
+          <FormLink name="ObjectDisplayShader" refName="EffectShader" />
+          <FormLink name="EffectSound" refName="Sound" />
+          <FormLink name="BoltSound" refName="Sound" />
+          <FormLink name="HitSound" refName="Sound" />
+          <FormLink name="AreaSound" refName="Sound" />
+          <Float name="ConstantEffectEnchantmentFactor" />
+          <Float name="ConstantEffectBarterFactor" />
+          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" defaultType="MagicEffectArchetype" />
+          <!-- Actor Value parsed by above custom logic -->
+        </Fields>
+      </Data>
+      <FormLink name="Script" refName="Script" recordType="SCPT" />
+      <List name="CounterEffects" recordType="ESCE">
+        <FormLink refName="MagicEffect" type="EDIDChars" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="AMagicEffectArchetype" abstract="true" objType="Subrecord">
+    <Fields>
+      <Enum name="ActorValue" enumName="ActorValue" generateClassMembers="false" binary="NoGeneration" default="ActorValue.None" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" />
+      <FormLink name="Association" binary="NoGeneration" refName="Fallout3MajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectScriptArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Script" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectBoundItemArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" >
+        <Interface>IBoundItem</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
+    <Fields>
+      <FormLink name="Association" binary="NoGeneration" refName="Creature" />
+    </Fields>
+  </Object>
+</Loqui>

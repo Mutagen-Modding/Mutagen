@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Explosion" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="EXPL">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <Data>
+        <Fields>
+          <Float name="Force" />
+          <Float name="Damage" />
+          <Float name="Radius" />
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="Sound1" refName="Sound" />
+          <Enum name="Flags" enumName="Explosion.Flag" byteLength="4" />
+          <Float name="ISRadius" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="Sound2" refName="Sound" />
+          <Float name="RadiationLevel" />
+          <Float name="RadiationDissipationTime" />
+          <Float name="RadiationRadius" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+        </Fields>
+      </Data>
+      <FormLink name="ImageSpaceAdapterRef" refName="ImageSpaceAdapter" recordType="IMAD" />
+      <FormLink name="PlacedImpactObject" recordType="INAM" refName="FalloutNVMajorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

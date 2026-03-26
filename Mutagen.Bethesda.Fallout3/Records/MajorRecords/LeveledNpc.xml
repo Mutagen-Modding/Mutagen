@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledNpc" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="LVLN">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="1" />
+      <RefList name="Entries" refName="LeveledNpcEntry" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+    <LinkInterface>INpcSpawn</LinkInterface>
+  </Object>
+  <Object name="LeveledNpcEntry" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Data" refName="LeveledNpcEntryData" />
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledNpcEntryData" objType="Subrecord" recordType="LVLO">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" refName="Fallout3MajorRecord" />
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

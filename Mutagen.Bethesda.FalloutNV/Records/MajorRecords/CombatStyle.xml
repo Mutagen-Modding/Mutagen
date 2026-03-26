@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CombatStyle" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="CSTY">
+    <Fields>
+      <Data recordType="CSTD" nullable="False">
+        <Fields>
+          <UInt8 name="DodgeChance" />
+          <UInt8 name="LeftRightChance" />
+          <ByteArray name="Unused1" byteLength="2" nullable="False" />
+          <Float name="DodgeLRTimerMin" />
+          <Float name="DodgeLRTimerMax" />
+          <Float name="DodgeForwardTimerMin" />
+          <Float name="DodgeForwardTimerMax" />
+          <Float name="DodgeBackTimerMin" />
+          <Float name="DodgeBackTimerMax" />
+          <Float name="IdleTimerMin" />
+          <Float name="IdleTimerMax" />
+          <UInt8 name="BlockChance" />
+          <UInt8 name="AttackChance" />
+          <ByteArray name="Unused2" byteLength="2" nullable="False" />
+          <Float name="RecoilStaggerBonusToAttack" />
+          <Float name="UnconsciousBonusToAttack" />
+          <Float name="HandToHandBonusToAttack" />
+          <UInt8 name="PowerAttackChance" />
+          <ByteArray name="Unused3" byteLength="3" nullable="False" />
+          <Float name="RecoilStaggerBonusToPowerAttack" />
+          <Float name="UnconsciousBonusToPowerAttack" />
+          <UInt8 name="PowerAttackNormal" />
+          <UInt8 name="PowerAttackForward" />
+          <UInt8 name="PowerAttackBack" />
+          <UInt8 name="PowerAttackLeft" />
+          <UInt8 name="PowerAttackRight" />
+          <ByteArray name="Unused4" byteLength="3" nullable="False" />
+          <Float name="HoldTimerMin" />
+          <Float name="HoldTimerMax" />
+          <UInt16 name="Flags" />
+          <ByteArray name="Unused5" byteLength="2" nullable="False" />
+          <UInt8 name="AcrobaticDodgeChance" />
+          <UInt8 name="RushingAttackChance" />
+          <ByteArray name="Unused6" byteLength="2" nullable="False" />
+          <Float name="RushingAttackDistanceMult" />
+        </Fields>
+      </Data>
+
+      <Data recordType="CSAD">
+        <Fields>
+          <Float name="DodgeFatigueModMult" />
+          <Float name="DodgeFatigueModBase" />
+          <Float name="EncumbSpeedModBase" />
+          <Float name="EncumbSpeedModMult" />
+          <Float name="DodgeWhileUnderAttackMult" />
+          <Float name="DodgeNotUnderAttackMult" />
+          <Float name="DodgeBackWhileUnderAttackMult" />
+          <Float name="DodgeBackNotUnderAttackMult" />
+          <Float name="DodgeForwardWhileAttackingMult" />
+          <Float name="DodgeForwardNotAttackingMult" />
+          <Float name="BlockSkillModifierMult" />
+          <Float name="BlockSkillModifierBase" />
+          <Float name="BlockWhileUnderAttackMult" />
+          <Float name="BlockNotUnderAttackMult" />
+          <Float name="AttackSkillModifierMult" />
+          <Float name="AttackSkillModifierBase" />
+          <Float name="AttackWhileUnderAttackMult" />
+          <Float name="AttackNotUnderAttackMult" />
+          <Float name="AttackDuringBlockMult" />
+          <Float name="PowerAttackFatigueModBase" />
+          <Float name="PowerAttackFatigueModMult" />
+        </Fields>
+      </Data>
+
+      <Data recordType="CSSD">
+        <Fields>
+          <Float name="CoverSearchRadius" />
+          <Float name="TakeCoverChance" />
+          <Float name="WaitTimerMin" />
+          <Float name="WaitTimerMax" />
+          <Float name="WaitToFireTimerMin" />
+          <Float name="WaitToFireTimerMax" />
+          <Float name="FireTimerMin" />
+          <Float name="FireTimerMax" />
+          <Float name="RangedWeaponRangeMultMin" />
+          <ByteArray name="Unused" byteLength="4" nullable="False" />
+          <UInt32 name="WeaponRestrictions" />
+          <Float name="RangedWeaponRangeMultMax" />
+          <Float name="MaxTargetingFov" />
+          <Float name="CombatRadius" />
+          <Float name="SemiAutoFiringDelayMultMin" />
+          <Float name="SemiAutoFiringDelayMultMax" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

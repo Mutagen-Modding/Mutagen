@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Climate" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="CLMT">
+    <Fields>
+      <RefList name="WeatherTypes" refName="WeatherType" recordType="WLST" />
+      <String name="SunTexture" recordType="FNAM" />
+      <String name="SunGlareTexture" recordType="GNAM" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="WeatherOverride" refName="Weather" recordType="WTHR" />
+      <Data recordType="TNAM">
+        <Fields>
+          <TimeOnly name="SunriseBegin" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunriseEnd" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunsetBegin" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunsetEnd" binary="Custom" byteLength="1" />
+          <UInt8 name="Volatility" />
+          <CustomLogic name="MoonAndPhaseLength" />
+          <Enum name="Moons" enumName="Climate.Moon" binary="NoGeneration" />
+          <UInt8 name="PhaseLength" min="0" max="64" binary="NoGeneration" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingredient" recordType="INGR" objType="Record" baseClass="FalloutNVMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <Enum name="EquipmentType" recordType="ETYP" enumName="EquipType" byteLength="4" nullable="False" />
+      <Float name="Weight" recordType="DATA" nullable="False" />
+      <Data recordType="ENIT" nullable="False">
+        <Fields>
+          <Int32 name="Value" />
+          <UInt8 name="Flags" />
+          <ByteArray name="Unused" byteLength="3" nullable="False" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

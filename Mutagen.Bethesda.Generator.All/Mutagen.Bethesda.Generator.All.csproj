@@ -18,6 +18,8 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Pex.Generator\Mutagen.Bethesda.Pex.Generator.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim.Generator\Mutagen.Bethesda.Skyrim.Generator.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Starfield.Generator\Mutagen.Bethesda.Starfield.Generator.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Fallout3.Generator\Mutagen.Bethesda.Fallout3.Generator.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.FalloutNV.Generator\Mutagen.Bethesda.FalloutNV.Generator.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EffectShader" baseClass="FalloutNVMajorRecord" objType="Record" recordType="EFSH">
+    <Fields>
+      <String name="FillTexture" recordType="ICON" />
+      <String name="ParticleShaderTexture" recordType="ICO2" />
+      <String name="HolesTexture" recordType="NAM7" />
+      <RefDirect name="Data" refName="EffectShaderData" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="EffectShaderData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <!-- Membrane Shader flags + padding -->
+      <UInt8 name="Flags" />
+      <ByteArray name="Unused1" byteLength="3" nullable="False" />
+      <UInt32 name="MembraneShaderSourceBlendMode" />
+      <UInt32 name="MembraneShaderBlendOperation" />
+      <UInt32 name="MembraneShaderZTestFunction" />
+      <!-- Fill/Texture Effect -->
+      <Color name="FillTextureEffectColor" binaryType="Alpha" />
+      <Float name="FillTextureEffectAlphaFadeInTime" />
+      <Float name="FillTextureEffectFullAlphaTime" />
+      <Float name="FillTextureEffectAlphaFadeOutTime" />
+      <Float name="FillTextureEffectPersistentAlphaRatio" />
+      <Float name="FillTextureEffectAlphaPulseAmplitude" />
+      <Float name="FillTextureEffectAlphaPulseFrequency" />
+      <Float name="FillTextureEffectTextureAnimationSpeedU" />
+      <Float name="FillTextureEffectTextureAnimationSpeedV" />
+      <!-- Edge Effect -->
+      <Float name="EdgeEffectFallOff" />
+      <Color name="EdgeEffectColor" binaryType="Alpha" />
+      <Float name="EdgeEffectAlphaFadeInTime" />
+      <Float name="EdgeEffectFullAlphaTime" />
+      <Float name="EdgeEffectAlphaFadeOutTime" />
+      <Float name="EdgeEffectPersistentAlphaRatio" />
+      <Float name="EdgeEffectAlphaPulseAmplitude" />
+      <Float name="EdgeEffectAlphaPulseFrequency" />
+      <Float name="FillTextureEffectFullAlphaRatio" />
+      <Float name="EdgeEffectFullAlphaRatio" />
+      <UInt32 name="MembraneShaderDestBlendMode" />
+      <!-- Particle Shader -->
+      <UInt32 name="ParticleShaderSourceBlendMode" />
+      <UInt32 name="ParticleShaderBlendOperation" />
+      <UInt32 name="ParticleShaderZTestFunction" />
+      <UInt32 name="ParticleShaderDestBlendMode" />
+      <Float name="ParticleShaderParticleBirthRampUpTime" />
+      <Float name="ParticleShaderFullParticleBirthTime" />
+      <Float name="ParticleShaderParticleBirthRampDownTime" />
+      <Float name="ParticleShaderFullParticleBirthRatio" />
+      <Float name="ParticleShaderPersistentParticleBirthRatio" />
+      <Float name="ParticleShaderParticleLifetime" />
+      <Float name="ParticleShaderParticleLifetimePlusMinus" />
+      <Float name="ParticleShaderInitialSpeedAlongNormal" />
+      <Float name="ParticleShaderAccelerationAlongNormal" />
+      <Float name="ParticleShaderInitialVelocity1" />
+      <Float name="ParticleShaderInitialVelocity2" />
+      <Float name="ParticleShaderInitialVelocity3" />
+      <Float name="ParticleShaderAcceleration1" />
+      <Float name="ParticleShaderAcceleration2" />
+      <Float name="ParticleShaderAcceleration3" />
+      <Float name="ParticleShaderScaleKey1" />
+      <Float name="ParticleShaderScaleKey2" />
+      <Float name="ParticleShaderScaleKey1Time" />
+      <Float name="ParticleShaderScaleKey2Time" />
+      <!-- Color Keys -->
+      <Color name="ColorKey1Color" binaryType="Alpha" />
+      <Color name="ColorKey2Color" binaryType="Alpha" />
+      <Color name="ColorKey3Color" binaryType="Alpha" />
+      <Float name="ColorKey1ColorAlpha" />
+      <Float name="ColorKey2ColorAlpha" />
+      <Float name="ColorKey3ColorAlpha" />
+      <Float name="ColorKey1ColorKeyTime" />
+      <Float name="ColorKey2ColorKeyTime" />
+      <Float name="ColorKey3ColorKeyTime" />
+      <!-- FO3 extended fields (optional — some records have shorter DATA) -->
+      <ByteArray name="ExtendedData" />
+    </Fields>
+  </Object>
+</Loqui>

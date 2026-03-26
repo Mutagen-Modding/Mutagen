@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weather" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="WTHR">
+    <Fields>
+      <FormLink name="ImageSpaceSunrise" recordTypeHex="0x44414900" refName="ImageSpaceAdapter" />
+      <FormLink name="ImageSpaceDay" recordTypeHex="0x44414901" refName="ImageSpaceAdapter" />
+      <FormLink name="ImageSpaceSunset" recordTypeHex="0x44414902" refName="ImageSpaceAdapter" />
+      <FormLink name="ImageSpaceNight" recordTypeHex="0x44414903" refName="ImageSpaceAdapter" />
+      <String name="CloudTextureLayer0" recordType="DNAM" />
+      <String name="CloudTextureLayer1" recordType="CNAM" />
+      <String name="CloudTextureLayer2" recordType="ANAM" />
+      <String name="CloudTextureLayer3" recordType="BNAM" />
+      <RefDirect name="Model" refName="Model" />
+      <UInt32 name="MaxCloudLayers" recordType="LNAM" nullable="False" />
+      <RefDirect name="CloudSpeeds" refName="WeatherCloudSpeeds" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <List name="Colors" recordType="NAM0">
+        <RefDirect refName="WeatherColors" />
+      </List>
+      <RefDirect name="FogDistance" refName="WeatherFogDistance" />
+      <ByteArray name="INAM" recordType="INAM" />
+      <RefDirect name="Data" refName="WeatherData" />
+      <RefList name="Sounds" refName="WeatherSound" />
+    </Fields>
+  </Object>
+  <Object name="WeatherCloudSpeeds" objType="Subrecord" recordType="ONAM">
+    <Fields>
+      <UInt8 name="Layer0Speed" />
+      <UInt8 name="Layer1Speed" />
+      <UInt8 name="Layer2Speed" />
+      <UInt8 name="Layer3Speed" />
+    </Fields>
+  </Object>
+  <Object name="WeatherColors" objType="Subrecord">
+    <Fields>
+      <Color name="Sunrise" binaryType="Alpha" />
+      <Color name="Day" binaryType="Alpha" />
+      <Color name="Sunset" binaryType="Alpha" />
+      <Color name="Night" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="WeatherFogDistance" objType="Subrecord" recordType="FNAM">
+    <Fields>
+      <Float name="FogDistanceDayNear" />
+      <Float name="FogDistanceDayFar" />
+      <Float name="FogDistanceNightNear" />
+      <Float name="FogDistanceNightFar" />
+      <Float name="FogDistanceDayPower" />
+      <Float name="FogDistanceNightPower" />
+    </Fields>
+  </Object>
+  <Object name="WeatherData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt8 name="WindSpeed" />
+      <UInt8 name="Unused1" />
+      <UInt8 name="Unused2" />
+      <UInt8 name="TransDelta" />
+      <UInt8 name="SunGlare" />
+      <UInt8 name="SunDamage" />
+      <UInt8 name="PrecipitationBeginFadeIn" />
+      <UInt8 name="PrecipitationEndFadeOut" />
+      <UInt8 name="ThunderLightningBeginFadeIn" />
+      <UInt8 name="ThunderLightningEndFadeOut" />
+      <UInt8 name="ThunderLightningFrequency" />
+      <UInt8 name="Flags" />
+      <Color name="LightningColor" binaryType="NoAlpha" />
+    </Fields>
+  </Object>
+  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM">
+    <Fields>
+      <FormLink name="Sound" refName="Sound" />
+      <UInt32 name="Type" />
+    </Fields>
+  </Object>
+</Loqui>

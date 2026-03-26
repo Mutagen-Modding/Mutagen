@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Water" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="WATR">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="NoiseMapTexture" recordType="NNAM" />
+      <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
+      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
+      <String name="MaterialId" recordType="MNAM" />
+      <FormLink name="Material" recordType="TNAM" refName="Fallout3MajorRecord" />
+      <FormLink name="Sound" recordType="SNAM" refName="Sound" />
+      <FormLink name="Effect" recordType="XNAM" refName="Spell" />
+      <UInt16 name="DamagePerSecond" recordType="DATA" />
+      <RefDirect name="VisualData" refName="WaterData" />
+      <ByteArray name="GNAM" recordType="GNAM" />
+      <P3Float name="LinearVelocity" recordType="NAM0" />
+      <P3Float name="AngularVelocity" recordType="NAM1" />
+    </Fields>
+  </Object>
+  <Object name="WaterData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <ByteArray name="Unused1" byteLength="16" nullable="False" />
+      <Float name="SunPower" />
+      <Float name="ReflectivityAmount" />
+      <Float name="FresnelAmount" />
+      <ByteArray name="Unused2" byteLength="4" nullable="False" />
+      <Float name="FogAboveNearPlane" />
+      <Float name="FogAboveFarPlane" />
+      <!-- Shallow Color (RGBA) -->
+      <UInt8 name="ShallowColorRed" />
+      <UInt8 name="ShallowColorGreen" />
+      <UInt8 name="ShallowColorBlue" />
+      <UInt8 name="ShallowColorAlpha" />
+      <!-- Deep Color (RGBA) -->
+      <UInt8 name="DeepColorRed" />
+      <UInt8 name="DeepColorGreen" />
+      <UInt8 name="DeepColorBlue" />
+      <UInt8 name="DeepColorAlpha" />
+      <!-- Reflection Color (RGBA) -->
+      <UInt8 name="ReflectionColorRed" />
+      <UInt8 name="ReflectionColorGreen" />
+      <UInt8 name="ReflectionColorBlue" />
+      <UInt8 name="ReflectionColorAlpha" />
+      <ByteArray name="Unused3" byteLength="4" nullable="False" />
+      <Float name="RainSimulatorForce" />
+      <Float name="RainSimulatorVelocity" />
+      <Float name="RainSimulatorFalloff" />
+      <Float name="RainSimulatorDampner" />
+      <Float name="DisplacementStartingSize" />
+      <Float name="DisplacementForce" />
+      <Float name="DisplacementVelocity" />
+      <Float name="DisplacementFalloff" />
+      <Float name="DisplacementDampner" />
+      <Float name="RainSimulatorStartingSize" />
+      <Float name="NormalsNoiseScale" />
+      <Float name="NoiseLayerOneWindDirection" />
+      <Float name="NoiseLayerTwoWindDirection" />
+      <Float name="NoiseLayerThreeWindDirection" />
+      <Float name="NoiseLayerOneWindSpeed" />
+      <Float name="NoiseLayerTwoWindSpeed" />
+      <Float name="NoiseLayerThreeWindSpeed" />
+      <Float name="NormalsDepthFalloffStart" />
+      <Float name="NormalsDepthFalloffEnd" />
+      <Float name="FogAboveAmount" />
+      <Float name="NormalsUVScale" />
+      <Float name="FogUnderAmount" />
+      <Float name="FogUnderNearPlane" />
+      <Float name="FogUnderFarPlane" />
+      <Float name="DistortionAmount" />
+      <Float name="Shininess" />
+      <Float name="ReflectionHDRMultiplier" />
+      <Float name="LightRadius" />
+      <Float name="LightBrightness" />
+      <Float name="NoiseLayerOneUVScale" />
+      <Float name="NoiseLayerTwoUVScale" />
+      <Float name="NoiseLayerThreeUVScale" />
+      <!-- Optional from xEdit element 43: amplitude scales -->
+      <ByteArray name="Remaining" />
+    </Fields>
+  </Object>
+</Loqui>

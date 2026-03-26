@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledCreature" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="LVLC">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledCreature.Flag" byteLength="1" />
+      <RefList name="Entries" refName="LeveledCreatureEntry" />
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+    <LinkInterface>ICreatureSpawn</LinkInterface>
+  </Object>
+  <Object name="LeveledCreatureEntry" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Data" refName="LeveledCreatureEntryData" />
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledCreatureEntryData" objType="Subrecord" recordType="LVLO">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference">
+        <Interface>ICreatureSpawn</Interface>
+      </FormLink>
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

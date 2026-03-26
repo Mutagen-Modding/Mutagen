@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TalkingActivator" recordType="TACT" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="LoopingSound" recordType="SNAM" refName="Sound" />
+      <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
+    </Fields>
+  </Object>
+</Loqui>

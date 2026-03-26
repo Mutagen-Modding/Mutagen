@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EncounterZone" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="ECZN">
+    <Fields>
+      <Data>
+        <Fields>
+          <FormLink name="Owner">
+            <Interface>IOwner</Interface>
+          </FormLink>
+          <Int8 name="Rank" />
+          <Int8 name="MinLevel" />
+          <UInt8 name="Flags" />
+          <UInt8 name="Unused" />
+        </Fields>
+      </Data>
+      <FormLink name="FactionOwner" refName="Faction" recordType="FACT" />
+      <FormLink name="NpcOwner" refName="Npc" recordType="NPC_" />
+    </Fields>
+  </Object>
+</Loqui>

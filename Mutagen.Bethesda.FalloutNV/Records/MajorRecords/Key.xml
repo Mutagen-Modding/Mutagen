@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Key" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="KEYM">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="LargeIconFilename" recordType="ICON" />
+      <String name="SmallIconFilename" recordType="MICO" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <FormLink name="LoopingSound" recordType="RNAM" refName="Sound" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+</Loqui>

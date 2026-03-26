@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Region" baseClass="FalloutNVMajorRecord" objType="Record" recordType="REGN">
+    <Fields>
+      <RefDirect name="Icons" refName="Icons" />
+      <ByteArray name="MapColor" recordType="RCLR" />
+      <FormLink name="Worldspace" recordType="WNAM" refName="Worldspace" />
+      <List name="RegionAreas">
+        <ByteArray recordType="RPLI" />
+      </List>
+      <ByteArray name="RegionAreaData" recordType="RPLD" />
+      <RefList name="RegionDataEntries" refName="RegionDataEntry" />
+    </Fields>
+    <LinkInterface>IEmittance</LinkInterface>
+  </Object>
+  <Object name="RegionDataEntry" objType="Subrecord">
+    <Fields>
+      <ByteArray name="DataHeader" recordType="RDAT" />
+      <ByteArray name="Objects" recordType="RDOT" />
+      <String name="MapName" recordType="RDMP" />
+      <ByteArray name="Grasses" recordType="RDGS" />
+      <UInt32 name="MusicType" recordType="RDMD" />
+      <FormLink name="Music" recordType="RDMO" refName="FalloutNVMajorRecord" />
+      <FormLink name="IncidentalMediaSet" recordType="RDSI" refName="FalloutNVMajorRecord" />
+      <List name="BattleMediaSets">
+        <FormLink recordType="RDSB" refName="FalloutNVMajorRecord" />
+      </List>
+      <ByteArray name="Sounds" recordType="RDSD" />
+      <ByteArray name="WeatherTypes" recordType="RDWT" />
+      <ByteArray name="Imposters" recordType="RDID" />
+    </Fields>
+  </Object>
+</Loqui>

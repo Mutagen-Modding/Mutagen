@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlaceableWater" recordType="PWAT" objType="Record"
+          baseClass="FalloutNVMajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <UInt32 name="Flags" />
+          <FormLink name="Water" refName="Water" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

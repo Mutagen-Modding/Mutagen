@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Casino" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="CSNO">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Float name="DecksPercentBeforeShuffle" />
+          <Float name="BlackjackPayoutRatio" />
+          <UInt32 name="SlotReelSymbol1" />
+          <UInt32 name="SlotReelSymbol2" />
+          <UInt32 name="SlotReelSymbol3" />
+          <UInt32 name="SlotReelSymbol4" />
+          <UInt32 name="SlotReelSymbol5" />
+          <UInt32 name="SlotReelSymbol6" />
+          <UInt32 name="SlotReelSymbolW" />
+          <UInt32 name="NumberOfDecks" />
+          <UInt32 name="MaxWinnings" />
+          <FormLink name="Currency" refName="CasinoChip" />
+          <FormLink name="CasinoWinningsQuest" refName="Quest" />
+          <Enum name="Flags" enumName="CasinoFlag" byteLength="4" />
+        </Fields>
+      </Data>
+      <List name="ChipModels" recordType="MODL">
+        <String />
+      </List>
+      <String name="SlotMachineModel" recordType="MOD2" />
+      <String name="BlackJackTableModel" recordType="MOD3" />
+      <String name="BlackJackTableModelRelated" recordType="MODT" />
+      <String name="RouletteTableModel" recordType="MOD4" />
+      <List name="SlotReelTextures" recordType="ICON">
+        <String />
+      </List>
+      <List name="BlackjackDeckTextures" recordType="ICO2">
+        <String />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

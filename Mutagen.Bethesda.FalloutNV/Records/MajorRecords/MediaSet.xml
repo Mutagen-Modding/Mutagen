@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MediaSet" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="MSET">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <Enum name="Type" enumName="MediaSetType" recordType="NAM1" byteLength="4" />
+      <String name="LoopBattleDayOuter" recordType="NAM2" />
+      <String name="ExploreDayMiddle" recordType="NAM3" />
+      <String name="SuspenseDayInner" recordType="NAM4" />
+      <String name="NightOuter" recordType="NAM5" />
+      <String name="NightMiddle" recordType="NAM6" />
+      <String name="NightInner" recordType="NAM7" />
+      <Float name="LoopBattleDayOuterDb" recordType="NAM8" />
+      <Float name="ExploreDayMiddleDb" recordType="NAM9" />
+      <Float name="SuspenseDayInnerDb" recordType="NAM0" />
+      <Float name="NightOuterDb" recordType="ANAM" />
+      <Float name="NightMiddleDb" recordType="BNAM" />
+      <Float name="NightInnerDb" recordType="CNAM" />
+      <Float name="DayOuterBoundaryPercent" recordType="JNAM" />
+      <Float name="DayMiddleBoundaryPercent" recordType="KNAM" />
+      <Float name="DayInnerBoundaryPercent" recordType="LNAM" />
+      <Float name="NightOuterBoundaryPercent" recordType="MNAM" />
+      <Float name="NightMiddleBoundaryPercent" recordType="NNAM" />
+      <Float name="NightInnerBoundaryPercent" recordType="ONAM" />
+      <UInt8 name="EnableFlags" recordType="PNAM" />
+      <Float name="WaitTimeMinTimeOnDaytimeMin" recordType="DNAM" />
+      <Float name="LoopFadeOutCrossfadeOverlapNighttimeMin" recordType="ENAM" />
+      <Float name="RecoveryTimeCrossfadeTimeDaytimeMax" recordType="FNAM" />
+      <Float name="NighttimeMax" recordType="GNAM" />
+      <FormLink name="IntroDaytime" recordType="HNAM" refName="Sound" />
+      <FormLink name="OutroNighttime" recordType="INAM" refName="Sound" />
+      <ByteArray name="DATA" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

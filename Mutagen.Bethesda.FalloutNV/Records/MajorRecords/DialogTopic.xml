@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="DIAL" customBinaryEnd="Normal">
+    <Fields>
+      <RefList name="Quests" refName="DialogTopicQuest" />
+      <String name="Name" recordType="FULL" />
+      <Float name="Priority" recordType="PNAM" nullable="False" default="50" />
+      <String name="DumbResponse" recordType="TDUM" />
+      <ByteArray name="Data" recordType="DATA" />
+      <ByteArray name="INOM" recordType="INOM" />
+      <ByteArray name="INOA" recordType="INOA" />
+      <!-- FNV: some DIAL records (GECK errors) have INFC/INFX without a QSTI group -->
+      <ByteArray name="INFC" recordType="INFC" />
+      <ByteArray name="INFX" recordType="INFX" />
+      <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
+    </Fields>
+  </Object>
+  <Object name="DialogTopicQuest" objType="Subrecord">
+    <Fields>
+      <FormLink name="Quest" refName="Quest" recordType="QSTI" nullable="False" />
+      <RefList name="SharedInfos" refName="DialogTopicSharedInfo" />
+    </Fields>
+  </Object>
+  <Object name="DialogTopicSharedInfo" objType="Subrecord">
+    <Fields>
+      <FormLink name="InfoConnection" refName="DialogResponses" recordType="INFC" />
+      <Int32 name="InfoIndex" recordType="INFX" />
+    </Fields>
+  </Object>
+</Loqui>

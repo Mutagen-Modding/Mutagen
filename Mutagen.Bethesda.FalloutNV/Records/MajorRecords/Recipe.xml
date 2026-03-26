@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Recipe" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="RCPE">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefList name="Conditions" refName="Condition" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Enum name="Skill" enumName="ActorValue" byteLength="4" />
+          <UInt32 name="Level" />
+          <FormLink name="Category" refName="RecipeCategory" />
+          <FormLink name="SubCategory" refName="RecipeCategory" />
+        </Fields>
+      </Data>
+      <RefList name="Ingredients" refName="RecipeIngredient" />
+      <RefList name="Outputs" refName="RecipeOutput" />
+    </Fields>
+  </Object>
+  <Object name="RecipeIngredient" objType="Subrecord" recordType="RCIL">
+    <Fields>
+      <FormLink name="Item" refName="FalloutNVMajorRecord" />
+      <UInt32 name="Quantity" recordType="RCQY" />
+    </Fields>
+  </Object>
+  <Object name="RecipeOutput" objType="Subrecord" recordType="RCOD">
+    <Fields>
+      <FormLink name="Item" refName="FalloutNVMajorRecord" />
+      <UInt32 name="Quantity" recordType="RCQY" />
+    </Fields>
+  </Object>
+</Loqui>

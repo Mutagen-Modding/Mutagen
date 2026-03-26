@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BipedData" objType="Subrecord" recordType="BMDT">
+    <Fields>
+      <UInt32 name="BipedFlags" />
+      <UInt32 name="GeneralFlags" />
+    </Fields>
+  </Object>
+</Loqui>

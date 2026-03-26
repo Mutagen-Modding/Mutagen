@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Npc" baseClass="Fallout3MajorRecord" objType="Record" recordType="NPC_">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
+      <UInt16 name="EnchantmentChargeAmount" recordType="EAMT" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <Data recordType="ACBS" nullable="False">
+        <Fields>
+          <UInt32 name="Flags" />
+          <UInt16 name="Fatigue" />
+          <UInt16 name="BarterGold" />
+          <UInt16 name="Level" />
+          <UInt16 name="CalcMin" />
+          <UInt16 name="CalcMax" />
+          <UInt16 name="SpeedMultiplier" />
+          <Float name="KarmaAlignment" />
+          <Int16 name="DispositionBase" />
+          <UInt16 name="TemplateFlags" />
+        </Fields>
+      </Data>
+      <List name="Factions">
+        <ByteArray recordType="SNAM" />
+      </List>
+      <FormLink name="DeathItem" recordType="INAM" refName="LeveledItem" />
+      <FormLink name="Voice" recordType="VTCK" refName="VoiceType" />
+      <FormLink name="Template" recordType="TPLT">
+        <Interface>INpcOrCreatureSpawn</Interface>
+      </FormLink>
+      <FormLink name="Race" refName="Race" recordType="RNAM" />
+      <List name="ActorEffects">
+        <FormLink refName="Spell" recordType="SPLO" />
+      </List>
+      <RefList name="Items" refName="ContainerEntry" />
+      <Data recordType="AIDT" nullable="False">
+        <Fields>
+          <Enum name="Aggression" enumName="Aggression" byteLength="1" />
+          <Enum name="Confidence" enumName="Confidence" byteLength="1" />
+          <UInt8 name="EnergyLevel" />
+          <UInt8 name="Responsibility" />
+          <Enum name="Mood" enumName="Mood" byteLength="1" />
+          <ByteArray name="AIDTUnused" byteLength="3" nullable="False" />
+          <UInt32 name="BuySellServices" />
+          <Enum name="Teaches" enumName="Skill" byteLength="1" />
+          <UInt8 name="MaxTrainingLevel" />
+          <Enum name="Assistance" enumName="Assistance" byteLength="1" />
+          <UInt8 name="AggroRadiusBehavior" />
+          <Int32 name="AggroRadius" />
+        </Fields>
+      </Data>
+      <List name="Packages">
+        <FormLink refName="Package" recordType="PKID" />
+      </List>
+      <ByteArray name="Animations" recordType="KFFZ" />
+      <FormLink name="Class" recordType="CNAM" refName="Class" />
+      <ByteArray name="Data" recordType="DATA" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <UInt8 name="SkillBarter" />
+          <UInt8 name="SkillBigGuns" />
+          <UInt8 name="SkillEnergyWeapons" />
+          <UInt8 name="SkillExplosives" />
+          <UInt8 name="SkillLockpick" />
+          <UInt8 name="SkillMedicine" />
+          <UInt8 name="SkillMeleeWeapons" />
+          <UInt8 name="SkillRepair" />
+          <UInt8 name="SkillScience" />
+          <UInt8 name="SkillSmallGuns" />
+          <UInt8 name="SkillSneak" />
+          <UInt8 name="SkillSpeech" />
+          <UInt8 name="SkillThrowing" />
+          <UInt8 name="SkillUnarmed" />
+          <UInt8 name="OffsetBarter" />
+          <UInt8 name="OffsetBigGuns" />
+          <UInt8 name="OffsetEnergyWeapons" />
+          <UInt8 name="OffsetExplosives" />
+          <UInt8 name="OffsetLockpick" />
+          <UInt8 name="OffsetMedicine" />
+          <UInt8 name="OffsetMeleeWeapons" />
+          <UInt8 name="OffsetRepair" />
+          <UInt8 name="OffsetScience" />
+          <UInt8 name="OffsetSmallGuns" />
+          <UInt8 name="OffsetSneak" />
+          <UInt8 name="OffsetSpeech" />
+          <UInt8 name="OffsetThrowing" />
+          <UInt8 name="OffsetUnarmed" />
+        </Fields>
+      </Data>
+      <List name="HeadParts">
+        <FormLink refName="HeadPart" recordType="PNAM" />
+      </List>
+      <FormLink name="Hair" recordType="HNAM" refName="Hair" />
+      <Float name="HairLength" recordType="LNAM" />
+      <FormLink name="Eyes" recordType="ENAM" refName="Eyes" />
+      <Color name="HairColor" recordType="HCLR" binaryType="Alpha" />
+      <FormLink name="CombatStyle" recordType="ZNAM" refName="CombatStyle" />
+      <Enum name="ImpactMaterialType" enumName="ImpactMaterialType" recordType="NAM4" byteLength="4" />
+      <ByteArray name="FaceGenGeometrySymmetric" recordType="FGGS" />
+      <ByteArray name="FaceGenGeometryAsymmetric" recordType="FGGA" />
+      <ByteArray name="FaceGenTexture" recordType="FGTS" />
+      <UInt16 name="NAM5" recordType="NAM5" />
+      <Float name="Height" recordType="NAM6" />
+      <Float name="Weight" recordType="NAM7" />
+    </Fields>
+    <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>INpcOrCreatureSpawn</LinkInterface>
+    <LinkInterface>ISoundOrNpcSpawn</LinkInterface>
+  </Object>
+</Loqui>

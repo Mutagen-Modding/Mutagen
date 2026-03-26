@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledItem" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="LVLI">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="1" />
+      <FormLink name="Global" recordType="LVLG" refName="Global" />
+      <RefList name="Entries" refName="LeveledItemEntry" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+  <Object name="LeveledItemEntry" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Data" refName="LeveledItemEntryData" />
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledItemEntryData" objType="Subrecord" recordType="LVLO">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

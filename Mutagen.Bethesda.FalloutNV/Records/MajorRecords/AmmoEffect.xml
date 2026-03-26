@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AmmoEffect" objType="Record" baseClass="FalloutNVMajorRecord"
+          recordType="AMEF">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Enum name="Type" enumName="AmmoEffectType" byteLength="4" />
+          <Enum name="Operation" enumName="AmmoEffectOperation" byteLength="4" />
+          <Float name="Value" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

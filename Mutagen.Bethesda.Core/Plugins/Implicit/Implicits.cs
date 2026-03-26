@@ -19,6 +19,8 @@ public static class Implicits
     private static readonly ImplicitRegistration SkyrimVR;
     private static readonly ImplicitRegistration Fallout4;
     private static readonly ImplicitRegistration Fallout4VR;
+    private static readonly ImplicitRegistration Fallout3;
+    private static readonly ImplicitRegistration FalloutNV;
     private static readonly ImplicitRegistration Starfield;
 
     static Implicits()
@@ -150,6 +152,30 @@ public static class Implicits
         };
         #endregion
 
+        #region Fallout3
+        var fallout3BaseMasters = new HashSet<ModKey>()
+        {
+            "Fallout3.esm",
+        };
+        Fallout3 = new ImplicitRegistration(
+            GameRelease.Fallout3,
+            BaseMasters: new ImplicitModKeyCollection(fallout3BaseMasters),
+            Listings: new ImplicitModKeyCollection(fallout3BaseMasters),
+            RecordFormKeys: new HashSet<FormKey>());
+        #endregion
+
+        #region FalloutNV
+        var falloutNVBaseMasters = new HashSet<ModKey>()
+        {
+            "FalloutNV.esm",
+        };
+        FalloutNV = new ImplicitRegistration(
+            GameRelease.FalloutNV,
+            BaseMasters: new ImplicitModKeyCollection(falloutNVBaseMasters),
+            Listings: new ImplicitModKeyCollection(falloutNVBaseMasters),
+            RecordFormKeys: new HashSet<FormKey>());
+        #endregion
+
         #region Starfield
         var starfieldBaseMasters = new HashSet<ModKey>()
         {
@@ -191,6 +217,8 @@ public static class Implicits
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4,
             GameRelease.Starfield => Starfield,
+            GameRelease.Fallout3 => Fallout3,
+            GameRelease.FalloutNV => FalloutNV,
             _ => throw new NotImplementedException(),
         };
     }

@@ -15,6 +15,10 @@ public enum GameCategory
     Fallout4,
     [Description("Starfield")]
     Starfield,
+    [Description("Fallout3")]
+    Fallout3,
+    [Description("FalloutNV")]
+    FalloutNV,
 }
 
 public static class GameReleaseKernelExt
@@ -35,6 +39,8 @@ public static class GameReleaseKernelExt
             GameRelease.Fallout4 => GameCategory.Fallout4,
             GameRelease.Fallout4VR => GameCategory.Fallout4,
             GameRelease.Starfield => GameCategory.Starfield,
+            GameRelease.Fallout3 => GameCategory.Fallout3,
+            GameRelease.FalloutNV => GameCategory.FalloutNV,
             _ => throw new NotImplementedException(),
         };
     }

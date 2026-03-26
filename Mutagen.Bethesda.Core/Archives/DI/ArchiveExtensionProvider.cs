@@ -26,6 +26,8 @@ public sealed class ArchiveExtensionProvider : IArchiveExtensionProvider
         {
             case GameCategory.Oblivion:
             case GameCategory.Skyrim:
+            case GameCategory.Fallout3:
+            case GameCategory.FalloutNV:
                 return ".bsa";
             case GameCategory.Fallout4:
             case GameCategory.Starfield:

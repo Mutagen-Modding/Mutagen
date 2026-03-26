@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ammunition" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="AMMO" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Float name="Speed" />
+          <UInt8 name="Flags" />
+          <ByteArray name="Unused" byteLength="3" nullable="False" />
+          <Int32 name="Value" />
+          <UInt8 name="ClipRounds" />
+        </Fields>
+      </Data>
+
+      <String name="ShortName" recordType="ONAM" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IAmmoOrList</LinkInterface>
+  </Object>
+</Loqui>
