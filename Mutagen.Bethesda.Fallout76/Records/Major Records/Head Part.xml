@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HeadPart" recordType="HDPT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <UInt8 name="DATA" recordType="DATA" />
+      <Enum name="PartType" enumName="HeadPart.TypeEnum" byteLength="4" recordType="PNAM" />
+      <List name="ExtraParts">
+        <FormLink name="ExtraPart" recordType="HNAM" refName="HeadPart" />
+      </List>
+      <FormLink name="HNAM2" recordType="HNAM" refName="HeadPart" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <FormLink name="TextureSet" recordType="TNAM" refName="TextureSet" />
+      <FormLink name="Color" recordType="CNAM" refName="ColorRecord" />
+      <FormLink name="ValidRace" recordType="RNAM" refName="Race" />
+      <FormLink name="NAM0" recordType="NAM0" refName="Fallout76MajorRecord" />
+      <String name="NAM1" recordType="NAM1" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Worldspace" recordType="WRLD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true" customBinaryEnd="Normal">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <FormLink name="LightingTemplate" recordType="LTMP" refName="LightingTemplate" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="Location" />
+      <FormLink name="Location" recordType="XLCN" refName="Location" />
+      <FormLink name="ParentWorldspace" recordType="WNAM" refName="Worldspace" />
+      <UInt16 name="PNAM" recordType="PNAM" />
+      <FormLink name="Climate" recordType="CNAM" refName="Climate" />
+      <FormLink name="Water" recordType="NAM2" refName="Water" />
+      <FormLink name="LODWater" recordType="NAM3" refName="Water" />
+
+        <Float name="NAM4" recordType="NAM4" />
+      <String name="ICON" recordType="ICON" />
+      <RefDirect name="Model" refName="Model" />
+      <Float name="NAMA" recordType="NAMA" />
+      <UInt8 name="Flags" recordType="DATA" />
+      <List name="OrderedLandsTextures">
+        <FormLink name="MapArt" recordType="LNAM" refName="Fallout76MajorRecord" />
+      </List>
+      <ByteArray name="LNAM2" recordType="LNAM" />
+        <String name="NAM5" recordType="NAM5" />
+      <FormLink name="Music" recordType="ZNAM" refName="MusicType" />
+      <String name="NNAM" recordType="NNAM" />
+      <String name="XWEM" recordType="XWEM" />
+      <String name="TNAM" recordType="TNAM" />
+      <String name="UNAM" recordType="UNAM" />
+      <ByteArray name="XCLW" recordType="XCLW" />
+      <ByteArray name="WHGT" recordType="WHGT" />
+      <ByteArray name="WLEV" recordType="WLEV" />
+      <ByteArray name="CLSZ2" recordType="CLSZ" />
+      <P2Float name="DNAM2" recordType="DNAM" />
+      <ByteArray name="MHDT2" recordType="MHDT" />
+      <ByteArray name="MNAM2" recordType="MNAM" />
+      <ByteArray name="NAM0" recordType="NAM0" />
+      <ByteArray name="NAM6" recordType="NAM6" />
+      <ByteArray name="NAM9" recordType="NAM9" />
+      <ByteArray name="ONAM2" recordType="ONAM" />
+      <ByteArray name="RNAM2" recordType="RNAM" />
+      <ByteArray name="VISI2" recordType="VISI" />
+      <UInt32 name="WCTR" recordType="WCTR" />
+      <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
+      <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
+      <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
+      <Int32 name="SubCellsUnknown" binary="NoGeneration" />
+      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
+    </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
+  </Object>
+  <Object name="WorldspaceBlock" objType="Group">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceSubBlock" objType="Group">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
+      <ByteArray name="CLSZ" recordType="CLSZ" />
+      <P2Float name="DNAM" recordType="DNAM" />
+      <ByteArray name="MHDT" recordType="MHDT" />
+      <ByteArray name="MNAM" recordType="MNAM" />
+      <RefDirect name="ObjectBoundsMin" refName="WorldspaceObjectBoundsMin" />
+      <RefDirect name="CenterCell" refName="WorldspaceCenterCell" />
+      <RefDirect name="ObjectBoundsMax" refName="WorldspaceObjectBoundsMax" />
+      <ByteArray name="ONAM" recordType="ONAM" />
+      <ByteArray name="RNAM" recordType="RNAM" />
+      <ByteArray name="VISI" recordType="VISI" />
+      <UInt32 name="WCTR" recordType="WCTR" />
+</Fields>
+  </Object>
+  <Object name="WorldspaceObjectBoundsMin" objType="Subrecord" recordType="NAM0">
+    <Fields>
+      <Float name="X" />
+      <Float name="Y" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceObjectBoundsMax" objType="Subrecord" recordType="NAM9">
+    <Fields>
+      <Float name="X" />
+      <Float name="Y" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceCenterCell" objType="Subrecord" recordType="NAM6">
+    <Fields>
+      <Int32 name="X" />
+      <Int32 name="Y" />
+    </Fields>
+  </Object>
+</Loqui>

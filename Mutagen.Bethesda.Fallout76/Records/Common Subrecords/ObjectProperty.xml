@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectProperty" objType="Subrecord">
+    <Fields>
+      <FormLink name="ActorValue" refName="ActorValueInformation" />
+      <Float name="Value" />
+    </Fields>
+  </Object>
+</Loqui>

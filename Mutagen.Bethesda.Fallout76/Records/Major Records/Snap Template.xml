@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SnapTemplate" recordType="STMP" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <FormLink name="ParentTemplate" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <List name="ParentNodes">
+          <UInt32 name="ONAM" recordType="ONAM" />
+      </List>
+      <ByteArray name="ONAM2" recordType="ONAM" />
+        <ByteArray name="BNAM" recordType="BNAM" />
+      <RefDirect name="GNAM" refName="SnapTemplateGNAMData" />
+      <Bool name="UNAM" recordType="UNAM" />
+      <UInt32 name="INAM" recordType="INAM" />
+      <FormLink name="STPT" recordType="STPT" refName="Fallout76MajorRecord" />
+      <FormLink name="SNFG" recordType="SNFG" refName="Fallout76MajorRecord" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <FormLink name="TNAM" recordType="TNAM" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+  <Object name="SnapTemplateGNAMData" objType="Subrecord" recordType="GNAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

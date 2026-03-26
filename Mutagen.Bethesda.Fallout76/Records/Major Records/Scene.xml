@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Scene" recordType="SCEN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt16 name="FNAM" recordType="FNAM" />
+      <FormLink name="ParentQuest" recordType="PNAM" refName="Quest" />
+      <UInt32 name="INAM2" recordType="INAM" />
+      <ByteArray name="VNAM" recordType="VNAM" />
+      <Float name="CNAM" recordType="CNAM" />
+      <Float name="ACTV" recordType="ACTV" />
+      <Float name="CRIS" recordType="CRIS" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <String name="NNAM" recordType="NNAM" />
+      <FormLink name="TemplateScene" recordType="TNAM" refName="Fallout76MajorRecord" />
+      <UInt32 name="XNAM" recordType="XNAM" />
+      <FormLink name="AudioOutputOverride" recordType="ONAM" refName="SoundOutputModel" />
+      <!-- Scene action/phase subrecords (repeated per action block, ANAM...NEXT pattern) -->
+      <ByteArray name="SceneANAM" recordType="ANAM" />
+      <Bool name="NEXT" recordType="NEXT" boolAsMarker="True" />
+      <FormLink name="ALID" recordType="ALID" refName="Fallout76MajorRecord" />
+      <UInt32 name="ALSO" recordType="ALSO" />
+      <FormLink name="ATTR" recordType="ATTR" refName="Fallout76MajorRecord" />
+      <Bool name="ACBS" recordType="ACBS" />
+      <FormLink name="DATA" recordType="DATA" refName="Fallout76MajorRecord" />
+      <Float name="DMAX" recordType="DMAX" />
+      <Float name="DMIN" recordType="DMIN" />
+      <FormLink name="DNAM" recordType="DNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="DTGT" recordType="DTGT" refName="Fallout76MajorRecord" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <FormLink name="ESCE" recordType="ESCE" refName="Fallout76MajorRecord" />
+      <FormLink name="ESCS" recordType="ESCS" refName="Fallout76MajorRecord" />
+      <Bool name="HNAM" recordType="HNAM" />
+      <FormLink name="HTID" recordType="HTID" refName="Fallout76MajorRecord" />
+      <UInt16 name="INTT" recordType="INTT" />
+      <FormLink name="LCEP" recordType="LCEP" refName="Fallout76MajorRecord" />
+      <FormLink name="LNAM" recordType="LNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="NAM0" recordType="NAM0" />
+      <Int16 name="SCQS" recordType="SCQS" />
+      <UInt32 name="SDCT" recordType="SDCT" />
+      <Float name="SNAM" recordType="SNAM" />
+      <UInt32 name="SPPI" recordType="SPPI" />
+      <UInt32 name="SPPT" recordType="SPPT" />
+      <String name="SSPN" recordType="SSPN" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <FormLink name="WNAM" recordType="WNAM" refName="Fallout76MajorRecord" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <String name="CIS2" recordType="CIS2" />
+    </Fields>
+  </Object>
+  <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord">
+    <Fields>
+      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" />
+    </Fields>
+  </Object>
+  <Object name="ScenePhaseFragment" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="ScenePhaseFragment.Flag" byteLength="1" />
+      <UInt8 name="Index" />
+      <UInt32 name="Unknown" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+      <Bool name="ACBS" recordType="ACBS" />
+      <FormLink name="ALID" recordType="ALID" refName="Fallout76MajorRecord" />
+      <UInt32 name="ALSO" recordType="ALSO" />
+      <Enum name="ActionType" enumName="Scene.PhaseType" byteLength="2" recordType="ANAM" />
+      <FormLink name="ATTR" recordType="ATTR" refName="Fallout76MajorRecord" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <ByteArray name="DALC" recordType="DALC" />
+      <FormLink name="DATA" recordType="DATA" refName="Fallout76MajorRecord" />
+      <Float name="DMAX" recordType="DMAX" />
+      <Float name="DMIN" recordType="DMIN" />
+      <FormLink name="DNAM" recordType="DNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="DTGT" recordType="DTGT" refName="Fallout76MajorRecord" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <Bool name="HNAM" recordType="HNAM" />
+      <FormLink name="HTID" recordType="HTID" refName="Fallout76MajorRecord" />
+      <UInt16 name="INTT" recordType="INTT" />
+      <ByteArray name="JOUT" recordType="JOUT" />
+      <FormLink name="LCEP" recordType="LCEP" refName="Fallout76MajorRecord" />
+      <FormLink name="LNAM" recordType="LNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="NAM0" recordType="NAM0" />
+      <ByteArray name="NETO" recordType="NETO" />
+      <Bool name="NEXT" recordType="NEXT" boolAsMarker="True" />
+      <ByteArray name="NNGS" recordType="NNGS" />
+      <ByteArray name="NNGT" recordType="NNGT" />
+      <ByteArray name="NNUS" recordType="NNUS" />
+      <ByteArray name="NNUT" recordType="NNUT" />
+      <ByteArray name="NPOS" recordType="NPOS" />
+      <ByteArray name="NPOT" recordType="NPOT" />
+      <ByteArray name="NQUS" recordType="NQUS" />
+      <ByteArray name="NQUT" recordType="NQUT" />
+      <ByteArray name="NTOP" recordType="NTOP" />
+      <ByteArray name="PLVD" recordType="PLVD" />
+      <ByteArray name="PTOP" recordType="PTOP" />
+      <ByteArray name="QTOP" recordType="QTOP" />
+      <Int16 name="SCQS" recordType="SCQS" />
+      <UInt32 name="SDCT" recordType="SDCT" />
+      <Float name="SNAM" recordType="SNAM" />
+      <ByteArray name="SPCT" recordType="SPCT" />
+      <UInt32 name="SPPI" recordType="SPPI" />
+      <UInt32 name="SPPT" recordType="SPPT" />
+      <String name="SSPN" recordType="SSPN" />
+      <ByteArray name="STSC" recordType="STSC" />
+      <ByteArray name="VENC" recordType="VENC" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <FormLink name="WNAM" recordType="WNAM" refName="Fallout76MajorRecord" />
+      <String name="CIS2" recordType="CIS2" />
+      <FormLink name="CITC" recordType="CITC" refName="Fallout76MajorRecord" />
+      <FormLink name="ESCE" recordType="ESCE" refName="Fallout76MajorRecord" />
+      <FormLink name="ESCS" recordType="ESCS" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

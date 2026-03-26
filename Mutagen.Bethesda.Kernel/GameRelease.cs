@@ -31,4 +31,6 @@ public enum GameRelease
     OblivionRE = 10,
     [Description("Enderal SE GOG")]
     EnderalSEGog = 11,
+    [Description("Fallout 76")]
+    Fallout76 = 14,
 }

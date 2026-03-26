@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Entitlement" recordType="ENTM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <String name="SWFI" recordType="SWFI" />
+      <String name="NNAM" recordType="NNAM" translated="Normal" />
+      <Bool name="BEVA" recordType="BEVA" />
+      <String name="ETIP" recordType="ETIP" />
+      <String name="ETDI" recordType="ETDI" />
+      <FormLink name="EntitlementLog" recordType="ETLG" refName="Fallout76MajorRecord" />
+
+        <List name="StorefrontConfirmImageList">
+
+        <String name="ECIL" recordType="ECIL" />
+
+        </List>
+      <ByteArray name="ECIL2" recordType="ECIL" />
+      <ByteArray name="SFDA" recordType="SFDA" />
+      <ByteArray name="SFLA" recordType="SFLA" />
+      <ByteArray name="SFSA" recordType="SFSA" />
+      <ByteArray name="STDA" recordType="STDA" />
+    </Fields>
+  </Object>
+</Loqui>

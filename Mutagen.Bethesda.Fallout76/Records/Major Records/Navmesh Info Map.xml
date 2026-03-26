@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMeshInfoMap" recordType="NAVI" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt32 name="NVER" recordType="NVER" />
+      <ByteArray name="NVSI" recordType="NVSI" />
+      <UInt64 name="NVPP" recordType="NVPP" />
+      <ByteArray name="NVMI" recordType="NVMI" />
+</Fields>
+  </Object>
+</Loqui>

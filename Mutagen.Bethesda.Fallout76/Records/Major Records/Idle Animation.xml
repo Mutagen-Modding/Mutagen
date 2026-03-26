@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleAnimation" recordType="IDLE" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="DNAM" recordType="DNAM" />
+      <String name="ENAM" recordType="ENAM" />
+      <String name="GNAM" recordType="GNAM" />
+      <FormLink name="Parent" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+          <P2Float name="ANAM" recordType="ANAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <RefDirect name="Data" refName="IdleAnimationData" />
+      <String name="CIS1" recordType="CIS1" />
+</Fields>
+  </Object>
+  <Object name="IdleAnimationData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt8 name="LoopMin" />
+      <UInt8 name="LoopMax" />
+      <UInt8 name="Flags" />
+      <ByteArray name="Unknown" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

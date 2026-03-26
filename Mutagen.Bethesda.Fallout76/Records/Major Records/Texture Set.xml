@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="FLTR" recordType="FLTR" />
+      <String name="TX00" recordType="TX00" />
+      <String name="TX01" recordType="TX01" />
+      <String name="TX03" recordType="TX03" />
+      <String name="TX04" recordType="TX04" />
+      <String name="TX05" recordType="TX05" />
+      <String name="TX02" recordType="TX02" />
+      <String name="TX06" recordType="TX06" />
+      <String name="TX07" recordType="TX07" />
+      <String name="TX08" recordType="TX08" />
+      <String name="TX09" recordType="TX09" />
+      <String name="TX10" recordType="TX10" />
+      <ByteArray name="DODT" recordType="DODT" />
+      <UInt16 name="DNAM" recordType="DNAM" />
+      <String name="MNAM" recordType="MNAM" />
+      <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
+          <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

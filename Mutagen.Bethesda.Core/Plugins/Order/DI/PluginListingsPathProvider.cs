@@ -34,6 +34,7 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             GameRelease.Fallout4 => "Fallout4",
             GameRelease.Fallout4VR => "Fallout4VR",
             GameRelease.Starfield => "Starfield",
+            GameRelease.Fallout76 => "Fallout76",
             _ => throw new NotImplementedException()
         };
     }

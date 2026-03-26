@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="CSMD" recordType="CSMD" />
+      <Float name="CSRA" recordType="CSRA" />
+      <Float name="CSCV" recordType="CSCV" />
+      <UInt32 name="DATA" recordType="DATA" />
+      <Float name="CSTD" recordType="CSTD" />
+      <ByteArray name="CSCR" recordType="CSCR" />
+      <ByteArray name="CSFL" recordType="CSFL" />
+      <ByteArray name="CSGD" recordType="CSGD" />
+      <ByteArray name="CSLR" recordType="CSLR" />
+      <ByteArray name="CSME" recordType="CSME" />
+      <P3Float name="CSTG" recordType="CSTG" />
+</Fields>
+  </Object>
+</Loqui>

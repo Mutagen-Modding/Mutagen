@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AudioCategorySnapshot" recordType="SCSN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt16 name="PNAM" recordType="PNAM" />
+      <RefList name="CategoryMultipliers" refName="CategoryMultiplier" />
+</Fields>
+  </Object>
+  <Object name="CategoryMultiplier" objType="Subrecord" recordType="CNAM">
+    <Fields>
+      <FormLink name="Category" refName="SoundCategory" />
+      <Float name="Multiplier" />
+    </Fields>
+  </Object>
+</Loqui>

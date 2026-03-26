@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Holotape" recordType="NOTE" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="ICON" recordType="ICON" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="SoundDescriptor" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+      <UInt8 name="DNAM" recordType="DNAM" />
+      <Float name="SNAM" recordType="SNAM" />
+      <FormLink name="Quest" recordType="DIQO" refName="Quest" />
+      <String name="PNAM" recordType="PNAM" />
+      <RefDirect name="Data" refName="ValueWeight" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GameplayReward" recordType="GMRW" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <FormLink name="RewardFormID" recordType="ANAM" refName="Fallout76MajorRecord" />
+      <UInt32 name="RWDS" recordType="RWDS" />
+      <FormLink name="CENT" recordType="CENT" refName="Fallout76MajorRecord" />
+      <String name="CIS2" recordType="CIS2" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <UInt32 name="ESRE" recordType="ESRE" />
+      <Bool name="ITME" recordType="ITME" />
+      <Float name="NAM7" recordType="NAM7" />
+      <Float name="NAM8" recordType="NAM8" />
+      <FormLink name="NAM9" recordType="NAM9" refName="Fallout76MajorRecord" />
+      <FormLink name="QRCO" recordType="QRCO" refName="Fallout76MajorRecord" />
+      <FormLink name="QRCX" recordType="QRCX" refName="Fallout76MajorRecord" />
+      <Float name="QRLI" recordType="QRLI" />
+      <FormLink name="QRLR" recordType="QRLR" refName="Fallout76MajorRecord" />
+      <Bool name="QRRI" recordType="QRRI" />
+      <RefDirect name="SeasonRewardData" refName="GameplayRewardSeasonData" />
+      <Float name="XPCT" recordType="XPCT" />
+      <ByteArray name="INAM" recordType="INAM" />
+      <ByteArray name="RNAM" recordType="RNAM" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="TNAM" recordType="TNAM" />
+</Fields>
+  </Object>
+  <Object name="GameplayRewardSeasonData" objType="Subrecord" recordType="QSRD">
+    <Fields>
+      <UInt32 name="Unknown1" />
+      <UInt32 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Package" recordType="PACK" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+        <UInt8 name="IDLF" recordType="IDLF" />
+      <ByteArray name="IsFO3" binary="NoGeneration" />
+      <UInt8 name="IDLC" recordType="IDLC" />
+        <Float name="IDLT" recordType="IDLT" />
+      <FormLink name="IDLA" recordType="IDLA" refName="Fallout76MajorRecord" />
+      <ByteArray name="IsSF1" binary="NoGeneration" />
+      <UInt8 name="CNAM" recordType="CNAM" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" />
+      <UInt8 name="XNAM" recordType="XNAM" />
+      <Bool name="POBA" recordType="POBA" boolAsMarker="True" />
+      <FormLink name="IdleAnimation" recordType="INAM" refName="Fallout76MajorRecord" />
+      <Bool name="POEA" recordType="POEA" boolAsMarker="True" />
+      <FormLink name="IdleAnimation2" recordType="INAM" refName="Fallout76MajorRecord" />
+      <Bool name="POCA" recordType="POCA" boolAsMarker="True" />
+      <FormLink name="IdleAnimation3" recordType="INAM" refName="Fallout76MajorRecord" />
+      <String name="ANAM" recordType="ANAM" />
+      <String name="BNAM" recordType="BNAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <FormLink name="FNAM" recordType="FNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="PFO2" recordType="PFO2" />
+      <ByteArray name="PFOR" recordType="PFOR" />
+      <UInt8 name="PKC2" recordType="PKC2" />
+      <RefDirect name="PKCU" refName="PackagePKCUData" />
+      <RefDirect name="PKDT" refName="PackagePKDTData" />
+      <String name="PNAM" recordType="PNAM" />
+      <RefDirect name="Root" refName="PackageRoot" />
+      <RefDirect name="PSDT" refName="PackagePSDTData" />
+      <RefDirect name="PTDA" refName="PackagePTDAData" />
+      <ByteArray name="TPIC" recordType="TPIC" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <String name="CIS1" recordType="CIS1" />
+      <String name="CIS2" recordType="CIS2" />
+      <UInt64 name="PDTO" recordType="PDTO" />
+      <ByteArray name="PLDT" recordType="PLDT" />
+      <UInt8 name="UNAM" recordType="UNAM" />
+</Fields>
+  </Object>
+  <Object name="PackageRoot" objType="Subrecord" recordType="PRCB">
+    <Fields>
+      <UInt32 name="BranchCount" />
+      <UInt32 name="Flags" />
+    </Fields>
+  </Object>
+  <Object name="PackagePKCUData" objType="Subrecord" recordType="PKCU">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="PackagePKDTData" objType="Subrecord" recordType="PKDT">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="PackagePSDTData" objType="Subrecord" recordType="PSDT">
+    <Fields>
+      <Int8 name="Month" />
+      <Enum name="DayOfWeek" enumName="Package.DayOfWeek" byteLength="1" enumType="UInt8" />
+      <UInt8 name="Date" />
+      <Int8 name="Hour" />
+      <Int8 name="Minute" />
+      <ByteArray name="Unused" binaryLength="3" />
+      <Int32 name="Duration" />
+    </Fields>
+  </Object>
+  <Object name="PackagePTDAData" objType="Subrecord" recordType="PTDA">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

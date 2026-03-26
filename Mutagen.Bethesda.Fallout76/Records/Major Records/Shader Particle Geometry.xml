@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ShaderParticleGeometry" recordType="SPGD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="MNAM" recordType="MNAM" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Float name="GravityVelocity" />
+          <UInt32 name="Unused1" />
+          <Float name="RotationVelocity" />
+          <UInt32 name="Unused2" />
+          <Float name="ParticleSizeX" />
+          <UInt32 name="Unused3" />
+          <Float name="ParticleSizeY" />
+          <UInt32 name="Unused4" />
+          <Float name="CenterOffsetMin" />
+          <UInt32 name="Unused5" />
+          <Float name="CenterOffsetMax" />
+          <UInt32 name="Unused6" />
+          <Float name="InitialRotation" />
+          <UInt32 name="Unused7" />
+          <UInt32 name="NumSubtexturesX" />
+          <UInt32 name="Unused8" />
+          <UInt32 name="NumSubtexturesY" />
+          <UInt32 name="Unused9" />
+          <UInt32 name="Type" />
+          <UInt32 name="Unused10" />
+          <UInt32 name="BoxSize" />
+          <UInt32 name="Unused11" />
+          <Float name="ParticleDensity" />
+          <UInt32 name="Unused12" />
+        </Fields>
+      </Data>
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedObject" recordType="REFR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+          <Float name="ANAM" recordType="ANAM" />
+      <RefDirect name="Placement" refName="PlacedObjectData" />
+      <UInt8 name="FNAM" recordType="FNAM" />
+      <String name="Name" recordType="FULL" />
+      <FormLink name="GNAM" recordType="GNAM" refName="Fallout76MajorRecord" />
+      <Float name="HNAM" recordType="HNAM" />
+      <UInt16 name="INAM" recordType="INAM" />
+      <FormLink name="ISIZ" recordType="ISIZ" refName="Fallout76MajorRecord" />
+      <List name="KWDA" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="MNAM" recordType="MNAM" />
+      <FormLink name="NAME" recordType="NAME" refName="Fallout76MajorRecord" />
+      <Bool name="ONAM" recordType="ONAM" boolAsMarker="True" />
+      <UInt64 name="PDTO" recordType="PDTO" />
+      <FormLink name="SRGN" recordType="SRGN" refName="Fallout76MajorRecord" />
+      <UInt16 name="MapMarkerType" recordType="TNAM" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <UInt32 name="VNAM" recordType="VNAM" />
+      <FormLink name="XACT" recordType="XACT" refName="Fallout76MajorRecord" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <UInt16 name="XALP" recordType="XALP" />
+      <Bool name="XAPD" recordType="XAPD" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <FormLink name="XASP" recordType="XASP" refName="Fallout76MajorRecord" />
+      <Bool name="XATP" recordType="XATP" boolAsMarker="True" />
+      <FormLink name="XATR" recordType="XATR" refName="Fallout76MajorRecord" />
+      <ByteArray name="XBSD" recordType="XBSD" />
+      <ByteArray name="XCMD" recordType="XCMD" />
+      <FormLink name="XCNT" recordType="XCNT" refName="Fallout76MajorRecord" />
+      <RefDirect name="XCVL" refName="PlacedObjectXCVLData" />
+      <UInt32 name="XCZA" recordType="XCZA" />
+      <FormLink name="XCZC" recordType="XCZC" refName="Fallout76MajorRecord" />
+      <FormLink name="XCZR" recordType="XCZR" refName="Fallout76MajorRecord" />
+      <Float name="XEMI" recordType="XEMI" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <FormLink name="XEZN" recordType="XEZN" refName="Fallout76MajorRecord" />
+      <FormLink name="XFLG" recordType="XFLG" refName="Fallout76MajorRecord" />
+      <Float name="XFVC" recordType="XFVC" />
+      <UInt32 name="XHLT" recordType="XHLT" />
+      <Float name="XHTW" recordType="XHTW" />
+      <Bool name="XIS2" recordType="XIS2" boolAsMarker="True" />
+      <ByteArray name="XKPD" recordType="XKPD" />
+      <FormLink name="XLCM" recordType="XLCM" refName="Fallout76MajorRecord" />
+      <FormLink name="XLCN" recordType="XLCN" refName="Fallout76MajorRecord" />
+      <FormLink name="XLIB" recordType="XLIB" refName="Fallout76MajorRecord" />
+      <ByteArray name="XLIG" recordType="XLIG" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <Bool name="XLKT" recordType="XLKT" boolAsMarker="True" />
+      <FormLink name="XLLV" recordType="XLLV" refName="Fallout76MajorRecord" />
+      <Data recordType="XLOC" nullable="False">
+        <Fields>
+          <UInt8 name="LockLevel" />
+          <ByteArray name="XlocUnused1" byteLength="3" nullable="False" />
+          <FormLink name="LockKey" refName="Fallout76MajorRecord" />
+          <UInt8 name="LockFlags" />
+          <ByteArray name="XlocUnused2" byteLength="3" nullable="False" />
+          <UInt8 name="LockUnknown" />
+          <ByteArray name="XlocUnused3" byteLength="3" nullable="False" />
+        </Fields>
+      </Data>
+      <ByteArray name="XLRT" recordType="XLRT" />
+      <Float name="XLWT" recordType="XLWT" />
+      <FormLink name="XLYR" recordType="XLYR" refName="Fallout76MajorRecord" />
+      <P3Float name="XMBO" recordType="XMBO" />
+      <Bool name="XMRK" recordType="XMRK" />
+      <FormLink name="XMSP" recordType="XMSP" refName="Fallout76MajorRecord" />
+      <UInt64 name="XNDP" recordType="XNDP" />
+      <ByteArray name="XOCP" recordType="XOCP" />
+      <RefDirect name="XOWN" refName="PlacedObjectXOWNData" />
+      <FormLink name="XPCK" recordType="XPCK" refName="Fallout76MajorRecord" />
+      <ByteArray name="XPDD" recordType="XPDD" />
+      <UInt64 name="XPLK" recordType="XPLK" />
+      <Bool name="XPPA" recordType="XPPA" boolAsMarker="True" />
+      <ByteArray name="XPPS" recordType="XPPS" />
+      <Float name="XPRD" recordType="XPRD" />
+      <Data recordType="XPRM" nullable="False">
+        <Fields>
+          <Float name="BoundsX" />
+          <Float name="BoundsY" />
+          <Float name="BoundsZ" />
+          <Float name="ColorR" />
+          <Float name="ColorG" />
+          <Float name="ColorB" />
+          <Float name="ColorA" />
+          <UInt32 name="Type" />
+        </Fields>
+      </Data>
+      <ByteArray name="XRDO" recordType="XRDO" />
+      <Float name="XRDS" recordType="XRDS" />
+      <FormLink name="XRFG" recordType="XRFG" refName="Fallout76MajorRecord" />
+      <RefDirect name="XRGB" refName="PlacedObjectXRGBData" />
+      <ByteArray name="XRGD" recordType="XRGD" />
+      <FormLink name="XRL2" recordType="XRL2" refName="Fallout76MajorRecord" />
+      <ByteArray name="XRLL" recordType="XRLL" />
+      <UInt32 name="XRNK" recordType="XRNK" />
+      <Float name="XSCL" recordType="XSCL" />
+      <Data recordType="XTEL" nullable="False">
+        <Fields>
+          <FormLink name="TeleportDoor" refName="PlacedObject" />
+          <Float name="TeleportPositionX" />
+          <Float name="TeleportPositionY" />
+          <Float name="TeleportPositionZ" />
+          <Float name="TeleportRotationX" />
+          <Float name="TeleportRotationY" />
+          <Float name="TeleportRotationZ" />
+          <UInt32 name="TeleportFlags" />
+          <FormLink name="TransitionInterior" refName="Fallout76MajorRecord" />
+        </Fields>
+      </Data>
+      <FormLink name="XTNM" recordType="XTNM" refName="Fallout76MajorRecord" />
+      <FormLink name="XTRI" recordType="XTRI" refName="Fallout76MajorRecord" />
+      <FormLink name="XWCN" recordType="XWCN" refName="Fallout76MajorRecord" />
+      <ByteArray name="XWCU" recordType="XWCU" />
+      <Bool name="XWPK" recordType="XWPK" boolAsMarker="True" />
+      <UInt64 name="XWRC" recordType="XWRC" />
+      <ByteArray name="LNAM" recordType="LNAM" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <ByteArray name="NAM4" recordType="NAM4" />
+      <ByteArray name="XAMC" recordType="XAMC" />
+      <ByteArray name="XCVR" recordType="XCVR" />
+      <ByteArray name="XLRL" recordType="XLRL" />
+      <List name="LinkedRooms" recordType="XLRM">
+        <FormLink refName="PlacedObject" />
+      </List>
+      <List name="LitWater" recordType="XLTW">
+        <FormLink refName="PlacedObject" />
+      </List>
+      <ByteArray name="XMBP" recordType="XMBP" />
+      <ByteArray name="XMBR" recordType="XMBR" />
+      <ByteArray name="XORD" recordType="XORD" />
+      <ByteArray name="XPOD" recordType="XPOD" />
+      <ByteArray name="XRMR" recordType="XRMR" />
+      <ByteArray name="XSPC" recordType="XSPC" />
+      <ByteArray name="XWPG" recordType="XWPG" />
+      <ByteArray name="XWPN" recordType="XWPN" />
+</Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedSimple</LinkInterface>
+    <LinkInterface>IPlacedThing</LinkInterface>
+  </Object>
+  <Object name="PlacedObjectData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <Float name="PositionX" />
+      <Float name="PositionY" />
+      <Float name="PositionZ" />
+      <Float name="RotationX" />
+      <Float name="RotationY" />
+      <Float name="RotationZ" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectXCVLData" objType="Subrecord" recordType="XCVL">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectXOWNData" objType="Subrecord" recordType="XOWN">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="PlacedObjectXRGBData" objType="Subrecord" recordType="XRGB">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

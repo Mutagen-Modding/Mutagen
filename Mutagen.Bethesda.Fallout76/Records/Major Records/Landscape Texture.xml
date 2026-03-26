@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="BNAM" recordType="BNAM" />
+      <FormLink name="TextureSet" recordType="TNAM" refName="TextureSet" />
+      <FormLink name="MaterialType" recordType="MNAM" refName="MaterialType" />
+      <FormLink name="GroundCover" recordType="ONAM" refName="Fallout76MajorRecord" />
+      <UInt8 name="SNAM" recordType="SNAM" />
+      <List name="Unused" binary="NoGeneration">
+        <FormLink name="Grass" recordType="GNAM" refName="Grass" />
+      </List>
+      <FormLink name="GNAM2" recordType="GNAM" refName="Grass" />
+          <UInt16 name="HNAM" recordType="HNAM" />
+</Fields>
+  </Object>
+</Loqui>

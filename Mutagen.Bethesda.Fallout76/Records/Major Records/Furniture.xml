@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Furniture" recordType="FURN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="AnimationSound" recordType="STCP" refName="AnimationSoundTagSet" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <ByteArray name="XFLG" recordType="XFLG" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+        <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="NativeTerminal" recordType="NTRM" refName="Terminal" />
+      <FormLink name="ForcedLocRefType" refName="Fallout76MajorRecord" recordType="FTYP" />
+      <FormLink name="NAM1" recordType="NAM1" refName="Fallout76MajorRecord" />
+      <UInt32 name="LODP" recordType="LODP" />
+      <UInt32 name="PNAM" recordType="PNAM"/>
+      <FormLink name="Water" recordType="WNAM" refName="Water" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <Bool name="AIID" recordType="AIID" />
+      <String name="ATTX" recordType="ATTX" translated="Normal" />
+      <UInt16 name="FNAM" recordType="FNAM" />
+      <RefList name="Items" refName="ContainerEntry" counterRecType="COCT" />
+      <Float name="PAHD" recordType="PAHD" />
+      <ByteArray name="CTRN" recordType="CTRN" />
+      <UInt32 name="COCT" recordType="COCT" />
+      <UInt32 name="LAVT" recordType="LAVT" />
+      <UInt32 name="LAMN" recordType="LAMN" />
+      <UInt32 name="LAMX" recordType="LAMX" />
+      <UInt32 name="MNAM" recordType="MNAM" />
+      <FormLink name="AssociatedForm" recordType="NAM1" refName="Fallout76MajorRecord" />
+      <List name="Markers">
+          <UInt32 name="ENAM" recordType="ENAM" />
+      </List>
+      <ByteArray name="ENAM2" recordType="ENAM" />
+      <String name="XMRK" recordType="XMRK" />
+      <FormLink name="WaterType" recordType="SNAM" refName="Water" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Fallout76MajorRecord" />
+        <Float name="CNAM" recordType="CNAM" />
+      <UInt8 name="LNAM" recordType="LNAM" />
+      <ByteArray name="APPR" recordType="APPR" />
+      <UInt32 name="OBTE" recordType="OBTE" />
+      <ByteArray name="OBTS" recordType="OBTS" />
+      <FormLink name="FFEF" recordType="FFEF" refName="Fallout76MajorRecord" />
+      <ByteArray name="NVNM" recordType="NVNM" />
+      <FormLink name="CNDC" recordType="CNDC" refName="Fallout76MajorRecord" />
+      <String name="Description" recordType="DESC" />
+      <RefList name="DestructibleObjectFactions" refName="DestructibleObjectFaction" />
+      <FormLink name="FNMK" recordType="FNMK" refName="Fallout76MajorRecord" />
+      <RefDirect name="FNMU" refName="FurnitureFNMUData" />
+      <FormLink name="FNPR" recordType="FNPR" refName="Fallout76MajorRecord" />
+      <FormLink name="NAM0" recordType="NAM0" refName="Fallout76MajorRecord" />
+      <ByteArray name="OBTF" recordType="OBTF" />
+      <ByteArray name="RADR" recordType="RADR" />
+      <Bool name="STOP" recordType="STOP" boolAsMarker="True" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <UInt16 name="WBDT" recordType="WBDT" />
+      <FormLink name="CITC" recordType="CITC" refName="Fallout76MajorRecord" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <FormLink name="HGLB" recordType="HGLB" refName="Fallout76MajorRecord" />
+      <ByteArray name="DOFA" recordType="DOFA" />
+</Fields>
+  </Object>
+  <Object name="FurnitureFNMUData" objType="Subrecord" recordType="FNMU">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+      <UInt32 name="Field4" />
+    </Fields>
+  </Object>
+</Loqui>

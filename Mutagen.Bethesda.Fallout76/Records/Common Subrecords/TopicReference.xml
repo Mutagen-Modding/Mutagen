@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ATopicReference" abstract="true" objType="Subrecord" recordType="PDTO" />
+  <Object name="TopicReference" objType="Subrecord" baseClass="ATopicReference">
+    <Fields>
+      <FormLink name="Reference" refName="DialogTopic" />
+    </Fields>
+  </Object>
+  <Object name="TopicReferenceSubtype" objType="Subrecord" baseClass="ATopicReference">
+    <Fields>
+      <RecordType name="Subtype" />
+    </Fields>
+  </Object>
+</Loqui>

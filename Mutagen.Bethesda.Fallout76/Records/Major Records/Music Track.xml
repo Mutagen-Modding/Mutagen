@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt32 name="CNAM" recordType="CNAM" />
+      <Float name="FLTV" recordType="FLTV" />
+      <Float name="DNAM" recordType="DNAM" />
+      <String name="ANAM" recordType="ANAM" />
+      <String name="BNAM" recordType="BNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <UInt32 name="CITC" recordType="CITC" />
+      <List name="Tracks" recordType="SNAM">
+        <FormLink refName="MusicTrack" />
+      </List>
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <RefDirect name="LNAM" refName="MusicTrackLNAMData" />
+      <String name="CIS2" recordType="CIS2" />
+</Fields>
+  </Object>
+  <Object name="MusicTrackLNAMData" objType="Subrecord" recordType="LNAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

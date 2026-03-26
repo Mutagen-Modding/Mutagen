@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Resource" recordType="RESO" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="ResourceItem" recordType="NAM1" refName="Fallout76MajorRecord" />
+      <FormLink name="ResourceItem2" recordType="NAM2" refName="Fallout76MajorRecord" />
+      <Float name="NAM4" recordType="NAM4" />
+      <ByteArray name="GLOB" recordType="GLOB" />
+    </Fields>
+  </Object>
+</Loqui>

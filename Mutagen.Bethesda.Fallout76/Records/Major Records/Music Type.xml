@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt32 name="FNAM" recordType="FNAM" />
+      <Float name="WNAM" recordType="WNAM" />
+      <UInt64 name="VNAM" recordType="VNAM" />
+      <UInt64 name="UNAM" recordType="UNAM" />
+      <FormLink name="TNAM" recordType="TNAM" refName="Fallout76MajorRecord" />
+          <Float name="PNAM" recordType="PNAM" />
+</Fields>
+  </Object>
+</Loqui>

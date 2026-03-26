@@ -407,6 +407,17 @@ public sealed record GameConstants
         IniName = "Fallout4",
     };
 
+    /// <summary>
+    /// Readonly singleton of Fallout 76 game constants
+    /// </summary>
+    public static readonly GameConstants Fallout76 = Fallout4 with
+    {
+        Release = GameRelease.Fallout76,
+        DefaultFormVersion = 184,
+        MyDocumentsString = null,
+        IniName = "Fallout76",
+    };
+
     /// <summary> 
     /// Readonly singleton of Starfield game constants 
     /// </summary> 
@@ -526,6 +537,7 @@ public sealed record GameConstants
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4VR,
             GameRelease.Starfield => Starfield,
+            GameRelease.Fallout76 => Fallout76,
             _ => throw new NotImplementedException()
         };
     }

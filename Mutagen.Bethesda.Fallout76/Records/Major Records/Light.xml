@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Light" recordType="LIGH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <RefDirect name="Destructible" refName="Destructible" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="ICON" recordType="ICON" />
+      <String name="MICO" recordType="MICO" />
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+      <Float name="LILS" recordType="LILS" />
+      <String name="NAM0" recordType="NAM0" />
+      <FormLink name="LensFlare" recordType="LNAM" refName="LensFlare" />
+      <FormLink name="GodRays" recordType="WGDR" refName="GodRays" />
+      <FormLink name="Sound" recordType="SNAM" refName="SoundDescriptor" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <FormLink name="HGLB" recordType="HGLB" refName="Fallout76MajorRecord" />
+  <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

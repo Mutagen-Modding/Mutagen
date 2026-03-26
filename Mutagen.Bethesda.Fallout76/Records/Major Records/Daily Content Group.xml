@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DailyContentGroup" recordType="DCGF" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="QuestList">
+        <FormLink name="Quest" recordType="DCGQ" refName="Quest" />
+      </List>
+      <FormLink name="DCGS" recordType="DCGS" refName="Fallout76MajorRecord" />
+      <FormLink name="Location" recordType="DCGL" refName="Location" />
+      <FormLink name="DCGB" recordType="DCGB" refName="Fallout76MajorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

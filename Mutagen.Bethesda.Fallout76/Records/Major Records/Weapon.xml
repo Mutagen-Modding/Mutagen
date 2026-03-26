@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weapon" recordType="WEAP" baseClass="Fallout76MajorRecord" majorFlag="true" objType="Record">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="AnimationSound" recordType="STCP" refName="AnimationSoundTagSet" />
+      <FormLink name="SnapshotTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
+      <UInt16 name="EnchantmentAmount" recordType="EAMT" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
+      <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="SoundDescriptor" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <String name="Description" recordType="DESC" translated="DL" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
+      <List name="EligibleLevels" recordType="EILV">
+        <UInt32  />
+      </List>
+      <FormLink name="BreakSound" recordType="IBSD" refName="SoundDescriptor" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword"  />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" >
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <Bool name="STOP" recordType="STOP" boolAsMarker="True" />
+      <ByteArray name="ENLM2" recordType="ENLM" />
+      <ByteArray name="ENLT2" recordType="ENLT" />
+      <Float name="ENLS2" recordType="ENLS" />
+      <ByteArray name="AUUV2" recordType="AUUV" />
+      <ByteArray name="XFLG" recordType="XFLG" />
+      <ByteArray name="MODD" recordType="MODD" />
+      <FormLink name="EmbeddedWeaponMod" recordType="NNAM" refName="AObjectModification" />
+      <RefDirect name="FirstPersonModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODC" To="MO4C" />
+          <Mapping From="MODS" To="MO4S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <Int32 name="MO4F" recordType="MO4F" />
+      <Data recordType="DNAM">
+        <Fields>
+          <FormLink name="Ammo" refName="Ammunition" />
+          <Float name="Speed" />
+          <Float name="ReloadSpeed" />
+          <Float name="NpcReloadDelay" />
+          <Float name="Reach" />
+          <Float name="ReachEngagementMult" />
+          <Float name="MinRange" />
+          <Float name="MaxRange" />
+          <Float name="Unknown" />
+          <Float name="AttackDelay" />
+          <Float name="Unused" />
+          <Float name="DamageOutOfRangeMult" />
+          <Enum name="OnHit" enumName="Weapon.HitBehavior" byteLength="4" />
+      <FormLink name="Skill" refName="ActorValueInformation" />
+      <FormLink name="Resist" refName="ActorValueInformation" />
+          <UInt32 name="Flags" /> <!-- Was Enum Weapon.Flag but [Flags] enums cause infinite loop in Spriggit YAML serializer -->
+      <UInt16 name="Capacity" />
+      <UInt16 name="AmmoPerShot" />
+          <Enum name="AnimationType" enumName="Weapon.AnimationTypes" byteLength="1" />
+          <Float name="SecondaryDamage" />
+          <Float name="Weight" />
+      <UInt32 name="Value" />
+      <UInt16 name="BaseDamage" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+      <FormLink name="AttackSound" refName="SoundDescriptor" />
+      <FormLink name="ThrowablePrimedSound" refName="SoundDescriptor" />
+      <FormLink name="AttackLoopSound" refName="SoundDescriptor" />
+      <FormLink name="AttackFailSound" refName="SoundDescriptor" />
+      <FormLink name="IdleSound" refName="SoundDescriptor" />
+      <FormLink name="EquipSound" refName="SoundDescriptor" />
+      <FormLink name="UnequipSound" refName="SoundDescriptor" />
+      <FormLink name="FastEquipSound" refName="SoundDescriptor" />
+      <UInt8 name="AccuracyBonus" />
+          <Float name="AnimationAttackSeconds" />
+      <UInt16 name="Rank" />
+          <Float name="ActionPointCost" />
+          <Float name="FullPowerSeconds" />
+          <Float name="MinPowerPerShot" />
+          <Enum name="Stagger" enumName="Stagger" byteLength="4" />
+          <Float name="ColorRemappingIndex" />
+      <UInt32 name="Health" />
+      <ByteArray name="Unknown2" byteLength="8" nullable="False" />
+          <Float name="OverheatRateUp" />
+          <Float name="OverheatRateDown" />
+      <ByteArray name="Unknown3" byteLength="4" nullable="False" />
+        </Fields>
+      </Data>
+      <RefDirect name="RangedWeaponData" refName="RangedWeaponData" />
+      <Data recordType="CRDT">
+        <Fields>
+          <Float name="CritDamageMult" />
+          <Float name="CritChargeBonus" />
+      <FormLink name="CritEffect" refName="Spell" />
+        </Fields>
+      </Data>
+      <FormLink name="ImpactDataSet" recordType="INAM" refName="Fallout76MajorRecord" />
+      <FormLink name="NpcAddAmmoList" recordType="LNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="AimModel" recordType="WAMD" refName="AimModel" />
+      <FormLink name="AimAssistModel" recordType="WAAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Zoom" recordType="WZMD" refName="Zoom" />
+      <FormLink name="Template" recordType="CNAM" refName="Fallout76MajorRecord" />
+      <RefList name="DamageTypes" refName="WeaponDamageType" recordType="DAMA" />
+      <String name="Filter" recordType="FLTR" />
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+      <Float name="MinimumChargeTime" recordType="WMCT" />
+      <FormLink name="DamageCurve" recordType="CVT0" refName="Fallout76MajorRecord" />
+      <FormLink name="MinDurabilityCurve" recordType="CVT1" refName="Fallout76MajorRecord" />
+      <FormLink name="ConditionLossScale" recordType="CVT2" refName="Fallout76MajorRecord" />
+      <FormLink name="BashConditionLossScale" recordType="CVT3" refName="Fallout76MajorRecord" />
+      <FormLink name="MaxDurabilityCurve" recordType="CVT4" refName="Fallout76MajorRecord" />
+      <FormLink name="UnknownCurve" recordType="CVT5" refName="Fallout76MajorRecord" />
+      <Enum name="MeleeSpeed" recordType="MASE" enumName="Weapon.MeleeSpeeds" />
+      <Float name="TelegraphTime" recordType="WTDT" />
+      <FormLink name="TelegraphVisual" recordType="WTDA" refName="Fallout76MajorRecord" />
+      <FormLink name="TelegraphSound" recordType="WTDS" refName="SoundDescriptor" />
+      <Float name="SneakAttackMultiplier" recordType="WSAM" />
+      <ByteArray name="DAMS2" recordType="DAMS" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IBindableEquipment</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IFurnitureAssociation</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+  </Object>
+  <Object name="WeaponDamageType" objType="Subrecord">
+    <Fields>
+      <FormLink name="DamageType" refName="ADamageType" />
+      <UInt32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="RangedWeaponData" recordType="RGW3" objType="Subrecord">
+    <Fields>
+      <FormLink name="OverrideProjectile" refName="Projectile" />
+      <Float name="AnimationFireSeconds" />
+      <Float name="RumbleLeftMotorStrength" />
+      <Float name="RumbleRightMotorStrength" />
+      <Float name="RumbleDuration" />
+      <Float name="AnimationReloadSeconds" />
+      <Float name="BoltDrawSpeed" />
+      <Float name="SightedTransitionSeconds" />
+      <Float name="UnsightedTransitionSeconds" />
+      <Float name="MinWeaponDrawTime" />
+      <Float name="DamageBonusMultiplier" />
+      <UInt32 name="RumblePeriodMs" />
+      <Enum name="RumblePattern" enumName="Weapon.PatternType" byteLength="4" />
+      <UInt8 name="NumProjectiles" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <Bool name="OBTF" recordType="OBTF" boolAsMarker="True" />
+      <ByteArray name="OBTS" recordType="OBTS" />
+      <ByteArray name="RGW2" recordType="RGW2" />
+      <Bool name="STOP" recordType="STOP" boolAsMarker="True" />
+      <RefDirect name="DAMS" refName="WeaponDAMSData" />
+</Fields>
+  </Object>
+  <Object name="WeaponDAMSData" objType="Subrecord" recordType="DAMS">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+          <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

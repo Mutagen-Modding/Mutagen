@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreen" recordType="LSCR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <String name="BNAM" recordType="BNAM" />
+      <FormLink name="LoadingScreenNIF" recordType="NNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Transform" recordType="TNAM" refName="Transform" />
+      <String name="MOD2" recordType="MOD2" />
+      <UInt8 name="PNAM" recordType="PNAM" />
+      <String name="LSST" recordType="LSST" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <Float name="ONAM" recordType="ONAM" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

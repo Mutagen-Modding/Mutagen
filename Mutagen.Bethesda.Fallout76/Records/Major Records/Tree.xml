@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Tree" recordType="TREE" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="PFIG" recordType="PFIG" />
+      <ByteArray name="sigBaseObjects" binary="NoGeneration"/>
+      <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />
+      <ByteArray name="SNDR" recordType="SNDR" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <ByteArray name="CNAM" recordType="CNAM" />
+      <ByteArray name="PFPC" recordType="PFPC" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlayerReference" recordType="PLYR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="Player" recordType="PLYR" refName="Fallout76MajorRecord" />
+      <FormLink name="NAME" recordType="NAME" refName="Fallout76MajorRecord" />
+      <ByteArray name="DATA" recordType="DATA" />
+</Fields>
+  </Object>
+</Loqui>

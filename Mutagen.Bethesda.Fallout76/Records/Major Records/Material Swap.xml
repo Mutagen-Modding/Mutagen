@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MaterialSwap" recordType="MSWP" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <String name="FNAM" recordType="FNAM" />
+      <String name="BNAM" recordType="BNAM" />
+      <Float name="CNAM" recordType="CNAM" />
+      <String name="SNAM" recordType="SNAM" />
+</Fields>
+  </Object>
+</Loqui>

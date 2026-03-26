@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Impact" recordType="IPCT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="Model" refName="Model" />
+      <Data>
+        <Fields>
+          <Float name="Duration" />
+          <Enum name="Orientation" enumName="Impact.OrientationType" byteLength="4" />
+          <Float name="AngleThreshold" />
+          <Float name="PlacementRadius" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Bool name="NoDecalData" byteLength="1" />
+          <Enum name="Result" enumName="Impact.ResultType" byteLength="1" />
+          <Int16 name="Unknown" />
+        </Fields>
+      </Data>
+      <ByteArray name="DODT" recordType="DODT" />
+      <FormLink name="DecalTextureSet" recordType="DNAM" refName="TextureSet" />
+      <FormLink name="SecondaryTextureSet" recordType="ENAM" refName="TextureSet" />
+      <FormLink name="Sound1" recordType="SNAM" refName="SoundDescriptor" />
+      <FormLink name="Sound2" recordType="NAM1" refName="SoundDescriptor" />
+      <FormLink name="Hazard" recordType="NAM3" refName="Hazard" />
+      <FormLink name="FootstepExplosion" recordType="NAM2" refName="Explosion" />
+      <FormLink name="Sound3" recordType="NAM4" refName="SoundDescriptor" />
+      <Float name="FNAM" recordType="FNAM" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledNpc" recordType="LVLN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <ByteArray name="BelowVersion" binary="NoGeneration" />
+      <String name="ONAM" recordType="ONAM" translated="Normal" />
+      <Float name="LVMV" recordType="LVMV" />
+      <Float name="LVCV" recordType="LVCV" />
+      <UInt8 name="LVLM" recordType="LVLM" />
+      <FormLink name="ChanceNoneGlobal" recordType="LVLG" refName="Global" />
+      <ByteArray name="LVLF" recordType="LVLF" />
+      <UInt8 name="LLCT" recordType="LLCT" />
+      <ByteArray name="LLKC" recordType="LLKC" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+  <Float name="LVIV" recordType="LVIV" />
+      <UInt8 name="LVLD" recordType="LVLD" />
+  <Float name="LVLO" recordType="LVLO" />
+      <FormLink name="LVLT" recordType="LVLT" refName="Fallout76MajorRecord" />
+  <Float name="LVLV" recordType="LVLV" />
+      <FormLink name="LVOG" recordType="LVOG" refName="Fallout76MajorRecord" />
+      <UInt32 name="LVOV" recordType="LVOV" />
+      <ByteArray name="LVLC" recordType="LVLC" />
+</Fields>
+  </Object>
+</Loqui>

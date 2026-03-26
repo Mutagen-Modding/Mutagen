@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogBranch" recordType="DLBR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" />
+      <UInt32 name="TNAM" recordType="TNAM" />
+      <UInt32 name="DNAM" recordType="DNAM" />
+      <FormLink name="StartingTopic" recordType="SNAM" refName="DialogTopic" />
+    </Fields>
+  </Object>
+</Loqui>

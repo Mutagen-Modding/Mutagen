@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="MNAM" recordType="MNAM" />
+      <ByteArray name="SPED" recordType="SPED" />
+      <Float name="JNAM" recordType="JNAM" />
+      <Float name="LNAM" recordType="LNAM" />
+      <RefDirect name="INAM" refName="MovementTypeINAMData" />
+</Fields>
+  </Object>
+  <Object name="MovementTypeINAMData" objType="Subrecord" recordType="INAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

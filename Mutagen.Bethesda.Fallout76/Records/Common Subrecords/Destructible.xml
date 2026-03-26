@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Destructible" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Data" refName="DestructableData" />
+      <RefList name="Resistances" refName="ResistanceDestructible" recordType="DAMC" />
+      <RefList name="Stages" refName="DestructionStage" />
+    </Fields>
+  </Object>
+  <Object name="DestructableData" objType="Subrecord" recordType="DEST">
+    <Fields>
+      <Int32 name="Health" />
+      <UInt8 name="DESTCount" />
+      <Enum name="Flags" enumName="Destructible.DestructibleFlag" byteLength="1" />
+      <Int16 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="ResistanceDestructible" objType="Subrecord">
+    <Fields>
+      <FormLink name="DamageType" refName="ADamageType" />
+      <UInt32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF">
+    <Fields>
+      <Data recordType="DSTD" >
+        <Fields>
+          <UInt8 name="HealthPercent" />
+          <UInt8 name="Index" />
+          <UInt8 name="ModelDamageStage" />
+          <Enum name="Flags" enumName="Destructible.DestructionStageDataFlag" byteLength="1" />
+          <Int32 name="SelfDamagePerSecond" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Debris" refName="Debris" />
+          <Int32 name="DebrisCount" />
+        </Fields>
+      </Data>
+      <String name="SequenceName" recordType="DSTA" nullable="True" />
+      <RefDirect name="Model" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="DMDL" />
+          <Mapping From="MODT" To="DMDT" />
+          <Mapping From="MODC" To="DMDC" />
+          <Mapping From="MODS" To="DMDS" />
+        </RecordTypeOverrides>
+      </RefDirect>
+    </Fields>
+  </Object>
+</Loqui>

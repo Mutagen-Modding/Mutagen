@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MiscItem" recordType="MISC" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <FormLink name="CraftingSound" recordType="CUSD" refName="SoundDescriptor" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <String name="ICON" recordType="ICON" />
+      <String name="MICO" recordType="MICO" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="SoundDescriptor" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="FeaturedItemMessage" recordType="FIMD" refName="Message" />
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <ByteArray name="AQIC" recordType="AQIC" />
+      <FormLink name="Quest" recordType="DIQO" refName="Quest" />
+      <ByteArray name="CVPA" recordType="CVPA" />
+      <ByteArray name="CDIX" recordType="CDIX" />
+      <RefDirect name="Data" refName="ValueWeight" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <FormLink name="HGLB" recordType="HGLB" refName="Fallout76MajorRecord" />
+      <ByteArray name="MCQP" recordType="MCQP" />
+  <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundOutputModel" recordType="SOPM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt32 name="MNAM" recordType="MNAM" />
+      <Int16 name="VNAM" recordType="VNAM" />
+      <Float name="WNAM" recordType="WNAM" />
+      <FormLink name="EffectChain" recordType="ENAM" refName="AudioEffectChain" />
+      <ByteArray name="ATTN" recordType="ATTN" />
+      <Float name="NAM1" recordType="NAM1" />
+      <ByteArray name="ONAM" recordType="ONAM" />
+</Fields>
+  </Object>
+</Loqui>

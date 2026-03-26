@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundDescriptor" recordType="SNDR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="NNAM" recordType="NNAM" />
+      <UInt32 name="CNAM" recordType="CNAM" />
+      <FormLink name="Category" recordType="GNAM" refName="SoundCategory" />
+      <FormLink name="AlternateSoundFor" recordType="SNAM" refName="SoundDescriptor" />
+      <List name="Sounds">
+        <String name="ANAM" recordType="ANAM" />
+      </List>
+      <FormLink name="OutputModel" recordType="ONAM" refName="SoundOutputModel" />
+      <ByteArray name="BNAM" recordType="BNAM" />
+      <UInt32 name="HNAM" recordType="HNAM" />
+      <UInt32 name="INAM" recordType="INAM" />
+      <List name="Descriptors">
+        <FormLink name="DecibelsGlobal" recordType="DNAM" refName="Fallout76MajorRecord" />
+      </List>
+      <ByteArray name="DNAM2" recordType="DNAM" />
+      <UInt32 name="ITMC" recordType="ITMC" />
+      <FormLink name="PNAM" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="QNAM" recordType="QNAM" refName="Fallout76MajorRecord" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <String name="FNAM" recordType="FNAM" />
+      <FormLink name="INTV" recordType="INTV" refName="Fallout76MajorRecord" />
+      <Bool name="ITME" recordType="ITME" />
+      <Bool name="ITMS" recordType="ITMS" />
+      <FormLink name="LNAM" recordType="LNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="ANAM2" recordType="ANAM" />
+</Fields>
+  </Object>
+</Loqui>

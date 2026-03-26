@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VolumetricLighting" recordType="VOLI" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <Float name="CNAM" recordType="CNAM" />
+      <Float name="DNAM" recordType="DNAM" />
+        <Float name="Red" binary="NoGeneration" />
+
+        <Float name="Green" binary="NoGeneration" />
+
+        <Float name="Blue" binary="NoGeneration" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <Float name="FNAM" recordType="FNAM" />
+      <Float name="GNAM" recordType="GNAM" />
+      <Float name="HNAM" recordType="HNAM" />
+      <Float name="INAM" recordType="INAM" />
+      <Float name="JNAM" recordType="JNAM" />
+      <Float name="KNAM" recordType="KNAM" />
+      <Float name="LNAM" recordType="LNAM" />
+      <Float name="MNAM" recordType="MNAM" />
+      <Float name="NNAM" recordType="NNAM" />
+    </Fields>
+  </Object>
+</Loqui>

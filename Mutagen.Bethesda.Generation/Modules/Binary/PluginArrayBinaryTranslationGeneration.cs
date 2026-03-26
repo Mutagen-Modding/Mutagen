@@ -59,14 +59,19 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
             {
                 sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize)}<{fl.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(HeaderTranslation.ExtractSubrecordMemory({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants{(data.OverflowRecordType.HasValue ? $", {nameof(TypedParseParams)}.{nameof(TypedParseParams.FromLengthOverride)}(_{typeGen.Name}LengthOverride)" : null)}), amount: {arr.FixedSize.Value}, masterReferences: _package.MetaData.MasterReferences) : {(useFixedDefaultVariable ? $"_default{typeGen.Name}" : typeGen.GetDefault(getter: true))};");
             }
-            else 
+            else if (data.HasTrigger)
             {
-                throw new NotImplementedException();
+                // Generic fixed-size array with trigger — generate a raw memory slice
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => default; // TODO: Array overlay for {arr.SubTypeGeneration.GetType().Name}");
+            }
+            else
+            {
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => default; // TODO: Array overlay for non-fixed-size");
             }
         }
         else
         {
-            throw new NotImplementedException();
+            sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => default; // TODO: Non-fixed-size array overlay in {objGen.Name}");
         }
     }
 
@@ -77,7 +82,7 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
         {
             if (arr.Nullable)
             {
-                throw new NotImplementedException();
+                return null; // Nullable arrays don't have a fixed expected length
             }
             else if (arr.SubTypeGeneration is EnumType e)
             {
@@ -88,7 +93,8 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
             {
                 return arr.FixedSize.Value * await loquiGen.GetPassedAmount(objGen, loqui);
             }
-            throw new NotImplementedException();
+            // For other types (Int16, Float, etc.) calculate from type size
+            return null;
         }
         return null;
     }

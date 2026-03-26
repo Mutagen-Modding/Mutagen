@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledItem" recordType="LVLI" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <ByteArray name="BelowVersion" binary="NoGeneration" />
+      <String name="ONAM" recordType="ONAM" translated="Normal" />
+      <Float name="LVMV" recordType="LVMV" />
+      <FormLink name="MaxGlobal" recordType="LVMG" refName="Global" />
+      <FormLink name="MaxCurveTable" recordType="LVMT" refName="Fallout76MajorRecord" />
+      <UInt8 name="LVLM" recordType="LVLM" />
+      <Float name="LVCV" recordType="LVCV" />
+      <FormLink name="ChanceNoneGlobal" recordType="LVLG" refName="Global" />
+      <FormLink name="ChanceNoneCurveTable" recordType="LVCT" refName="Fallout76MajorRecord" />
+      <ByteArray name="LVLF" recordType="LVLF" />
+      <UInt8 name="LLCT" recordType="LLCT" />
+      <ByteArray name="LLKC" recordType="LLKC" />
+      <FormLink name="SubGlobal" recordType="LVSG" refName="Global" />
+      <FormLink name="Quest" recordType="DIQO" refName="Quest" />
+      <UInt32 name="LIMC" recordType="LIMC"/>
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM2" recordType="ENLM" />
+      <ByteArray name="ENLT2" recordType="ENLT" />
+      <Float name="ENLS2" recordType="ENLS" />
+      <ByteArray name="AUUV2" recordType="AUUV" />
+      <ByteArray name="COED" recordType="COED" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <Float name="LVIG" recordType="LVIG" />
+      <FormLink name="LVIT" recordType="LVIT" refName="Fallout76MajorRecord" />
+      <Float name="LVIV" recordType="LVIV" />
+      <Bool name="LVLD" recordType="LVLD" boolAsMarker="True" />
+      <Float name="LVLO" recordType="LVLO" />
+      <FormLink name="LVLT" recordType="LVLT" refName="Fallout76MajorRecord" />
+      <Float name="LVLV" recordType="LVLV" />
+      <Float name="LVOC" recordType="LVOC" />
+      <FormLink name="LVOG" recordType="LVOG" refName="Fallout76MajorRecord" />
+      <FormLink name="LVOT" recordType="LVOT" refName="Fallout76MajorRecord" />
+      <Float name="LVOV" recordType="LVOV" />
+      <P2Float name="LVUD" recordType="LVUD" />
+      <ByteArray name="LVLC" recordType="LVLC" />
+  <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

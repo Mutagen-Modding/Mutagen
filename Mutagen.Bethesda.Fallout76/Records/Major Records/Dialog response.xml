@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
+      <FormLink name="PreviousInfo" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="SharedInfo" recordType="DNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="InfoGroup" recordType="GNAM" refName="Fallout76MajorRecord" />
+      <String name="IOVR" recordType="IOVR" />
+      <String name="RNAM" recordType="RNAM" translated="Normal" />
+      <FormLink name="Speaker" recordType="ANAM" refName="Fallout76MajorRecord" />
+      <FormLink name="TargetScene" recordType="TSCE" refName="Fallout76MajorRecord" />
+      <UInt32 name="ALFT" recordType="ALFT" />
+      <UInt32 name="INTV" recordType="INTV" />
+      <UInt32 name="ALFA" recordType="ALFA" />
+      <FormLink name="AudioOutputOverride2" recordType="ONAM" refName="SoundOutputModel" />
+      <UInt32 name="GREE" recordType="GREE" />
+      <String name="NAM0" recordType="NAM0" />
+      <Enum name="ChallengeLevel" enumName="DialogResponses.ChallengeType" byteLength="4" recordType="INCC" />
+      <FormLink name="ModQuest" recordType="MODQ" refName="Quest" />
+      <UInt32 name="INAM" recordType="INAM" />
+      <UInt64 name="NAM8" recordType="NAM8" />
+          <Float name="BNAM" recordType="BNAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <ByteArray name="ENAM" recordType="ENAM" />
+      <FormLink name="LNAM" recordType="LNAM" refName="Fallout76MajorRecord" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <Bool name="NAM3" recordType="NAM3" />
+      <Bool name="NAM4" recordType="NAM4" />
+      <UInt64 name="NAM9" recordType="NAM9" />
+      <FormLink name="SNAM" recordType="SNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="SRAF" recordType="SRAF" />
+      <UInt32 name="TIQS" recordType="TIQS" />
+      <ByteArray name="TNAM" recordType="TNAM" />
+      <Bool name="TRAE" recordType="TRAE" />
+      <ByteArray name="TRDA" recordType="TRDA" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <Bool name="WZMD" recordType="WZMD" />
+      <String name="CIS2" recordType="CIS2" />
+</Fields>
+  </Object>
+</Loqui>

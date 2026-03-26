@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Faction" recordType="FACT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefList name="Relations" refName="FactionXNAMData" />
+      <FormLink name="DATA" recordType="DATA" refName="Fallout76MajorRecord" />
+      <FormLink name="ExteriorJailMarker" recordType="JAIL" refName="PlacedObject" />
+      <FormLink name="FollowerWaitMarker" recordType="WAIT" refName="PlacedObject" />
+      <FormLink name="StolenGoodsContainer" recordType="STOL" refName="PlacedObject" />
+      <FormLink name="PlayerInventoryContainer" recordType="PLCN" refName="PlacedObject" />
+      <FormLink name="SharedCrimeFactionList" recordType="CRGR" refName="FormList" />
+      <FormLink name="JailOutfit" recordType="JOUT" refName="Outfit" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <FormLink name="VendorBuySellList" recordType="VEND" refName="FormList" />
+      <FormLink name="MerchantContainer" recordType="VENC" refName="PlacedObject" />
+      <FormLink name="VendorRespawnCell" recordType="VENR" refName="Cell" />
+      <FormLink name="VendorCapResetGlobal" recordType="VENG" refName="Global" />
+      <FormLink name="VendorBuyCurrency" recordType="VBCY" refName="Fallout76MajorRecord" />
+      <Bool name="VREN" recordType="VREN" />
+      <ByteArray name="VENP" recordType="VENP" />
+      <ByteArray name="VENV" recordType="VENV" />
+      <ByteArray name="CRVA" recordType="CRVA" />
+      <List name="RankNumbers">
+        <FormLink name="RNAM" recordType="RNAM" refName="Fallout76MajorRecord" />
+      </List>
+      <List name="RankMaleTitles">
+        <FormLink name="MNAM" recordType="MNAM" refName="Fallout76MajorRecord" />
+      </List>
+      <List name="RankFemaleTitles">
+        <FormLink name="FNAM" recordType="FNAM" refName="Fallout76MajorRecord" />
+      </List>
+      <List name="RankInsignia">
+        <ByteArray name="INAM" recordType="INAM" />
+      </List>
+      <RefDirect name="PLVD" refName="FactionPLVDData" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <List name="EntryChecks">
+        <Bool name="FCNR" recordType="FCNR" />
+      </List>
+      <FormLink name="FCRF" recordType="FCRF" refName="Faction" />
+      <FormLink name="FCOR" recordType="FCOR" refName="Fallout76MajorRecord" />
+      <FormLink name="FCBM" recordType="FCBM" refName="Fallout76MajorRecord" />
+      <RefList name="EntryCheckConditions" refName="Condition" counterRecType="CITC" />
+      <FormLink name="FCAF" recordType="FCAF" refName="Fallout76MajorRecord" />
+      <RefList name="FactionConditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
+  <Object name="FactionXNAMData" objType="Subrecord" recordType="XNAM">
+    <Fields>
+      <FormLink name="Target" refName="Faction" />
+      <Int32 name="Modifier" />
+      <UInt32 name="Reaction" />
+    </Fields>
+  </Object>
+  <Object name="FactionPLVDData" objType="Subrecord" recordType="PLVD">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+      <UInt32 name="Field4" />
+    </Fields>
+  </Object>
+</Loqui>

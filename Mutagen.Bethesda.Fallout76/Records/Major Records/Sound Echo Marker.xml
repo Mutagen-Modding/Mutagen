@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundEchoMarker" recordType="SECH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="NNAM" recordType="NNAM" />
+      <FormLink name="ANAM" recordType="ANAM" refName="Fallout76MajorRecord" />
+      <Float name="BNAM" recordType="BNAM" />
+      <Bool name="CNAM" recordType="CNAM" />
+      <Bool name="DNAM" recordType="DNAM" />
+      <Bool name="ECHD" recordType="ECHD" />
+      <Bool name="ECHE" recordType="ECHE" />
+      <Bool name="ECHO" recordType="ECHO" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <FormLink name="ETRG" recordType="ETRG" refName="Fallout76MajorRecord" />
+      <FormLink name="SDSC" recordType="SDSC" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

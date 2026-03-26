@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMeshObstacleManager" recordType="NOCM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+          <RefDirect name="Data" refName="NavmeshObstacleData" />
+      <FormLink name="INDX" recordType="INDX" refName="Fallout76MajorRecord" />
+      <FormLink name="INTV" recordType="INTV" refName="Fallout76MajorRecord" />
+      <String name="NAM1" recordType="NAM1" />
+</Fields>
+  </Object>
+  <Object name="NavmeshObstacleData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt16 name="Unknown1" />
+      <UInt16 name="Unknown2" />
+      <UInt32 name="Unknown3" />
+    </Fields>
+  </Object>
+</Loqui>

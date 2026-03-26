@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true" customBinaryEnd="Normal">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <ByteArray name="SetAfterLoad" binary="NoGeneration" />
+      <Float name="PNAM" recordType="PNAM" />
+      <FormLink name="Branch" recordType="BNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" />
+      <FormLink name="Keyword" recordType="KNAM" refName="Keyword" />
+      <UInt32 name="SNAM" recordType="SNAM" />
+      <UInt32 name="TIFC" recordType="TIFC" />
+      <ByteArray name="INOM" recordType="INOM" />
+      <ByteArray name="INOA" recordType="INOA" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="Unknown" binary="NoGeneration" />
+      <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
+      <FormLink name="DATA" recordType="DATA" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

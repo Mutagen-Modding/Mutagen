@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SceneCollection" recordType="SCCO" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="Quest" recordType="QNAM" refName="Quest" />
+      <RefList name="SceneLayout" refName="SceneCollectionItem" />
+      <ByteArray name="VNAM" recordType="VNAM" />
+      <RefList name="OriginalCoordinates" refName="SceneCollectionCoordinates" />
+      <ByteArray name="VNAM2" recordType="VNAM" />
+    </Fields>
+  </Object>
+  <Object name="SceneCollectionItem" objType="Subrecord" recordType="SNAM">
+    <Fields>
+      <FormLink name="Scene" refName="Scene" />
+      <RefDirect name="Coordinates" refName="SceneCollectionCoordinates" />
+    </Fields>
+  </Object>
+  <Object name="SceneCollectionCoordinates" objType="Subrecord" recordType="XNAM">
+    <Fields>
+      <Int32 name="X" />
+      <Int32 name="Y" />
+    </Fields>
+  </Object>
+</Loqui>

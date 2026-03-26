@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AssociationType" recordType="ASTP" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="MPRT" recordType="MPRT" />
+      <String name="FPRT" recordType="FPRT" />
+      <String name="MCHT" recordType="MCHT" />
+      <String name="FCHT" recordType="FCHT" />
+      <UInt32 name="DATA" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

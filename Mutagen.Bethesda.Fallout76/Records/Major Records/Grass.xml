@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="DATA">
+        <Fields>
+          <UInt8 name="Density" />
+          <UInt8 name="MinSlope" />
+          <UInt8 name="MaxSlope" />
+          <ByteArray name="Unknown" byteLength="1" nullable="False" />
+          <UInt16 name="UnitsFromWater" />
+          <ByteArray name="Unknown2" byteLength="2" nullable="False" />
+          <UInt32 name="UnitsFromWaterType" />
+          <Float name="PositionRange" />
+          <Float name="HeightRange" />
+          <Float name="ColorRange" />
+          <Float name="WavePeriod" />
+          <UInt8 name="Flags" />
+          <ByteArray name="Unknown3" byteLength="3" nullable="False" />
+        </Fields>
+      </Data>
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <Float name="DnamUnknown1" />
+          <Float name="DnamUnknown2" />
+          <Float name="DnamHeightRange" />
+          <Float name="DnamColorRange" />
+          <Float name="DnamWavePeriod" />
+          <ByteArray name="DnamUnknown3" byteLength="4" nullable="False" />
+          <UInt8 name="DnamDensity" />
+          <UInt8 name="DnamMinSlope" />
+          <UInt8 name="DnamMaxSlope" />
+          <UInt8 name="DnamFlags" />
+        </Fields>
+      </Data>
+</Fields>
+  </Object>
+</Loqui>

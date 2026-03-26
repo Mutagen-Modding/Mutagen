@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpace" recordType="IMGS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <Float name="INAM" recordType="INAM" />
+      <UInt32 name="YNAM" recordType="YNAM" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Fallout76MajorRecord" />
+      <String name="TX00" recordType="TX00" />
+          <P3Float name="CNAM" recordType="CNAM" />
+      <RefDirect name="DepthOfField" refName="ImageSpaceDNAMData" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="GNAM" recordType="GNAM" />
+      <ByteArray name="HNAM" recordType="HNAM" />
+      <FormLink name="TNAM" recordType="TNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="XNAM" recordType="XNAM" />
+</Fields>
+  </Object>
+  <Object name="ImageSpaceDNAMData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <Float name="Strength" />
+      <Float name="Distance" />
+      <Float name="Range" />
+      <ByteArray name="Unused" binaryLength="2" />
+      <Enum name="SkyBlurRadius" enumName="ImageSpace.SkyBlurRadius" byteLength="2" />
+      <Float name="VignetteRadius" />
+      <Float name="VignetteStrength" />
+    </Fields>
+  </Object>
+</Loqui>

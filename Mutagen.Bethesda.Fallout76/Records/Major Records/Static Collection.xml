@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="StaticCollection" recordType="SCOL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <ByteArray name="XFLG" recordType="XFLG" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <ByteArray name="MNAM" recordType="MNAM" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <UInt32 name="LODP" recordType="LODP" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="FLTR" recordType="FLTR" />
+      <RefList name="Parts" refName="StaticCollectionPart" />
+      <ByteArray name="DATA" recordType="DATA" />
+</Fields>
+  </Object>
+  <Object name="StaticCollectionPart" objType="Subrecord" recordType="ONAM">
+    <Fields>
+      <FormLink name="Static" refName="Static" />
+      <UInt32 name="Flags" />
+          <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

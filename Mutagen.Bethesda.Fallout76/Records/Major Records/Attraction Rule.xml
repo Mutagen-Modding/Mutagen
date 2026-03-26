@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AttractionRule" recordType="AORU" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="AOR2" refName="AttractionRuleAOR2Data" />
+</Fields>
+  </Object>
+  <Object name="AttractionRuleAOR2Data" objType="Subrecord" recordType="AOR2">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+      <UInt32 name="Field4" />
+    </Fields>
+  </Object>
+</Loqui>

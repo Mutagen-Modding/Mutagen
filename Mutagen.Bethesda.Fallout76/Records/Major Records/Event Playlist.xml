@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EventPlaylist" recordType="PEPF" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="EventGroup" recordType="EPEG" refName="Fallout76MajorRecord" />
+      <UInt32 name="EPCD" recordType="EPCD" />
+      <UInt32 name="EPPR" recordType="EPPR" />
+      <UInt32 name="EPNQ" recordType="EPNQ" />
+      <UInt32 name="EPFL" recordType="EPFL" />
+          <Float name="EPQA" recordType="EPQA" />
+      <FormLink name="EPSI" recordType="EPSI" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectPlacementDefault" objType="Subrecord" recordType="OPDS">
+    <Fields>
+      <UInt32 name="Flags" />
+      <Float name="Sink" />
+      <Float name="SinkVariance" />
+      <Float name="Scale" />
+      <Float name="ScaleVariance" />
+      <Float name="AngleX" />
+      <Float name="AngleXVariance" />
+      <Float name="AngleY" />
+      <Float name="AngleYVariance" />
+      <Float name="AngleZ" />
+      <Float name="AngleZVariance" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TalkingActivator" recordType="TACT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+        <ByteArray name="NAM1" recordType="NAM1" />
+      <UInt32 name="LODP" recordType="LODP" />
+      <UInt32 name="PNAM" recordType="PNAM"/>
+      <FormLink name="Sound" recordType="SNAM" refName="SoundDescriptor" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <Bool name="AIID" recordType="AIID" />
+      <UInt16 name="FNAM" recordType="FNAM" />
+      <RefList name="Items" refName="ContainerEntry" counterRecType="COCT" />
+      <Float name="PAHD" recordType="PAHD" />
+      <ByteArray name="CTRN" recordType="CTRN" />
+      <FormLink name="GroundCover" recordType="GCDA" refName="Fallout76MajorRecord" />
+      <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
+      <FormLink name="Faction" recordType="FNAM" refName="Faction" />
+      <FormLink name="CNDC" recordType="CNDC" refName="Fallout76MajorRecord" />
+      <String name="Description" recordType="DESC" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <FormLink name="CITC" recordType="CITC" refName="Fallout76MajorRecord" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+</Fields>
+  </Object>
+</Loqui>

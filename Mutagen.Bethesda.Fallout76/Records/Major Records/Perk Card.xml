@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PerkCard" recordType="PCRD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <FormLink name="PerkData" recordType="PCDV" refName="Fallout76MajorRecord" />
+      <FormLink name="Sound" recordType="SNAM" refName="SoundDescriptor" />
+      <String name="MNAM" recordType="MNAM" />
+      <String name="FNAM" recordType="FNAM" />
+      <UInt32 name="ANAM" recordType="ANAM" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Float name="Value" />
+          <UInt8 name="MinLevel" />
+          <Enum name="Special" enumName="SpecialType" byteLength="1" />
+          <UInt16 name="RaceRestriction" />
+        </Fields>
+      </Data>
+      <Bool name="PRKE" recordType="PRKE" />
+      <Bool name="PRKF" recordType="PRKF" boolAsMarker="True" />
+</Fields>
+  </Object>
+</Loqui>

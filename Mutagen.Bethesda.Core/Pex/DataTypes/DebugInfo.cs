@@ -23,7 +23,7 @@ public partial class DebugInfo
         }
 
         //F04 only
-        if (ret._gameCategory != GameCategory.Fallout4) return ret;
+        if (ret._gameCategory is not GameCategory.Fallout4 and not GameCategory.Fallout76) return ret;
 
         var propertyGroupsCount = parse.Reader.ReadUInt16();
         for (var i = 0; i < propertyGroupsCount; i++)
@@ -52,7 +52,7 @@ public partial class DebugInfo
         }
 
         //F04 only
-        if (_gameCategory != GameCategory.Fallout4) return;
+        if (_gameCategory is not GameCategory.Fallout4 and not GameCategory.Fallout76) return;
 
         bw.Writer.Write((ushort)PropertyGroups.Count);
         foreach (var propertyGroup in PropertyGroups)

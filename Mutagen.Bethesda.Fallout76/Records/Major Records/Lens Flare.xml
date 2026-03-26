@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LensFlare" recordType="LENS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <Float name="CNAM" recordType="CNAM" />
+      <Float name="DNAM" recordType="DNAM" />
+      <UInt32 name="LFSP" recordType="LFSP" />
+      <String name="FNAM" recordType="FNAM" />
+      <ByteArray name="LFSD" recordType="LFSD" />
+</Fields>
+  </Object>
+</Loqui>

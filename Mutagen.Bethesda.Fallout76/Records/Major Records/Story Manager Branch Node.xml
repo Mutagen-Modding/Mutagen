@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="StoryManagerBranchNode" recordType="SMBN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="Parent" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Child" recordType="SNAM" refName="Fallout76MajorRecord" />
+      <UInt32 name="CITC" recordType="CITC" />
+      <UInt32 name="DNAM" recordType="DNAM" />
+      <UInt32 name="XNAM" recordType="XNAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+</Fields>
+  </Object>
+</Loqui>

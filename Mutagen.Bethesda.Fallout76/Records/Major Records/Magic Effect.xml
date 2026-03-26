@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <FormLink name="MenuDisplayObject" recordType="MDOB" refName="Static" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <List name="CounterEffects">
+        <FormLink name="DualCastingArt" recordType="ESCE" refName="Fallout76MajorRecord" />
+      </List>
+      <ByteArray name="ESCE2" recordType="ESCE" />
+        <Bool name="SNDD" recordType="SNDD" boolAsMarker="True" />
+      <String name="DNAM" recordType="DNAM" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <ByteArray name="DATA" recordType="DATA" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AnimationSoundTagSet" recordType="STAG" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <FormLink name="TNAM" recordType="TNAM" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

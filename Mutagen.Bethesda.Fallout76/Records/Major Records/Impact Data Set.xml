@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImpactDataSet" recordType="IPDS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="Impacts" refName="ImpactDataSetEntry" />
+</Fields>
+  </Object>
+  <Object name="ImpactDataSetEntry" objType="Subrecord" recordType="PNAM">
+    <Fields>
+      <FormLink name="Material" refName="MaterialType" />
+      <FormLink name="Impact" refName="Impact" />
+    </Fields>
+  </Object>
+</Loqui>

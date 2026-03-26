@@ -28,6 +28,9 @@ namespace Mutagen.Bethesda
                 case "IStarfieldMod":
                 case "IStarfieldModGetter":
                     return GameCategory.Starfield;
+                case "IFallout76Mod":
+                case "IFallout76ModGetter":
+                    return GameCategory.Fallout76;
                 default:
                 {
                     return null;

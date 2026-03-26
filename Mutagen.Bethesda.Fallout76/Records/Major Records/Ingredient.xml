@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingredient" recordType="INGR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <String name="ICON" recordType="ICON" />
+      <String name="MICO" recordType="MICO" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="SoundDescriptor" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+      <UInt32 name="MIID" recordType="MIID" />
+      <RefDirect name="Data" refName="ValueWeight" />
+      <FormLink name="BaseEffect" recordType="EFID" refName="MagicEffect" />
+      <ByteArray name="EFIT" recordType="EFIT" />
+      <RefDirect name="EffectData" refName="IngredientEffectData" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <UInt32 name="CODV" recordType="CODV" />
+      <UInt32 name="MAGF" recordType="MAGF" />
+      <String name="CIS1" recordType="CIS1" />
+      <String name="CIS2" recordType="CIS2" />
+      <ByteArray name="CTDA" recordType="CTDA" />
+</Fields>
+  </Object>
+  <Object name="IngredientEffectData" objType="Subrecord" recordType="ENIT">
+    <Fields>
+      <Int32 name="IngredientValue" />
+      <UInt32 name="Flags" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Icons" objType="Subrecord">
+    <Fields>
+      <String name="InventoryImage" recordType="ICON" />
+      <String name="MessageIcon" recordType="MICO" />
+    </Fields>
+  </Object>
+</Loqui>

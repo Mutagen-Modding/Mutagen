@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <UInt32 name="DATA" recordType="DATA" />
+      <UInt32 name="ANAM" recordType="ANAM" />
+    </Fields>
+  </Object>
+</Loqui>

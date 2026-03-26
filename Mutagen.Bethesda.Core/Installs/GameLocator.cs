@@ -354,6 +354,26 @@ public sealed class GameLocator
                     })
             },
             {
+            GameRelease.Fallout76, new GameMetaData(
+                GameRelease.Fallout76,
+                GameSources: new IGameSource[]
+                {
+                    new RegistryGameSource()
+                    {
+                        RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout 76",
+                        RegistryKey = @"installed path",
+                    },
+                    new SteamGameSource()
+                    {
+                        Id = 1151340
+                    },
+                },
+                RequiredFiles: new string[]
+                {
+                    "Fallout76.exe"
+                })
+        },
+        {
             GameRelease.Starfield, new GameMetaData(
                 GameRelease.Starfield,
                 GameSources: new IGameSource[]

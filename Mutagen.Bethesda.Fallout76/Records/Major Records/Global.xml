@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Global" recordType="GLOB" baseClass="Fallout76MajorRecord" majorFlag="true" objType="Record" abstract="true">
+    <Fields>
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <CustomLogic name="TypeChar" recordType="FNAM" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="GlobalInt" recordType="GLOB" baseClass="Global" objType="Record">
+    <Fields>
+      <Int32 name="Data" recordType="FLTV" binary="Custom" />
+      <Bool name="NTWK" recordType="NTWK" boolAsMarker="True" />
+    </Fields>
+  </Object>
+  <Object name="GlobalShort" recordType="GLOB" baseClass="Global" objType="Record">
+    <Fields>
+      <Int16 name="Data" recordType="FLTV" binary="Custom" />
+      <Bool name="NTWK" recordType="NTWK" boolAsMarker="True" />
+    </Fields>
+  </Object>
+  <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record">
+    <Fields>
+      <Float name="Data" recordType="FLTV" />
+      <Bool name="OutputChar" binary="NoGeneration" />
+      <Bool name="NTWK" recordType="NTWK" boolAsMarker="True" />
+    </Fields>
+  </Object>
+  <Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record">
+    <Fields>
+      <Bool name="Data" recordType="FLTV" binary="Custom" />
+      <Bool name="NTWK" recordType="NTWK" boolAsMarker="True" />
+    </Fields>
+  </Object>
+</Loqui>

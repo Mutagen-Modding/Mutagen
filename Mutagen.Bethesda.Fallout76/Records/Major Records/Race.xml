@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DURL" recordType="DURL" />
+      <FormLink name="AnimationSound" recordType="STCP" refName="AnimationSoundTagSet" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <List name="ActorEffects" counterRecType="SPCT">
+        <FormLink name="ActorEffect" recordType="SPLO" refName="Spell" />
+      </List>
+      <FormLink name="SPLO2" recordType="SPLO" refName="Spell" />
+      <FormLink name="Skin" recordType="WNAM" refName="Armor" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+        <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="APPR" recordType="APPR" refName="Fallout76MajorRecord" />
+      <Bool name="MNAM" recordType="MNAM" />
+      <String name="ANAM" recordType="ANAM" />
+      <ByteArray name="ModelInfo" recordType="____"/>
+      <Bool name="FNAM" recordType="FNAM" />
+      <String name="ANAM2" binary="NoGeneration" />
+      <ByteArray name="ModelInfo2" recordType="____"/>
+      <List name="MovementTypeNames" binary="NoGeneration">
+        <String name="MTNM" recordType="MTNM" />
+      </List>
+        <RefDirect name="Voices" refName="RaceVoices" />
+      <RefDirect name="DefaultHairColors" refName="RaceDefaultHairColors" />
+      <UInt16 name="TINL" recordType="TINL" />
+      <Float name="PNAM" recordType="PNAM" />
+      <Float name="UNAM" recordType="UNAM" />
+      <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
+      <Bool name="NAM1" recordType="NAM1" />
+      <Bool name="MNAM2" binary="NoGeneration" />
+      <Bool name="FNAM2" binary="NoGeneration" />
+      <FormLink name="BodyPartData" recordType="GNAM" refName="BodyPartData" />
+      <FormLink name="DefaultHairColor" recordType="DNAM" refName="ColorRecord" />
+      <Bool name="NAM3" recordType="NAM3" />
+      <Bool name="MNAM3" binary="NoGeneration" />
+      <RefDirect name="Model" refName="Model" />
+      <Bool name="FNAM3" binary="NoGeneration" />
+      <RefDirect name="Model2" refName="Model" />
+      <FormLink name="ImpactMaterialType" recordType="NAM4" refName="MaterialType" />
+      <FormLink name="ImpactDataSet" recordType="NAM5" refName="ImpactDataSet" />
+      <FormLink name="DecapitationFXArt" recordType="NAM7" refName="Fallout76MajorRecord" />
+      <FormLink name="Corpse" recordType="CNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="MorphRace" recordType="NAM2" refName="Race" />
+      <FormLink name="ArmorRace" recordType="ONAM" refName="Race" />
+      <FormLink name="LensFlare" recordType="LNAM" refName="Fallout76MajorRecord" />
+      <List name="BipedObjectNames" binary="NoGeneration">
+        <String name="NAME" recordType="NAME" />
+      </List>
+        <ByteArray name="RBPC" recordType="RBPC" />
+      <UInt32 name="VNAM" recordType="VNAM" />
+      <FormLink name="UnarmedWeapon" recordType="UNWP" refName="Weapon" />
+      <FormLink name="RaceCategory" recordType="RLBC" refName="Fallout76MajorRecord" />
+      <List name="PhonemeTargetNames" binary="NoGeneration">
+        <String name="PHTN" recordType="PHTN" />
+      </List>
+      <FormLink name="WalkMovementType" recordType="WKMV" refName="MovementType" />
+      <FormLink name="SwimMovementType" recordType="SWMV" refName="MovementType" />
+      <FormLink name="FlyMovementType" recordType="FLMV" refName="MovementType" />
+      <FormLink name="SneakMovementType" recordType="SNMV" refName="MovementType" />
+      <Bool name="NAM0" recordType="NAM0" />
+      <Bool name="MNAM4" binary="NoGeneration" />
+
+
+          <List name="MaleHeadParts" binary="NoGeneration">
+        <FormLink refName="HeadPart"  />
+      </List>
+
+
+          <List name="MaleRacePresets" binary="NoGeneration">
+
+
+          <FormLink name="RagdollPoseMatchM" recordType="RPRM" refName="Fallout76MajorRecord" />
+
+
+          </List>
+
+
+          <List name="MaleHairColors" binary="NoGeneration">
+
+
+          <FormLink name="DefaultHairColorM" recordType="AHCM" refName="ColorRecord" />
+
+
+          </List>
+
+
+          <List name="MaleFaceDetails" binary="NoGeneration">
+
+
+          <FormLink name="DefaultFaceTexM" recordType="FTSM" refName="TextureSet" />
+
+
+          </List>
+
+
+          <FormLink name="DefaultFaceTexSetM" recordType="DFTM" refName="TextureSet" />
+      <String name="WMAP" recordType="WMAP" />
+      <Bool name="NAM02" binary="NoGeneration" />
+      <Bool name="FNAM4" binary="NoGeneration" />
+
+
+          <List name="FemaleHeadParts" binary="NoGeneration">
+        <FormLink refName="HeadPart"  />
+      </List>
+
+
+          <List name="FemaleRacePresets" binary="NoGeneration">
+
+
+          <FormLink name="RagdollPoseMatchF" recordType="RPRF" refName="Fallout76MajorRecord" />
+
+
+          </List>
+
+
+          <List name="FemaleHairColors" binary="NoGeneration">
+
+
+          <FormLink name="DefaultHairColorF" recordType="AHCF" refName="ColorRecord" />
+
+
+          </List>
+
+
+          <List name="FemaleFaceDetails" binary="NoGeneration">
+
+
+          <FormLink name="DefaultFaceTexF" recordType="FTSF" refName="TextureSet" />
+
+
+          </List>
+
+
+          <FormLink name="DefaultFaceTexSetF" recordType="DFTF" refName="TextureSet" />
+      <String name="WMAP2" binary="NoGeneration" />
+      <FormLink name="OpenLootSound" recordType="NAM8" refName="SoundDescriptor" />
+      <FormLink name="SkeletonModel" recordType="RNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Curve1" recordType="CVT1" refName="Fallout76MajorRecord" />
+      <FormLink name="SubRace" recordType="SRAC" refName="Fallout76MajorRecord" />
+      <FormLink name="SkeletonAdd" recordType="SADD" refName="Fallout76MajorRecord" />
+      <Float name="PTOP" recordType="PTOP" />
+      <Float name="NTOP" recordType="NTOP" />
+      <UInt32 name="MLSI" recordType="MLSI" />
+      <String name="HNAM" recordType="HNAM" />
+      <String name="HLTX" recordType="HLTX" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <String name="SNAM" recordType="SNAM" translated="Normal" />
+      <UInt8 name="TSLT" recordType="TSLT" />
+      <UInt32 name="BOD2" recordType="BOD2" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <Float name="MSID" recordType="MSID" />
+      <String name="MSM0" recordType="MSM0" />
+      <String name="MSM1" recordType="MSM1" />
+      <FormLink name="MTYP" recordType="MTYP" refName="Fallout76MajorRecord" />
+      <String name="NNAM" recordType="NNAM" />
+      <FormLink name="SAKD" recordType="SAKD" refName="Fallout76MajorRecord" />
+      <String name="SAPT" recordType="SAPT" />
+      <String name="SGNM" recordType="SGNM" />
+      <FormLink name="SRAF" recordType="SRAF" refName="Fallout76MajorRecord" />
+      <Float name="STKD" recordType="STKD" />
+      <ByteArray name="ATKD" recordType="ATKD" />
+      <String name="ATKE" recordType="ATKE" />
+      <FormLink name="ATKS" recordType="ATKS" refName="Fallout76MajorRecord" />
+      <String name="ATKT" recordType="ATKT" />
+      <FormLink name="ATKW" recordType="ATKW" refName="Fallout76MajorRecord" />
+      <FormLink name="BMMP" recordType="BMMP" refName="Fallout76MajorRecord" />
+      <String name="BSMB" recordType="BSMB" />
+      <FormLink name="BSMP" recordType="BSMP" refName="Fallout76MajorRecord" />
+      <ByteArray name="BSMS" recordType="BSMS" />
+      <String name="CIS1" recordType="CIS1" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+  <Float name="FMRI" recordType="FMRI" />
+      <UInt32 name="FMRN" recordType="FMRN" />
+      <FormLink name="HEAD" recordType="HEAD" refName="Fallout76MajorRecord" />
+      <FormLink name="INDX" recordType="INDX" refName="Fallout76MajorRecord" />
+      <String name="MPGN" recordType="MPGN" />
+      <ByteArray name="MPGS" recordType="MPGS" />
+      <FormLink name="MPPC" recordType="MPPC" refName="Fallout76MajorRecord" />
+      <Bool name="MPPF" recordType="MPPF" />
+  <Float name="MPPI" recordType="MPPI" />
+      <UInt16 name="MPPK" recordType="MPPK" />
+      <String name="MPPM" recordType="MPPM" />
+  <Float name="MPPN" recordType="MPPN" />
+      <FormLink name="MPPT" recordType="MPPT" refName="Fallout76MajorRecord" />
+      <ByteArray name="PHWT" recordType="PHWT" />
+      <FormLink name="QNAM" recordType="QNAM" refName="Fallout76MajorRecord" />
+  <Float name="TETI" recordType="TETI" />
+      <FormLink name="TTEB" recordType="TTEB" refName="Fallout76MajorRecord" />
+      <ByteArray name="TTEC" recordType="TTEC" />
+  <Float name="TTED" recordType="TTED" />
+      <UInt16 name="TTEF" recordType="TTEF" />
+      <ByteArray name="TTET" recordType="TTET" />
+      <FormLink name="TTGE" recordType="TTGE" refName="Fallout76MajorRecord" />
+  <Float name="TTGP" recordType="TTGP" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="SPED" recordType="SPED" />
+      <!-- Stubs for binary=NoGeneration list items -->
+      <String name="MTNM2" recordType="MTNM" />
+      <String name="NAME2" recordType="NAME" />
+      <String name="PHTN2" recordType="PHTN" />
+      <FormLink name="RPRM2" recordType="RPRM" refName="Fallout76MajorRecord" />
+      <FormLink name="AHCM2" recordType="AHCM" refName="ColorRecord" />
+      <FormLink name="FTSM2" recordType="FTSM" refName="TextureSet" />
+      <FormLink name="RPRF2" recordType="RPRF" refName="Fallout76MajorRecord" />
+      <FormLink name="AHCF2" recordType="AHCF" refName="ColorRecord" />
+      <FormLink name="FTSF2" recordType="FTSF" refName="TextureSet" />
+</Fields>
+  </Object>
+  <Object name="RaceVoices" objType="Subrecord" recordType="VTCK">
+    <Fields>
+      <FormLink name="Male" refName="VoiceType" />
+      <FormLink name="Female" refName="VoiceType" />
+    </Fields>
+  </Object>
+  <Object name="RaceDefaultHairColors" objType="Subrecord" recordType="HCLF">
+    <Fields>
+      <FormLink name="Male" refName="ColorRecord" />
+      <FormLink name="Female" refName="ColorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

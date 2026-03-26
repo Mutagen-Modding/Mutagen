@@ -25,6 +25,7 @@ public sealed class CreationClubEnabledProvider : ICreationClubEnabledProvider
             {
                 case GameCategory.Oblivion:
                 case GameCategory.Starfield:
+                case GameCategory.Fallout76:
                     return false;
                 case GameCategory.Skyrim:
                 case GameCategory.Fallout4:

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ADamageType" recordType="DMGT" objType="Record" abstract="true" baseClass="Fallout76MajorRecord">
+    <Fields>
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <CustomLogic name="CustomLogic" />
+    </Fields>
+  </Object>
+  <Object name="DamageType" baseClass="ADamageType" recordType="DMGT" objType="Record">
+    <Fields>
+      <RefList name="DamageTypes" refName="DamageTypeItem" />
+      <FormLink name="DAMA" recordType="DAMA" refName="Fallout76MajorRecord" />
+      <Float name="DSEB" recordType="DSEB" />
+      <Float name="DSES" recordType="DSES" />
+      <FormLink name="DSEA" recordType="DSEA" refName="Fallout76MajorRecord" />
+      <ByteArray name="DSED" recordType="DSED" />
+      <ByteArray name="DSEI" recordType="DSEI" />
+    </Fields>
+  </Object>
+  <Object name="DamageTypeIndexed" baseClass="ADamageType" recordType="DMGT" objType="Record">
+    <Fields>
+      <List name="DamageTypes" recordType="DNAM">
+        <UInt32 />
+      </List>
+      <FormLink name="DAMA" recordType="DAMA" refName="Fallout76MajorRecord" />
+      <Float name="DSEB" recordType="DSEB" />
+      <Float name="DSES" recordType="DSES" />
+      <FormLink name="DSEA" recordType="DSEA" refName="Fallout76MajorRecord" />
+      <ByteArray name="DSED" recordType="DSED" />
+      <ByteArray name="DSEI" recordType="DSEI" />
+    </Fields>
+  </Object>
+  <Object name="DamageTypeItem" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <FormLink name="ActorValue" refName="ActorValueInformation" />
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
+</Loqui>

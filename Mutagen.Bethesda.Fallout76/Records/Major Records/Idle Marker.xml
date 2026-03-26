@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleMarker" recordType="IDLM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+        <UInt8 name="IDLF" recordType="IDLF" />
+      <ByteArray name="IsFO3" binary="NoGeneration" />
+
+        <Float name="IDLT" recordType="IDLT" />
+      <ByteArray name="IDLA" recordType="IDLA" />
+      <ByteArray name="IsSF1" binary="NoGeneration" />
+      <FormLink name="CloseSound" recordType="QNAM" refName="SoundDescriptor" />
+      <RefDirect name="Model" refName="Model" />
+      <UInt8 name="IDLC" recordType="IDLC" />
+</Fields>
+  </Object>
+</Loqui>

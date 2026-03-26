@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="SoundDescriptor" recordType="SDSC" refName="SoundDescriptor" />
+      <UInt8 name="BEVA" recordType="BEVA" />
+      <Float name="FEVA" recordType="FEVA" />
+      <ByteArray name="REPT" recordType="REPT" />
+</Fields>
+  </Object>
+</Loqui>

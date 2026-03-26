@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Water" recordType="WATR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <UInt8 name="ANAM" recordType="ANAM" />
+      <UInt8 name="FNAM" recordType="FNAM" />
+      <FormLink name="Material" recordType="TNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="OpenSound" recordType="SNAM" refName="SoundDescriptor" />
+      <FormLink name="ConsumeSpell" recordType="XNAM" refName="Spell" />
+      <FormLink name="ContactSpell" recordType="YNAM" refName="Spell" />
+      <FormLink name="ImageSpace" recordType="INAM" refName="ImageSpace" />
+      <Bool name="DATA" recordType="DATA" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <Float name="FogDepthAmount" />
+          <UInt8 name="ShallowColorR" />
+          <UInt8 name="ShallowColorG" />
+          <UInt8 name="ShallowColorB" />
+          <UInt8 name="ShallowColorA" />
+          <UInt8 name="DeepColorR" />
+          <UInt8 name="DeepColorG" />
+          <UInt8 name="DeepColorB" />
+          <UInt8 name="DeepColorA" />
+          <Float name="ColorShallowRange" />
+          <Float name="ColorDeepRange" />
+          <Float name="ShallowAlpha" />
+          <Float name="DeepAlpha" />
+          <Float name="AlphaShallowRange" />
+          <Float name="AlphaDeepRange" />
+          <UInt8 name="UnderwaterColorR" />
+          <UInt8 name="UnderwaterColorG" />
+          <UInt8 name="UnderwaterColorB" />
+          <UInt8 name="UnderwaterColorA" />
+          <Float name="UnderwaterFogAmount" />
+          <Float name="UnderwaterNearFog" />
+          <Float name="UnderwaterFarFog" />
+          <Float name="NormalMagnitude" />
+          <Float name="ShallowNormalFalloff" />
+          <Float name="DeepNormalFalloff" />
+          <Float name="ReflectivityAmount" />
+          <Float name="FresnelAmount" />
+          <Float name="SurfaceEffectFalloff" />
+          <Float name="DisplacementForce" />
+          <Float name="DisplacementVelocity" />
+          <Float name="DisplacementFalloff" />
+          <Float name="DisplacementDampener" />
+          <Float name="DisplacementStartingSize" />
+          <UInt8 name="ReflectionColorR" />
+          <UInt8 name="ReflectionColorG" />
+          <UInt8 name="ReflectionColorB" />
+          <UInt8 name="ReflectionColorA" />
+          <Float name="SunSpecularPower" />
+          <Float name="SunSpecularMagnitude" />
+          <Float name="SunSparklePower" />
+          <Float name="SunSparkleMagnitude" />
+          <Float name="InteriorSpecularRadius" />
+          <Float name="InteriorSpecularBrightness" />
+          <Float name="InteriorSpecularPower" />
+          <Float name="Unknown1" />
+          <Float name="Unknown2" />
+          <Float name="Unknown3" />
+          <Float name="Unknown4" />
+          <Float name="Unknown5" />
+        </Fields>
+      </Data>
+      <ByteArray name="AWSD" recordType="AWSD" />
+      <RefDirect name="GNAM" refName="WaterGNAMData" />
+        <Float name="X" binary="NoGeneration" />
+
+        <Float name="Y" binary="NoGeneration" />
+
+        <Float name="Z" binary="NoGeneration" />
+      <RefDirect name="NAM0" refName="WaterNAM0Data" />
+        <Float name="X2" binary="NoGeneration" />
+
+        <Float name="Y2" binary="NoGeneration" />
+
+        <Float name="Z2" binary="NoGeneration" />
+      <RefDirect name="NAM1" refName="WaterNAM1Data" />
+      <String name="NAM2" recordType="NAM2" />
+      <String name="NAM3" recordType="NAM3" />
+      <String name="NAM4" recordType="NAM4" />
+      <String name="NAM5" recordType="NAM5" />
+      <Bool name="NAM6" recordType="NAM6" />
+      <ByteArray name="NAM7" recordType="NAM7" />
+    </Fields>
+  </Object>
+  <Object name="WaterNoiseProperties" objType="Subrecord">
+    <Fields>
+      <Float name="WindDirection" binary="NoGeneration" />
+      <Float name="WindSpeed" binary="NoGeneration" />
+      <Float name="AmplitudeScale" binary="NoGeneration" />
+      <Float name="UvScale" binary="NoGeneration" />
+      <Float name="NoiseFalloff" binary="NoGeneration" />
+      <String name="Texture" nullable="True" binary="NoGeneration" />
+      <ByteArray name="DNAM" recordType="DNAM" />
+</Fields>
+  </Object>
+  <Object name="WaterGNAMData" objType="Subrecord" recordType="GNAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="WaterNAM0Data" objType="Subrecord" recordType="NAM0">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="WaterNAM1Data" objType="Subrecord" recordType="NAM1">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

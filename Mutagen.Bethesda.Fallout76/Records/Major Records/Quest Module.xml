@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="QuestModule" recordType="QMDL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt32 name="QMDI" recordType="QMDI" />
+      <FormLink name="Quest" recordType="QMDQ" refName="Quest" />
+      <FormLink name="ParentModule" recordType="QMDP" refName="Fallout76MajorRecord" />
+      <UInt32 name="QMDT" recordType="QMDT" />
+      <String name="QMDN" recordType="QMDN" />
+      <UInt32 name="QMPO" recordType="QMPO" />
+      <UInt32 name="QMOD" recordType="QMOD" />
+      <UInt32 name="QMAD" recordType="QMAD" />
+      <UInt32 name="QMSD" recordType="QMSD" />
+      <FormLink name="QMAI" recordType="QMAI" refName="Fallout76MajorRecord" />
+      <FormLink name="QMAO" recordType="QMAO" refName="Fallout76MajorRecord" />
+      <UInt16 name="QMOI" recordType="QMOI" />
+      <UInt32 name="QMOT" recordType="QMOT" />
+      <UInt16 name="QMSI" recordType="QMSI" />
+      <UInt16 name="QMSO" recordType="QMSO" />
+      <FormLink name="QMTR" recordType="QMTR" refName="Fallout76MajorRecord" />
+      <FormLink name="QMTT" recordType="QMTT" refName="Fallout76MajorRecord" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+</Fields>
+  </Object>
+</Loqui>

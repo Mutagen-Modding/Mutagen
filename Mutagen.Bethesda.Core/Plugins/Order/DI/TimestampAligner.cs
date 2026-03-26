@@ -73,6 +73,7 @@ public sealed class TimestampAligner : ITimestampAligner
             case GameCategory.Skyrim:
                 return false;
             case GameCategory.Fallout4:
+            case GameCategory.Fallout76:
                 return false;
             default:
                 throw new NotImplementedException();

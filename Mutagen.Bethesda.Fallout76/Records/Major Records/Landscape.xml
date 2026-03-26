@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Landscape" recordType="LAND" objType="Record" baseClass="Fallout76MajorRecord">
+    <Fields>
+      <Int32 name="DATA" recordType="DATA" />
+      <Array2d name="VertexNormals" recordType="VNML" fixedWidth="33" fixedHeight="33">
+        <P3UInt8 />
+      </Array2d>
+      <RefDirect name="VertexHeightMap" refName="LandscapeVertexHeightMap" />
+      <Array2d name="VertexColors" recordType="VCLR" fixedWidth="33" fixedHeight="33">
+        <P3UInt8 />
+      </Array2d>
+      <RefList name="Layers" refName="BaseLayer" />
+      <List name="Textures" recordType="VTEX">
+        <FormLink refName="LandscapeTexture"  />
+      </List>
+      <RefList name="MPCDs" refName="LandscapeMPCD" />
+    </Fields>
+    <LinkInterface>IPreCutMapEntryReference</LinkInterface>
+  </Object>
+  <Object name="BaseLayer" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Header" refName="LayerHeader" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer">
+    <Fields>
+      <ByteArray name="AlphaLayerData" recordType="VTXT" />
+    </Fields>
+    <BaseRecordTypeOverrides>
+      <Mapping From="BTXT" To="ATXT" />
+    </BaseRecordTypeOverrides>
+  </Object>
+  <Object name="LayerHeader" recordType="BTXT" objType="Subrecord">
+    <Fields>
+      <FormLink name="Texture" refName="LandscapeTexture" />
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />
+      <UInt8 name="Unused" />
+      <UInt16 name="LayerNumber" />
+    </Fields>
+  </Object>
+  <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord">
+    <Fields>
+      <Float name="Offset" />
+      <Array2d name="HeightMap" fixedWidth="33" fixedHeight="33">
+        <UInt8 />
+      </Array2d>
+      <P3UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="LandscapeMPCD" recordType="MPCD" objType="Subrecord">
+    <Fields>
+      <ByteArray name="MPCD" recordType="MPCD" />
+    </Fields>
+  </Object>
+</Loqui>

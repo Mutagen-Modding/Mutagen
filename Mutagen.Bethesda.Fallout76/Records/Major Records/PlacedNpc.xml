@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedNpc" recordType="ACHR" baseClass="Fallout76MajorRecord" objType="Record" majorFlag="true">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <FormLink name="Base" refName="Npc" recordType="NAME" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
+      <RefDirect name="Patrol" refName="Patrol" />
+      <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Percent name="Health" recordType="XHLT" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <Bool name="IsActivationPoint" boolAsMarker="XATP" />
+      <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
+      <FormLink name="ReferenceGroup" recordType="XRFG" refName="ReferenceGroup" />
+      <FormLink name="Layer" recordType="XLYR" refName="Layer" />
+      <FormLink name="MaterialSwap" recordType="XMSP" refName="MaterialSwap" />
+      <FormLink name="PersistentLocation" recordType="XLCN" refName="Location" />
+      <FormLink name="LocationReference" refName="Location" recordType="XLRL" />
+      <List name="LocationRefTypes" recordType="XLRT">
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
+      <RefList name="SplineConnections" refName="SplineConnection" />
+      <Float name="HeadTrackingWeight" recordType="XHTW" />
+      <Float name="FavorCost" recordType="XFVC" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <FormLink name="MultiBoundReference" recordType="XMBR">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <Bool name="IsIgnoredBySandbox2" boolAsMarker="XIBS" />
+      <Float name="Scale" recordType="XSCL" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+      <String name="Comments" recordType="MNAM" />
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedSimple</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
+  </Object>
+</Loqui>

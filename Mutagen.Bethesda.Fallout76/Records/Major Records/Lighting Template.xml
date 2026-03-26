@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LightingTemplate" recordType="LGTM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="DALC" recordType="DALC" />
+      <ByteArray name="DALC2" recordType="DALC" />
+      <FormLink name="GodRays" recordType="WGDR" refName="GodRays" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="AmbientColor" />
+          <UInt32 name="DirectionalColor" />
+          <UInt32 name="FogColorNear" />
+          <Float name="FogNear" />
+          <Float name="FogFar" />
+          <Int32 name="DirectionalRotationXY" />
+          <Int32 name="DirectionalRotationZ" />
+          <Float name="DirectionalFade" />
+          <Float name="FogClipDistance" />
+          <Float name="FogPower" />
+          <!-- AmbientColors (Unused in LGTM): 6x RGBA directional colors + 2x unused uint32 = 32 bytes -->
+          <ByteArray name="AmbientColorsUnused" byteLength="32" nullable="False" />
+          <UInt32 name="FogColorFar" />
+          <Float name="FogMax" />
+          <Float name="LightFadeBegin" />
+          <Float name="LightFadeEnd" />
+          <ByteArray name="Unused" byteLength="4" nullable="False" />
+          <Float name="NearHeightMid" />
+          <Float name="NearHeightRange" />
+          <UInt32 name="FogColorHighNear" />
+          <UInt32 name="FogColorHighFar" />
+          <Float name="HighDensityScale" />
+          <Float name="FogNearScale" />
+          <Float name="FogFarScale" />
+          <Float name="FogHighNearScale" />
+          <Float name="FogHighFarScale" />
+          <Float name="FarHeightMid" />
+          <Float name="FarHeightRange" />
+          <Float name="SkyboxCenterX" />
+          <Float name="SkyboxCenterY" />
+          <Float name="SkyboxCenterZ" />
+          <Float name="SkyboxRadiusX" />
+          <Float name="SkyboxRadiusY" />
+          <Float name="SkyboxRadiusZ" />
+        </Fields>
+      </Data>
+</Fields>
+  </Object>
+</Loqui>

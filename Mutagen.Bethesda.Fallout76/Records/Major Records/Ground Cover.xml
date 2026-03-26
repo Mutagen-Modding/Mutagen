@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GroundCover" recordType="GCVR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="LandscapeTextures" binary="NoGeneration">
+        <FormLink name="LandscapeTexture" recordType="LNAM" refName="LandscapeTexture" />
+      </List>
+      <ByteArray name="LNAM2" recordType="LNAM" />
+      <Float name="YNAM" recordType="YNAM" />
+      <Float name="ZNAM" recordType="ZNAM" />
+      <UInt16 name="DNAM" recordType="DNAM" />
+      <Float name="GNAM" recordType="GNAM" />
+</Fields>
+  </Object>
+</Loqui>

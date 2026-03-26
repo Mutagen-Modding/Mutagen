@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Fish" recordType="FISH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <Float name="FISP" recordType="FISP" />
+      <Float name="FIDS" recordType="FIDS" />
+      <Float name="FIES" recordType="FIES" />
+      <UInt32 name="FIHS" recordType="FIHS" />
+      <UInt32 name="FILS" recordType="FILS" />
+      <Float name="FIHD" recordType="FIHD" />
+      <Float name="FILD" recordType="FILD" />
+      <Float name="FIJS" recordType="FIJS" />
+      <Float name="FIHJ" recordType="FIHJ" />
+      <Float name="FILJ" recordType="FILJ" />
+      <Float name="FILA" recordType="FILA" />
+      <Float name="FIHA" recordType="FIHA" />
+      <FormLink name="FishItem" recordType="FIRI" refName="Fallout76MajorRecord" />
+      <FormLink name="FishExplode" recordType="FIEX" refName="Explosion" />
+      <FormLink name="FishSound" recordType="FISD" refName="SoundDescriptor" />
+      <FormLink name="FishSurface" recordType="FISU" refName="Fallout76MajorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

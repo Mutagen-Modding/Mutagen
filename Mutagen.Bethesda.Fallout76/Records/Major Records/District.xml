@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="District" recordType="DIST" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <FormLink name="DistrictPart" recordType="DPRT" refName="Fallout76MajorRecord" />
+      <FormLink name="Quest" recordType="DQST" refName="Quest" />
+      <FormLink name="Cell" recordType="DCLL" refName="Cell" />
+      <String name="DIMG" recordType="DIMG" />
+      <FormLink name="DICO" recordType="DICO" refName="Fallout76MajorRecord" />
+          <P2Float name="DPOS" recordType="DPOS" />
+</Fields>
+  </Object>
+</Loqui>

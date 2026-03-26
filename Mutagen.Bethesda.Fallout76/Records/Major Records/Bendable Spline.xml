@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BendableSpline" recordType="BNDS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="Texture" recordType="TNAM" refName="TextureSet" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <Float name="DefaultNumberOfTiles" />
+          <UInt16 name="DefaultNumberOfSlices" />
+          <UInt16 name="DefaultNumberOfTilesRelativeToLength" />
+          <Float name="DefaultColorR" />
+          <Float name="DefaultColorG" />
+          <Float name="DefaultColorB" />
+          <Float name="DefaultColorA" />
+          <Float name="WindSettingsSensibility" />
+          <Float name="WindSettingsFlexibility" />
+        </Fields>
+      </Data>
+</Fields>
+  </Object>
+</Loqui>

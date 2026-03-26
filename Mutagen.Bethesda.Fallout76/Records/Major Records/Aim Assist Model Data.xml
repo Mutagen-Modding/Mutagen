@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimAssistModelData" recordType="AAMD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <Float name="ANAM" recordType="ANAM" />
+      <Float name="BNAM" recordType="BNAM" />
+      <Float name="CNAM" recordType="CNAM" />
+      <Float name="DNAM" recordType="DNAM" />
+      <Float name="ENAM" recordType="ENAM" />
+      <Float name="FNAM" recordType="FNAM" />
+      <Float name="GNAM" recordType="GNAM" />
+      <Float name="HNAM" recordType="HNAM" />
+      <Float name="INAM" recordType="INAM" />
+      <Float name="JNAM" recordType="JNAM" />
+      <Float name="KNAM" recordType="KNAM" />
+      <Float name="LNAM" recordType="LNAM" />
+      <Float name="MNAM" recordType="MNAM" />
+      <Float name="NNAM" recordType="NNAM" />
+      <Float name="ONAM" recordType="ONAM" />
+      <Float name="PNAM" recordType="PNAM" />
+      <Float name="QNAM" recordType="QNAM" />
+      <Float name="RNAM" recordType="RNAM" />
+      <Float name="SNAM" recordType="SNAM" />
+      <Float name="TNAM" recordType="TNAM" />
+      <Float name="UNAM" recordType="UNAM" />
+      <Float name="VNAM" recordType="VNAM" />
+    </Fields>
+  </Object>
+</Loqui>

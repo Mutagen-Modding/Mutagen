@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="ICON" recordType="ICON" />
+      <String name="ICO2" recordType="ICO2" />
+      <String name="NAM7" recordType="NAM7" />
+      <String name="NAM8" recordType="NAM8" />
+      <String name="NAM9" recordType="NAM9" />
+      <Bool name="DATA" recordType="DATA" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <UInt32 name="MembraneShaderSourceBlendMode" />
+          <UInt32 name="MembraneShaderBlendOperation" />
+          <UInt32 name="MembraneShaderZTestFunction" />
+          <UInt8 name="FillColorKey1R" />
+          <UInt8 name="FillColorKey1G" />
+          <UInt8 name="FillColorKey1B" />
+          <UInt8 name="FillColorKey1A" />
+          <Float name="FillAlphaFadeInTime" />
+          <Float name="FillFullAlphaTime" />
+          <Float name="FillAlphaFadeOutTime" />
+          <Float name="FillPersistentAlphaRatio" />
+          <Float name="FillAlphaPulseAmplitude" />
+          <Float name="FillAlphaPulseFrequency" />
+          <Float name="FillTextureAnimationSpeedU" />
+          <Float name="FillTextureAnimationSpeedV" />
+          <Float name="EdgeEffectFallOff" />
+          <UInt8 name="EdgeEffectColorR" />
+          <UInt8 name="EdgeEffectColorG" />
+          <UInt8 name="EdgeEffectColorB" />
+          <UInt8 name="EdgeEffectColorA" />
+          <Float name="EdgeEffectAlphaFadeInTime" />
+          <Float name="EdgeEffectFullAlphaTime" />
+          <Float name="EdgeEffectAlphaFadeOutTime" />
+          <Float name="EdgeEffectPersistentAlphaRatio" />
+          <Float name="EdgeEffectAlphaPulseAmplitude" />
+          <Float name="EdgeEffectAlphaPulseFrequency" />
+          <Float name="FillFullAlphaRatio" />
+          <Float name="EdgeEffectFullAlphaRatio" />
+          <UInt32 name="MembraneShaderDestBlendMode" />
+          <Float name="HolesAnimationStartTime" />
+          <Float name="HolesAnimationEndTime" />
+          <Float name="HolesAnimationStartValue" />
+          <Float name="HolesAnimationEndValue" />
+          <FormLink name="AmbientSound" refName="SoundDescriptor" />
+          <UInt8 name="FillColorKey2R" />
+          <UInt8 name="FillColorKey2G" />
+          <UInt8 name="FillColorKey2B" />
+          <UInt8 name="FillColorKey2A" />
+          <UInt8 name="FillColorKey3R" />
+          <UInt8 name="FillColorKey3G" />
+          <UInt8 name="FillColorKey3B" />
+          <UInt8 name="FillColorKey3A" />
+          <UInt8 name="BoneDepth" />
+          <Float name="ColorKey1Scale" />
+          <Float name="ColorKey2Scale" />
+          <Float name="ColorKey3Scale" />
+          <Float name="ColorKey1Time" />
+          <Float name="ColorKey2Time" />
+          <Float name="ColorKey3Time" />
+          <UInt32 name="Flags" />
+          <Float name="FillTextureScaleU" />
+          <Float name="FillTextureScaleV" />
+        </Fields>
+      </Data>
+</Fields>
+  </Object>
+</Loqui>

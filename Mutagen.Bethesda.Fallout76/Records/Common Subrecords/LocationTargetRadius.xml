@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LocationTargetRadius" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Target" refName="ALocationTarget" byteLength="8" generateClassMembers="false" binary="Custom" />
+      <UInt32 name="Radius" />
+      <Break />
+      <UInt32 name="CollectionIndex" />
+    </Fields>
+  </Object>
+  <Object name="ALocationTarget" abstract="true" objType="Subrecord" />
+  <Object name="LocationTarget" baseClass="ALocationTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Link">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="LocationCell" baseClass="ALocationTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Link" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="LocationObjectId" baseClass="ALocationTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Link">
+        <Interface>IObjectId</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="LocationObjectType" baseClass="ALocationTarget" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="TargetObjectType" />
+    </Fields>
+  </Object>
+  <Object name="LocationKeyword" baseClass="ALocationTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Link" refName="Keyword" />
+    </Fields>
+  </Object>
+  <Object name="LocationFallback" baseClass="ALocationTarget" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="LocationTargetRadius.LocationType" byteLength="4" />
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+</Loqui>

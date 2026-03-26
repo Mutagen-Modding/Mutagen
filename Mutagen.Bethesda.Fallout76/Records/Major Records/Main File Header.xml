@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MainFileHeader" recordType="TES4" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <ByteArray name="MMSB" recordType="MMSB" />
+      <String name="CNAM" recordType="CNAM" />
+      <String name="SNAM" recordType="SNAM" />
+      <List name="MasterFiles">
+          <ByteArray name="DATA" recordType="DATA" />
+      </List>
+        <ByteArray name="ONAM" recordType="ONAM" />
+      <UInt32 name="INTV" recordType="INTV" />
+      <UInt32 name="INCC" recordType="INCC" />
+      <ByteArray name="DELE" recordType="DELE" />
+      <ByteArray name="OFST" recordType="OFST" />
+      <ByteArray name="SCRN" recordType="SCRN" />
+      <ByteArray name="TNAM" recordType="TNAM" />
+      <ByteArray name="HEDR" recordType="HEDR" />
+</Fields>
+  </Object>
+</Loqui>

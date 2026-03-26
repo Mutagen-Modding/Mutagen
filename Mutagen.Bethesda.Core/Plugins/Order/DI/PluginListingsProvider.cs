@@ -42,6 +42,7 @@ public sealed class PluginListingsProvider : IPluginListingsProvider
             case GameRelease.Fallout4VR:
             case GameRelease.Starfield:
             case GameRelease.OblivionRE:
+            case GameRelease.Fallout76:
                 return _enabledPluginListingsProvider.Get();
             default:
                 throw new NotImplementedException();

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectVisibilityManager" recordType="OVIS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <List name="StaticObjects">
+          <FormLink name="Object" recordType="INDX" refName="Fallout76MajorRecord" />
+      </List>
+          <ByteArray name="DATA" recordType="DATA" />
+</Fields>
+  </Object>
+</Loqui>

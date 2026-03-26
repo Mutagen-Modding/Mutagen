@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovableStatic" recordType="MSTT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <FormLink name="AnimationSound" recordType="STCP" refName="AnimationSoundTagSet" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+        <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="APPR" recordType="APPR" />
+      <Bool name="OnLocalMap" recordType="DATA" />
+      <FormLink name="Sound" recordType="SNAM" refName="SoundDescriptor" />
+      <RefDirect name="ANLD" refName="MovableStaticAnimation" />
+      <RefList name="DestructibleObjectFactions" refName="DestructibleObjectFaction" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <Bool name="DSCF" recordType="DSCF" boolAsMarker="True" />
+  <Float name="HGLB" recordType="HGLB" />
+</Fields>
+  </Object>
+  <Object name="MovableStaticAnimation" objType="Subrecord" recordType="ANLD">
+    <Fields>
+      <UInt32 name="Unknown1" />
+      <UInt32 name="Unknown2" />
+          <ByteArray name="DOFA" recordType="DOFA" />
+      <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

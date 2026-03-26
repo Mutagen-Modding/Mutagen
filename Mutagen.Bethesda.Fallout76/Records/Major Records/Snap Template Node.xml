@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SnapTemplateNode" recordType="STND" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <UInt32 name="CNAM" recordType="CNAM"/>
+      <UInt32 name="FNAM" recordType="FNAM" />
+      <UInt32 name="SNST" recordType="SNST" />
+      <List name="AdjacentSnapNodes">
+        <FormLink name="ParentNode" recordType="NNAM" refName="Fallout76MajorRecord" />
+      </List>
+      <ByteArray name="NNAM2" recordType="NNAM" />
+      <List name="SnapAngles">
+        <Float name="FLTV" recordType="FLTV" />
+      </List>
+      <Float name="FLTV2" recordType="FLTV" />
+          <Float name="LNAM" recordType="LNAM" />
+      <FormLink name="PHST" recordType="PHST" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+</Loqui>

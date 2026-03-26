@@ -14,6 +14,7 @@ public static class GameCategoryExt
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
             GameCategory.Starfield => true,
+            GameCategory.Fallout76 => true,
         };
     }
 
@@ -25,6 +26,7 @@ public static class GameCategoryExt
             GameCategory.Skyrim => GameRelease.SkyrimSE,
             GameCategory.Fallout4 => GameRelease.Fallout4,
             GameCategory.Starfield => GameRelease.Starfield,
+            GameCategory.Fallout76 => GameRelease.Fallout76,
             _ => throw new NotImplementedException(),
         };
     }
@@ -53,6 +55,9 @@ public static class GameCategoryExt
             case GameCategory.Starfield:
                 yield return GameRelease.Starfield;
                 yield break;
+            case GameCategory.Fallout76:
+                yield return GameRelease.Fallout76;
+                yield break;
             default:
                 throw new NotImplementedException();
         }
@@ -80,6 +85,7 @@ public static class GameCategoryExt
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
             GameCategory.Starfield => false,
+            GameCategory.Fallout76 => true,
         };
     }
 

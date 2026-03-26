@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MiscItemSpawner" recordType="MSCS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <List name="Spawns">
+        <FormLink name="SpawnItem" recordType="SPWN" refName="Fallout76MajorRecord" />
+      </List>
+      <ByteArray name="SPWN2" recordType="SPWN" />
+    </Fields>
+  </Object>
+</Loqui>

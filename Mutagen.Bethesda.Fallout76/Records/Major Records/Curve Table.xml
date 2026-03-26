@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CurveTable" recordType="CURV" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="CRVE" recordType="CRVE" />
+      <String name="JASF" recordType="JASF" />
+    </Fields>
+  </Object>
+</Loqui>

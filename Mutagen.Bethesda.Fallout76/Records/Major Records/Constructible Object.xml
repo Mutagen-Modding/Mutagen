@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <FormLink name="PickUpSound" recordType="YNAM" refName="SoundDescriptor" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <ByteArray name="FVPA" recordType="FVPA" />
+      <ByteArray name="REPR" recordType="REPR" />
+      <UInt8 name="REPM" recordType="REPM" />
+      <UInt8 name="LRNM" recordType="LRNM" />
+      <ByteArray name="ESCR" recordType="ESCR" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <FormLink name="CreatedObject" recordType="CNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Workbench" recordType="BNAM" refName="Keyword" />
+      <ByteArray name="NAM1" recordType="NAM1" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <FormLink name="MenuSortOrder" recordType="ANAM" refName="Fallout76MajorRecord" />
+      <FormLink name="RequiredPerk" recordType="GNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Category" recordType="INAM" refName="Keyword" />
+      <FormLink name="RequiredFilter" recordType="JNAM" refName="Keyword" />
+      <FormLink name="YieldCurve" recordType="CVT0" refName="Fallout76MajorRecord" />
+      <FormLink name="LearnCondition" recordType="LRNC" refName="Fallout76MajorRecord" />
+      <FormLink name="RepairCondition" recordType="RCND" refName="Fallout76MajorRecord" />
+        <Float name="FNAM" recordType="FNAM" />
+      <String name="HNAM" recordType="HNAM" translated="Normal" />
+      <FormLink name="ConditionFilterKeyword" recordType="CIFK" refName="Keyword" />
+      <UInt64 name="RECF" recordType="RECF" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <RefDirect name="Data" refName="ConstructibleObjectData" />
+      <FormLink name="INTV" recordType="INTV" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+  <Object name="ConstructibleObjectData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <Float name="Priority" />
+      <UInt16 name="CreatedObjectCount" />
+      <ByteArray name="Unused" byteLength="2" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

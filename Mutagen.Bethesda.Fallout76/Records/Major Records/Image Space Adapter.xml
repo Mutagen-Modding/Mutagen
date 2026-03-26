@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpaceAdapter" recordType="IMAD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="LNAM" recordType="LNAM" />
+      <FormLink name="TNAM" recordType="TNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <String name="FULL" recordType="FULL" />
+      <ByteArray name="DNAM" recordType="DNAM" />
+      <ByteArray name="BNAM" recordType="BNAM" />
+      <ByteArray name="RNAM" recordType="RNAM" />
+      <ByteArray name="SNAM" recordType="SNAM" />
+      <ByteArray name="UNAM" recordType="UNAM" />
+      <ByteArray name="VNAM" recordType="VNAM" />
+      <ByteArray name="WNAM" recordType="WNAM" />
+      <ByteArray name="XNAM" recordType="XNAM" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="NAM1" recordType="NAM1" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM4" recordType="NAM4" />
+      <ByteArray name="NAM5" recordType="NAM5" />
+      <ByteArray name="NAM6" recordType="NAM6" />
+      <!-- Binary-offset IAD pairs: \x00IAD through \x14IAD (hex byte prefix) -->
+      <ByteArray name="IAD_0x00" recordTypeHex="0x44414900" />
+      <ByteArray name="AtIAD" recordTypeHex="0x44414940" />
+      <ByteArray name="IAD_0x01" recordTypeHex="0x44414901" />
+      <ByteArray name="AIAD" recordType="AIAD" />
+      <ByteArray name="IAD_0x02" recordTypeHex="0x44414902" />
+      <ByteArray name="BIAD" recordType="BIAD" />
+      <ByteArray name="IAD_0x03" recordTypeHex="0x44414903" />
+      <ByteArray name="CIAD" recordType="CIAD" />
+      <ByteArray name="IAD_0x04" recordTypeHex="0x44414904" />
+      <ByteArray name="DIAD" recordType="DIAD" />
+      <ByteArray name="IAD_0x05" recordTypeHex="0x44414905" />
+      <ByteArray name="EIAD" recordType="EIAD" />
+      <ByteArray name="IAD_0x06" recordTypeHex="0x44414906" />
+      <ByteArray name="FIAD" recordType="FIAD" />
+      <ByteArray name="IAD_0x07" recordTypeHex="0x44414907" />
+      <ByteArray name="GIAD" recordType="GIAD" />
+      <ByteArray name="IAD_0x08" recordTypeHex="0x44414908" />
+      <ByteArray name="HIAD" recordType="HIAD" />
+      <ByteArray name="IAD_0x09" recordTypeHex="0x44414909" />
+      <ByteArray name="IIAD" recordType="IIAD" />
+      <ByteArray name="IAD_0x0A" recordTypeHex="0x4441490A" />
+      <ByteArray name="JIAD" recordType="JIAD" />
+      <ByteArray name="IAD_0x0B" recordTypeHex="0x4441490B" />
+      <ByteArray name="KIAD" recordType="KIAD" />
+      <ByteArray name="IAD_0x0C" recordTypeHex="0x4441490C" />
+      <ByteArray name="LIAD" recordType="LIAD" />
+      <ByteArray name="IAD_0x0D" recordTypeHex="0x4441490D" />
+      <ByteArray name="MIAD" recordType="MIAD" />
+      <ByteArray name="IAD_0x0E" recordTypeHex="0x4441490E" />
+      <ByteArray name="NIAD" recordType="NIAD" />
+      <ByteArray name="IAD_0x0F" recordTypeHex="0x4441490F" />
+      <ByteArray name="OIAD" recordType="OIAD" />
+      <ByteArray name="IAD_0x10" recordTypeHex="0x44414910" />
+      <ByteArray name="PIAD" recordType="PIAD" />
+      <ByteArray name="IAD_0x11" recordTypeHex="0x44414911" />
+      <ByteArray name="QIAD" recordType="QIAD" />
+      <ByteArray name="IAD_0x12" recordTypeHex="0x44414912" />
+      <ByteArray name="RIAD" recordType="RIAD" />
+      <ByteArray name="IAD_0x13" recordTypeHex="0x44414913" />
+      <ByteArray name="SIAD" recordType="SIAD" />
+      <ByteArray name="IAD_0x14" recordTypeHex="0x44414914" />
+      <ByteArray name="TIAD" recordType="TIAD" />
+    </Fields>
+  </Object>
+</Loqui>

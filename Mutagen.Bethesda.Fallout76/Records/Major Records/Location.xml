@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Location" recordType="LCTN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DURL" recordType="DURL" />
+      <RefList name="PersistentActorReferencesAdded" refName="PersistentActorReference" recordType="ACPR" />
+      <RefList name="PersistentActorReferencesStatic" refName="PersistentActorReference" recordType="LCPR" />
+      <List name="PersistentActorReferencesRemoved" recordType="RCPR">
+        <FormLink>
+          <Interface>IPlacedSimple</Interface>
+        </FormLink>
+      </List>
+      <RefList name="UniqueActorReferencesAdded" refName="UniqueActorReference" recordType="ACUN" />
+      <RefList name="UniqueActorReferencesStatic" refName="UniqueActorReference" recordType="LCUN" />
+      <List name="UniqueActorReferencesRemoved" recordType="RCUN">
+        <FormLink refName="Npc" />
+      </List>
+      <RefList name="LocationRefTypeReferencesAdded" refName="LocationRefTypeReference" recordType="ACSR" />
+      <RefList name="LocationRefTypeReferencesStatic" refName="LocationRefTypeReference" recordType="LCSR" overflowRecordType="XXXX" />
+      <List name="LocationRefTypeReferencesRemoved" recordType="RCSR">
+        <FormLink>
+          <Interface>IPlacedSimple</Interface>
+        </FormLink>
+      </List>
+      <List name="InitiallyDisabledReferencesAdded" recordType="ACID">
+        <FormLink>
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <List name="InitiallyDisabledReferencesStatic" recordType="LCID">
+        <FormLink>
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <RefList name="EnableParentReferencesAdded" refName="EnableParentReference" recordType="ACEP" />
+      <RefList name="EnableParentReferencesStatic" refName="EnableParentReference" recordType="LCEP" />
+      <ByteArray name="LCEC" recordType="LCEC" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+        <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
+      <FormLink name="OwnerFaction" recordType="NAM1" refName="Faction" />
+      <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
+      <FormLink name="Music" recordType="MNAM" refName="MusicType" />
+      <Float name="RNAM" recordType="RNAM" />
+      <Float name="ANAM" recordType="ANAM" />
+      <FormLink name="NAM5" recordType="NAM5" refName="Fallout76MajorRecord" />
+      <FormLink name="NAM6" recordType="NAM6" refName="Fallout76MajorRecord" />
+      <UInt32 name="CNAM" recordType="CNAM"/>
+      <RefDirect name="LocationData" refName="LocationData" />
+      <FormLink name="NAM0" recordType="NAM0" refName="Fallout76MajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="PersistentActorReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="Actor" refName="PlacedObject" />
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="UniqueActorReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="Actor" refName="Npc" />
+      <FormLink name="Ref" refName="PlacedObject" />
+      <FormLink name="Location" refName="Location" />
+    </Fields>
+  </Object>
+  <Object name="LocationRefTypeReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="LocationRefType" refName="LocationReferenceType" />
+      <FormLink name="Ref">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="EnableParentReference" objType="Subrecord">
+    <Fields>
+      <FormLink name="Actor">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <FormLink name="EnableParent">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <UInt8 name="Flags" />
+      <UInt8 name="Padding1" />
+      <UInt8 name="Padding2" />
+      <UInt8 name="Padding3" />
+    </Fields>
+  </Object>
+  <Object name="LocationData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt32 name="Unknown" />
+      <UInt8 name="UnknownByte" />
+      <UInt8 name="MinLocationLevel" />
+      <UInt8 name="LocationType" />
+      <UInt8 name="Padding" />
+    </Fields>
+  </Object>
+</Loqui>

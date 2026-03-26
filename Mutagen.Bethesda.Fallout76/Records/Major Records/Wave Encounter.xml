@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WaveEncounter" recordType="WAVE" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+        <ByteArray name="WAVD" recordType="WAVD" />
+      <RefDirect name="Data" refName="WaveEncounterData" />
+    </Fields>
+  </Object>
+  <Object name="WaveEncounterData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <UInt32 name="Unknown1" />
+      <UInt32 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

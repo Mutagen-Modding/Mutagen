@@ -172,6 +172,10 @@ public readonly struct RecordType : IEquatable<RecordType>, IEquatable<string>
             ret = ret.Remove(i, 1);
             ret = ret.Insert(i, $"_{b:X}_");
         }
+        if (ret.Length > 0 && char.IsDigit(ret[0]))
+        {
+            ret = "_" + ret;
+        }
         return ret;
     }
 

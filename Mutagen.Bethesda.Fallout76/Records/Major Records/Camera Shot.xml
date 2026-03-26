@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CameraShot" recordType="CAMS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ImageSpaceModifier" recordType="MNAM" refName="ImageSpaceAdapter" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="Action" />
+          <UInt32 name="Location" />
+          <UInt32 name="Target" />
+          <UInt32 name="Flags" />
+          <Float name="PlayerTimeMult" />
+          <Float name="TargetTimeMult" />
+          <Float name="GlobalTimeMult" />
+          <Float name="MaxTime" />
+          <Float name="MinTime" />
+          <Float name="TargetPctBetweenActors" />
+          <Float name="NearTargetDistance" />
+          <Float name="LocationSpring" />
+          <Float name="TargetSpring" />
+          <Float name="RotationOffsetX" />
+          <Float name="RotationOffsetY" />
+          <Float name="RotationOffsetZ" />
+        </Fields>
+      </Data>
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CameraPath" recordType="CPTH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt8 name="DATA" recordType="DATA" />
+      <List name="CameraShots">
+        <FormLink name="Shot" recordType="SNAM" refName="CameraShot" />
+      </List>
+      <ByteArray name="SNAM2" recordType="SNAM" />
+      <RefDirect name="CameraPaths" refName="CameraPathData" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+</Fields>
+  </Object>
+  <Object name="CameraPathData" objType="Subrecord" recordType="ANAM">
+    <Fields>
+      <FormLink name="Parent" refName="CameraPath" />
+      <FormLink name="Previous" refName="CameraPath" />
+    </Fields>
+  </Object>
+</Loqui>

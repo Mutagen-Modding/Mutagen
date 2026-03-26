@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AudioEffectChain" recordType="AECH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="Effects" refName="AudioEffectChainEffect" />
+    </Fields>
+  </Object>
+  <Object name="AudioEffectChainEffect" objType="Subrecord" recordType="KNAM">
+    <Fields>
+      <UInt32 name="EffectType" />
+      <ByteArray name="EffectData" recordType="DNAM" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -47,6 +47,7 @@ public sealed class ArchiveReaderProvider : IArchiveReaderProvider
             case GameRelease.Starfield:
             case GameRelease.Fallout4:
             case GameRelease.Fallout4VR:
+            case GameRelease.Fallout76:
                 return new Ba2Reader(path, _fileSystem);
             default:
                 throw new NotImplementedException();

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ReferenceGroup" recordType="RFGP" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="NNAM" recordType="NNAM" />
+      <FormLink name="Reference" recordType="RNAM" refName="PlacedObject" />
+      <FormLink name="ParentGroup" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="Location" recordType="LNAM" refName="Location" />
+    </Fields>
+  </Object>
+</Loqui>

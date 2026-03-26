@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <FormLink name="AnimationSound" recordType="STCP" refName="AnimationSoundTagSet" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <UInt32 name="AJLN" recordType="AJLN" />
+      <UInt32 name="AJLX" recordType="AJLX" />
+      <UInt32 name="AJLO" recordType="AJLO" />
+      <FormLink name="AdjustJiggleNerveGlobal" recordType="AJNG" refName="Global" />
+      <FormLink name="AdjustJiggleXGlobal" recordType="AJXG" refName="Global" />
+      <FormLink name="AdjustJiggleOffsetGlobal" recordType="AJOG" refName="Global" />
+      <ByteArray name="SNAM" recordType="SNAM" />
+      <FormLink name="DeathItem" recordType="INAM" refName="LeveledItem" />
+      <FormLink name="VoiceType" recordType="VTCK" refName="VoiceType" />
+      <FormLink name="Template" recordType="TPLT" refName="Fallout76MajorRecord" />
+      <FormLink name="LegendaryTemplate" recordType="LTPT" refName="Fallout76MajorRecord" />
+      <FormLink name="LegendaryChance" recordType="LTPC" refName="Global" />
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <List name="ActorEffects" counterRecType="SPCT">
+        <FormLink refName="Spell" recordType="SPLO" />
+      </List>
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="WornArmor" recordType="WNAM" refName="Armor" />
+      <FormLink name="FarAwayModel" recordType="ANAM" refName="Fallout76MajorRecord" />
+      <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
+      <FormLink name="SpectatorOverridePackList" recordType="SPOR" refName="FormList" />
+      <FormLink name="ObserveDeadBodyOverridePackList" recordType="OCOR" refName="FormList" />
+      <FormLink name="GuardWarnOverridePackList" recordType="GWOR" refName="FormList" />
+      <FormLink name="CombatOverridePackList" recordType="ECOR" refName="FormList" />
+      <FormLink name="FollowerCmdPackList" recordType="FCPL" refName="FormList" />
+      <FormLink name="RecordColor" recordType="RCLR" refName="Fallout76MajorRecord" />
+      <List name="Perks" counterRecType="PRKZ" recordType="PRKR">
+        <FormLink refName="Perk" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="ForcedLocRefType" refName="Fallout76MajorRecord" recordType="FTYP" />
+      <FormLink name="NativeTerminal" recordType="NTRM" refName="Terminal" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
+      <List name="Packages">
+        <FormLink refName="Package" recordType="PKID" />
+      </List>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <ByteArray name="APPR" recordType="APPR" />
+      <ByteArray name="OBTS" recordType="OBTS" />
+      <FormLink name="Class" recordType="CNAM" refName="Class" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="SHRT" recordType="SHRT" translated="Normal" />
+      <Bool name="DATA" recordType="DATA" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <FormLink name="GiftFilter" recordType="GNAM" refName="FormList" />
+      <FormLink name="HairColor" recordType="HCLF" refName="ColorRecord" />
+      <ByteArray name="NAM5" recordType="NAM5" />
+      <Float name="NAM6" recordType="NAM6" />
+      <Float name="NAM4" recordType="NAM4" />
+      <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" recordType="NAM8" />
+      <List name="ActorSounds" counterRecType="CS2H" recordType="CS2D">
+        <FormLink refName="SoundDescriptor" />
+      </List>
+      <Bool name="CS2E" recordType="CS2E" />
+      <ByteArray name="CS2F" recordType="CS2F" />
+      <FormLink name="AudioTemplate" recordType="CSCR" refName="Fallout76MajorRecord" />
+      <FormLink name="ForcedReference" recordType="PFRN" refName="Fallout76MajorRecord" />
+      <FormLink name="DefaultOutfit" recordType="DOFT" refName="Outfit" />
+      <FormLink name="SleepOutfit" recordType="SOFT" refName="Outfit" />
+      <FormLink name="DefaultPackList" recordType="DPLT" refName="FormList" />
+      <FormLink name="CrimeFaction" recordType="CRIF" refName="Faction" />
+      <List name="HeadParts">
+        <FormLink refName="HeadPart" recordType="PNAM" />
+      </List>
+      <FormLink name="FacialHairColor" recordType="BCLF" refName="ColorRecord" />
+      <FormLink name="HeadTexture" recordType="FTST" refName="TextureSet" />
+      <ByteArray name="MSDK" recordType="MSDK" />
+      <ByteArray name="MSDV" recordType="MSDV" />
+      <Float name="FMIN" recordType="FMIN" />
+      <String name="ATTX" recordType="ATTX" translated="Normal" />
+      <FormLink name="DamageCurve" recordType="CVT0" refName="Fallout76MajorRecord" />
+      <FormLink name="MinDurabilityCurve" recordType="CVT1" refName="Fallout76MajorRecord" />
+      <FormLink name="ConditionLossScale" recordType="CVT2" refName="Fallout76MajorRecord" />
+      <FormLink name="BashConditionLossScale" recordType="CVT3" refName="Fallout76MajorRecord" />
+      <FormLink name="UnarmedWeapon" recordType="UNWP" refName="Weapon" />
+      <Data recordType="ACBS" nullable="False">
+        <Fields>
+          <UInt32 name="Flags" />
+          <Int16 name="XPValueOffset" />
+          <UInt16 name="Level" />
+          <UInt16 name="CalcMinLevel" />
+          <UInt16 name="CalcMaxLevel" />
+          <Int16 name="DispositionBase" />
+          <UInt16 name="TemplateFlags" />
+          <UInt16 name="BleedoutOverride" />
+          <ByteArray name="AcbsUnused" byteLength="2" nullable="False" />
+        </Fields>
+      </Data>
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <UInt16 name="CalculatedHealth" />
+          <UInt16 name="CalculatedActionPoints" />
+          <UInt16 name="FarAwayModelDistance" />
+          <UInt8 name="GearedUpWeapons" />
+          <ByteArray name="DnamUnused" byteLength="1" nullable="False" />
+        </Fields>
+      </Data>
+      <Int32 name="FMRI" recordType="FMRI" />
+      <ByteArray name="FMRS" recordType="FMRS" />
+      <ByteArray name="MRSV" recordType="MRSV" />
+      <ByteArray name="MWGT" recordType="MWGT" />
+      <ByteArray name="QNAM" recordType="QNAM" />
+      <ByteArray name="OBTE" recordType="OBTE" />
+      <ByteArray name="OBTF" recordType="OBTF" />
+      <FormLink name="PKID" recordType="PKID" refName="Fallout76MajorRecord" />
+      <FormLink name="PNAM" recordType="PNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="SPLO" recordType="SPLO" />
+      <ByteArray name="STOP" recordType="STOP" />
+      <ByteArray name="TETI" recordType="TETI" />
+      <ByteArray name="TEND" recordType="TEND" />
+      <ByteArray name="TPTA" recordType="TPTA" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <Data recordType="AIDT" nullable="False">
+        <Fields>
+          <UInt8 name="Aggression" />
+          <UInt8 name="Confidence" />
+          <UInt8 name="EnergyLevel" />
+          <UInt8 name="Morality" />
+          <UInt8 name="Mood" />
+          <UInt8 name="Assistance" />
+          <UInt8 name="AggroRadiusBehavior" />
+          <ByteArray name="AidtUnused" byteLength="1" nullable="False" />
+          <UInt32 name="Warn" />
+          <UInt32 name="WarnAttack" />
+          <UInt32 name="Attack" />
+          <UInt32 name="NoSlowApproach" />
+        </Fields>
+      </Data>
+      <ByteArray name="ATKD" recordType="ATKD" />
+      <ByteArray name="ATKE" recordType="ATKE" />
+      <ByteArray name="ATKW" recordType="ATKW" />
+      <ByteArray name="CTDA" recordType="CTDA" />
+      <ByteArray name="ATKS" recordType="ATKS" />
+      <ByteArray name="ATKT" recordType="ATKT" />
+      <RefList name="Items" refName="ContainerEntry" counterRecType="COCT" />
+</Fields>
+  </Object>
+</Loqui>

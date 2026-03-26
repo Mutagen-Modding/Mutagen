@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Armor" recordType="ARMO" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" recordType="PTRN" refName="Transform" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <FormLink name="SnapTemplate" recordType="SNTP" refName="Fallout76MajorRecord" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <FormLink name="Enchantment" recordType="EITM" refName="ObjectEffect" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="SoundDescriptor" />
+      <FormLink name="PutDownSound" recordType="ZNAM" refName="SoundDescriptor" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
+      <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <String name="Description" recordType="DESC" translated="Normal" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
+      <ByteArray name="EILV" recordType="EILV" />
+      <FormLink name="BreakSound" recordType="IBSD" refName="SoundDescriptor" />
+      <RefList name="Armatures" refName="ArmorAddonModel" />
+      <ByteArray name="APPR" recordType="APPR" />
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false">
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <Bool name="STOP" recordType="STOP" boolAsMarker="True" />
+      <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
+      <ByteArray name="DAMA" recordType="DAMA" />
+      <FormLink name="DamageCurve" recordType="CVT0" refName="Fallout76MajorRecord" />
+      <FormLink name="MinDurabilityCurve" recordType="CVT1" refName="Fallout76MajorRecord" />
+      <FormLink name="ConditionLossScale" recordType="CVT2" refName="Fallout76MajorRecord" />
+      <FormLink name="BashConditionLossScale" recordType="CVT3" refName="Fallout76MajorRecord" />
+      <FormLink name="AbsorbPercent" recordType="ABPO" refName="Fallout76MajorRecord" />
+      <FormLink name="Quest" recordType="DIQO" refName="Quest" />
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+          <Float name="BOD2" recordType="BOD2" />
+      <RefDirect name="DATA" refName="ArmorDATAData" />
+      <RefDirect name="FNAM" refName="ArmorFNAMData" />
+      <String name="ICO2" recordType="ICO2" />
+      <String name="MIC2" recordType="MIC2" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+  <FormLink name="MO2S" recordType="MO2S" refName="MaterialSwap" />
+      <ByteArray name="MO2T" recordType="MO2T" />
+  <FormLink name="MO4S" recordType="MO4S" refName="MaterialSwap" />
+      <ByteArray name="MO4T" recordType="MO4T" />
+      <String name="MOD2" recordType="MOD2" />
+      <String name="MOD4" recordType="MOD4" />
+      <ByteArray name="ENLM2" recordType="ENLM" />
+      <ByteArray name="ENLT2" recordType="ENLT" />
+      <Float name="ENLS2" recordType="ENLS" />
+      <ByteArray name="AUUV2" recordType="AUUV" />
+</Fields>
+  </Object>
+  <Object name="ArmorAddonModel" objType="Subrecord">
+    <Fields>
+      <UInt16 name="AddonIndex" recordType="INDX" />
+      <FormLink name="ArmorAddon" recordType="MODL" refName="ArmorAddon" />
+    </Fields>
+  </Object>
+  <Object name="ArmorDATAData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="ArmorFNAMData" objType="Subrecord" recordType="FNAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+          <ByteArray name="OBTF" recordType="OBTF" />
+      <ByteArray name="OBTS" recordType="OBTS" />
+</Fields>
+  </Object>
+</Loqui>

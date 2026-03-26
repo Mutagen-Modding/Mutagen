@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CampTitle" recordType="CMPT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="Title" recordType="ANAM" translated="Normal" />
+      <UInt8 name="IsPrefix" recordType="PTPR" />
+      <UInt8 name="IsSuffix" recordType="PTSU" />
+      <Bool name="PTDS" recordType="PTDS" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
+  </Object>
+</Loqui>

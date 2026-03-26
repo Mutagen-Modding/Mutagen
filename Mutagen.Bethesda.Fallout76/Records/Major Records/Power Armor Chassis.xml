@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PowerArmorChassis" recordType="PACH" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <FormLink name="ValueCurrency" recordType="VCRY" refName="Fallout76MajorRecord" />
+      <FormLink name="Equipment" recordType="PAEQ" refName="Fallout76MajorRecord" />
+      <RefDirect name="Data" refName="ValueWeight" />
+</Fields>
+  </Object>
+</Loqui>

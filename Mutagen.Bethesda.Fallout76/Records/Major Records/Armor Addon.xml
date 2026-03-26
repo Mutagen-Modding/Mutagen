@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ArmorAddon" recordType="ARMA" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <RefDirect name="DNAM" refName="ArmorAddonDNAMData" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <ByteArray name="XFLG" recordType="XFLG" />
+      <FormLink name="NAM0" recordType="NAM0" refName="Fallout76MajorRecord" />
+      <FormLink name="NAM1" recordType="NAM1" refName="Fallout76MajorRecord" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <List name="AdditionalRaces">
+        <FormLink name="MODL" recordType="MODL" refName="Race" />
+      </List>
+      <FormLink name="FootstepSound" recordType="SNDD" refName="Fallout76MajorRecord" />
+      <FormLink name="ArtObject" recordType="ONAM" refName="Fallout76MajorRecord" />
+      <FormLink name="BSMP" recordType="BSMP" refName="Fallout76MajorRecord" />
+      <UInt8 name="VONL" recordType="VONL" />
+          <Float name="BOD2" recordType="BOD2" />
+      <String name="BSMB" recordType="BSMB" />
+  <P3Float name="BSMS" recordType="BSMS" />
+  <Float name="MO2C" recordType="MO2C" />
+      <UInt8 name="MO2F" recordType="MO2F" />
+  <Float name="MO2S" recordType="MO2S" />
+      <ByteArray name="MO2T" recordType="MO2T" />
+  <Float name="MO3C" recordType="MO3C" />
+      <UInt8 name="MO3F" recordType="MO3F" />
+  <Float name="MO3S" recordType="MO3S" />
+      <ByteArray name="MO3T" recordType="MO3T" />
+  <Float name="MO4S" recordType="MO4S" />
+      <ByteArray name="MO4T" recordType="MO4T" />
+  <Float name="MO5S" recordType="MO5S" />
+      <ByteArray name="MO5T" recordType="MO5T" />
+      <String name="MOD2" recordType="MOD2" />
+      <String name="MOD3" recordType="MOD3" />
+      <String name="MOD4" recordType="MOD4" />
+      <String name="MOD5" recordType="MOD5" />
+      <ByteArray name="MO4C" recordType="MO4C" />
+      <ByteArray name="MO4F" recordType="MO4F" />
+      <ByteArray name="MO5C" recordType="MO5C" />
+      <ByteArray name="MO5F" recordType="MO5F" />
+</Fields>
+  </Object>
+  <Object name="ArmorAddonDNAMData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

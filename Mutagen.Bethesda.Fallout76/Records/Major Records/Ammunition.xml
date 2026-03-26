@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="SnapTemplate" refName="Fallout76MajorRecord" recordType="SNTP" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <String name="Description" recordType="DESC" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <FormLink name="ValueCurrency" refName="Fallout76MajorRecord" recordType="VCRY" />
+      
+      <Data recordType="DNAM">
+        <Fields>
+          <FormLink name="Projectile" refName="Projectile" />
+      <UInt32 name="Flags" />
+          <Float name="Damage" />
+      <UInt32 name="Health" />
+        </Fields>
+      </Data>
+      <String name="ShortName" recordType="ONAM" translated="Normal" />
+      <String name="CasingModel" recordType="NAM1" />
+      <ByteArray name="ModelInfo" recordType="NAM2" />
+      <RefDirect name="Data" refName="ValueWeight" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+</Fields>
+  </Object>
+</Loqui>

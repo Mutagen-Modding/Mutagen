@@ -1,0 +1,65 @@
+namespace Mutagen.Bethesda.Fallout76.Internals;
+
+public partial class RecordTypeInts
+{
+    public const int ADBO = 0x4F424441;
+    public const int ADCR = 0x52434441;
+    public const int ADIA = 0x41494441;
+    public const int AFAV = 0x56414641;
+    public const int AHEL = 0x4C454841;
+    public const int AIPL = 0x4C504941;
+    public const int AOBJ = 0x4A424F41;
+    public const int ARRT = 0x54525241;
+    public const int ASSU = 0x55535341;
+    public const int BRIB = 0x42495242;
+    public const int CAST = 0x54534143;
+    public const int CHRR = 0x52524843;
+    public const int CLOC = 0x434F4C43;
+    public const int CLRL = 0x4C524C43;
+    public const int CRFT = 0x54465243;
+    public const int CURE = 0x45525543;
+    public const int DEAD = 0x44414544;
+    public const int ESJA = 0x414A5345;
+    public const int FLAT = 0x54414C46;
+    public const int HACK = 0x4B434148;
+    public const int ILOC = 0x434F4C49;
+    public const int INFC = 0x43464E49;
+    public const int INTM = 0x4D544E49;
+    public const int IRON = 0x4E4F5249;
+    public const int KILL = 0x4C4C494B;
+    public const int LCLD = 0x444C434C;
+    public const int LCPG = 0x4750434C;
+    public const int LEVL = 0x4C56454C;
+    public const int LOCK = 0x4B434F4C;
+    public const int NVPE = 0x4550564E;
+    public const int OAAT = 0x5441414F;
+    public const int PARW = 0x57524150;
+    public const int PBAR = 0x52414250;
+    public const int PBEA = 0x41454250;
+    public const int PCON = 0x4E4F4350;
+    public const int PFIN = 0x4E494650;
+    public const int PFLA = 0x414C4650;
+    public const int PGRE = 0x45524750;
+    public const int PHZD = 0x445A4850;
+    public const int PMIS = 0x53494D50;
+    public const int PRFV = 0x56465250;
+    public const int QPMT = 0x544D5051;
+    public const int QSTR = 0x52545351;
+    public const int REMP = 0x504D4552;
+    public const int SCPT = 0x54504353;
+    public const int SKIL = 0x4C494B53;
+    public const int STIJ = 0x4A495453;
+    public const int TMEE = 0x45454D54;
+    public const int TRES = 0x53455254;
+    public const int CS2K = 0x4B325343;
+    public const int DEMO = 0x4F4D4544;
+    public const int DEVA = 0x41564544;
+    public const int DTID = 0x44495444;
+    public const int IDLB = 0x424C4449;
+
+    public const int RDGS = 0x53474452;
+    public const int SCDA = 0x41444353;
+    public const int SCRO = 0x4F524353;
+    public const int SCTX = 0x58544353;
+    public const int XLOD = 0x444F4C58;
+}

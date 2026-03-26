@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <UInt32 name="CNAM" recordType="CNAM" />
+      <UInt32 name="FNAM" recordType="FNAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+</Fields>
+  </Object>
+</Loqui>

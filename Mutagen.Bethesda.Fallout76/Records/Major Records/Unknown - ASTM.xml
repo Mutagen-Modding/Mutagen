@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="UnknownASTM" recordType="ASTM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <UInt32 name="ATAT" recordType="ATAT" />
+      <FormLink name="ATSI" recordType="ATSI" refName="Fallout76MajorRecord" />
+    </Fields>
+  </Object>
+</Loqui>

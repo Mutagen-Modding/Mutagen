@@ -19,6 +19,7 @@ public static class Implicits
     private static readonly ImplicitRegistration SkyrimVR;
     private static readonly ImplicitRegistration Fallout4;
     private static readonly ImplicitRegistration Fallout4VR;
+    private static readonly ImplicitRegistration Fallout76;
     private static readonly ImplicitRegistration Starfield;
 
     static Implicits()
@@ -150,6 +151,21 @@ public static class Implicits
         };
         #endregion
 
+        #region Fallout76
+        var fallout76BaseMasters = new HashSet<ModKey>()
+        {
+            "SeventySix.esm",
+        };
+        Fallout76 = new ImplicitRegistration(
+            GameRelease.Fallout76,
+            BaseMasters: new ImplicitModKeyCollection(fallout76BaseMasters),
+            Listings: new ImplicitModKeyCollection(fallout76BaseMasters),
+            RecordFormKeys: new HashSet<FormKey>()
+            {
+                // ToDo
+            });
+        #endregion
+
         #region Starfield
         var starfieldBaseMasters = new HashSet<ModKey>()
         {
@@ -191,6 +207,7 @@ public static class Implicits
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4,
             GameRelease.Starfield => Starfield,
+            GameRelease.Fallout76 => Fallout76,
             _ => throw new NotImplementedException(),
         };
     }

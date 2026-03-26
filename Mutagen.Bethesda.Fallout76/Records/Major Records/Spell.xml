@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <FormLink name="MenuDisplayObject" recordType="MDOB" refName="Static" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <UInt32 name="MIID" recordType="MIID" />
+      <FormLink name="BaseEffect" recordType="EFID" refName="MagicEffect" />
+      <ByteArray name="EFIT" recordType="EFIT" />
+      <String name="CIS2" recordType="CIS2" />
+  <Float name="CODG" recordType="CODG" />
+      <FormLink name="CODV" recordType="CODV" refName="Fallout76MajorRecord" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+  <Float name="CVT0" recordType="CVT0" />
+  <Float name="DURG" recordType="DURG" />
+  <Float name="EIES" recordType="EIES" />
+  <Float name="MAGA" recordType="MAGA" />
+      <UInt32 name="MAGF" recordType="MAGF" />
+  <Float name="MAGG" recordType="MAGG" />
+      <ByteArray name="SPIT" recordType="SPIT" />
+</Fields>
+  </Object>
+</Loqui>

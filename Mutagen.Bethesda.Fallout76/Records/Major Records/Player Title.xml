@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlayerTitle" recordType="PLYT" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="ANAM" recordType="ANAM" translated="Normal" />
+      <String name="BNAM" recordType="BNAM" translated="Normal" />
+      <UInt32 name="PTPR" recordType="PTPR" />
+      <UInt32 name="PTSU" recordType="PTSU" />
+      <Bool name="PTDS" recordType="PTDS" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+</Fields>
+  </Object>
+</Loqui>

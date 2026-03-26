@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BodyPartData" recordType="BPTD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="BNAM" recordType="BNAM" />
+      <FormLink name="BPAB" recordType="BPAB" refName="Fallout76MajorRecord" />
+      <ByteArray name="BPND" recordType="BPND" />
+      <String name="BPNN" recordType="BPNN" />
+      <String name="BPNT" recordType="BPNT" />
+      <UInt32 name="BPTN" recordType="BPTN" />
+      <String name="BPVB" recordType="BPVB" />
+      <FormLink name="CNAM" recordType="CNAM" refName="Fallout76MajorRecord" />
+      <String name="DNAM" recordType="DNAM" />
+      <FormLink name="ENAM" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <String name="FNAM" recordType="FNAM" />
+      <FormLink name="INAM" recordType="INAM" refName="Fallout76MajorRecord" />
+      <FormLink name="JNAM" recordType="JNAM" refName="Fallout76MajorRecord" />
+      <String name="NAM1" recordType="NAM1" />
+      <FormLink name="NAM2" recordType="NAM2" refName="Fallout76MajorRecord" />
+      <String name="NAM4" recordType="NAM4" />
+      <Bool name="NAM5" recordType="NAM5" />
+</Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Perk" recordType="PERK" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DURL" recordType="DURL" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <String name="ICON" recordType="ICON" />
+      <FormLink name="Sound" recordType="SNAM" refName="SoundDescriptor" />
+      <FormLink name="PerkRequirement" recordType="PRFS" refName="Fallout76MajorRecord" />
+      <ByteArray name="NNAM" recordType="NNAM" />
+      <ByteArray name="PERK" recordType="PERK" />
+      <String name="FNAM" recordType="FNAM" />
+      <String name="PRFI" recordType="PRFI" />
+      <FormLink name="PerkFaction" recordType="PFAC" refName="Faction" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <String name="CIS1" recordType="CIS1" />
+      <String name="CIS2" recordType="CIS2" />
+      <ByteArray name="DATA" recordType="DATA" />
+  <Float name="EPF2" recordType="EPF2" />
+      <ByteArray name="EPF3" recordType="EPF3" />
+  <Float name="EPF4" recordType="EPF4" />
+      <UInt16 name="EPFB" recordType="EPFB" />
+      <UInt32 name="EPFD" recordType="EPFD" />
+      <UInt8 name="EPFT" recordType="EPFT" />
+      <UInt8 name="PRKC" recordType="PRKC" />
+      <UInt16 name="PRKE" recordType="PRKE" />
+      <Bool name="PRKF" recordType="PRKF" boolAsMarker="True" />
+</Fields>
+  </Object>
+</Loqui>

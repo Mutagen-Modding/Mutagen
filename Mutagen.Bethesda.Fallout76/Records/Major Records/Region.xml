@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Region" recordType="REGN" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <UInt32 name="RCLR" recordType="RCLR"/>
+      <FormLink name="Worldspace" recordType="WNAM" refName="Worldspace" />
+      <FormLink name="Location" recordType="LNAM" refName="Location" />
+      <UInt8 name="LCPR" recordType="LCPR" />
+      <Bool name="RCBN" recordType="RCBN" />
+          <Float name="ANAM" recordType="ANAM" />
+      <ByteArray name="ICON" recordType="ICON" />
+      <Float name="RDMO" recordType="RDMO" />
+      <UInt32 name="RDMP" recordType="RDMP" />
+      <ByteArray name="RDOT" recordType="RDOT" />
+      <ByteArray name="RDSN" recordType="RDSN" />
+      <P2Float name="RDWK" recordType="RDWK" />
+      <Bool name="RDWR" recordType="RDWR" />
+      <ByteArray name="RLDM" recordType="RLDM" />
+      <RefList name="DataHeaders" refName="RegionDataHeader" />
+      <ByteArray name="RDSA" recordType="RDSA" />
+      <ByteArray name="RDWT" recordType="RDWT" />
+      <ByteArray name="RPLD" recordType="RPLD" />
+      <FormLink name="RPLI" recordType="RPLI" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+  <Object name="RegionDataHeader" objType="Subrecord" recordType="RDAT">
+    <Fields>
+      <Enum name="Type" enumName="Region.RegionType" byteLength="4" />
+      <UInt32 name="Flags" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <ByteArray name="XALG" recordType="XALG" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <Bool name="DATA" recordType="DATA" boolAsMarker="True" />
+      <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" recordType="VNAM" />
+      <FormLink name="SpeedCurveTable" recordType="PSCT" refName="Fallout76MajorRecord" />
+      <FormLink name="SeekStrengthCurveTable" recordType="PSSC" refName="Fallout76MajorRecord" />
+      <Float name="PFDX" recordType="PFDX" />
+      <Float name="PFDZ" recordType="PFDZ" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <UInt16 name="Flags" />
+          <UInt16 name="Type" />
+          <Float name="Gravity" />
+          <Float name="Speed" />
+          <Float name="Range" />
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="MuzzleFlashLight" refName="Light" />
+          <Float name="ExplosionAltTriggerProximity" />
+          <Float name="ExplosionAltTriggerTimer" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Sound" refName="SoundDescriptor" />
+          <Float name="MuzzleFlashDuration" />
+          <Float name="FadeDuration" />
+          <Float name="ImpactForce" />
+          <FormLink name="SoundCountdown" refName="SoundDescriptor" />
+          <FormLink name="SoundDisable" refName="SoundDescriptor" />
+          <FormLink name="DefaultWeaponSource" refName="Weapon" />
+          <Float name="ConeSpread" />
+          <Float name="CollisionRadius" />
+          <Float name="Lifetime" />
+          <Float name="RelaunchInterval" />
+          <FormLink name="DecalData" refName="TextureSet" />
+          <FormLink name="CollisionLayer" refName="Fallout76MajorRecord" />
+          <UInt8 name="TracerFrequency" />
+          <FormLink name="VATSProjectile" refName="Projectile" />
+        </Fields>
+      </Data>
+      <ByteArray name="NAM1" recordType="NAM1" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+</Fields>
+  </Object>
+</Loqui>

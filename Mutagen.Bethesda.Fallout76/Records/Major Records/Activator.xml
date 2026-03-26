@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Activator" objType="Record" recordType="ACTI" majorFlag="true" baseClass="Fallout76MajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
+      <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
+      <FormLink name="SnapTemplate" refName="Fallout76MajorRecord" recordType="SNTP" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <List name="FormTags">
+        <String name="FTAG" recordType="FTAG" />
+      </List>
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <ByteArray name="ENLM" recordType="ENLM" />
+      <ByteArray name="ENLT" recordType="ENLT" />
+      <Float name="ENLS" recordType="ENLS" />
+      <ByteArray name="AUUV" recordType="AUUV" />
+      <ByteArray name="XFLG" recordType="XFLG" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <FormLink name="NativeTerminal" refName="Terminal" recordType="NTRM" />
+      <FormLink name="ForcedLocRefType" refName="Fallout76MajorRecord" recordType="FTYP" />
+      <ByteArray name="MNAM" recordType="MNAM" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <UInt32 name="LODP" recordType="LODP" />
+      <UInt32 name="MarkerColor" recordType="PNAM" />
+      <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="ActivationSound" refName="SoundDescriptor" recordType="VNAM" />
+      <FormLink name="WaterType" refName="Water" recordType="WNAM" />
+      <FormLink name="Quest" refName="Quest" recordType="QSTI" />
+      <Bool name="AIID" recordType="AIID" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <UInt16 name="Flags" recordType="FNAM" />
+      <UInt32 name="LookatValue" recordType="LAVT" />
+      <UInt32 name="LookatMinimum" recordType="LAMN" />
+      <UInt32 name="LookatMaximum" recordType="LAMX" />
+      <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
+      <RefDirect name="RadioReceiver" refName="RadioReceiverData" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <FormLink name="GlobalCooldownTimer" refName="Global" recordType="GCDA" />
+      <ByteArray name="VEND" recordType="VEND" />
+      <Float name="PAHD" recordType="PAHD" />
+      <ByteArray name="CTRN" recordType="CTRN" />
+      <FormLink name="CNDC" recordType="CNDC" refName="Fallout76MajorRecord" />
+      <String name="Description" recordType="DESC" />
+      <RefList name="DestructibleObjectFactions" refName="DestructibleObjectFaction" />
+      <ByteArray name="NVNM" recordType="NVNM" />
+      <String name="CIS1" recordType="CIS1" />
+      <String name="CIS2" recordType="CIS2" />
+      <Bool name="DSCF" recordType="DSCF" boolAsMarker="True" />
+      <FormLink name="HGLB" recordType="HGLB" refName="Fallout76MajorRecord" />
+</Fields>
+  </Object>
+  <Object name="RadioReceiverData" objType="Subrecord" recordType="RADR">
+    <Fields>
+      <FormLink name="SoundModel" refName="SoundOutputModel" />
+      <Float name="Frequency" />
+      <Float name="Volume" />
+      <Bool name="StartsActive" byteLength="1" />
+      <Bool name="NoSignalStatic" byteLength="1" />
+          <ByteArray name="DOFA" recordType="DOFA" />
+      <ByteArray name="OPDS" recordType="OPDS" />
+</Fields>
+  </Object>
+</Loqui>

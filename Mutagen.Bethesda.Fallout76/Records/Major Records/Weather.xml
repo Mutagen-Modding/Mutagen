@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weather" recordType="WTHR" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true" customRecordFallback="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword"  />
+      </List>
+      <UInt32 name="LNAM" recordType="LNAM" />
+      <FormLink name="MNAM" recordType="MNAM" refName="Fallout76MajorRecord" />
+      <ByteArray name="SPGD" recordType="SPGD" />
+      <String name="NNAM" recordType="NNAM" />
+      <ByteArray name="RFCT" recordType="RFCT" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="JNAM" recordType="JNAM" />
+      <ByteArray name="NAM4" recordType="NAM4" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <List name="SkyStatics">
+        <FormLink refName="Static" recordType="TNAM" />
+      </List>
+      <ByteArray name="DALC" recordType="DALC" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="GodRays" recordType="GNAM" refName="GodRays" />
+      <Float name="VNAM" recordType="VNAM" />
+      <Float name="WNAM" recordType="WNAM" />
+      <Float name="XNAM" recordType="XNAM" />
+      <Float name="ZNAM" recordType="ZNAM" />
+      <Float name="YNAM" recordType="YNAM" />
+      <Float name="KNAM" recordType="KNAM" />
+      <Float name="INAM" recordType="INAM" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <FormLink name="TNAM" recordType="TNAM" refName="Fallout76MajorRecord" />
+      <String name="TX_00TX" recordType="00TX" />
+      <String name="TX_10TX" recordType="10TX" />
+      <String name="TX_20TX" recordType="20TX" />
+      <String name="TX_30TX" recordType="30TX" />
+      <String name="TX_40TX" recordType="40TX" />
+      <String name="TX_50TX" recordType="50TX" />
+      <String name="TX_60TX" recordType="60TX" />
+      <String name="TX_70TX" recordType="70TX" />
+      <String name="TX_80TX" recordType="80TX" />
+      <String name="TX_90TX" recordType="90TX" />
+      <String name="A0TX" recordType="A0TX" />
+      <String name="E0TX" recordType="E0TX" />
+      <String name="F0TX" recordType="F0TX" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="HNAM" recordType="HNAM" />
+      <ByteArray name="IMSP" recordType="IMSP" />
+      <String name="K0TX" recordType="K0TX" />
+      <String name="L0TX" recordType="L0TX" />
+      <ByteArray name="NAM0" recordType="NAM0" />
+      <ByteArray name="QNAM" recordType="QNAM" />
+      <ByteArray name="RNAM" recordType="RNAM" />
+      <RefDirect name="Sounds" refName="WeatherSound" />
+      <ByteArray name="UNAM" recordType="UNAM" />
+</Fields>
+  </Object>
+  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM">
+    <Fields>
+      <FormLink name="Sound" refName="SoundDescriptor" />
+      <UInt32 name="Type" />
+</Fields>
+  </Object>
+</Loqui>

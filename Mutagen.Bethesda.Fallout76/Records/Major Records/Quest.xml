@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Quest" recordType="QUST" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DURL" recordType="DURL" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <ByteArray name="General" binary="NoGeneration" />
+      <UInt32 name="ENAM" recordType="ENAM" />
+      <FormLink name="Location" recordType="LNAM" refName="Location" />
+      <FormLink name="ExternalEvent" recordType="XNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="QMCI" recordType="QMCI" refName="Fallout76MajorRecord" />
+      <FormLink name="TimeLimitGlobal" recordType="QTLM" refName="Global" />
+      <FormLink name="EventTimeLimit" recordType="QETL" refName="Fallout76MajorRecord" />
+      <FormLink name="StartupStageKeyword" recordType="QSSK" refName="Keyword" />
+      <FormLink name="StartupLocation" recordType="QSLC" refName="Location" />
+      <FormLink name="EventCurve" recordType="QECV" refName="Fallout76MajorRecord" />
+      <FormLink name="UpdateConfigForm" recordType="QUCF" refName="Fallout76MajorRecord" />
+      <RefDirect name="QSDD" refName="QuestQSDDData" />
+      <Enum name="QETE" enumName="Quest.EventType" recordType="QETE" byteLength="1" />
+      <List name="TextDisplayGlobals">
+        <FormLink name="TimeGlobal" recordType="QTGL" refName="Global" />
+      </List>
+      <List name="QuestVariables">
+        <String name="QTVR" recordType="QTVR" />
+      </List>
+      <String name="FLTR" recordType="FLTR" />
+      <Bool name="NEXT" recordType="NEXT" boolAsMarker="True" />
+      <Bool name="NEXT2" binary="NoGeneration" />
+      <Bool name="NEXT3" binary="NoGeneration" />
+      <UInt32 name="ANAM" recordType="ANAM" />
+      <FormLink name="ALST" recordType="ALST" refName="Fallout76MajorRecord" />
+      <String name="NNAM2" recordType="NNAM" />
+      <FormLink name="QuestGroup" recordType="GNAM" refName="Fallout76MajorRecord" />
+      <String name="SNAM2" recordType="SNAM" />
+      <String name="SCCM2" recordType="SCCM" />
+      <String name="QRWT" recordType="QRWT" translated="Normal" />
+      <Enum name="QARV" enumName="Quest.ActorReserveType" recordType="QARV" byteLength="4" />
+      <UInt16 name="QARF" recordType="QARF" />
+      <Enum name="PEDF" enumName="Quest.PublicEventDifficulty" recordType="PEDF" byteLength="4" />
+      <String name="PEPI" recordType="PEPI" />
+      <UInt32 name="PERM" recordType="PERM" />
+      <UInt32 name="PERT" recordType="PERT" />
+      <UInt32 name="QQSD" recordType="QQSD" />
+      <UInt16 name="QTFS" recordType="QTFS" />
+      <Bool name="QMDE" recordType="QMDE" boolAsMarker="True" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="Unknown" binary="NoGeneration" />
+      <RefList name="DialogConditions" refName="Condition" binary="NoGeneration" />
+      <RefList name="DialogBranches" binary="NoGeneration" refName="DialogBranch" />
+      <RefList name="DialogTopics" binary="NoGeneration" refName="DialogTopic" />
+      <RefList name="Scenes" binary="NoGeneration" refName="Scene" />
+      <ByteArray name="CTDA2" recordType="CTDA" />
+      <ByteArray name="QTGL2" recordType="QTGL" />
+      <UInt32 name="CNAM" recordType="CNAM" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <RefDirect name="DNAM" refName="QuestDNAMData" />
+      <FormLink name="ECOR" recordType="ECOR" refName="Fallout76MajorRecord" />
+      <UInt32 name="ESAV" recordType="ESAV" />
+      <UInt32 name="ESDA" recordType="ESDA" />
+      <UInt32 name="ESRP" recordType="ESRP" />
+      <UInt32 name="ESRV" recordType="ESRV" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <FormLink name="GWOR" recordType="GWOR" refName="Fallout76MajorRecord" />
+      <FormLink name="KNAM" recordType="KNAM" refName="Fallout76MajorRecord" />
+      <UInt32 name="KeywordCount" recordType="KSIZ" />
+      <List name="KWDA" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="NAM0" recordType="NAM0" refName="Fallout76MajorRecord" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <String name="NAM2" recordType="NAM2" />
+      <FormLink name="NAM7" recordType="NAM7" refName="Fallout76MajorRecord" />
+      <FormLink name="OCOR" recordType="OCOR" refName="Fallout76MajorRecord" />
+      <UInt32 name="PBLT" recordType="PBLT" />
+      <UInt32 name="PBRT" recordType="PBRT" />
+      <String name="PEWI" recordType="PEWI" />
+      <UInt32 name="PEWR" recordType="PEWR" />
+      <UInt16 name="QOBJ" recordType="QOBJ" />
+      <Float name="QOTM" recordType="QOTM" />
+      <String name="QQSK" recordType="QQSK" />
+      <String name="QQSV" recordType="QQSV" />
+      <FormLink name="QRWD" recordType="QRWD" refName="Fallout76MajorRecord" />
+      <UInt8 name="QSDT" recordType="QSDT" />
+      <ByteArray name="QSTA" recordType="QSTA" />
+      <FormLink name="QUIM" recordType="QUIM" refName="Fallout76MajorRecord" />
+      <String name="SCFC" recordType="SCFC" />
+      <FormLink name="SPOR" recordType="SPOR" refName="Fallout76MajorRecord" />
+      <ByteArray name="QTVR2" recordType="QTVR" />
+      <ByteArray name="VMAD" recordType="VMAD" />
+      <UInt32 name="VTCK" recordType="VTCK" />
+      <UInt32 name="ALCA" recordType="ALCA" />
+      <FormLink name="ALCC" recordType="ALCC" refName="Fallout76MajorRecord" />
+      <Enum name="ALCL" enumName="Quest.QuestLevel" recordType="ALCL" byteLength="4" />
+      <FormLink name="ALCO" recordType="ALCO" refName="Fallout76MajorRecord" />
+      <FormLink name="ALCS" recordType="ALCS" refName="Fallout76MajorRecord" />
+      <FormLink name="ALDI" recordType="ALDI" refName="Fallout76MajorRecord" />
+      <UInt32 name="ALDN" recordType="ALDN" />
+      <FormLink name="ALEA" recordType="ALEA" refName="Fallout76MajorRecord" />
+      <Bool name="ALED" recordType="ALED" boolAsMarker="True" />
+      <FormLink name="ALEQ" recordType="ALEQ" refName="Fallout76MajorRecord" />
+      <FormLink name="ALFA" recordType="ALFA" refName="Fallout76MajorRecord" />
+      <FormLink name="ALFC" recordType="ALFC" refName="Fallout76MajorRecord" />
+      <String name="ALFD" recordType="ALFD" />
+      <UInt32 name="ALFE" recordType="ALFE" />
+      <Float name="ALFF" recordType="ALFF" />
+      <FormLink name="ALFI" recordType="ALFI" refName="Fallout76MajorRecord" />
+      <FormLink name="ALFL" recordType="ALFL" refName="Fallout76MajorRecord" />
+      <FormLink name="ALFR" recordType="ALFR" refName="Fallout76MajorRecord" />
+      <FormLink name="ALFV" recordType="ALFV" refName="Fallout76MajorRecord" />
+      <String name="ALID" recordType="ALID" />
+      <ByteArray name="ALLA" recordType="ALLA" />
+      <FormLink name="ALLS" recordType="ALLS" refName="Fallout76MajorRecord" />
+      <UInt8 name="ALMI" recordType="ALMI" />
+      <FormLink name="ALNA" recordType="ALNA" refName="Fallout76MajorRecord" />
+      <UInt32 name="ALNT" recordType="ALNT" />
+      <FormLink name="ALPC" recordType="ALPC" refName="Fallout76MajorRecord" />
+      <FormLink name="ALRT" recordType="ALRT" refName="Fallout76MajorRecord" />
+      <Float name="ALSP" recordType="ALSP" />
+      <Float name="ALUA" recordType="ALUA" />
+      <ByteArray name="CIS1" recordType="CIS1" />
+      <String name="CIS2" recordType="CIS2" />
+      <RefList name="Items" refName="ContainerEntry" counterRecType="COCT" />
+      <FormLink name="COCT" recordType="COCT" refName="Fallout76MajorRecord" />
+      <ByteArray name="COED" recordType="COED" />
+      <UInt32 name="INDX" recordType="INDX" />
+      <ByteArray name="INAM" recordType="INAM" />
+      <ByteArray name="RNAM" recordType="RNAM" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="TNAM" recordType="TNAM" />
+</Fields>
+    <SubgroupType>10</SubgroupType>
+  </Object>
+  <Object name="QuestQSDDData" objType="Subrecord" recordType="QSDD">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+  <Object name="QuestDNAMData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

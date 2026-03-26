@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <ByteArray name="XCNT" recordType="XCNT" />
+</Fields>
+  </Object>
+</Loqui>

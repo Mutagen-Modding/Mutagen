@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimAssistPoseData" recordType="AAPD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <Bool name="AAAP" recordType="AAAP" />
+      <String name="ANAM" recordType="ANAM" />
+      <String name="BNAM" recordType="BNAM" />
+
+        <Float name="RADR" recordType="RADR" />
+
+        <Float name="WTMX" recordType="WTMX" />
+      <UInt32 name="AAPS" recordType="AAPS" />
+      <String name="ANAM2" recordType="ANAM" />
+      <String name="BNAM2" recordType="BNAM" />
+      <Float name="RADR2" recordType="RADR" />
+      <Float name="WTMX2" recordType="WTMX" />
+    </Fields>
+  </Object>
+</Loqui>

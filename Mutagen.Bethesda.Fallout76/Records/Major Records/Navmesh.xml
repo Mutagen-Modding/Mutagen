@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Navmesh" recordType="NAVM" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="NVNM" recordType="NVNM" />
+      <ByteArray name="ONAM" recordType="ONAM" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="NNAM" recordType="NNAM" />
+      <ByteArray name="MNAM" recordType="MNAM" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CellBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="CellSubBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="Cell" recordType="CELL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true" customBinaryEnd="Normal">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DURL" recordType="DURL" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <UInt16 name="DATA" recordType="DATA" />
+      <ByteArray name="VISI" recordType="VISI" />
+      <FormLink name="RoomVis" recordType="RVIS" refName="Fallout76MajorRecord" />
+      <ByteArray name="PCMB" recordType="PCMB" />
+      <UInt8 name="PrecombinedObjectLevelXY" recordType="CNAM" />
+      <UInt8 name="PrecombinedObjectLevelZ" recordType="ZNAM" />
+      <ByteArray name="TVDT" recordType="TVDT" />
+      <FormLink name="LightingTemplate" recordType="LTMP" refName="LightingTemplate" />
+      <Float name="XCLW" recordType="XCLW" />
+      <Float name="XILS" recordType="XILS" />
+      <FormLink name="RadiusDesc" recordType="RDES" refName="Fallout76MajorRecord" />
+      <ByteArray name="NAVH" recordType="NAVH" />
+      <FormLink name="Water" recordType="XCWT" refName="Water" />
+      <FormLink name="XCLR" recordType="XCLR" refName="Fallout76MajorRecord" />
+      <FormLink name="Location" recordType="XLCN" refName="Location" />
+      <UInt32 name="XWCN" recordType="XWCN" />
+      <ByteArray name="XWCU" recordType="XWCU" />
+      <FormLink name="LockList" recordType="XILL" refName="Fallout76MajorRecord" />
+      <String name="XWEM" recordType="XWEM" />
+      <FormLink name="SkyWeatherOverride" recordType="XCCM" refName="Climate" />
+      <FormLink name="AcousticSpace" recordType="XCAS" refName="AcousticSpace" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="Location" />
+      <FormLink name="MusicType" recordType="XCMO" refName="MusicType" />
+      <FormLink name="ImageSpace" recordType="XCIM" refName="ImageSpace" />
+      <FormLink name="GodRays" recordType="XGDR" refName="GodRays" />
+      <ByteArray name="XPRI" recordType="XPRI" />
+      <ByteArray name="XCPF" recordType="XCPF" />
+      <Float name="CII0" recordType="CII0" />
+      <Float name="CIDH" recordType="CIDH" />
+      <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="UnknownGroupData" binary="NoGeneration" />
+      <Int32 name="PersistentTimestamp" binary="NoGeneration" />
+      <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
+      <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+          <ByteArray name="MHDT" recordType="MHDT" />
+      <ByteArray name="XCLL" recordType="XCLL" />
+      <ByteArray name="XCRI" recordType="XCRI" overflowRecordType="XXXX" />
+      <ByteArray name="XCRP" recordType="XCRP" />
+      <ByteArray name="XILW" recordType="XILW" />
+      <ByteArray name="XISR" recordType="XISR" />
+      <RefDirect name="XCLC" refName="CellBlockXCLCData" />
+      <ByteArray name="NAM2" recordType="NAM2" />
+      <ByteArray name="NAM3" recordType="NAM3" />
+      <ByteArray name="NAM4" recordType="NAM4" />
+      <FormLink name="Owner" recordType="XOWN" refName="Fallout76MajorRecord" />
+</Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
+  </Object>
+  <Object name="CellBlockXCLCData" objType="Subrecord" recordType="XCLC">
+    <Fields>
+      <UInt32 name="Field1" />
+      <UInt32 name="Field2" />
+      <UInt32 name="Field3" />
+    </Fields>
+  </Object>
+</Loqui>

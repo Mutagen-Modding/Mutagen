@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledPerkCard" recordType="LVPC" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <ByteArray name="BelowVersion" binary="NoGeneration" />
+      <String name="ONAM" recordType="ONAM" translated="Normal" />
+      <Float name="LVMV" recordType="LVMV" />
+      <Float name="LVCV" recordType="LVCV" />
+      <UInt16 name="LVLF" recordType="LVLF" />
+      <UInt32 name="LLCT" recordType="LLCT" />
+      <Bool name="LVCL" recordType="LVCL" />
+      <UInt16 name="LVUO" recordType="LVUO" />
+          <Float name="LVIV" recordType="LVIV" />
+      <UInt8 name="LVLD" recordType="LVLD" />
+      <FormLink name="LVLO" recordType="LVLO" refName="Fallout76MajorRecord" />
+      <Float name="LVLV" recordType="LVLV" />
+      <UInt32 name="LVOV" recordType="LVOV" />
+      <UInt8 name="LVUD" recordType="LVUD" />
+      <ByteArray name="LVLC" recordType="LVLC" />
+</Fields>
+  </Object>
+</Loqui>

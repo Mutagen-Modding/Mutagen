@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt32 name="PHST" recordType="PHST" />
+      <String name="FULL" recordType="FULL" translated="Normal" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Enchantment" recordType="EITM" refName="ObjectEffect" />
+      <FormLink name="ImageSpaceModifier" recordType="MNAM" refName="ImageSpaceAdapter" />
+      <ByteArray name="DATA" recordType="DATA" />
+      <ByteArray name="DAMA" recordType="DAMA" />
+</Fields>
+  </Object>
+</Loqui>

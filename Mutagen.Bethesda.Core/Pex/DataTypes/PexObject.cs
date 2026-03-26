@@ -17,13 +17,13 @@ public partial class PexObject
         ret.ParentClassName = parse.ReadString();
         ret.DocString = parse.ReadString();
 
-        if (parse.Category == GameCategory.Fallout4)
+        if (parse.Category is GameCategory.Fallout4 or GameCategory.Fallout76)
             ret.IsConst = parse.Reader.ReadBoolean();
 
         ret.RawUserFlags = parse.Reader.ReadUInt32();
         ret.AutoStateName = parse.ReadString();
 
-        if (parse.Category == GameCategory.Fallout4)
+        if (parse.Category is GameCategory.Fallout4 or GameCategory.Fallout76)
         {
             var infoCount = parse.Reader.ReadUInt16();
             for (var i = 0; i < infoCount; i++)
@@ -73,7 +73,7 @@ public partial class PexObject
         write.WriteString(ParentClassName);
         write.WriteString(DocString);
 
-        if (write.Category == GameCategory.Fallout4)
+        if (write.Category is GameCategory.Fallout4 or GameCategory.Fallout76)
         {
             write.Writer.Write(IsConst ? (byte)1 : (byte)0);
         }
@@ -81,7 +81,7 @@ public partial class PexObject
         write.Writer.Write(RawUserFlags);
         write.WriteString(AutoStateName);
 
-        if (write.Category == GameCategory.Fallout4)
+        if (write.Category is GameCategory.Fallout4 or GameCategory.Fallout76)
         {
             write.Writer.Write((ushort)StructInfos.Count);
             foreach (var structInfo in StructInfos)

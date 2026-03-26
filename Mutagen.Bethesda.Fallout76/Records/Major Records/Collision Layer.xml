@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <String name="DESC" recordType="DESC" translated="Normal" />
+      <UInt32 name="BNAM" recordType="BNAM" />
+      <UInt32 name="Colors" binary="NoGeneration" />
+      <Float name="FNAM" recordType="FNAM" />
+      <String name="MNAM" recordType="MNAM" />
+      <UInt32 name="INTV" recordType="INTV" />
+      <ByteArray name="CNAM" recordType="CNAM" />
+      <Int32 name="GNAM" recordType="GNAM" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ReverbParameters" recordType="REVB" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <Data>
+        <Fields>
+          <UInt16 name="DecayMilliseconds" />
+          <UInt16 name="HfReferenceHertz" />
+          <Int8 name="RoomFilter" />
+          <Int8 name="RoomHfFilter" />
+          <Int8 name="Reflections" />
+          <Int8 name="ReverbAmp" />
+          <Float name="DecayHfRatio" integerType="Byte" divisor="100" />
+          <UInt8 name="ReflectDelayMS" />
+          <UInt8 name="ReverbDelayMS" />
+          <Percent name="DiffusionPercent" integerType="Byte" />
+          <Percent name="DensityPercent" integerType="Byte" />
+          <UInt8 name="Unknown" />
+        </Fields>
+      </Data>
+      <Enum name="ReverbClass" enumName="ReverbClass" byteLength="4" recordType="ANAM" />
+    </Fields>
+  </Object>
+</Loqui>

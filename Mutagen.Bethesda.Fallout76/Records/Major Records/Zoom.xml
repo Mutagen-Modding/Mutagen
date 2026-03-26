@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Zoom" recordType="ZOOM" objType="Record" baseClass="Fallout76MajorRecord">
+    <Fields>
+      <Data recordType="GNAM">
+        <Fields>
+          <Float name="FovMult" />
+          <Enum name="Overlay" enumName="Zoom.OverlayType" byteLength="4" />
+      <FormLink name="ImagespaceModifier" refName="ImageSpaceAdapter" />
+          <P3Float name="CameraOffset" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SpellThresholdData" recordType="STHD" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <FormLink name="Spell" recordType="SPIT" refName="Spell" />
+      <FormLink name="ActorEffect" recordType="SPLO" refName="Spell" />
+      <ByteArray name="NAM0" recordType="NAM0" />
+    </Fields>
+  </Object>
+</Loqui>

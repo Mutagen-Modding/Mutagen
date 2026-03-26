@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AObjectModification" recordType="OMOD" objType="Record" abstract="true" majorFlag="true" baseClass="Fallout76MajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <RefDirect name="Model" refName="Model" />
+      <CustomLogic name="DataParse" recordType="DATA" />
+      <UInt16 name="Unknown" binary="NoGeneration" />
+      <UInt8 name="MaxRank" binary="NoGeneration" />
+      <UInt8 name="LevelTierScaledOffset" binary="NoGeneration" />
+      <FormLink name="AttachPoint" refName="Keyword" binary="NoGeneration" />
+      <List name="AttachParentSlots" binary="NoGeneration">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Items" refName="ObjectModItem" binary="NoGeneration" />
+      <RefList name="Includes" refName="ObjectModInclude" binary="NoGeneration" />
+      <List name="TargetOmodKeywords" recordType="MNAM">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="FilterKeywords" recordType="FNAM">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="LooseMod" refName="MiscItem" recordType="LNAM" />
+      <UInt8 name="Priority" recordType="NAM1" />
+      <String name="Filter" recordType="FLTR" />
+      <String name="DURL" recordType="DURL" />
+      <ByteArray name="XALG" recordType="XALG" />
+      <ByteArray name="ENLM2" recordType="ENLM" />
+      <ByteArray name="ENLT2" recordType="ENLT" />
+      <Float name="ENLS2" recordType="ENLS" />
+      <ByteArray name="AUUV2" recordType="AUUV" />
+      <Float name="ARTC" recordType="ARTC" />
+      <FormLink name="DNAM2" recordType="DNAM" refName="Fallout76MajorRecord" />
+      <FormLink name="ENAM2" recordType="ENAM" refName="Fallout76MajorRecord" />
+      <String name="FTAG" recordType="FTAG" />
+      <Bool name="INDX2" recordType="INDX" />
+      <Bool name="NAM2b" recordType="NAM2" />
+      <ByteArray name="NAM3b" recordType="NAM3" />
+      <UInt32 name="OBST" recordType="OBST" />
+      <FormLink name="XNAM2" recordType="XNAM" refName="Fallout76MajorRecord" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
+  </Object>
+  <Object name="ObjectModItem" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Value1" />
+      <UInt32 name="Value2" />
+    </Fields>
+  </Object>
+  <Object name="ObjectModInclude" objType="Subrecord">
+    <Fields>
+      <FormLink name="Mod" refName="AObjectModification" />
+      <UInt8 name="MinimumLevel" />
+      <Bool name="Optional" byteLength="1" />
+      <Bool name="DoNotUseAll" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="ArmorModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="NpcModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Npc.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="WeaponModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="UnknownObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <RecordType name="ModificationType" binary="NoGeneration" />
+</Fields>
+  </Object>
+</Loqui>

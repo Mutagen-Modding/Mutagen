@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="Fallout76MajorRecord" majorFlag="true">
+    <Fields>
+      <String name="EDID" recordType="EDID" />
+      <RefList name="ObjectPlacementDefaults" refName="ObjectPlacementDefault" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="DefaultLayer" recordType="DEFL" refName="Layer" />
+      <FormLink name="LoopingSound" recordType="SNAM" refName="SoundDescriptor" />
+      <FormLink name="UseSoundFromRegion" recordType="RDAT" refName="Region" />
+      <FormLink name="EnvironmentType" recordType="BNAM" refName="ReverbParameters" />
+      <UInt8 name="XTRI" recordType="XTRI" />
+      <UInt16 name="FNAM" recordType="FNAM" />
+      <UInt16 name="WNAM" recordType="WNAM" />
+      <UInt8 name="BEVA" recordType="BEVA" />
+      <Float name="FEVA" recordType="FEVA" />
+    </Fields>
+  </Object>
+</Loqui>

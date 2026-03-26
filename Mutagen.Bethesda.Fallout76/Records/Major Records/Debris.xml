@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="Fallout76MajorRecord">
+    <Fields>
+      <RefList name="Models" refName="DebrisModel" />
+    </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
+  </Object>
+  <Object name="DebrisModel" objType="Subrecord">
+    <Fields>
+      
+      <ByteArray name="MODT" recordType="MODT" />
+      <ByteArray name="DATA" recordType="DATA" />
+</Fields>
+  </Object>
+</Loqui>
