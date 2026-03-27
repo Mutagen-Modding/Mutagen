@@ -19882,7 +19882,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimVR = 3,
         EnderalLE = 5,
         EnderalSE = 6,
-        EnderalSEGog = 8
+        EnderalSEGog = 11
     }
 
     public static class SkyrimReleaseExt
@@ -19897,6 +19897,7 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimRelease.SkyrimVR => GameRelease.SkyrimVR,
                 SkyrimRelease.EnderalLE => GameRelease.EnderalLE,
                 SkyrimRelease.EnderalSE => GameRelease.EnderalSE,
+                SkyrimRelease.EnderalSEGog => GameRelease.EnderalSEGog,
                 _ => throw new ArgumentException()
             };
         }
@@ -19911,6 +19912,7 @@ namespace Mutagen.Bethesda.Skyrim
                 GameRelease.SkyrimVR => SkyrimRelease.SkyrimVR,
                 GameRelease.EnderalLE => SkyrimRelease.EnderalLE,
                 GameRelease.EnderalSE => SkyrimRelease.EnderalSE,
+                GameRelease.EnderalSEGog => SkyrimRelease.EnderalSEGog,
                 _ => throw new ArgumentException()
             };
         }
