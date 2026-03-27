@@ -354,10 +354,10 @@ internal class Fallout4MultiModOverlay : IFallout4ModDisposableGetter
         _cells ??= new MergedListGroup(_sourceMods.Select(m => m.Cells));
     public IFallout4GroupGetter<IWorldspaceGetter> Worldspaces =>
         _worldspaces ??= new MergedGroup<IWorldspaceGetter>(
-            _sourceMods.Select(m => m.Worldspaces));
+            _sourceMods.Select(m => m.Worldspaces), allowDuplicateOverrides: true);
     public IFallout4GroupGetter<IQuestGetter> Quests =>
         _quests ??= new MergedGroup<IQuestGetter>(
-            _sourceMods.Select(m => m.Quests));
+            _sourceMods.Select(m => m.Quests), allowDuplicateOverrides: true);
     public IFallout4GroupGetter<IIdleAnimationGetter> IdleAnimations =>
         _idleAnimations ??= new MergedGroup<IIdleAnimationGetter>(
             _sourceMods.Select(m => m.IdleAnimations));
@@ -596,33 +596,45 @@ internal class Fallout4MultiModOverlay : IFallout4ModDisposableGetter
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords())
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords())
             {
-                yield return record;
+                if (seen.Add(record.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
 
     public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords<T>(throwIfUnknown))
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords<T>(throwIfUnknown))
             {
-                yield return record;
+                if (record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords(type, throwIfUnknown))
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords(type, throwIfUnknown))
             {
-                yield return record;
+                if (seen.Add(record.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
@@ -766,17 +778,20 @@ internal class Fallout4MultiModOverlay : IFallout4ModDisposableGetter
 /// <summary>
 /// Merged group that combines multiple groups into a single unified view.
 /// Validates no duplicate FormKeys exist and caches results.
+/// When allowDuplicateOverrides is true, duplicate FormKeys are allowed and the later copy wins.
 /// </summary>
 internal class MergedGroup<TGetter> : IFallout4GroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>
     where TGetter : class, IFallout4MajorRecordGetter, IBinaryItem
 {
     private readonly IEnumerable<IGroupGetter<TGetter>> _sourceGroups;
+    private readonly bool _allowDuplicateOverrides;
     private Dictionary<FormKey, TGetter>? _cache;
     private readonly object _cacheLock = new object();
 
-    public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups)
+    public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups, bool allowDuplicateOverrides = false)
     {
         _sourceGroups = sourceGroups;
+        _allowDuplicateOverrides = allowDuplicateOverrides;
     }
 
     private Dictionary<FormKey, TGetter> Cache
@@ -796,9 +811,18 @@ internal class MergedGroup<TGetter> : IFallout4GroupGetter<TGetter>, IReadOnlyCa
                     {
                         if (!cache.TryAdd(record.FormKey, record))
                         {
-                            throw new SplitModException(
-                                $"Duplicate FormKey {record.FormKey} found in split mods. " +
-                                "This indicates corruption or an error in the splitting logic.");
+                            if (_allowDuplicateOverrides)
+                            {
+                                // Parent record duplicated across split files;
+                                // use the later copy following override rules.
+                                cache[record.FormKey] = record;
+                            }
+                            else
+                            {
+                                throw new SplitModException(
+                                    $"Duplicate FormKey {record.FormKey} found in split mods. " +
+                                    "This indicates corruption or an error in the splitting logic.");
+                            }
                         }
                     }
                 }

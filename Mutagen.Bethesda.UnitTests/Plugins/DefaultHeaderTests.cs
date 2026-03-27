@@ -62,6 +62,21 @@ public class DefaultHeaderTests
     }
 
     [Fact]
+    public void GetMultiFileOverlayTypeInfo_AllGameCategories_Supported()
+    {
+        foreach (var category in Enums<GameCategory>.Values)
+        {
+            var (typeName, assemblyName) = category.GetMultiFileOverlayTypeInfo();
+            typeName.ShouldNotBeNullOrEmpty($"TypeName should not be null/empty for {category}");
+            assemblyName.ShouldNotBeNullOrEmpty($"AssemblyName should not be null/empty for {category}");
+
+            var assemblyQualifiedName = $"{typeName}, {assemblyName}";
+            var overlayType = Type.GetType(assemblyQualifiedName);
+            overlayType.ShouldNotBeNull($"Could not find multi-file overlay type for {category}: {assemblyQualifiedName}");
+        }
+    }
+
+    [Fact]
     public void ModStatsVersionDefaultMatchesGameConstants()
     {
         foreach (var category in Enums<GameCategory>.Values)

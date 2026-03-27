@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
 
             // Validate no duplicate FormIDs across split files
-            ValidateNoDuplicates(overlays, targetModKey);
+            ValidateNoDuplicates(overlays, targetModKey, release);
 
             // Merge masters from all overlays according to load order
             // Filter out targetModKey and all split file ModKeys, since split files may
@@ -324,13 +324,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             IReadOnlyList<IMasterReferenceGetter> mergedMasters)
         {
             // Determine which multi-file overlay class to instantiate based on game release
-            var (typeName, assemblyName) = gameRelease.ToCategory() switch
-            {
-                GameCategory.Skyrim => ("Mutagen.Bethesda.Skyrim.SkyrimMultiModOverlay", "Mutagen.Bethesda.Skyrim"),
-                _ => throw new NotImplementedException(
-                    $"Multi-mod overlay is not yet implemented for {gameRelease}. " +
-                    "Only Skyrim is currently supported.")
-            };
+            var (typeName, assemblyName) = gameRelease.ToCategory().GetMultiFileOverlayTypeInfo();
 
             // Load the overlay type with assembly-qualified name
             var assemblyQualifiedName = $"{typeName}, {assemblyName}";
@@ -392,8 +386,9 @@ namespace Mutagen.Bethesda.Plugins.Records
             return (IModDisposeGetter)overlay;
         }
 
-        private static void ValidateNoDuplicates(List<IModDisposeGetter> overlays, ModKey modKey)
+        private static void ValidateNoDuplicates(List<IModDisposeGetter> overlays, ModKey modKey, GameRelease release)
         {
+            var parentRecordTypes = Meta.GameConstants.Get(release).GroupConstants.ParentRecordTypes;
             var seenFormKeys = new Dictionary<FormKey, string>();
 
             for (int i = 0; i < overlays.Count; i++)
@@ -405,6 +400,16 @@ namespace Mutagen.Bethesda.Plugins.Records
                 {
                     if (seenFormKeys.TryGetValue(record.FormKey, out var previousFile))
                     {
+                        if (parentRecordTypes.Contains(Mapping.RecordTypeLookup.GetRecordType(record.GetType())))
+                        {
+                            // Known parent record types (Cell, Worldspace, DialogTopic) can be
+                            // legitimately duplicated across split files because GetOrAddAsOverride
+                            // on child records implicitly adds parent containers.
+                            // Accept the later copy following override rules.
+                            seenFormKeys[record.FormKey] = fileName;
+                            continue;
+                        }
+
                         throw new InvalidOperationException(
                             $"Duplicate FormKey {record.FormKey} found in both {previousFile} and {fileName}. " +
                             "This indicates corruption in the split files.");

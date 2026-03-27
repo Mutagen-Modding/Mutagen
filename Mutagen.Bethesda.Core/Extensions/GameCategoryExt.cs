@@ -72,6 +72,19 @@ public static class GameCategoryExt
         }
     }
     
+    internal static (string TypeName, string AssemblyName) GetMultiFileOverlayTypeInfo(this GameCategory category)
+    {
+        return category switch
+        {
+            GameCategory.Oblivion => ("Mutagen.Bethesda.Oblivion.OblivionMultiModOverlay", "Mutagen.Bethesda.Oblivion"),
+            GameCategory.Skyrim => ("Mutagen.Bethesda.Skyrim.SkyrimMultiModOverlay", "Mutagen.Bethesda.Skyrim"),
+            GameCategory.Fallout4 => ("Mutagen.Bethesda.Fallout4.Fallout4MultiModOverlay", "Mutagen.Bethesda.Fallout4"),
+            GameCategory.Starfield => ("Mutagen.Bethesda.Starfield.StarfieldMultiModOverlay", "Mutagen.Bethesda.Starfield"),
+            _ => throw new NotImplementedException(
+                $"Multi-mod overlay is not yet implemented for {category}."),
+        };
+    }
+
     public static bool IncludesMasterReferenceDataSubrecords(this GameCategory release)
     {
         return release switch
