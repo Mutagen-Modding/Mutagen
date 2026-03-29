@@ -30,6 +30,7 @@ public class PassthroughTestParams
     public GameRelease GameRelease { get; set; }
     public Target Target { get; set; } = new();
     public required IWorkDropoff WorkDropoff { get; set; }
+    public string? DataFolder { get; set; }
 }
 
 public abstract class PassthroughTest
@@ -51,6 +52,7 @@ public abstract class PassthroughTest
     public DirectoryPath SourceDataFolder => FilePath.Path.Directory!.Value;
     public GameRelease GameRelease { get; }
     public ILoadOrderGetter<IModMasterStyledGetter> MasterFlagsLookup { get; }
+    public string? DataFolder { get; }
     public readonly GameConstants Meta;
 
     public StringsReadParameters StringsParams => new StringsReadParameters()
@@ -71,9 +73,30 @@ public abstract class PassthroughTest
         Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
         Settings = param.PassthroughSettings;
         Target = param.Target;
+        DataFolder = param.DataFolder;
         Meta = GameConstants.Get(GameRelease);
-        using var env = GameEnvironment.Typical.Construct(GameRelease);
-        MasterFlagsLookup = env.LoadOrder.ResolveExistingMods().Transform(KeyedMasterStyle.FromMod);
+        if (!string.IsNullOrEmpty(param.DataFolder))
+        {
+            MasterFlagsLookup = BuildMasterFlagsFromDataFolder(param.DataFolder, release);
+        }
+        else
+        {
+            using var env = GameEnvironment.Typical.Construct(GameRelease);
+            MasterFlagsLookup = env.LoadOrder.ResolveExistingMods().Transform(KeyedMasterStyle.FromMod);
+        }
+    }
+
+    private static ILoadOrderGetter<IModMasterStyledGetter> BuildMasterFlagsFromDataFolder(string dataFolder, GameRelease release)
+    {
+        var modFiles = Directory.EnumerateFiles(dataFolder, "*.esm")
+            .Concat(Directory.EnumerateFiles(dataFolder, "*.esp"))
+            .Select(f =>
+            {
+                var modPath = new ModPath(ModKey.FromFileName(Path.GetFileName(f)), f);
+                return KeyedMasterStyle.FromPath(modPath, release);
+            })
+            .ToList();
+        return new LoadOrder<IModMasterStyledGetter>(modFiles);
     }
 
     public abstract AlignmentRules GetAlignmentRules();
@@ -613,6 +636,7 @@ public abstract class PassthroughTest
         Target target,
         IWorkDropoff workDropoff)
     {
+        var dataFolder = settings.DataFolderLocations.Get(group.GameRelease);
         return Factory(new PassthroughTestParams()
         {
             WorkDropoff = workDropoff,
@@ -620,6 +644,7 @@ public abstract class PassthroughTest
             PassthroughSettings = settings.PassthroughSettings,
             Target = target,
             GameRelease = group.GameRelease,
+            DataFolder = string.IsNullOrEmpty(dataFolder) ? null : dataFolder,
         });
     }
 
@@ -627,9 +652,11 @@ public abstract class PassthroughTest
         IBinaryModdedWriteBuilderLoadOrderChoice builder,
         StringsWriter stringsWriter)
     {
-        return builder
-            .WithLoadOrderFromHeaderMasters()
-            .WithDefaultDataFolder()
+        var withLoadOrder = builder.WithLoadOrderFromHeaderMasters();
+        var withDataFolder = !string.IsNullOrEmpty(DataFolder)
+            ? withLoadOrder.WithDataFolder(DataFolder)
+            : withLoadOrder.WithDefaultDataFolder();
+        return withDataFolder
             .WithStringsWriter(stringsWriter)
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.NoCheck)
