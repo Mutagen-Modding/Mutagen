@@ -44,6 +44,7 @@ public partial class RecordTypeInts
     public const int DELE = 0x454C4544;
     public const int DESC = 0x43534544;
     public const int DEST = 0x54534544;
+    public const int DIAL = 0x4C414944;
     public const int DMDL = 0x4C444D44;
     public const int DMDT = 0x54444D44;
     public const int DNAM = 0x4D414E44;
@@ -167,6 +168,7 @@ public partial class RecordTypeInts
     public const int PROJ = 0x4A4F5250;
     public const int PWAT = 0x54415750;
     public const int QNAM = 0x4D414E51;
+    public const int QUST = 0x54535551;
     public const int RACE = 0x45434152;
     public const int RCIL = 0x4C494352;
     public const int RDAT = 0x54414452;

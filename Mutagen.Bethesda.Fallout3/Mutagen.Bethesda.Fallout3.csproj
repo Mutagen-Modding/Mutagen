@@ -563,8 +563,29 @@
     <Compile Include="Records\MajorRecords\Water_Generated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Note.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Note_Generated.cs">
       <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\ANoteData_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\NoteStandard.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\NoteStandard_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\NoteVoice_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Quest_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\DialogTopic_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\Terminal_Generated.cs">
       <DependentUpon>Terminal.xml</DependentUpon>

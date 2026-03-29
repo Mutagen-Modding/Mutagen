@@ -46,6 +46,7 @@ public partial class RecordTypes
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DESC = new(0x43534544);
     public static readonly RecordType DEST = new(0x54534544);
+    public static readonly RecordType DIAL = new(0x4C414944);
     public static readonly RecordType DMDL = new(0x4C444D44);
     public static readonly RecordType DMDT = new(0x54444D44);
     public static readonly RecordType DNAM = new(0x4D414E44);
@@ -169,6 +170,7 @@ public partial class RecordTypes
     public static readonly RecordType PROJ = new(0x4A4F5250);
     public static readonly RecordType PWAT = new(0x54415750);
     public static readonly RecordType QNAM = new(0x4D414E51);
+    public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RACE = new(0x45434152);
     public static readonly RecordType RCIL = new(0x4C494352);
     public static readonly RecordType RDAT = new(0x54414452);

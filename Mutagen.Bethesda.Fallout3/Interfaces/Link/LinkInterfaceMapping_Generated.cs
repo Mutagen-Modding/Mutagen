@@ -49,6 +49,32 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IExplodeSpawn),
                 Getter: typeof(IExplodeSpawnGetter)));
         dict[typeof(IExplodeSpawnGetter)] = dict[typeof(IExplodeSpawn)] with { Setter = false };
+        dict[typeof(IRelatable)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Faction_Registration.Instance,
+                Race_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IRelatable),
+                Getter: typeof(IRelatableGetter)));
+        dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
+        dict[typeof(IPlaced)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                PlacedBeam_Registration.Instance,
+                PlacedCreature_Registration.Instance,
+                PlacedGrenade_Registration.Instance,
+                PlacedMissile_Registration.Instance,
+                PlacedNpc_Registration.Instance,
+                PlacedObject_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlaced),
+                Getter: typeof(IPlacedGetter)));
+        dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
         dict[typeof(IItem)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -66,9 +92,9 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
                 MoveableStatic_Registration.Instance,
-                Note_Registration.Instance,
                 Static_Registration.Instance,
                 Weapon_Registration.Instance,
+                Note_Registration.Instance,
             },
             new InterfaceMappingTypes(
                 Setter: typeof(IItem),
@@ -109,17 +135,6 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(INpcSpawn),
                 Getter: typeof(INpcSpawnGetter)));
         dict[typeof(INpcSpawnGetter)] = dict[typeof(INpcSpawn)] with { Setter = false };
-        dict[typeof(IRelatable)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                Faction_Registration.Instance,
-                Race_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IRelatable),
-                Getter: typeof(IRelatableGetter)));
-        dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
         dict[typeof(IEffectRecord)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -131,21 +146,6 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IEffectRecord),
                 Getter: typeof(IEffectRecordGetter)));
         dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
-        dict[typeof(IPlaced)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                PlacedBeam_Registration.Instance,
-                PlacedCreature_Registration.Instance,
-                PlacedGrenade_Registration.Instance,
-                PlacedMissile_Registration.Instance,
-                PlacedNpc_Registration.Instance,
-                PlacedObject_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IPlaced),
-                Getter: typeof(IPlacedGetter)));
-        dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, Cell, Class, CombatStyle, Container, Creature, Debris, Door, EffectShader, Explosion, Eye, Eyes, Faction, FormList, Furniture, GameSetting, Global, Grass, Hair, HeadPart, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, LandscapeTexture, LeveledCreature, LeveledItem, LeveledNpc, Light, MagicEffect, MenuIcon, MiscItem, MoveableStatic, Note, Npc, ObjectEffect, Package, PlaceableWater, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Projectile, Race, Region, Script, Sound, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, VoiceType, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Cell, Class, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MagicEffect, MenuIcon, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType, Water, LandscapeTexture, TalkingActivator, Terminal, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, CombatStyle, Container, Creature, Door, FormList, Furniture, Grass, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, LeveledCreature, LeveledItem, LeveledNpc, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, Package, PlaceableWater, Projectile, Script, Spell, Static, StaticCollection, Tree, Weapon, Quest, DialogTopic, Note]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, Cell, Class, CombatStyle, Container, Creature, Debris, Door, EffectShader, Explosion, Eye, Eyes, Faction, FormList, Furniture, GameSetting, Global, Grass, Hair, HeadPart, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, LandscapeTexture, LeveledCreature, LeveledItem, LeveledNpc, Light, MagicEffect, MenuIcon, MiscItem, MoveableStatic, Note, Npc, ObjectEffect, Package, PlaceableWater, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Projectile, Race, Region, Script, Sound, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, VoiceType, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Cell, Class, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MagicEffect, MenuIcon, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType, Water, LandscapeTexture, TalkingActivator, Terminal, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, CombatStyle, Container, Creature, Door, FormList, Furniture, Grass, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, LeveledCreature, LeveledItem, LeveledNpc, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, Package, PlaceableWater, Projectile, Script, Spell, Static, StaticCollection, Tree, Weapon, Quest, DialogTopic, Note]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, Cell, Class, CombatStyle, Container, Creature, Debris, Door, EffectShader, Explosion, Eye, Eyes, Faction, FormList, Furniture, GameSetting, Global, Grass, Hair, HeadPart, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, LandscapeTexture, LeveledCreature, LeveledItem, LeveledNpc, Light, MagicEffect, MenuIcon, MiscItem, MoveableStatic, Note, Npc, ObjectEffect, Package, PlaceableWater, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Projectile, Race, Region, Script, Sound, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, VoiceType, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, Cell, Class, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MagicEffect, MenuIcon, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType, Water, LandscapeTexture, TalkingActivator, Terminal, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, CombatStyle, Container, Creature, Door, FormList, Furniture, Grass, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, LeveledCreature, LeveledItem, LeveledNpc, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, Package, PlaceableWater, Projectile, Script, Spell, Static, StaticCollection, Tree, Weapon, Quest, DialogTopic, Note]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,

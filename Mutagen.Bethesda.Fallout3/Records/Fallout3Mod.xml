@@ -46,6 +46,7 @@
       <Group name="Keys" refName="Key" />
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="IdleMarkers" refName="IdleMarker" />
+      <Group name="Notes" refName="Note" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
