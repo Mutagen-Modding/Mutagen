@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAimAssistPosePointGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAimAssistPosePointGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

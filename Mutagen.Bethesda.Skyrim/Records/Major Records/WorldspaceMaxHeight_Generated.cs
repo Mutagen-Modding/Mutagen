@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceMaxHeightGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceMaxHeightGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

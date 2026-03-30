@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon<T>.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => InstanceNamingRuleCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRuleSetterCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleGetter<T> obj, bool iterateNestedRecords = true)
         {
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleCommon<T>.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => InstanceNamingRuleCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => InstanceNamingRuleBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

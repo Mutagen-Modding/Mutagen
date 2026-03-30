@@ -2843,7 +2843,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPhonemeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPhonemeGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

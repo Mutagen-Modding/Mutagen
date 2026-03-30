@@ -6477,7 +6477,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeaponCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponSetterCommon.Instance.RemapLinks(this, mapping);
         public Weapon(
             FormKey formKey,
@@ -9849,34 +9849,34 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Transforms is {} TransformsItems)
             {
-                foreach (var item in TransformsItems.EnumerateFormLinks())
+                foreach (var item in TransformsItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -9899,14 +9899,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.PickupSound is {} PickupSoundItems)
             {
-                foreach (var item in PickupSoundItems.EnumerateFormLinks())
+                foreach (var item in PickupSoundItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.DropdownSound is {} DropdownSoundItems)
             {
-                foreach (var item in DropdownSoundItems.EnumerateFormLinks())
+                foreach (var item in DropdownSoundItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -9931,7 +9931,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.ObjectTemplates is {} ObjectTemplatesItem)
             {
-                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -9949,31 +9949,31 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.AmmoList);
             yield return FormLinkInformation.Factory(obj.OverrideProjectile);
             yield return FormLinkInformation.Factory(obj.OverrideShellCasing);
-            foreach (var item in obj.MeleeOrCreature.EnumerateFormLinks())
+            foreach (var item in obj.MeleeOrCreature.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.PrimedExplosive.EnumerateFormLinks())
+            foreach (var item in obj.PrimedExplosive.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.DryFire.EnumerateFormLinks())
+            foreach (var item in obj.DryFire.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Idle.EnumerateFormLinks())
+            foreach (var item in obj.Idle.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Equip.EnumerateFormLinks())
+            foreach (var item in obj.Equip.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Unequip.EnumerateFormLinks())
+            foreach (var item in obj.Unequip.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.FastEquip.EnumerateFormLinks())
+            foreach (var item in obj.FastEquip.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -9982,7 +9982,7 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.Skill);
             if (obj.DamageTypes is {} DamageTypesItem)
             {
-                foreach (var item in DamageTypesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in DamageTypesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -9994,7 +9994,7 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.PowerConsumption);
             if (obj.FirstPersonModel is {} FirstPersonModelItems)
             {
-                foreach (var item in FirstPersonModelItems.EnumerateFormLinks())
+                foreach (var item in FirstPersonModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -12651,7 +12651,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeaponCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeaponCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;

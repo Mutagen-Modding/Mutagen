@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectTemplateCommon<T>.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ObjectTemplateCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectTemplateSetterCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -920,18 +920,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectTemplateGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectTemplateGetter<T> obj, bool iterateNestedRecords = true)
         {
             foreach (var item in obj.Keywords)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Includes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Includes.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<T>, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectTemplateCommon<T>.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ObjectTemplateCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ObjectTemplateBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

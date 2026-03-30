@@ -1367,7 +1367,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshGeometrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -2139,20 +2139,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshGeometryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshGeometryGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.Parent is IFormLinkContainerGetter ParentlinkCont)
             {
-                foreach (var item in ParentlinkCont.EnumerateFormLinks())
+                foreach (var item in ParentlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.EdgeLinks.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.EdgeLinks.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DoorTriangles.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.DoorTriangles.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2760,7 +2760,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NavmeshGeometryCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshGeometryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

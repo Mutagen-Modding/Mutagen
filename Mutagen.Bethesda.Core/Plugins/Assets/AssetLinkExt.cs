@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Mutagen.Bethesda.Plugins.Assets;
 
 namespace Noggog;
@@ -10,25 +9,25 @@ public static class AssetLinkExt
         s.GivenPath.IsNumeric(floatingPt: floatingPt);
 
     public static IEnumerable<string> Split(this IAssetLinkGetter line, string delim, char escapeChar) =>
-        line.GivenPath.Split(delim: delim, escapeChar: escapeChar);
+        line.GivenPath.Split(delim: delim, escapeChar: escapeChar, StringComparison.OrdinalIgnoreCase);
 
     public static bool TrySubstringFromStart(this IAssetLinkGetter src, string item, out string result) =>
-        src.GivenPath.TrySubstringFromStart(item: item, result: out result);
+        src.GivenPath.TrySubstringFromStart(item: item, StringComparison.OrdinalIgnoreCase, result: out result);
 
     public static string SubstringFromStart(this IAssetLinkGetter src, string item) =>
-        src.GivenPath.SubstringFromStart(item: item);
+        src.GivenPath.SubstringFromStart(item: item, StringComparison.OrdinalIgnoreCase);
 
     public static bool TrySubstringFromEnd(this IAssetLinkGetter src, string item, out string result) =>
-        src.GivenPath.TrySubstringFromEnd(item: item, result: out result);
+        src.GivenPath.TrySubstringFromEnd(item: item, StringComparison.OrdinalIgnoreCase, result: out result);
 
     public static string SubstringFromEnd(this IAssetLinkGetter src, string item) =>
-        src.GivenPath.SubstringFromEnd(item: item);
+        src.GivenPath.SubstringFromEnd(item: item, StringComparison.OrdinalIgnoreCase);
 
     public static bool TryTrimStart(this IAssetLinkGetter src, string item, out string result) =>
-        src.GivenPath.TryTrimStart(item: item, result: out result);
+        src.GivenPath.TryTrimStart(item: item, StringComparison.OrdinalIgnoreCase, result: out result);
 
     public static string TrimStart(this IAssetLinkGetter src, string item) =>
-        src.GivenPath.TrimStart(item: item);
+        src.GivenPath.TrimStart(item: item, StringComparison.OrdinalIgnoreCase);
 
     public static bool TryTrimEnd(this IAssetLinkGetter src, string item, out string result) =>
         src.GivenPath.TryTrimStringFromEnd(item: item, result: out result);

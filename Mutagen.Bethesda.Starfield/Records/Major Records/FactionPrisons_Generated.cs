@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionPrisonsCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FactionPrisonsCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionPrisonsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionPrisonsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionPrisonsGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.PrisonDoorMarker);
             yield return FormLinkInformation.Factory(obj.PrisonShipLandingMarker);
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionPrisonsCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FactionPrisonsCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FactionPrisonsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

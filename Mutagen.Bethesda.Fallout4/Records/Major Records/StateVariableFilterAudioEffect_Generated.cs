@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStateVariableFilterAudioEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStateVariableFilterAudioEffectGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

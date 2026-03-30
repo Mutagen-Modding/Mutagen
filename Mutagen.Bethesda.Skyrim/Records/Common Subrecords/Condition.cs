@@ -928,6 +928,7 @@ partial class ConditionBinaryCreateTranslation
         item.RunOnTypeIndex = frame.ReadInt32();
     }
     
+#pragma warning disable CS0618 // Type or member is obsolete
     public static ConditionData? CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
     {
         switch (functionIndex)
@@ -1740,6 +1741,7 @@ partial class ConditionBinaryCreateTranslation
                 return null;
         }
     }
+#pragma warning restore CS0618
 
     public ushort GetFunctionIndex(IConditionDataGetter data)
     {

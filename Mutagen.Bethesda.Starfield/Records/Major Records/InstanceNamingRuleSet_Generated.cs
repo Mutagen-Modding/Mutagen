@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleSetCommon<T>.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => InstanceNamingRuleSetCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => InstanceNamingRuleSetSetterCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -629,11 +629,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleSetGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInstanceNamingRuleSetGetter<T> obj, bool iterateNestedRecords = true)
         {
             if (obj.Names is {} NamesItem)
             {
-                foreach (var item in NamesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in NamesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => InstanceNamingRuleSetCommon<T>.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => InstanceNamingRuleSetCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => InstanceNamingRuleSetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

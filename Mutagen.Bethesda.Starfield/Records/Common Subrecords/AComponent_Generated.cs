@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AComponentCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AComponentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AComponentSetterCommon.Instance.RemapLinks(this, mapping);
         public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AComponentSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAComponentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAComponentGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AComponentCommon.Instance.EnumerateFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AComponentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AComponentBinaryWriteTranslation.Instance;

@@ -809,7 +809,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IColorDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IColorDataGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VehicleWWiseDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => VehicleWWiseDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VehicleWWiseDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1371,45 +1371,45 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVehicleWWiseDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVehicleWWiseDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.MotorSound.EnumerateFormLinks())
+            foreach (var item in obj.MotorSound.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.TireSoundFrontLeft.EnumerateFormLinks())
+            foreach (var item in obj.TireSoundFrontLeft.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.TireSoundFrontRight.EnumerateFormLinks())
+            foreach (var item in obj.TireSoundFrontRight.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.TireSoundRearLeft.EnumerateFormLinks())
+            foreach (var item in obj.TireSoundRearLeft.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.TireSoundRearRight.EnumerateFormLinks())
+            foreach (var item in obj.TireSoundRearRight.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.HeadlightOn.EnumerateFormLinks())
+            foreach (var item in obj.HeadlightOn.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.HeadlightOff.EnumerateFormLinks())
+            foreach (var item in obj.HeadlightOff.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LandingSoundGround.EnumerateFormLinks())
+            foreach (var item in obj.LandingSoundGround.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LandingSoundWater.EnumerateFormLinks())
+            foreach (var item in obj.LandingSoundWater.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.HornSound.EnumerateFormLinks())
+            foreach (var item in obj.HornSound.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VehicleWWiseDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => VehicleWWiseDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => VehicleWWiseDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

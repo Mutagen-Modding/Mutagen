@@ -45,7 +45,7 @@ public class TestMajorRecord : ITestMajorRecord
     }
 
     public ushort? FormVersion { get; }
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => throw new NotImplementedException();
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => throw new NotImplementedException();
     public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping)
     {
         throw new System.NotImplementedException();

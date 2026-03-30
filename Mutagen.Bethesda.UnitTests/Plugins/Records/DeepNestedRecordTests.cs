@@ -1,6 +1,5 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -113,7 +112,7 @@ public class DeepNestedRecordTests
         var result = ModFactory<ISkyrimModDisposableGetter>.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -196,7 +195,7 @@ public class DeepNestedRecordTests
         var result = ModFactory<ISkyrimModDisposableGetter>.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 
@@ -274,7 +273,7 @@ public class DeepNestedRecordTests
         var result = ModFactory<ISkyrimModDisposableGetter>.ImportMultiFileGetter(
             modKey,
             new[] { (ModPath)splitFile1, (ModPath)splitFile2 },
-            Array.Empty<IModMasterStyledGetter>(),
+            Array.Empty<ModKey>(),
             GameRelease.SkyrimSE,
             BinaryReadParameters.Default with { FileSystem = fileSystem });
 

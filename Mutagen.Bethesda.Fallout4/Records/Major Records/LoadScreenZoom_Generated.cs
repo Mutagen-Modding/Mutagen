@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILoadScreenZoomGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILoadScreenZoomGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

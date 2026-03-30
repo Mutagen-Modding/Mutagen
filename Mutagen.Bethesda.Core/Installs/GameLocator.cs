@@ -453,6 +453,16 @@ public sealed class GameLocator
                 },
             },
         };
+        games[GameRelease.EnderalSEGog] = games[GameRelease.SkyrimSE] with
+        {
+            GameSources = new IGameSource[]
+            {
+                new GogGameSource()
+                {
+                    Id = 1708684988
+                },
+            },
+        };
         Games = games;
     }
 }

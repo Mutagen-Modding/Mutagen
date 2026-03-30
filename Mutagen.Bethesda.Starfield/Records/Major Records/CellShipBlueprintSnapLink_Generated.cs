@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellShipBlueprintSnapLinkCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CellShipBlueprintSnapLinkCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellShipBlueprintSnapLinkSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellShipBlueprintSnapLinkGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellShipBlueprintSnapLinkGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.ParentReference);
             yield return FormLinkInformation.Factory(obj.LinkedReference);
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellShipBlueprintSnapLinkCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CellShipBlueprintSnapLinkCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellShipBlueprintSnapLinkBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

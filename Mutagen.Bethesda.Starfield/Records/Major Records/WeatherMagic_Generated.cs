@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherMagicCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeatherMagicCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherMagicSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherMagicGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherMagicGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.OnLightningStrikeSpell);
             yield return FormLinkInformation.Factory(obj.OnWeatherActivateSpell);
@@ -1355,7 +1355,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherMagicCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeatherMagicCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherMagicBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

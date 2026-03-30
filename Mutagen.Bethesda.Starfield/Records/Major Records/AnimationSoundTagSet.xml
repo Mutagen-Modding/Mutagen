@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AnimationSoundTagSet" recordType="STAG" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefList name="Tags" refName="AnimationSoundTag" counterRecType="STMS" />
     </Fields>
   </Object>

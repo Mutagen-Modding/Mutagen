@@ -745,4 +745,122 @@ public class ModFilesMoverTests
     }
 
     #endregion
+
+    #region SplitPlugins
+
+    [Theory, MutagenModAutoData]
+    public void MoveSplitFilesToCleanDestination(
+        IFileSystem fileSystem,
+        ModKey modKey,
+        DirectoryPath existingDirectoryPath,
+        DirectoryPath existingDirectoryPath2,
+        string content,
+        StructureUnderTest sut)
+    {
+        var baseName = Path.GetFileNameWithoutExtension(modKey.FileName);
+        var extension = Path.GetExtension(modKey.FileName);
+
+        ModPath modPath = Path.Combine(existingDirectoryPath, modKey.FileName);
+        var splitFile2 = Path.Combine(existingDirectoryPath, $"{baseName}_2{extension}");
+        var splitFile3 = Path.Combine(existingDirectoryPath, $"{baseName}_3{extension}");
+        fileSystem.File.WriteAllText(modPath, content);
+        fileSystem.File.WriteAllText(splitFile2, content);
+        fileSystem.File.WriteAllText(splitFile3, content);
+
+        sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
+
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(splitFile2).ShouldBeFalse();
+        fileSystem.File.Exists(splitFile3).ShouldBeFalse();
+
+        var destMod = Path.Combine(existingDirectoryPath2, modKey.FileName);
+        var destSplit2 = Path.Combine(existingDirectoryPath2, $"{baseName}_2{extension}");
+        var destSplit3 = Path.Combine(existingDirectoryPath2, $"{baseName}_3{extension}");
+        fileSystem.File.ReadAllText(destMod).ShouldBe(content);
+        fileSystem.File.ReadAllText(destSplit2).ShouldBe(content);
+        fileSystem.File.ReadAllText(destSplit3).ShouldBe(content);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void MoveFewerSplitsCleansStaleSplits(
+        IFileSystem fileSystem,
+        ModKey modKey,
+        DirectoryPath existingDirectoryPath,
+        DirectoryPath existingDirectoryPath2,
+        string sourceContent,
+        string destContent,
+        StructureUnderTest sut)
+    {
+        var baseName = Path.GetFileNameWithoutExtension(modKey.FileName);
+        var extension = Path.GetExtension(modKey.FileName);
+
+        // Source: base + _2
+        ModPath modPath = Path.Combine(existingDirectoryPath, modKey.FileName);
+        var splitFile2 = Path.Combine(existingDirectoryPath, $"{baseName}_2{extension}");
+        fileSystem.File.WriteAllText(modPath, sourceContent);
+        fileSystem.File.WriteAllText(splitFile2, sourceContent);
+
+        // Destination already has base + _2 + _3 + _4
+        var destMod = Path.Combine(existingDirectoryPath2, modKey.FileName);
+        var destSplit2 = Path.Combine(existingDirectoryPath2, $"{baseName}_2{extension}");
+        var destSplit3 = Path.Combine(existingDirectoryPath2, $"{baseName}_3{extension}");
+        var destSplit4 = Path.Combine(existingDirectoryPath2, $"{baseName}_4{extension}");
+        fileSystem.File.WriteAllText(destMod, destContent);
+        fileSystem.File.WriteAllText(destSplit2, destContent);
+        fileSystem.File.WriteAllText(destSplit3, destContent);
+        fileSystem.File.WriteAllText(destSplit4, destContent);
+
+        sut.Sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: true);
+
+        // Source files are gone
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(splitFile2).ShouldBeFalse();
+
+        // Destination has source content for base + _2
+        fileSystem.File.ReadAllText(destMod).ShouldBe(sourceContent);
+        fileSystem.File.ReadAllText(destSplit2).ShouldBe(sourceContent);
+
+        // Stale split files at destination are cleaned up
+        fileSystem.File.Exists(destSplit3).ShouldBeFalse();
+        fileSystem.File.Exists(destSplit4).ShouldBeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void MoveNonSplitModCleansAllSplits(
+        IFileSystem fileSystem,
+        ModKey modKey,
+        DirectoryPath existingDirectoryPath,
+        DirectoryPath existingDirectoryPath2,
+        string sourceContent,
+        string destContent,
+        StructureUnderTest sut)
+    {
+        var baseName = Path.GetFileNameWithoutExtension(modKey.FileName);
+        var extension = Path.GetExtension(modKey.FileName);
+
+        // Source: just the base mod, no splits
+        ModPath modPath = Path.Combine(existingDirectoryPath, modKey.FileName);
+        fileSystem.File.WriteAllText(modPath, sourceContent);
+
+        // Destination already has base + _2 + _3
+        var destMod = Path.Combine(existingDirectoryPath2, modKey.FileName);
+        var destSplit2 = Path.Combine(existingDirectoryPath2, $"{baseName}_2{extension}");
+        var destSplit3 = Path.Combine(existingDirectoryPath2, $"{baseName}_3{extension}");
+        fileSystem.File.WriteAllText(destMod, destContent);
+        fileSystem.File.WriteAllText(destSplit2, destContent);
+        fileSystem.File.WriteAllText(destSplit3, destContent);
+
+        sut.Sut.MoveModTo(modPath, existingDirectoryPath2, overwrite: true);
+
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+
+        // Destination has source content for base
+        fileSystem.File.ReadAllText(destMod).ShouldBe(sourceContent);
+
+        // All stale split files at destination are cleaned up
+        fileSystem.File.Exists(destSplit2).ShouldBeFalse();
+        fileSystem.File.Exists(destSplit3).ShouldBeFalse();
+    }
+
+    #endregion
 }

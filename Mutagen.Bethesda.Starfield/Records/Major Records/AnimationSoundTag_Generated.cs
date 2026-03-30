@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimationSoundTagCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AnimationSoundTagCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AnimationSoundTagSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -888,9 +888,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationSoundTagGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationSoundTagGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Sound.EnumerateFormLinks())
+            foreach (var item in obj.Sound.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AnimationSoundTagCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AnimationSoundTagCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AnimationSoundTagBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

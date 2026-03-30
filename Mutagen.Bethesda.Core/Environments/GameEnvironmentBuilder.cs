@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Plugins.Analysis;
 using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
@@ -133,8 +134,9 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// </summary>
     /// <param name="mod">Mutable safe mod to add to the end of the load order</param>
     /// <param name="trimming">What load order trimming rules to follow</param>
+    /// <param name="considerModSplittingForTrimming">When true, also trims split siblings (e.g. MyMod_2.esp) of the output mod</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder<TMod, TModGetter> WithOutputMod(TMod mod, OutputModTrimming trimming = OutputModTrimming.SelfAndPast)
+    public GameEnvironmentBuilder<TMod, TModGetter> WithOutputMod(TMod mod, OutputModTrimming trimming = OutputModTrimming.SelfAndPast, bool considerModSplittingForTrimming = true)
     {
         var ret = this;
         switch (trimming)
@@ -142,10 +144,26 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             case OutputModTrimming.NoTrimming:
                 break;
             case OutputModTrimming.Self:
-                ret = ret.TransformLoadOrderListings(x => x.Where(x => x.ModKey != mod.ModKey));
+                if (considerModSplittingForTrimming)
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.Where(x =>
+                        x.ModKey != mod.ModKey && !MultiModFileAnalysis.IsSplitModSibling(x.ModKey, mod.ModKey)));
+                }
+                else
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.Where(x => x.ModKey != mod.ModKey));
+                }
                 break;
             case OutputModTrimming.SelfAndPast:
-                ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                if (considerModSplittingForTrimming)
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x =>
+                        x.ModKey != mod.ModKey && !MultiModFileAnalysis.IsSplitModSibling(x.ModKey, mod.ModKey)));
+                }
+                else
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                }
                 break;
             default:
                 throw new NotImplementedException();
@@ -508,8 +526,9 @@ public sealed record GameEnvironmentBuilder
     /// </summary>
     /// <param name="mod">Mutable safe mod to add to the end of the load order</param>
     /// <param name="trimming">What load order trimming rules to follow</param>
+    /// <param name="considerModSplittingForTrimming">When true, also trims split siblings (e.g. MyMod_2.esp) of the output mod</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder WithOutputMod(IMod mod, OutputModTrimming trimming = OutputModTrimming.SelfAndPast)
+    public GameEnvironmentBuilder WithOutputMod(IMod mod, OutputModTrimming trimming = OutputModTrimming.SelfAndPast, bool considerModSplittingForTrimming = true)
     {
         var ret = this;
         switch (trimming)
@@ -517,10 +536,26 @@ public sealed record GameEnvironmentBuilder
             case OutputModTrimming.NoTrimming:
                 break;
             case OutputModTrimming.Self:
-                ret = ret.TransformLoadOrderListings(x => x.Where(x => x.ModKey != mod.ModKey));
+                if (considerModSplittingForTrimming)
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.Where(x =>
+                        x.ModKey != mod.ModKey && !MultiModFileAnalysis.IsSplitModSibling(x.ModKey, mod.ModKey)));
+                }
+                else
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.Where(x => x.ModKey != mod.ModKey));
+                }
                 break;
             case OutputModTrimming.SelfAndPast:
-                ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                if (considerModSplittingForTrimming)
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x =>
+                        x.ModKey != mod.ModKey && !MultiModFileAnalysis.IsSplitModSibling(x.ModKey, mod.ModKey)));
+                }
+                else
+                {
+                    ret = ret.TransformLoadOrderListings(x => x.TakeWhile(x => x.ModKey != mod.ModKey));
+                }
                 break;
             default:
                 throw new NotImplementedException();

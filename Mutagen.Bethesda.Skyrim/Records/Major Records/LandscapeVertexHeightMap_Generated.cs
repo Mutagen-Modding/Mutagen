@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILandscapeVertexHeightMapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILandscapeVertexHeightMapGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

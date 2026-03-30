@@ -16,7 +16,7 @@ public class AssetTypeLocator
 			if (type.Namespace == null) continue;
 
 			GameCategory gameCategory;
-			switch (type.Namespace.TrimStart("Mutagen.Bethesda."))
+			switch (type.Namespace.TrimStart("Mutagen.Bethesda.", StringComparison.Ordinal))
 			{
 				case "Oblivion.Assets":
 					gameCategory = GameCategory.Oblivion;

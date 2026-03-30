@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProgressionEvaluatorArgumentCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ProgressionEvaluatorArgumentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProgressionEvaluatorArgumentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1004,11 +1004,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProgressionEvaluatorArgumentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProgressionEvaluatorArgumentGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.Conditions is {} ConditionsItem)
             {
-                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProgressionEvaluatorArgumentCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ProgressionEvaluatorArgumentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ProgressionEvaluatorArgumentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

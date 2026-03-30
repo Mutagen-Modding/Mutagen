@@ -51,7 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Version
-        public Single Version { get; set; } = default(Single);
+        public static readonly Single VersionDefault = 1.71f;
+        public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default(UInt32);
@@ -757,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IModStats item)
         {
             ClearPartial();
-            item.Version = default(Single);
+            item.Version = ModStats.VersionDefault;
             item.NumRecords = default(UInt32);
             item.NextFormID = ModStats.NextFormIDDefault;
         }
@@ -914,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModStatsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModStatsGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

@@ -13,7 +13,6 @@ using System.Runtime.InteropServices;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
@@ -907,7 +906,7 @@ public abstract class Processor
             .ThenBy(x => x.ID)
             .Select(fk =>
             {
-                return FormIDTranslator.GetFormID(separatedMasters, fk.ToLink<IMajorRecordGetter>(), reference: true);
+                return separatedMasters.GetFormID(fk);
             })
             .Select(x => x.Raw)
             .ToArray();

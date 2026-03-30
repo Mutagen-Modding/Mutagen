@@ -131,12 +131,62 @@ if (formLink.TryResolve(linkCache, out var foundRecord))
     Using the [FormKey Generator](https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys) project is a good alternative to hand constructing FormLinks"
 
 ## Convert FormKey to FormID
-=== MasterReferenceCollection
+=== "From a Mod Object"
     ``` { .cs hl_lines="4" }
     FormKey formKey = ...;
-    IMasterReferenceCollection masterCollection = ...;
-    
-    FormID formID = masterCollection.GetFormID(formKey);
+    IModGetter mod = ...;
+
+    FormID formID = mod.GetFormID(formKey);
+    ```
+
+=== "Via SeparatedMasterPackage"
+    More optimized if you need to convert many FormKeys, as the package is built once and reused.
+
+    ``` { .cs hl_lines="4-9 12" }
+    IModGetter mod = ...;
+
+    // Build the package once
+    var masters = MasterReferenceCollection.FromPath(modPath, GameRelease.SkyrimSE);
+    var package = SeparatedMasterPackage.Factory(
+        GameRelease.SkyrimSE,
+        modPath.ModKey,
+        MasterStyle.Full,
+        masters,
+        masterFlagLookup: null);
+
+    // Reuse for many conversions
+    FormID formIdA = package.GetFormID(formKeyA);
+    FormID formIdB = package.GetFormID(formKeyB);
+    ```
+
+=== "Starfield / Separated Master Games"
+    Starfield requires knowing each master's style (Full, Medium, or Small) to correctly map the FormKey into the right index space.
+    You build a lookup cache and pass it in.
+
+    ``` { .cs hl_lines="5-12 15-19 22" }
+    IModGetter mod = ...;
+    string dataFolderPath = ...;
+
+    // Build master flag lookup by reading each master's header from the data folder
+    var masterFlagLookup = new Noggog.Cache<IModMasterStyledGetter, ModKey>(x => x.ModKey);
+    foreach (var master in mod.MasterReferences.Select(x => x.Master))
+    {
+        var masterPath = Path.Combine(dataFolderPath, master.FileName);
+        var masterHeader = ModHeaderFrame.FromPath(masterPath, GameRelease.Starfield);
+        masterFlagLookup.Add(new KeyedMasterStyle(master, masterHeader.MasterStyle));
+    }
+
+    // Build the package once, reuse for many conversions
+    var masters = new MasterReferenceCollection(mod.ModKey, mod.MasterReferences);
+    var package = SeparatedMasterPackage.Factory(
+        GameRelease.Starfield,
+        mod.ModKey,
+        mod.GetMasterStyle(),
+        masters,
+        masterFlagLookup);
+
+    FormID formIdA = package.GetFormID(formKeyA);
+    FormID formIdB = package.GetFormID(formKeyB);
     ```
 
 [:octicons-arrow-right-24: FormKeys](plugins/ModKey, FormKey, FormLink.md#formkey)
@@ -162,14 +212,14 @@ if (!npc.Race.IsNull)
 [:octicons-arrow-right-24: FormLink Nullability](best-practices/FormLink-Nullability.md/#checking-if-formlink-is-null)
 
 ## Convert FormLink to NullableFormLink
-=== SetTo
+=== "SetTo"
     ``` { .cs hl_lines="4" }
     IFormLinkGetter<IEquipTypeGetter> link = ...;
     IFormLinkNullableGetter<IEquipTypeGetter> nullableLink = ...;
     
     nullableLink.SetTo(link);
     ```
-=== AsNullable
+=== "AsNullable"
     ``` { .cs hl_lines="3" }
     IFormLinkGetter<IEquipTypeGetter> link = ...;
 	
@@ -407,6 +457,51 @@ foreach (var placedObjectContext in loadOrder.PriorityOrder.PlacedObject().Winni
 ```
 
 [:octicons-arrow-right-24: Mod Context Parents](linkcache/ModContexts.md/#parent-concepts)
+
+## Keyword Checks
+=== "By FormLink"
+    ```cs
+    INpcGetter npc = ...;
+    IFormLinkGetter<IKeywordGetter> armorHeavyKeyword = ...;
+
+    if (npc.HasKeyword(armorHeavyKeyword))
+    {
+        // NPC has the keyword
+    }
+    ```
+=== "By EditorID"
+    ```cs
+    INpcGetter npc = ...;
+    ILinkCache linkCache = ...;
+
+    if (npc.HasKeyword("ArmorHeavy", linkCache))
+    {
+        // NPC has the keyword
+    }
+    ```
+=== "Any of Multiple"
+    ```cs
+    IWeaponGetter weapon = ...;
+    IEnumerable<IFormLinkGetter<IKeywordGetter>> swordKeywords = ...;
+
+    if (weapon.HasAnyKeyword(swordKeywords))
+    {
+        // Weapon matches at least one of the keywords
+    }
+    ```
+=== "Resolve Keyword"
+    ```cs
+    IArmorGetter armor = ...;
+    IFormLinkGetter<IKeywordGetter> keywordLink = ...;
+    ILinkCache linkCache = ...;
+
+    if (armor.TryResolveKeyword(keywordLink, linkCache, out var keyword))
+    {
+        Console.WriteLine($"Found keyword: {keyword.EditorID}");
+    }
+    ```
+
+[:octicons-arrow-right-24: Keywords](plugins/specific/Keywords.md)
 
 ## Call Generic Function by Mod Type
 ```cs

@@ -591,7 +591,7 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
             if (MultiModFileAnalysis.IsMultiModFile(_param._path.Value, fileSystem))
             {
                 var splitFiles = MultiModFileAnalysis.GetSplitModFiles(_param._path.Value, fileSystem);
-                var loadOrder = _param.Params.MasterFlagsLookup?.Items ?? Enumerable.Empty<IModMasterStyledGetter>();
+                var loadOrder = _param.Params.MasterFlagsLookup?.Items.Select(x => x.ModKey) ?? Enumerable.Empty<ModKey>();
 
                 return ModFactory<TModGetter>.ImportMultiFileGetter(
                     _param.ModKey,
@@ -1510,7 +1510,7 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
             if (MultiModFileAnalysis.IsMultiModFile(_param._path.Value, fileSystem))
             {
                 var splitFiles = MultiModFileAnalysis.GetSplitModFiles(_param._path.Value, fileSystem);
-                var loadOrder = _param.Params.MasterFlagsLookup?.Items ?? Enumerable.Empty<IModMasterStyledGetter>();
+                var loadOrder = _param.Params.MasterFlagsLookup?.Items.Select(x => x.ModKey) ?? Enumerable.Empty<ModKey>();
 
                 // Import as readonly overlay
                 using var overlay = ModFactory<TModGetter>.ImportMultiFileGetter(

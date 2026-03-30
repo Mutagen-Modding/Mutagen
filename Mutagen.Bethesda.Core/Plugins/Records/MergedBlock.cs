@@ -109,11 +109,11 @@ public class MergedBlock<TBlock, TSubBlock> : ILoquiObject, IBinaryItem, IFormLi
     object IBinaryItem.BinaryWriteTranslator => this;
 
     // IFormLinkContainerGetter
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var block in _sourceBlocks)
         {
-            foreach (var link in block.EnumerateFormLinks())
+            foreach (var link in block.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return link;
             }

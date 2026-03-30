@@ -431,10 +431,10 @@ internal class StarfieldMultiModOverlay : IStarfieldModDisposableGetter
         _cells ??= new MergedListGroup(_sourceMods.Select(m => m.Cells));
     public IStarfieldGroupGetter<IWorldspaceGetter> Worldspaces =>
         _worldspaces ??= new MergedGroup<IWorldspaceGetter>(
-            _sourceMods.Select(m => m.Worldspaces));
+            _sourceMods.Select(m => m.Worldspaces), allowDuplicateOverrides: true);
     public IStarfieldGroupGetter<IQuestGetter> Quests =>
         _quests ??= new MergedGroup<IQuestGetter>(
-            _sourceMods.Select(m => m.Quests));
+            _sourceMods.Select(m => m.Quests), allowDuplicateOverrides: true);
     public IStarfieldGroupGetter<IIdleAnimationGetter> IdleAnimations =>
         _idleAnimations ??= new MergedGroup<IIdleAnimationGetter>(
             _sourceMods.Select(m => m.IdleAnimations));
@@ -783,11 +783,11 @@ internal class StarfieldMultiModOverlay : IStarfieldModDisposableGetter
         }
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var mod in _sourceMods)
         {
-            foreach (var link in mod.EnumerateFormLinks())
+            foreach (var link in mod.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return link;
             }
@@ -796,33 +796,45 @@ internal class StarfieldMultiModOverlay : IStarfieldModDisposableGetter
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords())
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords())
             {
-                yield return record;
+                if (seen.Add(record.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
 
     public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords<T>(throwIfUnknown))
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords<T>(throwIfUnknown))
             {
-                yield return record;
+                if (record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords(type, throwIfUnknown))
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords(type, throwIfUnknown))
             {
-                yield return record;
+                if (seen.Add(record.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
@@ -966,17 +978,20 @@ internal class StarfieldMultiModOverlay : IStarfieldModDisposableGetter
 /// <summary>
 /// Merged group that combines multiple groups into a single unified view.
 /// Validates no duplicate FormKeys exist and caches results.
+/// When allowDuplicateOverrides is true, duplicate FormKeys are allowed and the later copy wins.
 /// </summary>
 internal class MergedGroup<TGetter> : IStarfieldGroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>
     where TGetter : class, IStarfieldMajorRecordGetter, IBinaryItem
 {
     private readonly IEnumerable<IGroupGetter<TGetter>> _sourceGroups;
+    private readonly bool _allowDuplicateOverrides;
     private Dictionary<FormKey, TGetter>? _cache;
     private readonly object _cacheLock = new object();
 
-    public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups)
+    public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups, bool allowDuplicateOverrides = false)
     {
         _sourceGroups = sourceGroups;
+        _allowDuplicateOverrides = allowDuplicateOverrides;
     }
 
     private Dictionary<FormKey, TGetter> Cache
@@ -996,9 +1011,18 @@ internal class MergedGroup<TGetter> : IStarfieldGroupGetter<TGetter>, IReadOnlyC
                     {
                         if (!cache.TryAdd(record.FormKey, record))
                         {
-                            throw new SplitModException(
-                                $"Duplicate FormKey {record.FormKey} found in split mods. " +
-                                "This indicates corruption or an error in the splitting logic.");
+                            if (_allowDuplicateOverrides)
+                            {
+                                // Parent record duplicated across split files;
+                                // use the later copy following override rules.
+                                cache[record.FormKey] = record;
+                            }
+                            else
+                            {
+                                throw new SplitModException(
+                                    $"Duplicate FormKey {record.FormKey} found in split mods. " +
+                                    "This indicates corruption or an error in the splitting logic.");
+                            }
                         }
                     }
                 }
@@ -1057,13 +1081,13 @@ internal class MergedGroup<TGetter> : IStarfieldGroupGetter<TGetter>, IReadOnlyC
 
     object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException("Merged groups do not support binary writing.");
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var record in Cache.Values)
         {
             if (record is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }
@@ -1259,13 +1283,13 @@ internal class MergedListGroup : IStarfieldListGroupGetter<ICellBlockGetter>
 
     object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException("Merged groups do not support binary writing.");
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var block in Cache)
         {
             if (block is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }
@@ -1392,13 +1416,13 @@ internal class MergedCellBlock : ICellBlockGetter
         }
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var subBlock in SubBlocks)
         {
             if (subBlock is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }

@@ -19,3 +19,7 @@ Some related documentation about some deviation patterns that might be encounter
 [:octicons-arrow-right-24: ExtraData (Container Item Ownership)](ExtraData.md)
 
 [:octicons-arrow-right-24: Globals and GameSettings](Globals-And-GameSettings.md)
+
+[:octicons-arrow-right-24: Keywords](Keywords.md)
+
+[:octicons-arrow-right-24: Placed Objects](Placed.md)

@@ -119,7 +119,7 @@ public class ModCompactor : IModCompactor
                     throw;
                 }
             }
-            catch (FormIDCompactionOutOfBoundsException e)
+            catch (FormIDCompactionOutOfBoundsException)
             {
             }
             targetStyle = MasterStyle.Medium;
@@ -137,7 +137,7 @@ public class ModCompactor : IModCompactor
                     throw;
                 }
             }
-            catch (FormIDCompactionOutOfBoundsException e)
+            catch (FormIDCompactionOutOfBoundsException)
             {
             }
         }

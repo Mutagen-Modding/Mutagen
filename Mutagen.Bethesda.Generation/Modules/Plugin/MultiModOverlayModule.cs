@@ -68,7 +68,7 @@ public class MultiModOverlayModule : GenerationModule
                 sb.AppendLine();
                 GenerateProperties(sb, obj, gameName);
                 sb.AppendLine();
-                GenerateGroupProperties(sb, obj, gameName);
+                GenerateGroupProperties(sb, obj, gameName, proto);
                 sb.AppendLine();
                 GenerateInterfaceMembers(sb, obj, gameName);
             }
@@ -244,7 +244,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var block in Cache)");
@@ -253,7 +253,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (block is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -429,7 +429,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var subBlock in SubBlocks)");
@@ -438,7 +438,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (subBlock is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -513,6 +513,7 @@ public class MultiModOverlayModule : GenerationModule
         {
             comment.Summary.AppendLine("Merged group that combines multiple groups into a single unified view.");
             comment.Summary.AppendLine("Validates no duplicate FormKeys exist and caches results.");
+            comment.Summary.AppendLine("When allowDuplicateOverrides is true, duplicate FormKeys are allowed and the later copy wins.");
         }
         sb.AppendLine($"internal class MergedGroup<TGetter> : I{gameName}GroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>");
         using (sb.IncreaseDepth())
@@ -523,15 +524,17 @@ public class MultiModOverlayModule : GenerationModule
         {
             // Fields
             sb.AppendLine("private readonly IEnumerable<IGroupGetter<TGetter>> _sourceGroups;");
+            sb.AppendLine("private readonly bool _allowDuplicateOverrides;");
             sb.AppendLine("private Dictionary<FormKey, TGetter>? _cache;");
             sb.AppendLine("private readonly object _cacheLock = new object();");
             sb.AppendLine();
 
             // Constructor
-            sb.AppendLine("public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups)");
+            sb.AppendLine("public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups, bool allowDuplicateOverrides = false)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("_sourceGroups = sourceGroups;");
+                sb.AppendLine("_allowDuplicateOverrides = allowDuplicateOverrides;");
             }
             sb.AppendLine();
 
@@ -559,11 +562,22 @@ public class MultiModOverlayModule : GenerationModule
                                 sb.AppendLine("if (!cache.TryAdd(record.FormKey, record))");
                                 using (sb.CurlyBrace())
                                 {
-                                    sb.AppendLine("throw new SplitModException(");
-                                    using (sb.IncreaseDepth())
+                                    sb.AppendLine("if (_allowDuplicateOverrides)");
+                                    using (sb.CurlyBrace())
                                     {
-                                        sb.AppendLine("$\"Duplicate FormKey {record.FormKey} found in split mods. \" +");
-                                        sb.AppendLine("\"This indicates corruption or an error in the splitting logic.\");");
+                                        sb.AppendLine("// Parent record duplicated across split files;");
+                                        sb.AppendLine("// use the later copy following override rules.");
+                                        sb.AppendLine("cache[record.FormKey] = record;");
+                                    }
+                                    sb.AppendLine("else");
+                                    using (sb.CurlyBrace())
+                                    {
+                                        sb.AppendLine("throw new SplitModException(");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            sb.AppendLine("$\"Duplicate FormKey {record.FormKey} found in split mods. \" +");
+                                            sb.AppendLine("\"This indicates corruption or an error in the splitting logic.\");");
+                                        }
                                     }
                                 }
                             }
@@ -643,7 +657,7 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var record in Cache.Values)");
@@ -652,7 +666,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (record is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -853,7 +867,7 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine();
     }
     
-    private void GenerateGroupProperties(StructuredStringBuilder sb, ObjectGeneration obj, string gameName)
+    private void GenerateGroupProperties(StructuredStringBuilder sb, ObjectGeneration obj, string gameName, ProtocolGeneration proto)
     {
         foreach (var field in obj.IterateFields())
         {
@@ -880,10 +894,18 @@ public class MultiModOverlayModule : GenerationModule
                 else
                 {
                     // For regular groups, use the game-specific MergedGroup wrapper
+                    var isParentType = IsKnownParentRecordType(recordType, obj, proto);
                     sb.AppendLine($"{fieldName} ??= new MergedGroup<I{recordType}Getter>(");
                     using (sb.IncreaseDepth())
                     {
-                        sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}));");
+                        if (isParentType)
+                        {
+                            sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}), allowDuplicateOverrides: true);");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}));");
+                        }
                     }
                 }
             }
@@ -924,13 +946,13 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine();
 
         // EnumerateFormLinks
-        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
         using (sb.CurlyBrace())
         {
             sb.AppendLine("foreach (var mod in _sourceMods)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var link in mod.EnumerateFormLinks())");
+                sb.AppendLine("foreach (var link in mod.EnumerateFormLinks(iterateNestedRecords))");
                 using (sb.CurlyBrace())
                 {
                     sb.AppendLine("yield return link;");
@@ -939,17 +961,24 @@ public class MultiModOverlayModule : GenerationModule
         }
         sb.AppendLine();
 
-        // EnumerateMajorRecords
+        // EnumerateMajorRecords - deduplicate by FormKey across source mods
+        // Iterates in reverse so last writer wins (override semantics),
+        // yielding as we go for streaming enumeration.
         sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var record in mod.EnumerateMajorRecords())");
+                sb.AppendLine("foreach (var record in _sourceMods[i].EnumerateMajorRecords())");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return record;");
+                    sb.AppendLine("if (seen.Add(record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return record;");
+                    }
                 }
             }
         }
@@ -958,13 +987,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var record in mod.EnumerateMajorRecords<T>(throwIfUnknown))");
+                sb.AppendLine("foreach (var record in _sourceMods[i].EnumerateMajorRecords<T>(throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return record;");
+                    sb.AppendLine("if (record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return record;");
+                    }
                 }
             }
         }
@@ -973,13 +1007,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var record in mod.EnumerateMajorRecords(type, throwIfUnknown))");
+                sb.AppendLine("foreach (var record in _sourceMods[i].EnumerateMajorRecords(type, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return record;");
+                    sb.AppendLine("if (seen.Add(record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return record;");
+                    }
                 }
             }
         }
@@ -1226,5 +1265,37 @@ public class MultiModOverlayModule : GenerationModule
         // Check if this is a list group (like Cells) by looking at the type
         // List groups implement IListGroupGetter
         return loqui.TypeName(getter: true).Contains("ListGroup");
+    }
+
+    /// <summary>
+    /// Checks whether a group's inner record type is a known parent/container type
+    /// by looking up the record type in the game's GroupConstants.ParentRecordTypes metadata.
+    /// </summary>
+    private static bool IsKnownParentRecordType(string recordTypeName, ObjectGeneration modObj, ProtocolGeneration proto)
+    {
+        // Look up the ObjectGeneration for the record type by name
+        if (!proto.ObjectGenerationsByName.TryGetValue(recordTypeName, out var recordObjGen)) return false;
+
+        // Get the 4-char RecordType from the record
+        if (!recordObjGen.TryGetRecordType(out var recType)) return false;
+
+        // Get the game's ParentRecordTypes from metadata
+        var gameCategory = modObj.GetObjectData().GameCategory;
+        if (gameCategory == null) return false;
+
+        var gameConstants = GetGameConstantsForCategory(gameCategory.Value);
+        return gameConstants.GroupConstants.ParentRecordTypes.Contains(recType);
+    }
+
+    private static GameConstants GetGameConstantsForCategory(GameCategory category)
+    {
+        return category switch
+        {
+            GameCategory.Oblivion => GameConstants.Oblivion,
+            GameCategory.Skyrim => GameConstants.SkyrimLE,
+            GameCategory.Fallout4 => GameConstants.Fallout4,
+            GameCategory.Starfield => GameConstants.Starfield,
+            _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
+        };
     }
 }

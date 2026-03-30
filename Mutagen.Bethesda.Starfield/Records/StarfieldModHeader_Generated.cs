@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StarfieldModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StarfieldModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => StarfieldModHeaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StarfieldModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -2008,7 +2008,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStarfieldModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStarfieldModHeaderGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StarfieldModHeaderCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => StarfieldModHeaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => StarfieldModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

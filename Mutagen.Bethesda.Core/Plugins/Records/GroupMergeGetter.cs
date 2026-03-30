@@ -42,7 +42,7 @@ internal sealed class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, I
     public IReadOnlyCache<TMajor, FormKey> RecordCache => this;
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => this;
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SubGroups.SelectMany(x => x.EnumerateFormLinks());
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SubGroups.SelectMany(x => x.EnumerateFormLinks(iterateNestedRecords));
 
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,

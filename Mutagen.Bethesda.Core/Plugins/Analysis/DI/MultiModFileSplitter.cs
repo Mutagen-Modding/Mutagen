@@ -67,19 +67,47 @@ public class MultiModFileSplitter : IMultiModFileSplitter
         public List<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> Records = new();
     }
 
-    private static HashSet<ModKey> GetAllMastersForRecord(IMajorRecordGetter record, ModKey except)
+    private static HashSet<ModKey> GetAllMastersForRecord(
+        IMajorRecordGetter record,
+        ModKey except)
     {
         var result = new HashSet<ModKey>();
 
         result.Add(record.FormKey.ModKey);
 
-        var formLinks = record.EnumerateFormLinks();
-        foreach (var formLink in formLinks)
+        foreach (var formLink in record.EnumerateFormLinks(iterateNestedRecords: false))
         {
             result.Add(formLink.FormKey.ModKey);
         }
 
         result.Remove(except);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Gets the masters needed for clustering a record, accounting for deep nested record structures.
+    /// Uses iterateNestedRecords: false to get only the record's own FormLinks, excluding child
+    /// records' FormLinks from the master count. For child records with parent contexts, this includes
+    /// the parent's own (shallow) masters since the parent will be pulled into the same output file
+    /// via GetOrAddAsOverride.
+    /// </summary>
+    private static HashSet<ModKey> GetMastersForClustering(
+        IModContext<IMajorRecordGetter> rec,
+        ModKey except)
+    {
+        var result = GetAllMastersForRecord(rec.Record, except);
+
+        // Walk the parent chain (e.g., DialogResponse -> DialogTopic, PlacedObject -> Cell -> Worldspace)
+        // including each parent's shallow masters since GetOrAddAsOverride will pull
+        // parent records into the same output file.
+        var parent = rec.Parent;
+        while (parent?.Record is IMajorRecordGetter parentRecord)
+        {
+            var parentMasters = GetAllMastersForRecord(parentRecord, except);
+            result.UnionWith(parentMasters);
+            parent = parent.Parent;
+        }
 
         return result;
     }
@@ -101,7 +129,7 @@ public class MultiModFileSplitter : IMultiModFileSplitter
         var linkCache = inputMod.ToUntypedImmutableLinkCache();
         foreach (var rec in inputMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache))
         {
-            var mastersHashSet = GetAllMastersForRecord(rec.Record, inputMod.ModKey);
+            var mastersHashSet = GetMastersForClustering(rec, inputMod.ModKey);
 
             // Check if single record exceeds master limit
             if (mastersHashSet.Count > limit)

@@ -162,6 +162,41 @@ public class JsonConverterTests
     #endregion
 
     #region FormLink
+    class FormLinkListClass
+    {
+        public List<IFormLinkGetter<ITestMajorRecordGetter>> Members { get; set; } = [];
+    }
+
+    [Fact]
+    public void FormKeyConverter_FormLink_Deserialize_WithoutType()
+    {
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var target = new FormLinkClass()
+        {
+            Direct = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
+            Setter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
+            Getter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
+        };
+        var toDeserialize = $"{{\"Direct\":\"{target.Direct.FormKey}\",\"Setter\":\"{target.Direct.FormKey}\",\"Getter\":\"{target.Direct.FormKey}\"}}";
+        var result = JsonConvert.DeserializeObject<FormLinkClass>(toDeserialize, settings)!;
+        result.Direct.ShouldBe(target.Direct);
+        result.Setter.ShouldBe(target.Setter);
+        result.Getter.ShouldBe(target.Getter);
+    }
+
+    [Fact]
+    public void FormKeyConverter_FormLinkList_Deserialize_WithoutType()
+    {
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var formKey = FormKey.Factory("0361F3:Skyrim.esm");
+        var toDeserialize = $"{{\"Members\":[\"{formKey}\"]}}";
+        var result = JsonConvert.DeserializeObject<FormLinkListClass>(toDeserialize, settings)!;
+        result.Members.Count.ShouldBe(1);
+        result.Members[0].FormKey.ShouldBe(formKey);
+    }
+
     class FormLinkClass
     {
         public FormLink<ITestMajorRecordGetter> Direct { get; set; } = new(TestConstants.Form1);

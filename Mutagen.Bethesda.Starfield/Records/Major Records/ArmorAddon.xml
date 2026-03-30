@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ArmorAddon" recordType="ARMA" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefList name="Components" refName="AComponent" />
       <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />

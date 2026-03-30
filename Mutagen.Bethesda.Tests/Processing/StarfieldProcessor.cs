@@ -970,7 +970,7 @@ public class StarfieldProcessor : Processor
                     }
                     else
                     {
-                        if (EnumExt.HasFlag(flag, 4))
+                        if (Enums.HasFlag(flag, 4))
                         {
                             Instructions.SetSubstitution(fileOffset + xtv2.ContentLocation + pos, new byte[]
                             {

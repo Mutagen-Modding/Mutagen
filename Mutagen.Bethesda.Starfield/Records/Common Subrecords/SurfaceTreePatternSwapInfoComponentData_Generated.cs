@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoComponentDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SurfaceTreePatternSwapInfoComponentDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SurfaceTreePatternSwapInfoComponentDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -973,9 +973,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISurfaceTreePatternSwapInfoComponentDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISurfaceTreePatternSwapInfoComponentDataGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Data.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Data.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoComponentDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SurfaceTreePatternSwapInfoComponentDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SurfaceTreePatternSwapInfoComponentDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

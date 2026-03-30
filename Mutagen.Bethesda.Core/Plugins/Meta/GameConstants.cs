@@ -138,23 +138,20 @@ public sealed record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(HasTopLevelRecordType: true, 3,
-                        new GroupNesting(6,
+                    new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 3,
+                        new GroupNesting(RecordTypes.CELL, 6,
                             new GroupNesting(8),
                             new GroupNesting(9),
                             new GroupNesting(10)))),
-                new GroupNesting(GroupType: 7),
-                new GroupNesting(
-                    HasTopLevelRecordType: true, GroupType: 1,
-                    new GroupNesting(
-                        GroupType: 6,
+                new GroupNesting(RecordTypes.DIAL, 7),
+                new GroupNesting(RecordTypes.WRLD, HasTopLevelRecordType: true, 1,
+                    new GroupNesting(RecordTypes.CELL, 6,
                         new GroupNesting(8),
                         new GroupNesting(9),
                         new GroupNesting(10)),
                     new GroupNesting(4,
-                        new GroupNesting(HasTopLevelRecordType: true, 5,
-                            new GroupNesting(
-                                GroupType: 6,
+                        new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 5,
+                            new GroupNesting(RecordTypes.CELL, 6,
                                 new GroupNesting(8),
                                 new GroupNesting(9),
                                 new GroupNesting(10))))),
@@ -282,21 +279,18 @@ public sealed record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(HasTopLevelRecordType: true, 3,
-                        new GroupNesting(6,
+                    new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 3,
+                        new GroupNesting(RecordTypes.CELL, 6,
                             new GroupNesting(8),
                             new GroupNesting(9)))),
-                new GroupNesting(GroupType: 7),
-                new GroupNesting(
-                    HasTopLevelRecordType: true, GroupType: 1,
-                    new GroupNesting(
-                        GroupType: 6,
+                new GroupNesting(RecordTypes.DIAL, 7),
+                new GroupNesting(RecordTypes.WRLD, HasTopLevelRecordType: true, 1,
+                    new GroupNesting(RecordTypes.CELL, 6,
                         new GroupNesting(8),
                         new GroupNesting(9)),
                     new GroupNesting(4,
-                        new GroupNesting(HasTopLevelRecordType: true, 5,
-                            new GroupNesting(
-                                GroupType: 6,
+                        new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 5,
+                            new GroupNesting(RecordTypes.CELL, 6,
                                 new GroupNesting(8),
                                 new GroupNesting(9))))),
             }),
@@ -381,6 +375,13 @@ public sealed record GameConstants
         IniName = "Enderal",
     };
 
+    public static readonly GameConstants EnderalSEGog = SkyrimSE with
+    {
+        Release = GameRelease.EnderalSEGog,
+        MyDocumentsString = "Enderal Special Edition GOG",
+        IniName = "Enderal",
+    };
+
     /// <summary> 
     /// Readonly singleton of Fallout4 game constants 
     /// </summary> 
@@ -403,22 +404,19 @@ public sealed record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(HasTopLevelRecordType: true, 3,
-                        new GroupNesting(6,
+                    new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 3,
+                        new GroupNesting(RecordTypes.CELL, 6,
                             new GroupNesting(8),
                             new GroupNesting(9)))),
-                new GroupNesting(HasTopLevelRecordType: true, GroupType: 10,
-                    new GroupNesting(GroupType: 7)),
-                new GroupNesting(
-                    HasTopLevelRecordType: true, GroupType: 1,
-                    new GroupNesting(
-                        GroupType: 6,
+                new GroupNesting(RecordTypes.QUST, HasTopLevelRecordType: true, 10,
+                    new GroupNesting(RecordTypes.DIAL, 7)),
+                new GroupNesting(RecordTypes.WRLD, HasTopLevelRecordType: true, 1,
+                    new GroupNesting(RecordTypes.CELL, 6,
                         new GroupNesting(8),
                         new GroupNesting(9)),
                     new GroupNesting(4,
-                        new GroupNesting(HasTopLevelRecordType: true, 5,
-                            new GroupNesting(
-                                GroupType: 6,
+                        new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 5,
+                            new GroupNesting(RecordTypes.CELL, 6,
                                 new GroupNesting(8),
                                 new GroupNesting(9))))),
             })
@@ -492,22 +490,19 @@ public sealed record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(HasTopLevelRecordType: true, 3,
-                        new GroupNesting(6,
+                    new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 3,
+                        new GroupNesting(RecordTypes.CELL, 6,
                             new GroupNesting(8),
                             new GroupNesting(9)))),
-                new GroupNesting(HasTopLevelRecordType: true, GroupType: 10,
-                    new GroupNesting(GroupType: 7)),
-                new GroupNesting(
-                    HasTopLevelRecordType: true, GroupType: 1,
-                    new GroupNesting(
-                        GroupType: 6,
+                new GroupNesting(RecordTypes.QUST, HasTopLevelRecordType: true, 10,
+                    new GroupNesting(RecordTypes.DIAL, 7)),
+                new GroupNesting(RecordTypes.WRLD, HasTopLevelRecordType: true, 1,
+                    new GroupNesting(RecordTypes.CELL, 6,
                         new GroupNesting(8),
                         new GroupNesting(9)),
                     new GroupNesting(4,
-                        new GroupNesting(HasTopLevelRecordType: true, 5,
-                            new GroupNesting(
-                                GroupType: 6,
+                        new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 5,
+                            new GroupNesting(RecordTypes.CELL, 6,
                                 new GroupNesting(8),
                                 new GroupNesting(9))))),
             })
@@ -584,6 +579,7 @@ public sealed record GameConstants
             GameRelease.SkyrimSE => SkyrimSE,
             GameRelease.SkyrimSEGog => SkyrimSEGog,
             GameRelease.EnderalSE => EnderalSE,
+            GameRelease.EnderalSEGog => EnderalSEGog,
             GameRelease.SkyrimVR => SkyrimVR,
             GameRelease.Fallout3 => Fallout3,
             GameRelease.FalloutNV => FalloutNV,

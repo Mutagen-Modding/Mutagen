@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RadioSceneActionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RadioSceneActionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RadioSceneActionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1086,23 +1086,23 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRadioSceneActionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRadioSceneActionGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.Topic);
             if (obj.WED0 is {} WED0Items)
             {
-                foreach (var item in WED0Items.EnumerateFormLinks())
+                foreach (var item in WED0Items.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.WED1 is {} WED1Items)
             {
-                foreach (var item in WED1Items.EnumerateFormLinks())
+                foreach (var item in WED1Items.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1469,7 +1469,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RadioSceneActionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RadioSceneActionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RadioSceneActionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

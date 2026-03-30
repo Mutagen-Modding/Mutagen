@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundOutputChannelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundOutputChannelGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

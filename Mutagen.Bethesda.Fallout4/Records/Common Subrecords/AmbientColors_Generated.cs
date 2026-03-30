@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmbientColorsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmbientColorsGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

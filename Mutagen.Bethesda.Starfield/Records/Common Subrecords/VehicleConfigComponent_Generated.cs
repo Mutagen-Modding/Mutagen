@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VehicleConfigComponentCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => VehicleConfigComponentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VehicleConfigComponentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1279,9 +1279,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVehicleConfigComponentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVehicleConfigComponentGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1298,14 +1298,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.WWise is {} WWiseItems)
             {
-                foreach (var item in WWiseItems.EnumerateFormLinks())
+                foreach (var item in WWiseItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Material is {} MaterialItems)
             {
-                foreach (var item in MaterialItems.EnumerateFormLinks())
+                foreach (var item in MaterialItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VehicleConfigComponentCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => VehicleConfigComponentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VehicleConfigComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

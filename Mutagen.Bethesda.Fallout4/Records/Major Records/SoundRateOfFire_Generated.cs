@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundRateOfFireGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundRateOfFireGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

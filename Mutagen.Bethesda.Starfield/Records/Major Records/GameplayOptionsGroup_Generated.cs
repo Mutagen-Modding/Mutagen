@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GameplayOptionsGroup_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GameplayOptionsGroupCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => GameplayOptionsGroupCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GameplayOptionsGroupSetterCommon.Instance.RemapLinks(this, mapping);
         public GameplayOptionsGroup(
             FormKey formKey,
@@ -1126,15 +1126,15 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGameplayOptionsGroupGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGameplayOptionsGroupGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Options is IFormLinkContainerGetter OptionslinkCont)
             {
-                foreach (var item in OptionslinkCont.EnumerateFormLinks())
+                foreach (var item in OptionslinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GameplayOptionsGroupCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => GameplayOptionsGroupCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GameplayOptionsGroupBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

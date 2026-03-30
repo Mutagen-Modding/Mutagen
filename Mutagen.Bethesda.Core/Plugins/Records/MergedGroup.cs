@@ -21,13 +21,15 @@ public class MergedGroup<TMod, TModGetter> : ILoquiObject, IGroupGetter<TModGett
 {
     private readonly IEnumerable<IGroupGetter<TModGetter>> _sourceGroups;
     private readonly IModGetter _sourceMod;
+    private readonly bool _allowDuplicateOverrides;
     private Dictionary<FormKey, TModGetter>? _cache;
     private readonly object _cacheLock = new object();
 
-    public MergedGroup(IEnumerable<IGroupGetter<TModGetter>> sourceGroups, IModGetter sourceMod)
+    public MergedGroup(IEnumerable<IGroupGetter<TModGetter>> sourceGroups, IModGetter sourceMod, bool allowDuplicateOverrides = false)
     {
         _sourceGroups = sourceGroups;
         _sourceMod = sourceMod;
+        _allowDuplicateOverrides = allowDuplicateOverrides;
     }
 
     private Dictionary<FormKey, TModGetter> Cache
@@ -47,9 +49,18 @@ public class MergedGroup<TMod, TModGetter> : ILoquiObject, IGroupGetter<TModGett
                     {
                         if (!cache.TryAdd(record.FormKey, record))
                         {
-                            throw new SplitModException(
-                                $"Duplicate FormKey {record.FormKey} found in split mods. " +
-                                "This indicates corruption or an error in the splitting logic.");
+                            if (_allowDuplicateOverrides)
+                            {
+                                // Parent record duplicated across split files;
+                                // use the later copy following override rules.
+                                cache[record.FormKey] = record;
+                            }
+                            else
+                            {
+                                throw new SplitModException(
+                                    $"Duplicate FormKey {record.FormKey} found in split mods. " +
+                                    "This indicates corruption or an error in the splitting logic.");
+                            }
                         }
                     }
                 }
@@ -119,13 +130,13 @@ public class MergedGroup<TMod, TModGetter> : ILoquiObject, IGroupGetter<TModGett
     object IBinaryItem.BinaryWriteTranslator => this;
 
     // IFormLinkContainerGetter
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var record in Cache.Values)
         {
             if (record is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }

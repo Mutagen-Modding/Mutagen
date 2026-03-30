@@ -902,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAlphaLayerDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAlphaLayerDataGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
