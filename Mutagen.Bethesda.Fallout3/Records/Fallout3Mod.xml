@@ -48,6 +48,7 @@
       <Group name="IdleMarkers" refName="IdleMarker" />
       <Group name="Notes" refName="Note" />
       <Group name="Projectiles" refName="Projectile" />
+      <Group name="LeveledItems" refName="LeveledItem" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

@@ -728,6 +728,12 @@
     <Compile Include="Records\MajorRecords\LeveledItem_Generated.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\LeveledItemEntry_Generated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\LeveledItemEntryData_Generated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>

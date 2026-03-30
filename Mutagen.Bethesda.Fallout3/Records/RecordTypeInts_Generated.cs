@@ -108,6 +108,7 @@ public partial class RecordTypeInts
     public const int LVLC = 0x434C564C;
     public const int LVLD = 0x444C564C;
     public const int LVLF = 0x464C564C;
+    public const int LVLG = 0x474C564C;
     public const int LVLI = 0x494C564C;
     public const int LVLN = 0x4E4C564C;
     public const int LVLO = 0x4F4C564C;

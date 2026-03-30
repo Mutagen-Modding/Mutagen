@@ -273,6 +273,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Furniture_Registration.Instance,
                     IdleMarker_Registration.Instance,
                     Ingredient_Registration.Instance,
+                    LeveledItem_Registration.Instance,
                     Light_Registration.Instance,
                     MoveableStatic_Registration.Instance,
                     Note_Registration.Instance,

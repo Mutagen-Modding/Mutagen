@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,54 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? ILeveledItemGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ChanceNone
+        public Percent ChanceNone { get; set; } = default(Percent);
+        #endregion
+        #region Flags
+        public LeveledFlag Flags { get; set; } = default(LeveledFlag);
+        #endregion
+        #region Global
+        private readonly IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Global
+        {
+            get => _Global;
+            set => _Global.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.Global => this.Global;
+        #endregion
+        #region Entries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LeveledItemEntry> _Entries = new ExtendedList<LeveledItemEntry>();
+        public ExtendedList<LeveledItemEntry> Entries
+        {
+            get => this._Entries;
+            init => this._Entries = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILeveledItemEntryGetter> ILeveledItemGetter.Entries => _Entries;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +128,11 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ChanceNone = initialValue;
+                this.Flags = initialValue;
+                this.Global = initialValue;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -87,7 +142,12 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ChanceNone,
+                TItem Flags,
+                TItem Global,
+                TItem Entries)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +157,11 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ChanceNone = ChanceNone;
+                this.Flags = Flags;
+                this.Global = Global;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, []);
             }
 
             #pragma warning disable CS8618
@@ -105,6 +170,14 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ChanceNone;
+            public TItem Flags;
+            public TItem Global;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>? Entries;
             #endregion
 
             #region Equals
@@ -118,11 +191,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Global, rhs.Global)) return false;
+                if (!object.Equals(this.Entries, rhs.Entries)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ChanceNone);
+                hash.Add(this.Flags);
+                hash.Add(this.Global);
+                hash.Add(this.Entries);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +216,26 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ChanceNone)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Global)) return false;
+                if (this.Entries != null)
+                {
+                    if (!eval(this.Entries.Overall)) return false;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +244,26 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ChanceNone)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Global)) return true;
+                if (this.Entries != null)
+                {
+                    if (eval(this.Entries.Overall)) return true;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +279,25 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ChanceNone = eval(this.ChanceNone);
+                obj.Flags = eval(this.Flags);
+                obj.Global = eval(this.Global);
+                if (Entries != null)
+                {
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), []);
+                    if (Entries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>();
+                        obj.Entries.Specific = l;
+                        foreach (var item in Entries.Specific)
+                        {
+                            MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +316,41 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(LeveledItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ChanceNone ?? true)
+                    {
+                        sb.AppendItem(ChanceNone, "ChanceNone");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Global ?? true)
+                    {
+                        sb.AppendItem(Global, "Global");
+                    }
+                    if ((printMask?.Entries?.Overall ?? true)
+                        && Entries is {} EntriesItem)
+                    {
+                        sb.AppendLine("Entries =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(EntriesItem.Overall);
+                            if (EntriesItem.Specific != null)
+                            {
+                                foreach (var subItem in EntriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +361,30 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ChanceNone;
+            public Exception? Flags;
+            public Exception? Global;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>? Entries;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledItem_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case LeveledItem_FieldIndex.ChanceNone:
+                        return ChanceNone;
+                    case LeveledItem_FieldIndex.Flags:
+                        return Flags;
+                    case LeveledItem_FieldIndex.Global:
+                        return Global;
+                    case LeveledItem_FieldIndex.Entries:
+                        return Entries;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +395,21 @@ namespace Mutagen.Bethesda.Fallout3
                 LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.ChanceNone:
+                        this.ChanceNone = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Global:
+                        this.Global = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Entries:
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +421,21 @@ namespace Mutagen.Bethesda.Fallout3
                 LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.ChanceNone:
+                        this.ChanceNone = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Global:
+                        this.Global = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Entries:
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +445,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ChanceNone != null) return true;
+                if (Flags != null) return true;
+                if (Global != null) return true;
+                if (Entries != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +476,34 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ChanceNone, "ChanceNone");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Global, "Global");
+                }
+                if (Entries is {} EntriesItem)
+                {
+                    sb.AppendLine("Entries =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(EntriesItem.Overall);
+                        if (EntriesItem.Specific != null)
+                        {
+                            foreach (var subItem in EntriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +512,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Global = this.Global.Combine(rhs.Global);
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +538,36 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ChanceNone;
+            public bool Flags;
+            public bool Global;
+            public LeveledItemEntry.TranslationMask? Entries;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ChanceNone = defaultOn;
+                this.Flags = defaultOn;
+                this.Global = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ChanceNone, null));
+                ret.Add((Flags, null));
+                ret.Add((Global, null));
+                ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +579,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledItemCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,10 +699,20 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface ILeveledItem :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         IItem,
         ILeveledItemGetter,
-        ILoquiObjectSetter<ILeveledItemInternal>
+        ILoquiObjectSetter<ILeveledItemInternal>,
+        IObjectBoundedOptional
     {
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        new ObjectBounds? ObjectBounds { get; set; }
+        new Percent ChanceNone { get; set; }
+        new LeveledFlag Flags { get; set; }
+        new IFormLinkNullable<IGlobalGetter> Global { get; set; }
+        new ExtendedList<LeveledItemEntry> Entries { get; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -430,11 +726,23 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ILeveledItemGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         IItemGetter,
         ILoquiObject<ILeveledItemGetter>,
-        IMapsToGetter<ILeveledItemGetter>
+        IMapsToGetter<ILeveledItemGetter>,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedOptionalGetter
+        /// </summary>
+        IObjectBoundsGetter? ObjectBounds { get; }
+        #endregion
+        Percent ChanceNone { get; }
+        LeveledFlag Flags { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Global { get; }
+        IReadOnlyList<ILeveledItemEntryGetter> Entries { get; }
 
     }
 
@@ -611,6 +919,11 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ChanceNone = 8,
+        Flags = 9,
+        Global = 10,
+        Entries = 11,
     }
     #endregion
 
@@ -621,9 +934,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(LeveledItem.Mask<>);
 
@@ -653,8 +966,18 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LVLI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LVLI);
+            var all = RecordCollection.Factory(
+                RecordTypes.LVLI,
+                RecordTypes.OBND,
+                RecordTypes.LVLD,
+                RecordTypes.LVLF,
+                RecordTypes.LVLG,
+                RecordTypes.LVLO,
+                RecordTypes.COED);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
@@ -696,6 +1019,11 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ILeveledItemInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = null;
+            item.ChanceNone = default(Percent);
+            item.Flags = default(LeveledFlag);
+            item.Global.Clear();
+            item.Entries.Clear();
             base.Clear(item);
         }
         
@@ -713,6 +1041,8 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(ILeveledItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Global.Relink(mapping);
+            obj.Entries.RemapLinks(mapping);
         }
         
         #endregion
@@ -780,6 +1110,18 @@ namespace Mutagen.Bethesda.Fallout3
             LeveledItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Global = item.Global.Equals(rhs.Global);
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1171,37 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+            }
+            if (printMask?.ChanceNone ?? true)
+            {
+                sb.AppendItem(item.ChanceNone, "ChanceNone");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Global ?? true)
+            {
+                sb.AppendItem(item.Global.FormKeyNullable, "Global");
+            }
+            if (printMask?.Entries?.Overall ?? true)
+            {
+                sb.AppendLine("Entries =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Entries)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static LeveledItem_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +1252,30 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
+            {
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
+            {
+                if (!lhs.Global.Equals(rhs.Global)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            {
+                if (!lhs.Entries.SequenceEqual(rhs.Entries, (l, r) => ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries)))) return false;
+            }
             return true;
         }
         
@@ -907,6 +1304,14 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ILeveledItemGetter item)
         {
             var hash = new HashCode();
+            if (item.ObjectBounds is {} ObjectBoundsitem)
+            {
+                hash.Add(ObjectBoundsitem);
+            }
+            hash.Add(item.ChanceNone);
+            hash.Add(item.Flags);
+            hash.Add(item.Global);
+            hash.Add(item.Entries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -935,6 +1340,15 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Global, out var GlobalInfo))
+            {
+                yield return GlobalInfo;
+            }
+            foreach (var item in obj.Entries.WhereCastable<ILeveledItemEntryGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1010,6 +1424,68 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.ObjectBounds);
+                try
+                {
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
+            {
+                item.ChanceNone = rhs.ChanceNone;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
+            {
+                item.Global.SetTo(rhs.Global.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
+                try
+                {
+                    item.Entries.SetTo(
+                        rhs.Entries
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +1646,49 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly LeveledItemBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILeveledItemGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            PercentBinaryTranslation.Write(
+                writer: writer,
+                item: item.ChanceNone,
+                integerType: FloatIntegerType.ByteHundred,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLD));
+            EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLF));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Global,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.Write(
+                writer: writer,
+                items: item.Entries,
+                transl: (MutagenWriter subWriter, ILeveledItemEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LeveledItemEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ILeveledItemGetter item,
@@ -1224,6 +1743,67 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLI;
+        public static ParseResult FillBinaryRecordTypes(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)LeveledItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.LVLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ChanceNone = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.ByteHundred);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
+                }
+                case RecordTypeInts.LVLF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)LeveledItem_FieldIndex.Flags;
+                }
+                case RecordTypeInts.LVLG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LeveledItem_FieldIndex.Global;
+                }
+                case RecordTypeInts.LVLO:
+                {
+                    item.Entries.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledItemEntry>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: LeveledItemEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: LeveledItemEntry.TryCreateFromBinary));
+                    return (int)LeveledItem_FieldIndex.Entries;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +1836,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1270,6 +1851,23 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(ILeveledItemGetter);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region ChanceNone
+        private int? _ChanceNoneLocation;
+        public Percent ChanceNone => _ChanceNoneLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants), FloatIntegerType.ByteHundred) : default(Percent);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public LeveledFlag Flags => EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
+        #endregion
+        #region Global
+        private int? _GlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalLocation);
+        #endregion
+        public IReadOnlyList<ILeveledItemEntryGetter> Entries { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +1925,58 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LeveledItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.LVLD:
+                {
+                    _ChanceNoneLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
+                }
+                case RecordTypeInts.LVLF:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.Flags;
+                }
+                case RecordTypeInts.LVLG:
+                {
+                    _GlobalLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.Global;
+                }
+                case RecordTypeInts.LVLO:
+                {
+                    this.Entries = this.ParseRepeatedTypelessSubrecord<ILeveledItemEntryGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: LeveledItemEntry_Registration.TriggerSpecs,
+                        factory: LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory);
+                    return (int)LeveledItem_FieldIndex.Entries;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

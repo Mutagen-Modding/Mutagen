@@ -106,6 +106,7 @@ namespace Mutagen.Bethesda.Fallout3
             _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             _Notes_Object = new Fallout3Group<Note>(this);
             _Projectiles_Object = new Fallout3Group<Projectile>(this);
+            _LeveledItems_Object = new Fallout3Group<LeveledItem>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -433,6 +434,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IProjectileGetter> IFallout3ModGetter.Projectiles => _Projectiles_Object;
         #endregion
+        #region LeveledItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<LeveledItem> _LeveledItems_Object;
+        public Fallout3Group<LeveledItem> LeveledItems => _LeveledItems_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ILeveledItemGetter> IFallout3ModGetter.LeveledItems => _LeveledItems_Object;
+        #endregion
 
         #region To String
 
@@ -518,6 +526,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Notes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Projectiles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.LeveledItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -566,7 +575,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Ingestibles,
                 TItem IdleMarkers,
                 TItem Notes,
-                TItem Projectiles)
+                TItem Projectiles,
+                TItem LeveledItems)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -614,6 +624,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(IdleMarkers, new Fallout3Group.Mask<TItem>(IdleMarkers));
                 this.Notes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Notes, new Fallout3Group.Mask<TItem>(Notes));
                 this.Projectiles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Projectiles, new Fallout3Group.Mask<TItem>(Projectiles));
+                this.LeveledItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LeveledItems, new Fallout3Group.Mask<TItem>(LeveledItems));
             }
 
             #pragma warning disable CS8618
@@ -671,6 +682,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? IdleMarkers { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Notes { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Projectiles { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LeveledItems { get; set; }
             #endregion
 
             #region Equals
@@ -729,6 +741,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 if (!object.Equals(this.Notes, rhs.Notes)) return false;
                 if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
+                if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -780,6 +793,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.IdleMarkers);
                 hash.Add(this.Notes);
                 hash.Add(this.Projectiles);
+                hash.Add(this.LeveledItems);
                 return hash.ToHashCode();
             }
 
@@ -1018,6 +1032,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Projectiles.Overall)) return false;
                     if (this.Projectiles.Specific != null && !this.Projectiles.Specific.All(eval)) return false;
                 }
+                if (LeveledItems != null)
+                {
+                    if (!eval(this.LeveledItems.Overall)) return false;
+                    if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1255,6 +1274,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Projectiles.Overall)) return true;
                     if (this.Projectiles.Specific != null && this.Projectiles.Specific.Any(eval)) return true;
                 }
+                if (LeveledItems != null)
+                {
+                    if (eval(this.LeveledItems.Overall)) return true;
+                    if (this.LeveledItems.Specific != null && this.LeveledItems.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1315,6 +1339,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
                 obj.Notes = this.Notes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Notes.Overall), this.Notes.Specific?.Translate(eval));
                 obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
+                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1517,6 +1542,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Projectiles?.Print(sb);
                     }
+                    if (printMask?.LeveledItems?.Overall ?? true)
+                    {
+                        LeveledItems?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1587,6 +1616,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>? Notes;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             #endregion
 
             #region IErrorMask
@@ -1687,6 +1717,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Notes;
                     case Fallout3Mod_FieldIndex.Projectiles:
                         return Projectiles;
+                    case Fallout3Mod_FieldIndex.LeveledItems:
+                        return LeveledItems;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1834,6 +1866,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Projectiles:
                         this.Projectiles = new MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.LeveledItems:
+                        this.LeveledItems = new MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1983,6 +2018,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Projectiles:
                         this.Projectiles = (MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.LeveledItems:
+                        this.LeveledItems = (MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2037,6 +2075,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (IdleMarkers != null) return true;
                 if (Notes != null) return true;
                 if (Projectiles != null) return true;
+                if (LeveledItems != null) return true;
                 return false;
             }
             #endregion
@@ -2108,6 +2147,7 @@ namespace Mutagen.Bethesda.Fallout3
                 IdleMarkers?.Print(sb);
                 Notes?.Print(sb);
                 Projectiles?.Print(sb);
+                LeveledItems?.Print(sb);
             }
             #endregion
 
@@ -2162,6 +2202,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 ret.Notes = this.Notes.Combine(rhs.Notes, (l, r) => l.Combine(r));
                 ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
+                ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2231,6 +2272,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             public Fallout3Group.TranslationMask<Note.TranslationMask>? Notes;
             public Fallout3Group.TranslationMask<Projectile.TranslationMask>? Projectiles;
+            public Fallout3Group.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
             #endregion
 
             #region Ctors
@@ -2301,6 +2343,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
                 ret.Add((Notes != null ? Notes.OnOverall : DefaultOn, Notes?.GetCrystal()));
                 ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
+                ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2406,6 +2449,7 @@ namespace Mutagen.Bethesda.Fallout3
             _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             _Notes_Object = new Fallout3Group<Note>(this);
             _Projectiles_Object = new Fallout3Group<Projectile>(this);
+            _LeveledItems_Object = new Fallout3Group<LeveledItem>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2591,6 +2635,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Projectiles ?? true)
             {
                 this.Projectiles.RecordCache.Set(rhsMod.Projectiles.RecordCache.Items);
+            }
+            if (mask?.LeveledItems ?? true)
+            {
+                this.LeveledItems.RecordCache.Set(rhsMod.LeveledItems.RecordCache.Items);
             }
         }
 
@@ -2898,6 +2946,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<IdleMarker> IdleMarkers { get; }
         new Fallout3Group<Note> Notes { get; }
         new Fallout3Group<Projectile> Projectiles { get; }
+        new Fallout3Group<LeveledItem> LeveledItems { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2963,6 +3012,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
         IFallout3GroupGetter<INoteGetter> Notes { get; }
         IFallout3GroupGetter<IProjectileGetter> Projectiles { get; }
+        IFallout3GroupGetter<ILeveledItemGetter> LeveledItems { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -3559,6 +3609,7 @@ namespace Mutagen.Bethesda.Fallout3
         IdleMarkers = 43,
         Notes = 44,
         Projectiles = 45,
+        LeveledItems = 46,
     }
     #endregion
 
@@ -3569,9 +3620,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 46;
+        public const ushort AdditionalFieldCount = 47;
 
-        public const ushort FieldCount = 46;
+        public const ushort FieldCount = 47;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -3683,6 +3734,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.IdleMarkers.Clear();
             item.Notes.Clear();
             item.Projectiles.Clear();
+            item.LeveledItems.Clear();
         }
         
         #region Mutagen
@@ -3727,6 +3779,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.IdleMarkers.RemapLinks(mapping);
             obj.Notes.RemapLinks(mapping);
             obj.Projectiles.RemapLinks(mapping);
+            obj.LeveledItems.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3832,6 +3885,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.IdleMarkers.Remove(keys);
             obj.Notes.Remove(keys);
             obj.Projectiles.Remove(keys);
+            obj.LeveledItems.Remove(keys);
         }
         
         public void Remove(
@@ -4239,6 +4293,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    obj.LeveledItems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -4269,6 +4331,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IAmmoOrList":
                 case "IAmmoOrListGetter":
@@ -4503,6 +4566,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
             ret.Notes = MaskItemExt.Factory(item.Notes.GetEqualsMask(rhs.Notes, include), include);
             ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
+            ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
         }
         
         public string Print(
@@ -4730,6 +4794,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Projectiles?.Overall ?? true)
             {
                 item.Projectiles?.Print(sb, "Projectiles");
+            }
+            if (printMask?.LeveledItems?.Overall ?? true)
+            {
+                item.LeveledItems?.Print(sb, "LeveledItems");
             }
         }
         
@@ -5108,6 +5176,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isProjectilesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.LeveledItems) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledItems, rhs.LeveledItems, out var lhsLeveledItems, out var rhsLeveledItems, out var isLeveledItemsEqual))
+                {
+                    if (!object.Equals(lhsLeveledItems, rhsLeveledItems)) return false;
+                }
+                else if (!isLeveledItemsEqual) return false;
+            }
             return true;
         }
         
@@ -5160,6 +5236,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.IdleMarkers);
             hash.Add(item.Notes);
             hash.Add(item.Projectiles);
+            hash.Add(item.LeveledItems);
             return hash.ToHashCode();
         }
         
@@ -5431,6 +5508,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IProjectile":
                 case "IProjectileInternal":
                     return obj.Projectiles;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    return obj.LeveledItems;
                 default:
                     return null;
             }
@@ -5448,7 +5530,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[45];
+            Stream[] outputStreams = new Stream[46];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -5495,6 +5577,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 42, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Notes, 43, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Projectiles, 44, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 45, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -5585,6 +5668,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Notes.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -5755,6 +5839,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Projectiles.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledItems.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -5950,6 +6038,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Projectiles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledItems.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6409,6 +6501,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -6835,6 +6936,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Projectiles,
                 groupGetter: (m) => m.Projectiles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledItem, ILeveledItemGetter>(
+                srcGroup: obj.LeveledItems,
+                type: typeof(ILeveledItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledItems,
+                groupGetter: (m) => m.LeveledItems))
             {
                 yield return item;
             }
@@ -7495,6 +7605,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Projectiles,
                         groupGetter: (m) => m.Projectiles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledItem, ILeveledItemGetter>(
+                        srcGroup: obj.LeveledItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledItems,
+                        groupGetter: (m) => m.LeveledItems))
                     {
                         yield return item;
                     }
@@ -8520,6 +8644,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.LeveledItems) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.LeveledItems);
+                try
+                {
+                    item.LeveledItems.DeepCopyIn(
+                        rhs: rhs.LeveledItems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.LeveledItems));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -8668,6 +8812,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool IdleMarkers;
         public bool Notes;
         public bool Projectiles;
+        public bool LeveledItems;
         public GroupMask()
         {
         }
@@ -8718,6 +8863,7 @@ namespace Mutagen.Bethesda.Fallout3
             IdleMarkers = defaultValue;
             Notes = defaultValue;
             Projectiles = defaultValue;
+            LeveledItems = defaultValue;
         }
     }
 
@@ -9271,6 +9417,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
                         item: ProjectilesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LeveledItems ?? true)
+            {
+                var LeveledItemsItem = item.LeveledItems;
+                if (LeveledItemsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
+                        item: LeveledItemsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9975,6 +10132,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Projectiles;
                 }
+                case RecordTypeInts.LVLI:
+                {
+                    if (importMask?.LeveledItems ?? true)
+                    {
+                        item.LeveledItems.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.LeveledItems;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -10365,6 +10536,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout3GroupBinaryOverlay<IProjectileGetter>.Fallout3GroupFactory(_stream, _ProjectilesLocations, _package) : default;
         public IFallout3GroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Fallout3Group<Projectile>(this);
         #endregion
+        #region LeveledItems
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private IFallout3GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? Fallout3GroupBinaryOverlay<ILeveledItemGetter>.Fallout3GroupFactory(_stream, _LeveledItemsLocations, _package) : default;
+        public IFallout3GroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Fallout3Group<LeveledItem>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -10708,6 +10884,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _ProjectilesLocations ??= new();
                     _ProjectilesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Projectiles;
+                }
+                case RecordTypeInts.LVLI:
+                {
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.LeveledItems;
                 }
                 default:
                     return default(int?);

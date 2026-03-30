@@ -87,7 +87,6 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 CasinoChip_Registration.Instance,
                 Ingestible_Registration.Instance,
                 Key_Registration.Instance,
-                LeveledItem_Registration.Instance,
                 Light_Registration.Instance,
                 MiscItem_Registration.Instance,
                 MoveableStatic_Registration.Instance,
@@ -95,6 +94,7 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Weapon_Registration.Instance,
                 Note_Registration.Instance,
                 ItemMod_Registration.Instance,
+                LeveledItem_Registration.Instance,
             },
             new InterfaceMappingTypes(
                 Setter: typeof(IItem),

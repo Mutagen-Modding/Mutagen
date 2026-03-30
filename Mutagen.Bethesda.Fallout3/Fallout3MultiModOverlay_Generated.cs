@@ -72,6 +72,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IIdleMarkerGetter>? _idleMarkers;
     private MergedGroup<INoteGetter>? _notes;
     private MergedGroup<IProjectileGetter>? _projectiles;
+    private MergedGroup<ILeveledItemGetter>? _leveledItems;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -242,6 +243,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IProjectileGetter> Projectiles =>
         _projectiles ??= new MergedGroup<IProjectileGetter>(
             _sourceMods.Select(m => m.Projectiles));
+    public IFallout3GroupGetter<ILeveledItemGetter> LeveledItems =>
+        _leveledItems ??= new MergedGroup<ILeveledItemGetter>(
+            _sourceMods.Select(m => m.LeveledItems));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

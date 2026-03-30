@@ -110,6 +110,7 @@ public partial class RecordTypes
     public static readonly RecordType LVLC = new(0x434C564C);
     public static readonly RecordType LVLD = new(0x444C564C);
     public static readonly RecordType LVLF = new(0x464C564C);
+    public static readonly RecordType LVLG = new(0x474C564C);
     public static readonly RecordType LVLI = new(0x494C564C);
     public static readonly RecordType LVLN = new(0x4E4C564C);
     public static readonly RecordType LVLO = new(0x4F4C564C);

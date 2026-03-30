@@ -124,6 +124,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingredient
 - Key
 - LeveledCreature
+- LeveledItem
 - LeveledNpc
 - Light
 - MiscItem
@@ -240,6 +241,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHasIcons
 ### LeveledCreature
 - IModeled
+- IObjectBounded
+### LeveledItem
 - IObjectBounded
 ### LeveledNpc
 - IModeled

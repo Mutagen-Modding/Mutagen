@@ -96,6 +96,8 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             LeveledCreatureEntry_Registration.Instance,
             LeveledCreatureEntryData_Registration.Instance,
             LeveledItem_Registration.Instance,
+            LeveledItemEntry_Registration.Instance,
+            LeveledItemEntryData_Registration.Instance,
             LeveledNpc_Registration.Instance,
             LeveledNpcEntry_Registration.Instance,
             LeveledNpcEntryData_Registration.Instance,
