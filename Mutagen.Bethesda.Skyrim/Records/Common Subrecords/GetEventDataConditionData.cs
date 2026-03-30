@@ -41,7 +41,7 @@ public partial class GetEventDataConditionData : IConditionParameters
     }
     Type? IConditionParametersGetter.Parameter2Type => typeof(object);
 
-    public enum EventMember : ushort
+    public enum EventMember
     {
         None = 0x0000,
         CreatedObject = 0x314F,

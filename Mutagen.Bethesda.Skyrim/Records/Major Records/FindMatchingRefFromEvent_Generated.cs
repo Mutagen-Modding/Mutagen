@@ -56,15 +56,9 @@ namespace Mutagen.Bethesda.Skyrim
         RecordType? IFindMatchingRefFromEventGetter.FromEvent => this.FromEvent;
         #endregion
         #region EventData
+        public GetEventDataConditionData.EventMember? EventData { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _EventData;
-        public MemorySlice<Byte>? EventData
-        {
-            get => this._EventData;
-            set => this._EventData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFindMatchingRefFromEventGetter.EventData => this.EventData;
+        GetEventDataConditionData.EventMember? IFindMatchingRefFromEventGetter.EventData => this.EventData;
         #endregion
 
         #region To String
@@ -457,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFindMatchingRefFromEvent>
     {
         new RecordType? FromEvent { get; set; }
-        new MemorySlice<Byte>? EventData { get; set; }
+        new GetEventDataConditionData.EventMember? EventData { get; set; }
     }
 
     public partial interface IFindMatchingRefFromEventGetter :
@@ -473,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         RecordType? FromEvent { get; }
-        ReadOnlyMemorySlice<Byte>? EventData { get; }
+        GetEventDataConditionData.EventMember? EventData { get; }
 
     }
 
@@ -783,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FromEvent = item.FromEvent == rhs.FromEvent;
-            ret.EventData = MemorySliceExt.SequenceEqual(item.EventData, rhs.EventData);
+            ret.EventData = item.EventData == rhs.EventData;
         }
         
         public string Print(
@@ -836,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim
             if ((printMask?.EventData ?? true)
                 && item.EventData is {} EventDataItem)
             {
-                sb.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
+                sb.AppendItem(EventDataItem, "EventData");
             }
         }
         
@@ -853,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.EventData) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.EventData, rhs.EventData)) return false;
+                if (lhs.EventData != rhs.EventData) return false;
             }
             return true;
         }
@@ -865,9 +859,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(FromEventitem);
             }
-            if (item.EventData is {} EventDataItem)
+            if (item.EventData is {} EventDataitem)
             {
-                hash.Add(EventDataItem);
+                hash.Add(EventDataitem);
             }
             return hash.ToHashCode();
         }
@@ -907,14 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)FindMatchingRefFromEvent_FieldIndex.EventData) ?? true))
             {
-                if(rhs.EventData is {} EventDatarhs)
-                {
-                    item.EventData = EventDatarhs.ToArray();
-                }
-                else
-                {
-                    item.EventData = default;
-                }
+                item.EventData = rhs.EventData;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1029,9 +1016,10 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.FromEvent,
                 header: translationParams.ConvertToCustom(RecordTypes.ALFE));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.EventData,
+            EnumBinaryTranslation<GetEventDataConditionData.EventMember, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.EventData,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.ALFD));
         }
 
@@ -1086,7 +1074,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.EventData, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EventData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.EventData = EnumBinaryTranslation<GetEventDataConditionData.EventMember, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
                 }
                 default:
@@ -1163,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EventData
         private int? _EventDataLocation;
-        public ReadOnlyMemorySlice<Byte>? EventData => _EventDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EventDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public GetEventDataConditionData.EventMember? EventData => EnumBinaryTranslation<GetEventDataConditionData.EventMember, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EventDataLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -20,7 +20,7 @@ public partial class GetEventDataConditionData : IConditionParameters
 
     Condition.Function IConditionDataGetter.Function => Condition.Function.GetEventData;
     
-    public enum EventMember : ushort
+    public enum EventMember
     {
         None = 0x0,
         Form = 0x3146,
