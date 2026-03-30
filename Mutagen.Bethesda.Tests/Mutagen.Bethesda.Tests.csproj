@@ -15,6 +15,7 @@
     <PackageReference Include="CommandLineParser" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Fallout3\Mutagen.Bethesda.Fallout3.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ragdoll" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="RGDL">
+    <Fields>
+      <UInt32 name="Version" recordType="NVER" nullable="False" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="DynamicBoneCount" />
+          <UInt32 name="Unused" />
+          <Bool name="FeedbackEnabled" byteLength="1" />
+          <Bool name="FootIkEnabled" byteLength="1" />
+          <Bool name="LookIkEnabled" byteLength="1" />
+          <Bool name="GrabIkEnabled" byteLength="1" />
+          <Bool name="PoseMatchingEnabled" byteLength="1" />
+          <UInt8 name="Unused2" />
+        </Fields>
+      </Data>
+      <FormLink name="ActorBase" recordType="XNAM" refName="Npc" />
+      <FormLink name="BodyPartData" recordType="TNAM" refName="BodyPartData" />
+      <RefDirect name="FeedbackData" refName="RagdollFeedbackData" />
+      <ByteArray name="FeedbackDynamicBones" recordType="RAFB" />
+      <RefDirect name="PoseMatchingData" refName="RagdollPoseMatchingData" />
+      <String name="DeathPose" recordType="ANAM" />
+    </Fields>
+  </Object>
+  <Object name="RagdollFeedbackData" objType="Subrecord" recordType="RAFD">
+    <Fields>
+      <Float name="DynamicKeyframeBlendAmount" />
+      <Float name="HierarchyGain" />
+      <Float name="PositionGain" />
+      <Float name="VelocityGain" />
+      <Float name="AccelerationGain" />
+      <Float name="SnapGain" />
+      <Float name="VelocityDamping" />
+      <Float name="SnapMaxLinearVelocity" />
+      <Float name="SnapMaxAngularVelocity" />
+      <Float name="SnapMaxLinearDistance" />
+      <Float name="SnapMaxAngularDistance" />
+      <Float name="PositionMaxVelocityLinear" />
+      <Float name="PositionMaxVelocityAngular" />
+      <Int32 name="ProjectilePositionMaxVelocity" />
+      <Int32 name="MeleePositionMaxVelocity" />
+    </Fields>
+  </Object>
+  <Object name="RagdollPoseMatchingData" objType="Subrecord" recordType="RAPS">
+    <Fields>
+      <UInt16 name="MatchBone1" />
+      <UInt16 name="MatchBone2" />
+      <UInt16 name="MatchBone3" />
+      <UInt8 name="Flags" />
+      <UInt8 name="Unused" />
+      <Float name="MotorsStrength" />
+      <Float name="PoseActivationDelayTime" />
+      <Float name="MatchErrorAllowance" />
+      <Float name="DisplacementToDisable" />
+    </Fields>
+  </Object>
+</Loqui>

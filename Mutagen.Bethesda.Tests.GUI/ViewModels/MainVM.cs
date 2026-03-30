@@ -403,6 +403,8 @@ public class MainVM : ViewModel
         settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimVR = DataFolders.Get(GameRelease.SkyrimVR).DataFolder.TargetPath;
         settings.DataFolderLocations.Fallout4 = DataFolders.Get(GameRelease.Fallout4).DataFolder.TargetPath;
+        settings.DataFolderLocations.Fallout3 = DataFolders.Get(GameRelease.Fallout3).DataFolder.TargetPath;
+        settings.DataFolderLocations.FalloutNV = DataFolders.Get(GameRelease.FalloutNV).DataFolder.TargetPath;
         settings.DataFolderLocations.Starfield = DataFolders.Get(GameRelease.Starfield).DataFolder.TargetPath;
     }
 

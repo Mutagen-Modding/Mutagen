@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Eyes" recordType="EYES" objType="Record" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
+      <AssetLink name="Icon" recordType="ICON" assetType="Fallout3Texture" />
+      <Enum name="Flags" recordType="DATA" enumName="Eyes.Flag" byteLength="1" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

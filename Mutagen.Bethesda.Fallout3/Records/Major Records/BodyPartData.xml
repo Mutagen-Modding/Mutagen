@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BodyPartData" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="BPTD">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Parts" refName="BodyPart" />
+      <FormLink name="Ragdoll" recordType="RAGA" refName="Ragdoll" />
+    </Fields>
+  </Object>
+  <Object name="BodyPart" objType="Subrecord">
+    <Fields>
+      <String name="Name" recordType="BPTN" />
+      <String name="PartNode" recordType="BPNN" nullable="False" />
+      <String name="VatsTarget" recordType="BPNT" nullable="False" />
+      <String name="IkStartNode" recordType="BPNI" nullable="False" />
+      <Data recordType="BPND" nullable="False">
+        <Fields>
+          <Float name="DamageMult" />
+          <Enum name="Flags" enumName="BodyPart.Flag" byteLength="1" />
+          <Int8 name="PartType" />
+          <UInt8 name="HealthPercent" />
+          <Int8 name="ActorValue" />
+          <UInt8 name="ToHitChance" />
+          <UInt8 name="ExplodableExplosionChance" />
+          <UInt16 name="ExplodableDebrisCount" />
+          <FormLink name="ExplodableDebris" refName="Debris" />
+          <FormLink name="ExplodableExplosion" refName="Explosion" />
+          <Float name="TrackingMaxAngle" />
+          <Float name="ExplodableDebrisScale" />
+          <Int32 name="SeverableDebrisCount" />
+          <FormLink name="SeverableDebris" refName="Debris" />
+          <FormLink name="SeverableExplosion" refName="Explosion" />
+          <Float name="SeverableDebrisScale" />
+          <P3Float name="GorePositioning" />
+          <P3Float name="GoreRotation" />
+          <FormLink name="SeverableImpactData" refName="ImpactDataSet" />
+          <FormLink name="ExplodableImpactData" refName="ImpactDataSet" />
+          <UInt8 name="SeverableDecalCount" />
+          <UInt8 name="ExplodableDecalCount" />
+          <UInt16 name="Unknown" />
+          <Float name="LimbReplacementScale" />
+        </Fields>
+      </Data>
+      <String name="LimbReplacementModel" recordType="NAM1" nullable="False" />
+      <String name="GoreTargetBone" recordType="NAM4" nullable="False" />
+      <ByteArray name="TextureFilesHashes" recordType="NAM5" />
+    </Fields>
+  </Object>
+</Loqui>

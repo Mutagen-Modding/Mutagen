@@ -11,6 +11,7 @@ public static class GameCategoryExt
         return release switch
         {
             GameCategory.Oblivion => false,
+            GameCategory.Fallout3 => false,
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
             GameCategory.Starfield => true,
@@ -22,6 +23,7 @@ public static class GameCategoryExt
         return gameCategory switch
         {
             GameCategory.Oblivion => GameRelease.Oblivion,
+            GameCategory.Fallout3 => GameRelease.Fallout3,
             GameCategory.Skyrim => GameRelease.SkyrimSE,
             GameCategory.Fallout4 => GameRelease.Fallout4,
             GameCategory.Starfield => GameRelease.Starfield,
@@ -36,6 +38,10 @@ public static class GameCategoryExt
             case GameCategory.Oblivion:
                 yield return GameRelease.Oblivion;
                 yield return GameRelease.OblivionRE;
+                yield break;
+            case GameCategory.Fallout3:
+                yield return GameRelease.Fallout3;
+                yield return GameRelease.FalloutNV;
                 yield break;
             case GameCategory.Skyrim:
                 yield return GameRelease.SkyrimLE;
@@ -63,6 +69,7 @@ public static class GameCategoryExt
         switch (category)
         {
             case GameCategory.Oblivion:
+            case GameCategory.Fallout3:
                 return false;
             case GameCategory.Skyrim:
             case GameCategory.Fallout4:
@@ -78,6 +85,7 @@ public static class GameCategoryExt
         {
             GameCategory.Oblivion => ("Mutagen.Bethesda.Oblivion.OblivionMultiModOverlay", "Mutagen.Bethesda.Oblivion"),
             GameCategory.Skyrim => ("Mutagen.Bethesda.Skyrim.SkyrimMultiModOverlay", "Mutagen.Bethesda.Skyrim"),
+            GameCategory.Fallout3 => ("Mutagen.Bethesda.Fallout3.Fallout3MultiModOverlay", "Mutagen.Bethesda.Fallout3"),
             GameCategory.Fallout4 => ("Mutagen.Bethesda.Fallout4.Fallout4MultiModOverlay", "Mutagen.Bethesda.Fallout4"),
             GameCategory.Starfield => ("Mutagen.Bethesda.Starfield.StarfieldMultiModOverlay", "Mutagen.Bethesda.Starfield"),
             _ => throw new NotImplementedException(
@@ -90,6 +98,7 @@ public static class GameCategoryExt
         return release switch
         {
             GameCategory.Oblivion => true,
+            GameCategory.Fallout3 => true,
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
             GameCategory.Starfield => false,

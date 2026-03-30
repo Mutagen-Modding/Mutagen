@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Mutagen.Bethesda.Testing")]
 [assembly: InternalsVisibleTo("Mutagen.Bethesda.Tests")]
@@ -9,4 +9,5 @@
 [assembly: InternalsVisibleTo("Mutagen.Bethesda.Skyrim")]
 [assembly: InternalsVisibleTo("Mutagen.Bethesda.Fallout4")]
 [assembly: InternalsVisibleTo("Mutagen.Bethesda.Starfield")]
+[assembly: InternalsVisibleTo("Mutagen.Bethesda.Fallout3")]
 [assembly: InternalsVisibleTo("Mutagen.Bethesda.WPF")]

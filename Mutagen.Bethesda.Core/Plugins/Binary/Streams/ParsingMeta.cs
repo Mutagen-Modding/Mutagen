@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -55,6 +56,11 @@ public sealed class ParsingMeta
     /// Tracker of current major record version
     /// </summary>
     public ushort? FormVersion { get; set; }
+
+    /// <summary>
+    /// Mod header HEDR version (e.g. 0.94 for FO3, 1.34 for FNV)
+    /// </summary>
+    public float? ModHeaderVersion { get; set; }
 
     /// <summary>
     /// ModKey of the mod being parsed
@@ -144,6 +150,8 @@ public sealed class ParsingMeta
         var rawMasters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
         var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
+        var hedr = header.First(s => s.RecordType == RecordTypes.HEDR);
+        meta.ModHeaderVersion = System.Buffers.Binary.BinaryPrimitives.ReadSingleLittleEndian(hedr.Content.Slice(0, 4));
         meta.Absorb(param);
         return meta;
     }
@@ -159,6 +167,8 @@ public sealed class ParsingMeta
         stream.Position = 0;
         var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
+        var hedr = header.First(s => s.RecordType == RecordTypes.HEDR);
+        meta.ModHeaderVersion = System.Buffers.Binary.BinaryPrimitives.ReadSingleLittleEndian(hedr.Content.Slice(0, 4));
         meta.Absorb(param);
         return meta;
     }

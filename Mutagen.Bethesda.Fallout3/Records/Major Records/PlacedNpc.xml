@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedNpc" baseClass="Fallout3MajorRecord" objType="Record"
+          recordType="ACHR">
+    <Fields>
+      <FormLink name="Base" refName="Npc" recordType="NAME" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <ByteArray name="XRGD" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
+      <Float name="PatrolIdleTime" recordType="XPRD" />
+      <Bool name="PatrolScriptMarker" boolAsMarker="XPPA" />
+      <FormLink name="PatrolIdle" recordType="INAM" refName="IdleAnimation" />
+      <ByteArray name="PatrolSCHR" recordType="SCHR" />
+      <ByteArray name="PatrolSCDA" recordType="SCDA" />
+      <String name="PatrolSCTX" recordType="SCTX" binaryType="Plain" />
+      <RefList name="PatrolScriptReferences" refName="AScriptReference" />
+      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
+      <Int32 name="LevelModifier" recordType="XLCM" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <ByteArray name="LinkedDecals" recordType="XDCR" />
+      <FormLink name="LinkedReference" recordType="XLKR" refName="Fallout3MajorRecord" />
+      <RefDirect name="LinkedReferenceColor" refName="PlacedNpcLinkedReferenceColor" />
+      <UInt8 name="ActivateParentFlags" recordType="XAPD" />
+      <RefDirect name="ActivateParentRef" refName="PlacedNpcActivateParent" />
+      <String name="ActivationPrompt" recordType="XATO" />
+      <RefDirect name="EnableParent" refName="PlacedNpcEnableParent" />
+      <FormLink name="Emittance" recordType="XEMI" refName="Light" />
+      <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
+      <Float name="Scale" recordType="XSCL" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+  </Object>
+  <Object name="PlacedNpcLinkedReferenceColor" objType="Subrecord" recordType="XCLP">
+    <Fields>
+      <Color name="LinkStartColor" binaryType="Alpha" />
+      <Color name="LinkEndColor" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="PlacedNpcActivateParent" objType="Subrecord" recordType="XAPR">
+    <Fields>
+      <FormLink name="Reference" refName="Fallout3MajorRecord" />
+      <Float name="Delay" />
+    </Fields>
+  </Object>
+  <Object name="PlacedNpcEnableParent" objType="Subrecord" recordType="XESP">
+    <Fields>
+      <FormLink name="Reference" refName="Fallout3MajorRecord" />
+      <UInt8 name="Flags" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

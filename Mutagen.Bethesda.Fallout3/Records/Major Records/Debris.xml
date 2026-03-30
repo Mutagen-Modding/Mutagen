@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Debris" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="DEBR">
+    <Fields>
+      <RefList name="Models" refName="DebrisModel" />
+    </Fields>
+  </Object>
+  <Object name="DebrisModel" objType="Subrecord">
+    <Fields>
+      <Data>
+        <Fields>
+          <UInt8 name="Percentage" />
+          <String name="ModelFilename" binaryType="NullTerminate" />
+          <Break />
+          <UInt8 name="HasCollision" />
+        </Fields>
+      </Data>
+      <ByteArray name="TextureFileHashes" recordType="MODT" />
+    </Fields>
+  </Object>
+</Loqui>

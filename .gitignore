@@ -299,5 +299,8 @@ Mutagen.Bethesda.Tests/config/
 
 nupkg/
 
+# Parse reports (xEdit reference dumps for audit)
+ParseReports/
+
 # Claude Code files
 .claude

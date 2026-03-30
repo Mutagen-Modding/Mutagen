@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Activator" recordType="ACTI" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="LoopingSound" recordType="SNAM" refName="Sound" />
+      <FormLink name="ActivationSound" recordType="VNAM" refName="Sound" />
+      <FormLink name="RadioTemplate" recordType="INAM" refName="Sound">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <FormLink name="RadioStation" recordType="RNAM" refName="TalkingActivator" />
+      <FormLink name="WaterType" recordType="WNAM" refName="Water" />
+      <String name="ActivationPrompt" recordType="XATO">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+    </Fields>
+  </Object>
+</Loqui>

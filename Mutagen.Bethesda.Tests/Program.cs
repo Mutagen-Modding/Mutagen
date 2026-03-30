@@ -1,10 +1,6 @@
-using Newtonsoft.Json;
-using Noggog;
-using System.Diagnostics;
+#nullable enable
 using CommandLine;
-using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Tests.CLI;
-using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -12,113 +8,24 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        await Parser.Default.ParseArguments(args, typeof(RunConfigCommand), typeof(RunSinglePassthrough))
+        await Parser.Default.ParseArguments(args,
+                typeof(RunConfigCommand),
+                typeof(RunSinglePassthrough),
+                typeof(PassthroughCommand),
+                typeof(InspectGrupCommand),
+                typeof(InspectRecordCommand),
+                typeof(InspectBytesCommand),
+                typeof(ListGrupsCommand),
+                typeof(SearchSubrecordsCommand))
             .MapResult(
-                (RunConfigCommand runConfig) => RunConfig(runConfig),
-                (RunSinglePassthrough singlePassthrough) => RunSingle(singlePassthrough),
+                (RunConfigCommand cmd) => cmd.Run(),
+                (RunSinglePassthrough cmd) => cmd.Run(),
+                (PassthroughCommand cmd) => cmd.Run(),
+                (InspectGrupCommand cmd) => Task.FromResult(cmd.Run()),
+                (InspectRecordCommand cmd) => Task.FromResult(cmd.Run()),
+                (InspectBytesCommand cmd) => Task.FromResult(cmd.Run()),
+                (ListGrupsCommand cmd) => Task.FromResult(cmd.Run()),
+                (SearchSubrecordsCommand cmd) => Task.FromResult(cmd.Run()),
                 async _ => -1);
-    }
-
-    private static async Task<int> RunConfig(RunConfigCommand cmd)
-    {
-        try
-        {
-            FilePath settingsFile = cmd.PathToConfig;
-            if (!settingsFile.Exists)
-            {
-                throw new ArgumentException($"Could not find settings file at: {settingsFile}");
-            }
-
-            Console.WriteLine($"Using settings: {settingsFile.Path}");
-            var settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsFile.Path));
-
-            return await RunTests(settings);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Exception occurred:");
-            Console.WriteLine(ex);
-            return -1;
-        }
-    }
-
-    private static async Task<int> RunSingle(RunSinglePassthrough cmd)
-    {
-        try
-        {
-            var locator = GameLocatorLookupCache.Instance;
-            var dataDir = locator.GetDataDirectory(cmd.Release);
-            var settings = new TestingSettings()
-            {
-                PassthroughSettings = new PassthroughSettings()
-                {
-                    CacheReuse = new CacheReuse(cmd.ReuseCaches),
-                    TestNormal = true,
-                    TestBinaryOverlay = true,
-                    DeleteCachesAfter = false,
-                    TestImport = false,
-                    ParallelModTranslations = false,
-                    TestCopyIn = false,
-                    Trimming = new TrimmingSettings()
-                    {
-                        Enabled = false
-                    }
-                },
-                TargetGroups = new List<TargetGroup>()
-                {
-                    new TargetGroup()
-                    {
-                        GameRelease = cmd.Release,
-                        NicknameSuffix = cmd.NicknameSuffix,
-                        Do = true,
-                        Targets = new List<Target>()
-                        {
-                            new Target()
-                            {
-                                Do = true,
-                                Path = cmd.PathToMod
-                            }
-                        }
-                    }
-                },
-                TestFlattenedMod = false,
-                TestBenchmarks = false,
-                TestEquality = false,
-                TestPex = false,
-                TestGroupMasks = false,
-                TestRecordEnumerables = false,
-                DataFolderLocations = new DataFolderLocations(cmd.Release, dataDir)
-            };
-            
-            return await RunTests(settings);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Exception occurred:");
-            Console.WriteLine(ex);
-            return -1;
-        }
-    }
-
-    private static async Task<int> RunTests(TestingSettings settings)
-    {
-        try
-        {
-            var dropoff = new WorkDropoff();
-            using var consumer = new WorkConsumer(
-                new NumWorkThreadsConstant(null),
-                dropoff, dropoff);
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            await TestBattery.RunTests(settings, dropoff);
-            sw.Stop();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Exception occurred:");
-            Console.WriteLine(ex);
-            return -1;
-        }
-        return 0;
     }
 }

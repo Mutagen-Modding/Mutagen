@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedCreature" baseClass="Fallout3MajorRecord" objType="Record"
+          recordType="ACRE">
+    <Fields>
+      <FormLink name="Base" recordType="NAME" refName="Creature" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <ByteArray name="XRGD" recordType="XRGD" />
+      <ByteArray name="XRGB" recordType="XRGB" />
+      <Float name="XPRD" recordType="XPRD" />
+      <ByteArray name="XPPA" recordType="XPPA" />
+      <FormLink name="IdleMarker" recordType="INAM" refName="IdleAnimation" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="SCDA" recordType="SCDA" />
+      <String name="ScriptSource" recordType="SCTX" binaryType="Plain" />
+      <RefList name="ScriptReferences" refName="AScriptReference" />
+      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
+      <Int32 name="LevelModifier" recordType="XLCM" />
+      <FormLink name="Owner" recordType="XOWN" refName="Fallout3MajorRecord" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <ByteArray name="XDCR" recordType="XDCR" />
+      <FormLink name="LinkedReference" recordType="XLKR" refName="Fallout3MajorRecord" />
+      <RefDirect name="LinkedReferenceColor" refName="PlacedCreatureLinkedReferenceColor" />
+      <Bool name="ParentActivateOnly" recordType="XAPD" />
+      <ByteArray name="XAPR" recordType="XAPR" />
+      <ByteArray name="XESP" recordType="XESP" />
+      <FormLink name="EmittanceLight" recordType="XEMI" refName="Light" />
+      <FormLink name="MultiboundReference" recordType="XMBR" refName="PlacedObject" />
+      <!-- Activation Prompt (FNV) -->
+      <String name="ActivationPrompt" recordType="XATO">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <ByteArray name="XIBS" recordType="XIBS" />
+      <Float name="Scale" recordType="XSCL" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+  </Object>
+  <Object name="PlacedCreatureLinkedReferenceColor" objType="Subrecord" recordType="XCLP">
+    <Fields>
+      <UInt8 name="LinkStartColorRed" />
+      <UInt8 name="LinkStartColorGreen" />
+      <UInt8 name="LinkStartColorBlue" />
+      <UInt8 name="LinkStartColorAlpha" />
+      <UInt8 name="LinkEndColorRed" />
+      <UInt8 name="LinkEndColorGreen" />
+      <UInt8 name="LinkEndColorBlue" />
+      <UInt8 name="LinkEndColorAlpha" />
+    </Fields>
+  </Object>
+</Loqui>

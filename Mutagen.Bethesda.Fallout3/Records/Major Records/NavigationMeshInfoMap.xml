@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMeshInfoMap" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="NAVI">
+    <Fields>
+      <UInt32 name="NavMeshVersion" recordType="NVER" />
+      <RefList name="NavMeshInfos" refName="NavigationMapInfo" />
+      <RefList name="NavMeshConnections" refName="NavigationConnectionInfo" />
+    </Fields>
+  </Object>
+  <Object name="NavigationMapInfo" objType="Subrecord" recordType="NVMI">
+    <Fields>
+      <ByteArray name="Data" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="NavigationConnectionInfo" objType="Subrecord" recordType="NVCI">
+    <Fields>
+      <ByteArray name="Data" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

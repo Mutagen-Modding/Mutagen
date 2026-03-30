@@ -36,6 +36,8 @@ public sealed class ArchiveReaderProvider : IArchiveReaderProvider
         {
             case GameRelease.Oblivion:
             case GameRelease.OblivionRE:
+            case GameRelease.Fallout3:
+            case GameRelease.FalloutNV:
             case GameRelease.SkyrimLE:
             case GameRelease.SkyrimSE:
             case GameRelease.SkyrimSEGog:

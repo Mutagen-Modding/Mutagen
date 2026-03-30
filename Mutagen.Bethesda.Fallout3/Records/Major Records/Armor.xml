@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Armor" recordType="ARMO" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
+      <RefDirect name="BipedData" refName="BipedData" nullable="False" />
+
+      <!-- Male body -->
+      <RefDirect name="MaleBipedModel" refName="Model" />
+      <RefDirect name="MaleWorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODT" To="MO2T" />
+          <Mapping From="MODS" To="MO2S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <String name="MaleIcon" recordType="ICON" />
+      <String name="MaleMessageIcon" recordType="MICO" />
+
+      <!-- Female body -->
+      <RefDirect name="FemaleBipedModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD3" />
+          <Mapping From="MODT" To="MO3T" />
+          <Mapping From="MODS" To="MO3S" />
+          <Mapping From="MODD" To="MOSD" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <RefDirect name="FemaleWorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODS" To="MO4S" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <String name="FemaleIcon" recordType="ICO2" />
+      <String name="FemaleMessageIcon" recordType="MIC2" />
+
+      <String name="RagdollConstraintTemplate" recordType="BMCT" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="RepairList" recordType="REPL" refName="FormList" />
+      <FormLink name="BipedModelList" recordType="BIPL" refName="FormList" />
+      <Enum name="EquipmentType" recordType="ETYP" enumName="EquipType" byteLength="4" nullable="False" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Int32 name="Value" />
+          <Int32 name="Health" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <Int16 name="DamageResistance" />
+          <UInt16 name="DnamSlot1" />
+          <Break />
+          <Float name="DamageThreshold" />
+          <UInt16 name="DnamSlot2" />
+          <UInt16 name="DnamUnused" />
+        </Fields>
+      </Data>
+
+      <Bool name="OverridesAnimationSounds" recordType="BNAM" byteLength="4">
+        <ModHeaderVersioning version="1.32" />
+      </Bool>
+      <RefList name="AnimationSounds" refName="ArmorAnimationSound" />
+      <FormLink name="AnimationSoundsTemplate" recordType="TNAM" refName="Armor">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+    </Fields>
+    <LinkInterface>IBoundItem</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
+  </Object>
+  <Object name="ArmorAnimationSound" objType="Subrecord" recordType="SNAM">
+    <Fields>
+      <FormLink name="Sound" refName="Sound" />
+      <UInt8 name="Chance" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
+      <Enum name="Type" enumName="ArmorAnimationSound.SoundType" byteLength="4" />
+          <ByteArray name="BMDT" recordType="BMDT" />
+</Fields>
+  </Object>
+</Loqui>

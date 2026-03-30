@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="DIAL" customBinaryEnd="Normal">
+    <Fields>
+      <List name="Quests">
+        <FormLink recordType="QSTI" refName="Quest" />
+      </List>
+      <List name="QuestsRemoved">
+        <FormLink recordType="QSTR" refName="Quest" />
+      </List>
+      <String name="Name" recordType="FULL" />
+      <Float name="Priority" recordType="PNAM" nullable="True" />
+      <String name="DumbResponse" recordType="TDUM" />
+      <ByteArray name="Data" recordType="DATA" />
+      <ByteArray name="INOM" recordType="INOM" />
+      <ByteArray name="INOA" recordType="INOA" />
+      <!-- FNV: some DIAL records (GECK errors) have INFC/INFX without a QSTI group -->
+      <ByteArray name="INFC" recordType="INFC" />
+      <ByteArray name="INFX" recordType="INFX" />
+      <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
+    </Fields>
+  </Object>
+</Loqui>

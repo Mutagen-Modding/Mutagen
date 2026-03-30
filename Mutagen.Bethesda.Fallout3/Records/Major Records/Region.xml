@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Region" baseClass="Fallout3MajorRecord" objType="Record" recordType="REGN">
+    <Fields>
+      <RefDirect name="Icons" refName="Icons" />
+      <Color name="MapColor" recordType="RCLR" binaryType="Alpha" />
+      <FormLink name="Worldspace" recordType="WNAM" refName="Worldspace" />
+      <RefList name="RegionAreas" refName="RegionArea" />
+      <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
+      <RefDirect name="Objects" refName="RegionObjects" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Weather" refName="RegionWeather" binary="NoGeneration" nullable="True" />
+      <RefDirect name="MapName" refName="RegionMap" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Grasses" refName="RegionGrasses" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Sounds" refName="RegionSounds" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Imposters" refName="RegionImposters" binary="NoGeneration" nullable="True" />
+    </Fields>
+    <LinkInterface>IEmittance</LinkInterface>
+  </Object>
+
+  <Object name="RegionArea" objType="Subrecord">
+    <Fields>
+      <UInt32 name="EdgeFallOff" recordType="RPLI" />
+      <List name="RegionPoints" recordType="RPLD">
+        <P2Float />
+      </List>
+    </Fields>
+  </Object>
+
+  <!-- Abstract base for all region data types -->
+  <Object name="RegionData" abstract="true" objType="Subrecord">
+    <Fields>
+      <CustomLogic name="HeaderLogic" byteLength="8" recordType="RDAT" />
+      <Enum name="Flags" enumName="RegionData.RegionDataFlag" binary="NoGeneration" />
+      <UInt8 name="Priority" binary="NoGeneration" />
+    </Fields>
+  </Object>
+
+  <!-- Type 2: Objects (RDOT) -->
+  <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <RefList name="Objects" refName="RegionObject" recordType="RDOT" />
+    </Fields>
+  </Object>
+  <Object name="RegionObject" objType="Subrecord">
+    <Fields>
+      <FormLink name="Object" refName="Fallout3MajorRecord" />
+      <UInt16 name="ParentIndex" />
+      <ByteArray name="Unused" byteLength="2" nullable="False" />
+      <Float name="Density" />
+      <UInt8 name="Clustering" />
+      <UInt8 name="MinSlope" />
+      <UInt8 name="MaxSlope" />
+      <UInt8 name="Flags" />
+      <UInt16 name="RadiusWrtPercent" />
+      <UInt16 name="Radius" />
+      <Float name="MinHeight" />
+      <Float name="MaxHeight" />
+      <Float name="Sink" />
+      <Float name="SinkVariance" />
+      <Float name="SizeVariance" />
+      <UInt16 name="AngleVarianceX" />
+      <UInt16 name="AngleVarianceY" />
+      <UInt16 name="AngleVarianceZ" />
+      <ByteArray name="Unknown" byteLength="2" nullable="False" />
+      <ByteArray name="Unknown2" byteLength="4" nullable="False" />
+    </Fields>
+  </Object>
+
+  <!-- Type 3: Weather (RDWT) - uses WeatherType from Common Subrecords -->
+  <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <RefList name="Weathers" refName="WeatherType" recordType="RDWT" />
+    </Fields>
+  </Object>
+
+  <!-- Type 4: Map (RDMP) -->
+  <Object name="RegionMap" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <String name="Map" recordType="RDMP" />
+    </Fields>
+  </Object>
+
+  <!-- Type 6: Grasses (RDGS) -->
+  <Object name="RegionGrasses" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <RefList name="Grasses" refName="RegionGrass" recordType="RDGS" />
+    </Fields>
+  </Object>
+  <Object name="RegionGrass" objType="Subrecord">
+    <Fields>
+      <FormLink name="Grass" refName="Grass" />
+      <ByteArray name="Unknown" byteLength="4" nullable="False" />
+    </Fields>
+  </Object>
+
+  <!-- Type 7: Sounds (RDSD) -->
+  <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <UInt32 name="MusicType" recordType="RDMD" />
+      <FormLink name="Music" recordType="RDMO" refName="MusicType" />
+      <FormLink name="IncidentalMediaSet" recordType="RDSI" refName="Fallout3MajorRecord">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+      <List name="BattleMediaSets">
+        <FormLink recordType="RDSB" refName="Fallout3MajorRecord" />
+      </List>
+      <RefList name="Sounds" refName="RegionSound" recordType="RDSD" />
+    </Fields>
+  </Object>
+  <Object name="RegionSound" objType="Subrecord">
+    <Fields>
+      <FormLink name="Sound" refName="Sound" />
+      <UInt32 name="SoundFlags" />
+      <UInt32 name="Chance" />
+    </Fields>
+  </Object>
+
+  <!-- Type 8: Imposters (RDID) - FNV only, version >= 1.32 -->
+  <Object name="RegionImposters" objType="Subrecord" baseClass="RegionData">
+    <Fields>
+      <ByteArray name="Imposters" recordType="RDID">
+        <ModHeaderVersioning version="1.32" />
+      </ByteArray>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Terminal" recordType="TERM" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <String name="Description" recordType="DESC" nullable="False" />
+      <FormLink name="LoopingSound" recordType="SNAM" refName="Sound" />
+      <FormLink name="PasswordNote" recordType="PNAM" refName="Note" />
+      <Data recordType="DNAM" nullable="False">
+        <Fields>
+          <Enum name="BaseHackingDifficulty" enumName="Terminal.HackingDifficulty" byteLength="1" />
+          <Enum name="Flags" enumName="Terminal.TerminalFlag" byteLength="1" />
+          <Enum name="ServerType" enumName="Terminal.TerminalServerType" byteLength="1" />
+          <Break />
+          <UInt8 name="Unused" />
+        </Fields>
+      </Data>
+      <RefList name="MenuItems" refName="TerminalMenuItem" />
+    </Fields>
+  </Object>
+  <Object name="TerminalMenuItem" objType="Subrecord">
+    <Fields>
+      <String name="ItemText" recordType="ITXT" />
+      <String name="ResultText" recordType="RNAM" />
+      <Enum name="MenuItemFlags" recordType="ANAM" enumName="TerminalMenuItem.MenuItemFlag" byteLength="1" nullable="False" />
+      <FormLink name="DisplayNote" recordType="INAM" refName="Note" />
+      <FormLink name="SubMenu" recordType="TNAM" refName="Terminal" />
+      <RefDirect name="EmbeddedScript" refName="ScriptFields" singleton="true" nullable="False" />
+      <RefList name="Conditions" refName="Condition" />
+          <ByteArray name="SCDA" recordType="SCDA" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="SCRO" recordType="SCRO" />
+      <ByteArray name="SCRV" recordType="SCRV" />
+      <ByteArray name="SCTX" recordType="SCTX" />
+      <ByteArray name="SCVR" recordType="SCVR" />
+      <ByteArray name="SLSD" recordType="SLSD" />
+</Fields>
+  </Object>
+</Loqui>

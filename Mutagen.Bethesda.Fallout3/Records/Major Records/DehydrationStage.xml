@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DehydrationStage" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="DEHY">
+    <Fields>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="TriggerThreshold" />
+          <FormLink name="ActorEffect" refName="Spell" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>
