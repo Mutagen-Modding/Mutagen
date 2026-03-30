@@ -263,6 +263,9 @@
     <Compile Include="Records\MajorRecords\ImpactDataSet_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Projectile.cs">
+      <DependentUpon>Projectile.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Projectile_Generated.cs">
       <DependentUpon>Projectile.xml</DependentUpon>
     </Compile>

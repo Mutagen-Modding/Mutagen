@@ -39,6 +39,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.MISC, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.MSTT, ProcessDestructible);
         AddDynamicProcessing(RecordTypes.TERM, ProcessDestructible);
+        AddDynamicProcessing(RecordTypes.PROJ, ProcessProjectiles);
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
         AddDynamicProcessing(RecordTypes.AMMO, ProcessAmmunition);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
@@ -84,6 +85,20 @@ public class Fallout3Processor : Processor
         {
             // DEST layout: Int32 Health (4), UInt8 DESTCount (1), Bool VATSTargetable (1), ByteArray Unused (2)
             ProcessBool(dest, fileOffset, 5, 1, 1);
+        }
+    }
+
+    private void ProcessProjectiles(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessDestructible(majorFrame, fileOffset);
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var data))
+        {
+            // DATA layout: Flags(2), Type(2), then float/FormID fields at 4-byte intervals
+            // Scan all 4-byte positions starting at offset 4 for negative-zero floats
+            int loc = 4;
+            ProcessZeroFloats(data, fileOffset, ref loc, (data.ContentLength - 4) / 4);
         }
     }
 

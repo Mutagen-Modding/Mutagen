@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +56,273 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IProjectileGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IProjectileGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IProjectileGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IProjectileGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
+        #endregion
+        #region Flags
+        public Projectile.Flag Flags { get; set; } = default(Projectile.Flag);
+        #endregion
+        #region Type
+        public Projectile.TypeEnum Type { get; set; } = default(Projectile.TypeEnum);
+        #endregion
+        #region Gravity
+        public Single Gravity { get; set; } = default(Single);
+        #endregion
+        #region Speed
+        public Single Speed { get; set; } = default(Single);
+        #endregion
+        #region Range
+        public Single Range { get; set; } = default(Single);
+        #endregion
+        #region Light
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IProjectileGetter.Light => this.Light;
+        #endregion
+        #region MuzzleFlashLight
+        private readonly IFormLink<ILightGetter> _MuzzleFlashLight = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> MuzzleFlashLight
+        {
+            get => _MuzzleFlashLight;
+            set => _MuzzleFlashLight.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IProjectileGetter.MuzzleFlashLight => this.MuzzleFlashLight;
+        #endregion
+        #region TracerChance
+        public Single TracerChance { get; set; } = default(Single);
+        #endregion
+        #region ExplosionAltTriggerProximity
+        public Single ExplosionAltTriggerProximity { get; set; } = default(Single);
+        #endregion
+        #region ExplosionAltTriggerTimer
+        public Single ExplosionAltTriggerTimer { get; set; } = default(Single);
+        #endregion
+        #region Explosion
+        private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IProjectileGetter.Explosion => this.Explosion;
+        #endregion
+        #region Sound
+        private readonly IFormLink<ISoundGetter> _Sound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IProjectileGetter.Sound => this.Sound;
+        #endregion
+        #region MuzzleFlashDuration
+        public Single MuzzleFlashDuration { get; set; } = default(Single);
+        #endregion
+        #region FadeDuration
+        public Single FadeDuration { get; set; } = default(Single);
+        #endregion
+        #region ImpactForce
+        public Single ImpactForce { get; set; } = default(Single);
+        #endregion
+        #region CountdownSound
+        private readonly IFormLink<ISoundGetter> _CountdownSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> CountdownSound
+        {
+            get => _CountdownSound;
+            set => _CountdownSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IProjectileGetter.CountdownSound => this.CountdownSound;
+        #endregion
+        #region DisableSound
+        private readonly IFormLink<ISoundGetter> _DisableSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> DisableSound
+        {
+            get => _DisableSound;
+            set => _DisableSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IProjectileGetter.DisableSound => this.DisableSound;
+        #endregion
+        #region DefaultWeaponSource
+        private readonly IFormLink<IWeaponGetter> _DefaultWeaponSource = new FormLink<IWeaponGetter>();
+        public IFormLink<IWeaponGetter> DefaultWeaponSource
+        {
+            get => _DefaultWeaponSource;
+            set => _DefaultWeaponSource.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
+        #endregion
+        #region RotationX
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RotationX;
+        public Single RotationX
+        {
+            get => this._RotationX;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._RotationX = value;
+            }
+        }
+        #endregion
+        #region RotationY
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RotationY;
+        public Single RotationY
+        {
+            get => this._RotationY;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._RotationY = value;
+            }
+        }
+        #endregion
+        #region RotationZ
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RotationZ;
+        public Single RotationZ
+        {
+            get => this._RotationZ;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._RotationZ = value;
+            }
+        }
+        #endregion
+        #region BouncyMult
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _BouncyMult;
+        public Single BouncyMult
+        {
+            get => this._BouncyMult;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._BouncyMult = value;
+            }
+        }
+        #endregion
+        #region MuzzleFlashModel
+        public String MuzzleFlashModel { get; set; } = string.Empty;
+        #endregion
+        #region MuzzleFlashModelTextureHashes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _MuzzleFlashModelTextureHashes;
+        public MemorySlice<Byte>? MuzzleFlashModelTextureHashes
+        {
+            get => this._MuzzleFlashModelTextureHashes;
+            set => this._MuzzleFlashModelTextureHashes = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IProjectileGetter.MuzzleFlashModelTextureHashes => this.MuzzleFlashModelTextureHashes;
+        #endregion
+        #region SoundLevel
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
+        #endregion
+        #region DATADataTypeState
+        public Projectile.DATADataType DATADataTypeState { get; set; } = default(Projectile.DATADataType);
+        #endregion
 
         #region To String
 
@@ -78,6 +348,36 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.Type = initialValue;
+                this.Gravity = initialValue;
+                this.Speed = initialValue;
+                this.Range = initialValue;
+                this.Light = initialValue;
+                this.MuzzleFlashLight = initialValue;
+                this.TracerChance = initialValue;
+                this.ExplosionAltTriggerProximity = initialValue;
+                this.ExplosionAltTriggerTimer = initialValue;
+                this.Explosion = initialValue;
+                this.Sound = initialValue;
+                this.MuzzleFlashDuration = initialValue;
+                this.FadeDuration = initialValue;
+                this.ImpactForce = initialValue;
+                this.CountdownSound = initialValue;
+                this.DisableSound = initialValue;
+                this.DefaultWeaponSource = initialValue;
+                this.RotationX = initialValue;
+                this.RotationY = initialValue;
+                this.RotationZ = initialValue;
+                this.BouncyMult = initialValue;
+                this.MuzzleFlashModel = initialValue;
+                this.MuzzleFlashModelTextureHashes = initialValue;
+                this.SoundLevel = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -87,7 +387,37 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem Destructible,
+                TItem Flags,
+                TItem Type,
+                TItem Gravity,
+                TItem Speed,
+                TItem Range,
+                TItem Light,
+                TItem MuzzleFlashLight,
+                TItem TracerChance,
+                TItem ExplosionAltTriggerProximity,
+                TItem ExplosionAltTriggerTimer,
+                TItem Explosion,
+                TItem Sound,
+                TItem MuzzleFlashDuration,
+                TItem FadeDuration,
+                TItem ImpactForce,
+                TItem CountdownSound,
+                TItem DisableSound,
+                TItem DefaultWeaponSource,
+                TItem RotationX,
+                TItem RotationY,
+                TItem RotationZ,
+                TItem BouncyMult,
+                TItem MuzzleFlashModel,
+                TItem MuzzleFlashModelTextureHashes,
+                TItem SoundLevel,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +427,36 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.Flags = Flags;
+                this.Type = Type;
+                this.Gravity = Gravity;
+                this.Speed = Speed;
+                this.Range = Range;
+                this.Light = Light;
+                this.MuzzleFlashLight = MuzzleFlashLight;
+                this.TracerChance = TracerChance;
+                this.ExplosionAltTriggerProximity = ExplosionAltTriggerProximity;
+                this.ExplosionAltTriggerTimer = ExplosionAltTriggerTimer;
+                this.Explosion = Explosion;
+                this.Sound = Sound;
+                this.MuzzleFlashDuration = MuzzleFlashDuration;
+                this.FadeDuration = FadeDuration;
+                this.ImpactForce = ImpactForce;
+                this.CountdownSound = CountdownSound;
+                this.DisableSound = DisableSound;
+                this.DefaultWeaponSource = DefaultWeaponSource;
+                this.RotationX = RotationX;
+                this.RotationY = RotationY;
+                this.RotationZ = RotationZ;
+                this.BouncyMult = BouncyMult;
+                this.MuzzleFlashModel = MuzzleFlashModel;
+                this.MuzzleFlashModelTextureHashes = MuzzleFlashModelTextureHashes;
+                this.SoundLevel = SoundLevel;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +465,39 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem Flags;
+            public TItem Type;
+            public TItem Gravity;
+            public TItem Speed;
+            public TItem Range;
+            public TItem Light;
+            public TItem MuzzleFlashLight;
+            public TItem TracerChance;
+            public TItem ExplosionAltTriggerProximity;
+            public TItem ExplosionAltTriggerTimer;
+            public TItem Explosion;
+            public TItem Sound;
+            public TItem MuzzleFlashDuration;
+            public TItem FadeDuration;
+            public TItem ImpactForce;
+            public TItem CountdownSound;
+            public TItem DisableSound;
+            public TItem DefaultWeaponSource;
+            public TItem RotationX;
+            public TItem RotationY;
+            public TItem RotationZ;
+            public TItem BouncyMult;
+            public TItem MuzzleFlashModel;
+            public TItem MuzzleFlashModelTextureHashes;
+            public TItem SoundLevel;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -118,11 +511,71 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Gravity, rhs.Gravity)) return false;
+                if (!object.Equals(this.Speed, rhs.Speed)) return false;
+                if (!object.Equals(this.Range, rhs.Range)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.MuzzleFlashLight, rhs.MuzzleFlashLight)) return false;
+                if (!object.Equals(this.TracerChance, rhs.TracerChance)) return false;
+                if (!object.Equals(this.ExplosionAltTriggerProximity, rhs.ExplosionAltTriggerProximity)) return false;
+                if (!object.Equals(this.ExplosionAltTriggerTimer, rhs.ExplosionAltTriggerTimer)) return false;
+                if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.MuzzleFlashDuration, rhs.MuzzleFlashDuration)) return false;
+                if (!object.Equals(this.FadeDuration, rhs.FadeDuration)) return false;
+                if (!object.Equals(this.ImpactForce, rhs.ImpactForce)) return false;
+                if (!object.Equals(this.CountdownSound, rhs.CountdownSound)) return false;
+                if (!object.Equals(this.DisableSound, rhs.DisableSound)) return false;
+                if (!object.Equals(this.DefaultWeaponSource, rhs.DefaultWeaponSource)) return false;
+                if (!object.Equals(this.RotationX, rhs.RotationX)) return false;
+                if (!object.Equals(this.RotationY, rhs.RotationY)) return false;
+                if (!object.Equals(this.RotationZ, rhs.RotationZ)) return false;
+                if (!object.Equals(this.BouncyMult, rhs.BouncyMult)) return false;
+                if (!object.Equals(this.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
+                if (!object.Equals(this.MuzzleFlashModelTextureHashes, rhs.MuzzleFlashModelTextureHashes)) return false;
+                if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.Gravity);
+                hash.Add(this.Speed);
+                hash.Add(this.Range);
+                hash.Add(this.Light);
+                hash.Add(this.MuzzleFlashLight);
+                hash.Add(this.TracerChance);
+                hash.Add(this.ExplosionAltTriggerProximity);
+                hash.Add(this.ExplosionAltTriggerTimer);
+                hash.Add(this.Explosion);
+                hash.Add(this.Sound);
+                hash.Add(this.MuzzleFlashDuration);
+                hash.Add(this.FadeDuration);
+                hash.Add(this.ImpactForce);
+                hash.Add(this.CountdownSound);
+                hash.Add(this.DisableSound);
+                hash.Add(this.DefaultWeaponSource);
+                hash.Add(this.RotationX);
+                hash.Add(this.RotationY);
+                hash.Add(this.RotationZ);
+                hash.Add(this.BouncyMult);
+                hash.Add(this.MuzzleFlashModel);
+                hash.Add(this.MuzzleFlashModelTextureHashes);
+                hash.Add(this.SoundLevel);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +586,48 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Gravity)) return false;
+                if (!eval(this.Speed)) return false;
+                if (!eval(this.Range)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.MuzzleFlashLight)) return false;
+                if (!eval(this.TracerChance)) return false;
+                if (!eval(this.ExplosionAltTriggerProximity)) return false;
+                if (!eval(this.ExplosionAltTriggerTimer)) return false;
+                if (!eval(this.Explosion)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.MuzzleFlashDuration)) return false;
+                if (!eval(this.FadeDuration)) return false;
+                if (!eval(this.ImpactForce)) return false;
+                if (!eval(this.CountdownSound)) return false;
+                if (!eval(this.DisableSound)) return false;
+                if (!eval(this.DefaultWeaponSource)) return false;
+                if (!eval(this.RotationX)) return false;
+                if (!eval(this.RotationY)) return false;
+                if (!eval(this.RotationZ)) return false;
+                if (!eval(this.BouncyMult)) return false;
+                if (!eval(this.MuzzleFlashModel)) return false;
+                if (!eval(this.MuzzleFlashModelTextureHashes)) return false;
+                if (!eval(this.SoundLevel)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +636,48 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Gravity)) return true;
+                if (eval(this.Speed)) return true;
+                if (eval(this.Range)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.MuzzleFlashLight)) return true;
+                if (eval(this.TracerChance)) return true;
+                if (eval(this.ExplosionAltTriggerProximity)) return true;
+                if (eval(this.ExplosionAltTriggerTimer)) return true;
+                if (eval(this.Explosion)) return true;
+                if (eval(this.Sound)) return true;
+                if (eval(this.MuzzleFlashDuration)) return true;
+                if (eval(this.FadeDuration)) return true;
+                if (eval(this.ImpactForce)) return true;
+                if (eval(this.CountdownSound)) return true;
+                if (eval(this.DisableSound)) return true;
+                if (eval(this.DefaultWeaponSource)) return true;
+                if (eval(this.RotationX)) return true;
+                if (eval(this.RotationY)) return true;
+                if (eval(this.RotationZ)) return true;
+                if (eval(this.BouncyMult)) return true;
+                if (eval(this.MuzzleFlashModel)) return true;
+                if (eval(this.MuzzleFlashModelTextureHashes)) return true;
+                if (eval(this.SoundLevel)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +693,36 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
+                obj.Gravity = eval(this.Gravity);
+                obj.Speed = eval(this.Speed);
+                obj.Range = eval(this.Range);
+                obj.Light = eval(this.Light);
+                obj.MuzzleFlashLight = eval(this.MuzzleFlashLight);
+                obj.TracerChance = eval(this.TracerChance);
+                obj.ExplosionAltTriggerProximity = eval(this.ExplosionAltTriggerProximity);
+                obj.ExplosionAltTriggerTimer = eval(this.ExplosionAltTriggerTimer);
+                obj.Explosion = eval(this.Explosion);
+                obj.Sound = eval(this.Sound);
+                obj.MuzzleFlashDuration = eval(this.MuzzleFlashDuration);
+                obj.FadeDuration = eval(this.FadeDuration);
+                obj.ImpactForce = eval(this.ImpactForce);
+                obj.CountdownSound = eval(this.CountdownSound);
+                obj.DisableSound = eval(this.DisableSound);
+                obj.DefaultWeaponSource = eval(this.DefaultWeaponSource);
+                obj.RotationX = eval(this.RotationX);
+                obj.RotationY = eval(this.RotationY);
+                obj.RotationZ = eval(this.RotationZ);
+                obj.BouncyMult = eval(this.BouncyMult);
+                obj.MuzzleFlashModel = eval(this.MuzzleFlashModel);
+                obj.MuzzleFlashModelTextureHashes = eval(this.MuzzleFlashModelTextureHashes);
+                obj.SoundLevel = eval(this.SoundLevel);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -174,6 +741,126 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Projectile.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Gravity ?? true)
+                    {
+                        sb.AppendItem(Gravity, "Gravity");
+                    }
+                    if (printMask?.Speed ?? true)
+                    {
+                        sb.AppendItem(Speed, "Speed");
+                    }
+                    if (printMask?.Range ?? true)
+                    {
+                        sb.AppendItem(Range, "Range");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        sb.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.MuzzleFlashLight ?? true)
+                    {
+                        sb.AppendItem(MuzzleFlashLight, "MuzzleFlashLight");
+                    }
+                    if (printMask?.TracerChance ?? true)
+                    {
+                        sb.AppendItem(TracerChance, "TracerChance");
+                    }
+                    if (printMask?.ExplosionAltTriggerProximity ?? true)
+                    {
+                        sb.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                    }
+                    if (printMask?.ExplosionAltTriggerTimer ?? true)
+                    {
+                        sb.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                    }
+                    if (printMask?.Explosion ?? true)
+                    {
+                        sb.AppendItem(Explosion, "Explosion");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        sb.AppendItem(Sound, "Sound");
+                    }
+                    if (printMask?.MuzzleFlashDuration ?? true)
+                    {
+                        sb.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
+                    }
+                    if (printMask?.FadeDuration ?? true)
+                    {
+                        sb.AppendItem(FadeDuration, "FadeDuration");
+                    }
+                    if (printMask?.ImpactForce ?? true)
+                    {
+                        sb.AppendItem(ImpactForce, "ImpactForce");
+                    }
+                    if (printMask?.CountdownSound ?? true)
+                    {
+                        sb.AppendItem(CountdownSound, "CountdownSound");
+                    }
+                    if (printMask?.DisableSound ?? true)
+                    {
+                        sb.AppendItem(DisableSound, "DisableSound");
+                    }
+                    if (printMask?.DefaultWeaponSource ?? true)
+                    {
+                        sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
+                    }
+                    if (printMask?.RotationX ?? true)
+                    {
+                        sb.AppendItem(RotationX, "RotationX");
+                    }
+                    if (printMask?.RotationY ?? true)
+                    {
+                        sb.AppendItem(RotationY, "RotationY");
+                    }
+                    if (printMask?.RotationZ ?? true)
+                    {
+                        sb.AppendItem(RotationZ, "RotationZ");
+                    }
+                    if (printMask?.BouncyMult ?? true)
+                    {
+                        sb.AppendItem(BouncyMult, "BouncyMult");
+                    }
+                    if (printMask?.MuzzleFlashModel ?? true)
+                    {
+                        sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
+                    }
+                    if (printMask?.MuzzleFlashModelTextureHashes ?? true)
+                    {
+                        sb.AppendItem(MuzzleFlashModelTextureHashes, "MuzzleFlashModelTextureHashes");
+                    }
+                    if (printMask?.SoundLevel ?? true)
+                    {
+                        sb.AppendItem(SoundLevel, "SoundLevel");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
             }
             #endregion
@@ -184,12 +871,105 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? Flags;
+            public Exception? Type;
+            public Exception? Gravity;
+            public Exception? Speed;
+            public Exception? Range;
+            public Exception? Light;
+            public Exception? MuzzleFlashLight;
+            public Exception? TracerChance;
+            public Exception? ExplosionAltTriggerProximity;
+            public Exception? ExplosionAltTriggerTimer;
+            public Exception? Explosion;
+            public Exception? Sound;
+            public Exception? MuzzleFlashDuration;
+            public Exception? FadeDuration;
+            public Exception? ImpactForce;
+            public Exception? CountdownSound;
+            public Exception? DisableSound;
+            public Exception? DefaultWeaponSource;
+            public Exception? RotationX;
+            public Exception? RotationY;
+            public Exception? RotationZ;
+            public Exception? BouncyMult;
+            public Exception? MuzzleFlashModel;
+            public Exception? MuzzleFlashModelTextureHashes;
+            public Exception? SoundLevel;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
                 switch (enu)
                 {
+                    case Projectile_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Projectile_FieldIndex.Name:
+                        return Name;
+                    case Projectile_FieldIndex.Model:
+                        return Model;
+                    case Projectile_FieldIndex.Destructible:
+                        return Destructible;
+                    case Projectile_FieldIndex.Flags:
+                        return Flags;
+                    case Projectile_FieldIndex.Type:
+                        return Type;
+                    case Projectile_FieldIndex.Gravity:
+                        return Gravity;
+                    case Projectile_FieldIndex.Speed:
+                        return Speed;
+                    case Projectile_FieldIndex.Range:
+                        return Range;
+                    case Projectile_FieldIndex.Light:
+                        return Light;
+                    case Projectile_FieldIndex.MuzzleFlashLight:
+                        return MuzzleFlashLight;
+                    case Projectile_FieldIndex.TracerChance:
+                        return TracerChance;
+                    case Projectile_FieldIndex.ExplosionAltTriggerProximity:
+                        return ExplosionAltTriggerProximity;
+                    case Projectile_FieldIndex.ExplosionAltTriggerTimer:
+                        return ExplosionAltTriggerTimer;
+                    case Projectile_FieldIndex.Explosion:
+                        return Explosion;
+                    case Projectile_FieldIndex.Sound:
+                        return Sound;
+                    case Projectile_FieldIndex.MuzzleFlashDuration:
+                        return MuzzleFlashDuration;
+                    case Projectile_FieldIndex.FadeDuration:
+                        return FadeDuration;
+                    case Projectile_FieldIndex.ImpactForce:
+                        return ImpactForce;
+                    case Projectile_FieldIndex.CountdownSound:
+                        return CountdownSound;
+                    case Projectile_FieldIndex.DisableSound:
+                        return DisableSound;
+                    case Projectile_FieldIndex.DefaultWeaponSource:
+                        return DefaultWeaponSource;
+                    case Projectile_FieldIndex.RotationX:
+                        return RotationX;
+                    case Projectile_FieldIndex.RotationY:
+                        return RotationY;
+                    case Projectile_FieldIndex.RotationZ:
+                        return RotationZ;
+                    case Projectile_FieldIndex.BouncyMult:
+                        return BouncyMult;
+                    case Projectile_FieldIndex.MuzzleFlashModel:
+                        return MuzzleFlashModel;
+                    case Projectile_FieldIndex.MuzzleFlashModelTextureHashes:
+                        return MuzzleFlashModelTextureHashes;
+                    case Projectile_FieldIndex.SoundLevel:
+                        return SoundLevel;
+                    case Projectile_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +980,96 @@ namespace Mutagen.Bethesda.Fallout3
                 Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
                 switch (enu)
                 {
+                    case Projectile_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Projectile_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Projectile_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Projectile_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Projectile_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Projectile_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Projectile_FieldIndex.Gravity:
+                        this.Gravity = ex;
+                        break;
+                    case Projectile_FieldIndex.Speed:
+                        this.Speed = ex;
+                        break;
+                    case Projectile_FieldIndex.Range:
+                        this.Range = ex;
+                        break;
+                    case Projectile_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashLight:
+                        this.MuzzleFlashLight = ex;
+                        break;
+                    case Projectile_FieldIndex.TracerChance:
+                        this.TracerChance = ex;
+                        break;
+                    case Projectile_FieldIndex.ExplosionAltTriggerProximity:
+                        this.ExplosionAltTriggerProximity = ex;
+                        break;
+                    case Projectile_FieldIndex.ExplosionAltTriggerTimer:
+                        this.ExplosionAltTriggerTimer = ex;
+                        break;
+                    case Projectile_FieldIndex.Explosion:
+                        this.Explosion = ex;
+                        break;
+                    case Projectile_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashDuration:
+                        this.MuzzleFlashDuration = ex;
+                        break;
+                    case Projectile_FieldIndex.FadeDuration:
+                        this.FadeDuration = ex;
+                        break;
+                    case Projectile_FieldIndex.ImpactForce:
+                        this.ImpactForce = ex;
+                        break;
+                    case Projectile_FieldIndex.CountdownSound:
+                        this.CountdownSound = ex;
+                        break;
+                    case Projectile_FieldIndex.DisableSound:
+                        this.DisableSound = ex;
+                        break;
+                    case Projectile_FieldIndex.DefaultWeaponSource:
+                        this.DefaultWeaponSource = ex;
+                        break;
+                    case Projectile_FieldIndex.RotationX:
+                        this.RotationX = ex;
+                        break;
+                    case Projectile_FieldIndex.RotationY:
+                        this.RotationY = ex;
+                        break;
+                    case Projectile_FieldIndex.RotationZ:
+                        this.RotationZ = ex;
+                        break;
+                    case Projectile_FieldIndex.BouncyMult:
+                        this.BouncyMult = ex;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashModel:
+                        this.MuzzleFlashModel = ex;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashModelTextureHashes:
+                        this.MuzzleFlashModelTextureHashes = ex;
+                        break;
+                    case Projectile_FieldIndex.SoundLevel:
+                        this.SoundLevel = ex;
+                        break;
+                    case Projectile_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +1081,96 @@ namespace Mutagen.Bethesda.Fallout3
                 Projectile_FieldIndex enu = (Projectile_FieldIndex)index;
                 switch (enu)
                 {
+                    case Projectile_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Projectile_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Projectile_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Projectile_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Gravity:
+                        this.Gravity = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Speed:
+                        this.Speed = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Range:
+                        this.Range = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashLight:
+                        this.MuzzleFlashLight = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.TracerChance:
+                        this.TracerChance = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.ExplosionAltTriggerProximity:
+                        this.ExplosionAltTriggerProximity = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.ExplosionAltTriggerTimer:
+                        this.ExplosionAltTriggerTimer = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Explosion:
+                        this.Explosion = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.Sound:
+                        this.Sound = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashDuration:
+                        this.MuzzleFlashDuration = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.FadeDuration:
+                        this.FadeDuration = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.ImpactForce:
+                        this.ImpactForce = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.CountdownSound:
+                        this.CountdownSound = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.DisableSound:
+                        this.DisableSound = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.DefaultWeaponSource:
+                        this.DefaultWeaponSource = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.RotationX:
+                        this.RotationX = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.RotationY:
+                        this.RotationY = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.RotationZ:
+                        this.RotationZ = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.BouncyMult:
+                        this.BouncyMult = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashModel:
+                        this.MuzzleFlashModel = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.MuzzleFlashModelTextureHashes:
+                        this.MuzzleFlashModelTextureHashes = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.SoundLevel:
+                        this.SoundLevel = (Exception?)obj;
+                        break;
+                    case Projectile_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +1180,36 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
+                if (Gravity != null) return true;
+                if (Speed != null) return true;
+                if (Range != null) return true;
+                if (Light != null) return true;
+                if (MuzzleFlashLight != null) return true;
+                if (TracerChance != null) return true;
+                if (ExplosionAltTriggerProximity != null) return true;
+                if (ExplosionAltTriggerTimer != null) return true;
+                if (Explosion != null) return true;
+                if (Sound != null) return true;
+                if (MuzzleFlashDuration != null) return true;
+                if (FadeDuration != null) return true;
+                if (ImpactForce != null) return true;
+                if (CountdownSound != null) return true;
+                if (DisableSound != null) return true;
+                if (DefaultWeaponSource != null) return true;
+                if (RotationX != null) return true;
+                if (RotationY != null) return true;
+                if (RotationZ != null) return true;
+                if (BouncyMult != null) return true;
+                if (MuzzleFlashModel != null) return true;
+                if (MuzzleFlashModelTextureHashes != null) return true;
+                if (SoundLevel != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +1236,90 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                Destructible?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Gravity, "Gravity");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Range, "Range");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashLight, "MuzzleFlashLight");
+                }
+                {
+                    sb.AppendItem(TracerChance, "TracerChance");
+                }
+                {
+                    sb.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                }
+                {
+                    sb.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
+                }
+                {
+                    sb.AppendItem(FadeDuration, "FadeDuration");
+                }
+                {
+                    sb.AppendItem(ImpactForce, "ImpactForce");
+                }
+                {
+                    sb.AppendItem(CountdownSound, "CountdownSound");
+                }
+                {
+                    sb.AppendItem(DisableSound, "DisableSound");
+                }
+                {
+                    sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
+                }
+                {
+                    sb.AppendItem(RotationX, "RotationX");
+                }
+                {
+                    sb.AppendItem(RotationY, "RotationY");
+                }
+                {
+                    sb.AppendItem(RotationZ, "RotationZ");
+                }
+                {
+                    sb.AppendItem(BouncyMult, "BouncyMult");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashModelTextureHashes, "MuzzleFlashModelTextureHashes");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -254,6 +1328,36 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Gravity = this.Gravity.Combine(rhs.Gravity);
+                ret.Speed = this.Speed.Combine(rhs.Speed);
+                ret.Range = this.Range.Combine(rhs.Range);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.MuzzleFlashLight = this.MuzzleFlashLight.Combine(rhs.MuzzleFlashLight);
+                ret.TracerChance = this.TracerChance.Combine(rhs.TracerChance);
+                ret.ExplosionAltTriggerProximity = this.ExplosionAltTriggerProximity.Combine(rhs.ExplosionAltTriggerProximity);
+                ret.ExplosionAltTriggerTimer = this.ExplosionAltTriggerTimer.Combine(rhs.ExplosionAltTriggerTimer);
+                ret.Explosion = this.Explosion.Combine(rhs.Explosion);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.MuzzleFlashDuration = this.MuzzleFlashDuration.Combine(rhs.MuzzleFlashDuration);
+                ret.FadeDuration = this.FadeDuration.Combine(rhs.FadeDuration);
+                ret.ImpactForce = this.ImpactForce.Combine(rhs.ImpactForce);
+                ret.CountdownSound = this.CountdownSound.Combine(rhs.CountdownSound);
+                ret.DisableSound = this.DisableSound.Combine(rhs.DisableSound);
+                ret.DefaultWeaponSource = this.DefaultWeaponSource.Combine(rhs.DefaultWeaponSource);
+                ret.RotationX = this.RotationX.Combine(rhs.RotationX);
+                ret.RotationY = this.RotationY.Combine(rhs.RotationY);
+                ret.RotationZ = this.RotationZ.Combine(rhs.RotationZ);
+                ret.BouncyMult = this.BouncyMult.Combine(rhs.BouncyMult);
+                ret.MuzzleFlashModel = this.MuzzleFlashModel.Combine(rhs.MuzzleFlashModel);
+                ret.MuzzleFlashModelTextureHashes = this.MuzzleFlashModelTextureHashes.Combine(rhs.MuzzleFlashModelTextureHashes);
+                ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +1379,110 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
+            public bool Flags;
+            public bool Type;
+            public bool Gravity;
+            public bool Speed;
+            public bool Range;
+            public bool Light;
+            public bool MuzzleFlashLight;
+            public bool TracerChance;
+            public bool ExplosionAltTriggerProximity;
+            public bool ExplosionAltTriggerTimer;
+            public bool Explosion;
+            public bool Sound;
+            public bool MuzzleFlashDuration;
+            public bool FadeDuration;
+            public bool ImpactForce;
+            public bool CountdownSound;
+            public bool DisableSound;
+            public bool DefaultWeaponSource;
+            public bool RotationX;
+            public bool RotationY;
+            public bool RotationZ;
+            public bool BouncyMult;
+            public bool MuzzleFlashModel;
+            public bool MuzzleFlashModelTextureHashes;
+            public bool SoundLevel;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
+                this.Gravity = defaultOn;
+                this.Speed = defaultOn;
+                this.Range = defaultOn;
+                this.Light = defaultOn;
+                this.MuzzleFlashLight = defaultOn;
+                this.TracerChance = defaultOn;
+                this.ExplosionAltTriggerProximity = defaultOn;
+                this.ExplosionAltTriggerTimer = defaultOn;
+                this.Explosion = defaultOn;
+                this.Sound = defaultOn;
+                this.MuzzleFlashDuration = defaultOn;
+                this.FadeDuration = defaultOn;
+                this.ImpactForce = defaultOn;
+                this.CountdownSound = defaultOn;
+                this.DisableSound = defaultOn;
+                this.DefaultWeaponSource = defaultOn;
+                this.RotationX = defaultOn;
+                this.RotationY = defaultOn;
+                this.RotationZ = defaultOn;
+                this.BouncyMult = defaultOn;
+                this.MuzzleFlashModel = defaultOn;
+                this.MuzzleFlashModelTextureHashes = defaultOn;
+                this.SoundLevel = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+                ret.Add((Gravity, null));
+                ret.Add((Speed, null));
+                ret.Add((Range, null));
+                ret.Add((Light, null));
+                ret.Add((MuzzleFlashLight, null));
+                ret.Add((TracerChance, null));
+                ret.Add((ExplosionAltTriggerProximity, null));
+                ret.Add((ExplosionAltTriggerTimer, null));
+                ret.Add((Explosion, null));
+                ret.Add((Sound, null));
+                ret.Add((MuzzleFlashDuration, null));
+                ret.Add((FadeDuration, null));
+                ret.Add((ImpactForce, null));
+                ret.Add((CountdownSound, null));
+                ret.Add((DisableSound, null));
+                ret.Add((DefaultWeaponSource, null));
+                ret.Add((RotationX, null));
+                ret.Add((RotationY, null));
+                ret.Add((RotationZ, null));
+                ret.Add((BouncyMult, null));
+                ret.Add((MuzzleFlashModel, null));
+                ret.Add((MuzzleFlashModelTextureHashes, null));
+                ret.Add((SoundLevel, null));
+                ret.Add((DATADataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1494,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileSetterCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -333,6 +1534,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IProjectile);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -413,9 +1619,59 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IProjectile :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
+        IHasDestructible,
         ILoquiObjectSetter<IProjectileInternal>,
-        IProjectileGetter
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IProjectileGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
+        new Projectile.Flag Flags { get; set; }
+        new Projectile.TypeEnum Type { get; set; }
+        new Single Gravity { get; set; }
+        new Single Speed { get; set; }
+        new Single Range { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<ILightGetter> MuzzleFlashLight { get; set; }
+        new Single TracerChance { get; set; }
+        new Single ExplosionAltTriggerProximity { get; set; }
+        new Single ExplosionAltTriggerTimer { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
+        new IFormLink<ISoundGetter> Sound { get; set; }
+        new Single MuzzleFlashDuration { get; set; }
+        new Single FadeDuration { get; set; }
+        new Single ImpactForce { get; set; }
+        new IFormLink<ISoundGetter> CountdownSound { get; set; }
+        new IFormLink<ISoundGetter> DisableSound { get; set; }
+        new IFormLink<IWeaponGetter> DefaultWeaponSource { get; set; }
+        new Single RotationX { get; set; }
+        new Single RotationY { get; set; }
+        new Single RotationZ { get; set; }
+        new Single BouncyMult { get; set; }
+        new String MuzzleFlashModel { get; set; }
+        new MemorySlice<Byte>? MuzzleFlashModelTextureHashes { get; set; }
+        new SoundLevel SoundLevel { get; set; }
+        new Projectile.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IProjectileInternal :
@@ -429,10 +1685,68 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IProjectileGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         ILoquiObject<IProjectileGetter>,
-        IMapsToGetter<IProjectileGetter>
+        IMapsToGetter<IProjectileGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
+        #endregion
+        Projectile.Flag Flags { get; }
+        Projectile.TypeEnum Type { get; }
+        Single Gravity { get; }
+        Single Speed { get; }
+        Single Range { get; }
+        IFormLinkGetter<ILightGetter> Light { get; }
+        IFormLinkGetter<ILightGetter> MuzzleFlashLight { get; }
+        Single TracerChance { get; }
+        Single ExplosionAltTriggerProximity { get; }
+        Single ExplosionAltTriggerTimer { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
+        IFormLinkGetter<ISoundGetter> Sound { get; }
+        Single MuzzleFlashDuration { get; }
+        Single FadeDuration { get; }
+        Single ImpactForce { get; }
+        IFormLinkGetter<ISoundGetter> CountdownSound { get; }
+        IFormLinkGetter<ISoundGetter> DisableSound { get; }
+        IFormLinkGetter<IWeaponGetter> DefaultWeaponSource { get; }
+        Single RotationX { get; }
+        Single RotationY { get; }
+        Single RotationZ { get; }
+        Single BouncyMult { get; }
+        String MuzzleFlashModel { get; }
+        ReadOnlyMemorySlice<Byte>? MuzzleFlashModelTextureHashes { get; }
+        SoundLevel SoundLevel { get; }
+        Projectile.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -609,6 +1923,36 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Destructible = 10,
+        Flags = 11,
+        Type = 12,
+        Gravity = 13,
+        Speed = 14,
+        Range = 15,
+        Light = 16,
+        MuzzleFlashLight = 17,
+        TracerChance = 18,
+        ExplosionAltTriggerProximity = 19,
+        ExplosionAltTriggerTimer = 20,
+        Explosion = 21,
+        Sound = 22,
+        MuzzleFlashDuration = 23,
+        FadeDuration = 24,
+        ImpactForce = 25,
+        CountdownSound = 26,
+        DisableSound = 27,
+        DefaultWeaponSource = 28,
+        RotationX = 29,
+        RotationY = 30,
+        RotationZ = 31,
+        BouncyMult = 32,
+        MuzzleFlashModel = 33,
+        MuzzleFlashModelTextureHashes = 34,
+        SoundLevel = 35,
+        DATADataTypeState = 36,
     }
     #endregion
 
@@ -619,9 +1963,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 30;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -651,8 +1995,25 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PROJ);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PROJ);
+            var all = RecordCollection.Factory(
+                RecordTypes.PROJ,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.DATA,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.VNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
@@ -694,6 +2055,36 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IProjectileInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.Destructible = null;
+            item.Flags = default(Projectile.Flag);
+            item.Type = default(Projectile.TypeEnum);
+            item.Gravity = default(Single);
+            item.Speed = default(Single);
+            item.Range = default(Single);
+            item.Light.Clear();
+            item.MuzzleFlashLight.Clear();
+            item.TracerChance = default(Single);
+            item.ExplosionAltTriggerProximity = default(Single);
+            item.ExplosionAltTriggerTimer = default(Single);
+            item.Explosion.Clear();
+            item.Sound.Clear();
+            item.MuzzleFlashDuration = default(Single);
+            item.FadeDuration = default(Single);
+            item.ImpactForce = default(Single);
+            item.CountdownSound.Clear();
+            item.DisableSound.Clear();
+            item.DefaultWeaponSource.Clear();
+            item.RotationX = default(Single);
+            item.RotationY = default(Single);
+            item.RotationZ = default(Single);
+            item.BouncyMult = default(Single);
+            item.MuzzleFlashModel = string.Empty;
+            item.MuzzleFlashModelTextureHashes = default;
+            item.SoundLevel = default(SoundLevel);
+            item.DATADataTypeState = default(Projectile.DATADataType);
             base.Clear(item);
         }
         
@@ -711,6 +2102,15 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IProjectile obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.Light.Relink(mapping);
+            obj.MuzzleFlashLight.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.Sound.Relink(mapping);
+            obj.CountdownSound.Relink(mapping);
+            obj.DisableSound.Relink(mapping);
+            obj.DefaultWeaponSource.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +2178,44 @@ namespace Mutagen.Bethesda.Fallout3
             Projectile.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
+            ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
+            ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
+            ret.Range = item.Range.EqualsWithin(rhs.Range);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.MuzzleFlashLight = item.MuzzleFlashLight.Equals(rhs.MuzzleFlashLight);
+            ret.TracerChance = item.TracerChance.EqualsWithin(rhs.TracerChance);
+            ret.ExplosionAltTriggerProximity = item.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity);
+            ret.ExplosionAltTriggerTimer = item.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
+            ret.MuzzleFlashDuration = item.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration);
+            ret.FadeDuration = item.FadeDuration.EqualsWithin(rhs.FadeDuration);
+            ret.ImpactForce = item.ImpactForce.EqualsWithin(rhs.ImpactForce);
+            ret.CountdownSound = item.CountdownSound.Equals(rhs.CountdownSound);
+            ret.DisableSound = item.DisableSound.Equals(rhs.DisableSound);
+            ret.DefaultWeaponSource = item.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource);
+            ret.RotationX = item.RotationX.EqualsWithin(rhs.RotationX);
+            ret.RotationY = item.RotationY.EqualsWithin(rhs.RotationY);
+            ret.RotationZ = item.RotationZ.EqualsWithin(rhs.RotationZ);
+            ret.BouncyMult = item.BouncyMult.EqualsWithin(rhs.BouncyMult);
+            ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
+            ret.MuzzleFlashModelTextureHashes = MemorySliceExt.SequenceEqual(item.MuzzleFlashModelTextureHashes, rhs.MuzzleFlashModelTextureHashes);
+            ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +2265,130 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Type ?? true)
+            {
+                sb.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.Gravity ?? true)
+            {
+                sb.AppendItem(item.Gravity, "Gravity");
+            }
+            if (printMask?.Speed ?? true)
+            {
+                sb.AppendItem(item.Speed, "Speed");
+            }
+            if (printMask?.Range ?? true)
+            {
+                sb.AppendItem(item.Range, "Range");
+            }
+            if (printMask?.Light ?? true)
+            {
+                sb.AppendItem(item.Light.FormKey, "Light");
+            }
+            if (printMask?.MuzzleFlashLight ?? true)
+            {
+                sb.AppendItem(item.MuzzleFlashLight.FormKey, "MuzzleFlashLight");
+            }
+            if (printMask?.TracerChance ?? true)
+            {
+                sb.AppendItem(item.TracerChance, "TracerChance");
+            }
+            if (printMask?.ExplosionAltTriggerProximity ?? true)
+            {
+                sb.AppendItem(item.ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+            }
+            if (printMask?.ExplosionAltTriggerTimer ?? true)
+            {
+                sb.AppendItem(item.ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+            }
+            if (printMask?.Explosion ?? true)
+            {
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                sb.AppendItem(item.Sound.FormKey, "Sound");
+            }
+            if (printMask?.MuzzleFlashDuration ?? true)
+            {
+                sb.AppendItem(item.MuzzleFlashDuration, "MuzzleFlashDuration");
+            }
+            if (printMask?.FadeDuration ?? true)
+            {
+                sb.AppendItem(item.FadeDuration, "FadeDuration");
+            }
+            if (printMask?.ImpactForce ?? true)
+            {
+                sb.AppendItem(item.ImpactForce, "ImpactForce");
+            }
+            if (printMask?.CountdownSound ?? true)
+            {
+                sb.AppendItem(item.CountdownSound.FormKey, "CountdownSound");
+            }
+            if (printMask?.DisableSound ?? true)
+            {
+                sb.AppendItem(item.DisableSound.FormKey, "DisableSound");
+            }
+            if (printMask?.DefaultWeaponSource ?? true)
+            {
+                sb.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
+            }
+            if (printMask?.RotationX ?? true)
+            {
+                sb.AppendItem(item.RotationX, "RotationX");
+            }
+            if (printMask?.RotationY ?? true)
+            {
+                sb.AppendItem(item.RotationY, "RotationY");
+            }
+            if (printMask?.RotationZ ?? true)
+            {
+                sb.AppendItem(item.RotationZ, "RotationZ");
+            }
+            if (printMask?.BouncyMult ?? true)
+            {
+                sb.AppendItem(item.BouncyMult, "BouncyMult");
+            }
+            if (printMask?.MuzzleFlashModel ?? true)
+            {
+                sb.AppendItem(item.MuzzleFlashModel, "MuzzleFlashModel");
+            }
+            if ((printMask?.MuzzleFlashModelTextureHashes ?? true)
+                && item.MuzzleFlashModelTextureHashes is {} MuzzleFlashModelTextureHashesItem)
+            {
+                sb.AppendLine($"MuzzleFlashModelTextureHashes => {SpanExt.ToHexString(MuzzleFlashModelTextureHashesItem)}");
+            }
+            if (printMask?.SoundLevel ?? true)
+            {
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public static Projectile_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +2439,138 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Projectile_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
+            {
+                if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
+            {
+                if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
+            {
+                if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashLight) ?? true))
+            {
+                if (!lhs.MuzzleFlashLight.Equals(rhs.MuzzleFlashLight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
+            {
+                if (!lhs.TracerChance.EqualsWithin(rhs.TracerChance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
+            {
+                if (!lhs.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
+            {
+                if (!lhs.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
+            {
+                if (!lhs.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
+            {
+                if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
+            {
+                if (!lhs.ImpactForce.EqualsWithin(rhs.ImpactForce)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
+            {
+                if (!lhs.CountdownSound.Equals(rhs.CountdownSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisableSound) ?? true))
+            {
+                if (!lhs.DisableSound.Equals(rhs.DisableSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
+            {
+                if (!lhs.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationX) ?? true))
+            {
+                if (!lhs.RotationX.EqualsWithin(rhs.RotationX)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationY) ?? true))
+            {
+                if (!lhs.RotationY.EqualsWithin(rhs.RotationY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationZ) ?? true))
+            {
+                if (!lhs.RotationZ.EqualsWithin(rhs.RotationZ)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.BouncyMult) ?? true))
+            {
+                if (!lhs.BouncyMult.EqualsWithin(rhs.BouncyMult)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
+            {
+                if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModelTextureHashes) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.MuzzleFlashModelTextureHashes, rhs.MuzzleFlashModelTextureHashes)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
+            {
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -905,6 +2599,48 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IProjectileGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.Flags);
+            hash.Add(item.Type);
+            hash.Add(item.Gravity);
+            hash.Add(item.Speed);
+            hash.Add(item.Range);
+            hash.Add(item.Light);
+            hash.Add(item.MuzzleFlashLight);
+            hash.Add(item.TracerChance);
+            hash.Add(item.ExplosionAltTriggerProximity);
+            hash.Add(item.ExplosionAltTriggerTimer);
+            hash.Add(item.Explosion);
+            hash.Add(item.Sound);
+            hash.Add(item.MuzzleFlashDuration);
+            hash.Add(item.FadeDuration);
+            hash.Add(item.ImpactForce);
+            hash.Add(item.CountdownSound);
+            hash.Add(item.DisableSound);
+            hash.Add(item.DefaultWeaponSource);
+            hash.Add(item.RotationX);
+            hash.Add(item.RotationY);
+            hash.Add(item.RotationZ);
+            hash.Add(item.BouncyMult);
+            hash.Add(item.MuzzleFlashModel);
+            if (item.MuzzleFlashModelTextureHashes is {} MuzzleFlashModelTextureHashesItem)
+            {
+                hash.Add(MuzzleFlashModelTextureHashesItem);
+            }
+            hash.Add(item.SoundLevel);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -934,6 +2670,27 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.MuzzleFlashLight);
+            yield return FormLinkInformation.Factory(obj.Explosion);
+            yield return FormLinkInformation.Factory(obj.Sound);
+            yield return FormLinkInformation.Factory(obj.CountdownSound);
+            yield return FormLinkInformation.Factory(obj.DisableSound);
+            yield return FormLinkInformation.Factory(obj.DefaultWeaponSource);
             yield break;
         }
         
@@ -1008,6 +2765,195 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Projectile_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Projectile_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Projectile_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Projectile_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Projectile_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Projectile_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
+            {
+                item.Gravity = rhs.Gravity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
+            {
+                item.Speed = rhs.Speed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
+            {
+                item.Range = rhs.Range;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
+            {
+                item.Light.SetTo(rhs.Light.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashLight) ?? true))
+            {
+                item.MuzzleFlashLight.SetTo(rhs.MuzzleFlashLight.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
+            {
+                item.TracerChance = rhs.TracerChance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
+            {
+                item.ExplosionAltTriggerProximity = rhs.ExplosionAltTriggerProximity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
+            {
+                item.ExplosionAltTriggerTimer = rhs.ExplosionAltTriggerTimer;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
+            {
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
+            {
+                item.Sound.SetTo(rhs.Sound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
+            {
+                item.MuzzleFlashDuration = rhs.MuzzleFlashDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
+            {
+                item.FadeDuration = rhs.FadeDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
+            {
+                item.ImpactForce = rhs.ImpactForce;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
+            {
+                item.CountdownSound.SetTo(rhs.CountdownSound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DisableSound) ?? true))
+            {
+                item.DisableSound.SetTo(rhs.DisableSound.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
+            {
+                item.DefaultWeaponSource.SetTo(rhs.DefaultWeaponSource.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationX) ?? true))
+            {
+                item.RotationX = rhs.RotationX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationY) ?? true))
+            {
+                item.RotationY = rhs.RotationY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationZ) ?? true))
+            {
+                item.RotationZ = rhs.RotationZ;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.BouncyMult) ?? true))
+            {
+                item.BouncyMult = rhs.BouncyMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
+            {
+                item.MuzzleFlashModel = rhs.MuzzleFlashModel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModelTextureHashes) ?? true))
+            {
+                if(rhs.MuzzleFlashModelTextureHashes is {} MuzzleFlashModelTextureHashesrhs)
+                {
+                    item.MuzzleFlashModelTextureHashes = MuzzleFlashModelTextureHashesrhs.ToArray();
+                }
+                else
+                {
+                    item.MuzzleFlashModelTextureHashes = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
+            {
+                item.SoundLevel = rhs.SoundLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +3114,139 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly ProjectileBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IProjectileGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IProjectileGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                EnumBinaryTranslation<Projectile.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 2);
+                EnumBinaryTranslation<Projectile.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Gravity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Speed);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Range);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Light);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MuzzleFlashLight);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TracerChance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ExplosionAltTriggerProximity);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ExplosionAltTriggerTimer);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Explosion);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MuzzleFlashDuration);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FadeDuration);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactForce);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CountdownSound);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DisableSound);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DefaultWeaponSource);
+                if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.RotationX);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.RotationY);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.RotationZ);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.BouncyMult);
+                }
+            }
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MuzzleFlashModel,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1),
+                binaryType: StringBinaryType.NullTerminate);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.MuzzleFlashModelTextureHashes,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.SoundLevel,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.VNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IProjectileGetter item,
@@ -1222,6 +3301,156 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PROJ;
+        public static void FillBinaryStructs(
+            IProjectileInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IProjectileInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Projectile_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Projectile_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Projectile_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Fallout3.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Projectile_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Flags = EnumBinaryTranslation<Projectile.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Type = EnumBinaryTranslation<Projectile.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Gravity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Range = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MuzzleFlashLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TracerChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ExplosionAltTriggerProximity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ExplosionAltTriggerTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MuzzleFlashDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FadeDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImpactForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CountdownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DisableSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DefaultWeaponSource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= Projectile.DATADataType.Break0;
+                        return (int)Projectile_FieldIndex.DefaultWeaponSource;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RotationX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RotationY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RotationZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BouncyMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Projectile_FieldIndex.BouncyMult;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MuzzleFlashModel = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModel;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MuzzleFlashModelTextureHashes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Projectile_FieldIndex.MuzzleFlashModelTextureHashes;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Projectile_FieldIndex.SoundLevel;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +3483,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +3498,149 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IProjectileGetter);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        private RangeInt32? _DATALocation;
+        public Projectile.DATADataType DATADataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        #endregion
+        #region Type
+        private int _TypeLocation => _DATALocation!.Value.Min + 0x2;
+        private bool _Type_IsSet => _DATALocation.HasValue;
+        public Projectile.TypeEnum Type => _Type_IsSet ? (Projectile.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x2)) : default;
+        #endregion
+        #region Gravity
+        private int _GravityLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Gravity_IsSet => _DATALocation.HasValue;
+        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default(Single);
+        #endregion
+        #region Speed
+        private int _SpeedLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Speed_IsSet => _DATALocation.HasValue;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default(Single);
+        #endregion
+        #region Range
+        private int _RangeLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Range_IsSet => _DATALocation.HasValue;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default(Single);
+        #endregion
+        #region Light
+        private int _LightLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _Light_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region MuzzleFlashLight
+        private int _MuzzleFlashLightLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _MuzzleFlashLight_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILightGetter> MuzzleFlashLight => _MuzzleFlashLight_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_MuzzleFlashLightLocation, 0x4), isSet: _MuzzleFlashLight_IsSet) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region TracerChance
+        private int _TracerChanceLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _TracerChance_IsSet => _DATALocation.HasValue;
+        public Single TracerChance => _TracerChance_IsSet ? _recordData.Slice(_TracerChanceLocation, 4).Float() : default(Single);
+        #endregion
+        #region ExplosionAltTriggerProximity
+        private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _ExplosionAltTriggerProximity_IsSet => _DATALocation.HasValue;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default(Single);
+        #endregion
+        #region ExplosionAltTriggerTimer
+        private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _ExplosionAltTriggerTimer_IsSet => _DATALocation.HasValue;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default(Single);
+        #endregion
+        #region Explosion
+        private int _ExplosionLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _Explosion_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
+        #endregion
+        #region Sound
+        private int _SoundLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _Sound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> Sound => _Sound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region MuzzleFlashDuration
+        private int _MuzzleFlashDurationLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _MuzzleFlashDuration_IsSet => _DATALocation.HasValue;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default(Single);
+        #endregion
+        #region FadeDuration
+        private int _FadeDurationLocation => _DATALocation!.Value.Min + 0x30;
+        private bool _FadeDuration_IsSet => _DATALocation.HasValue;
+        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default(Single);
+        #endregion
+        #region ImpactForce
+        private int _ImpactForceLocation => _DATALocation!.Value.Min + 0x34;
+        private bool _ImpactForce_IsSet => _DATALocation.HasValue;
+        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default(Single);
+        #endregion
+        #region CountdownSound
+        private int _CountdownSoundLocation => _DATALocation!.Value.Min + 0x38;
+        private bool _CountdownSound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> CountdownSound => _CountdownSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_CountdownSoundLocation, 0x4), isSet: _CountdownSound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region DisableSound
+        private int _DisableSoundLocation => _DATALocation!.Value.Min + 0x3C;
+        private bool _DisableSound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> DisableSound => _DisableSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_DisableSoundLocation, 0x4), isSet: _DisableSound_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region DefaultWeaponSource
+        private int _DefaultWeaponSourceLocation => _DATALocation!.Value.Min + 0x40;
+        private bool _DefaultWeaponSource_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet) : FormLink<IWeaponGetter>.Null;
+        #endregion
+        #region RotationX
+        private int _RotationXLocation => _DATALocation!.Value.Min + 0x44;
+        private bool _RotationX_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
+        public Single RotationX => _RotationX_IsSet ? _recordData.Slice(_RotationXLocation, 4).Float() : default(Single);
+        #endregion
+        #region RotationY
+        private int _RotationYLocation => _DATALocation!.Value.Min + 0x48;
+        private bool _RotationY_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
+        public Single RotationY => _RotationY_IsSet ? _recordData.Slice(_RotationYLocation, 4).Float() : default(Single);
+        #endregion
+        #region RotationZ
+        private int _RotationZLocation => _DATALocation!.Value.Min + 0x4C;
+        private bool _RotationZ_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
+        public Single RotationZ => _RotationZ_IsSet ? _recordData.Slice(_RotationZLocation, 4).Float() : default(Single);
+        #endregion
+        #region BouncyMult
+        private int _BouncyMultLocation => _DATALocation!.Value.Min + 0x50;
+        private bool _BouncyMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
+        public Single BouncyMult => _BouncyMult_IsSet ? _recordData.Slice(_BouncyMultLocation, 4).Float() : default(Single);
+        #endregion
+        #region MuzzleFlashModel
+        private int? _MuzzleFlashModelLocation;
+        public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #endregion
+        #region MuzzleFlashModelTextureHashes
+        private int? _MuzzleFlashModelTextureHashesLocation;
+        public ReadOnlyMemorySlice<Byte>? MuzzleFlashModelTextureHashes => _MuzzleFlashModelTextureHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelTextureHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region SoundLevel
+        private int? _SoundLevelLocation;
+        public SoundLevel SoundLevel => EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_SoundLevelLocation, _recordData, _package, 4);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +3698,85 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Projectile_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Projectile_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Projectile_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Projectile_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x44)
+                    {
+                        this.DATADataTypeState |= Projectile.DATADataType.Break0;
+                    }
+                    return (int)Projectile_FieldIndex.BouncyMult;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _MuzzleFlashModelLocation = (stream.Position - offset);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModel;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _MuzzleFlashModelTextureHashesLocation = (stream.Position - offset);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModelTextureHashes;
+                }
+                case RecordTypeInts.VNAM:
+                {
+                    _SoundLevelLocation = (stream.Position - offset);
+                    return (int)Projectile_FieldIndex.SoundLevel;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

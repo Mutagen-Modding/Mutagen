@@ -18,6 +18,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MoveableStatic
 - Npc
+- Projectile
 - TalkingActivator
 - Terminal
 - Tree
@@ -68,6 +69,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Note
 - Npc
 - PlaceableWater
+- Projectile
 - Static
 - StaticCollection
 - TalkingActivator
@@ -100,6 +102,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Note
 - Npc
 - ObjectEffect
+- Projectile
 - Race
 - Spell
 - TalkingActivator
@@ -128,6 +131,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Note
 - Npc
 - PlaceableWater
+- Projectile
 - Sound
 - Static
 - StaticCollection
@@ -279,6 +283,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### PlaceableWater
 - IModeled
+- IObjectBounded
+### Projectile
+- IHasDestructible
+- IModeled
+- INamed
 - IObjectBounded
 ### Race
 - INamed

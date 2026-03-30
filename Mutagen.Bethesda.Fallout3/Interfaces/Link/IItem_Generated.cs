@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout3
 {
     /// <summary>
-    /// Implemented by: [Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Ingestible, ItemMod, Key, LeveledItem, Light, MiscItem, MoveableStatic, Static, Weapon, Note]
+    /// Implemented by: [Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Ingestible, Key, LeveledItem, Light, MiscItem, MoveableStatic, Static, Weapon, Note, ItemMod]
     /// </summary>
     public partial interface IItem :
         IFallout3MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Ingestible, ItemMod, Key, LeveledItem, Light, MiscItem, MoveableStatic, Static, Weapon, Note]
+    /// Implemented by: [Ammunition, Armor, Book, CaravanCard, CaravanMoney, CasinoChip, Ingestible, Key, LeveledItem, Light, MiscItem, MoveableStatic, Static, Weapon, Note, ItemMod]
     /// </summary>
     public partial interface IItemGetter : IFallout3MajorRecordGetter
     {

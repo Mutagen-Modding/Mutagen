@@ -259,7 +259,7 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("ALCH"),
             new RecordType("IDLM"),
             new RecordType("NOTE"),
-            new RecordType("IMOD"));
+            new RecordType("PROJ"));
         return ret;
     }
 }

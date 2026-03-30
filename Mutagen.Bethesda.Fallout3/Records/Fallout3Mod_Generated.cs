@@ -105,6 +105,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Ingestibles_Object = new Fallout3Group<Ingestible>(this);
             _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             _Notes_Object = new Fallout3Group<Note>(this);
+            _Projectiles_Object = new Fallout3Group<Projectile>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -425,6 +426,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<INoteGetter> IFallout3ModGetter.Notes => _Notes_Object;
         #endregion
+        #region Projectiles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Projectile> _Projectiles_Object;
+        public Fallout3Group<Projectile> Projectiles => _Projectiles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IProjectileGetter> IFallout3ModGetter.Projectiles => _Projectiles_Object;
+        #endregion
 
         #region To String
 
@@ -509,6 +517,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Ingestibles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Notes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Projectiles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -556,7 +565,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Keys,
                 TItem Ingestibles,
                 TItem IdleMarkers,
-                TItem Notes)
+                TItem Notes,
+                TItem Projectiles)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -603,6 +613,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Ingestibles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Ingestibles, new Fallout3Group.Mask<TItem>(Ingestibles));
                 this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(IdleMarkers, new Fallout3Group.Mask<TItem>(IdleMarkers));
                 this.Notes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Notes, new Fallout3Group.Mask<TItem>(Notes));
+                this.Projectiles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Projectiles, new Fallout3Group.Mask<TItem>(Projectiles));
             }
 
             #pragma warning disable CS8618
@@ -659,6 +670,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? IdleMarkers { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Notes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Projectiles { get; set; }
             #endregion
 
             #region Equals
@@ -716,6 +728,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 if (!object.Equals(this.Notes, rhs.Notes)) return false;
+                if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -766,6 +779,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Ingestibles);
                 hash.Add(this.IdleMarkers);
                 hash.Add(this.Notes);
+                hash.Add(this.Projectiles);
                 return hash.ToHashCode();
             }
 
@@ -999,6 +1013,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Notes.Overall)) return false;
                     if (this.Notes.Specific != null && !this.Notes.Specific.All(eval)) return false;
                 }
+                if (Projectiles != null)
+                {
+                    if (!eval(this.Projectiles.Overall)) return false;
+                    if (this.Projectiles.Specific != null && !this.Projectiles.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1231,6 +1250,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Notes.Overall)) return true;
                     if (this.Notes.Specific != null && this.Notes.Specific.Any(eval)) return true;
                 }
+                if (Projectiles != null)
+                {
+                    if (eval(this.Projectiles.Overall)) return true;
+                    if (this.Projectiles.Specific != null && this.Projectiles.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1290,6 +1314,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
                 obj.Notes = this.Notes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Notes.Overall), this.Notes.Specific?.Translate(eval));
+                obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1488,6 +1513,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Notes?.Print(sb);
                     }
+                    if (printMask?.Projectiles?.Overall ?? true)
+                    {
+                        Projectiles?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1557,6 +1586,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>? Notes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
             #endregion
 
             #region IErrorMask
@@ -1655,6 +1685,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return IdleMarkers;
                     case Fallout3Mod_FieldIndex.Notes:
                         return Notes;
+                    case Fallout3Mod_FieldIndex.Projectiles:
+                        return Projectiles;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1799,6 +1831,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Notes:
                         this.Notes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Projectiles:
+                        this.Projectiles = new MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1945,6 +1980,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Notes:
                         this.Notes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Projectiles:
+                        this.Projectiles = (MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1998,6 +2036,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Ingestibles != null) return true;
                 if (IdleMarkers != null) return true;
                 if (Notes != null) return true;
+                if (Projectiles != null) return true;
                 return false;
             }
             #endregion
@@ -2068,6 +2107,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Ingestibles?.Print(sb);
                 IdleMarkers?.Print(sb);
                 Notes?.Print(sb);
+                Projectiles?.Print(sb);
             }
             #endregion
 
@@ -2121,6 +2161,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 ret.Notes = this.Notes.Combine(rhs.Notes, (l, r) => l.Combine(r));
+                ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2189,6 +2230,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public Fallout3Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             public Fallout3Group.TranslationMask<Note.TranslationMask>? Notes;
+            public Fallout3Group.TranslationMask<Projectile.TranslationMask>? Projectiles;
             #endregion
 
             #region Ctors
@@ -2258,6 +2300,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
                 ret.Add((Notes != null ? Notes.OnOverall : DefaultOn, Notes?.GetCrystal()));
+                ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2362,6 +2405,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Ingestibles_Object = new Fallout3Group<Ingestible>(this);
             _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             _Notes_Object = new Fallout3Group<Note>(this);
+            _Projectiles_Object = new Fallout3Group<Projectile>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2543,6 +2587,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Notes ?? true)
             {
                 this.Notes.RecordCache.Set(rhsMod.Notes.RecordCache.Items);
+            }
+            if (mask?.Projectiles ?? true)
+            {
+                this.Projectiles.RecordCache.Set(rhsMod.Projectiles.RecordCache.Items);
             }
         }
 
@@ -2849,6 +2897,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Ingestible> Ingestibles { get; }
         new Fallout3Group<IdleMarker> IdleMarkers { get; }
         new Fallout3Group<Note> Notes { get; }
+        new Fallout3Group<Projectile> Projectiles { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -2913,6 +2962,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IIngestibleGetter> Ingestibles { get; }
         IFallout3GroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
         IFallout3GroupGetter<INoteGetter> Notes { get; }
+        IFallout3GroupGetter<IProjectileGetter> Projectiles { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -3508,6 +3558,7 @@ namespace Mutagen.Bethesda.Fallout3
         Ingestibles = 42,
         IdleMarkers = 43,
         Notes = 44,
+        Projectiles = 45,
     }
     #endregion
 
@@ -3518,9 +3569,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 45;
+        public const ushort AdditionalFieldCount = 46;
 
-        public const ushort FieldCount = 45;
+        public const ushort FieldCount = 46;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -3631,6 +3682,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Ingestibles.Clear();
             item.IdleMarkers.Clear();
             item.Notes.Clear();
+            item.Projectiles.Clear();
         }
         
         #region Mutagen
@@ -3674,6 +3726,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ingestibles.RemapLinks(mapping);
             obj.IdleMarkers.RemapLinks(mapping);
             obj.Notes.RemapLinks(mapping);
+            obj.Projectiles.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3778,6 +3831,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ingestibles.Remove(keys);
             obj.IdleMarkers.Remove(keys);
             obj.Notes.Remove(keys);
+            obj.Projectiles.Remove(keys);
         }
         
         public void Remove(
@@ -4177,6 +4231,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    obj.Projectiles.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -4440,6 +4502,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
             ret.Notes = MaskItemExt.Factory(item.Notes.GetEqualsMask(rhs.Notes, include), include);
+            ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
         }
         
         public string Print(
@@ -4663,6 +4726,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Notes?.Overall ?? true)
             {
                 item.Notes?.Print(sb, "Notes");
+            }
+            if (printMask?.Projectiles?.Overall ?? true)
+            {
+                item.Projectiles?.Print(sb, "Projectiles");
             }
         }
         
@@ -5033,6 +5100,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isNotesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Projectiles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Projectiles, rhs.Projectiles, out var lhsProjectiles, out var rhsProjectiles, out var isProjectilesEqual))
+                {
+                    if (!object.Equals(lhsProjectiles, rhsProjectiles)) return false;
+                }
+                else if (!isProjectilesEqual) return false;
+            }
             return true;
         }
         
@@ -5084,6 +5159,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Ingestibles);
             hash.Add(item.IdleMarkers);
             hash.Add(item.Notes);
+            hash.Add(item.Projectiles);
             return hash.ToHashCode();
         }
         
@@ -5350,6 +5426,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "INote":
                 case "INoteInternal":
                     return obj.Notes;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    return obj.Projectiles;
                 default:
                     return null;
             }
@@ -5367,7 +5448,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[44];
+            Stream[] outputStreams = new Stream[45];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -5413,6 +5494,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 41, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 42, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Notes, 43, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, 44, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -5502,6 +5584,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Notes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -5668,6 +5751,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Notes.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -5859,6 +5946,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Notes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6309,6 +6400,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -6726,6 +6826,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Notes,
                 groupGetter: (m) => m.Notes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
+                srcGroup: obj.Projectiles,
+                type: typeof(IProjectileGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Projectiles,
+                groupGetter: (m) => m.Projectiles))
             {
                 yield return item;
             }
@@ -7372,6 +7481,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Notes,
                         groupGetter: (m) => m.Notes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
+                        srcGroup: obj.Projectiles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Projectiles,
+                        groupGetter: (m) => m.Projectiles))
                     {
                         yield return item;
                     }
@@ -8377,6 +8500,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Projectiles) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Projectiles);
+                try
+                {
+                    item.Projectiles.DeepCopyIn(
+                        rhs: rhs.Projectiles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Projectiles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -8524,6 +8667,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Ingestibles;
         public bool IdleMarkers;
         public bool Notes;
+        public bool Projectiles;
         public GroupMask()
         {
         }
@@ -8573,6 +8717,7 @@ namespace Mutagen.Bethesda.Fallout3
             Ingestibles = defaultValue;
             IdleMarkers = defaultValue;
             Notes = defaultValue;
+            Projectiles = defaultValue;
         }
     }
 
@@ -9115,6 +9260,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)NotesItem).BinaryWriteTranslator).Write<INoteGetter>(
                         item: NotesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Projectiles ?? true)
+            {
+                var ProjectilesItem = item.Projectiles;
+                if (ProjectilesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
+                        item: ProjectilesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9805,6 +9961,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Notes;
                 }
+                case RecordTypeInts.PROJ:
+                {
+                    if (importMask?.Projectiles ?? true)
+                    {
+                        item.Projectiles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Projectiles;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -10190,6 +10360,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? Fallout3GroupBinaryOverlay<INoteGetter>.Fallout3GroupFactory(_stream, _NotesLocations, _package) : default;
         public IFallout3GroupGetter<INoteGetter> Notes => _Notes ?? new Fallout3Group<Note>(this);
         #endregion
+        #region Projectiles
+        private List<RangeInt64>? _ProjectilesLocations;
+        private IFallout3GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout3GroupBinaryOverlay<IProjectileGetter>.Fallout3GroupFactory(_stream, _ProjectilesLocations, _package) : default;
+        public IFallout3GroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Fallout3Group<Projectile>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -10527,6 +10702,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _NotesLocations ??= new();
                     _NotesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Notes;
+                }
+                case RecordTypeInts.PROJ:
+                {
+                    _ProjectilesLocations ??= new();
+                    _ProjectilesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Projectiles;
                 }
                 default:
                     return default(int?);
