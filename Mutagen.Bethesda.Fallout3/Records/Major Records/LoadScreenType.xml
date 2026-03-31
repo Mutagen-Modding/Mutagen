@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreenType" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="LSCT">
+    <Fields>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Enum name="Type" enumName="LoadScreenTypeEnum" byteLength="4" />
+          <UInt32 name="X" />
+          <UInt32 name="Y" />
+          <UInt32 name="Width" />
+          <UInt32 name="Height" />
+          <Float name="Orientation" />
+          <UInt32 name="Font" />
+          <Float name="FontColorR" />
+          <Float name="FontColorG" />
+          <Float name="FontColorB" />
+          <UInt32 name="Alignment" />
+          <ByteArray name="Unknown1" byteLength="20" nullable="False" />
+          <UInt32 name="Font2" />
+          <Float name="Font2ColorR" />
+          <Float name="Font2ColorG" />
+          <Float name="Font2ColorB" />
+          <ByteArray name="Unknown2" byteLength="4" nullable="False" />
+          <UInt32 name="Stats" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

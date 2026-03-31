@@ -22,6 +22,7 @@
         </Fields>
       </Gendered>
       <String name="Insignia" recordType="INAM" />
+          <ByteArray name="XNAM" recordType="XNAM" />
     </Fields>
   </Object>
 </Loqui>

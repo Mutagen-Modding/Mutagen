@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="RecipeCategory" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="RCCT">
+    <Fields>
+      <String name="Name" recordType="FULL">
+      </String>
+      <Enum name="Flags" enumName="RecipeCategoryFlag" recordType="DATA" byteLength="1">
+      </Enum>
+    </Fields>
+  </Object>
+</Loqui>

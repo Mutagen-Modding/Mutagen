@@ -267,6 +267,10 @@ public sealed class GameLocator
                         {
                             Id = 22370
                         },
+                        new GogGameSource()
+                        {
+                            Id = 1454315831
+                        },
                     },
                     RequiredFiles: new string[]
                     {
@@ -286,6 +290,10 @@ public sealed class GameLocator
                         new SteamGameSource()
                         {
                             Id = 22380
+                        },
+                        new GogGameSource()
+                        {
+                            Id = 1454587428
                         },
                     },
                     RequiredFiles: new string[]

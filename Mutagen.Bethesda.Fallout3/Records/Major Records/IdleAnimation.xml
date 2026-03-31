@@ -2,6 +2,28 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="IdleAnimation" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="IDLE">
-    <Fields />
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefDirect name="RelatedIdleAnimations" refName="IdleAnimationRelatedAnimations" nullable="False" />
+      <RefDirect name="AnimationData" refName="IdleAnimationData" nullable="False" />
+    </Fields>
+    <LinkInterface>IIdleRelation</LinkInterface>
+  </Object>
+  <Object name="IdleAnimationRelatedAnimations" objType="Subrecord" recordType="ANAM">
+    <Fields>
+      <FormLink name="Parent" refName="IdleAnimation" />
+      <FormLink name="Previous" refName="IdleAnimation" />
+    </Fields>
+  </Object>
+  <Object name="IdleAnimationData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt8 name="AnimationGroupSection" />
+      <UInt8 name="LoopingMin" />
+      <UInt8 name="LoopingMax" />
+      <UInt8 name="Unused1" />
+      <Int16 name="ReplayDelay" />
+      <ByteArray name="Remaining" />
+    </Fields>
   </Object>
 </Loqui>

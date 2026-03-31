@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MediaSet" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="MSET">
+    <Fields>
+      <String name="Name" recordType="FULL">
+      </String>
+      <Enum name="Type" enumName="MediaSetType" recordType="NAM1" byteLength="4">
+      </Enum>
+      <String name="LoopBattleDayOuter" recordType="NAM2">
+      </String>
+      <String name="ExploreDayMiddle" recordType="NAM3">
+      </String>
+      <String name="SuspenseDayInner" recordType="NAM4">
+      </String>
+      <String name="NightOuter" recordType="NAM5">
+      </String>
+      <String name="NightMiddle" recordType="NAM6">
+      </String>
+      <String name="NightInner" recordType="NAM7">
+      </String>
+      <Float name="LoopBattleDayOuterDb" recordType="NAM8">
+      </Float>
+      <Float name="ExploreDayMiddleDb" recordType="NAM9">
+      </Float>
+      <Float name="SuspenseDayInnerDb" recordType="NAM0">
+      </Float>
+      <Float name="NightOuterDb" recordType="ANAM">
+      </Float>
+      <Float name="NightMiddleDb" recordType="BNAM">
+      </Float>
+      <Float name="NightInnerDb" recordType="CNAM">
+      </Float>
+      <Float name="DayOuterBoundaryPercent" recordType="JNAM">
+      </Float>
+      <Float name="DayMiddleBoundaryPercent" recordType="KNAM">
+      </Float>
+      <Float name="DayInnerBoundaryPercent" recordType="LNAM">
+      </Float>
+      <Float name="NightOuterBoundaryPercent" recordType="MNAM">
+      </Float>
+      <Float name="NightMiddleBoundaryPercent" recordType="NNAM">
+      </Float>
+      <Float name="NightInnerBoundaryPercent" recordType="ONAM">
+      </Float>
+      <UInt8 name="EnableFlags" recordType="PNAM">
+      </UInt8>
+      <Float name="WaitTimeMinTimeOnDaytimeMin" recordType="DNAM">
+      </Float>
+      <Float name="LoopFadeOutCrossfadeOverlapNighttimeMin" recordType="ENAM">
+      </Float>
+      <Float name="RecoveryTimeCrossfadeTimeDaytimeMax" recordType="FNAM">
+      </Float>
+      <Float name="NighttimeMax" recordType="GNAM">
+      </Float>
+      <FormLink name="IntroDaytime" recordType="HNAM" refName="Sound">
+      </FormLink>
+      <FormLink name="OutroNighttime" recordType="INAM" refName="Sound">
+      </FormLink>
+      <ByteArray name="DATA" recordType="DATA">
+      </ByteArray>
+    </Fields>
+  </Object>
+</Loqui>

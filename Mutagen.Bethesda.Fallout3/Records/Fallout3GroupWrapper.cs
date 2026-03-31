@@ -28,7 +28,8 @@ internal class Fallout3GroupWrapper<TMajor> : IFallout3GroupGetter<TMajor>
 
     #region IGroupGetter Forwarding
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => _groupMerge.EnumerateFormLinks();
+
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => _groupMerge.EnumerateFormLinks(iterateNestedRecords);
 
     public IMod SourceMod => _groupMerge.SourceMod;
     

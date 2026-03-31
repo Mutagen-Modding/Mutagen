@@ -181,15 +181,6 @@ public sealed record GameConstants
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
-    public static readonly GameConstants OblivionRE = Oblivion with
-    {
-        PluginsFileInGameFolder = true,
-        DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
-    };
-
-    /// <summary> 
-    /// Readonly singleton of Fallout3 game constants 
-    /// </summary> 
     public static readonly GameConstants Fallout3 = new GameConstants(
         release: GameRelease.Fallout3,
         modHeaderLength: 24,
@@ -209,23 +200,20 @@ public sealed record GameConstants
             new GroupNesting[]
             {
                 new GroupNesting(2,
-                    new GroupNesting(HasTopLevelRecordType: true, 3,
-                        new GroupNesting(6,
+                    new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 3,
+                        new GroupNesting(RecordTypes.CELL, 6,
                             new GroupNesting(8),
                             new GroupNesting(9),
                             new GroupNesting(10)))),
-                new GroupNesting(GroupType: 7),
-                new GroupNesting(
-                    HasTopLevelRecordType: true, GroupType: 1,
-                    new GroupNesting(
-                        GroupType: 6,
+                new GroupNesting(RecordTypes.DIAL, 7),
+                new GroupNesting(RecordTypes.WRLD, HasTopLevelRecordType: true, 1,
+                    new GroupNesting(RecordTypes.CELL, 6,
                         new GroupNesting(8),
                         new GroupNesting(9),
                         new GroupNesting(10)),
                     new GroupNesting(4,
-                        new GroupNesting(HasTopLevelRecordType: true, 5,
-                            new GroupNesting(
-                                GroupType: 6,
+                        new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 5,
+                            new GroupNesting(RecordTypes.CELL, 6,
                                 new GroupNesting(8),
                                 new GroupNesting(9),
                                 new GroupNesting(10))))),
@@ -243,7 +231,7 @@ public sealed record GameConstants
         languages: [],
         languageFormat: null,
         hasEnabledMarkers: false,
-        defaultFormVersion: null,
+        defaultFormVersion: 40,
         defaultModHeaderVersion: 0.94f,
         defaultHighRangeFormId: 0x800,
         useLowerRangeFormIdVersion: null,
@@ -255,10 +243,21 @@ public sealed record GameConstants
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
-    public static readonly GameConstants FalloutNV = Fallout3;
-    
-    /// <summary> 
-    /// Readonly singleton of Skyrim LE game constants 
+    public static readonly GameConstants FalloutNV = Fallout3 with
+    {
+        Release = GameRelease.FalloutNV,
+        MyDocumentsString = "FalloutNV",
+        IniName = "FalloutNV",
+    };
+
+    public static readonly GameConstants OblivionRE = Oblivion with
+    {
+        PluginsFileInGameFolder = true,
+        DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
+    };
+
+    /// <summary>
+    /// Readonly singleton of Skyrim LE game constants
     /// </summary> 
     public static readonly GameConstants SkyrimLE = new GameConstants(
         release: GameRelease.SkyrimLE,
@@ -468,9 +467,9 @@ public sealed record GameConstants
         IniName = "Fallout4",
     };
 
-    /// <summary> 
-    /// Readonly singleton of Starfield game constants 
-    /// </summary> 
+    /// <summary>
+    /// Readonly singleton of Starfield game constants
+    /// </summary>
     public static readonly GameConstants Starfield = new GameConstants(
         release: GameRelease.Starfield,
         modHeaderLength: 24,

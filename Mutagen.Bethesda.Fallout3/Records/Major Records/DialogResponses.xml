@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="Data" refName="DialogResponsesData" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <FormLink name="PreviousTopic" recordType="TPIC" refName="DialogTopic" />
+      <FormLink name="PreviousInfo" recordType="PNAM" refName="DialogResponses" />
+      <List name="AddTopics">
+        <FormLink recordType="NAME" refName="DialogTopic" />
+      </List>
+      <RefList name="Responses" refName="DialogResponse" />
+      <RefList name="Conditions" refName="Condition" />
+      <List name="Choices">
+        <FormLink recordType="TCLT" refName="DialogTopic" />
+      </List>
+      <List name="LinkFrom">
+        <FormLink recordType="TCLF" refName="DialogTopic" />
+      </List>
+      <List name="FollowUp">
+        <FormLink recordType="TCFU" refName="DialogResponses" />
+      </List>
+      <RefDirect name="BeginScript" refName="ScriptFields" singleton="true" nullable="False" />
+      <Bool name="NextMarker" boolAsMarker="NEXT" />
+      <RefDirect name="EndScript" refName="ScriptFields" singleton="true" nullable="False" />
+      <FormLink name="UnusedSound" recordType="SNDD" refName="Sound" />
+      <String name="Prompt" recordType="RNAM" />
+      <FormLink name="Speaker" recordType="ANAM" refName="Fallout3MajorRecord" />
+      <FormLink name="ActorValuePerk" recordType="KNAM" refName="Fallout3MajorRecord" />
+      <Enum name="SpeechChallenge" recordType="DNAM" enumName="SpeechChallenge" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponsesData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <UInt8 name="Type" />
+      <UInt8 name="NextSpeaker" />
+      <UInt8 name="Flags1" />
+      <Break />
+      <UInt8 name="Flags2" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponse" objType="Subrecord">
+    <Fields>
+      <RefDirect name="ResponseData" refName="DialogResponseData" nullable="False" binary="Custom" />
+      <String name="ResponseText" recordType="NAM1" />
+      <String name="ScriptNotes" recordType="NAM2" />
+      <String name="Edits" recordType="NAM3" />
+      <FormLink name="SpeakerAnimation" recordType="SNAM" refName="IdleAnimation" />
+      <FormLink name="ListenerAnimation" recordType="LNAM" refName="IdleAnimation" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseData" objType="Subrecord" recordType="TRDT">
+    <Fields>
+      <Enum name="EmotionType" enumName="EmotionType" byteLength="4" />
+      <Int32 name="EmotionValue" />
+      <ByteArray name="TRDTUnused1" byteLength="4" nullable="False" />
+      <UInt8 name="ResponseNumber" />
+      <ByteArray name="TRDTUnused2" byteLength="3" nullable="False" />
+      <Break />
+      <FormLink name="ResponseSound" refName="Sound" />
+      <Break />
+      <UInt8 name="UseEmotionAnimation" />
+      <ByteArray name="TRDTUnused3" byteLength="3" nullable="False" />
+          <ByteArray name="SCDA" recordType="SCDA" />
+      <ByteArray name="SCHR" recordType="SCHR" />
+      <ByteArray name="SCRO" recordType="SCRO" />
+      <ByteArray name="SCTX" recordType="SCTX" />
+</Fields>
+  </Object>
+</Loqui>

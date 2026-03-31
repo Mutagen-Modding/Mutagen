@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MediaLocationController" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="ALOC">
+    <Fields>
+      <String name="Name" recordType="FULL">
+      </String>
+      <FormLink name="NAM1" recordType="NAM1" refName="Fallout3MajorRecord">
+      </FormLink>
+      <UInt32 name="Unknown" recordType="NAM2">
+      </UInt32>
+      <UInt32 name="Unknown2" recordType="NAM3">
+      </UInt32>
+      <Float name="LocationDelay" recordType="NAM4">
+      </Float>
+      <UInt32 name="DayStart" recordType="NAM5">
+      </UInt32>
+      <UInt32 name="NightStart" recordType="NAM6">
+      </UInt32>
+      <Float name="RetriggerDelay" recordType="NAM7">
+      </Float>
+      <RefList name="NeutralSets" refName="MediaLocationControllerMediaSet" recordType="HNAM">
+      </RefList>
+      <RefList name="AllySets" refName="MediaLocationControllerAllySet" recordType="ZNAM">
+      </RefList>
+      <RefList name="FriendSets" refName="MediaLocationControllerFriendSet" recordType="XNAM">
+      </RefList>
+      <RefList name="EnemySets" refName="MediaLocationControllerEnemySet" recordType="YNAM">
+      </RefList>
+      <RefList name="LocationSets" refName="MediaLocationControllerLocationSet" recordType="LNAM">
+      </RefList>
+      <RefList name="BattleSets" refName="MediaLocationControllerBattleSet" recordType="GNAM">
+      </RefList>
+      <FormLink name="ConditionalFaction" recordType="RNAM" refName="Faction">
+      </FormLink>
+      <UInt32 name="FNAM" recordType="FNAM">
+      </UInt32>
+    </Fields>
+  </Object>
+  <Object name="MediaLocationControllerMediaSet" objType="Subrecord" recordType="HNAM">
+    <Fields>
+      <FormLink name="MediaSet" refName="MediaSet" />
+    </Fields>
+  </Object>
+  <Object name="MediaLocationControllerAllySet" objType="Subrecord" recordType="ZNAM">
+    <Fields>
+      <FormLink name="MediaSet" refName="MediaSet" />
+    </Fields>
+  </Object>
+  <Object name="MediaLocationControllerFriendSet" objType="Subrecord" recordType="XNAM">
+    <Fields>
+      <FormLink name="MediaSet" refName="MediaSet" />
+    </Fields>
+  </Object>
+  <Object name="MediaLocationControllerEnemySet" objType="Subrecord" recordType="YNAM">
+    <Fields>
+      <FormLink name="MediaSet" refName="MediaSet" />
+    </Fields>
+  </Object>
+  <Object name="MediaLocationControllerLocationSet" objType="Subrecord" recordType="LNAM">
+    <Fields>
+      <FormLink name="MediaSet" refName="MediaSet" />
+    </Fields>
+  </Object>
+  <Object name="MediaLocationControllerBattleSet" objType="Subrecord" recordType="GNAM">
+    <Fields>
+      <FormLink name="MediaSet" refName="MediaSet" />
+    </Fields>
+  </Object>
+</Loqui>

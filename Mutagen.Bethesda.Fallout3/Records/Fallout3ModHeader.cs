@@ -41,7 +41,15 @@ public partial class Fallout3ModHeader
     
     public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
     {
-        throw new NotImplementedException();
+        if (formKeys == null)
+        {
+            this.OverriddenForms = null;
+        }
+        else
+        {
+            this.OverriddenForms ??= new();
+            this.OverriddenForms.SetTo(formKeys.Select(f => f.ToLink<IFallout3MajorRecordGetter>()));
+        }
     }
 }
 

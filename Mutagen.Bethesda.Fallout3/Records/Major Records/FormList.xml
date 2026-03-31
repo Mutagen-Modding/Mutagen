@@ -2,7 +2,11 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="FormList" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="FLST">
-    <Fields />
+    <Fields>
+      <List name="Items">
+        <FormLink refName="Fallout3MajorRecord" recordType="LNAM" />
+      </List>
+    </Fields>
     <LinkInterface>IAmmoOrList</LinkInterface>
   </Object>
 </Loqui>

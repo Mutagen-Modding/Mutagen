@@ -10,7 +10,9 @@
       <Enum name="Function" enumName="Function" byteLength="4" />
       <Int32 name="FirstParameter" />
       <Int32 name="SecondParameter" />
+      <Break />
       <Enum name="RunOnType" enumName="Condition.RunOn" byteLength="4" />
+      <Break />
       <FormLink name="Reference">
         <Interface>IPlaced</Interface>
       </FormLink>

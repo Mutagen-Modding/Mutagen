@@ -8,4 +8,5 @@ public enum LeveledFlag : byte
     CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
     CalculateForEachItemInCount = 0x02,
     UseAll = 0x04,
+
 }

@@ -10,7 +10,7 @@
       <AssetLink name="ParallaxMap" recordType="TX04" assetType="Fallout3Texture" />
       <AssetLink name="EnvironmentMap" recordType="TX05" assetType="Fallout3Texture" />
       <RefDirect name="Decal" refName="Decal" />
-      <Bool name="NoSpecular" recordType="DNAM" byteLength="2" />
+      <Enum name="Flags" enumName="TextureSet.Flag" recordType="DNAM" byteLength="2" />
     </Fields>
   </Object>
 </Loqui>

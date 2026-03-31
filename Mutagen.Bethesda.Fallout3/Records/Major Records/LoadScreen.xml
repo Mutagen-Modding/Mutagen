@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreen" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="LSCR" majorFlag="true">
+    <Fields>
+      <String name="LargeIconFilename" recordType="ICON" nullable="False" />
+      <String name="SmallIconFilename" recordType="MICO" />
+      <String name="Description" recordType="DESC" nullable="False" />
+      <RefList name="Locations" refName="LoadScreenLocation" />
+      <FormLink name="LoadScreenType" recordType="WMI1" refName="Fallout3MajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="LoadScreenLocation" objType="Subrecord" recordType="LNAM">
+    <Fields>
+      <FormLink name="Direct">
+        <Interface>ICellOrWorldspace</Interface>
+      </FormLink>
+      <FormLink name="IndirectWorld" refName="Worldspace" />
+      <Int16 name="GridY" />
+      <Int16 name="GridX" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -2,6 +2,24 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ImpactDataSet" baseClass="Fallout3MajorRecord" objType="Record"
           recordType="IPDS">
-    <Fields />
+    <Fields>
+      <RefDirect name="Data" refName="ImpactDataSetData" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="ImpactDataSetData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <FormLink name="Stone" refName="Impact" />
+      <FormLink name="Dirt" refName="Impact" />
+      <FormLink name="Grass" refName="Impact" />
+      <FormLink name="Glass" refName="Impact" />
+      <FormLink name="Metal" refName="Impact" />
+      <FormLink name="Wood" refName="Impact" />
+      <FormLink name="Organic" refName="Impact" />
+      <FormLink name="Cloth" refName="Impact" />
+      <FormLink name="Water" refName="Impact" />
+      <FormLink name="Hollow Metal" refName="Impact" />
+      <FormLink name="Organic Bug" refName="Impact" />
+      <FormLink name="Organic Glow" refName="Impact" />
+    </Fields>
   </Object>
 </Loqui>

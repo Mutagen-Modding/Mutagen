@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Sound" objType="Record" baseClass="Fallout3MajorRecord" recordType="SOUN">
     <Fields>
@@ -14,6 +14,7 @@
       <Int16 name="ReverbAttenuationControl" recordType="GNAM" />
       <Int32 name="Priority" recordType="HNAM" />
     </Fields>
+    <LinkInterface>ISoundOrNpcSpawn</LinkInterface>
   </Object>
   <Object name="SoundData" objType="Subrecord" recordType="SNDX" forceInternalInterface="true">
     <Fields>

@@ -71,6 +71,8 @@ public static class MutagenEncoding
     {
         switch (release)
         {
+            case GameRelease.Fallout3:
+            case GameRelease.FalloutNV:
             case GameRelease.EnderalLE:
             case GameRelease.SkyrimLE:
                 return GetSkyrimLeEncoding(language);

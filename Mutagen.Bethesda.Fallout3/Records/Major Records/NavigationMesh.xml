@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMesh" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="NAVM">
+    <Fields>
+      <UInt32 name="Version" recordType="NVER" />
+      <RefDirect name="Data" refName="NavigationMeshData" />
+      <ByteArray name="Vertices" recordType="NVVX" />
+      <ByteArray name="Triangles" recordType="NVTR" />
+      <ByteArray name="CoverTriangles" recordType="NVCA" />
+      <ByteArray name="DoorLinks" recordType="NVDP" />
+      <ByteArray name="NavmeshGrid" recordType="NVGD" />
+      <ByteArray name="EdgeLinks" recordType="NVEX" />
+      <ByteArray name="ONAM" recordType="ONAM" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="NNAM" recordType="NNAM" />
+    </Fields>
+  </Object>
+  <Object name="ANavmeshParent" abstract="true" objType="Subrecord">
+  </Object>
+  <Object name="WorldspaceNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
+    <Fields>
+      <FormLink name="Parent" refName="Worldspace" />
+      <P2Int16 name="Coordinates" />
+    </Fields>
+  </Object>
+  <Object name="CellNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
+    <Fields>
+      <FormLink name="UnusedWorldspaceParent" refName="Worldspace" />
+      <FormLink name="Parent" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="NavigationMeshData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <FormLink name="Cell" refName="Cell" />
+      <UInt32 name="VertexCount" />
+      <UInt32 name="TriangleCount" />
+      <UInt32 name="EdgeLinkCount" />
+      <UInt32 name="CoverTriangleCount" />
+      <UInt32 name="DoorLinkCount" />
+    </Fields>
+  </Object>
+</Loqui>

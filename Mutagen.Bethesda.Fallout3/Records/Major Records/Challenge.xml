@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Challenge" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="CHAL">
+    <Fields>
+      <String name="Name" recordType="FULL">
+      </String>
+      <RefDirect name="Icons" refName="Icons">
+      </RefDirect>
+      <FormLink name="Script" recordType="SCRI" refName="Script">
+      </FormLink>
+      <String name="Description" recordType="DESC">
+      </String>
+      <Data recordType="DATA">
+        <Fields>
+          <Enum name="Type" enumName="ChallengeType" byteLength="4" />
+          <UInt32 name="Threshold" />
+          <Enum name="Flags" enumName="ChallengeFlag" byteLength="4" />
+          <UInt32 name="Interval" />
+          <ByteArray name="TypeData" byteLength="8" nullable="False" />
+        </Fields>
+      </Data>
+      <FormLink name="SNAM" recordType="SNAM" refName="Fallout3MajorRecord">
+      </FormLink>
+      <FormLink name="XNAM" recordType="XNAM" refName="Fallout3MajorRecord">
+      </FormLink>
+    </Fields>
+  </Object>
+</Loqui>
