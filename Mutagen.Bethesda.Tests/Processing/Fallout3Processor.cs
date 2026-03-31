@@ -102,6 +102,13 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.PROJ, ProcessProjectiles);
         AddDynamicProcessing(RecordTypes.ASPC, ProcessAcousticSpaces);
         AddDynamicProcessing(RecordTypes.ANIO, ProcessAnimatedObjects);
+        AddDynamicProcessing(
+            ProcessDestructible,
+            RecordTypes.ACTI, RecordTypes.TACT, RecordTypes.ARMO,
+            RecordTypes.BOOK, RecordTypes.CONT, RecordTypes.DOOR,
+            RecordTypes.LIGH, RecordTypes.MISC, RecordTypes.MSTT,
+            RecordTypes.TERM, RecordTypes.PROJ, RecordTypes.WEAP,
+            RecordTypes.AMMO, RecordTypes.FURN);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -1075,5 +1082,16 @@ public class Fallout3Processor : Processor
             majorFrame,
             fileOffset,
             RecordTypes.DATA);
+    }
+
+    private void ProcessDestructible(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.DEST, out var dest))
+        {
+            // DEST layout: Int32 Health (4), UInt8 DESTCount (1), Bool VATSTargetable (1), ByteArray Unused (2)
+            ProcessBool(dest, fileOffset, 5, 1, 1);
+        }
     }
 }
