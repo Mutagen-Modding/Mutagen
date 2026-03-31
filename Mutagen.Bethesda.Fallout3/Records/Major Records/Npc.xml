@@ -69,6 +69,7 @@
       <Float name="Weight" recordType="NAM7" nullable="False" />
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>IOwner</LinkInterface>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS">
     <Fields>

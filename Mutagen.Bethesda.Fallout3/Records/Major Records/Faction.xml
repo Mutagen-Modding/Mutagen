@@ -12,6 +12,7 @@
       </FormLink>
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
+    <LinkInterface>IOwner</LinkInterface>
   </Object>
   <Object name="Rank" objType="Subrecord">
     <Fields>
