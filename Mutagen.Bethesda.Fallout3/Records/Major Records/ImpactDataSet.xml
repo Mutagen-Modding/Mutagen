@@ -8,6 +8,7 @@
   </Object>
   <Object name="ImpactDataSetData" objType="Subrecord" recordType="DATA">
     <Fields>
+      <!-- Required fields (xEdit elements 0-8) -->
       <FormLink name="Stone" refName="Impact" />
       <FormLink name="Dirt" refName="Impact" />
       <FormLink name="Grass" refName="Impact" />
@@ -17,9 +18,8 @@
       <FormLink name="Organic" refName="Impact" />
       <FormLink name="Cloth" refName="Impact" />
       <FormLink name="Water" refName="Impact" />
-      <FormLink name="Hollow Metal" refName="Impact" />
-      <FormLink name="Organic Bug" refName="Impact" />
-      <FormLink name="Organic Glow" refName="Impact" />
+      <!-- Optional from xEdit element 9: HollowMetal, OrganicBug, OrganicGlow -->
+      <ByteArray name="Remaining" />
     </Fields>
   </Object>
 </Loqui>
