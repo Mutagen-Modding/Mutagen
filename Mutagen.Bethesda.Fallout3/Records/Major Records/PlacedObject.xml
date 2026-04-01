@@ -260,10 +260,6 @@
     <Fields>
       <FormLink name="Origin" refName="Fallout3MajorRecord" />
       <FormLink name="Destination" refName="Fallout3MajorRecord" />
-          <ByteArray name="ONAM" recordType="ONAM" />
-      <ByteArray name="XMBP" recordType="XMBP" />
-      <ByteArray name="XMRK" recordType="XMRK" />
-      <ByteArray name="XPPA" recordType="XPPA" />
-</Fields>
+    </Fields>
   </Object>
 </Loqui>
