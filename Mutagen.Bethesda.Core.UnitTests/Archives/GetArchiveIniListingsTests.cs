@@ -28,8 +28,9 @@ sResourceArchiveList2=Skyrim - Voices_en0.bsa, Skyrim - Textures0.bsa") }
             new IniPathProvider(
                 new GameReleaseInjection(GameRelease.SkyrimSE),
                 new IniPathLookup(
+                    GameLocatorLookupCache.Instance,
                     GameLocatorLookupCache.Instance)));
-            
+
         get.Get(Ini.GetTypicalPath(GameRelease.SkyrimSE))
             .ShouldBe(new FileName[]
             {
@@ -56,8 +57,9 @@ sResourceArchiveList2=Skyrim - Voices_en0.bsa,Skyrim - Textures0.bsa") }
             new IniPathProvider(
                 new GameReleaseInjection(GameRelease.SkyrimSE),
                 new IniPathLookup(
+                    GameLocatorLookupCache.Instance,
                     GameLocatorLookupCache.Instance)));
-            
+
         get.Get(Ini.GetTypicalPath(GameRelease.SkyrimSE))
             .ShouldBe(new FileName[]
             {

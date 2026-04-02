@@ -21,7 +21,8 @@ public static class PluginListings
             new PluginListingsPathProvider(
                 new DataDirectoryProvider(
                     gameReleaseInjection,
-                    gameLocator)),
+                    gameLocator),
+                gameLocator),
             gameReleaseInjection).Path;
     }
 
@@ -84,7 +85,8 @@ public static class PluginListings
                 new PluginListingsPathProvider(
                     new DataDirectoryProvider(
                         gameReleaseInjection,
-                        gameLocator)),
+                        gameLocator),
+                    gameLocator),
                 gameReleaseInjection).Path,
             game,
             dataPath,
@@ -156,7 +158,8 @@ public static class PluginListings
                 new PluginListingsPathProvider(
                     new DataDirectoryProvider(
                         gameReleaseInjection,
-                        gameLocator)),
+                        gameLocator),
+                    gameLocator),
                 gameReleaseInjection).Path);
     }
 

@@ -178,6 +178,45 @@ public sealed class GameLocator
         return false;
     }
 
+    private string? TryGetProtonPrefixPath(GameRelease release, params string[] subPath)
+    {
+        if (!OperatingSystem.IsLinux()) return null;
+        if (_steam.Value == null) return null;
+
+        var meta = Games[release];
+        foreach (var source in meta.GameSources)
+        {
+            if (source is SteamGameSource steam)
+            {
+                var find = _steam.Value.FindOneGameById(AppId.From(steam.Id), out var err);
+                if (find != null)
+                {
+                    var prefix = find.GetProtonPrefix();
+                    if (prefix == null) continue;
+                    var configDir = prefix.ConfigurationDirectory;
+                    if (configDir == default) continue;
+                    var parts = new[] { configDir.GetFullPath(), "drive_c", "users", "steamuser" };
+                    var fullPath = Path.Combine(Path.Combine(parts), Path.Combine(subPath));
+                    if (Directory.Exists(fullPath))
+                    {
+                        return fullPath;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public string? TryGetProtonLocalAppData(GameRelease release)
+    {
+        return TryGetProtonPrefixPath(release, "AppData", "Local");
+    }
+
+    public string? TryGetProtonMyDocuments(GameRelease release)
+    {
+        return TryGetProtonPrefixPath(release, "Documents");
+    }
+
     private bool TryGetGameDirectoryFromRegistry(
         RegistryGameSource registryGameSource,
         [MaybeNullWhen(false)] out DirectoryPath path)

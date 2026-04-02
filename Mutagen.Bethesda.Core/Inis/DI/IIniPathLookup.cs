@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
@@ -13,12 +14,16 @@ public interface IIniPathLookup
 public class IniPathLookup : IIniPathLookup
 {
     private readonly IGameDirectoryLookup _gameDirectoryLookup;
+    private readonly IProtonPrefixProvider _protonPrefixProvider;
 
-    public IniPathLookup(IGameDirectoryLookup gameDirectoryLookup)
+    public IniPathLookup(
+        IGameDirectoryLookup gameDirectoryLookup,
+        IProtonPrefixProvider protonPrefixProvider)
     {
         _gameDirectoryLookup = gameDirectoryLookup;
+        _protonPrefixProvider = protonPrefixProvider;
     }
-    
+
     public FilePath? TryGet(GameRelease release)
     {
         var constants = GameConstants.Get(release);
@@ -27,41 +32,28 @@ public class IniPathLookup : IIniPathLookup
         {
             var gameDir = _gameDirectoryLookup.TryGet(release);
             if (gameDir == null) return null;
-            
-            return Path.Combine(gameDir, ToIniFileName(release));
-        }
 
-        var envPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        if (envPath.IsNullOrWhitespace()) return null;
-        
-        return Path.Combine(
-            envPath,
-            "My Games",
-            docsString, 
-            ToIniFileName(release));
-    }
-    
-    public FilePath Get(GameRelease release)
-    {
-        var constants = GameConstants.Get(release);
-        var docsString = constants.MyDocumentsString;
-        if (docsString == null)
-        {
-            var gameDir = _gameDirectoryLookup.Get(release);
             return Path.Combine(gameDir, ToIniFileName(release));
         }
 
         var envPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         if (envPath.IsNullOrWhitespace())
         {
-            throw new DirectoryNotFoundException("Could not find MyDocuments environment path");
+            envPath = _protonPrefixProvider.TryGetProtonMyDocuments(release);
         }
-        
+        if (envPath.IsNullOrWhitespace()) return null;
+
         return Path.Combine(
             envPath,
             "My Games",
-            docsString, 
+            docsString,
             ToIniFileName(release));
+    }
+
+    public FilePath Get(GameRelease release)
+    {
+        return TryGet(release)
+               ?? throw new DirectoryNotFoundException("Could not find INI path for " + release);
     }
 
     public static string ToIniFileName(GameRelease release)
@@ -78,7 +70,7 @@ internal class IniPathLookupInjection : IIniPathLookup
     {
         _path = path;
     }
-    
+
     public FilePath Get(GameRelease release)
     {
         return _path;
