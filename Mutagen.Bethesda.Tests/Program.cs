@@ -60,9 +60,6 @@ class Program
                     ParallelModTranslations = false,
                     TestCopyIn = false,
                     Trimming = new TrimmingSettings()
-                    {
-                        Enabled = false
-                    }
                 },
                 TargetGroups = new List<TargetGroup>()
                 {
