@@ -397,14 +397,16 @@ public class ModFactoryMultiFileTests
 
         // Create first split file with a record
         var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
-        var flst1 = mod1.FormLists.AddNew();
+        var flst1 = new FormList(new FormKey(modKey, 0x800), SkyrimRelease.SkyrimSE);
         flst1.EditorID = "TestFormList1";
+        mod1.FormLists.Add(flst1);
 
         // Create second split file that references mod1's FormList, creating a cross-mod master
         var mod2 = new SkyrimMod(mod2Key, SkyrimRelease.SkyrimSE);
-        var flst2 = mod2.FormLists.AddNew();
+        var flst2 = new FormList(new FormKey(mod2Key, 0x900), SkyrimRelease.SkyrimSE);
         flst2.EditorID = "TestFormList2";
         flst2.Items.Add(flst1.ToLink());
+        mod2.FormLists.Add(flst2);
 
         var splitFile1 = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
@@ -445,21 +447,24 @@ public class ModFactoryMultiFileTests
 
         // Create first split file with a record
         var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
-        var flst1 = mod1.FormLists.AddNew();
+        var flst1 = new FormList(new FormKey(modKey, 0x800), SkyrimRelease.SkyrimSE);
         flst1.EditorID = "TestFormList1";
+        mod1.FormLists.Add(flst1);
 
         // Create second split file referencing mod1's record
         var mod2 = new SkyrimMod(mod2Key, SkyrimRelease.SkyrimSE);
-        var flst2 = mod2.FormLists.AddNew();
+        var flst2 = new FormList(new FormKey(mod2Key, 0x900), SkyrimRelease.SkyrimSE);
         flst2.EditorID = "TestFormList2";
         flst2.Items.Add(flst1.ToLink());
+        mod2.FormLists.Add(flst2);
 
         // Create third split file referencing records in both mod1 and mod2
         var mod3 = new SkyrimMod(mod3Key, SkyrimRelease.SkyrimSE);
-        var flst3 = mod3.FormLists.AddNew();
+        var flst3 = new FormList(new FormKey(mod3Key, 0xA00), SkyrimRelease.SkyrimSE);
         flst3.EditorID = "TestFormList3";
         flst3.Items.Add(flst1.ToLink());
         flst3.Items.Add(flst2.ToLink());
+        mod3.FormLists.Add(flst3);
 
         var splitFile1 = Path.Combine(existingOutputDirectory.Path, modKey.FileName);
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");

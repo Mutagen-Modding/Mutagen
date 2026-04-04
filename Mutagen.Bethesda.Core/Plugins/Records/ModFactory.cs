@@ -3,7 +3,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using DynamicData;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Analysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records.Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records
@@ -204,7 +207,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 // Import as multi-file
                 return ImportMultiFileGetter(
                     modPath.ModKey,
-                    splitFiles.Select(f => new ModPath(modPath.ModKey, f.Path)),
+                    splitFiles.Select(f => (ModPath)f.Path),
                     loadOrder,
                     release,
                     param);
@@ -254,11 +257,39 @@ namespace Mutagen.Bethesda.Plugins.Records
             GameRelease release,
             BinaryReadParameters? param = null)
         {
-            // Import all split files as overlays
-            var overlays = new List<IModDisposeGetter>();
+            param ??= BinaryReadParameters.Default;
+
+            // Standardize all split file ModPaths to use targetModKey, and collect
+            // the original ModKeys so we know which masters are split siblings.
+            var splitModKeys = new HashSet<ModKey> { targetModKey };
+            var splitFilesList = new List<ModPath>();
             foreach (var splitFile in splitFiles)
             {
-                var overlay = ImportGetter(splitFile, release, param);
+                var actualModKey = ModKey.FromFileName(Path.GetFileName(splitFile.Path));
+                splitModKeys.Add(actualModKey);
+                splitFilesList.Add(new ModPath(targetModKey, splitFile.Path));
+            }
+
+            // Import all split files as overlays, remapping split sibling masters to targetModKey
+            var overlays = new List<IModDisposeGetter>();
+            foreach (var splitFile in splitFilesList)
+            {
+                // Read header to get original masters
+                var header = ModHeaderFrame.FromPath(splitFile, release, fileSystem: param.FileSystem);
+
+                // Remap masters: replace any split sibling ModKey with targetModKey
+                var remappedMasters = header.Masters(splitFile.ModKey)
+                    .Select(m => splitModKeys.Contains(m.Master)
+                        ? (IMasterReferenceGetter)new MasterReference { Master = targetModKey }
+                        : m)
+                    .ToList();
+
+                var splitParam = param with
+                {
+                    MasterOverrides = MasterReferenceCollection.CreateUnsafe(targetModKey, remappedMasters)
+                };
+
+                var overlay = ImportGetter(splitFile, release, splitParam);
                 overlays.Add(overlay);
             }
 
@@ -268,7 +299,6 @@ namespace Mutagen.Bethesda.Plugins.Records
             // Merge masters from all overlays according to load order
             // Filter out targetModKey and all split file ModKeys, since split files may
             // cross-reference each other as masters (e.g. Mod_3.esp mastering Mod_2.esp)
-            var splitModKeys = new HashSet<ModKey>(overlays.Select(o => o.ModKey)) { targetModKey };
             var mergedMasters = MergeMasters(overlays, loadOrder, splitModKeys);
 
             // Create multi-file overlay that presents all the split files as one unified mod
