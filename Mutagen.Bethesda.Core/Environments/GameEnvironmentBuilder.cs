@@ -255,7 +255,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
             () => new PluginListingsPathContext(
-                new PluginListingsPathProvider(dataDirectory, GameLocatorLookupCache.Instance),
+                new PluginListingsPathProvider(dataDirectory, new ProtonPrefixProvider()),
                 Release),
             PluginListingsPathContext);
 
@@ -412,7 +412,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                                 Release,
                                 new IniPathLookup(
                                     gameDirectoryLookup,
-                                    GameLocatorLookupCache.Instance))),
+                                    new ProtonPrefixProvider()))),
                         new ArchiveNameFromModKeyProvider(Release))),
                 Release));
 
@@ -648,7 +648,7 @@ public sealed record GameEnvironmentBuilder
         
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
             () => new PluginListingsPathContext(
-                new PluginListingsPathProvider(dataDirectory, GameLocatorLookupCache.Instance),
+                new PluginListingsPathProvider(dataDirectory, new ProtonPrefixProvider()),
                 Release),
             PluginListingsPathContext);
         
@@ -805,7 +805,7 @@ public sealed record GameEnvironmentBuilder
                                 Release,
                                 new IniPathLookup(
                                     gameDirectoryLookup,
-                                    GameLocatorLookupCache.Instance))),
+                                    new ProtonPrefixProvider()))),
                         new ArchiveNameFromModKeyProvider(Release))),
                 Release));
         

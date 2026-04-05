@@ -5,7 +5,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
 
-public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup, IProtonPrefixProvider
+public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup
 {
     internal static readonly GameLocatorLookupCache Instance = new();
     
@@ -77,16 +77,6 @@ public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup
         throw new DirectoryNotFoundException($"Data folder for {release} cannot be found automatically");
     }
     
-    public string? TryGetProtonLocalAppData(GameRelease release)
-    {
-        return GameLocator.Instance.TryGetProtonLocalAppData(release);
-    }
-
-    public string? TryGetProtonMyDocuments(GameRelease release)
-    {
-        return GameLocator.Instance.TryGetProtonMyDocuments(release);
-    }
-
     #region Interface Implementations
 
     IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)

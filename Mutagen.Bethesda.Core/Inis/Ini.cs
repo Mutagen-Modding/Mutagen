@@ -8,7 +8,7 @@ public static class Ini
 {
     private static readonly IniPathLookup Lookup = new(
         GameLocatorLookupCache.Instance,
-        GameLocatorLookupCache.Instance);
+        new ProtonPrefixProvider());
     
     public static FilePath GetTypicalPath(GameRelease release)
     {
