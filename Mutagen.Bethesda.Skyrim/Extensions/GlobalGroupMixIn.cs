@@ -18,6 +18,7 @@ public static class GlobalGroupMixIn
         var ret = new GlobalFloat(
             globals.SourceMod.GetNextFormKey(editorId),
             globals.SourceMod.GameRelease.ToSkyrimRelease());
+        ret.EditorID = editorId;
         globals.Add(ret);
         return ret;
     }
@@ -36,6 +37,7 @@ public static class GlobalGroupMixIn
         var ret = new GlobalInt(
             globals.SourceMod.GetNextFormKey(editorId),
             globals.SourceMod.GameRelease.ToSkyrimRelease());
+        ret.EditorID = editorId;
         globals.Add(ret);
         return ret;
     }
@@ -54,6 +56,7 @@ public static class GlobalGroupMixIn
         var ret = new GlobalShort(
             globals.SourceMod.GetNextFormKey(editorId),
             globals.SourceMod.GameRelease.ToSkyrimRelease());
+        ret.EditorID = editorId;
         globals.Add(ret);
         return ret;
     }
