@@ -39,9 +39,10 @@ public partial class Fallout3Mod : AMod
         set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
     }
 
-    public override bool ListsOverriddenForms => false;
-    
-    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+    public override bool ListsOverriddenForms => true;
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 
     internal static uint GetDefaultInitialNextFormIDStatic(float headerVersion,
         bool? forceUseLowerFormIDRanges)
@@ -209,11 +210,12 @@ internal partial class Fallout3ModBinaryOverlay
     public bool IsSmallMaster => false;
     public bool CanBeMediumMaster => false;
     public bool IsMediumMaster => false;
-    public bool ListsOverriddenForms => false;
+    public bool ListsOverriddenForms => true;
     public MasterStyle MasterStyle => this.GetMasterStyle();
     IMod IModGetter.DeepCopy() => this.DeepCopy();
-    
-    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
 
     IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(
@@ -324,8 +326,171 @@ partial class Fallout3ModCommon
         streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
     }
     
+    public static void WriteWorldspacesParallel(
+        IFallout3GroupGetter<IWorldspaceGetter> group,
+        int targetIndex,
+        Stream[] streamDepositArray,
+        WritingBundle bundle,
+        ParallelWriteParameters parallelWriteParameters)
+    {
+        var cache = group.RecordCache;
+        if (cache == null || cache.Count == 0) return;
+        Stream[] streams = new Stream[cache.Count + 1];
+        byte[] groupBytes = new byte[GameConstants.Fallout3.GroupConstants.HeaderLength];
+        BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
+        var groupByteStream = new MemoryStream(groupBytes);
+        using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
+        {
+            stream.Position += 8;
+            Fallout3GroupBinaryWriteTranslation.WriteEmbedded<IWorldspaceGetter>(group, stream);
+        }
+        streams[0] = groupByteStream;
+        Parallel.ForEach(group, parallelWriteParameters.ParallelOptions, (worldspace, worldspaceState, worldspaceCounter) =>
+        {
+            var worldTrib = new MemoryTributary();
+            using (var writer = new MutagenWriter(worldTrib, bundle with {}, dispose: false))
+            {
+                using (HeaderExport.Header(
+                           writer: writer,
+                           record: RecordTypes.WRLD,
+                           type: ObjectType.Record))
+                {
+                    WorldspaceBinaryWriteTranslation.WriteEmbedded(
+                        item: worldspace,
+                        writer: writer);
+                    WorldspaceBinaryWriteTranslation.WriteRecordTypes(
+                        item: worldspace,
+                        writer: writer,
+                        translationParams: null);
+                }
+            }
+            var topCell = worldspace.TopCell;
+            var subCells = worldspace.SubCells;
+            if (subCells?.Count == 0
+                && topCell == null)
+            {
+                streams[worldspaceCounter + 1] = worldTrib;
+                return;
+            }
+
+            Stream[] subStreams = new Stream[(subCells?.Count ?? 0) + 1];
+
+            var worldGroupTrib = new MemoryTributary();
+            var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle with {}, dispose: false);
+            worldGroupWriter.Write(RecordTypes.GRUP.TypeInt);
+            worldGroupWriter.Write(Zeros.Slice(0, GameConstants.Fallout3.GroupConstants.LengthLength));
+            FormKeyBinaryTranslation.Instance.Write(
+                worldGroupWriter,
+                worldspace);
+            worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
+            worldGroupWriter.Write(worldspace.SubCellsTimestamp);
+            worldGroupWriter.Write(worldspace.SubCellsUnknownGroupData);
+            topCell?.WriteToBinary(worldGroupWriter);
+            subStreams[0] = worldGroupTrib;
+
+            if (subCells != null)
+            {
+                Parallel.ForEach(subCells, parallelWriteParameters.ParallelOptions, (block, blockState, blockCounter) =>
+                {
+                    WriteWorldspaceBlocksParallel(
+                        block,
+                        (int)blockCounter + 1,
+                        subStreams,
+                        bundle,
+                        parallelWriteParameters);
+                });
+            }
+
+            worldGroupWriter.Position = 4;
+            worldGroupWriter.Write((uint)(subStreams.WhereNotNull().Select(s => s.Length).Sum()));
+            streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
+        });
+        PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+        streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+    }
+
+    public static void WriteWorldspaceBlocksParallel(
+        IWorldspaceBlockGetter block,
+        int targetIndex,
+        Stream[] streamDepositArray,
+        WritingBundle bundle,
+        ParallelWriteParameters parallelWriteParameters)
+    {
+        var items = block.Items;
+        Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
+        byte[] groupBytes = new byte[GameConstants.Fallout3.GroupConstants.HeaderLength];
+        BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
+        var groupByteStream = new MemoryStream(groupBytes);
+        using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
+        {
+            stream.Position += 8;
+            WorldspaceBlockBinaryWriteTranslation.WriteEmbedded(block, stream);
+        }
+        streams[0] = groupByteStream;
+        if (items != null)
+        {
+            Parallel.ForEach(items, parallelWriteParameters.ParallelOptions, (subBlock, state, counter) =>
+            {
+                WriteWorldspaceSubBlocksParallel(
+                    subBlock,
+                    (int)counter + 1,
+                    streams,
+                    bundle,
+                    parallelWriteParameters);
+            });
+        }
+        PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+        streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+    }
+
+    public static void WriteWorldspaceSubBlocksParallel(
+        IWorldspaceSubBlockGetter subBlock,
+        int targetIndex,
+        Stream[] streamDepositArray,
+        WritingBundle bundle,
+        ParallelWriteParameters parallelWriteParameters)
+    {
+        var items = subBlock.Items;
+        Stream[] streams = new Stream[(items?.Count ?? 0) + 1];
+        byte[] groupBytes = new byte[GameConstants.Fallout3.GroupConstants.HeaderLength];
+        BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
+        var groupByteStream = new MemoryStream(groupBytes);
+        using (var stream = new MutagenWriter(groupByteStream, bundle with {}, dispose: false))
+        {
+            stream.Position += 8;
+            WorldspaceSubBlockBinaryWriteTranslation.WriteEmbedded(subBlock, stream);
+        }
+        streams[0] = groupByteStream;
+        if (items != null)
+        {
+            Parallel.ForEach(items, parallelWriteParameters.ParallelOptions, (cell, state, counter) =>
+            {
+                MemoryTributary trib = new MemoryTributary();
+                cell.WriteToBinary(new MutagenWriter(trib, bundle with {}, dispose: false));
+                streams[(int)counter + 1] = trib;
+            });
+        }
+        PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+        streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
+    }
+
+    public static void WriteDialogTopicsParallel(
+        IFallout3GroupGetter<IDialogTopicGetter> group,
+        int targetIndex,
+        Stream[] streamDepositArray,
+        WritingBundle bundle,
+        ParallelWriteParameters parallelWriteParameters)
+    {
+        WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
+
     partial void GetCustomRecordCount(IFallout3ModGetter item, Action<uint> setter)
     {
-        // ToDo
+        uint count = 0;
+
+        // Tally Dialog Group Counts
+        count += (uint)item.DialogTopics.RecordCache.Count;
+
+        setter(count);
     }
 }

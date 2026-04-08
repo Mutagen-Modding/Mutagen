@@ -10,6 +10,12 @@ namespace Mutagen.Bethesda.Fallout3;
 
 public partial class Weapon
 {
+
+    partial void CustomCtor()
+    {
+        _PowerAttackAnimationOverride = PowerAttackAnim.Default;
+    }
+
     [Flags]
     public enum MajorFlag
     {
@@ -31,6 +37,7 @@ public partial class Weapon
         GrenadeThrow1Hand = 10,
         LandMine1Hand = 11,
         MineDrop1Hand = 12,
+        Thrown1Hand = 13,
     }
 
     [Flags]

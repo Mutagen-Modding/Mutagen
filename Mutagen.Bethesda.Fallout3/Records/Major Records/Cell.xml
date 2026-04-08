@@ -5,6 +5,7 @@
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
       <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
     </Fields>
   </Object>
@@ -13,24 +14,77 @@
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
       <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
   <Object name="Cell" recordType="CELL" baseClass="Fallout3MajorRecord" objType="Record" customBinaryEnd="Normal">
     <Fields>
+      <String name="Name" recordType="FULL" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="1" recordType="DATA" nullable="False" />
+      <RefDirect name="Grid" refName="CellGrid" />
+      <RefDirect name="Lighting" refName="CellLighting" />
+      <ByteArray name="FootstepMaterials" recordType="IMPF" />
+      <FormLink name="LightTemplate" recordType="LTMP" refName="LightingTemplate" />
+      <UInt32 name="LightInheritFlags" recordType="LNAM" />
+      <List name="Regions" recordType="XCLR">
+        <FormLink refName="Region" />
+      </List>
+      <Float name="WaterHeight" recordType="XCLW" />
+      <String name="WaterNoiseTexture" recordType="XNAM" />
+      <FormLink name="MusicType" recordType="XCMO" refName="MusicType" />
+      <FormLink name="AcousticSpace" recordType="XCAS" refName="AcousticSpace" />
+      <ByteArray name="XCET" recordType="XCET" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <FormLink name="Climate" recordType="XCCM" refName="Climate" />
+      <FormLink name="ImageSpace" recordType="XCIM" refName="ImageSpace" />
+      <FormLink name="Water" recordType="XCWT" refName="Water" />
+      <FormLink name="Owner" recordType="XOWN" refName="Faction" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <ByteArray name="XCMT" recordType="XCMT" />
+      <RefDirect name="Landscape" refName="Landscape" binary="NoGeneration" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />
+      <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
       <RefList name="Persistent" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
       <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
+      <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
       <RefList name="Temporary" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
       <Int32 name="VisibleWhenDistantTimestamp" binary="NoGeneration" />
+      <Int32 name="VisibleWhenDistantUnknownGroupData" binary="NoGeneration" />
       <RefList name="VisibleWhenDistant" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
+    </Fields>
+    <LinkInterface>ICellOrWorldspace</LinkInterface>
+  </Object>
+  <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
+    <Fields>
+      <Int32 name="GridX" nullable="False" />
+      <Int32 name="GridY" nullable="False" />
+      <Break />
+      <UInt8 name="LandFlags" nullable="False" />
+      <ByteArray name="Unused" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="CellLighting" recordType="XCLL" objType="Subrecord">
+    <Fields>
+      <!-- Required fields (xEdit elements 0-6) -->
+      <Color name="AmbientColor" nullable="False" binaryType="Alpha" />
+      <Color name="DirectionalColor" nullable="False" binaryType="Alpha" />
+      <Color name="FogColor" nullable="False" binaryType="Alpha" />
+      <Float name="FogNear" nullable="False" />
+      <Float name="FogFar" nullable="False" />
+      <Int32 name="DirectionalRotationXY" nullable="False" />
+      <Int32 name="DirectionalRotationZ" nullable="False" />
+      <!-- Optional from xEdit element 7: DirectionalFade, FogClipDistance, FogPower -->
+      <ByteArray name="Remaining" />
     </Fields>
   </Object>
 </Loqui>

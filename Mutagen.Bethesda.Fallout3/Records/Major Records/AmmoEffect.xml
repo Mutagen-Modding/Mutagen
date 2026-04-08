@@ -2,6 +2,18 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AmmoEffect" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="AMEF">
-    <Fields />
+    <Fields>
+      <String name="Name" recordType="FULL">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <Data recordType="DATA" nullable="False">
+        <ModHeaderVersioning version="1.32" />
+        <Fields>
+          <Enum name="Type" enumName="AmmoEffectType" byteLength="4" />
+          <Enum name="Operation" enumName="AmmoEffectOperation" byteLength="4" />
+          <Float name="Value" />
+        </Fields>
+      </Data>
+    </Fields>
   </Object>
 </Loqui>

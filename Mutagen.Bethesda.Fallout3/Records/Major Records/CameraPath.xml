@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CameraPath" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="CPTH">
+    <Fields>
+      <RefList name="Conditions" refName="Condition" />
+      <Data recordType="ANAM" nullable="False">
+        <Fields>
+          <FormLink name="Parent" refName="CameraPath" />
+          <FormLink name="Previous" refName="CameraPath" />
+        </Fields>
+      </Data>
+      <Enum name="Zoom" enumName="CameraPath.ZoomType" byteLength="1" nullable="False" binary="Custom" recordType="DATA" />
+      <Bool name="ZoomMustHaveCameraShots" binary="NoGeneration" />
+      <List name="Shots">
+        <FormLink recordType="SNAM" refName="CameraShot" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

@@ -85,6 +85,7 @@ public static class GameCategoryExt
         {
             GameCategory.Oblivion => ("Mutagen.Bethesda.Oblivion.OblivionMultiModOverlay", "Mutagen.Bethesda.Oblivion"),
             GameCategory.Skyrim => ("Mutagen.Bethesda.Skyrim.SkyrimMultiModOverlay", "Mutagen.Bethesda.Skyrim"),
+            GameCategory.Fallout3 => ("Mutagen.Bethesda.Fallout3.Fallout3MultiModOverlay", "Mutagen.Bethesda.Fallout3"),
             GameCategory.Fallout4 => ("Mutagen.Bethesda.Fallout4.Fallout4MultiModOverlay", "Mutagen.Bethesda.Fallout4"),
             GameCategory.Starfield => ("Mutagen.Bethesda.Starfield.StarfieldMultiModOverlay", "Mutagen.Bethesda.Starfield"),
             _ => throw new NotImplementedException(

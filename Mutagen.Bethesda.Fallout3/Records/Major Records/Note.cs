@@ -186,3 +186,9 @@ partial class NoteBinaryOverlay
         return (int)Note_FieldIndex.DropSound;
     }
 }
+
+partial class NoteStandardBinaryOverlay
+{
+    // Type is set via NoGeneration; overlay is never used directly (Note constructs NoteStandard manually)
+    public Note.NoteType Type => default;
+}

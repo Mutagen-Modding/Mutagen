@@ -77,22 +77,27 @@ partial class AcousticSpaceBinaryWriteTranslation
     public static partial void WriteBinarySoundLoopCustom(
         MutagenWriter writer, IAcousticSpaceGetter item)
     {
-        if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+        // AcousticSpace has up to 5 sequential SNAM subrecords:
+        // DawnDefaultLoop, Afternoon, Dusk, Night, Walla
+        if (!item.DawnDefaultLoop.IsNull)
         {
-            // FNV: always write all 5 SNAMs
             WriteSnam(writer, item.DawnDefaultLoop);
-            WriteSnam(writer, item.Afternoon);
-            WriteSnam(writer, item.Dusk);
-            WriteSnam(writer, item.Night);
-            WriteSnam(writer, item.Walla);
         }
-        else
+        if (!item.Afternoon.IsNull)
         {
-            // FO3: write single SNAM only if non-null
-            if (!item.DawnDefaultLoop.IsNull)
-            {
-                WriteSnam(writer, item.DawnDefaultLoop);
-            }
+            WriteSnam(writer, item.Afternoon);
+        }
+        if (!item.Dusk.IsNull)
+        {
+            WriteSnam(writer, item.Dusk);
+        }
+        if (!item.Night.IsNull)
+        {
+            WriteSnam(writer, item.Night);
+        }
+        if (!item.Walla.IsNull)
+        {
+            WriteSnam(writer, item.Walla);
         }
     }
 

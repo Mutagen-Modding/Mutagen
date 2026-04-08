@@ -3,15 +3,15 @@
 [Flags]
 public enum ClassService
 {
-    Weapons = 0x1,
-    Armor = 0x2,
-    Alcohol = 0x4,
-    Books = 0x8,
-    Food = 0x10,
-    Chems = 0x02,
-    Stimpacks = 0x04,
-    Miscellaneous = 0x400,
-    Training = 0x4000,
-    Recharge = 0x10000,
-    Repair = 0x20000
+    Weapons = 0x0000_0001,
+    Armor = 0x0000_0002,
+    Alcohol = 0x0000_0004,
+    Books = 0x0000_0008,
+    Food = 0x0000_0010,
+    Chems = 0x0000_0020,
+    Stimpaks = 0x0000_0040,
+    Miscellaneous = 0x0000_0400,
+    Training = 0x0000_4000,
+    Recharge = 0x0001_0000,
+    Repair = 0x0002_0000,
 }

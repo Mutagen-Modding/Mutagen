@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LightingTemplate" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="LGTM">
+    <Fields>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Color name="AmbientColor" binaryType="Alpha" />
+          <Color name="DirectionalColor" binaryType="Alpha" />
+          <Color name="FogColor" binaryType="Alpha" />
+          <Float name="FogNear" />
+          <Float name="FogFar" />
+          <Int32 name="DirectionalRotationXY" />
+          <Int32 name="DirectionalRotationZ" />
+          <Float name="DirectionalFade" />
+          <Float name="FogClipDistance" />
+          <Float name="FogPower" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

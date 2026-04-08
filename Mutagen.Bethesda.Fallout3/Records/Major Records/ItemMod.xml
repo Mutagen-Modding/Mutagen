@@ -2,7 +2,23 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ItemMod" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="IMOD">
-    <Fields />
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <String name="Description" recordType="DESC" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+    </Fields>
     <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

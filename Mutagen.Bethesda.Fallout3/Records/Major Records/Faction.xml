@@ -12,6 +12,7 @@
       </FormLink>
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
+    <LinkInterface>IOwner</LinkInterface>
   </Object>
   <Object name="Rank" objType="Subrecord">
     <Fields>
@@ -22,6 +23,7 @@
         </Fields>
       </Gendered>
       <String name="Insignia" recordType="INAM" />
+          <ByteArray name="XNAM" recordType="XNAM" />
     </Fields>
   </Object>
 </Loqui>

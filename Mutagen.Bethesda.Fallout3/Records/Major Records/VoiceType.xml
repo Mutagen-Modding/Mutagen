@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="VoiceType" baseClass="Fallout3MajorRecord" objType="Record" recordType="VTYP">
     <Fields>
+      <Enum name="Flags" recordType="DNAM" enumName="VoiceType.VoiceTypeFlag" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

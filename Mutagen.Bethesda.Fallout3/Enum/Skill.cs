@@ -1,4 +1,4 @@
-﻿namespace Mutagen.Bethesda.Fallout3;
+namespace Mutagen.Bethesda.Fallout3;
 
 public enum Skill
 {
