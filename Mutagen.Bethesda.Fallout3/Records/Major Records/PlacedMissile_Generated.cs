@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,260 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Base
+        private readonly IFormLinkNullable<IProjectileGetter> _Base = new FormLinkNullable<IProjectileGetter>();
+        public IFormLinkNullable<IProjectileGetter> Base
+        {
+            get => _Base;
+            set => _Base.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IProjectileGetter> IPlacedMissileGetter.Base => this.Base;
+        #endregion
+        #region EncounterZone
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
+        {
+            get => _EncounterZone;
+            set => _EncounterZone.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEncounterZoneGetter> IPlacedMissileGetter.EncounterZone => this.EncounterZone;
+        #endregion
+        #region XRGD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XRGD;
+        public MemorySlice<Byte>? XRGD
+        {
+            get => this._XRGD;
+            set => this._XRGD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XRGD => this.XRGD;
+        #endregion
+        #region XRGB
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XRGB;
+        public MemorySlice<Byte>? XRGB
+        {
+            get => this._XRGB;
+            set => this._XRGB = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XRGB => this.XRGB;
+        #endregion
+        #region XPRD
+        public Single? XPRD { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedMissileGetter.XPRD => this.XPRD;
+        #endregion
+        #region XPPA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XPPA;
+        public MemorySlice<Byte>? XPPA
+        {
+            get => this._XPPA;
+            set => this._XPPA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XPPA => this.XPPA;
+        #endregion
+        #region IdleMarker
+        private readonly IFormLinkNullable<IIdleAnimationGetter> _IdleMarker = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> IdleMarker
+        {
+            get => _IdleMarker;
+            set => _IdleMarker.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IIdleAnimationGetter> IPlacedMissileGetter.IdleMarker => this.IdleMarker;
+        #endregion
+        #region SCHR
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _SCHR;
+        public MemorySlice<Byte>? SCHR
+        {
+            get => this._SCHR;
+            set => this._SCHR = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.SCHR => this.SCHR;
+        #endregion
+        #region SCDA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _SCDA;
+        public MemorySlice<Byte>? SCDA
+        {
+            get => this._SCDA;
+            set => this._SCDA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.SCDA => this.SCDA;
+        #endregion
+        #region ScriptSource
+        public String? ScriptSource { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPlacedMissileGetter.ScriptSource => this.ScriptSource;
+        #endregion
+        #region GlobalReference
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _GlobalReference = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> GlobalReference
+        {
+            get => _GlobalReference;
+            set => _GlobalReference.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IPlacedMissileGetter.GlobalReference => this.GlobalReference;
+        #endregion
+        #region Topic
+        private readonly IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> Topic
+        {
+            get => _Topic;
+            set => _Topic.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogTopicGetter> IPlacedMissileGetter.Topic => this.Topic;
+        #endregion
+        #region LevelModifier
+        public Int32? LevelModifier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedMissileGetter.LevelModifier => this.LevelModifier;
+        #endregion
+        #region Owner
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _Owner = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> Owner
+        {
+            get => _Owner;
+            set => _Owner.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IPlacedMissileGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedMissileGetter.FactionRank => this.FactionRank;
+        #endregion
+        #region Count
+        public Int32? Count { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedMissileGetter.Count => this.Count;
+        #endregion
+        #region Radius
+        public Single? Radius { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedMissileGetter.Radius => this.Radius;
+        #endregion
+        #region Health
+        public Single? Health { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedMissileGetter.Health => this.Health;
+        #endregion
+        #region XDCR
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XDCR;
+        public MemorySlice<Byte>? XDCR
+        {
+            get => this._XDCR;
+            set => this._XDCR = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XDCR => this.XDCR;
+        #endregion
+        #region LinkedReferenceColor
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _LinkedReferenceColor = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> LinkedReferenceColor
+        {
+            get => _LinkedReferenceColor;
+            set => _LinkedReferenceColor.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IPlacedMissileGetter.LinkedReferenceColor => this.LinkedReferenceColor;
+        #endregion
+        #region XCLP
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XCLP;
+        public MemorySlice<Byte>? XCLP
+        {
+            get => this._XCLP;
+            set => this._XCLP = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XCLP => this.XCLP;
+        #endregion
+        #region ParentActivateOnly
+        public Boolean? ParentActivateOnly { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IPlacedMissileGetter.ParentActivateOnly => this.ParentActivateOnly;
+        #endregion
+        #region XAPR
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XAPR;
+        public MemorySlice<Byte>? XAPR
+        {
+            get => this._XAPR;
+            set => this._XAPR = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XAPR => this.XAPR;
+        #endregion
+        #region XESP
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XESP;
+        public MemorySlice<Byte>? XESP
+        {
+            get => this._XESP;
+            set => this._XESP = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.XESP => this.XESP;
+        #endregion
+        #region EmittanceLight
+        private readonly IFormLinkNullable<ILightGetter> _EmittanceLight = new FormLinkNullable<ILightGetter>();
+        public IFormLinkNullable<ILightGetter> EmittanceLight
+        {
+            get => _EmittanceLight;
+            set => _EmittanceLight.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILightGetter> IPlacedMissileGetter.EmittanceLight => this.EmittanceLight;
+        #endregion
+        #region MultiboundReference
+        private readonly IFormLinkNullable<IPlacedObjectGetter> _MultiboundReference = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> MultiboundReference
+        {
+            get => _MultiboundReference;
+            set => _MultiboundReference.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedMissileGetter.MultiboundReference => this.MultiboundReference;
+        #endregion
+        #region WaterReflectionRefraction
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _WaterReflectionRefraction;
+        public MemorySlice<Byte>? WaterReflectionRefraction
+        {
+            get => this._WaterReflectionRefraction;
+            set => this._WaterReflectionRefraction = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedMissileGetter.WaterReflectionRefraction => this.WaterReflectionRefraction;
+        #endregion
+        #region IsIgnoredBySandbox
+        public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
+        #endregion
+        #region Scale
+        public Single? Scale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedMissileGetter.Scale => this.Scale;
+        #endregion
+        #region Position
+        public P3Float Position { get; set; } = default(P3Float);
+        #endregion
+        #region Rotation
+        public P3Float Rotation { get; set; } = default(P3Float);
+        #endregion
 
         #region To String
 
@@ -78,6 +334,37 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Base = initialValue;
+                this.EncounterZone = initialValue;
+                this.XRGD = initialValue;
+                this.XRGB = initialValue;
+                this.XPRD = initialValue;
+                this.XPPA = initialValue;
+                this.IdleMarker = initialValue;
+                this.SCHR = initialValue;
+                this.SCDA = initialValue;
+                this.ScriptSource = initialValue;
+                this.GlobalReference = initialValue;
+                this.Topic = initialValue;
+                this.LevelModifier = initialValue;
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
+                this.Count = initialValue;
+                this.Radius = initialValue;
+                this.Health = initialValue;
+                this.XDCR = initialValue;
+                this.LinkedReferenceColor = initialValue;
+                this.XCLP = initialValue;
+                this.ParentActivateOnly = initialValue;
+                this.XAPR = initialValue;
+                this.XESP = initialValue;
+                this.EmittanceLight = initialValue;
+                this.MultiboundReference = initialValue;
+                this.WaterReflectionRefraction = initialValue;
+                this.IsIgnoredBySandbox = initialValue;
+                this.Scale = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
             }
 
             public Mask(
@@ -87,7 +374,38 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Base,
+                TItem EncounterZone,
+                TItem XRGD,
+                TItem XRGB,
+                TItem XPRD,
+                TItem XPPA,
+                TItem IdleMarker,
+                TItem SCHR,
+                TItem SCDA,
+                TItem ScriptSource,
+                TItem GlobalReference,
+                TItem Topic,
+                TItem LevelModifier,
+                TItem Owner,
+                TItem FactionRank,
+                TItem Count,
+                TItem Radius,
+                TItem Health,
+                TItem XDCR,
+                TItem LinkedReferenceColor,
+                TItem XCLP,
+                TItem ParentActivateOnly,
+                TItem XAPR,
+                TItem XESP,
+                TItem EmittanceLight,
+                TItem MultiboundReference,
+                TItem WaterReflectionRefraction,
+                TItem IsIgnoredBySandbox,
+                TItem Scale,
+                TItem Position,
+                TItem Rotation)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +415,37 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Base = Base;
+                this.EncounterZone = EncounterZone;
+                this.XRGD = XRGD;
+                this.XRGB = XRGB;
+                this.XPRD = XPRD;
+                this.XPPA = XPPA;
+                this.IdleMarker = IdleMarker;
+                this.SCHR = SCHR;
+                this.SCDA = SCDA;
+                this.ScriptSource = ScriptSource;
+                this.GlobalReference = GlobalReference;
+                this.Topic = Topic;
+                this.LevelModifier = LevelModifier;
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
+                this.Count = Count;
+                this.Radius = Radius;
+                this.Health = Health;
+                this.XDCR = XDCR;
+                this.LinkedReferenceColor = LinkedReferenceColor;
+                this.XCLP = XCLP;
+                this.ParentActivateOnly = ParentActivateOnly;
+                this.XAPR = XAPR;
+                this.XESP = XESP;
+                this.EmittanceLight = EmittanceLight;
+                this.MultiboundReference = MultiboundReference;
+                this.WaterReflectionRefraction = WaterReflectionRefraction;
+                this.IsIgnoredBySandbox = IsIgnoredBySandbox;
+                this.Scale = Scale;
+                this.Position = Position;
+                this.Rotation = Rotation;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +454,40 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Base;
+            public TItem EncounterZone;
+            public TItem XRGD;
+            public TItem XRGB;
+            public TItem XPRD;
+            public TItem XPPA;
+            public TItem IdleMarker;
+            public TItem SCHR;
+            public TItem SCDA;
+            public TItem ScriptSource;
+            public TItem GlobalReference;
+            public TItem Topic;
+            public TItem LevelModifier;
+            public TItem Owner;
+            public TItem FactionRank;
+            public TItem Count;
+            public TItem Radius;
+            public TItem Health;
+            public TItem XDCR;
+            public TItem LinkedReferenceColor;
+            public TItem XCLP;
+            public TItem ParentActivateOnly;
+            public TItem XAPR;
+            public TItem XESP;
+            public TItem EmittanceLight;
+            public TItem MultiboundReference;
+            public TItem WaterReflectionRefraction;
+            public TItem IsIgnoredBySandbox;
+            public TItem Scale;
+            public TItem Position;
+            public TItem Rotation;
             #endregion
 
             #region Equals
@@ -118,11 +501,73 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Base, rhs.Base)) return false;
+                if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
+                if (!object.Equals(this.XRGD, rhs.XRGD)) return false;
+                if (!object.Equals(this.XRGB, rhs.XRGB)) return false;
+                if (!object.Equals(this.XPRD, rhs.XPRD)) return false;
+                if (!object.Equals(this.XPPA, rhs.XPPA)) return false;
+                if (!object.Equals(this.IdleMarker, rhs.IdleMarker)) return false;
+                if (!object.Equals(this.SCHR, rhs.SCHR)) return false;
+                if (!object.Equals(this.SCDA, rhs.SCDA)) return false;
+                if (!object.Equals(this.ScriptSource, rhs.ScriptSource)) return false;
+                if (!object.Equals(this.GlobalReference, rhs.GlobalReference)) return false;
+                if (!object.Equals(this.Topic, rhs.Topic)) return false;
+                if (!object.Equals(this.LevelModifier, rhs.LevelModifier)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+                if (!object.Equals(this.Count, rhs.Count)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.XDCR, rhs.XDCR)) return false;
+                if (!object.Equals(this.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
+                if (!object.Equals(this.XCLP, rhs.XCLP)) return false;
+                if (!object.Equals(this.ParentActivateOnly, rhs.ParentActivateOnly)) return false;
+                if (!object.Equals(this.XAPR, rhs.XAPR)) return false;
+                if (!object.Equals(this.XESP, rhs.XESP)) return false;
+                if (!object.Equals(this.EmittanceLight, rhs.EmittanceLight)) return false;
+                if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
+                if (!object.Equals(this.WaterReflectionRefraction, rhs.WaterReflectionRefraction)) return false;
+                if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Base);
+                hash.Add(this.EncounterZone);
+                hash.Add(this.XRGD);
+                hash.Add(this.XRGB);
+                hash.Add(this.XPRD);
+                hash.Add(this.XPPA);
+                hash.Add(this.IdleMarker);
+                hash.Add(this.SCHR);
+                hash.Add(this.SCDA);
+                hash.Add(this.ScriptSource);
+                hash.Add(this.GlobalReference);
+                hash.Add(this.Topic);
+                hash.Add(this.LevelModifier);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
+                hash.Add(this.Count);
+                hash.Add(this.Radius);
+                hash.Add(this.Health);
+                hash.Add(this.XDCR);
+                hash.Add(this.LinkedReferenceColor);
+                hash.Add(this.XCLP);
+                hash.Add(this.ParentActivateOnly);
+                hash.Add(this.XAPR);
+                hash.Add(this.XESP);
+                hash.Add(this.EmittanceLight);
+                hash.Add(this.MultiboundReference);
+                hash.Add(this.WaterReflectionRefraction);
+                hash.Add(this.IsIgnoredBySandbox);
+                hash.Add(this.Scale);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +578,37 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Base)) return false;
+                if (!eval(this.EncounterZone)) return false;
+                if (!eval(this.XRGD)) return false;
+                if (!eval(this.XRGB)) return false;
+                if (!eval(this.XPRD)) return false;
+                if (!eval(this.XPPA)) return false;
+                if (!eval(this.IdleMarker)) return false;
+                if (!eval(this.SCHR)) return false;
+                if (!eval(this.SCDA)) return false;
+                if (!eval(this.ScriptSource)) return false;
+                if (!eval(this.GlobalReference)) return false;
+                if (!eval(this.Topic)) return false;
+                if (!eval(this.LevelModifier)) return false;
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
+                if (!eval(this.Count)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Health)) return false;
+                if (!eval(this.XDCR)) return false;
+                if (!eval(this.LinkedReferenceColor)) return false;
+                if (!eval(this.XCLP)) return false;
+                if (!eval(this.ParentActivateOnly)) return false;
+                if (!eval(this.XAPR)) return false;
+                if (!eval(this.XESP)) return false;
+                if (!eval(this.EmittanceLight)) return false;
+                if (!eval(this.MultiboundReference)) return false;
+                if (!eval(this.WaterReflectionRefraction)) return false;
+                if (!eval(this.IsIgnoredBySandbox)) return false;
+                if (!eval(this.Scale)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +617,37 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Base)) return true;
+                if (eval(this.EncounterZone)) return true;
+                if (eval(this.XRGD)) return true;
+                if (eval(this.XRGB)) return true;
+                if (eval(this.XPRD)) return true;
+                if (eval(this.XPPA)) return true;
+                if (eval(this.IdleMarker)) return true;
+                if (eval(this.SCHR)) return true;
+                if (eval(this.SCDA)) return true;
+                if (eval(this.ScriptSource)) return true;
+                if (eval(this.GlobalReference)) return true;
+                if (eval(this.Topic)) return true;
+                if (eval(this.LevelModifier)) return true;
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
+                if (eval(this.Count)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Health)) return true;
+                if (eval(this.XDCR)) return true;
+                if (eval(this.LinkedReferenceColor)) return true;
+                if (eval(this.XCLP)) return true;
+                if (eval(this.ParentActivateOnly)) return true;
+                if (eval(this.XAPR)) return true;
+                if (eval(this.XESP)) return true;
+                if (eval(this.EmittanceLight)) return true;
+                if (eval(this.MultiboundReference)) return true;
+                if (eval(this.WaterReflectionRefraction)) return true;
+                if (eval(this.IsIgnoredBySandbox)) return true;
+                if (eval(this.Scale)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +663,37 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Base = eval(this.Base);
+                obj.EncounterZone = eval(this.EncounterZone);
+                obj.XRGD = eval(this.XRGD);
+                obj.XRGB = eval(this.XRGB);
+                obj.XPRD = eval(this.XPRD);
+                obj.XPPA = eval(this.XPPA);
+                obj.IdleMarker = eval(this.IdleMarker);
+                obj.SCHR = eval(this.SCHR);
+                obj.SCDA = eval(this.SCDA);
+                obj.ScriptSource = eval(this.ScriptSource);
+                obj.GlobalReference = eval(this.GlobalReference);
+                obj.Topic = eval(this.Topic);
+                obj.LevelModifier = eval(this.LevelModifier);
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
+                obj.Count = eval(this.Count);
+                obj.Radius = eval(this.Radius);
+                obj.Health = eval(this.Health);
+                obj.XDCR = eval(this.XDCR);
+                obj.LinkedReferenceColor = eval(this.LinkedReferenceColor);
+                obj.XCLP = eval(this.XCLP);
+                obj.ParentActivateOnly = eval(this.ParentActivateOnly);
+                obj.XAPR = eval(this.XAPR);
+                obj.XESP = eval(this.XESP);
+                obj.EmittanceLight = eval(this.EmittanceLight);
+                obj.MultiboundReference = eval(this.MultiboundReference);
+                obj.WaterReflectionRefraction = eval(this.WaterReflectionRefraction);
+                obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
+                obj.Scale = eval(this.Scale);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
             }
             #endregion
 
@@ -174,6 +712,130 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PlacedMissile.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Base ?? true)
+                    {
+                        sb.AppendItem(Base, "Base");
+                    }
+                    if (printMask?.EncounterZone ?? true)
+                    {
+                        sb.AppendItem(EncounterZone, "EncounterZone");
+                    }
+                    if (printMask?.XRGD ?? true)
+                    {
+                        sb.AppendItem(XRGD, "XRGD");
+                    }
+                    if (printMask?.XRGB ?? true)
+                    {
+                        sb.AppendItem(XRGB, "XRGB");
+                    }
+                    if (printMask?.XPRD ?? true)
+                    {
+                        sb.AppendItem(XPRD, "XPRD");
+                    }
+                    if (printMask?.XPPA ?? true)
+                    {
+                        sb.AppendItem(XPPA, "XPPA");
+                    }
+                    if (printMask?.IdleMarker ?? true)
+                    {
+                        sb.AppendItem(IdleMarker, "IdleMarker");
+                    }
+                    if (printMask?.SCHR ?? true)
+                    {
+                        sb.AppendItem(SCHR, "SCHR");
+                    }
+                    if (printMask?.SCDA ?? true)
+                    {
+                        sb.AppendItem(SCDA, "SCDA");
+                    }
+                    if (printMask?.ScriptSource ?? true)
+                    {
+                        sb.AppendItem(ScriptSource, "ScriptSource");
+                    }
+                    if (printMask?.GlobalReference ?? true)
+                    {
+                        sb.AppendItem(GlobalReference, "GlobalReference");
+                    }
+                    if (printMask?.Topic ?? true)
+                    {
+                        sb.AppendItem(Topic, "Topic");
+                    }
+                    if (printMask?.LevelModifier ?? true)
+                    {
+                        sb.AppendItem(LevelModifier, "LevelModifier");
+                    }
+                    if (printMask?.Owner ?? true)
+                    {
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
+                    }
+                    if (printMask?.Count ?? true)
+                    {
+                        sb.AppendItem(Count, "Count");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        sb.AppendItem(Health, "Health");
+                    }
+                    if (printMask?.XDCR ?? true)
+                    {
+                        sb.AppendItem(XDCR, "XDCR");
+                    }
+                    if (printMask?.LinkedReferenceColor ?? true)
+                    {
+                        sb.AppendItem(LinkedReferenceColor, "LinkedReferenceColor");
+                    }
+                    if (printMask?.XCLP ?? true)
+                    {
+                        sb.AppendItem(XCLP, "XCLP");
+                    }
+                    if (printMask?.ParentActivateOnly ?? true)
+                    {
+                        sb.AppendItem(ParentActivateOnly, "ParentActivateOnly");
+                    }
+                    if (printMask?.XAPR ?? true)
+                    {
+                        sb.AppendItem(XAPR, "XAPR");
+                    }
+                    if (printMask?.XESP ?? true)
+                    {
+                        sb.AppendItem(XESP, "XESP");
+                    }
+                    if (printMask?.EmittanceLight ?? true)
+                    {
+                        sb.AppendItem(EmittanceLight, "EmittanceLight");
+                    }
+                    if (printMask?.MultiboundReference ?? true)
+                    {
+                        sb.AppendItem(MultiboundReference, "MultiboundReference");
+                    }
+                    if (printMask?.WaterReflectionRefraction ?? true)
+                    {
+                        sb.AppendItem(WaterReflectionRefraction, "WaterReflectionRefraction");
+                    }
+                    if (printMask?.IsIgnoredBySandbox ?? true)
+                    {
+                        sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                    }
+                    if (printMask?.Scale ?? true)
+                    {
+                        sb.AppendItem(Scale, "Scale");
+                    }
+                    if (printMask?.Position ?? true)
+                    {
+                        sb.AppendItem(Position, "Position");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        sb.AppendItem(Rotation, "Rotation");
+                    }
                 }
             }
             #endregion
@@ -184,12 +846,108 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Base;
+            public Exception? EncounterZone;
+            public Exception? XRGD;
+            public Exception? XRGB;
+            public Exception? XPRD;
+            public Exception? XPPA;
+            public Exception? IdleMarker;
+            public Exception? SCHR;
+            public Exception? SCDA;
+            public Exception? ScriptSource;
+            public Exception? GlobalReference;
+            public Exception? Topic;
+            public Exception? LevelModifier;
+            public Exception? Owner;
+            public Exception? FactionRank;
+            public Exception? Count;
+            public Exception? Radius;
+            public Exception? Health;
+            public Exception? XDCR;
+            public Exception? LinkedReferenceColor;
+            public Exception? XCLP;
+            public Exception? ParentActivateOnly;
+            public Exception? XAPR;
+            public Exception? XESP;
+            public Exception? EmittanceLight;
+            public Exception? MultiboundReference;
+            public Exception? WaterReflectionRefraction;
+            public Exception? IsIgnoredBySandbox;
+            public Exception? Scale;
+            public Exception? Position;
+            public Exception? Rotation;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 PlacedMissile_FieldIndex enu = (PlacedMissile_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedMissile_FieldIndex.Base:
+                        return Base;
+                    case PlacedMissile_FieldIndex.EncounterZone:
+                        return EncounterZone;
+                    case PlacedMissile_FieldIndex.XRGD:
+                        return XRGD;
+                    case PlacedMissile_FieldIndex.XRGB:
+                        return XRGB;
+                    case PlacedMissile_FieldIndex.XPRD:
+                        return XPRD;
+                    case PlacedMissile_FieldIndex.XPPA:
+                        return XPPA;
+                    case PlacedMissile_FieldIndex.IdleMarker:
+                        return IdleMarker;
+                    case PlacedMissile_FieldIndex.SCHR:
+                        return SCHR;
+                    case PlacedMissile_FieldIndex.SCDA:
+                        return SCDA;
+                    case PlacedMissile_FieldIndex.ScriptSource:
+                        return ScriptSource;
+                    case PlacedMissile_FieldIndex.GlobalReference:
+                        return GlobalReference;
+                    case PlacedMissile_FieldIndex.Topic:
+                        return Topic;
+                    case PlacedMissile_FieldIndex.LevelModifier:
+                        return LevelModifier;
+                    case PlacedMissile_FieldIndex.Owner:
+                        return Owner;
+                    case PlacedMissile_FieldIndex.FactionRank:
+                        return FactionRank;
+                    case PlacedMissile_FieldIndex.Count:
+                        return Count;
+                    case PlacedMissile_FieldIndex.Radius:
+                        return Radius;
+                    case PlacedMissile_FieldIndex.Health:
+                        return Health;
+                    case PlacedMissile_FieldIndex.XDCR:
+                        return XDCR;
+                    case PlacedMissile_FieldIndex.LinkedReferenceColor:
+                        return LinkedReferenceColor;
+                    case PlacedMissile_FieldIndex.XCLP:
+                        return XCLP;
+                    case PlacedMissile_FieldIndex.ParentActivateOnly:
+                        return ParentActivateOnly;
+                    case PlacedMissile_FieldIndex.XAPR:
+                        return XAPR;
+                    case PlacedMissile_FieldIndex.XESP:
+                        return XESP;
+                    case PlacedMissile_FieldIndex.EmittanceLight:
+                        return EmittanceLight;
+                    case PlacedMissile_FieldIndex.MultiboundReference:
+                        return MultiboundReference;
+                    case PlacedMissile_FieldIndex.WaterReflectionRefraction:
+                        return WaterReflectionRefraction;
+                    case PlacedMissile_FieldIndex.IsIgnoredBySandbox:
+                        return IsIgnoredBySandbox;
+                    case PlacedMissile_FieldIndex.Scale:
+                        return Scale;
+                    case PlacedMissile_FieldIndex.Position:
+                        return Position;
+                    case PlacedMissile_FieldIndex.Rotation:
+                        return Rotation;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +958,99 @@ namespace Mutagen.Bethesda.Fallout3
                 PlacedMissile_FieldIndex enu = (PlacedMissile_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedMissile_FieldIndex.Base:
+                        this.Base = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.EncounterZone:
+                        this.EncounterZone = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XRGD:
+                        this.XRGD = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XRGB:
+                        this.XRGB = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XPRD:
+                        this.XPRD = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XPPA:
+                        this.XPPA = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.IdleMarker:
+                        this.IdleMarker = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.SCHR:
+                        this.SCHR = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.SCDA:
+                        this.SCDA = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.ScriptSource:
+                        this.ScriptSource = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.GlobalReference:
+                        this.GlobalReference = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Topic:
+                        this.Topic = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.LevelModifier:
+                        this.LevelModifier = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Count:
+                        this.Count = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XDCR:
+                        this.XDCR = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.LinkedReferenceColor:
+                        this.LinkedReferenceColor = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XCLP:
+                        this.XCLP = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.ParentActivateOnly:
+                        this.ParentActivateOnly = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XAPR:
+                        this.XAPR = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.XESP:
+                        this.XESP = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.EmittanceLight:
+                        this.EmittanceLight = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.MultiboundReference:
+                        this.MultiboundReference = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.WaterReflectionRefraction:
+                        this.WaterReflectionRefraction = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Scale:
+                        this.Scale = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case PlacedMissile_FieldIndex.Rotation:
+                        this.Rotation = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +1062,99 @@ namespace Mutagen.Bethesda.Fallout3
                 PlacedMissile_FieldIndex enu = (PlacedMissile_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedMissile_FieldIndex.Base:
+                        this.Base = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.EncounterZone:
+                        this.EncounterZone = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XRGD:
+                        this.XRGD = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XRGB:
+                        this.XRGB = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XPRD:
+                        this.XPRD = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XPPA:
+                        this.XPPA = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.IdleMarker:
+                        this.IdleMarker = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.SCHR:
+                        this.SCHR = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.SCDA:
+                        this.SCDA = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.ScriptSource:
+                        this.ScriptSource = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.GlobalReference:
+                        this.GlobalReference = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Topic:
+                        this.Topic = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.LevelModifier:
+                        this.LevelModifier = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Count:
+                        this.Count = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Health:
+                        this.Health = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XDCR:
+                        this.XDCR = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.LinkedReferenceColor:
+                        this.LinkedReferenceColor = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XCLP:
+                        this.XCLP = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.ParentActivateOnly:
+                        this.ParentActivateOnly = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XAPR:
+                        this.XAPR = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.XESP:
+                        this.XESP = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.EmittanceLight:
+                        this.EmittanceLight = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.MultiboundReference:
+                        this.MultiboundReference = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.WaterReflectionRefraction:
+                        this.WaterReflectionRefraction = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Scale:
+                        this.Scale = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Position:
+                        this.Position = (Exception?)obj;
+                        break;
+                    case PlacedMissile_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +1164,37 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Base != null) return true;
+                if (EncounterZone != null) return true;
+                if (XRGD != null) return true;
+                if (XRGB != null) return true;
+                if (XPRD != null) return true;
+                if (XPPA != null) return true;
+                if (IdleMarker != null) return true;
+                if (SCHR != null) return true;
+                if (SCDA != null) return true;
+                if (ScriptSource != null) return true;
+                if (GlobalReference != null) return true;
+                if (Topic != null) return true;
+                if (LevelModifier != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
+                if (Count != null) return true;
+                if (Radius != null) return true;
+                if (Health != null) return true;
+                if (XDCR != null) return true;
+                if (LinkedReferenceColor != null) return true;
+                if (XCLP != null) return true;
+                if (ParentActivateOnly != null) return true;
+                if (XAPR != null) return true;
+                if (XESP != null) return true;
+                if (EmittanceLight != null) return true;
+                if (MultiboundReference != null) return true;
+                if (WaterReflectionRefraction != null) return true;
+                if (IsIgnoredBySandbox != null) return true;
+                if (Scale != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +1221,99 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(XRGD, "XRGD");
+                }
+                {
+                    sb.AppendItem(XRGB, "XRGB");
+                }
+                {
+                    sb.AppendItem(XPRD, "XPRD");
+                }
+                {
+                    sb.AppendItem(XPPA, "XPPA");
+                }
+                {
+                    sb.AppendItem(IdleMarker, "IdleMarker");
+                }
+                {
+                    sb.AppendItem(SCHR, "SCHR");
+                }
+                {
+                    sb.AppendItem(SCDA, "SCDA");
+                }
+                {
+                    sb.AppendItem(ScriptSource, "ScriptSource");
+                }
+                {
+                    sb.AppendItem(GlobalReference, "GlobalReference");
+                }
+                {
+                    sb.AppendItem(Topic, "Topic");
+                }
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(XDCR, "XDCR");
+                }
+                {
+                    sb.AppendItem(LinkedReferenceColor, "LinkedReferenceColor");
+                }
+                {
+                    sb.AppendItem(XCLP, "XCLP");
+                }
+                {
+                    sb.AppendItem(ParentActivateOnly, "ParentActivateOnly");
+                }
+                {
+                    sb.AppendItem(XAPR, "XAPR");
+                }
+                {
+                    sb.AppendItem(XESP, "XESP");
+                }
+                {
+                    sb.AppendItem(EmittanceLight, "EmittanceLight");
+                }
+                {
+                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                }
+                {
+                    sb.AppendItem(WaterReflectionRefraction, "WaterReflectionRefraction");
+                }
+                {
+                    sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
             }
             #endregion
 
@@ -254,6 +1322,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Base = this.Base.Combine(rhs.Base);
+                ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
+                ret.XRGD = this.XRGD.Combine(rhs.XRGD);
+                ret.XRGB = this.XRGB.Combine(rhs.XRGB);
+                ret.XPRD = this.XPRD.Combine(rhs.XPRD);
+                ret.XPPA = this.XPPA.Combine(rhs.XPPA);
+                ret.IdleMarker = this.IdleMarker.Combine(rhs.IdleMarker);
+                ret.SCHR = this.SCHR.Combine(rhs.SCHR);
+                ret.SCDA = this.SCDA.Combine(rhs.SCDA);
+                ret.ScriptSource = this.ScriptSource.Combine(rhs.ScriptSource);
+                ret.GlobalReference = this.GlobalReference.Combine(rhs.GlobalReference);
+                ret.Topic = this.Topic.Combine(rhs.Topic);
+                ret.LevelModifier = this.LevelModifier.Combine(rhs.LevelModifier);
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+                ret.Count = this.Count.Combine(rhs.Count);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.XDCR = this.XDCR.Combine(rhs.XDCR);
+                ret.LinkedReferenceColor = this.LinkedReferenceColor.Combine(rhs.LinkedReferenceColor);
+                ret.XCLP = this.XCLP.Combine(rhs.XCLP);
+                ret.ParentActivateOnly = this.ParentActivateOnly.Combine(rhs.ParentActivateOnly);
+                ret.XAPR = this.XAPR.Combine(rhs.XAPR);
+                ret.XESP = this.XESP.Combine(rhs.XESP);
+                ret.EmittanceLight = this.EmittanceLight.Combine(rhs.EmittanceLight);
+                ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
+                ret.WaterReflectionRefraction = this.WaterReflectionRefraction.Combine(rhs.WaterReflectionRefraction);
+                ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +1374,116 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Base;
+            public bool EncounterZone;
+            public bool XRGD;
+            public bool XRGB;
+            public bool XPRD;
+            public bool XPPA;
+            public bool IdleMarker;
+            public bool SCHR;
+            public bool SCDA;
+            public bool ScriptSource;
+            public bool GlobalReference;
+            public bool Topic;
+            public bool LevelModifier;
+            public bool Owner;
+            public bool FactionRank;
+            public bool Count;
+            public bool Radius;
+            public bool Health;
+            public bool XDCR;
+            public bool LinkedReferenceColor;
+            public bool XCLP;
+            public bool ParentActivateOnly;
+            public bool XAPR;
+            public bool XESP;
+            public bool EmittanceLight;
+            public bool MultiboundReference;
+            public bool WaterReflectionRefraction;
+            public bool IsIgnoredBySandbox;
+            public bool Scale;
+            public bool Position;
+            public bool Rotation;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Base = defaultOn;
+                this.EncounterZone = defaultOn;
+                this.XRGD = defaultOn;
+                this.XRGB = defaultOn;
+                this.XPRD = defaultOn;
+                this.XPPA = defaultOn;
+                this.IdleMarker = defaultOn;
+                this.SCHR = defaultOn;
+                this.SCDA = defaultOn;
+                this.ScriptSource = defaultOn;
+                this.GlobalReference = defaultOn;
+                this.Topic = defaultOn;
+                this.LevelModifier = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
+                this.Count = defaultOn;
+                this.Radius = defaultOn;
+                this.Health = defaultOn;
+                this.XDCR = defaultOn;
+                this.LinkedReferenceColor = defaultOn;
+                this.XCLP = defaultOn;
+                this.ParentActivateOnly = defaultOn;
+                this.XAPR = defaultOn;
+                this.XESP = defaultOn;
+                this.EmittanceLight = defaultOn;
+                this.MultiboundReference = defaultOn;
+                this.WaterReflectionRefraction = defaultOn;
+                this.IsIgnoredBySandbox = defaultOn;
+                this.Scale = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Base, null));
+                ret.Add((EncounterZone, null));
+                ret.Add((XRGD, null));
+                ret.Add((XRGB, null));
+                ret.Add((XPRD, null));
+                ret.Add((XPPA, null));
+                ret.Add((IdleMarker, null));
+                ret.Add((SCHR, null));
+                ret.Add((SCDA, null));
+                ret.Add((ScriptSource, null));
+                ret.Add((GlobalReference, null));
+                ret.Add((Topic, null));
+                ret.Add((LevelModifier, null));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
+                ret.Add((Count, null));
+                ret.Add((Radius, null));
+                ret.Add((Health, null));
+                ret.Add((XDCR, null));
+                ret.Add((LinkedReferenceColor, null));
+                ret.Add((XCLP, null));
+                ret.Add((ParentActivateOnly, null));
+                ret.Add((XAPR, null));
+                ret.Add((XESP, null));
+                ret.Add((EmittanceLight, null));
+                ret.Add((MultiboundReference, null));
+                ret.Add((WaterReflectionRefraction, null));
+                ret.Add((IsIgnoredBySandbox, null));
+                ret.Add((Scale, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1495,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedMissile_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlacedMissileCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedMissileSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedMissile(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,10 +1615,43 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IPlacedMissile :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlacedMissileInternal>,
         IPlaced,
-        IPlacedMissileGetter
+        IPlacedMissileGetter,
+        IPositionRotation
     {
+        new IFormLinkNullable<IProjectileGetter> Base { get; set; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new MemorySlice<Byte>? XRGD { get; set; }
+        new MemorySlice<Byte>? XRGB { get; set; }
+        new Single? XPRD { get; set; }
+        new MemorySlice<Byte>? XPPA { get; set; }
+        new IFormLinkNullable<IIdleAnimationGetter> IdleMarker { get; set; }
+        new MemorySlice<Byte>? SCHR { get; set; }
+        new MemorySlice<Byte>? SCDA { get; set; }
+        new String? ScriptSource { get; set; }
+        new IFormLinkNullable<IFallout3MajorRecordGetter> GlobalReference { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
+        new Int32? LevelModifier { get; set; }
+        new IFormLinkNullable<IFallout3MajorRecordGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
+        new Int32? Count { get; set; }
+        new Single? Radius { get; set; }
+        new Single? Health { get; set; }
+        new MemorySlice<Byte>? XDCR { get; set; }
+        new IFormLinkNullable<IFallout3MajorRecordGetter> LinkedReferenceColor { get; set; }
+        new MemorySlice<Byte>? XCLP { get; set; }
+        new Boolean? ParentActivateOnly { get; set; }
+        new MemorySlice<Byte>? XAPR { get; set; }
+        new MemorySlice<Byte>? XESP { get; set; }
+        new IFormLinkNullable<ILightGetter> EmittanceLight { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
+        new MemorySlice<Byte>? WaterReflectionRefraction { get; set; }
+        new Boolean IsIgnoredBySandbox { get; set; }
+        new Single? Scale { get; set; }
+        new P3Float Position { get; set; }
+        new P3Float Rotation { get; set; }
     }
 
     public partial interface IPlacedMissileInternal :
@@ -430,11 +1665,44 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IPlacedMissileGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IPlacedMissileGetter>,
         IMapsToGetter<IPlacedMissileGetter>,
-        IPlacedGetter
+        IPlacedGetter,
+        IPositionRotationGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedMissile_Registration.Instance;
+        IFormLinkNullableGetter<IProjectileGetter> Base { get; }
+        IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
+        ReadOnlyMemorySlice<Byte>? XRGD { get; }
+        ReadOnlyMemorySlice<Byte>? XRGB { get; }
+        Single? XPRD { get; }
+        ReadOnlyMemorySlice<Byte>? XPPA { get; }
+        IFormLinkNullableGetter<IIdleAnimationGetter> IdleMarker { get; }
+        ReadOnlyMemorySlice<Byte>? SCHR { get; }
+        ReadOnlyMemorySlice<Byte>? SCDA { get; }
+        String? ScriptSource { get; }
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> GlobalReference { get; }
+        IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
+        Int32? LevelModifier { get; }
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> Owner { get; }
+        Int32? FactionRank { get; }
+        Int32? Count { get; }
+        Single? Radius { get; }
+        Single? Health { get; }
+        ReadOnlyMemorySlice<Byte>? XDCR { get; }
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> LinkedReferenceColor { get; }
+        ReadOnlyMemorySlice<Byte>? XCLP { get; }
+        Boolean? ParentActivateOnly { get; }
+        ReadOnlyMemorySlice<Byte>? XAPR { get; }
+        ReadOnlyMemorySlice<Byte>? XESP { get; }
+        IFormLinkNullableGetter<ILightGetter> EmittanceLight { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference { get; }
+        ReadOnlyMemorySlice<Byte>? WaterReflectionRefraction { get; }
+        Boolean IsIgnoredBySandbox { get; }
+        Single? Scale { get; }
+        P3Float Position { get; }
+        P3Float Rotation { get; }
 
     }
 
@@ -611,6 +1879,37 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Base = 7,
+        EncounterZone = 8,
+        XRGD = 9,
+        XRGB = 10,
+        XPRD = 11,
+        XPPA = 12,
+        IdleMarker = 13,
+        SCHR = 14,
+        SCDA = 15,
+        ScriptSource = 16,
+        GlobalReference = 17,
+        Topic = 18,
+        LevelModifier = 19,
+        Owner = 20,
+        FactionRank = 21,
+        Count = 22,
+        Radius = 23,
+        Health = 24,
+        XDCR = 25,
+        LinkedReferenceColor = 26,
+        XCLP = 27,
+        ParentActivateOnly = 28,
+        XAPR = 29,
+        XESP = 30,
+        EmittanceLight = 31,
+        MultiboundReference = 32,
+        WaterReflectionRefraction = 33,
+        IsIgnoredBySandbox = 34,
+        Scale = 35,
+        Position = 36,
+        Rotation = 37,
     }
     #endregion
 
@@ -621,9 +1920,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(PlacedMissile.Mask<>);
 
@@ -653,8 +1952,42 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PMIS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PMIS);
+            var all = RecordCollection.Factory(
+                RecordTypes.PMIS,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XRGD,
+                RecordTypes.XRGB,
+                RecordTypes.XPRD,
+                RecordTypes.XPPA,
+                RecordTypes.INAM,
+                RecordTypes.SCHR,
+                RecordTypes.SCDA,
+                RecordTypes.SCTX,
+                RecordTypes.SCRO,
+                RecordTypes.TNAM,
+                RecordTypes.XLCM,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XCNT,
+                RecordTypes.XRDS,
+                RecordTypes.XHLP,
+                RecordTypes.XDCR,
+                RecordTypes.XLKR,
+                RecordTypes.XCLP,
+                RecordTypes.XAPD,
+                RecordTypes.XAPR,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XPWR,
+                RecordTypes.XIBS,
+                RecordTypes.XSCL,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedMissileBinaryWriteTranslation);
         #region Interface
@@ -696,6 +2029,37 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPlacedMissileInternal item)
         {
             ClearPartial();
+            item.Base.Clear();
+            item.EncounterZone.Clear();
+            item.XRGD = default;
+            item.XRGB = default;
+            item.XPRD = default;
+            item.XPPA = default;
+            item.IdleMarker.Clear();
+            item.SCHR = default;
+            item.SCDA = default;
+            item.ScriptSource = default;
+            item.GlobalReference.Clear();
+            item.Topic.Clear();
+            item.LevelModifier = default;
+            item.Owner.Clear();
+            item.FactionRank = default;
+            item.Count = default;
+            item.Radius = default;
+            item.Health = default;
+            item.XDCR = default;
+            item.LinkedReferenceColor.Clear();
+            item.XCLP = default;
+            item.ParentActivateOnly = default;
+            item.XAPR = default;
+            item.XESP = default;
+            item.EmittanceLight.Clear();
+            item.MultiboundReference.Clear();
+            item.WaterReflectionRefraction = default;
+            item.IsIgnoredBySandbox = default(Boolean);
+            item.Scale = default;
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
             base.Clear(item);
         }
         
@@ -713,6 +2077,15 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IPlacedMissile obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Base.Relink(mapping);
+            obj.EncounterZone.Relink(mapping);
+            obj.IdleMarker.Relink(mapping);
+            obj.GlobalReference.Relink(mapping);
+            obj.Topic.Relink(mapping);
+            obj.Owner.Relink(mapping);
+            obj.LinkedReferenceColor.Relink(mapping);
+            obj.EmittanceLight.Relink(mapping);
+            obj.MultiboundReference.Relink(mapping);
         }
         
         #endregion
@@ -780,6 +2153,37 @@ namespace Mutagen.Bethesda.Fallout3
             PlacedMissile.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Base = item.Base.Equals(rhs.Base);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
+            ret.XRGD = MemorySliceExt.SequenceEqual(item.XRGD, rhs.XRGD);
+            ret.XRGB = MemorySliceExt.SequenceEqual(item.XRGB, rhs.XRGB);
+            ret.XPRD = item.XPRD.EqualsWithin(rhs.XPRD);
+            ret.XPPA = MemorySliceExt.SequenceEqual(item.XPPA, rhs.XPPA);
+            ret.IdleMarker = item.IdleMarker.Equals(rhs.IdleMarker);
+            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
+            ret.SCDA = MemorySliceExt.SequenceEqual(item.SCDA, rhs.SCDA);
+            ret.ScriptSource = string.Equals(item.ScriptSource, rhs.ScriptSource);
+            ret.GlobalReference = item.GlobalReference.Equals(rhs.GlobalReference);
+            ret.Topic = item.Topic.Equals(rhs.Topic);
+            ret.LevelModifier = item.LevelModifier == rhs.LevelModifier;
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
+            ret.Count = item.Count == rhs.Count;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Health = item.Health.EqualsWithin(rhs.Health);
+            ret.XDCR = MemorySliceExt.SequenceEqual(item.XDCR, rhs.XDCR);
+            ret.LinkedReferenceColor = item.LinkedReferenceColor.Equals(rhs.LinkedReferenceColor);
+            ret.XCLP = MemorySliceExt.SequenceEqual(item.XCLP, rhs.XCLP);
+            ret.ParentActivateOnly = item.ParentActivateOnly == rhs.ParentActivateOnly;
+            ret.XAPR = MemorySliceExt.SequenceEqual(item.XAPR, rhs.XAPR);
+            ret.XESP = MemorySliceExt.SequenceEqual(item.XESP, rhs.XESP);
+            ret.EmittanceLight = item.EmittanceLight.Equals(rhs.EmittanceLight);
+            ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
+            ret.WaterReflectionRefraction = MemorySliceExt.SequenceEqual(item.WaterReflectionRefraction, rhs.WaterReflectionRefraction);
+            ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
+            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +2233,149 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Base ?? true)
+            {
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
+            }
+            if (printMask?.EncounterZone ?? true)
+            {
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+            }
+            if ((printMask?.XRGD ?? true)
+                && item.XRGD is {} XRGDItem)
+            {
+                sb.AppendLine($"XRGD => {SpanExt.ToHexString(XRGDItem)}");
+            }
+            if ((printMask?.XRGB ?? true)
+                && item.XRGB is {} XRGBItem)
+            {
+                sb.AppendLine($"XRGB => {SpanExt.ToHexString(XRGBItem)}");
+            }
+            if ((printMask?.XPRD ?? true)
+                && item.XPRD is {} XPRDItem)
+            {
+                sb.AppendItem(XPRDItem, "XPRD");
+            }
+            if ((printMask?.XPPA ?? true)
+                && item.XPPA is {} XPPAItem)
+            {
+                sb.AppendLine($"XPPA => {SpanExt.ToHexString(XPPAItem)}");
+            }
+            if (printMask?.IdleMarker ?? true)
+            {
+                sb.AppendItem(item.IdleMarker.FormKeyNullable, "IdleMarker");
+            }
+            if ((printMask?.SCHR ?? true)
+                && item.SCHR is {} SCHRItem)
+            {
+                sb.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
+            }
+            if ((printMask?.SCDA ?? true)
+                && item.SCDA is {} SCDAItem)
+            {
+                sb.AppendLine($"SCDA => {SpanExt.ToHexString(SCDAItem)}");
+            }
+            if ((printMask?.ScriptSource ?? true)
+                && item.ScriptSource is {} ScriptSourceItem)
+            {
+                sb.AppendItem(ScriptSourceItem, "ScriptSource");
+            }
+            if (printMask?.GlobalReference ?? true)
+            {
+                sb.AppendItem(item.GlobalReference.FormKeyNullable, "GlobalReference");
+            }
+            if (printMask?.Topic ?? true)
+            {
+                sb.AppendItem(item.Topic.FormKeyNullable, "Topic");
+            }
+            if ((printMask?.LevelModifier ?? true)
+                && item.LevelModifier is {} LevelModifierItem)
+            {
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
+            }
+            if (printMask?.Owner ?? true)
+            {
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
+            }
+            if ((printMask?.Count ?? true)
+                && item.Count is {} CountItem)
+            {
+                sb.AppendItem(CountItem, "Count");
+            }
+            if ((printMask?.Radius ?? true)
+                && item.Radius is {} RadiusItem)
+            {
+                sb.AppendItem(RadiusItem, "Radius");
+            }
+            if ((printMask?.Health ?? true)
+                && item.Health is {} HealthItem)
+            {
+                sb.AppendItem(HealthItem, "Health");
+            }
+            if ((printMask?.XDCR ?? true)
+                && item.XDCR is {} XDCRItem)
+            {
+                sb.AppendLine($"XDCR => {SpanExt.ToHexString(XDCRItem)}");
+            }
+            if (printMask?.LinkedReferenceColor ?? true)
+            {
+                sb.AppendItem(item.LinkedReferenceColor.FormKeyNullable, "LinkedReferenceColor");
+            }
+            if ((printMask?.XCLP ?? true)
+                && item.XCLP is {} XCLPItem)
+            {
+                sb.AppendLine($"XCLP => {SpanExt.ToHexString(XCLPItem)}");
+            }
+            if ((printMask?.ParentActivateOnly ?? true)
+                && item.ParentActivateOnly is {} ParentActivateOnlyItem)
+            {
+                sb.AppendItem(ParentActivateOnlyItem, "ParentActivateOnly");
+            }
+            if ((printMask?.XAPR ?? true)
+                && item.XAPR is {} XAPRItem)
+            {
+                sb.AppendLine($"XAPR => {SpanExt.ToHexString(XAPRItem)}");
+            }
+            if ((printMask?.XESP ?? true)
+                && item.XESP is {} XESPItem)
+            {
+                sb.AppendLine($"XESP => {SpanExt.ToHexString(XESPItem)}");
+            }
+            if (printMask?.EmittanceLight ?? true)
+            {
+                sb.AppendItem(item.EmittanceLight.FormKeyNullable, "EmittanceLight");
+            }
+            if (printMask?.MultiboundReference ?? true)
+            {
+                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+            }
+            if ((printMask?.WaterReflectionRefraction ?? true)
+                && item.WaterReflectionRefraction is {} WaterReflectionRefractionItem)
+            {
+                sb.AppendLine($"WaterReflectionRefraction => {SpanExt.ToHexString(WaterReflectionRefractionItem)}");
+            }
+            if (printMask?.IsIgnoredBySandbox ?? true)
+            {
+                sb.AppendItem(item.IsIgnoredBySandbox, "IsIgnoredBySandbox");
+            }
+            if ((printMask?.Scale ?? true)
+                && item.Scale is {} ScaleItem)
+            {
+                sb.AppendItem(ScaleItem, "Scale");
+            }
+            if (printMask?.Position ?? true)
+            {
+                sb.AppendItem(item.Position, "Position");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                sb.AppendItem(item.Rotation, "Rotation");
+            }
         }
         
         public static PlacedMissile_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +2426,130 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.EncounterZone) ?? true))
+            {
+                if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XRGD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XRGD, rhs.XRGD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XRGB) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XRGB, rhs.XRGB)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XPRD) ?? true))
+            {
+                if (!lhs.XPRD.EqualsWithin(rhs.XPRD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XPPA) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XPPA, rhs.XPPA)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.IdleMarker) ?? true))
+            {
+                if (!lhs.IdleMarker.Equals(rhs.IdleMarker)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.SCDA) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.SCDA, rhs.SCDA)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.ScriptSource) ?? true))
+            {
+                if (!string.Equals(lhs.ScriptSource, rhs.ScriptSource)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.GlobalReference) ?? true))
+            {
+                if (!lhs.GlobalReference.Equals(rhs.GlobalReference)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Topic) ?? true))
+            {
+                if (!lhs.Topic.Equals(rhs.Topic)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.LevelModifier) ?? true))
+            {
+                if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Owner) ?? true))
+            {
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Count) ?? true))
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Health) ?? true))
+            {
+                if (!lhs.Health.EqualsWithin(rhs.Health)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XDCR) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XDCR, rhs.XDCR)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.LinkedReferenceColor) ?? true))
+            {
+                if (!lhs.LinkedReferenceColor.Equals(rhs.LinkedReferenceColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XCLP) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XCLP, rhs.XCLP)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.ParentActivateOnly) ?? true))
+            {
+                if (lhs.ParentActivateOnly != rhs.ParentActivateOnly) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XAPR) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XAPR, rhs.XAPR)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XESP) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XESP, rhs.XESP)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.EmittanceLight) ?? true))
+            {
+                if (!lhs.EmittanceLight.Equals(rhs.EmittanceLight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.MultiboundReference) ?? true))
+            {
+                if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.WaterReflectionRefraction) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.WaterReflectionRefraction, rhs.WaterReflectionRefraction)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.IsIgnoredBySandbox) ?? true))
+            {
+                if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Position) ?? true))
+            {
+                if (!lhs.Position.Equals(rhs.Position)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Rotation) ?? true))
+            {
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            }
             return true;
         }
         
@@ -907,6 +2578,94 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPlacedMissileGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Base);
+            hash.Add(item.EncounterZone);
+            if (item.XRGD is {} XRGDItem)
+            {
+                hash.Add(XRGDItem);
+            }
+            if (item.XRGB is {} XRGBItem)
+            {
+                hash.Add(XRGBItem);
+            }
+            if (item.XPRD is {} XPRDitem)
+            {
+                hash.Add(XPRDitem);
+            }
+            if (item.XPPA is {} XPPAItem)
+            {
+                hash.Add(XPPAItem);
+            }
+            hash.Add(item.IdleMarker);
+            if (item.SCHR is {} SCHRItem)
+            {
+                hash.Add(SCHRItem);
+            }
+            if (item.SCDA is {} SCDAItem)
+            {
+                hash.Add(SCDAItem);
+            }
+            if (item.ScriptSource is {} ScriptSourceitem)
+            {
+                hash.Add(ScriptSourceitem);
+            }
+            hash.Add(item.GlobalReference);
+            hash.Add(item.Topic);
+            if (item.LevelModifier is {} LevelModifieritem)
+            {
+                hash.Add(LevelModifieritem);
+            }
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
+            {
+                hash.Add(FactionRankitem);
+            }
+            if (item.Count is {} Countitem)
+            {
+                hash.Add(Countitem);
+            }
+            if (item.Radius is {} Radiusitem)
+            {
+                hash.Add(Radiusitem);
+            }
+            if (item.Health is {} Healthitem)
+            {
+                hash.Add(Healthitem);
+            }
+            if (item.XDCR is {} XDCRItem)
+            {
+                hash.Add(XDCRItem);
+            }
+            hash.Add(item.LinkedReferenceColor);
+            if (item.XCLP is {} XCLPItem)
+            {
+                hash.Add(XCLPItem);
+            }
+            if (item.ParentActivateOnly is {} ParentActivateOnlyitem)
+            {
+                hash.Add(ParentActivateOnlyitem);
+            }
+            if (item.XAPR is {} XAPRItem)
+            {
+                hash.Add(XAPRItem);
+            }
+            if (item.XESP is {} XESPItem)
+            {
+                hash.Add(XESPItem);
+            }
+            hash.Add(item.EmittanceLight);
+            hash.Add(item.MultiboundReference);
+            if (item.WaterReflectionRefraction is {} WaterReflectionRefractionItem)
+            {
+                hash.Add(WaterReflectionRefractionItem);
+            }
+            hash.Add(item.IsIgnoredBySandbox);
+            if (item.Scale is {} Scaleitem)
+            {
+                hash.Add(Scaleitem);
+            }
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -930,11 +2689,47 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedMissileGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedMissileGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
+            {
+                yield return BaseInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
+            {
+                yield return EncounterZoneInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.IdleMarker, out var IdleMarkerInfo))
+            {
+                yield return IdleMarkerInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.GlobalReference, out var GlobalReferenceInfo))
+            {
+                yield return GlobalReferenceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Topic, out var TopicInfo))
+            {
+                yield return TopicInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
+            {
+                yield return OwnerInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.LinkedReferenceColor, out var LinkedReferenceColorInfo))
+            {
+                yield return LinkedReferenceColorInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.EmittanceLight, out var EmittanceLightInfo))
+            {
+                yield return EmittanceLightInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
+            {
+                yield return MultiboundReferenceInfo;
             }
             yield break;
         }
@@ -1010,6 +2805,200 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Base) ?? true))
+            {
+                item.Base.SetTo(rhs.Base.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.EncounterZone) ?? true))
+            {
+                item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XRGD) ?? true))
+            {
+                if(rhs.XRGD is {} XRGDrhs)
+                {
+                    item.XRGD = XRGDrhs.ToArray();
+                }
+                else
+                {
+                    item.XRGD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XRGB) ?? true))
+            {
+                if(rhs.XRGB is {} XRGBrhs)
+                {
+                    item.XRGB = XRGBrhs.ToArray();
+                }
+                else
+                {
+                    item.XRGB = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XPRD) ?? true))
+            {
+                item.XPRD = rhs.XPRD;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XPPA) ?? true))
+            {
+                if(rhs.XPPA is {} XPPArhs)
+                {
+                    item.XPPA = XPPArhs.ToArray();
+                }
+                else
+                {
+                    item.XPPA = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.IdleMarker) ?? true))
+            {
+                item.IdleMarker.SetTo(rhs.IdleMarker.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.SCHR) ?? true))
+            {
+                if(rhs.SCHR is {} SCHRrhs)
+                {
+                    item.SCHR = SCHRrhs.ToArray();
+                }
+                else
+                {
+                    item.SCHR = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.SCDA) ?? true))
+            {
+                if(rhs.SCDA is {} SCDArhs)
+                {
+                    item.SCDA = SCDArhs.ToArray();
+                }
+                else
+                {
+                    item.SCDA = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.ScriptSource) ?? true))
+            {
+                item.ScriptSource = rhs.ScriptSource;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.GlobalReference) ?? true))
+            {
+                item.GlobalReference.SetTo(rhs.GlobalReference.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Topic) ?? true))
+            {
+                item.Topic.SetTo(rhs.Topic.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.LevelModifier) ?? true))
+            {
+                item.LevelModifier = rhs.LevelModifier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Owner) ?? true))
+            {
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Count) ?? true))
+            {
+                item.Count = rhs.Count;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Health) ?? true))
+            {
+                item.Health = rhs.Health;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XDCR) ?? true))
+            {
+                if(rhs.XDCR is {} XDCRrhs)
+                {
+                    item.XDCR = XDCRrhs.ToArray();
+                }
+                else
+                {
+                    item.XDCR = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.LinkedReferenceColor) ?? true))
+            {
+                item.LinkedReferenceColor.SetTo(rhs.LinkedReferenceColor.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XCLP) ?? true))
+            {
+                if(rhs.XCLP is {} XCLPrhs)
+                {
+                    item.XCLP = XCLPrhs.ToArray();
+                }
+                else
+                {
+                    item.XCLP = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.ParentActivateOnly) ?? true))
+            {
+                item.ParentActivateOnly = rhs.ParentActivateOnly;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XAPR) ?? true))
+            {
+                if(rhs.XAPR is {} XAPRrhs)
+                {
+                    item.XAPR = XAPRrhs.ToArray();
+                }
+                else
+                {
+                    item.XAPR = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.XESP) ?? true))
+            {
+                if(rhs.XESP is {} XESPrhs)
+                {
+                    item.XESP = XESPrhs.ToArray();
+                }
+                else
+                {
+                    item.XESP = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.EmittanceLight) ?? true))
+            {
+                item.EmittanceLight.SetTo(rhs.EmittanceLight.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.MultiboundReference) ?? true))
+            {
+                item.MultiboundReference.SetTo(rhs.MultiboundReference.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.WaterReflectionRefraction) ?? true))
+            {
+                if(rhs.WaterReflectionRefraction is {} WaterReflectionRefractionrhs)
+                {
+                    item.WaterReflectionRefraction = WaterReflectionRefractionrhs.ToArray();
+                }
+                else
+                {
+                    item.WaterReflectionRefraction = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.IsIgnoredBySandbox) ?? true))
+            {
+                item.IsIgnoredBySandbox = rhs.IsIgnoredBySandbox;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Scale) ?? true))
+            {
+                item.Scale = rhs.Scale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Position) ?? true))
+            {
+                item.Position = rhs.Position;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Rotation) ?? true))
+            {
+                item.Rotation = rhs.Rotation;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +3159,143 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly PlacedMissileBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPlacedMissileGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Base,
+                header: translationParams.ConvertToCustom(RecordTypes.NAME));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EncounterZone,
+                header: translationParams.ConvertToCustom(RecordTypes.XEZN));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XRGD,
+                header: translationParams.ConvertToCustom(RecordTypes.XRGD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XRGB,
+                header: translationParams.ConvertToCustom(RecordTypes.XRGB));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XPRD,
+                header: translationParams.ConvertToCustom(RecordTypes.XPRD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XPPA,
+                header: translationParams.ConvertToCustom(RecordTypes.XPPA));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.IdleMarker,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SCHR,
+                header: translationParams.ConvertToCustom(RecordTypes.SCHR));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SCDA,
+                header: translationParams.ConvertToCustom(RecordTypes.SCDA));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ScriptSource,
+                header: translationParams.ConvertToCustom(RecordTypes.SCTX),
+                binaryType: StringBinaryType.Plain);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.GlobalReference,
+                header: translationParams.ConvertToCustom(RecordTypes.SCRO));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Topic,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LevelModifier,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Count,
+                header: translationParams.ConvertToCustom(RecordTypes.XCNT));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Radius,
+                header: translationParams.ConvertToCustom(RecordTypes.XRDS));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Health,
+                header: translationParams.ConvertToCustom(RecordTypes.XHLP));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XDCR,
+                header: translationParams.ConvertToCustom(RecordTypes.XDCR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LinkedReferenceColor,
+                header: translationParams.ConvertToCustom(RecordTypes.XLKR));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XCLP,
+                header: translationParams.ConvertToCustom(RecordTypes.XCLP));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParentActivateOnly,
+                header: translationParams.ConvertToCustom(RecordTypes.XAPD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XAPR,
+                header: translationParams.ConvertToCustom(RecordTypes.XAPR));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XESP,
+                header: translationParams.ConvertToCustom(RecordTypes.XESP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EmittanceLight,
+                header: translationParams.ConvertToCustom(RecordTypes.XEMI));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MultiboundReference,
+                header: translationParams.ConvertToCustom(RecordTypes.XMBR));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaterReflectionRefraction,
+                header: translationParams.ConvertToCustom(RecordTypes.XPWR));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.IsIgnoredBySandbox,
+                header: translationParams.ConvertToCustom(RecordTypes.XIBS));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Scale,
+                header: translationParams.ConvertToCustom(RecordTypes.XSCL));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Position);
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Rotation);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IPlacedMissileGetter item,
@@ -1224,6 +3350,216 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly PlacedMissileBinaryCreateTranslation Instance = new PlacedMissileBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PMIS;
+        public static ParseResult FillBinaryRecordTypes(
+            IPlacedMissileInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.NAME:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.Base;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.EncounterZone;
+                }
+                case RecordTypeInts.XRGD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XRGD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XRGD;
+                }
+                case RecordTypeInts.XRGB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XRGB = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XRGB;
+                }
+                case RecordTypeInts.XPRD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XPRD = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XPRD;
+                }
+                case RecordTypeInts.XPPA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XPPA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XPPA;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IdleMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.IdleMarker;
+                }
+                case RecordTypeInts.SCHR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.SCHR;
+                }
+                case RecordTypeInts.SCDA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SCDA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.SCDA;
+                }
+                case RecordTypeInts.SCTX:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ScriptSource = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.Plain,
+                        parseWhole: true);
+                    return (int)PlacedMissile_FieldIndex.ScriptSource;
+                }
+                case RecordTypeInts.SCRO:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GlobalReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.GlobalReference;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.Topic;
+                }
+                case RecordTypeInts.XLCM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LevelModifier = frame.ReadInt32();
+                    return (int)PlacedMissile_FieldIndex.LevelModifier;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.Owner;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)PlacedMissile_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XCNT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Count = frame.ReadInt32();
+                    return (int)PlacedMissile_FieldIndex.Count;
+                }
+                case RecordTypeInts.XRDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.Radius;
+                }
+                case RecordTypeInts.XHLP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Health = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.Health;
+                }
+                case RecordTypeInts.XDCR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XDCR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XDCR;
+                }
+                case RecordTypeInts.XLKR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LinkedReferenceColor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.LinkedReferenceColor;
+                }
+                case RecordTypeInts.XCLP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XCLP = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XCLP;
+                }
+                case RecordTypeInts.XAPD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParentActivateOnly = frame.ReadBoolean();
+                    return (int)PlacedMissile_FieldIndex.ParentActivateOnly;
+                }
+                case RecordTypeInts.XAPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XAPR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XAPR;
+                }
+                case RecordTypeInts.XESP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XESP = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.XESP;
+                }
+                case RecordTypeInts.XEMI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EmittanceLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.EmittanceLight;
+                }
+                case RecordTypeInts.XMBR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedMissile_FieldIndex.MultiboundReference;
+                }
+                case RecordTypeInts.XPWR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WaterReflectionRefraction = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.WaterReflectionRefraction;
+                }
+                case RecordTypeInts.XIBS:
+                {
+                    item.IsIgnoredBySandbox = true;
+                    return (int)PlacedMissile_FieldIndex.IsIgnoredBySandbox;
+                }
+                case RecordTypeInts.XSCL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedMissile_FieldIndex.Scale;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)PlacedMissile_FieldIndex.Rotation;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +3592,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlacedMissileCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedMissileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1270,6 +3607,133 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IPlacedMissileGetter);
 
 
+        #region Base
+        private int? _BaseLocation;
+        public IFormLinkNullableGetter<IProjectileGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IProjectileGetter>(_package, _recordData, _BaseLocation);
+        #endregion
+        #region EncounterZone
+        private int? _EncounterZoneLocation;
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEncounterZoneGetter>(_package, _recordData, _EncounterZoneLocation);
+        #endregion
+        #region XRGD
+        private int? _XRGDLocation;
+        public ReadOnlyMemorySlice<Byte>? XRGD => _XRGDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XRGDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region XRGB
+        private int? _XRGBLocation;
+        public ReadOnlyMemorySlice<Byte>? XRGB => _XRGBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XRGBLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region XPRD
+        private int? _XPRDLocation;
+        public Single? XPRD => _XPRDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XPRDLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region XPPA
+        private int? _XPPALocation;
+        public ReadOnlyMemorySlice<Byte>? XPPA => _XPPALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XPPALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region IdleMarker
+        private int? _IdleMarkerLocation;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleMarker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleMarkerLocation);
+        #endregion
+        #region SCHR
+        private int? _SCHRLocation;
+        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region SCDA
+        private int? _SCDALocation;
+        public ReadOnlyMemorySlice<Byte>? SCDA => _SCDALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCDALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region ScriptSource
+        private int? _ScriptSourceLocation;
+        public String? ScriptSource => _ScriptSourceLocation.HasValue ? BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptSourceLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region GlobalReference
+        private int? _GlobalReferenceLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> GlobalReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _GlobalReferenceLocation);
+        #endregion
+        #region Topic
+        private int? _TopicLocation;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
+        #endregion
+        #region LevelModifier
+        private int? _LevelModifierLocation;
+        public Int32? LevelModifier => _LevelModifierLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> Owner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _OwnerLocation);
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region Count
+        private int? _CountLocation;
+        public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region Radius
+        private int? _RadiusLocation;
+        public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Health
+        private int? _HealthLocation;
+        public Single? Health => _HealthLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HealthLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region XDCR
+        private int? _XDCRLocation;
+        public ReadOnlyMemorySlice<Byte>? XDCR => _XDCRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XDCRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region LinkedReferenceColor
+        private int? _LinkedReferenceColorLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> LinkedReferenceColor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _LinkedReferenceColorLocation);
+        #endregion
+        #region XCLP
+        private int? _XCLPLocation;
+        public ReadOnlyMemorySlice<Byte>? XCLP => _XCLPLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XCLPLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region ParentActivateOnly
+        private int? _ParentActivateOnlyLocation;
+        public Boolean? ParentActivateOnly => _ParentActivateOnlyLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentActivateOnlyLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
+        #endregion
+        #region XAPR
+        private int? _XAPRLocation;
+        public ReadOnlyMemorySlice<Byte>? XAPR => _XAPRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XAPRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region XESP
+        private int? _XESPLocation;
+        public ReadOnlyMemorySlice<Byte>? XESP => _XESPLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XESPLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region EmittanceLight
+        private int? _EmittanceLightLocation;
+        public IFormLinkNullableGetter<ILightGetter> EmittanceLight => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightGetter>(_package, _recordData, _EmittanceLightLocation);
+        #endregion
+        #region MultiboundReference
+        private int? _MultiboundReferenceLocation;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MultiboundReferenceLocation);
+        #endregion
+        #region WaterReflectionRefraction
+        private int? _WaterReflectionRefractionLocation;
+        public ReadOnlyMemorySlice<Byte>? WaterReflectionRefraction => _WaterReflectionRefractionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterReflectionRefractionLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region IsIgnoredBySandbox
+        private int? _IsIgnoredBySandboxLocation;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default(Boolean);
+        #endregion
+        #region Scale
+        private int? _ScaleLocation;
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Position
+        private int _PositionLocation => _DATALocation!.Value.Min;
+        private bool _Position_IsSet => _DATALocation.HasValue;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default(P3Float);
+        #endregion
+        #region Rotation
+        private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Rotation_IsSet => _DATALocation.HasValue;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +3791,179 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.NAME:
+                {
+                    _BaseLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Base;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    _EncounterZoneLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.EncounterZone;
+                }
+                case RecordTypeInts.XRGD:
+                {
+                    _XRGDLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XRGD;
+                }
+                case RecordTypeInts.XRGB:
+                {
+                    _XRGBLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XRGB;
+                }
+                case RecordTypeInts.XPRD:
+                {
+                    _XPRDLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XPRD;
+                }
+                case RecordTypeInts.XPPA:
+                {
+                    _XPPALocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XPPA;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _IdleMarkerLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.IdleMarker;
+                }
+                case RecordTypeInts.SCHR:
+                {
+                    _SCHRLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.SCHR;
+                }
+                case RecordTypeInts.SCDA:
+                {
+                    _SCDALocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.SCDA;
+                }
+                case RecordTypeInts.SCTX:
+                {
+                    _ScriptSourceLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.ScriptSource;
+                }
+                case RecordTypeInts.SCRO:
+                {
+                    _GlobalReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.GlobalReference;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _TopicLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Topic;
+                }
+                case RecordTypeInts.XLCM:
+                {
+                    _LevelModifierLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.LevelModifier;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Owner;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XCNT:
+                {
+                    _CountLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Count;
+                }
+                case RecordTypeInts.XRDS:
+                {
+                    _RadiusLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Radius;
+                }
+                case RecordTypeInts.XHLP:
+                {
+                    _HealthLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Health;
+                }
+                case RecordTypeInts.XDCR:
+                {
+                    _XDCRLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XDCR;
+                }
+                case RecordTypeInts.XLKR:
+                {
+                    _LinkedReferenceColorLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.LinkedReferenceColor;
+                }
+                case RecordTypeInts.XCLP:
+                {
+                    _XCLPLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XCLP;
+                }
+                case RecordTypeInts.XAPD:
+                {
+                    _ParentActivateOnlyLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.ParentActivateOnly;
+                }
+                case RecordTypeInts.XAPR:
+                {
+                    _XAPRLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XAPR;
+                }
+                case RecordTypeInts.XESP:
+                {
+                    _XESPLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.XESP;
+                }
+                case RecordTypeInts.XEMI:
+                {
+                    _EmittanceLightLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.EmittanceLight;
+                }
+                case RecordTypeInts.XMBR:
+                {
+                    _MultiboundReferenceLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.MultiboundReference;
+                }
+                case RecordTypeInts.XPWR:
+                {
+                    _WaterReflectionRefractionLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.WaterReflectionRefraction;
+                }
+                case RecordTypeInts.XIBS:
+                {
+                    _IsIgnoredBySandboxLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.IsIgnoredBySandbox;
+                }
+                case RecordTypeInts.XSCL:
+                {
+                    _ScaleLocation = (stream.Position - offset);
+                    return (int)PlacedMissile_FieldIndex.Scale;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)PlacedMissile_FieldIndex.Rotation;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

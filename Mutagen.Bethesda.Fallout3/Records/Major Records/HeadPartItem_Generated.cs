@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadPartItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => HeadPartItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartItemSetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadPartItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => HeadPartItemSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadPartItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadPartItemGetter obj, bool iterateNestedRecords = true)
         {
             if (FormLinkInformation.TryFactory(obj.Head, out var HeadInfo))
             {
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadPartItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => HeadPartItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadPartItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadPartItemBinaryWriteTranslation.Instance;

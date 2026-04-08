@@ -117,10 +117,10 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDecalGetter? ITextureSetGetter.Decal => this.Decal;
         #endregion
-        #region NoSpecular
-        public Boolean? NoSpecular { get; set; }
+        #region Flags
+        public TextureSet.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Boolean? ITextureSetGetter.NoSpecular => this.NoSpecular;
+        TextureSet.Flag? ITextureSetGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ParallaxMap = initialValue;
                 this.EnvironmentMap = initialValue;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
-                this.NoSpecular = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ParallaxMap,
                 TItem EnvironmentMap,
                 TItem Decal,
-                TItem NoSpecular)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ParallaxMap = ParallaxMap;
                 this.EnvironmentMap = EnvironmentMap;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
-                this.NoSpecular = NoSpecular;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem ParallaxMap;
             public TItem EnvironmentMap;
             public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
-            public TItem NoSpecular;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ParallaxMap, rhs.ParallaxMap)) return false;
                 if (!object.Equals(this.EnvironmentMap, rhs.EnvironmentMap)) return false;
                 if (!object.Equals(this.Decal, rhs.Decal)) return false;
-                if (!object.Equals(this.NoSpecular, rhs.NoSpecular)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ParallaxMap);
                 hash.Add(this.EnvironmentMap);
                 hash.Add(this.Decal);
-                hash.Add(this.NoSpecular);
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Decal.Overall)) return false;
                     if (this.Decal.Specific != null && !this.Decal.Specific.All(eval)) return false;
                 }
-                if (!eval(this.NoSpecular)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Decal.Overall)) return true;
                     if (this.Decal.Specific != null && this.Decal.Specific.Any(eval)) return true;
                 }
-                if (eval(this.NoSpecular)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ParallaxMap = eval(this.ParallaxMap);
                 obj.EnvironmentMap = eval(this.EnvironmentMap);
                 obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal.Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
-                obj.NoSpecular = eval(this.NoSpecular);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -375,9 +375,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Decal?.Print(sb);
                     }
-                    if (printMask?.NoSpecular ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(NoSpecular, "NoSpecular");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
             }
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? ParallaxMap;
             public Exception? EnvironmentMap;
             public MaskItem<Exception?, Decal.ErrorMask?>? Decal;
-            public Exception? NoSpecular;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -423,8 +423,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return EnvironmentMap;
                     case TextureSet_FieldIndex.Decal:
                         return Decal;
-                    case TextureSet_FieldIndex.NoSpecular:
-                        return NoSpecular;
+                    case TextureSet_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -459,8 +459,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case TextureSet_FieldIndex.Decal:
                         this.Decal = new MaskItem<Exception?, Decal.ErrorMask?>(ex, null);
                         break;
-                    case TextureSet_FieldIndex.NoSpecular:
-                        this.NoSpecular = ex;
+                    case TextureSet_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -497,8 +497,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case TextureSet_FieldIndex.Decal:
                         this.Decal = (MaskItem<Exception?, Decal.ErrorMask?>?)obj;
                         break;
-                    case TextureSet_FieldIndex.NoSpecular:
-                        this.NoSpecular = (Exception?)obj;
+                    case TextureSet_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ParallaxMap != null) return true;
                 if (EnvironmentMap != null) return true;
                 if (Decal != null) return true;
-                if (NoSpecular != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 Decal?.Print(sb);
                 {
-                    sb.AppendItem(NoSpecular, "NoSpecular");
+                    sb.AppendItem(Flags, "Flags");
                 }
             }
             #endregion
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ParallaxMap = this.ParallaxMap.Combine(rhs.ParallaxMap);
                 ret.EnvironmentMap = this.EnvironmentMap.Combine(rhs.EnvironmentMap);
                 ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
-                ret.NoSpecular = this.NoSpecular.Combine(rhs.NoSpecular);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool ParallaxMap;
             public bool EnvironmentMap;
             public Decal.TranslationMask? Decal;
-            public bool NoSpecular;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.GlowMap = defaultOn;
                 this.ParallaxMap = defaultOn;
                 this.EnvironmentMap = defaultOn;
-                this.NoSpecular = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -645,7 +645,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ParallaxMap, null));
                 ret.Add((EnvironmentMap, null));
                 ret.Add((Decal != null ? Decal.OnOverall : DefaultOn, Decal?.GetCrystal()));
-                ret.Add((NoSpecular, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout3
         new AssetLink<Fallout3TextureAssetType>? ParallaxMap { get; set; }
         new AssetLink<Fallout3TextureAssetType>? EnvironmentMap { get; set; }
         new Decal? Decal { get; set; }
-        new Boolean? NoSpecular { get; set; }
+        new TextureSet.Flag? Flags { get; set; }
     }
 
     public partial interface ITextureSetInternal :
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Fallout3
         AssetLinkGetter<Fallout3TextureAssetType>? ParallaxMap { get; }
         AssetLinkGetter<Fallout3TextureAssetType>? EnvironmentMap { get; }
         IDecalGetter? Decal { get; }
-        Boolean? NoSpecular { get; }
+        TextureSet.Flag? Flags { get; }
 
     }
 
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Fallout3
         ParallaxMap = 12,
         EnvironmentMap = 13,
         Decal = 14,
-        NoSpecular = 15,
+        Flags = 15,
     }
     #endregion
 
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.ParallaxMap = default;
             item.EnvironmentMap = default;
             item.Decal = null;
-            item.NoSpecular = default;
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Decal,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.NoSpecular = item.NoSpecular == rhs.NoSpecular;
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1363,10 +1363,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 DecalItem?.Print(sb, "Decal");
             }
-            if ((printMask?.NoSpecular ?? true)
-                && item.NoSpecular is {} NoSpecularItem)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(NoSpecularItem, "NoSpecular");
+                sb.AppendItem(FlagsItem, "Flags");
             }
         }
         
@@ -1458,9 +1458,9 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isDecalEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NoSpecular) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
             {
-                if (lhs.NoSpecular != rhs.NoSpecular) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             return true;
         }
@@ -1522,9 +1522,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Decalitem);
             }
-            if (item.NoSpecular is {} NoSpecularitem)
+            if (item.Flags is {} Flagsitem)
             {
-                hash.Add(NoSpecularitem);
+                hash.Add(Flagsitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1549,9 +1549,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITextureSetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITextureSetGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1723,9 +1723,9 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NoSpecular) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
             {
-                item.NoSpecular = rhs.NoSpecular;
+                item.Flags = rhs.Flags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1940,11 +1940,11 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
-                writer: writer,
-                item: item.NoSpecular,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                byteLength: 2);
+            EnumBinaryTranslation<TextureSet.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 2,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
         }
 
         public void Write(
@@ -2062,10 +2062,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoSpecular = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 2);
-                    return (int)TextureSet_FieldIndex.NoSpecular;
+                    item.Flags = EnumBinaryTranslation<TextureSet.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)TextureSet_FieldIndex.Flags;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2158,9 +2158,9 @@ namespace Mutagen.Bethesda.Fallout3
         private RangeInt32? _DecalLocation;
         public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(_recordData.Slice(_DecalLocation!.Value.Min), _package) : default;
         #endregion
-        #region NoSpecular
-        private int? _NoSpecularLocation;
-        public Boolean? NoSpecular => _NoSpecularLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoSpecularLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
+        #region Flags
+        private int? _FlagsLocation;
+        public TextureSet.Flag? Flags => EnumBinaryTranslation<TextureSet.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2273,8 +2273,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _NoSpecularLocation = (stream.Position - offset);
-                    return (int)TextureSet_FieldIndex.NoSpecular;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)TextureSet_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

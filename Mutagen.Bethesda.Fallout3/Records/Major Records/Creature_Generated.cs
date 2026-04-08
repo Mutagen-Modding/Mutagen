@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Creature_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CreatureCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CreatureCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSetterCommon.Instance.RemapLinks(this, mapping);
         public Creature(
             FormKey formKey,
@@ -3429,15 +3429,15 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICreatureGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICreatureGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -3450,7 +3450,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return UnarmedAttackEffectInfo;
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Factions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3468,7 +3468,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                foreach (var item in DestructibleItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -3478,7 +3478,7 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return ScriptInfo;
             }
             foreach (var item in obj.Items.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3495,7 +3495,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return InheritsSoundFromInfo;
             }
-            foreach (var item in obj.SoundTypes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.SoundTypes.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4671,7 +4671,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CreatureCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CreatureCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

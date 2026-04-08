@@ -7,14 +7,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +57,126 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? ICasinoChipGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoChipGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ICasinoChipGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Icons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? ICasinoChipGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
+        #endregion
+        #region Script
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> ICasinoChipGetter.Script => this.Script;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? ICasinoChipGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
+        #endregion
+        #region PickUpSound
+        private readonly IFormLinkNullable<ISoundGetter> _PickUpSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> PickUpSound
+        {
+            get => _PickUpSound;
+            set => _PickUpSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> ICasinoChipGetter.PickUpSound => this.PickUpSound;
+        #endregion
+        #region DropSound
+        private readonly IFormLinkNullable<ISoundGetter> _DropSound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> DropSound
+        {
+            get => _DropSound;
+            set => _DropSound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> ICasinoChipGetter.DropSound => this.DropSound;
+        #endregion
 
         #region To String
 
@@ -78,6 +202,14 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
+                this.Script = initialValue;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.PickUpSound = initialValue;
+                this.DropSound = initialValue;
             }
 
             public Mask(
@@ -87,7 +219,15 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem Icons,
+                TItem Script,
+                TItem Destructible,
+                TItem PickUpSound,
+                TItem DropSound)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +237,14 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
+                this.Script = Script;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.PickUpSound = PickUpSound;
+                this.DropSound = DropSound;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +253,17 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
+            public TItem Script;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem PickUpSound;
+            public TItem DropSound;
             #endregion
 
             #region Equals
@@ -118,11 +277,27 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.DropSound, rhs.DropSound)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Icons);
+                hash.Add(this.Script);
+                hash.Add(this.Destructible);
+                hash.Add(this.PickUpSound);
+                hash.Add(this.DropSound);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +308,30 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Script)) return false;
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.DropSound)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +340,30 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Script)) return true;
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.DropSound)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +379,14 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
+                obj.Script = eval(this.Script);
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.DropSound = eval(this.DropSound);
             }
             #endregion
 
@@ -174,6 +405,38 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(CasinoChip.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Icons?.Overall ?? true)
+                    {
+                        Icons?.Print(sb);
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        sb.AppendItem(Script, "Script");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
+                    if (printMask?.PickUpSound ?? true)
+                    {
+                        sb.AppendItem(PickUpSound, "PickUpSound");
+                    }
+                    if (printMask?.DropSound ?? true)
+                    {
+                        sb.AppendItem(DropSound, "DropSound");
+                    }
                 }
             }
             #endregion
@@ -184,12 +447,39 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
+            public Exception? Script;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? PickUpSound;
+            public Exception? DropSound;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 CasinoChip_FieldIndex enu = (CasinoChip_FieldIndex)index;
                 switch (enu)
                 {
+                    case CasinoChip_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case CasinoChip_FieldIndex.Name:
+                        return Name;
+                    case CasinoChip_FieldIndex.Model:
+                        return Model;
+                    case CasinoChip_FieldIndex.Icons:
+                        return Icons;
+                    case CasinoChip_FieldIndex.Script:
+                        return Script;
+                    case CasinoChip_FieldIndex.Destructible:
+                        return Destructible;
+                    case CasinoChip_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case CasinoChip_FieldIndex.DropSound:
+                        return DropSound;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +490,30 @@ namespace Mutagen.Bethesda.Fallout3
                 CasinoChip_FieldIndex enu = (CasinoChip_FieldIndex)index;
                 switch (enu)
                 {
+                    case CasinoChip_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case CasinoChip_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case CasinoChip_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case CasinoChip_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
+                        break;
+                    case CasinoChip_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case CasinoChip_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case CasinoChip_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
+                        break;
+                    case CasinoChip_FieldIndex.DropSound:
+                        this.DropSound = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +525,30 @@ namespace Mutagen.Bethesda.Fallout3
                 CasinoChip_FieldIndex enu = (CasinoChip_FieldIndex)index;
                 switch (enu)
                 {
+                    case CasinoChip_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.Script:
+                        this.Script = (Exception?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
+                        break;
+                    case CasinoChip_FieldIndex.DropSound:
+                        this.DropSound = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +558,14 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icons != null) return true;
+                if (Script != null) return true;
+                if (Destructible != null) return true;
+                if (PickUpSound != null) return true;
+                if (DropSound != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +592,22 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                Icons?.Print(sb);
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                Destructible?.Print(sb);
+                {
+                    sb.AppendItem(PickUpSound, "PickUpSound");
+                }
+                {
+                    sb.AppendItem(DropSound, "DropSound");
+                }
             }
             #endregion
 
@@ -254,6 +616,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.DropSound = this.DropSound.Combine(rhs.DropSound);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +645,43 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public Icons.TranslationMask? Icons;
+            public bool Script;
+            public Destructible.TranslationMask? Destructible;
+            public bool PickUpSound;
+            public bool DropSound;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Script = defaultOn;
+                this.PickUpSound = defaultOn;
+                this.DropSound = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
+                ret.Add((Script, null));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((PickUpSound, null));
+                ret.Add((DropSound, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +693,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CasinoChip_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CasinoChipCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CasinoChipSetterCommon.Instance.RemapLinks(this, mapping);
         public CasinoChip(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -333,6 +733,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(ICasinoChip);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CasinoChipCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CasinoChipSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => CasinoChipSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CasinoChipSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -412,11 +816,42 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ICasinoChip :
+        IAssetLinkContainer,
         ICasinoChipGetter,
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
+        IHasDestructible,
+        IHasIcons,
         IItem,
-        ILoquiObjectSetter<ICasinoChipInternal>
+        ILoquiObjectSetter<ICasinoChipInternal>,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBoundedOptional
     {
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        new ObjectBounds? ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons? Icons { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
+        new IFormLinkNullable<ISoundGetter> PickUpSound { get; set; }
+        new IFormLinkNullable<ISoundGetter> DropSound { get; set; }
     }
 
     public partial interface ICasinoChipInternal :
@@ -429,12 +864,53 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.CHIP)]
     public partial interface ICasinoChipGetter :
         IFallout3MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHasDestructibleGetter,
+        IHasIconsGetter,
         IItemGetter,
         ILoquiObject<ICasinoChipGetter>,
-        IMapsToGetter<ICasinoChipGetter>
+        IMapsToGetter<ICasinoChipGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => CasinoChip_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedOptionalGetter
+        /// </summary>
+        IObjectBoundsGetter? ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter? Icons { get; }
+        #endregion
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
+        #endregion
+        IFormLinkNullableGetter<ISoundGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundGetter> DropSound { get; }
 
     }
 
@@ -611,6 +1087,14 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Icons = 10,
+        Script = 11,
+        Destructible = 12,
+        PickUpSound = 13,
+        DropSound = 14,
     }
     #endregion
 
@@ -621,9 +1105,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(CasinoChip.Mask<>);
 
@@ -653,8 +1137,25 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.CHIP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.CHIP);
+            var all = RecordCollection.Factory(
+                RecordTypes.CHIP,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.ICON,
+                RecordTypes.SCRI,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.YNAM,
+                RecordTypes.ZNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CasinoChipBinaryWriteTranslation);
         #region Interface
@@ -696,6 +1197,14 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICasinoChipInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = null;
+            item.Name = default;
+            item.Model = null;
+            item.Icons = null;
+            item.Script.Clear();
+            item.Destructible = null;
+            item.PickUpSound.Clear();
+            item.DropSound.Clear();
             base.Clear(item);
         }
         
@@ -713,6 +1222,37 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(ICasinoChip obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Script.Relink(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.PickUpSound.Relink(mapping);
+            obj.DropSound.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICasinoChip obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ICasinoChip obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Icons?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -780,6 +1320,30 @@ namespace Mutagen.Bethesda.Fallout3
             CasinoChip.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
+            ret.DropSound = item.DropSound.Equals(rhs.DropSound);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +1393,43 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons is {} IconsItem)
+            {
+                IconsItem?.Print(sb, "Icons");
+            }
+            if (printMask?.Script ?? true)
+            {
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
+            if (printMask?.PickUpSound ?? true)
+            {
+                sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
+            }
+            if (printMask?.DropSound ?? true)
+            {
+                sb.AppendItem(item.DropSound.FormKeyNullable, "DropSound");
+            }
         }
         
         public static CasinoChip_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +1480,54 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)CasinoChip_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)CasinoChip_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Icons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)CasinoChip_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)CasinoChip_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.DropSound) ?? true))
+            {
+                if (!lhs.DropSound.Equals(rhs.DropSound)) return false;
+            }
             return true;
         }
         
@@ -907,6 +1556,29 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ICasinoChipGetter item)
         {
             var hash = new HashCode();
+            if (item.ObjectBounds is {} ObjectBoundsitem)
+            {
+                hash.Add(ObjectBoundsitem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Icons is {} Iconsitem)
+            {
+                hash.Add(Iconsitem);
+            }
+            hash.Add(item.Script);
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.PickUpSound);
+            hash.Add(item.DropSound);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -930,11 +1602,53 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICasinoChipGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICasinoChipGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
+            {
+                yield return ScriptInfo;
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
+            {
+                yield return PickUpSoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.DropSound, out var DropSoundInfo))
+            {
+                yield return DropSoundInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICasinoChipGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1010,6 +1724,126 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)CasinoChip_FieldIndex.ObjectBounds);
+                try
+                {
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CasinoChip_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)CasinoChip_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CasinoChip_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Icons) ?? true))
+            {
+                errorMask?.PushIndex((int)CasinoChip_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons is {} rhsIcons)
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CasinoChip_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Script) ?? true))
+            {
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)CasinoChip_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CasinoChip_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.PickUpSound) ?? true))
+            {
+                item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)CasinoChip_FieldIndex.DropSound) ?? true))
+            {
+                item.DropSound.SetTo(rhs.DropSound.FormKeyNullable);
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +2004,62 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly CasinoChipBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ICasinoChipGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Icons is {} IconsItem)
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Script,
+                header: translationParams.ConvertToCustom(RecordTypes.SCRI));
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PickUpSound,
+                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DropSound,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ICasinoChipGetter item,
@@ -1224,6 +2114,88 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly CasinoChipBinaryCreateTranslation Instance = new CasinoChipBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CHIP;
+        public static ParseResult FillBinaryRecordTypes(
+            ICasinoChipInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)CasinoChip_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)CasinoChip_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CasinoChip_FieldIndex.Model;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    item.Icons = Mutagen.Bethesda.Fallout3.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CasinoChip_FieldIndex.Icons;
+                }
+                case RecordTypeInts.SCRI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)CasinoChip_FieldIndex.Script;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Fallout3.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CasinoChip_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)CasinoChip_FieldIndex.PickUpSound;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)CasinoChip_FieldIndex.DropSound;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +2228,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CasinoChipCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CasinoChipCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CasinoChipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1270,6 +2244,33 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(ICasinoChipGetter);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IIconsGetter? Icons { get; private set; }
+        #region Script
+        private int? _ScriptLocation;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
+        #endregion
+        public IDestructibleGetter? Destructible { get; private set; }
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _PickUpSoundLocation);
+        #endregion
+        #region DropSound
+        private int? _DropSoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> DropSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _DropSoundLocation);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +2328,83 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)CasinoChip_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)CasinoChip_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CasinoChip_FieldIndex.Model;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CasinoChip_FieldIndex.Icons;
+                }
+                case RecordTypeInts.SCRI:
+                {
+                    _ScriptLocation = (stream.Position - offset);
+                    return (int)CasinoChip_FieldIndex.Script;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)CasinoChip_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.YNAM:
+                {
+                    _PickUpSoundLocation = (stream.Position - offset);
+                    return (int)CasinoChip_FieldIndex.PickUpSound;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _DropSoundLocation = (stream.Position - offset);
+                    return (int)CasinoChip_FieldIndex.DropSound;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

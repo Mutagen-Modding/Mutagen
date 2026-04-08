@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +54,20 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> _Items = new ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> Items
+        {
+            get => this._Items;
+            init => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> IFormListGetter.Items => _Items;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +93,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
@@ -87,7 +103,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Items)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +114,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, []);
             }
 
             #pragma warning disable CS8618
@@ -105,6 +123,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Items;
             #endregion
 
             #region Equals
@@ -118,11 +140,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Items);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +157,17 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +176,17 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +202,20 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), []);
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +234,27 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(FormList.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
+                    {
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +265,18 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Items;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Items:
+                        return Items;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +287,9 @@ namespace Mutagen.Bethesda.Fallout3
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +301,9 @@ namespace Mutagen.Bethesda.Fallout3
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +313,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Items != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +340,26 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Items is {} ItemsItem)
+                {
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +368,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +390,26 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Items;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Items = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Items, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +421,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = FormList_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FormListCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FormListSetterCommon.Instance.RemapLinks(this, mapping);
         public FormList(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -414,9 +542,11 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IFormList :
         IAmmoOrList,
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         IFormListGetter,
         ILoquiObjectSetter<IFormListInternal>
     {
+        new ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> Items { get; }
     }
 
     public partial interface IFormListInternal :
@@ -431,10 +561,12 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAmmoOrListGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFormListGetter>,
         IMapsToGetter<IFormListGetter>
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
+        IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> Items { get; }
 
     }
 
@@ -611,6 +743,7 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Items = 7,
     }
     #endregion
 
@@ -621,9 +754,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(FormList.Mask<>);
 
@@ -653,8 +786,13 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FLST);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.FLST);
+            var all = RecordCollection.Factory(
+                RecordTypes.FLST,
+                RecordTypes.LNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FormListBinaryWriteTranslation);
         #region Interface
@@ -696,6 +834,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IFormListInternal item)
         {
             ClearPartial();
+            item.Items.Clear();
             base.Clear(item);
         }
         
@@ -713,6 +852,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IFormList obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Items.RemapLinks(mapping);
         }
         
         #endregion
@@ -780,6 +920,10 @@ namespace Mutagen.Bethesda.Fallout3
             FormList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,6 +973,20 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Items?.Overall ?? true)
+            {
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static FormList_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -879,6 +1037,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
             return true;
         }
         
@@ -907,6 +1069,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IFormListGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Items);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -930,11 +1093,15 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFormListGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFormListGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Items)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1010,6 +1177,25 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.Items) ?? true))
+            {
+                errorMask?.PushIndex((int)FormList_FieldIndex.Items);
+                try
+                {
+                    item.Items.SetTo(
+                        rhs.Items
+                            .Select(b => (IFormLinkGetter<IFallout3MajorRecordGetter>)new FormLink<IFallout3MajorRecordGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1170,6 +1356,27 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly FormListBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IFormListGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout3MajorRecordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Items,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout3MajorRecordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IFormListGetter item,
@@ -1224,6 +1431,39 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLST;
+        public static ParseResult FillBinaryRecordTypes(
+            IFormListInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.LNAM:
+                {
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout3MajorRecordGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.LNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)FormList_FieldIndex.Items;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1256,6 +1496,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FormListCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1270,6 +1511,7 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IFormListGetter);
 
 
+        public IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> Items { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1327,6 +1569,43 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.LNAM:
+                {
+                    this.Items = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IFallout3MajorRecordGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(p, s),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.LNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)FormList_FieldIndex.Items;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

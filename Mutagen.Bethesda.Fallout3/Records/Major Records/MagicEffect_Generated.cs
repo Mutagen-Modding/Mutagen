@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MagicEffectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(
             FormKey formKey,
@@ -2195,15 +2195,15 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Fallout3
             yield return FormLinkInformation.Factory(obj.AreaSound);
             if (obj.Archetype is IFormLinkContainerGetter ArchetypelinkCont)
             {
-                foreach (var item in ArchetypelinkCont.EnumerateFormLinks())
+                foreach (var item in ArchetypelinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2937,7 +2937,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MagicEffectCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

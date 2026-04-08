@@ -63,6 +63,9 @@ namespace Mutagen.Bethesda.Fallout3
         #region LastModified
         public Int32 LastModified { get; set; } = default(Int32);
         #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default(Int32);
+        #endregion
         #region Cells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<Cell> _Cells = new ExtendedList<Cell>();
@@ -119,6 +122,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.BlockNumber = initialValue;
                 this.GroupType = initialValue;
                 this.LastModified = initialValue;
+                this.Unknown = initialValue;
                 this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(initialValue, []);
             }
 
@@ -126,11 +130,13 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem BlockNumber,
                 TItem GroupType,
                 TItem LastModified,
+                TItem Unknown,
                 TItem Cells)
             {
                 this.BlockNumber = BlockNumber;
                 this.GroupType = GroupType;
                 this.LastModified = LastModified;
+                this.Unknown = Unknown;
                 this.Cells = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>(Cells, []);
             }
 
@@ -146,6 +152,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem BlockNumber;
             public TItem GroupType;
             public TItem LastModified;
+            public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Cell.Mask<TItem>?>>?>? Cells;
             #endregion
 
@@ -162,6 +169,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.BlockNumber, rhs.BlockNumber)) return false;
                 if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
                 if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Cells, rhs.Cells)) return false;
                 return true;
             }
@@ -171,6 +179,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.BlockNumber);
                 hash.Add(this.GroupType);
                 hash.Add(this.LastModified);
+                hash.Add(this.Unknown);
                 hash.Add(this.Cells);
                 return hash.ToHashCode();
             }
@@ -183,6 +192,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.BlockNumber)) return false;
                 if (!eval(this.GroupType)) return false;
                 if (!eval(this.LastModified)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (this.Cells != null)
                 {
                     if (!eval(this.Cells.Overall)) return false;
@@ -205,6 +215,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.BlockNumber)) return true;
                 if (eval(this.GroupType)) return true;
                 if (eval(this.LastModified)) return true;
+                if (eval(this.Unknown)) return true;
                 if (this.Cells != null)
                 {
                     if (eval(this.Cells.Overall)) return true;
@@ -234,6 +245,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.BlockNumber = eval(this.BlockNumber);
                 obj.GroupType = eval(this.GroupType);
                 obj.LastModified = eval(this.LastModified);
+                obj.Unknown = eval(this.Unknown);
                 if (Cells != null)
                 {
                     obj.Cells = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Cell.Mask<R>?>>?>(eval(this.Cells.Overall), []);
@@ -278,6 +290,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.LastModified ?? true)
                     {
                         sb.AppendItem(LastModified, "LastModified");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Cells?.Overall ?? true)
                         && Cells is {} CellsItem)
@@ -325,6 +341,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? BlockNumber;
             public Exception? GroupType;
             public Exception? LastModified;
+            public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>? Cells;
             #endregion
 
@@ -340,6 +357,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return GroupType;
                     case CellSubBlock_FieldIndex.LastModified:
                         return LastModified;
+                    case CellSubBlock_FieldIndex.Unknown:
+                        return Unknown;
                     case CellSubBlock_FieldIndex.Cells:
                         return Cells;
                     default:
@@ -360,6 +379,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case CellSubBlock_FieldIndex.LastModified:
                         this.LastModified = ex;
+                        break;
+                    case CellSubBlock_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case CellSubBlock_FieldIndex.Cells:
                         this.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(ex, null);
@@ -383,6 +405,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case CellSubBlock_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
                         break;
+                    case CellSubBlock_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
                     case CellSubBlock_FieldIndex.Cells:
                         this.Cells = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>)obj;
                         break;
@@ -397,6 +422,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (BlockNumber != null) return true;
                 if (GroupType != null) return true;
                 if (LastModified != null) return true;
+                if (Unknown != null) return true;
                 if (Cells != null) return true;
                 return false;
             }
@@ -432,6 +458,9 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(LastModified, "LastModified");
                 }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
                 if (Cells is {} CellsItem)
                 {
                     sb.AppendLine("Cells =>");
@@ -461,6 +490,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.BlockNumber = this.BlockNumber.Combine(rhs.BlockNumber);
                 ret.GroupType = this.GroupType.Combine(rhs.GroupType);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Cells = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Cell.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Cells?.Overall, rhs.Cells?.Overall), Noggog.ExceptionExt.Combine(this.Cells?.Specific, rhs.Cells?.Specific));
                 return ret;
             }
@@ -488,6 +518,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool BlockNumber;
             public bool GroupType;
             public bool LastModified;
+            public bool Unknown;
             public Cell.TranslationMask? Cells;
             #endregion
 
@@ -501,6 +532,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.BlockNumber = defaultOn;
                 this.GroupType = defaultOn;
                 this.LastModified = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -519,6 +551,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((BlockNumber, null));
                 ret.Add((GroupType, null));
                 ret.Add((LastModified, null));
+                ret.Add((Unknown, null));
                 ret.Add((Cells == null ? DefaultOn : !Cells.GetCrystal().CopyNothing, Cells?.GetCrystal()));
             }
 
@@ -532,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CellSubBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -548,8 +581,10 @@ namespace Mutagen.Bethesda.Fallout3
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -644,6 +679,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
+        new Int32 Unknown { get; set; }
         new ExtendedList<Cell> Cells { get; }
     }
 
@@ -665,6 +701,7 @@ namespace Mutagen.Bethesda.Fallout3
         Int32 BlockNumber { get; }
         GroupTypeEnum GroupType { get; }
         Int32 LastModified { get; }
+        Int32 Unknown { get; }
         IReadOnlyList<ICellGetter> Cells { get; }
 
     }
@@ -1067,7 +1104,8 @@ namespace Mutagen.Bethesda.Fallout3
         BlockNumber = 0,
         GroupType = 1,
         LastModified = 2,
-        Cells = 3,
+        Unknown = 3,
+        Cells = 4,
     }
     #endregion
 
@@ -1078,9 +1116,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(CellSubBlock.Mask<>);
 
@@ -1150,6 +1188,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.BlockNumber = default(Int32);
             item.GroupType = default(GroupTypeEnum);
             item.LastModified = default(Int32);
+            item.Unknown = default(Int32);
             item.Cells.Clear();
         }
         
@@ -1203,11 +1242,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public void Remove(
             ICellSubBlock obj,
             HashSet<FormKey> keys)
         {
             obj.Cells.Remove(keys);
+            obj.Cells.ForEach(i => i.Remove(keys));
         }
         
         public void Remove(
@@ -1232,36 +1273,89 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICell":
                 case "ICellInternal":
                     obj.Cells.RemoveWhere(i => keys.Contains(i.FormKey));
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "PlacedBeam":
                 case "IPlacedBeamGetter":
                 case "IPlacedBeam":
                 case "IPlacedBeamInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "PlacedCreature":
                 case "IPlacedCreatureGetter":
                 case "IPlacedCreature":
                 case "IPlacedCreatureInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "PlacedGrenade":
                 case "IPlacedGrenadeGetter":
                 case "IPlacedGrenade":
                 case "IPlacedGrenadeInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "PlacedMissile":
                 case "IPlacedMissileGetter":
                 case "IPlacedMissile":
                 case "IPlacedMissileInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "PlacedNpc":
                 case "IPlacedNpcGetter":
                 case "IPlacedNpc":
                 case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "PlacedObject":
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 default:
                     if (throwIfUnknown)
@@ -1275,6 +1369,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICellSubBlock obj)
         {
             foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainer>()
@@ -1340,6 +1435,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified == rhs.LastModified;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Cells = item.Cells.CollectionEqualsHelper(
                 rhs.Cells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1400,6 +1496,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.LastModified, "LastModified");
             }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
             if (printMask?.Cells?.Overall ?? true)
             {
                 sb.AppendLine("Cells =>");
@@ -1435,6 +1535,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
             {
                 if (!lhs.Cells.SequenceEqual(rhs.Cells, (l, r) => ((CellCommon)((ICellGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells)))) return false;
@@ -1448,6 +1552,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.BlockNumber);
             hash.Add(item.GroupType);
             hash.Add(item.LastModified);
+            hash.Add(item.Unknown);
             hash.Add(item.Cells);
             return hash.ToHashCode();
         }
@@ -1461,12 +1566,14 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellSubBlockGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellSubBlockGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Cells.WhereCastable<ICellGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            if (iterateNestedRecords)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in obj.Cells.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1536,6 +1643,38 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICellGetter":
                 case "ICell":
                 case "ICellInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var subItem in obj.Cells)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
@@ -1701,6 +1840,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.LastModified = rhs.LastModified;
             }
+            if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
             if ((copyMask?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
             {
                 errorMask?.PushIndex((int)CellSubBlock_FieldIndex.Cells);
@@ -1839,6 +1982,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item.GroupType,
                 length: 4);
             writer.Write(item.LastModified);
+            writer.Write(item.Unknown);
         }
 
         public static void WriteRecordTypes(
@@ -1912,6 +2056,7 @@ namespace Mutagen.Bethesda.Fallout3
                 reader: frame,
                 length: 4);
             item.LastModified = frame.ReadInt32();
+            item.Unknown = frame.ReadInt32();
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1990,7 +2135,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CellSubBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -2015,6 +2160,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         #region Cells
         partial void CellsCustomParse(
             OverlayStream stream,

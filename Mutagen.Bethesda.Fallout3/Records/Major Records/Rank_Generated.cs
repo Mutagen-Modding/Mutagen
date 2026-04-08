@@ -64,6 +64,17 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRankGetter.Insignia => this.Insignia;
         #endregion
+        #region XNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XNAM;
+        public MemorySlice<Byte>? XNAM
+        {
+            get => this._XNAM;
+            set => this._XNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IRankGetter.XNAM => this.XNAM;
+        #endregion
 
         #region To String
 
@@ -106,16 +117,19 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RankNumber = initialValue;
                 this.Name = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.Insignia = initialValue;
+                this.XNAM = initialValue;
             }
 
             public Mask(
                 TItem RankNumber,
                 TItem Name,
-                TItem Insignia)
+                TItem Insignia,
+                TItem XNAM)
             {
                 this.RankNumber = RankNumber;
                 this.Name = new MaskItem<TItem, GenderedItem<TItem>?>(Name, default);
                 this.Insignia = Insignia;
+                this.XNAM = XNAM;
             }
 
             #pragma warning disable CS8618
@@ -130,6 +144,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem RankNumber;
             public MaskItem<TItem, GenderedItem<TItem>?>? Name;
             public TItem Insignia;
+            public TItem XNAM;
             #endregion
 
             #region Equals
@@ -145,6 +160,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.RankNumber, rhs.RankNumber)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
+                if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -153,6 +169,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.RankNumber);
                 hash.Add(this.Name);
                 hash.Add(this.Insignia);
+                hash.Add(this.XNAM);
                 return hash.ToHashCode();
             }
 
@@ -166,6 +183,7 @@ namespace Mutagen.Bethesda.Fallout3
                     this.Name,
                     eval: eval)) return false;
                 if (!eval(this.Insignia)) return false;
+                if (!eval(this.XNAM)) return false;
                 return true;
             }
             #endregion
@@ -178,6 +196,7 @@ namespace Mutagen.Bethesda.Fallout3
                     this.Name,
                     eval: eval)) return true;
                 if (eval(this.Insignia)) return true;
+                if (eval(this.XNAM)) return true;
                 return false;
             }
             #endregion
@@ -197,6 +216,7 @@ namespace Mutagen.Bethesda.Fallout3
                     this.Name,
                     eval);
                 obj.Insignia = eval(this.Insignia);
+                obj.XNAM = eval(this.XNAM);
             }
             #endregion
 
@@ -228,6 +248,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Insignia, "Insignia");
                     }
+                    if (printMask?.XNAM ?? true)
+                    {
+                        sb.AppendItem(XNAM, "XNAM");
+                    }
                 }
             }
             #endregion
@@ -255,6 +279,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? RankNumber;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Name;
             public Exception? Insignia;
+            public Exception? XNAM;
             #endregion
 
             #region IErrorMask
@@ -269,6 +294,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Name;
                     case Rank_FieldIndex.Insignia:
                         return Insignia;
+                    case Rank_FieldIndex.XNAM:
+                        return XNAM;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -287,6 +314,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Rank_FieldIndex.Insignia:
                         this.Insignia = ex;
+                        break;
+                    case Rank_FieldIndex.XNAM:
+                        this.XNAM = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -307,6 +337,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Rank_FieldIndex.Insignia:
                         this.Insignia = (Exception?)obj;
                         break;
+                    case Rank_FieldIndex.XNAM:
+                        this.XNAM = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -318,6 +351,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (RankNumber != null) return true;
                 if (Name != null) return true;
                 if (Insignia != null) return true;
+                if (XNAM != null) return true;
                 return false;
             }
             #endregion
@@ -353,6 +387,9 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Insignia, "Insignia");
                 }
+                {
+                    sb.AppendItem(XNAM, "XNAM");
+                }
             }
             #endregion
 
@@ -364,6 +401,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
                 ret.Name = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Name?.Overall, rhs.Name?.Overall), GenderedItem.Combine(this.Name?.Specific, rhs.Name?.Specific));
                 ret.Insignia = this.Insignia.Combine(rhs.Insignia);
+                ret.XNAM = this.XNAM.Combine(rhs.XNAM);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -390,6 +428,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool RankNumber;
             public GenderedItem<bool>? Name;
             public bool Insignia;
+            public bool XNAM;
             #endregion
 
             #region Ctors
@@ -401,6 +440,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.OnOverall = onOverall;
                 this.RankNumber = defaultOn;
                 this.Insignia = defaultOn;
+                this.XNAM = defaultOn;
             }
 
             #endregion
@@ -419,6 +459,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((RankNumber, null));
                 ret.Add((Name != null || DefaultOn, null));
                 ret.Add((Insignia, null));
+                ret.Add((XNAM, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -494,6 +535,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Int32? RankNumber { get; set; }
         new IGenderedItem<String?>? Name { get; set; }
         new String? Insignia { get; set; }
+        new MemorySlice<Byte>? XNAM { get; set; }
     }
 
     public partial interface IRankGetter :
@@ -511,6 +553,7 @@ namespace Mutagen.Bethesda.Fallout3
         Int32? RankNumber { get; }
         IGenderedItemGetter<String?>? Name { get; }
         String? Insignia { get; }
+        ReadOnlyMemorySlice<Byte>? XNAM { get; }
 
     }
 
@@ -683,6 +726,7 @@ namespace Mutagen.Bethesda.Fallout3
         RankNumber = 0,
         Name = 1,
         Insignia = 2,
+        XNAM = 3,
     }
     #endregion
 
@@ -693,9 +737,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Rank.Mask<>);
 
@@ -728,7 +772,8 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.RNAM,
                 RecordTypes.MNAM,
                 RecordTypes.FNAM,
-                RecordTypes.INAM);
+                RecordTypes.INAM,
+                RecordTypes.XNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);
@@ -774,6 +819,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.RankNumber = default;
             item.Name = null;
             item.Insignia = default;
+            item.XNAM = default;
         }
         
         #region Mutagen
@@ -830,6 +876,7 @@ namespace Mutagen.Bethesda.Fallout3
                 maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
                 include: include);
             ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
+            ret.XNAM = MemorySliceExt.SequenceEqual(item.XNAM, rhs.XNAM);
         }
         
         public string Print(
@@ -889,6 +936,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(InsigniaItem, "Insignia");
             }
+            if ((printMask?.XNAM ?? true)
+                && item.XNAM is {} XNAMItem)
+            {
+                sb.AppendLine($"XNAM => {SpanExt.ToHexString(XNAMItem)}");
+            }
         }
         
         #region Equals and Hash
@@ -910,6 +962,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.XNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XNAM, rhs.XNAM)) return false;
+            }
             return true;
         }
         
@@ -928,6 +984,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Insigniaitem);
             }
+            if (item.XNAM is {} XNAMItem)
+            {
+                hash.Add(XNAMItem);
+            }
             return hash.ToHashCode();
         }
         
@@ -940,7 +1000,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRankGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRankGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -977,6 +1037,17 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
                 item.Insignia = rhs.Insignia;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.XNAM) ?? true))
+            {
+                if(rhs.XNAM is {} XNAMrhs)
+                {
+                    item.XNAM = XNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.XNAM = default;
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1102,6 +1173,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.Insignia,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM),
                 binaryType: StringBinaryType.NullTerminate);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
         }
 
         public void Write(
@@ -1172,6 +1247,13 @@ namespace Mutagen.Bethesda.Fallout3
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Rank_FieldIndex.Insignia;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.XNAM, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Rank_FieldIndex.XNAM;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1252,6 +1334,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region Insignia
         private int? _InsigniaLocation;
         public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region XNAM
+        private int? _XNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? XNAM => _XNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1339,6 +1425,12 @@ namespace Mutagen.Bethesda.Fallout3
                     if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     _InsigniaLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.Insignia;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.XNAM, translationParams)) return ParseResult.Stop;
+                    _XNAMLocation = (stream.Position - offset);
+                    return (int)Rank_FieldIndex.XNAM;
                 }
                 default:
                     return ParseResult.Stop;

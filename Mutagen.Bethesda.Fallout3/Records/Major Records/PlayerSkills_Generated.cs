@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlayerSkillsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlayerSkillsGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }

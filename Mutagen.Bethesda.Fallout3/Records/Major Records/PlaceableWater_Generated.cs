@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlaceableWater_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlaceableWaterCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlaceableWaterCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlaceableWaterSetterCommon.Instance.RemapLinks(this, mapping);
         public PlaceableWater(
             FormKey formKey,
@@ -1234,15 +1234,15 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlaceableWaterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlaceableWaterGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlaceableWaterCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PlaceableWaterCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlaceableWaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

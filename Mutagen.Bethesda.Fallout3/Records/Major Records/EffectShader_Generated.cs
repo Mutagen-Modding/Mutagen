@@ -53,6 +53,26 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region FillTexture
+        public String? FillTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IEffectShaderGetter.FillTexture => this.FillTexture;
+        #endregion
+        #region ParticleShaderTexture
+        public String? ParticleShaderTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
+        #endregion
+        #region HolesTexture
+        public String? HolesTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IEffectShaderGetter.HolesTexture => this.HolesTexture;
+        #endregion
+        #region Data
+        public EffectShaderData Data { get; set; } = new EffectShaderData();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEffectShaderDataGetter IEffectShaderGetter.Data => Data;
+        #endregion
 
         #region To String
 
@@ -78,6 +98,10 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.FillTexture = initialValue;
+                this.ParticleShaderTexture = initialValue;
+                this.HolesTexture = initialValue;
+                this.Data = new MaskItem<TItem, EffectShaderData.Mask<TItem>?>(initialValue, new EffectShaderData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -87,7 +111,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem FillTexture,
+                TItem ParticleShaderTexture,
+                TItem HolesTexture,
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +125,10 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.FillTexture = FillTexture;
+                this.ParticleShaderTexture = ParticleShaderTexture;
+                this.HolesTexture = HolesTexture;
+                this.Data = new MaskItem<TItem, EffectShaderData.Mask<TItem>?>(Data, new EffectShaderData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -105,6 +137,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem FillTexture;
+            public TItem ParticleShaderTexture;
+            public TItem HolesTexture;
+            public MaskItem<TItem, EffectShaderData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -118,11 +157,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.FillTexture, rhs.FillTexture)) return false;
+                if (!object.Equals(this.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+                if (!object.Equals(this.HolesTexture, rhs.HolesTexture)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.FillTexture);
+                hash.Add(this.ParticleShaderTexture);
+                hash.Add(this.HolesTexture);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +180,14 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.FillTexture)) return false;
+                if (!eval(this.ParticleShaderTexture)) return false;
+                if (!eval(this.HolesTexture)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -141,6 +196,14 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.FillTexture)) return true;
+                if (eval(this.ParticleShaderTexture)) return true;
+                if (eval(this.HolesTexture)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -156,6 +219,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.FillTexture = eval(this.FillTexture);
+                obj.ParticleShaderTexture = eval(this.ParticleShaderTexture);
+                obj.HolesTexture = eval(this.HolesTexture);
+                obj.Data = this.Data == null ? null : new MaskItem<R, EffectShaderData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -174,6 +241,22 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(EffectShader.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.FillTexture ?? true)
+                    {
+                        sb.AppendItem(FillTexture, "FillTexture");
+                    }
+                    if (printMask?.ParticleShaderTexture ?? true)
+                    {
+                        sb.AppendItem(ParticleShaderTexture, "ParticleShaderTexture");
+                    }
+                    if (printMask?.HolesTexture ?? true)
+                    {
+                        sb.AppendItem(HolesTexture, "HolesTexture");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -184,12 +267,27 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? FillTexture;
+            public Exception? ParticleShaderTexture;
+            public Exception? HolesTexture;
+            public MaskItem<Exception?, EffectShaderData.ErrorMask?>? Data;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShader_FieldIndex.FillTexture:
+                        return FillTexture;
+                    case EffectShader_FieldIndex.ParticleShaderTexture:
+                        return ParticleShaderTexture;
+                    case EffectShader_FieldIndex.HolesTexture:
+                        return HolesTexture;
+                    case EffectShader_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +298,18 @@ namespace Mutagen.Bethesda.Fallout3
                 EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShader_FieldIndex.FillTexture:
+                        this.FillTexture = ex;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderTexture:
+                        this.ParticleShaderTexture = ex;
+                        break;
+                    case EffectShader_FieldIndex.HolesTexture:
+                        this.HolesTexture = ex;
+                        break;
+                    case EffectShader_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, EffectShaderData.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +321,18 @@ namespace Mutagen.Bethesda.Fallout3
                 EffectShader_FieldIndex enu = (EffectShader_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShader_FieldIndex.FillTexture:
+                        this.FillTexture = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.ParticleShaderTexture:
+                        this.ParticleShaderTexture = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.HolesTexture:
+                        this.HolesTexture = (Exception?)obj;
+                        break;
+                    case EffectShader_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, EffectShaderData.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +342,10 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (FillTexture != null) return true;
+                if (ParticleShaderTexture != null) return true;
+                if (HolesTexture != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +372,16 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(FillTexture, "FillTexture");
+                }
+                {
+                    sb.AppendItem(ParticleShaderTexture, "ParticleShaderTexture");
+                }
+                {
+                    sb.AppendItem(HolesTexture, "HolesTexture");
+                }
+                Data?.Print(sb);
             }
             #endregion
 
@@ -254,6 +390,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.FillTexture = this.FillTexture.Combine(rhs.FillTexture);
+                ret.ParticleShaderTexture = this.ParticleShaderTexture.Combine(rhs.ParticleShaderTexture);
+                ret.HolesTexture = this.HolesTexture.Combine(rhs.HolesTexture);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +415,34 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool FillTexture;
+            public bool ParticleShaderTexture;
+            public bool HolesTexture;
+            public EffectShaderData.TranslationMask? Data;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.FillTexture = defaultOn;
+                this.ParticleShaderTexture = defaultOn;
+                this.HolesTexture = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((FillTexture, null));
+                ret.Add((ParticleShaderTexture, null));
+                ret.Add((HolesTexture, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -416,6 +575,10 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<IEffectShaderInternal>
     {
+        new String? FillTexture { get; set; }
+        new String? ParticleShaderTexture { get; set; }
+        new String? HolesTexture { get; set; }
+        new EffectShaderData Data { get; set; }
     }
 
     public partial interface IEffectShaderInternal :
@@ -433,6 +596,10 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IEffectShaderGetter>
     {
         static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
+        String? FillTexture { get; }
+        String? ParticleShaderTexture { get; }
+        String? HolesTexture { get; }
+        IEffectShaderDataGetter Data { get; }
 
     }
 
@@ -609,6 +776,10 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        FillTexture = 7,
+        ParticleShaderTexture = 8,
+        HolesTexture = 9,
+        Data = 10,
     }
     #endregion
 
@@ -619,9 +790,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(EffectShader.Mask<>);
 
@@ -651,8 +822,16 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.EFSH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.EFSH);
+            var all = RecordCollection.Factory(
+                RecordTypes.EFSH,
+                RecordTypes.ICON,
+                RecordTypes.ICO2,
+                RecordTypes.NAM7,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
@@ -694,6 +873,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IEffectShaderInternal item)
         {
             ClearPartial();
+            item.FillTexture = default;
+            item.ParticleShaderTexture = default;
+            item.HolesTexture = default;
+            item.Data.Clear();
             base.Clear(item);
         }
         
@@ -778,6 +961,10 @@ namespace Mutagen.Bethesda.Fallout3
             EffectShader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.FillTexture = string.Equals(item.FillTexture, rhs.FillTexture);
+            ret.ParticleShaderTexture = string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
+            ret.HolesTexture = string.Equals(item.HolesTexture, rhs.HolesTexture);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1014,25 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.FillTexture ?? true)
+                && item.FillTexture is {} FillTextureItem)
+            {
+                sb.AppendItem(FillTextureItem, "FillTexture");
+            }
+            if ((printMask?.ParticleShaderTexture ?? true)
+                && item.ParticleShaderTexture is {} ParticleShaderTextureItem)
+            {
+                sb.AppendItem(ParticleShaderTextureItem, "ParticleShaderTexture");
+            }
+            if ((printMask?.HolesTexture ?? true)
+                && item.HolesTexture is {} HolesTextureItem)
+            {
+                sb.AppendItem(HolesTextureItem, "HolesTexture");
+            }
+            if (printMask?.Data?.Overall ?? true)
+            {
+                item.Data?.Print(sb, "Data");
+            }
         }
         
         public static EffectShader_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1083,26 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
+            {
+                if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
+            {
+                if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
+            {
+                if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((EffectShaderDataCommon)((IEffectShaderDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
             return true;
         }
         
@@ -905,6 +1131,19 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IEffectShaderGetter item)
         {
             var hash = new HashCode();
+            if (item.FillTexture is {} FillTextureitem)
+            {
+                hash.Add(FillTextureitem);
+            }
+            if (item.ParticleShaderTexture is {} ParticleShaderTextureitem)
+            {
+                hash.Add(ParticleShaderTextureitem);
+            }
+            if (item.HolesTexture is {} HolesTextureitem)
+            {
+                hash.Add(HolesTextureitem);
+            }
+            hash.Add(item.Data);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,9 +1167,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectShaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectShaderGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1008,6 +1247,40 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
+            {
+                item.FillTexture = rhs.FillTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
+            {
+                item.ParticleShaderTexture = rhs.ParticleShaderTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
+            {
+                item.HolesTexture = rhs.HolesTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)EffectShader_FieldIndex.Data);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Data) ?? true))
+                    {
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)EffectShader_FieldIndex.Data),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +1441,37 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly EffectShaderBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IEffectShaderGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FillTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParticleShaderTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.ICO2),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HolesTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM7),
+                binaryType: StringBinaryType.NullTerminate);
+            var DataItem = item.Data;
+            ((EffectShaderDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
         public void Write(
             MutagenWriter writer,
             IEffectShaderGetter item,
@@ -1222,6 +1526,62 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EFSH;
+        public static ParseResult FillBinaryRecordTypes(
+            IEffectShaderInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.ICON:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FillTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)EffectShader_FieldIndex.FillTexture;
+                }
+                case RecordTypeInts.ICO2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParticleShaderTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HolesTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)EffectShader_FieldIndex.HolesTexture;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    item.Data = Mutagen.Bethesda.Fallout3.EffectShaderData.CreateFromBinary(frame: frame);
+                    return (int)EffectShader_FieldIndex.Data;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1268,6 +1628,23 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IEffectShaderGetter);
 
 
+        #region FillTexture
+        private int? _FillTextureLocation;
+        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ParticleShaderTexture
+        private int? _ParticleShaderTextureLocation;
+        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region HolesTexture
+        private int? _HolesTextureLocation;
+        public String? HolesTexture => _HolesTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Data
+        private RangeInt32? _DataLocation;
+        private IEffectShaderDataGetter? _Data => _DataLocation.HasValue ? EffectShaderDataBinaryOverlay.EffectShaderDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        public IEffectShaderDataGetter Data => _Data ?? new EffectShaderData();
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +1702,49 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.ICON:
+                {
+                    _FillTextureLocation = (stream.Position - offset);
+                    return (int)EffectShader_FieldIndex.FillTexture;
+                }
+                case RecordTypeInts.ICO2:
+                {
+                    _ParticleShaderTextureLocation = (stream.Position - offset);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
+                }
+                case RecordTypeInts.NAM7:
+                {
+                    _HolesTextureLocation = (stream.Position - offset);
+                    return (int)EffectShader_FieldIndex.HolesTexture;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)EffectShader_FieldIndex.Data;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

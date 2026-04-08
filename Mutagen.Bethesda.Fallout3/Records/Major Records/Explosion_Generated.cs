@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,169 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IExplosionGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IExplosionGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IExplosionGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region ObjectEffect
+        private readonly IFormLinkNullable<IObjectEffectGetter> _ObjectEffect = new FormLinkNullable<IObjectEffectGetter>();
+        public IFormLinkNullable<IObjectEffectGetter> ObjectEffect
+        {
+            get => _ObjectEffect;
+            set => _ObjectEffect.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IObjectEffectGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
+        #endregion
+        #region ImageSpaceModifier
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region Force
+        public Single Force { get; set; } = default(Single);
+        #endregion
+        #region Damage
+        public Single Damage { get; set; } = default(Single);
+        #endregion
+        #region Radius
+        public Single Radius { get; set; } = default(Single);
+        #endregion
+        #region Light
+        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> Light
+        {
+            get => _Light;
+            set => _Light.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IExplosionGetter.Light => this.Light;
+        #endregion
+        #region Sound1
+        private readonly IFormLink<ISoundGetter> _Sound1 = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Sound1
+        {
+            get => _Sound1;
+            set => _Sound1.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IExplosionGetter.Sound1 => this.Sound1;
+        #endregion
+        #region Flags
+        public Explosion.Flag Flags { get; set; } = default(Explosion.Flag);
+        #endregion
+        #region ISRadius
+        public Single ISRadius { get; set; } = default(Single);
+        #endregion
+        #region ImpactDataSet
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region Sound2
+        private readonly IFormLink<ISoundGetter> _Sound2 = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> Sound2
+        {
+            get => _Sound2;
+            set => _Sound2.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IExplosionGetter.Sound2 => this.Sound2;
+        #endregion
+        #region RadiationLevel
+        public Single RadiationLevel { get; set; } = default(Single);
+        #endregion
+        #region RadiationDissipationTime
+        public Single RadiationDissipationTime { get; set; } = default(Single);
+        #endregion
+        #region RadiationRadius
+        public Single RadiationRadius { get; set; } = default(Single);
+        #endregion
+        #region SoundLevel
+        public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
+        #endregion
+        #region ImageSpaceAdapterRef
+        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceAdapterRef = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceAdapterRef
+        {
+            get => _ImageSpaceAdapterRef;
+            set => _ImageSpaceAdapterRef.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceAdapterRef => this.ImageSpaceAdapterRef;
+        #endregion
+        #region PlacedImpactObject
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _PlacedImpactObject = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> PlacedImpactObject
+        {
+            get => _PlacedImpactObject;
+            set => _PlacedImpactObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IExplosionGetter.PlacedImpactObject => this.PlacedImpactObject;
+        #endregion
 
         #region To String
 
@@ -78,6 +243,26 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ObjectEffect = initialValue;
+                this.ImageSpaceModifier = initialValue;
+                this.Force = initialValue;
+                this.Damage = initialValue;
+                this.Radius = initialValue;
+                this.Light = initialValue;
+                this.Sound1 = initialValue;
+                this.Flags = initialValue;
+                this.ISRadius = initialValue;
+                this.ImpactDataSet = initialValue;
+                this.Sound2 = initialValue;
+                this.RadiationLevel = initialValue;
+                this.RadiationDissipationTime = initialValue;
+                this.RadiationRadius = initialValue;
+                this.SoundLevel = initialValue;
+                this.ImageSpaceAdapterRef = initialValue;
+                this.PlacedImpactObject = initialValue;
             }
 
             public Mask(
@@ -87,7 +272,27 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem ObjectEffect,
+                TItem ImageSpaceModifier,
+                TItem Force,
+                TItem Damage,
+                TItem Radius,
+                TItem Light,
+                TItem Sound1,
+                TItem Flags,
+                TItem ISRadius,
+                TItem ImpactDataSet,
+                TItem Sound2,
+                TItem RadiationLevel,
+                TItem RadiationDissipationTime,
+                TItem RadiationRadius,
+                TItem SoundLevel,
+                TItem ImageSpaceAdapterRef,
+                TItem PlacedImpactObject)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +302,26 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ObjectEffect = ObjectEffect;
+                this.ImageSpaceModifier = ImageSpaceModifier;
+                this.Force = Force;
+                this.Damage = Damage;
+                this.Radius = Radius;
+                this.Light = Light;
+                this.Sound1 = Sound1;
+                this.Flags = Flags;
+                this.ISRadius = ISRadius;
+                this.ImpactDataSet = ImpactDataSet;
+                this.Sound2 = Sound2;
+                this.RadiationLevel = RadiationLevel;
+                this.RadiationDissipationTime = RadiationDissipationTime;
+                this.RadiationRadius = RadiationRadius;
+                this.SoundLevel = SoundLevel;
+                this.ImageSpaceAdapterRef = ImageSpaceAdapterRef;
+                this.PlacedImpactObject = PlacedImpactObject;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +330,29 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem ObjectEffect;
+            public TItem ImageSpaceModifier;
+            public TItem Force;
+            public TItem Damage;
+            public TItem Radius;
+            public TItem Light;
+            public TItem Sound1;
+            public TItem Flags;
+            public TItem ISRadius;
+            public TItem ImpactDataSet;
+            public TItem Sound2;
+            public TItem RadiationLevel;
+            public TItem RadiationDissipationTime;
+            public TItem RadiationRadius;
+            public TItem SoundLevel;
+            public TItem ImageSpaceAdapterRef;
+            public TItem PlacedImpactObject;
             #endregion
 
             #region Equals
@@ -118,11 +366,51 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ObjectEffect, rhs.ObjectEffect)) return false;
+                if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.Force, rhs.Force)) return false;
+                if (!object.Equals(this.Damage, rhs.Damage)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.Sound1, rhs.Sound1)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ISRadius, rhs.ISRadius)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.Sound2, rhs.Sound2)) return false;
+                if (!object.Equals(this.RadiationLevel, rhs.RadiationLevel)) return false;
+                if (!object.Equals(this.RadiationDissipationTime, rhs.RadiationDissipationTime)) return false;
+                if (!object.Equals(this.RadiationRadius, rhs.RadiationRadius)) return false;
+                if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
+                if (!object.Equals(this.ImageSpaceAdapterRef, rhs.ImageSpaceAdapterRef)) return false;
+                if (!object.Equals(this.PlacedImpactObject, rhs.PlacedImpactObject)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.ObjectEffect);
+                hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.Force);
+                hash.Add(this.Damage);
+                hash.Add(this.Radius);
+                hash.Add(this.Light);
+                hash.Add(this.Sound1);
+                hash.Add(this.Flags);
+                hash.Add(this.ISRadius);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.Sound2);
+                hash.Add(this.RadiationLevel);
+                hash.Add(this.RadiationDissipationTime);
+                hash.Add(this.RadiationRadius);
+                hash.Add(this.SoundLevel);
+                hash.Add(this.ImageSpaceAdapterRef);
+                hash.Add(this.PlacedImpactObject);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +421,34 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ObjectEffect)) return false;
+                if (!eval(this.ImageSpaceModifier)) return false;
+                if (!eval(this.Force)) return false;
+                if (!eval(this.Damage)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.Sound1)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.ISRadius)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.Sound2)) return false;
+                if (!eval(this.RadiationLevel)) return false;
+                if (!eval(this.RadiationDissipationTime)) return false;
+                if (!eval(this.RadiationRadius)) return false;
+                if (!eval(this.SoundLevel)) return false;
+                if (!eval(this.ImageSpaceAdapterRef)) return false;
+                if (!eval(this.PlacedImpactObject)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +457,34 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ObjectEffect)) return true;
+                if (eval(this.ImageSpaceModifier)) return true;
+                if (eval(this.Force)) return true;
+                if (eval(this.Damage)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.Sound1)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.ISRadius)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.Sound2)) return true;
+                if (eval(this.RadiationLevel)) return true;
+                if (eval(this.RadiationDissipationTime)) return true;
+                if (eval(this.RadiationRadius)) return true;
+                if (eval(this.SoundLevel)) return true;
+                if (eval(this.ImageSpaceAdapterRef)) return true;
+                if (eval(this.PlacedImpactObject)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +500,26 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.ObjectEffect = eval(this.ObjectEffect);
+                obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.Force = eval(this.Force);
+                obj.Damage = eval(this.Damage);
+                obj.Radius = eval(this.Radius);
+                obj.Light = eval(this.Light);
+                obj.Sound1 = eval(this.Sound1);
+                obj.Flags = eval(this.Flags);
+                obj.ISRadius = eval(this.ISRadius);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.Sound2 = eval(this.Sound2);
+                obj.RadiationLevel = eval(this.RadiationLevel);
+                obj.RadiationDissipationTime = eval(this.RadiationDissipationTime);
+                obj.RadiationRadius = eval(this.RadiationRadius);
+                obj.SoundLevel = eval(this.SoundLevel);
+                obj.ImageSpaceAdapterRef = eval(this.ImageSpaceAdapterRef);
+                obj.PlacedImpactObject = eval(this.PlacedImpactObject);
             }
             #endregion
 
@@ -174,6 +538,86 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Explosion.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.ObjectEffect ?? true)
+                    {
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
+                    }
+                    if (printMask?.ImageSpaceModifier ?? true)
+                    {
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.Force ?? true)
+                    {
+                        sb.AppendItem(Force, "Force");
+                    }
+                    if (printMask?.Damage ?? true)
+                    {
+                        sb.AppendItem(Damage, "Damage");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        sb.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.Sound1 ?? true)
+                    {
+                        sb.AppendItem(Sound1, "Sound1");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.ISRadius ?? true)
+                    {
+                        sb.AppendItem(ISRadius, "ISRadius");
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.Sound2 ?? true)
+                    {
+                        sb.AppendItem(Sound2, "Sound2");
+                    }
+                    if (printMask?.RadiationLevel ?? true)
+                    {
+                        sb.AppendItem(RadiationLevel, "RadiationLevel");
+                    }
+                    if (printMask?.RadiationDissipationTime ?? true)
+                    {
+                        sb.AppendItem(RadiationDissipationTime, "RadiationDissipationTime");
+                    }
+                    if (printMask?.RadiationRadius ?? true)
+                    {
+                        sb.AppendItem(RadiationRadius, "RadiationRadius");
+                    }
+                    if (printMask?.SoundLevel ?? true)
+                    {
+                        sb.AppendItem(SoundLevel, "SoundLevel");
+                    }
+                    if (printMask?.ImageSpaceAdapterRef ?? true)
+                    {
+                        sb.AppendItem(ImageSpaceAdapterRef, "ImageSpaceAdapterRef");
+                    }
+                    if (printMask?.PlacedImpactObject ?? true)
+                    {
+                        sb.AppendItem(PlacedImpactObject, "PlacedImpactObject");
+                    }
                 }
             }
             #endregion
@@ -184,12 +628,75 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? ObjectEffect;
+            public Exception? ImageSpaceModifier;
+            public Exception? Force;
+            public Exception? Damage;
+            public Exception? Radius;
+            public Exception? Light;
+            public Exception? Sound1;
+            public Exception? Flags;
+            public Exception? ISRadius;
+            public Exception? ImpactDataSet;
+            public Exception? Sound2;
+            public Exception? RadiationLevel;
+            public Exception? RadiationDissipationTime;
+            public Exception? RadiationRadius;
+            public Exception? SoundLevel;
+            public Exception? ImageSpaceAdapterRef;
+            public Exception? PlacedImpactObject;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
                 switch (enu)
                 {
+                    case Explosion_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Explosion_FieldIndex.Name:
+                        return Name;
+                    case Explosion_FieldIndex.Model:
+                        return Model;
+                    case Explosion_FieldIndex.ObjectEffect:
+                        return ObjectEffect;
+                    case Explosion_FieldIndex.ImageSpaceModifier:
+                        return ImageSpaceModifier;
+                    case Explosion_FieldIndex.Force:
+                        return Force;
+                    case Explosion_FieldIndex.Damage:
+                        return Damage;
+                    case Explosion_FieldIndex.Radius:
+                        return Radius;
+                    case Explosion_FieldIndex.Light:
+                        return Light;
+                    case Explosion_FieldIndex.Sound1:
+                        return Sound1;
+                    case Explosion_FieldIndex.Flags:
+                        return Flags;
+                    case Explosion_FieldIndex.ISRadius:
+                        return ISRadius;
+                    case Explosion_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Explosion_FieldIndex.Sound2:
+                        return Sound2;
+                    case Explosion_FieldIndex.RadiationLevel:
+                        return RadiationLevel;
+                    case Explosion_FieldIndex.RadiationDissipationTime:
+                        return RadiationDissipationTime;
+                    case Explosion_FieldIndex.RadiationRadius:
+                        return RadiationRadius;
+                    case Explosion_FieldIndex.SoundLevel:
+                        return SoundLevel;
+                    case Explosion_FieldIndex.ImageSpaceAdapterRef:
+                        return ImageSpaceAdapterRef;
+                    case Explosion_FieldIndex.PlacedImpactObject:
+                        return PlacedImpactObject;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +707,66 @@ namespace Mutagen.Bethesda.Fallout3
                 Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
                 switch (enu)
                 {
+                    case Explosion_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Explosion_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Explosion_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = ex;
+                        break;
+                    case Explosion_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = ex;
+                        break;
+                    case Explosion_FieldIndex.Force:
+                        this.Force = ex;
+                        break;
+                    case Explosion_FieldIndex.Damage:
+                        this.Damage = ex;
+                        break;
+                    case Explosion_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case Explosion_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case Explosion_FieldIndex.Sound1:
+                        this.Sound1 = ex;
+                        break;
+                    case Explosion_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Explosion_FieldIndex.ISRadius:
+                        this.ISRadius = ex;
+                        break;
+                    case Explosion_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Explosion_FieldIndex.Sound2:
+                        this.Sound2 = ex;
+                        break;
+                    case Explosion_FieldIndex.RadiationLevel:
+                        this.RadiationLevel = ex;
+                        break;
+                    case Explosion_FieldIndex.RadiationDissipationTime:
+                        this.RadiationDissipationTime = ex;
+                        break;
+                    case Explosion_FieldIndex.RadiationRadius:
+                        this.RadiationRadius = ex;
+                        break;
+                    case Explosion_FieldIndex.SoundLevel:
+                        this.SoundLevel = ex;
+                        break;
+                    case Explosion_FieldIndex.ImageSpaceAdapterRef:
+                        this.ImageSpaceAdapterRef = ex;
+                        break;
+                    case Explosion_FieldIndex.PlacedImpactObject:
+                        this.PlacedImpactObject = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +778,66 @@ namespace Mutagen.Bethesda.Fallout3
                 Explosion_FieldIndex enu = (Explosion_FieldIndex)index;
                 switch (enu)
                 {
+                    case Explosion_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Explosion_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Force:
+                        this.Force = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Damage:
+                        this.Damage = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Sound1:
+                        this.Sound1 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ISRadius:
+                        this.ISRadius = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.Sound2:
+                        this.Sound2 = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.RadiationLevel:
+                        this.RadiationLevel = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.RadiationDissipationTime:
+                        this.RadiationDissipationTime = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.RadiationRadius:
+                        this.RadiationRadius = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.SoundLevel:
+                        this.SoundLevel = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.ImageSpaceAdapterRef:
+                        this.ImageSpaceAdapterRef = (Exception?)obj;
+                        break;
+                    case Explosion_FieldIndex.PlacedImpactObject:
+                        this.PlacedImpactObject = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +847,26 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (ObjectEffect != null) return true;
+                if (ImageSpaceModifier != null) return true;
+                if (Force != null) return true;
+                if (Damage != null) return true;
+                if (Radius != null) return true;
+                if (Light != null) return true;
+                if (Sound1 != null) return true;
+                if (Flags != null) return true;
+                if (ISRadius != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (Sound2 != null) return true;
+                if (RadiationLevel != null) return true;
+                if (RadiationDissipationTime != null) return true;
+                if (RadiationRadius != null) return true;
+                if (SoundLevel != null) return true;
+                if (ImageSpaceAdapterRef != null) return true;
+                if (PlacedImpactObject != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +893,62 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(Force, "Force");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(Sound1, "Sound1");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(ISRadius, "ISRadius");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(Sound2, "Sound2");
+                }
+                {
+                    sb.AppendItem(RadiationLevel, "RadiationLevel");
+                }
+                {
+                    sb.AppendItem(RadiationDissipationTime, "RadiationDissipationTime");
+                }
+                {
+                    sb.AppendItem(RadiationRadius, "RadiationRadius");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(ImageSpaceAdapterRef, "ImageSpaceAdapterRef");
+                }
+                {
+                    sb.AppendItem(PlacedImpactObject, "PlacedImpactObject");
+                }
             }
             #endregion
 
@@ -254,6 +957,26 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
+                ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.Force = this.Force.Combine(rhs.Force);
+                ret.Damage = this.Damage.Combine(rhs.Damage);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.Sound1 = this.Sound1.Combine(rhs.Sound1);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ISRadius = this.ISRadius.Combine(rhs.ISRadius);
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.Sound2 = this.Sound2.Combine(rhs.Sound2);
+                ret.RadiationLevel = this.RadiationLevel.Combine(rhs.RadiationLevel);
+                ret.RadiationDissipationTime = this.RadiationDissipationTime.Combine(rhs.RadiationDissipationTime);
+                ret.RadiationRadius = this.RadiationRadius.Combine(rhs.RadiationRadius);
+                ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
+                ret.ImageSpaceAdapterRef = this.ImageSpaceAdapterRef.Combine(rhs.ImageSpaceAdapterRef);
+                ret.PlacedImpactObject = this.PlacedImpactObject.Combine(rhs.PlacedImpactObject);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +998,81 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public bool ObjectEffect;
+            public bool ImageSpaceModifier;
+            public bool Force;
+            public bool Damage;
+            public bool Radius;
+            public bool Light;
+            public bool Sound1;
+            public bool Flags;
+            public bool ISRadius;
+            public bool ImpactDataSet;
+            public bool Sound2;
+            public bool RadiationLevel;
+            public bool RadiationDissipationTime;
+            public bool RadiationRadius;
+            public bool SoundLevel;
+            public bool ImageSpaceAdapterRef;
+            public bool PlacedImpactObject;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.ObjectEffect = defaultOn;
+                this.ImageSpaceModifier = defaultOn;
+                this.Force = defaultOn;
+                this.Damage = defaultOn;
+                this.Radius = defaultOn;
+                this.Light = defaultOn;
+                this.Sound1 = defaultOn;
+                this.Flags = defaultOn;
+                this.ISRadius = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.Sound2 = defaultOn;
+                this.RadiationLevel = defaultOn;
+                this.RadiationDissipationTime = defaultOn;
+                this.RadiationRadius = defaultOn;
+                this.SoundLevel = defaultOn;
+                this.ImageSpaceAdapterRef = defaultOn;
+                this.PlacedImpactObject = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((ObjectEffect, null));
+                ret.Add((ImageSpaceModifier, null));
+                ret.Add((Force, null));
+                ret.Add((Damage, null));
+                ret.Add((Radius, null));
+                ret.Add((Light, null));
+                ret.Add((Sound1, null));
+                ret.Add((Flags, null));
+                ret.Add((ISRadius, null));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((Sound2, null));
+                ret.Add((RadiationLevel, null));
+                ret.Add((RadiationDissipationTime, null));
+                ret.Add((RadiationRadius, null));
+                ret.Add((SoundLevel, null));
+                ret.Add((ImageSpaceAdapterRef, null));
+                ret.Add((PlacedImpactObject, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1084,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ExplosionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionSetterCommon.Instance.RemapLinks(this, mapping);
         public Explosion(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -414,8 +1205,42 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IExplosion :
         IExplosionGetter,
         IFallout3MajorRecordInternal,
-        ILoquiObjectSetter<IExplosionInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IExplosionInternal>,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new IFormLinkNullable<IObjectEffectGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new Single Force { get; set; }
+        new Single Damage { get; set; }
+        new Single Radius { get; set; }
+        new IFormLink<ILightGetter> Light { get; set; }
+        new IFormLink<ISoundGetter> Sound1 { get; set; }
+        new Explosion.Flag Flags { get; set; }
+        new Single ISRadius { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<ISoundGetter> Sound2 { get; set; }
+        new Single RadiationLevel { get; set; }
+        new Single RadiationDissipationTime { get; set; }
+        new Single RadiationRadius { get; set; }
+        new SoundLevel SoundLevel { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceAdapterRef { get; set; }
+        new IFormLinkNullable<IFallout3MajorRecordGetter> PlacedImpactObject { get; set; }
     }
 
     public partial interface IExplosionInternal :
@@ -429,10 +1254,50 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IExplosionGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IExplosionGetter>,
-        IMapsToGetter<IExplosionGetter>
+        IMapsToGetter<IExplosionGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        Single Force { get; }
+        Single Damage { get; }
+        Single Radius { get; }
+        IFormLinkGetter<ILightGetter> Light { get; }
+        IFormLinkGetter<ISoundGetter> Sound1 { get; }
+        Explosion.Flag Flags { get; }
+        Single ISRadius { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        IFormLinkGetter<ISoundGetter> Sound2 { get; }
+        Single RadiationLevel { get; }
+        Single RadiationDissipationTime { get; }
+        Single RadiationRadius { get; }
+        SoundLevel SoundLevel { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapterRef { get; }
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> PlacedImpactObject { get; }
 
     }
 
@@ -609,6 +1474,26 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        ObjectEffect = 10,
+        ImageSpaceModifier = 11,
+        Force = 12,
+        Damage = 13,
+        Radius = 14,
+        Light = 15,
+        Sound1 = 16,
+        Flags = 17,
+        ISRadius = 18,
+        ImpactDataSet = 19,
+        Sound2 = 20,
+        RadiationLevel = 21,
+        RadiationDissipationTime = 22,
+        RadiationRadius = 23,
+        SoundLevel = 24,
+        ImageSpaceAdapterRef = 25,
+        PlacedImpactObject = 26,
     }
     #endregion
 
@@ -619,9 +1504,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -651,8 +1536,24 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.EXPL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.EXPL);
+            var all = RecordCollection.Factory(
+                RecordTypes.EXPL,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.EITM,
+                RecordTypes.MNAM,
+                RecordTypes.DATA,
+                RecordTypes.IMAD,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
@@ -694,6 +1595,26 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IExplosionInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.ObjectEffect.Clear();
+            item.ImageSpaceModifier.Clear();
+            item.Force = default(Single);
+            item.Damage = default(Single);
+            item.Radius = default(Single);
+            item.Light.Clear();
+            item.Sound1.Clear();
+            item.Flags = default(Explosion.Flag);
+            item.ISRadius = default(Single);
+            item.ImpactDataSet.Clear();
+            item.Sound2.Clear();
+            item.RadiationLevel = default(Single);
+            item.RadiationDissipationTime = default(Single);
+            item.RadiationRadius = default(Single);
+            item.SoundLevel = default(SoundLevel);
+            item.ImageSpaceAdapterRef.Clear();
+            item.PlacedImpactObject.Clear();
             base.Clear(item);
         }
         
@@ -711,6 +1632,15 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IExplosion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.ObjectEffect.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
+            obj.Light.Relink(mapping);
+            obj.Sound1.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
+            obj.Sound2.Relink(mapping);
+            obj.ImageSpaceAdapterRef.Relink(mapping);
+            obj.PlacedImpactObject.Relink(mapping);
         }
         
         #endregion
@@ -778,6 +1708,30 @@ namespace Mutagen.Bethesda.Fallout3
             Explosion.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
+            ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.Force = item.Force.EqualsWithin(rhs.Force);
+            ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Light = item.Light.Equals(rhs.Light);
+            ret.Sound1 = item.Sound1.Equals(rhs.Sound1);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.ISRadius = item.ISRadius.EqualsWithin(rhs.ISRadius);
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.Sound2 = item.Sound2.Equals(rhs.Sound2);
+            ret.RadiationLevel = item.RadiationLevel.EqualsWithin(rhs.RadiationLevel);
+            ret.RadiationDissipationTime = item.RadiationDissipationTime.EqualsWithin(rhs.RadiationDissipationTime);
+            ret.RadiationRadius = item.RadiationRadius.EqualsWithin(rhs.RadiationRadius);
+            ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
+            ret.ImageSpaceAdapterRef = item.ImageSpaceAdapterRef.Equals(rhs.ImageSpaceAdapterRef);
+            ret.PlacedImpactObject = item.PlacedImpactObject.Equals(rhs.PlacedImpactObject);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1781,88 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.ObjectEffect ?? true)
+            {
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+            }
+            if (printMask?.ImageSpaceModifier ?? true)
+            {
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+            }
+            if (printMask?.Force ?? true)
+            {
+                sb.AppendItem(item.Force, "Force");
+            }
+            if (printMask?.Damage ?? true)
+            {
+                sb.AppendItem(item.Damage, "Damage");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                sb.AppendItem(item.Radius, "Radius");
+            }
+            if (printMask?.Light ?? true)
+            {
+                sb.AppendItem(item.Light.FormKey, "Light");
+            }
+            if (printMask?.Sound1 ?? true)
+            {
+                sb.AppendItem(item.Sound1.FormKey, "Sound1");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.ISRadius ?? true)
+            {
+                sb.AppendItem(item.ISRadius, "ISRadius");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+            }
+            if (printMask?.Sound2 ?? true)
+            {
+                sb.AppendItem(item.Sound2.FormKey, "Sound2");
+            }
+            if (printMask?.RadiationLevel ?? true)
+            {
+                sb.AppendItem(item.RadiationLevel, "RadiationLevel");
+            }
+            if (printMask?.RadiationDissipationTime ?? true)
+            {
+                sb.AppendItem(item.RadiationDissipationTime, "RadiationDissipationTime");
+            }
+            if (printMask?.RadiationRadius ?? true)
+            {
+                sb.AppendItem(item.RadiationRadius, "RadiationRadius");
+            }
+            if (printMask?.SoundLevel ?? true)
+            {
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
+            }
+            if (printMask?.ImageSpaceAdapterRef ?? true)
+            {
+                sb.AppendItem(item.ImageSpaceAdapterRef.FormKeyNullable, "ImageSpaceAdapterRef");
+            }
+            if (printMask?.PlacedImpactObject ?? true)
+            {
+                sb.AppendItem(item.PlacedImpactObject.FormKeyNullable, "PlacedImpactObject");
+            }
         }
         
         public static Explosion_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1913,94 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Explosion_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
+            {
+                if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
+            {
+                if (!lhs.Force.EqualsWithin(rhs.Force)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Damage) ?? true))
+            {
+                if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
+            {
+                if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ISRadius) ?? true))
+            {
+                if (!lhs.ISRadius.EqualsWithin(rhs.ISRadius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
+            {
+                if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.RadiationLevel) ?? true))
+            {
+                if (!lhs.RadiationLevel.EqualsWithin(rhs.RadiationLevel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.RadiationDissipationTime) ?? true))
+            {
+                if (!lhs.RadiationDissipationTime.EqualsWithin(rhs.RadiationDissipationTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.RadiationRadius) ?? true))
+            {
+                if (!lhs.RadiationRadius.EqualsWithin(rhs.RadiationRadius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.SoundLevel) ?? true))
+            {
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceAdapterRef) ?? true))
+            {
+                if (!lhs.ImageSpaceAdapterRef.Equals(rhs.ImageSpaceAdapterRef)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedImpactObject) ?? true))
+            {
+                if (!lhs.PlacedImpactObject.Equals(rhs.PlacedImpactObject)) return false;
+            }
             return true;
         }
         
@@ -905,6 +2029,32 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IExplosionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.ObjectEffect);
+            hash.Add(item.ImageSpaceModifier);
+            hash.Add(item.Force);
+            hash.Add(item.Damage);
+            hash.Add(item.Radius);
+            hash.Add(item.Light);
+            hash.Add(item.Sound1);
+            hash.Add(item.Flags);
+            hash.Add(item.ISRadius);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.Sound2);
+            hash.Add(item.RadiationLevel);
+            hash.Add(item.RadiationDissipationTime);
+            hash.Add(item.RadiationRadius);
+            hash.Add(item.SoundLevel);
+            hash.Add(item.ImageSpaceAdapterRef);
+            hash.Add(item.PlacedImpactObject);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,11 +2078,38 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IExplosionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IExplosionGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
+            {
+                yield return ObjectEffectInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
+            {
+                yield return ImageSpaceModifierInfo;
+            }
+            yield return FormLinkInformation.Factory(obj.Light);
+            yield return FormLinkInformation.Factory(obj.Sound1);
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+            yield return FormLinkInformation.Factory(obj.Sound2);
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceAdapterRef, out var ImageSpaceAdapterRefInfo))
+            {
+                yield return ImageSpaceAdapterRefInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PlacedImpactObject, out var PlacedImpactObjectInfo))
+            {
+                yield return PlacedImpactObjectInfo;
             }
             yield break;
         }
@@ -1008,6 +2185,126 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Explosion_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Explosion_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Explosion_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ObjectEffect) ?? true))
+            {
+                item.ObjectEffect.SetTo(rhs.ObjectEffect.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Force) ?? true))
+            {
+                item.Force = rhs.Force;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Damage) ?? true))
+            {
+                item.Damage = rhs.Damage;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Light) ?? true))
+            {
+                item.Light.SetTo(rhs.Light.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound1) ?? true))
+            {
+                item.Sound1.SetTo(rhs.Sound1.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ISRadius) ?? true))
+            {
+                item.ISRadius = rhs.ISRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.Sound2) ?? true))
+            {
+                item.Sound2.SetTo(rhs.Sound2.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.RadiationLevel) ?? true))
+            {
+                item.RadiationLevel = rhs.RadiationLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.RadiationDissipationTime) ?? true))
+            {
+                item.RadiationDissipationTime = rhs.RadiationDissipationTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.RadiationRadius) ?? true))
+            {
+                item.RadiationRadius = rhs.RadiationRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.SoundLevel) ?? true))
+            {
+                item.SoundLevel = rhs.SoundLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceAdapterRef) ?? true))
+            {
+                item.ImageSpaceAdapterRef.SetTo(rhs.ImageSpaceAdapterRef.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedImpactObject) ?? true))
+            {
+                item.PlacedImpactObject.SetTo(rhs.PlacedImpactObject.FormKeyNullable);
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +2465,94 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly ExplosionBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IExplosionGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ObjectEffect,
+                header: translationParams.ConvertToCustom(RecordTypes.EITM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpaceModifier,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Force);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Damage);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Radius);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Light);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound1);
+                EnumBinaryTranslation<Explosion.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ISRadius);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactDataSet);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RadiationLevel);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RadiationDissipationTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RadiationRadius);
+                EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.SoundLevel,
+                    length: 4);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpaceAdapterRef,
+                header: translationParams.ConvertToCustom(RecordTypes.IMAD));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PlacedImpactObject,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IExplosionGetter item,
@@ -1222,6 +2607,115 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EXPL;
+        public static ParseResult FillBinaryRecordTypes(
+            IExplosionInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Fallout3.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Explosion_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Explosion_FieldIndex.Model;
+                }
+                case RecordTypeInts.EITM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Force = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Damage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Sound1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<Explosion.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ISRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Sound2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RadiationLevel = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RadiationDissipationTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RadiationRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)Explosion_FieldIndex.SoundLevel;
+                }
+                case RecordTypeInts.IMAD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpaceAdapterRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.ImageSpaceAdapterRef;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PlacedImpactObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Explosion_FieldIndex.PlacedImpactObject;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +2748,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ExplosionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +2763,102 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IExplosionGetter);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region ObjectEffect
+        private int? _ObjectEffectLocation;
+        public IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IObjectEffectGetter>(_package, _recordData, _ObjectEffectLocation);
+        #endregion
+        #region ImageSpaceModifier
+        private int? _ImageSpaceModifierLocation;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceModifierLocation);
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Force
+        private int _ForceLocation => _DATALocation!.Value.Min;
+        private bool _Force_IsSet => _DATALocation.HasValue;
+        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default(Single);
+        #endregion
+        #region Damage
+        private int _DamageLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Damage_IsSet => _DATALocation.HasValue;
+        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default(Single);
+        #endregion
+        #region Radius
+        private int _RadiusLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Radius_IsSet => _DATALocation.HasValue;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default(Single);
+        #endregion
+        #region Light
+        private int _LightLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Light_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region Sound1
+        private int _Sound1Location => _DATALocation!.Value.Min + 0x10;
+        private bool _Sound1_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> Sound1 => _Sound1_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_Sound1Location, 0x4), isSet: _Sound1_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region ISRadius
+        private int _ISRadiusLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _ISRadius_IsSet => _DATALocation.HasValue;
+        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default(Single);
+        #endregion
+        #region ImpactDataSet
+        private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region Sound2
+        private int _Sound2Location => _DATALocation!.Value.Min + 0x20;
+        private bool _Sound2_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundGetter> Sound2 => _Sound2_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_Sound2Location, 0x4), isSet: _Sound2_IsSet) : FormLink<ISoundGetter>.Null;
+        #endregion
+        #region RadiationLevel
+        private int _RadiationLevelLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _RadiationLevel_IsSet => _DATALocation.HasValue;
+        public Single RadiationLevel => _RadiationLevel_IsSet ? _recordData.Slice(_RadiationLevelLocation, 4).Float() : default(Single);
+        #endregion
+        #region RadiationDissipationTime
+        private int _RadiationDissipationTimeLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _RadiationDissipationTime_IsSet => _DATALocation.HasValue;
+        public Single RadiationDissipationTime => _RadiationDissipationTime_IsSet ? _recordData.Slice(_RadiationDissipationTimeLocation, 4).Float() : default(Single);
+        #endregion
+        #region RadiationRadius
+        private int _RadiationRadiusLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _RadiationRadius_IsSet => _DATALocation.HasValue;
+        public Single RadiationRadius => _RadiationRadius_IsSet ? _recordData.Slice(_RadiationRadiusLocation, 4).Float() : default(Single);
+        #endregion
+        #region SoundLevel
+        private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x30;
+        private bool _SoundLevel_IsSet => _DATALocation.HasValue;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        #endregion
+        #region ImageSpaceAdapterRef
+        private int? _ImageSpaceAdapterRefLocation;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapterRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceAdapterRefLocation);
+        #endregion
+        #region PlacedImpactObject
+        private int? _PlacedImpactObjectLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> PlacedImpactObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _PlacedImpactObjectLocation);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +2916,76 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Explosion_FieldIndex.Model;
+                }
+                case RecordTypeInts.EITM:
+                {
+                    _ObjectEffectLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _ImageSpaceModifierLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Explosion_FieldIndex.SoundLevel;
+                }
+                case RecordTypeInts.IMAD:
+                {
+                    _ImageSpaceAdapterRefLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.ImageSpaceAdapterRef;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _PlacedImpactObjectLocation = (stream.Position - offset);
+                    return (int)Explosion_FieldIndex.PlacedImpactObject;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

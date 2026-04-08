@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ArmorCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
         public Armor(
             FormKey formKey,
@@ -2985,9 +2985,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -3001,35 +3001,35 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (obj.MaleBipedModel is {} MaleBipedModelItems)
             {
-                foreach (var item in MaleBipedModelItems.EnumerateFormLinks())
+                foreach (var item in MaleBipedModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.MaleWorldModel is {} MaleWorldModelItems)
             {
-                foreach (var item in MaleWorldModelItems.EnumerateFormLinks())
+                foreach (var item in MaleWorldModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.FemaleBipedModel is {} FemaleBipedModelItems)
             {
-                foreach (var item in FemaleBipedModelItems.EnumerateFormLinks())
+                foreach (var item in FemaleBipedModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.FemaleWorldModel is {} FemaleWorldModelItems)
             {
-                foreach (var item in FemaleWorldModelItems.EnumerateFormLinks())
+                foreach (var item in FemaleWorldModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                foreach (var item in DestructibleItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -3050,7 +3050,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return DropSoundInfo;
             }
-            foreach (var item in obj.AnimationSounds.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.AnimationSounds.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4147,7 +4147,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ArmorCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -53,6 +53,11 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Flags
+        public VoiceType.VoiceTypeFlag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        VoiceType.VoiceTypeFlag? IVoiceTypeGetter.Flags => this.Flags;
+        #endregion
 
         #region To String
 
@@ -78,6 +83,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -87,7 +93,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +104,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +113,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -118,11 +130,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +147,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +156,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +172,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -174,6 +191,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(VoiceType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
                 }
             }
             #endregion
@@ -184,12 +205,18 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Flags;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +227,9 @@ namespace Mutagen.Bethesda.Fallout3
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +241,9 @@ namespace Mutagen.Bethesda.Fallout3
                 VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
+                    case VoiceType_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +253,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +280,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -254,6 +291,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +313,26 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Flags;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Flags = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -416,6 +465,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IVoiceTypeInternal>,
         IVoiceTypeGetter
     {
+        new VoiceType.VoiceTypeFlag? Flags { get; set; }
     }
 
     public partial interface IVoiceTypeInternal :
@@ -433,6 +483,7 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IVoiceTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
+        VoiceType.VoiceTypeFlag? Flags { get; }
 
     }
 
@@ -609,6 +660,7 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Flags = 7,
     }
     #endregion
 
@@ -619,9 +671,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(VoiceType.Mask<>);
 
@@ -651,8 +703,13 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.VTYP);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.VTYP);
+            var all = RecordCollection.Factory(
+                RecordTypes.VTYP,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(VoiceTypeBinaryWriteTranslation);
         #region Interface
@@ -694,6 +751,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IVoiceTypeInternal item)
         {
             ClearPartial();
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -778,6 +836,7 @@ namespace Mutagen.Bethesda.Fallout3
             VoiceType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +886,11 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
         }
         
         public static VoiceType_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +941,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -905,6 +973,10 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IVoiceTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,9 +1000,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVoiceTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVoiceTypeGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1008,6 +1080,10 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +1244,22 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly VoiceTypeBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IVoiceTypeGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            EnumBinaryTranslation<VoiceType.VoiceTypeFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IVoiceTypeGetter item,
@@ -1222,6 +1314,38 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly VoiceTypeBinaryCreateTranslation Instance = new VoiceTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.VTYP;
+        public static ParseResult FillBinaryRecordTypes(
+            IVoiceTypeInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<VoiceType.VoiceTypeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)VoiceType_FieldIndex.Flags;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1268,6 +1392,10 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IVoiceTypeGetter);
 
 
+        #region Flags
+        private int? _FlagsLocation;
+        public VoiceType.VoiceTypeFlag? Flags => EnumBinaryTranslation<VoiceType.VoiceTypeFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +1453,34 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)VoiceType_FieldIndex.Flags;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

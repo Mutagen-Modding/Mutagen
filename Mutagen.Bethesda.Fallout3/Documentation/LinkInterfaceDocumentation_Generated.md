@@ -11,11 +11,18 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IBoundItem
 - Armor
 - Weapon
+### ICellOrWorldspace
+- Cell
+- Worldspace
 ### IEffectRecord
 - ObjectEffect
 - Spell
+### IEmittance
+- Region
 ### IExplodeSpawn
 - AcousticSpace
+### IIdleRelation
+- IdleAnimation
 ### IItem
 - Ammunition
 - Armor
@@ -38,6 +45,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - LeveledCreature
 - LeveledNpc
 - Npc
+### IOwner
+- Faction
+- Npc
 ### IPlaceableObject
 - AcousticSpace
 ### IPlaced
@@ -52,6 +62,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRelatable
 - Faction
 - Race
+### ISoundOrNpcSpawn
+- Sound
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IExplodeSpawn
@@ -71,12 +83,17 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### CasinoChip
 - IItem
+### Cell
+- ICellOrWorldspace
 ### Creature
 - INpcSpawn
 ### Faction
+- IOwner
 - IRelatable
 ### FormList
 - IAmmoOrList
+### IdleAnimation
+- IIdleRelation
 ### Ingestible
 - IItem
 ### ItemMod
@@ -99,6 +116,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Npc
 - INpcSpawn
+- IOwner
 ### ObjectEffect
 - IEffectRecord
 ### PlacedBeam
@@ -115,6 +133,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 ### Race
 - IRelatable
+### Region
+- IEmittance
+### Sound
+- ISoundOrNpcSpawn
 ### Spell
 - IEffectRecord
 ### Static
@@ -122,3 +144,5 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Weapon
 - IBoundItem
 - IItem
+### Worldspace
+- ICellOrWorldspace

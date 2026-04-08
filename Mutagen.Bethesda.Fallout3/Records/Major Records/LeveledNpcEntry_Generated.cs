@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcEntryCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LeveledNpcEntryCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -914,15 +914,15 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledNpcEntryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledNpcEntryGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Data.EnumerateFormLinks())
+            foreach (var item in obj.Data.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.ExtraData is IFormLinkContainerGetter ExtraDatalinkCont)
             {
-                foreach (var item in ExtraDatalinkCont.EnumerateFormLinks())
+                foreach (var item in ExtraDatalinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcEntryCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LeveledNpcEntryCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledNpcEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -105,8 +105,45 @@ namespace Mutagen.Bethesda.Fallout3
             _Ingestibles_Object = new Fallout3Group<Ingestible>(this);
             _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             _Notes_Object = new Fallout3Group<Note>(this);
+            _ConstructibleObjects_Object = new Fallout3Group<ConstructibleObject>(this);
             _Projectiles_Object = new Fallout3Group<Projectile>(this);
             _LeveledItems_Object = new Fallout3Group<LeveledItem>(this);
+            _Weather_Object = new Fallout3Group<Weather>(this);
+            _Climates_Object = new Fallout3Group<Climate>(this);
+            _Regions_Object = new Fallout3Group<Region>(this);
+            _NavigationMeshInfoMaps_Object = new Fallout3Group<NavigationMeshInfoMap>(this);
+            _Worldspaces_Object = new Fallout3Group<Worldspace>(this);
+            _DialogTopics_Object = new Fallout3Group<DialogTopic>(this);
+            _Quests_Object = new Fallout3Group<Quest>(this);
+            _IdleAnimations_Object = new Fallout3Group<IdleAnimation>(this);
+            _Packages_Object = new Fallout3Group<Package>(this);
+            _CombatStyles_Object = new Fallout3Group<CombatStyle>(this);
+            _LoadScreens_Object = new Fallout3Group<LoadScreen>(this);
+            _AnimatedObjects_Object = new Fallout3Group<AnimatedObject>(this);
+            _Waters_Object = new Fallout3Group<Water>(this);
+            _EffectShaders_Object = new Fallout3Group<EffectShader>(this);
+            _Explosions_Object = new Fallout3Group<Explosion>(this);
+            _Debris_Object = new Fallout3Group<Debris>(this);
+            _ImageSpaces_Object = new Fallout3Group<ImageSpace>(this);
+            _ImageSpaceAdapters_Object = new Fallout3Group<ImageSpaceAdapter>(this);
+            _Messages_Object = new Fallout3Group<Message>(this);
+            _Perks_Object = new Fallout3Group<Perk>(this);
+            _BodyParts_Object = new Fallout3Group<BodyPartData>(this);
+            _AddonNodes_Object = new Fallout3Group<AddonNode>(this);
+            _ActorValueInformation_Object = new Fallout3Group<ActorValueInformation>(this);
+            _RadiationStages_Object = new Fallout3Group<RadiationStage>(this);
+            _CameraShots_Object = new Fallout3Group<CameraShot>(this);
+            _CameraPaths_Object = new Fallout3Group<CameraPath>(this);
+            _VoiceTypes_Object = new Fallout3Group<VoiceType>(this);
+            _Impacts_Object = new Fallout3Group<Impact>(this);
+            _ImpactDataSets_Object = new Fallout3Group<ImpactDataSet>(this);
+            _ArmorAddons_Object = new Fallout3Group<ArmorAddon>(this);
+            _EncounterZones_Object = new Fallout3Group<EncounterZone>(this);
+            _Ragdolls_Object = new Fallout3Group<Ragdoll>(this);
+            _DefaultObjectManagers_Object = new Fallout3Group<DefaultObjectManager>(this);
+            _LightingTemplates_Object = new Fallout3Group<LightingTemplate>(this);
+            _MusicTypes_Object = new Fallout3Group<MusicType>(this);
+            _FormLists_Object = new Fallout3Group<FormList>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -427,6 +464,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<INoteGetter> IFallout3ModGetter.Notes => _Notes_Object;
         #endregion
+        #region ConstructibleObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ConstructibleObject> _ConstructibleObjects_Object;
+        public Fallout3Group<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IConstructibleObjectGetter> IFallout3ModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        #endregion
         #region Projectiles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Fallout3Group<Projectile> _Projectiles_Object;
@@ -440,6 +484,265 @@ namespace Mutagen.Bethesda.Fallout3
         public Fallout3Group<LeveledItem> LeveledItems => _LeveledItems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ILeveledItemGetter> IFallout3ModGetter.LeveledItems => _LeveledItems_Object;
+        #endregion
+        #region Weather
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Weather> _Weather_Object;
+        public Fallout3Group<Weather> Weather => _Weather_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IWeatherGetter> IFallout3ModGetter.Weather => _Weather_Object;
+        #endregion
+        #region Climates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Climate> _Climates_Object;
+        public Fallout3Group<Climate> Climates => _Climates_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IClimateGetter> IFallout3ModGetter.Climates => _Climates_Object;
+        #endregion
+        #region Regions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Region> _Regions_Object;
+        public Fallout3Group<Region> Regions => _Regions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IRegionGetter> IFallout3ModGetter.Regions => _Regions_Object;
+        #endregion
+        #region NavigationMeshInfoMaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<NavigationMeshInfoMap> _NavigationMeshInfoMaps_Object;
+        public Fallout3Group<NavigationMeshInfoMap> NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<INavigationMeshInfoMapGetter> IFallout3ModGetter.NavigationMeshInfoMaps => _NavigationMeshInfoMaps_Object;
+        #endregion
+        #region Cells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Fallout3ListGroup<CellBlock> _Cells_Object = new Fallout3ListGroup<CellBlock>();
+        public Fallout3ListGroup<CellBlock> Cells => _Cells_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3ListGroupGetter<ICellBlockGetter> IFallout3ModGetter.Cells => _Cells_Object;
+        #endregion
+        #region Worldspaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Worldspace> _Worldspaces_Object;
+        public Fallout3Group<Worldspace> Worldspaces => _Worldspaces_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IWorldspaceGetter> IFallout3ModGetter.Worldspaces => _Worldspaces_Object;
+        #endregion
+        #region DialogTopics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<DialogTopic> _DialogTopics_Object;
+        public Fallout3Group<DialogTopic> DialogTopics => _DialogTopics_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IDialogTopicGetter> IFallout3ModGetter.DialogTopics => _DialogTopics_Object;
+        #endregion
+        #region Quests
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Quest> _Quests_Object;
+        public Fallout3Group<Quest> Quests => _Quests_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IQuestGetter> IFallout3ModGetter.Quests => _Quests_Object;
+        #endregion
+        #region IdleAnimations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<IdleAnimation> _IdleAnimations_Object;
+        public Fallout3Group<IdleAnimation> IdleAnimations => _IdleAnimations_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IIdleAnimationGetter> IFallout3ModGetter.IdleAnimations => _IdleAnimations_Object;
+        #endregion
+        #region Packages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Package> _Packages_Object;
+        public Fallout3Group<Package> Packages => _Packages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IPackageGetter> IFallout3ModGetter.Packages => _Packages_Object;
+        #endregion
+        #region CombatStyles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<CombatStyle> _CombatStyles_Object;
+        public Fallout3Group<CombatStyle> CombatStyles => _CombatStyles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICombatStyleGetter> IFallout3ModGetter.CombatStyles => _CombatStyles_Object;
+        #endregion
+        #region LoadScreens
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<LoadScreen> _LoadScreens_Object;
+        public Fallout3Group<LoadScreen> LoadScreens => _LoadScreens_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ILoadScreenGetter> IFallout3ModGetter.LoadScreens => _LoadScreens_Object;
+        #endregion
+        #region AnimatedObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<AnimatedObject> _AnimatedObjects_Object;
+        public Fallout3Group<AnimatedObject> AnimatedObjects => _AnimatedObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IAnimatedObjectGetter> IFallout3ModGetter.AnimatedObjects => _AnimatedObjects_Object;
+        #endregion
+        #region Waters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Water> _Waters_Object;
+        public Fallout3Group<Water> Waters => _Waters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IWaterGetter> IFallout3ModGetter.Waters => _Waters_Object;
+        #endregion
+        #region EffectShaders
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<EffectShader> _EffectShaders_Object;
+        public Fallout3Group<EffectShader> EffectShaders => _EffectShaders_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IEffectShaderGetter> IFallout3ModGetter.EffectShaders => _EffectShaders_Object;
+        #endregion
+        #region Explosions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Explosion> _Explosions_Object;
+        public Fallout3Group<Explosion> Explosions => _Explosions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IExplosionGetter> IFallout3ModGetter.Explosions => _Explosions_Object;
+        #endregion
+        #region Debris
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Debris> _Debris_Object;
+        public Fallout3Group<Debris> Debris => _Debris_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IDebrisGetter> IFallout3ModGetter.Debris => _Debris_Object;
+        #endregion
+        #region ImageSpaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ImageSpace> _ImageSpaces_Object;
+        public Fallout3Group<ImageSpace> ImageSpaces => _ImageSpaces_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IImageSpaceGetter> IFallout3ModGetter.ImageSpaces => _ImageSpaces_Object;
+        #endregion
+        #region ImageSpaceAdapters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ImageSpaceAdapter> _ImageSpaceAdapters_Object;
+        public Fallout3Group<ImageSpaceAdapter> ImageSpaceAdapters => _ImageSpaceAdapters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IImageSpaceAdapterGetter> IFallout3ModGetter.ImageSpaceAdapters => _ImageSpaceAdapters_Object;
+        #endregion
+        #region Messages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Message> _Messages_Object;
+        public Fallout3Group<Message> Messages => _Messages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IMessageGetter> IFallout3ModGetter.Messages => _Messages_Object;
+        #endregion
+        #region Perks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Perk> _Perks_Object;
+        public Fallout3Group<Perk> Perks => _Perks_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IPerkGetter> IFallout3ModGetter.Perks => _Perks_Object;
+        #endregion
+        #region BodyParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<BodyPartData> _BodyParts_Object;
+        public Fallout3Group<BodyPartData> BodyParts => _BodyParts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IBodyPartDataGetter> IFallout3ModGetter.BodyParts => _BodyParts_Object;
+        #endregion
+        #region AddonNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<AddonNode> _AddonNodes_Object;
+        public Fallout3Group<AddonNode> AddonNodes => _AddonNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IAddonNodeGetter> IFallout3ModGetter.AddonNodes => _AddonNodes_Object;
+        #endregion
+        #region ActorValueInformation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ActorValueInformation> _ActorValueInformation_Object;
+        public Fallout3Group<ActorValueInformation> ActorValueInformation => _ActorValueInformation_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IActorValueInformationGetter> IFallout3ModGetter.ActorValueInformation => _ActorValueInformation_Object;
+        #endregion
+        #region RadiationStages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<RadiationStage> _RadiationStages_Object;
+        public Fallout3Group<RadiationStage> RadiationStages => _RadiationStages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IRadiationStageGetter> IFallout3ModGetter.RadiationStages => _RadiationStages_Object;
+        #endregion
+        #region CameraShots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<CameraShot> _CameraShots_Object;
+        public Fallout3Group<CameraShot> CameraShots => _CameraShots_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICameraShotGetter> IFallout3ModGetter.CameraShots => _CameraShots_Object;
+        #endregion
+        #region CameraPaths
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<CameraPath> _CameraPaths_Object;
+        public Fallout3Group<CameraPath> CameraPaths => _CameraPaths_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICameraPathGetter> IFallout3ModGetter.CameraPaths => _CameraPaths_Object;
+        #endregion
+        #region VoiceTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<VoiceType> _VoiceTypes_Object;
+        public Fallout3Group<VoiceType> VoiceTypes => _VoiceTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IVoiceTypeGetter> IFallout3ModGetter.VoiceTypes => _VoiceTypes_Object;
+        #endregion
+        #region Impacts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Impact> _Impacts_Object;
+        public Fallout3Group<Impact> Impacts => _Impacts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IImpactGetter> IFallout3ModGetter.Impacts => _Impacts_Object;
+        #endregion
+        #region ImpactDataSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ImpactDataSet> _ImpactDataSets_Object;
+        public Fallout3Group<ImpactDataSet> ImpactDataSets => _ImpactDataSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IImpactDataSetGetter> IFallout3ModGetter.ImpactDataSets => _ImpactDataSets_Object;
+        #endregion
+        #region ArmorAddons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ArmorAddon> _ArmorAddons_Object;
+        public Fallout3Group<ArmorAddon> ArmorAddons => _ArmorAddons_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IArmorAddonGetter> IFallout3ModGetter.ArmorAddons => _ArmorAddons_Object;
+        #endregion
+        #region EncounterZones
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<EncounterZone> _EncounterZones_Object;
+        public Fallout3Group<EncounterZone> EncounterZones => _EncounterZones_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IEncounterZoneGetter> IFallout3ModGetter.EncounterZones => _EncounterZones_Object;
+        #endregion
+        #region Ragdolls
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Ragdoll> _Ragdolls_Object;
+        public Fallout3Group<Ragdoll> Ragdolls => _Ragdolls_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IRagdollGetter> IFallout3ModGetter.Ragdolls => _Ragdolls_Object;
+        #endregion
+        #region DefaultObjectManagers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<DefaultObjectManager> _DefaultObjectManagers_Object;
+        public Fallout3Group<DefaultObjectManager> DefaultObjectManagers => _DefaultObjectManagers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IDefaultObjectManagerGetter> IFallout3ModGetter.DefaultObjectManagers => _DefaultObjectManagers_Object;
+        #endregion
+        #region LightingTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<LightingTemplate> _LightingTemplates_Object;
+        public Fallout3Group<LightingTemplate> LightingTemplates => _LightingTemplates_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ILightingTemplateGetter> IFallout3ModGetter.LightingTemplates => _LightingTemplates_Object;
+        #endregion
+        #region MusicTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<MusicType> _MusicTypes_Object;
+        public Fallout3Group<MusicType> MusicTypes => _MusicTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IMusicTypeGetter> IFallout3ModGetter.MusicTypes => _MusicTypes_Object;
+        #endregion
+        #region FormLists
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<FormList> _FormLists_Object;
+        public Fallout3Group<FormList> FormLists => _FormLists_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IFormListGetter> IFallout3ModGetter.FormLists => _FormLists_Object;
         #endregion
 
         #region To String
@@ -525,8 +828,46 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Ingestibles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Notes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Projectiles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.LeveledItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Weather = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Climates = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Regions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Cells = new MaskItem<TItem, Fallout3ListGroup.Mask<TItem>?>(initialValue, new Fallout3ListGroup.Mask<TItem>(initialValue));
+                this.Worldspaces = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.DialogTopics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Quests = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.IdleAnimations = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Packages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.CombatStyles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.LoadScreens = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.AnimatedObjects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Waters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.EffectShaders = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Explosions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Debris = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ImageSpaces = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ImageSpaceAdapters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Messages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Perks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.BodyParts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.AddonNodes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ActorValueInformation = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.RadiationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.CameraShots = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.CameraPaths = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.VoiceTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Impacts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ImpactDataSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ArmorAddons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.EncounterZones = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Ragdolls = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.DefaultObjectManagers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.LightingTemplates = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.MusicTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.FormLists = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -575,8 +916,46 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Ingestibles,
                 TItem IdleMarkers,
                 TItem Notes,
+                TItem ConstructibleObjects,
                 TItem Projectiles,
-                TItem LeveledItems)
+                TItem LeveledItems,
+                TItem Weather,
+                TItem Climates,
+                TItem Regions,
+                TItem NavigationMeshInfoMaps,
+                TItem Cells,
+                TItem Worldspaces,
+                TItem DialogTopics,
+                TItem Quests,
+                TItem IdleAnimations,
+                TItem Packages,
+                TItem CombatStyles,
+                TItem LoadScreens,
+                TItem AnimatedObjects,
+                TItem Waters,
+                TItem EffectShaders,
+                TItem Explosions,
+                TItem Debris,
+                TItem ImageSpaces,
+                TItem ImageSpaceAdapters,
+                TItem Messages,
+                TItem Perks,
+                TItem BodyParts,
+                TItem AddonNodes,
+                TItem ActorValueInformation,
+                TItem RadiationStages,
+                TItem CameraShots,
+                TItem CameraPaths,
+                TItem VoiceTypes,
+                TItem Impacts,
+                TItem ImpactDataSets,
+                TItem ArmorAddons,
+                TItem EncounterZones,
+                TItem Ragdolls,
+                TItem DefaultObjectManagers,
+                TItem LightingTemplates,
+                TItem MusicTypes,
+                TItem FormLists)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -623,8 +1002,46 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Ingestibles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Ingestibles, new Fallout3Group.Mask<TItem>(Ingestibles));
                 this.IdleMarkers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(IdleMarkers, new Fallout3Group.Mask<TItem>(IdleMarkers));
                 this.Notes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Notes, new Fallout3Group.Mask<TItem>(Notes));
+                this.ConstructibleObjects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ConstructibleObjects, new Fallout3Group.Mask<TItem>(ConstructibleObjects));
                 this.Projectiles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Projectiles, new Fallout3Group.Mask<TItem>(Projectiles));
                 this.LeveledItems = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LeveledItems, new Fallout3Group.Mask<TItem>(LeveledItems));
+                this.Weather = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Weather, new Fallout3Group.Mask<TItem>(Weather));
+                this.Climates = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Climates, new Fallout3Group.Mask<TItem>(Climates));
+                this.Regions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Regions, new Fallout3Group.Mask<TItem>(Regions));
+                this.NavigationMeshInfoMaps = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(NavigationMeshInfoMaps, new Fallout3Group.Mask<TItem>(NavigationMeshInfoMaps));
+                this.Cells = new MaskItem<TItem, Fallout3ListGroup.Mask<TItem>?>(Cells, new Fallout3ListGroup.Mask<TItem>(Cells));
+                this.Worldspaces = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Worldspaces, new Fallout3Group.Mask<TItem>(Worldspaces));
+                this.DialogTopics = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(DialogTopics, new Fallout3Group.Mask<TItem>(DialogTopics));
+                this.Quests = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Quests, new Fallout3Group.Mask<TItem>(Quests));
+                this.IdleAnimations = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(IdleAnimations, new Fallout3Group.Mask<TItem>(IdleAnimations));
+                this.Packages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Packages, new Fallout3Group.Mask<TItem>(Packages));
+                this.CombatStyles = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CombatStyles, new Fallout3Group.Mask<TItem>(CombatStyles));
+                this.LoadScreens = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LoadScreens, new Fallout3Group.Mask<TItem>(LoadScreens));
+                this.AnimatedObjects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(AnimatedObjects, new Fallout3Group.Mask<TItem>(AnimatedObjects));
+                this.Waters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Waters, new Fallout3Group.Mask<TItem>(Waters));
+                this.EffectShaders = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(EffectShaders, new Fallout3Group.Mask<TItem>(EffectShaders));
+                this.Explosions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Explosions, new Fallout3Group.Mask<TItem>(Explosions));
+                this.Debris = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Debris, new Fallout3Group.Mask<TItem>(Debris));
+                this.ImageSpaces = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ImageSpaces, new Fallout3Group.Mask<TItem>(ImageSpaces));
+                this.ImageSpaceAdapters = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ImageSpaceAdapters, new Fallout3Group.Mask<TItem>(ImageSpaceAdapters));
+                this.Messages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Messages, new Fallout3Group.Mask<TItem>(Messages));
+                this.Perks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Perks, new Fallout3Group.Mask<TItem>(Perks));
+                this.BodyParts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(BodyParts, new Fallout3Group.Mask<TItem>(BodyParts));
+                this.AddonNodes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(AddonNodes, new Fallout3Group.Mask<TItem>(AddonNodes));
+                this.ActorValueInformation = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ActorValueInformation, new Fallout3Group.Mask<TItem>(ActorValueInformation));
+                this.RadiationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(RadiationStages, new Fallout3Group.Mask<TItem>(RadiationStages));
+                this.CameraShots = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CameraShots, new Fallout3Group.Mask<TItem>(CameraShots));
+                this.CameraPaths = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CameraPaths, new Fallout3Group.Mask<TItem>(CameraPaths));
+                this.VoiceTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(VoiceTypes, new Fallout3Group.Mask<TItem>(VoiceTypes));
+                this.Impacts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Impacts, new Fallout3Group.Mask<TItem>(Impacts));
+                this.ImpactDataSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ImpactDataSets, new Fallout3Group.Mask<TItem>(ImpactDataSets));
+                this.ArmorAddons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ArmorAddons, new Fallout3Group.Mask<TItem>(ArmorAddons));
+                this.EncounterZones = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(EncounterZones, new Fallout3Group.Mask<TItem>(EncounterZones));
+                this.Ragdolls = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Ragdolls, new Fallout3Group.Mask<TItem>(Ragdolls));
+                this.DefaultObjectManagers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(DefaultObjectManagers, new Fallout3Group.Mask<TItem>(DefaultObjectManagers));
+                this.LightingTemplates = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LightingTemplates, new Fallout3Group.Mask<TItem>(LightingTemplates));
+                this.MusicTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MusicTypes, new Fallout3Group.Mask<TItem>(MusicTypes));
+                this.FormLists = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(FormLists, new Fallout3Group.Mask<TItem>(FormLists));
             }
 
             #pragma warning disable CS8618
@@ -681,8 +1098,46 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? IdleMarkers { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Notes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Projectiles { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LeveledItems { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Weather { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Climates { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Regions { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? NavigationMeshInfoMaps { get; set; }
+            public MaskItem<TItem, Fallout3ListGroup.Mask<TItem>?>? Cells { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Worldspaces { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? DialogTopics { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Quests { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? IdleAnimations { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Packages { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CombatStyles { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LoadScreens { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? AnimatedObjects { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Waters { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? EffectShaders { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Explosions { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Debris { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ImageSpaces { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ImageSpaceAdapters { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Messages { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Perks { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? BodyParts { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? AddonNodes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ActorValueInformation { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? RadiationStages { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CameraShots { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CameraPaths { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? VoiceTypes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Impacts { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ImpactDataSets { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ArmorAddons { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? EncounterZones { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Ragdolls { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? DefaultObjectManagers { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LightingTemplates { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MusicTypes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? FormLists { get; set; }
             #endregion
 
             #region Equals
@@ -740,8 +1195,46 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
                 if (!object.Equals(this.Notes, rhs.Notes)) return false;
+                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
+                if (!object.Equals(this.Weather, rhs.Weather)) return false;
+                if (!object.Equals(this.Climates, rhs.Climates)) return false;
+                if (!object.Equals(this.Regions, rhs.Regions)) return false;
+                if (!object.Equals(this.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
+                if (!object.Equals(this.Cells, rhs.Cells)) return false;
+                if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
+                if (!object.Equals(this.DialogTopics, rhs.DialogTopics)) return false;
+                if (!object.Equals(this.Quests, rhs.Quests)) return false;
+                if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (!object.Equals(this.Packages, rhs.Packages)) return false;
+                if (!object.Equals(this.CombatStyles, rhs.CombatStyles)) return false;
+                if (!object.Equals(this.LoadScreens, rhs.LoadScreens)) return false;
+                if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
+                if (!object.Equals(this.Waters, rhs.Waters)) return false;
+                if (!object.Equals(this.EffectShaders, rhs.EffectShaders)) return false;
+                if (!object.Equals(this.Explosions, rhs.Explosions)) return false;
+                if (!object.Equals(this.Debris, rhs.Debris)) return false;
+                if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
+                if (!object.Equals(this.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
+                if (!object.Equals(this.Messages, rhs.Messages)) return false;
+                if (!object.Equals(this.Perks, rhs.Perks)) return false;
+                if (!object.Equals(this.BodyParts, rhs.BodyParts)) return false;
+                if (!object.Equals(this.AddonNodes, rhs.AddonNodes)) return false;
+                if (!object.Equals(this.ActorValueInformation, rhs.ActorValueInformation)) return false;
+                if (!object.Equals(this.RadiationStages, rhs.RadiationStages)) return false;
+                if (!object.Equals(this.CameraShots, rhs.CameraShots)) return false;
+                if (!object.Equals(this.CameraPaths, rhs.CameraPaths)) return false;
+                if (!object.Equals(this.VoiceTypes, rhs.VoiceTypes)) return false;
+                if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
+                if (!object.Equals(this.ImpactDataSets, rhs.ImpactDataSets)) return false;
+                if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
+                if (!object.Equals(this.EncounterZones, rhs.EncounterZones)) return false;
+                if (!object.Equals(this.Ragdolls, rhs.Ragdolls)) return false;
+                if (!object.Equals(this.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
+                if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
+                if (!object.Equals(this.MusicTypes, rhs.MusicTypes)) return false;
+                if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -792,8 +1285,46 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Ingestibles);
                 hash.Add(this.IdleMarkers);
                 hash.Add(this.Notes);
+                hash.Add(this.ConstructibleObjects);
                 hash.Add(this.Projectiles);
                 hash.Add(this.LeveledItems);
+                hash.Add(this.Weather);
+                hash.Add(this.Climates);
+                hash.Add(this.Regions);
+                hash.Add(this.NavigationMeshInfoMaps);
+                hash.Add(this.Cells);
+                hash.Add(this.Worldspaces);
+                hash.Add(this.DialogTopics);
+                hash.Add(this.Quests);
+                hash.Add(this.IdleAnimations);
+                hash.Add(this.Packages);
+                hash.Add(this.CombatStyles);
+                hash.Add(this.LoadScreens);
+                hash.Add(this.AnimatedObjects);
+                hash.Add(this.Waters);
+                hash.Add(this.EffectShaders);
+                hash.Add(this.Explosions);
+                hash.Add(this.Debris);
+                hash.Add(this.ImageSpaces);
+                hash.Add(this.ImageSpaceAdapters);
+                hash.Add(this.Messages);
+                hash.Add(this.Perks);
+                hash.Add(this.BodyParts);
+                hash.Add(this.AddonNodes);
+                hash.Add(this.ActorValueInformation);
+                hash.Add(this.RadiationStages);
+                hash.Add(this.CameraShots);
+                hash.Add(this.CameraPaths);
+                hash.Add(this.VoiceTypes);
+                hash.Add(this.Impacts);
+                hash.Add(this.ImpactDataSets);
+                hash.Add(this.ArmorAddons);
+                hash.Add(this.EncounterZones);
+                hash.Add(this.Ragdolls);
+                hash.Add(this.DefaultObjectManagers);
+                hash.Add(this.LightingTemplates);
+                hash.Add(this.MusicTypes);
+                hash.Add(this.FormLists);
                 return hash.ToHashCode();
             }
 
@@ -1027,6 +1558,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Notes.Overall)) return false;
                     if (this.Notes.Specific != null && !this.Notes.Specific.All(eval)) return false;
                 }
+                if (ConstructibleObjects != null)
+                {
+                    if (!eval(this.ConstructibleObjects.Overall)) return false;
+                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
+                }
                 if (Projectiles != null)
                 {
                     if (!eval(this.Projectiles.Overall)) return false;
@@ -1036,6 +1572,191 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (!eval(this.LeveledItems.Overall)) return false;
                     if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.All(eval)) return false;
+                }
+                if (Weather != null)
+                {
+                    if (!eval(this.Weather.Overall)) return false;
+                    if (this.Weather.Specific != null && !this.Weather.Specific.All(eval)) return false;
+                }
+                if (Climates != null)
+                {
+                    if (!eval(this.Climates.Overall)) return false;
+                    if (this.Climates.Specific != null && !this.Climates.Specific.All(eval)) return false;
+                }
+                if (Regions != null)
+                {
+                    if (!eval(this.Regions.Overall)) return false;
+                    if (this.Regions.Specific != null && !this.Regions.Specific.All(eval)) return false;
+                }
+                if (NavigationMeshInfoMaps != null)
+                {
+                    if (!eval(this.NavigationMeshInfoMaps.Overall)) return false;
+                    if (this.NavigationMeshInfoMaps.Specific != null && !this.NavigationMeshInfoMaps.Specific.All(eval)) return false;
+                }
+                if (Cells != null)
+                {
+                    if (!eval(this.Cells.Overall)) return false;
+                    if (this.Cells.Specific != null && !this.Cells.Specific.All(eval)) return false;
+                }
+                if (Worldspaces != null)
+                {
+                    if (!eval(this.Worldspaces.Overall)) return false;
+                    if (this.Worldspaces.Specific != null && !this.Worldspaces.Specific.All(eval)) return false;
+                }
+                if (DialogTopics != null)
+                {
+                    if (!eval(this.DialogTopics.Overall)) return false;
+                    if (this.DialogTopics.Specific != null && !this.DialogTopics.Specific.All(eval)) return false;
+                }
+                if (Quests != null)
+                {
+                    if (!eval(this.Quests.Overall)) return false;
+                    if (this.Quests.Specific != null && !this.Quests.Specific.All(eval)) return false;
+                }
+                if (IdleAnimations != null)
+                {
+                    if (!eval(this.IdleAnimations.Overall)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
+                }
+                if (Packages != null)
+                {
+                    if (!eval(this.Packages.Overall)) return false;
+                    if (this.Packages.Specific != null && !this.Packages.Specific.All(eval)) return false;
+                }
+                if (CombatStyles != null)
+                {
+                    if (!eval(this.CombatStyles.Overall)) return false;
+                    if (this.CombatStyles.Specific != null && !this.CombatStyles.Specific.All(eval)) return false;
+                }
+                if (LoadScreens != null)
+                {
+                    if (!eval(this.LoadScreens.Overall)) return false;
+                    if (this.LoadScreens.Specific != null && !this.LoadScreens.Specific.All(eval)) return false;
+                }
+                if (AnimatedObjects != null)
+                {
+                    if (!eval(this.AnimatedObjects.Overall)) return false;
+                    if (this.AnimatedObjects.Specific != null && !this.AnimatedObjects.Specific.All(eval)) return false;
+                }
+                if (Waters != null)
+                {
+                    if (!eval(this.Waters.Overall)) return false;
+                    if (this.Waters.Specific != null && !this.Waters.Specific.All(eval)) return false;
+                }
+                if (EffectShaders != null)
+                {
+                    if (!eval(this.EffectShaders.Overall)) return false;
+                    if (this.EffectShaders.Specific != null && !this.EffectShaders.Specific.All(eval)) return false;
+                }
+                if (Explosions != null)
+                {
+                    if (!eval(this.Explosions.Overall)) return false;
+                    if (this.Explosions.Specific != null && !this.Explosions.Specific.All(eval)) return false;
+                }
+                if (Debris != null)
+                {
+                    if (!eval(this.Debris.Overall)) return false;
+                    if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
+                }
+                if (ImageSpaces != null)
+                {
+                    if (!eval(this.ImageSpaces.Overall)) return false;
+                    if (this.ImageSpaces.Specific != null && !this.ImageSpaces.Specific.All(eval)) return false;
+                }
+                if (ImageSpaceAdapters != null)
+                {
+                    if (!eval(this.ImageSpaceAdapters.Overall)) return false;
+                    if (this.ImageSpaceAdapters.Specific != null && !this.ImageSpaceAdapters.Specific.All(eval)) return false;
+                }
+                if (Messages != null)
+                {
+                    if (!eval(this.Messages.Overall)) return false;
+                    if (this.Messages.Specific != null && !this.Messages.Specific.All(eval)) return false;
+                }
+                if (Perks != null)
+                {
+                    if (!eval(this.Perks.Overall)) return false;
+                    if (this.Perks.Specific != null && !this.Perks.Specific.All(eval)) return false;
+                }
+                if (BodyParts != null)
+                {
+                    if (!eval(this.BodyParts.Overall)) return false;
+                    if (this.BodyParts.Specific != null && !this.BodyParts.Specific.All(eval)) return false;
+                }
+                if (AddonNodes != null)
+                {
+                    if (!eval(this.AddonNodes.Overall)) return false;
+                    if (this.AddonNodes.Specific != null && !this.AddonNodes.Specific.All(eval)) return false;
+                }
+                if (ActorValueInformation != null)
+                {
+                    if (!eval(this.ActorValueInformation.Overall)) return false;
+                    if (this.ActorValueInformation.Specific != null && !this.ActorValueInformation.Specific.All(eval)) return false;
+                }
+                if (RadiationStages != null)
+                {
+                    if (!eval(this.RadiationStages.Overall)) return false;
+                    if (this.RadiationStages.Specific != null && !this.RadiationStages.Specific.All(eval)) return false;
+                }
+                if (CameraShots != null)
+                {
+                    if (!eval(this.CameraShots.Overall)) return false;
+                    if (this.CameraShots.Specific != null && !this.CameraShots.Specific.All(eval)) return false;
+                }
+                if (CameraPaths != null)
+                {
+                    if (!eval(this.CameraPaths.Overall)) return false;
+                    if (this.CameraPaths.Specific != null && !this.CameraPaths.Specific.All(eval)) return false;
+                }
+                if (VoiceTypes != null)
+                {
+                    if (!eval(this.VoiceTypes.Overall)) return false;
+                    if (this.VoiceTypes.Specific != null && !this.VoiceTypes.Specific.All(eval)) return false;
+                }
+                if (Impacts != null)
+                {
+                    if (!eval(this.Impacts.Overall)) return false;
+                    if (this.Impacts.Specific != null && !this.Impacts.Specific.All(eval)) return false;
+                }
+                if (ImpactDataSets != null)
+                {
+                    if (!eval(this.ImpactDataSets.Overall)) return false;
+                    if (this.ImpactDataSets.Specific != null && !this.ImpactDataSets.Specific.All(eval)) return false;
+                }
+                if (ArmorAddons != null)
+                {
+                    if (!eval(this.ArmorAddons.Overall)) return false;
+                    if (this.ArmorAddons.Specific != null && !this.ArmorAddons.Specific.All(eval)) return false;
+                }
+                if (EncounterZones != null)
+                {
+                    if (!eval(this.EncounterZones.Overall)) return false;
+                    if (this.EncounterZones.Specific != null && !this.EncounterZones.Specific.All(eval)) return false;
+                }
+                if (Ragdolls != null)
+                {
+                    if (!eval(this.Ragdolls.Overall)) return false;
+                    if (this.Ragdolls.Specific != null && !this.Ragdolls.Specific.All(eval)) return false;
+                }
+                if (DefaultObjectManagers != null)
+                {
+                    if (!eval(this.DefaultObjectManagers.Overall)) return false;
+                    if (this.DefaultObjectManagers.Specific != null && !this.DefaultObjectManagers.Specific.All(eval)) return false;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (!eval(this.LightingTemplates.Overall)) return false;
+                    if (this.LightingTemplates.Specific != null && !this.LightingTemplates.Specific.All(eval)) return false;
+                }
+                if (MusicTypes != null)
+                {
+                    if (!eval(this.MusicTypes.Overall)) return false;
+                    if (this.MusicTypes.Specific != null && !this.MusicTypes.Specific.All(eval)) return false;
+                }
+                if (FormLists != null)
+                {
+                    if (!eval(this.FormLists.Overall)) return false;
+                    if (this.FormLists.Specific != null && !this.FormLists.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -1269,6 +1990,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Notes.Overall)) return true;
                     if (this.Notes.Specific != null && this.Notes.Specific.Any(eval)) return true;
                 }
+                if (ConstructibleObjects != null)
+                {
+                    if (eval(this.ConstructibleObjects.Overall)) return true;
+                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
+                }
                 if (Projectiles != null)
                 {
                     if (eval(this.Projectiles.Overall)) return true;
@@ -1278,6 +2004,191 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (eval(this.LeveledItems.Overall)) return true;
                     if (this.LeveledItems.Specific != null && this.LeveledItems.Specific.Any(eval)) return true;
+                }
+                if (Weather != null)
+                {
+                    if (eval(this.Weather.Overall)) return true;
+                    if (this.Weather.Specific != null && this.Weather.Specific.Any(eval)) return true;
+                }
+                if (Climates != null)
+                {
+                    if (eval(this.Climates.Overall)) return true;
+                    if (this.Climates.Specific != null && this.Climates.Specific.Any(eval)) return true;
+                }
+                if (Regions != null)
+                {
+                    if (eval(this.Regions.Overall)) return true;
+                    if (this.Regions.Specific != null && this.Regions.Specific.Any(eval)) return true;
+                }
+                if (NavigationMeshInfoMaps != null)
+                {
+                    if (eval(this.NavigationMeshInfoMaps.Overall)) return true;
+                    if (this.NavigationMeshInfoMaps.Specific != null && this.NavigationMeshInfoMaps.Specific.Any(eval)) return true;
+                }
+                if (Cells != null)
+                {
+                    if (eval(this.Cells.Overall)) return true;
+                    if (this.Cells.Specific != null && this.Cells.Specific.Any(eval)) return true;
+                }
+                if (Worldspaces != null)
+                {
+                    if (eval(this.Worldspaces.Overall)) return true;
+                    if (this.Worldspaces.Specific != null && this.Worldspaces.Specific.Any(eval)) return true;
+                }
+                if (DialogTopics != null)
+                {
+                    if (eval(this.DialogTopics.Overall)) return true;
+                    if (this.DialogTopics.Specific != null && this.DialogTopics.Specific.Any(eval)) return true;
+                }
+                if (Quests != null)
+                {
+                    if (eval(this.Quests.Overall)) return true;
+                    if (this.Quests.Specific != null && this.Quests.Specific.Any(eval)) return true;
+                }
+                if (IdleAnimations != null)
+                {
+                    if (eval(this.IdleAnimations.Overall)) return true;
+                    if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
+                }
+                if (Packages != null)
+                {
+                    if (eval(this.Packages.Overall)) return true;
+                    if (this.Packages.Specific != null && this.Packages.Specific.Any(eval)) return true;
+                }
+                if (CombatStyles != null)
+                {
+                    if (eval(this.CombatStyles.Overall)) return true;
+                    if (this.CombatStyles.Specific != null && this.CombatStyles.Specific.Any(eval)) return true;
+                }
+                if (LoadScreens != null)
+                {
+                    if (eval(this.LoadScreens.Overall)) return true;
+                    if (this.LoadScreens.Specific != null && this.LoadScreens.Specific.Any(eval)) return true;
+                }
+                if (AnimatedObjects != null)
+                {
+                    if (eval(this.AnimatedObjects.Overall)) return true;
+                    if (this.AnimatedObjects.Specific != null && this.AnimatedObjects.Specific.Any(eval)) return true;
+                }
+                if (Waters != null)
+                {
+                    if (eval(this.Waters.Overall)) return true;
+                    if (this.Waters.Specific != null && this.Waters.Specific.Any(eval)) return true;
+                }
+                if (EffectShaders != null)
+                {
+                    if (eval(this.EffectShaders.Overall)) return true;
+                    if (this.EffectShaders.Specific != null && this.EffectShaders.Specific.Any(eval)) return true;
+                }
+                if (Explosions != null)
+                {
+                    if (eval(this.Explosions.Overall)) return true;
+                    if (this.Explosions.Specific != null && this.Explosions.Specific.Any(eval)) return true;
+                }
+                if (Debris != null)
+                {
+                    if (eval(this.Debris.Overall)) return true;
+                    if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
+                }
+                if (ImageSpaces != null)
+                {
+                    if (eval(this.ImageSpaces.Overall)) return true;
+                    if (this.ImageSpaces.Specific != null && this.ImageSpaces.Specific.Any(eval)) return true;
+                }
+                if (ImageSpaceAdapters != null)
+                {
+                    if (eval(this.ImageSpaceAdapters.Overall)) return true;
+                    if (this.ImageSpaceAdapters.Specific != null && this.ImageSpaceAdapters.Specific.Any(eval)) return true;
+                }
+                if (Messages != null)
+                {
+                    if (eval(this.Messages.Overall)) return true;
+                    if (this.Messages.Specific != null && this.Messages.Specific.Any(eval)) return true;
+                }
+                if (Perks != null)
+                {
+                    if (eval(this.Perks.Overall)) return true;
+                    if (this.Perks.Specific != null && this.Perks.Specific.Any(eval)) return true;
+                }
+                if (BodyParts != null)
+                {
+                    if (eval(this.BodyParts.Overall)) return true;
+                    if (this.BodyParts.Specific != null && this.BodyParts.Specific.Any(eval)) return true;
+                }
+                if (AddonNodes != null)
+                {
+                    if (eval(this.AddonNodes.Overall)) return true;
+                    if (this.AddonNodes.Specific != null && this.AddonNodes.Specific.Any(eval)) return true;
+                }
+                if (ActorValueInformation != null)
+                {
+                    if (eval(this.ActorValueInformation.Overall)) return true;
+                    if (this.ActorValueInformation.Specific != null && this.ActorValueInformation.Specific.Any(eval)) return true;
+                }
+                if (RadiationStages != null)
+                {
+                    if (eval(this.RadiationStages.Overall)) return true;
+                    if (this.RadiationStages.Specific != null && this.RadiationStages.Specific.Any(eval)) return true;
+                }
+                if (CameraShots != null)
+                {
+                    if (eval(this.CameraShots.Overall)) return true;
+                    if (this.CameraShots.Specific != null && this.CameraShots.Specific.Any(eval)) return true;
+                }
+                if (CameraPaths != null)
+                {
+                    if (eval(this.CameraPaths.Overall)) return true;
+                    if (this.CameraPaths.Specific != null && this.CameraPaths.Specific.Any(eval)) return true;
+                }
+                if (VoiceTypes != null)
+                {
+                    if (eval(this.VoiceTypes.Overall)) return true;
+                    if (this.VoiceTypes.Specific != null && this.VoiceTypes.Specific.Any(eval)) return true;
+                }
+                if (Impacts != null)
+                {
+                    if (eval(this.Impacts.Overall)) return true;
+                    if (this.Impacts.Specific != null && this.Impacts.Specific.Any(eval)) return true;
+                }
+                if (ImpactDataSets != null)
+                {
+                    if (eval(this.ImpactDataSets.Overall)) return true;
+                    if (this.ImpactDataSets.Specific != null && this.ImpactDataSets.Specific.Any(eval)) return true;
+                }
+                if (ArmorAddons != null)
+                {
+                    if (eval(this.ArmorAddons.Overall)) return true;
+                    if (this.ArmorAddons.Specific != null && this.ArmorAddons.Specific.Any(eval)) return true;
+                }
+                if (EncounterZones != null)
+                {
+                    if (eval(this.EncounterZones.Overall)) return true;
+                    if (this.EncounterZones.Specific != null && this.EncounterZones.Specific.Any(eval)) return true;
+                }
+                if (Ragdolls != null)
+                {
+                    if (eval(this.Ragdolls.Overall)) return true;
+                    if (this.Ragdolls.Specific != null && this.Ragdolls.Specific.Any(eval)) return true;
+                }
+                if (DefaultObjectManagers != null)
+                {
+                    if (eval(this.DefaultObjectManagers.Overall)) return true;
+                    if (this.DefaultObjectManagers.Specific != null && this.DefaultObjectManagers.Specific.Any(eval)) return true;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (eval(this.LightingTemplates.Overall)) return true;
+                    if (this.LightingTemplates.Specific != null && this.LightingTemplates.Specific.Any(eval)) return true;
+                }
+                if (MusicTypes != null)
+                {
+                    if (eval(this.MusicTypes.Overall)) return true;
+                    if (this.MusicTypes.Specific != null && this.MusicTypes.Specific.Any(eval)) return true;
+                }
+                if (FormLists != null)
+                {
+                    if (eval(this.FormLists.Overall)) return true;
+                    if (this.FormLists.Specific != null && this.FormLists.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -1338,8 +2249,46 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
                 obj.Notes = this.Notes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Notes.Overall), this.Notes.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
+                obj.Weather = this.Weather == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
+                obj.Climates = this.Climates == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Climates.Overall), this.Climates.Specific?.Translate(eval));
+                obj.Regions = this.Regions == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Regions.Overall), this.Regions.Specific?.Translate(eval));
+                obj.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.NavigationMeshInfoMaps.Overall), this.NavigationMeshInfoMaps.Specific?.Translate(eval));
+                obj.Cells = this.Cells == null ? null : new MaskItem<R, Fallout3ListGroup.Mask<R>?>(eval(this.Cells.Overall), this.Cells.Specific?.Translate(eval));
+                obj.Worldspaces = this.Worldspaces == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Worldspaces.Overall), this.Worldspaces.Specific?.Translate(eval));
+                obj.DialogTopics = this.DialogTopics == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.DialogTopics.Overall), this.DialogTopics.Specific?.Translate(eval));
+                obj.Quests = this.Quests == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.Packages = this.Packages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Packages.Overall), this.Packages.Specific?.Translate(eval));
+                obj.CombatStyles = this.CombatStyles == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CombatStyles.Overall), this.CombatStyles.Specific?.Translate(eval));
+                obj.LoadScreens = this.LoadScreens == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LoadScreens.Overall), this.LoadScreens.Specific?.Translate(eval));
+                obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
+                obj.Waters = this.Waters == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Waters.Overall), this.Waters.Specific?.Translate(eval));
+                obj.EffectShaders = this.EffectShaders == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.EffectShaders.Overall), this.EffectShaders.Specific?.Translate(eval));
+                obj.Explosions = this.Explosions == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Explosions.Overall), this.Explosions.Specific?.Translate(eval));
+                obj.Debris = this.Debris == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
+                obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
+                obj.ImageSpaceAdapters = this.ImageSpaceAdapters == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ImageSpaceAdapters.Overall), this.ImageSpaceAdapters.Specific?.Translate(eval));
+                obj.Messages = this.Messages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Messages.Overall), this.Messages.Specific?.Translate(eval));
+                obj.Perks = this.Perks == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
+                obj.BodyParts = this.BodyParts == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.BodyParts.Overall), this.BodyParts.Specific?.Translate(eval));
+                obj.AddonNodes = this.AddonNodes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.AddonNodes.Overall), this.AddonNodes.Specific?.Translate(eval));
+                obj.ActorValueInformation = this.ActorValueInformation == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ActorValueInformation.Overall), this.ActorValueInformation.Specific?.Translate(eval));
+                obj.RadiationStages = this.RadiationStages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.RadiationStages.Overall), this.RadiationStages.Specific?.Translate(eval));
+                obj.CameraShots = this.CameraShots == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CameraShots.Overall), this.CameraShots.Specific?.Translate(eval));
+                obj.CameraPaths = this.CameraPaths == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CameraPaths.Overall), this.CameraPaths.Specific?.Translate(eval));
+                obj.VoiceTypes = this.VoiceTypes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.VoiceTypes.Overall), this.VoiceTypes.Specific?.Translate(eval));
+                obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
+                obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
+                obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
+                obj.EncounterZones = this.EncounterZones == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.EncounterZones.Overall), this.EncounterZones.Specific?.Translate(eval));
+                obj.Ragdolls = this.Ragdolls == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Ragdolls.Overall), this.Ragdolls.Specific?.Translate(eval));
+                obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
+                obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
+                obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
+                obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1538,6 +2487,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Notes?.Print(sb);
                     }
+                    if (printMask?.ConstructibleObjects?.Overall ?? true)
+                    {
+                        ConstructibleObjects?.Print(sb);
+                    }
                     if (printMask?.Projectiles?.Overall ?? true)
                     {
                         Projectiles?.Print(sb);
@@ -1545,6 +2498,154 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.LeveledItems?.Overall ?? true)
                     {
                         LeveledItems?.Print(sb);
+                    }
+                    if (printMask?.Weather?.Overall ?? true)
+                    {
+                        Weather?.Print(sb);
+                    }
+                    if (printMask?.Climates?.Overall ?? true)
+                    {
+                        Climates?.Print(sb);
+                    }
+                    if (printMask?.Regions?.Overall ?? true)
+                    {
+                        Regions?.Print(sb);
+                    }
+                    if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
+                    {
+                        NavigationMeshInfoMaps?.Print(sb);
+                    }
+                    if (printMask?.Cells?.Overall ?? true)
+                    {
+                        Cells?.Print(sb);
+                    }
+                    if (printMask?.Worldspaces?.Overall ?? true)
+                    {
+                        Worldspaces?.Print(sb);
+                    }
+                    if (printMask?.DialogTopics?.Overall ?? true)
+                    {
+                        DialogTopics?.Print(sb);
+                    }
+                    if (printMask?.Quests?.Overall ?? true)
+                    {
+                        Quests?.Print(sb);
+                    }
+                    if (printMask?.IdleAnimations?.Overall ?? true)
+                    {
+                        IdleAnimations?.Print(sb);
+                    }
+                    if (printMask?.Packages?.Overall ?? true)
+                    {
+                        Packages?.Print(sb);
+                    }
+                    if (printMask?.CombatStyles?.Overall ?? true)
+                    {
+                        CombatStyles?.Print(sb);
+                    }
+                    if (printMask?.LoadScreens?.Overall ?? true)
+                    {
+                        LoadScreens?.Print(sb);
+                    }
+                    if (printMask?.AnimatedObjects?.Overall ?? true)
+                    {
+                        AnimatedObjects?.Print(sb);
+                    }
+                    if (printMask?.Waters?.Overall ?? true)
+                    {
+                        Waters?.Print(sb);
+                    }
+                    if (printMask?.EffectShaders?.Overall ?? true)
+                    {
+                        EffectShaders?.Print(sb);
+                    }
+                    if (printMask?.Explosions?.Overall ?? true)
+                    {
+                        Explosions?.Print(sb);
+                    }
+                    if (printMask?.Debris?.Overall ?? true)
+                    {
+                        Debris?.Print(sb);
+                    }
+                    if (printMask?.ImageSpaces?.Overall ?? true)
+                    {
+                        ImageSpaces?.Print(sb);
+                    }
+                    if (printMask?.ImageSpaceAdapters?.Overall ?? true)
+                    {
+                        ImageSpaceAdapters?.Print(sb);
+                    }
+                    if (printMask?.Messages?.Overall ?? true)
+                    {
+                        Messages?.Print(sb);
+                    }
+                    if (printMask?.Perks?.Overall ?? true)
+                    {
+                        Perks?.Print(sb);
+                    }
+                    if (printMask?.BodyParts?.Overall ?? true)
+                    {
+                        BodyParts?.Print(sb);
+                    }
+                    if (printMask?.AddonNodes?.Overall ?? true)
+                    {
+                        AddonNodes?.Print(sb);
+                    }
+                    if (printMask?.ActorValueInformation?.Overall ?? true)
+                    {
+                        ActorValueInformation?.Print(sb);
+                    }
+                    if (printMask?.RadiationStages?.Overall ?? true)
+                    {
+                        RadiationStages?.Print(sb);
+                    }
+                    if (printMask?.CameraShots?.Overall ?? true)
+                    {
+                        CameraShots?.Print(sb);
+                    }
+                    if (printMask?.CameraPaths?.Overall ?? true)
+                    {
+                        CameraPaths?.Print(sb);
+                    }
+                    if (printMask?.VoiceTypes?.Overall ?? true)
+                    {
+                        VoiceTypes?.Print(sb);
+                    }
+                    if (printMask?.Impacts?.Overall ?? true)
+                    {
+                        Impacts?.Print(sb);
+                    }
+                    if (printMask?.ImpactDataSets?.Overall ?? true)
+                    {
+                        ImpactDataSets?.Print(sb);
+                    }
+                    if (printMask?.ArmorAddons?.Overall ?? true)
+                    {
+                        ArmorAddons?.Print(sb);
+                    }
+                    if (printMask?.EncounterZones?.Overall ?? true)
+                    {
+                        EncounterZones?.Print(sb);
+                    }
+                    if (printMask?.Ragdolls?.Overall ?? true)
+                    {
+                        Ragdolls?.Print(sb);
+                    }
+                    if (printMask?.DefaultObjectManagers?.Overall ?? true)
+                    {
+                        DefaultObjectManagers?.Print(sb);
+                    }
+                    if (printMask?.LightingTemplates?.Overall ?? true)
+                    {
+                        LightingTemplates?.Print(sb);
+                    }
+                    if (printMask?.MusicTypes?.Overall ?? true)
+                    {
+                        MusicTypes?.Print(sb);
+                    }
+                    if (printMask?.FormLists?.Overall ?? true)
+                    {
+                        FormLists?.Print(sb);
                     }
                 }
             }
@@ -1615,8 +2716,46 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>? Notes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Weather.ErrorMask>?>? Weather;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Climate.ErrorMask>?>? Climates;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Region.ErrorMask>?>? Regions;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>? NavigationMeshInfoMaps;
+            public MaskItem<Exception?, Fallout3ListGroup.ErrorMask<CellBlock.ErrorMask>?>? Cells;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Worldspace.ErrorMask>?>? Worldspaces;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<DialogTopic.ErrorMask>?>? DialogTopics;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Quest.ErrorMask>?>? Quests;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<IdleAnimation.ErrorMask>?>? IdleAnimations;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Package.ErrorMask>?>? Packages;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<CombatStyle.ErrorMask>?>? CombatStyles;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreen.ErrorMask>?>? LoadScreens;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Water.ErrorMask>?>? Waters;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<EffectShader.ErrorMask>?>? EffectShaders;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Explosion.ErrorMask>?>? Explosions;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Debris.ErrorMask>?>? Debris;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ImageSpace.ErrorMask>?>? ImageSpaces;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>? ImageSpaceAdapters;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Message.ErrorMask>?>? Messages;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Perk.ErrorMask>?>? Perks;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<BodyPartData.ErrorMask>?>? BodyParts;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<AddonNode.ErrorMask>?>? AddonNodes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ActorValueInformation.ErrorMask>?>? ActorValueInformation;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<RadiationStage.ErrorMask>?>? RadiationStages;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<CameraShot.ErrorMask>?>? CameraShots;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<CameraPath.ErrorMask>?>? CameraPaths;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<VoiceType.ErrorMask>?>? VoiceTypes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<EncounterZone.ErrorMask>?>? EncounterZones;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Ragdoll.ErrorMask>?>? Ragdolls;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
             #endregion
 
             #region IErrorMask
@@ -1715,10 +2854,86 @@ namespace Mutagen.Bethesda.Fallout3
                         return IdleMarkers;
                     case Fallout3Mod_FieldIndex.Notes:
                         return Notes;
+                    case Fallout3Mod_FieldIndex.ConstructibleObjects:
+                        return ConstructibleObjects;
                     case Fallout3Mod_FieldIndex.Projectiles:
                         return Projectiles;
                     case Fallout3Mod_FieldIndex.LeveledItems:
                         return LeveledItems;
+                    case Fallout3Mod_FieldIndex.Weather:
+                        return Weather;
+                    case Fallout3Mod_FieldIndex.Climates:
+                        return Climates;
+                    case Fallout3Mod_FieldIndex.Regions:
+                        return Regions;
+                    case Fallout3Mod_FieldIndex.NavigationMeshInfoMaps:
+                        return NavigationMeshInfoMaps;
+                    case Fallout3Mod_FieldIndex.Cells:
+                        return Cells;
+                    case Fallout3Mod_FieldIndex.Worldspaces:
+                        return Worldspaces;
+                    case Fallout3Mod_FieldIndex.DialogTopics:
+                        return DialogTopics;
+                    case Fallout3Mod_FieldIndex.Quests:
+                        return Quests;
+                    case Fallout3Mod_FieldIndex.IdleAnimations:
+                        return IdleAnimations;
+                    case Fallout3Mod_FieldIndex.Packages:
+                        return Packages;
+                    case Fallout3Mod_FieldIndex.CombatStyles:
+                        return CombatStyles;
+                    case Fallout3Mod_FieldIndex.LoadScreens:
+                        return LoadScreens;
+                    case Fallout3Mod_FieldIndex.AnimatedObjects:
+                        return AnimatedObjects;
+                    case Fallout3Mod_FieldIndex.Waters:
+                        return Waters;
+                    case Fallout3Mod_FieldIndex.EffectShaders:
+                        return EffectShaders;
+                    case Fallout3Mod_FieldIndex.Explosions:
+                        return Explosions;
+                    case Fallout3Mod_FieldIndex.Debris:
+                        return Debris;
+                    case Fallout3Mod_FieldIndex.ImageSpaces:
+                        return ImageSpaces;
+                    case Fallout3Mod_FieldIndex.ImageSpaceAdapters:
+                        return ImageSpaceAdapters;
+                    case Fallout3Mod_FieldIndex.Messages:
+                        return Messages;
+                    case Fallout3Mod_FieldIndex.Perks:
+                        return Perks;
+                    case Fallout3Mod_FieldIndex.BodyParts:
+                        return BodyParts;
+                    case Fallout3Mod_FieldIndex.AddonNodes:
+                        return AddonNodes;
+                    case Fallout3Mod_FieldIndex.ActorValueInformation:
+                        return ActorValueInformation;
+                    case Fallout3Mod_FieldIndex.RadiationStages:
+                        return RadiationStages;
+                    case Fallout3Mod_FieldIndex.CameraShots:
+                        return CameraShots;
+                    case Fallout3Mod_FieldIndex.CameraPaths:
+                        return CameraPaths;
+                    case Fallout3Mod_FieldIndex.VoiceTypes:
+                        return VoiceTypes;
+                    case Fallout3Mod_FieldIndex.Impacts:
+                        return Impacts;
+                    case Fallout3Mod_FieldIndex.ImpactDataSets:
+                        return ImpactDataSets;
+                    case Fallout3Mod_FieldIndex.ArmorAddons:
+                        return ArmorAddons;
+                    case Fallout3Mod_FieldIndex.EncounterZones:
+                        return EncounterZones;
+                    case Fallout3Mod_FieldIndex.Ragdolls:
+                        return Ragdolls;
+                    case Fallout3Mod_FieldIndex.DefaultObjectManagers:
+                        return DefaultObjectManagers;
+                    case Fallout3Mod_FieldIndex.LightingTemplates:
+                        return LightingTemplates;
+                    case Fallout3Mod_FieldIndex.MusicTypes:
+                        return MusicTypes;
+                    case Fallout3Mod_FieldIndex.FormLists:
+                        return FormLists;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1864,11 +3079,125 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Notes:
                         this.Notes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>(ex, null);
                         break;
+                    case Fallout3Mod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = new MaskItem<Exception?, Fallout3Group.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
+                        break;
                     case Fallout3Mod_FieldIndex.Projectiles:
                         this.Projectiles = new MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>(ex, null);
                         break;
                     case Fallout3Mod_FieldIndex.LeveledItems:
                         this.LeveledItems = new MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Weather:
+                        this.Weather = new MaskItem<Exception?, Fallout3Group.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Climates:
+                        this.Climates = new MaskItem<Exception?, Fallout3Group.ErrorMask<Climate.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Regions:
+                        this.Regions = new MaskItem<Exception?, Fallout3Group.ErrorMask<Region.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.NavigationMeshInfoMaps:
+                        this.NavigationMeshInfoMaps = new MaskItem<Exception?, Fallout3Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Cells:
+                        this.Cells = new MaskItem<Exception?, Fallout3ListGroup.ErrorMask<CellBlock.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Worldspaces:
+                        this.Worldspaces = new MaskItem<Exception?, Fallout3Group.ErrorMask<Worldspace.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.DialogTopics:
+                        this.DialogTopics = new MaskItem<Exception?, Fallout3Group.ErrorMask<DialogTopic.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Quests:
+                        this.Quests = new MaskItem<Exception?, Fallout3Group.ErrorMask<Quest.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = new MaskItem<Exception?, Fallout3Group.ErrorMask<IdleAnimation.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Packages:
+                        this.Packages = new MaskItem<Exception?, Fallout3Group.ErrorMask<Package.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.CombatStyles:
+                        this.CombatStyles = new MaskItem<Exception?, Fallout3Group.ErrorMask<CombatStyle.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.LoadScreens:
+                        this.LoadScreens = new MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreen.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = new MaskItem<Exception?, Fallout3Group.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Waters:
+                        this.Waters = new MaskItem<Exception?, Fallout3Group.ErrorMask<Water.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.EffectShaders:
+                        this.EffectShaders = new MaskItem<Exception?, Fallout3Group.ErrorMask<EffectShader.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Explosions:
+                        this.Explosions = new MaskItem<Exception?, Fallout3Group.ErrorMask<Explosion.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Debris:
+                        this.Debris = new MaskItem<Exception?, Fallout3Group.ErrorMask<Debris.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.ImageSpaces:
+                        this.ImageSpaces = new MaskItem<Exception?, Fallout3Group.ErrorMask<ImageSpace.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.ImageSpaceAdapters:
+                        this.ImageSpaceAdapters = new MaskItem<Exception?, Fallout3Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Messages:
+                        this.Messages = new MaskItem<Exception?, Fallout3Group.ErrorMask<Message.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Perks:
+                        this.Perks = new MaskItem<Exception?, Fallout3Group.ErrorMask<Perk.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.BodyParts:
+                        this.BodyParts = new MaskItem<Exception?, Fallout3Group.ErrorMask<BodyPartData.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.AddonNodes:
+                        this.AddonNodes = new MaskItem<Exception?, Fallout3Group.ErrorMask<AddonNode.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.ActorValueInformation:
+                        this.ActorValueInformation = new MaskItem<Exception?, Fallout3Group.ErrorMask<ActorValueInformation.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.RadiationStages:
+                        this.RadiationStages = new MaskItem<Exception?, Fallout3Group.ErrorMask<RadiationStage.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.CameraShots:
+                        this.CameraShots = new MaskItem<Exception?, Fallout3Group.ErrorMask<CameraShot.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.CameraPaths:
+                        this.CameraPaths = new MaskItem<Exception?, Fallout3Group.ErrorMask<CameraPath.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.VoiceTypes:
+                        this.VoiceTypes = new MaskItem<Exception?, Fallout3Group.ErrorMask<VoiceType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Impacts:
+                        this.Impacts = new MaskItem<Exception?, Fallout3Group.ErrorMask<Impact.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.ImpactDataSets:
+                        this.ImpactDataSets = new MaskItem<Exception?, Fallout3Group.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.ArmorAddons:
+                        this.ArmorAddons = new MaskItem<Exception?, Fallout3Group.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.EncounterZones:
+                        this.EncounterZones = new MaskItem<Exception?, Fallout3Group.ErrorMask<EncounterZone.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Ragdolls:
+                        this.Ragdolls = new MaskItem<Exception?, Fallout3Group.ErrorMask<Ragdoll.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.DefaultObjectManagers:
+                        this.DefaultObjectManagers = new MaskItem<Exception?, Fallout3Group.ErrorMask<DefaultObjectManager.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = new MaskItem<Exception?, Fallout3Group.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.MusicTypes:
+                        this.MusicTypes = new MaskItem<Exception?, Fallout3Group.ErrorMask<MusicType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.FormLists:
+                        this.FormLists = new MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2015,11 +3344,125 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Notes:
                         this.Notes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Note.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = (MaskItem<Exception?, Fallout3Group.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                        break;
                     case Fallout3Mod_FieldIndex.Projectiles:
                         this.Projectiles = (MaskItem<Exception?, Fallout3Group.ErrorMask<Projectile.ErrorMask>?>?)obj;
                         break;
                     case Fallout3Mod_FieldIndex.LeveledItems:
                         this.LeveledItems = (MaskItem<Exception?, Fallout3Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Weather:
+                        this.Weather = (MaskItem<Exception?, Fallout3Group.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Climates:
+                        this.Climates = (MaskItem<Exception?, Fallout3Group.ErrorMask<Climate.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Regions:
+                        this.Regions = (MaskItem<Exception?, Fallout3Group.ErrorMask<Region.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.NavigationMeshInfoMaps:
+                        this.NavigationMeshInfoMaps = (MaskItem<Exception?, Fallout3Group.ErrorMask<NavigationMeshInfoMap.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Cells:
+                        this.Cells = (MaskItem<Exception?, Fallout3ListGroup.ErrorMask<CellBlock.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Worldspaces:
+                        this.Worldspaces = (MaskItem<Exception?, Fallout3Group.ErrorMask<Worldspace.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.DialogTopics:
+                        this.DialogTopics = (MaskItem<Exception?, Fallout3Group.ErrorMask<DialogTopic.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Quests:
+                        this.Quests = (MaskItem<Exception?, Fallout3Group.ErrorMask<Quest.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = (MaskItem<Exception?, Fallout3Group.ErrorMask<IdleAnimation.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Packages:
+                        this.Packages = (MaskItem<Exception?, Fallout3Group.ErrorMask<Package.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.CombatStyles:
+                        this.CombatStyles = (MaskItem<Exception?, Fallout3Group.ErrorMask<CombatStyle.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.LoadScreens:
+                        this.LoadScreens = (MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreen.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.AnimatedObjects:
+                        this.AnimatedObjects = (MaskItem<Exception?, Fallout3Group.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Waters:
+                        this.Waters = (MaskItem<Exception?, Fallout3Group.ErrorMask<Water.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.EffectShaders:
+                        this.EffectShaders = (MaskItem<Exception?, Fallout3Group.ErrorMask<EffectShader.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Explosions:
+                        this.Explosions = (MaskItem<Exception?, Fallout3Group.ErrorMask<Explosion.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Debris:
+                        this.Debris = (MaskItem<Exception?, Fallout3Group.ErrorMask<Debris.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.ImageSpaces:
+                        this.ImageSpaces = (MaskItem<Exception?, Fallout3Group.ErrorMask<ImageSpace.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.ImageSpaceAdapters:
+                        this.ImageSpaceAdapters = (MaskItem<Exception?, Fallout3Group.ErrorMask<ImageSpaceAdapter.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Messages:
+                        this.Messages = (MaskItem<Exception?, Fallout3Group.ErrorMask<Message.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Perks:
+                        this.Perks = (MaskItem<Exception?, Fallout3Group.ErrorMask<Perk.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.BodyParts:
+                        this.BodyParts = (MaskItem<Exception?, Fallout3Group.ErrorMask<BodyPartData.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.AddonNodes:
+                        this.AddonNodes = (MaskItem<Exception?, Fallout3Group.ErrorMask<AddonNode.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.ActorValueInformation:
+                        this.ActorValueInformation = (MaskItem<Exception?, Fallout3Group.ErrorMask<ActorValueInformation.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.RadiationStages:
+                        this.RadiationStages = (MaskItem<Exception?, Fallout3Group.ErrorMask<RadiationStage.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.CameraShots:
+                        this.CameraShots = (MaskItem<Exception?, Fallout3Group.ErrorMask<CameraShot.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.CameraPaths:
+                        this.CameraPaths = (MaskItem<Exception?, Fallout3Group.ErrorMask<CameraPath.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.VoiceTypes:
+                        this.VoiceTypes = (MaskItem<Exception?, Fallout3Group.ErrorMask<VoiceType.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Impacts:
+                        this.Impacts = (MaskItem<Exception?, Fallout3Group.ErrorMask<Impact.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.ImpactDataSets:
+                        this.ImpactDataSets = (MaskItem<Exception?, Fallout3Group.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.ArmorAddons:
+                        this.ArmorAddons = (MaskItem<Exception?, Fallout3Group.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.EncounterZones:
+                        this.EncounterZones = (MaskItem<Exception?, Fallout3Group.ErrorMask<EncounterZone.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Ragdolls:
+                        this.Ragdolls = (MaskItem<Exception?, Fallout3Group.ErrorMask<Ragdoll.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.DefaultObjectManagers:
+                        this.DefaultObjectManagers = (MaskItem<Exception?, Fallout3Group.ErrorMask<DefaultObjectManager.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = (MaskItem<Exception?, Fallout3Group.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.MusicTypes:
+                        this.MusicTypes = (MaskItem<Exception?, Fallout3Group.ErrorMask<MusicType.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.FormLists:
+                        this.FormLists = (MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2074,8 +3517,46 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Ingestibles != null) return true;
                 if (IdleMarkers != null) return true;
                 if (Notes != null) return true;
+                if (ConstructibleObjects != null) return true;
                 if (Projectiles != null) return true;
                 if (LeveledItems != null) return true;
+                if (Weather != null) return true;
+                if (Climates != null) return true;
+                if (Regions != null) return true;
+                if (NavigationMeshInfoMaps != null) return true;
+                if (Cells != null) return true;
+                if (Worldspaces != null) return true;
+                if (DialogTopics != null) return true;
+                if (Quests != null) return true;
+                if (IdleAnimations != null) return true;
+                if (Packages != null) return true;
+                if (CombatStyles != null) return true;
+                if (LoadScreens != null) return true;
+                if (AnimatedObjects != null) return true;
+                if (Waters != null) return true;
+                if (EffectShaders != null) return true;
+                if (Explosions != null) return true;
+                if (Debris != null) return true;
+                if (ImageSpaces != null) return true;
+                if (ImageSpaceAdapters != null) return true;
+                if (Messages != null) return true;
+                if (Perks != null) return true;
+                if (BodyParts != null) return true;
+                if (AddonNodes != null) return true;
+                if (ActorValueInformation != null) return true;
+                if (RadiationStages != null) return true;
+                if (CameraShots != null) return true;
+                if (CameraPaths != null) return true;
+                if (VoiceTypes != null) return true;
+                if (Impacts != null) return true;
+                if (ImpactDataSets != null) return true;
+                if (ArmorAddons != null) return true;
+                if (EncounterZones != null) return true;
+                if (Ragdolls != null) return true;
+                if (DefaultObjectManagers != null) return true;
+                if (LightingTemplates != null) return true;
+                if (MusicTypes != null) return true;
+                if (FormLists != null) return true;
                 return false;
             }
             #endregion
@@ -2146,8 +3627,46 @@ namespace Mutagen.Bethesda.Fallout3
                 Ingestibles?.Print(sb);
                 IdleMarkers?.Print(sb);
                 Notes?.Print(sb);
+                ConstructibleObjects?.Print(sb);
                 Projectiles?.Print(sb);
                 LeveledItems?.Print(sb);
+                Weather?.Print(sb);
+                Climates?.Print(sb);
+                Regions?.Print(sb);
+                NavigationMeshInfoMaps?.Print(sb);
+                Cells?.Print(sb);
+                Worldspaces?.Print(sb);
+                DialogTopics?.Print(sb);
+                Quests?.Print(sb);
+                IdleAnimations?.Print(sb);
+                Packages?.Print(sb);
+                CombatStyles?.Print(sb);
+                LoadScreens?.Print(sb);
+                AnimatedObjects?.Print(sb);
+                Waters?.Print(sb);
+                EffectShaders?.Print(sb);
+                Explosions?.Print(sb);
+                Debris?.Print(sb);
+                ImageSpaces?.Print(sb);
+                ImageSpaceAdapters?.Print(sb);
+                Messages?.Print(sb);
+                Perks?.Print(sb);
+                BodyParts?.Print(sb);
+                AddonNodes?.Print(sb);
+                ActorValueInformation?.Print(sb);
+                RadiationStages?.Print(sb);
+                CameraShots?.Print(sb);
+                CameraPaths?.Print(sb);
+                VoiceTypes?.Print(sb);
+                Impacts?.Print(sb);
+                ImpactDataSets?.Print(sb);
+                ArmorAddons?.Print(sb);
+                EncounterZones?.Print(sb);
+                Ragdolls?.Print(sb);
+                DefaultObjectManagers?.Print(sb);
+                LightingTemplates?.Print(sb);
+                MusicTypes?.Print(sb);
+                FormLists?.Print(sb);
             }
             #endregion
 
@@ -2201,8 +3720,46 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
                 ret.Notes = this.Notes.Combine(rhs.Notes, (l, r) => l.Combine(r));
+                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
+                ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
+                ret.Climates = this.Climates.Combine(rhs.Climates, (l, r) => l.Combine(r));
+                ret.Regions = this.Regions.Combine(rhs.Regions, (l, r) => l.Combine(r));
+                ret.NavigationMeshInfoMaps = this.NavigationMeshInfoMaps.Combine(rhs.NavigationMeshInfoMaps, (l, r) => l.Combine(r));
+                ret.Cells = this.Cells.Combine(rhs.Cells, (l, r) => l.Combine(r));
+                ret.Worldspaces = this.Worldspaces.Combine(rhs.Worldspaces, (l, r) => l.Combine(r));
+                ret.DialogTopics = this.DialogTopics.Combine(rhs.DialogTopics, (l, r) => l.Combine(r));
+                ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
+                ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
+                ret.Packages = this.Packages.Combine(rhs.Packages, (l, r) => l.Combine(r));
+                ret.CombatStyles = this.CombatStyles.Combine(rhs.CombatStyles, (l, r) => l.Combine(r));
+                ret.LoadScreens = this.LoadScreens.Combine(rhs.LoadScreens, (l, r) => l.Combine(r));
+                ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
+                ret.Waters = this.Waters.Combine(rhs.Waters, (l, r) => l.Combine(r));
+                ret.EffectShaders = this.EffectShaders.Combine(rhs.EffectShaders, (l, r) => l.Combine(r));
+                ret.Explosions = this.Explosions.Combine(rhs.Explosions, (l, r) => l.Combine(r));
+                ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
+                ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
+                ret.ImageSpaceAdapters = this.ImageSpaceAdapters.Combine(rhs.ImageSpaceAdapters, (l, r) => l.Combine(r));
+                ret.Messages = this.Messages.Combine(rhs.Messages, (l, r) => l.Combine(r));
+                ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
+                ret.BodyParts = this.BodyParts.Combine(rhs.BodyParts, (l, r) => l.Combine(r));
+                ret.AddonNodes = this.AddonNodes.Combine(rhs.AddonNodes, (l, r) => l.Combine(r));
+                ret.ActorValueInformation = this.ActorValueInformation.Combine(rhs.ActorValueInformation, (l, r) => l.Combine(r));
+                ret.RadiationStages = this.RadiationStages.Combine(rhs.RadiationStages, (l, r) => l.Combine(r));
+                ret.CameraShots = this.CameraShots.Combine(rhs.CameraShots, (l, r) => l.Combine(r));
+                ret.CameraPaths = this.CameraPaths.Combine(rhs.CameraPaths, (l, r) => l.Combine(r));
+                ret.VoiceTypes = this.VoiceTypes.Combine(rhs.VoiceTypes, (l, r) => l.Combine(r));
+                ret.Impacts = this.Impacts.Combine(rhs.Impacts, (l, r) => l.Combine(r));
+                ret.ImpactDataSets = this.ImpactDataSets.Combine(rhs.ImpactDataSets, (l, r) => l.Combine(r));
+                ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
+                ret.EncounterZones = this.EncounterZones.Combine(rhs.EncounterZones, (l, r) => l.Combine(r));
+                ret.Ragdolls = this.Ragdolls.Combine(rhs.Ragdolls, (l, r) => l.Combine(r));
+                ret.DefaultObjectManagers = this.DefaultObjectManagers.Combine(rhs.DefaultObjectManagers, (l, r) => l.Combine(r));
+                ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
+                ret.MusicTypes = this.MusicTypes.Combine(rhs.MusicTypes, (l, r) => l.Combine(r));
+                ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2271,8 +3828,46 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public Fallout3Group.TranslationMask<IdleMarker.TranslationMask>? IdleMarkers;
             public Fallout3Group.TranslationMask<Note.TranslationMask>? Notes;
+            public Fallout3Group.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             public Fallout3Group.TranslationMask<Projectile.TranslationMask>? Projectiles;
             public Fallout3Group.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
+            public Fallout3Group.TranslationMask<Weather.TranslationMask>? Weather;
+            public Fallout3Group.TranslationMask<Climate.TranslationMask>? Climates;
+            public Fallout3Group.TranslationMask<Region.TranslationMask>? Regions;
+            public Fallout3Group.TranslationMask<NavigationMeshInfoMap.TranslationMask>? NavigationMeshInfoMaps;
+            public Fallout3ListGroup.TranslationMask<CellBlock.TranslationMask>? Cells;
+            public Fallout3Group.TranslationMask<Worldspace.TranslationMask>? Worldspaces;
+            public Fallout3Group.TranslationMask<DialogTopic.TranslationMask>? DialogTopics;
+            public Fallout3Group.TranslationMask<Quest.TranslationMask>? Quests;
+            public Fallout3Group.TranslationMask<IdleAnimation.TranslationMask>? IdleAnimations;
+            public Fallout3Group.TranslationMask<Package.TranslationMask>? Packages;
+            public Fallout3Group.TranslationMask<CombatStyle.TranslationMask>? CombatStyles;
+            public Fallout3Group.TranslationMask<LoadScreen.TranslationMask>? LoadScreens;
+            public Fallout3Group.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
+            public Fallout3Group.TranslationMask<Water.TranslationMask>? Waters;
+            public Fallout3Group.TranslationMask<EffectShader.TranslationMask>? EffectShaders;
+            public Fallout3Group.TranslationMask<Explosion.TranslationMask>? Explosions;
+            public Fallout3Group.TranslationMask<Debris.TranslationMask>? Debris;
+            public Fallout3Group.TranslationMask<ImageSpace.TranslationMask>? ImageSpaces;
+            public Fallout3Group.TranslationMask<ImageSpaceAdapter.TranslationMask>? ImageSpaceAdapters;
+            public Fallout3Group.TranslationMask<Message.TranslationMask>? Messages;
+            public Fallout3Group.TranslationMask<Perk.TranslationMask>? Perks;
+            public Fallout3Group.TranslationMask<BodyPartData.TranslationMask>? BodyParts;
+            public Fallout3Group.TranslationMask<AddonNode.TranslationMask>? AddonNodes;
+            public Fallout3Group.TranslationMask<ActorValueInformation.TranslationMask>? ActorValueInformation;
+            public Fallout3Group.TranslationMask<RadiationStage.TranslationMask>? RadiationStages;
+            public Fallout3Group.TranslationMask<CameraShot.TranslationMask>? CameraShots;
+            public Fallout3Group.TranslationMask<CameraPath.TranslationMask>? CameraPaths;
+            public Fallout3Group.TranslationMask<VoiceType.TranslationMask>? VoiceTypes;
+            public Fallout3Group.TranslationMask<Impact.TranslationMask>? Impacts;
+            public Fallout3Group.TranslationMask<ImpactDataSet.TranslationMask>? ImpactDataSets;
+            public Fallout3Group.TranslationMask<ArmorAddon.TranslationMask>? ArmorAddons;
+            public Fallout3Group.TranslationMask<EncounterZone.TranslationMask>? EncounterZones;
+            public Fallout3Group.TranslationMask<Ragdoll.TranslationMask>? Ragdolls;
+            public Fallout3Group.TranslationMask<DefaultObjectManager.TranslationMask>? DefaultObjectManagers;
+            public Fallout3Group.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
+            public Fallout3Group.TranslationMask<MusicType.TranslationMask>? MusicTypes;
+            public Fallout3Group.TranslationMask<FormList.TranslationMask>? FormLists;
             #endregion
 
             #region Ctors
@@ -2342,8 +3937,46 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((IdleMarkers != null ? IdleMarkers.OnOverall : DefaultOn, IdleMarkers?.GetCrystal()));
                 ret.Add((Notes != null ? Notes.OnOverall : DefaultOn, Notes?.GetCrystal()));
+                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
                 ret.Add((Projectiles != null ? Projectiles.OnOverall : DefaultOn, Projectiles?.GetCrystal()));
                 ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
+                ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
+                ret.Add((Climates != null ? Climates.OnOverall : DefaultOn, Climates?.GetCrystal()));
+                ret.Add((Regions != null ? Regions.OnOverall : DefaultOn, Regions?.GetCrystal()));
+                ret.Add((NavigationMeshInfoMaps != null ? NavigationMeshInfoMaps.OnOverall : DefaultOn, NavigationMeshInfoMaps?.GetCrystal()));
+                ret.Add((Cells != null ? Cells.OnOverall : DefaultOn, Cells?.GetCrystal()));
+                ret.Add((Worldspaces != null ? Worldspaces.OnOverall : DefaultOn, Worldspaces?.GetCrystal()));
+                ret.Add((DialogTopics != null ? DialogTopics.OnOverall : DefaultOn, DialogTopics?.GetCrystal()));
+                ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
+                ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
+                ret.Add((Packages != null ? Packages.OnOverall : DefaultOn, Packages?.GetCrystal()));
+                ret.Add((CombatStyles != null ? CombatStyles.OnOverall : DefaultOn, CombatStyles?.GetCrystal()));
+                ret.Add((LoadScreens != null ? LoadScreens.OnOverall : DefaultOn, LoadScreens?.GetCrystal()));
+                ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
+                ret.Add((Waters != null ? Waters.OnOverall : DefaultOn, Waters?.GetCrystal()));
+                ret.Add((EffectShaders != null ? EffectShaders.OnOverall : DefaultOn, EffectShaders?.GetCrystal()));
+                ret.Add((Explosions != null ? Explosions.OnOverall : DefaultOn, Explosions?.GetCrystal()));
+                ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
+                ret.Add((ImageSpaces != null ? ImageSpaces.OnOverall : DefaultOn, ImageSpaces?.GetCrystal()));
+                ret.Add((ImageSpaceAdapters != null ? ImageSpaceAdapters.OnOverall : DefaultOn, ImageSpaceAdapters?.GetCrystal()));
+                ret.Add((Messages != null ? Messages.OnOverall : DefaultOn, Messages?.GetCrystal()));
+                ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
+                ret.Add((BodyParts != null ? BodyParts.OnOverall : DefaultOn, BodyParts?.GetCrystal()));
+                ret.Add((AddonNodes != null ? AddonNodes.OnOverall : DefaultOn, AddonNodes?.GetCrystal()));
+                ret.Add((ActorValueInformation != null ? ActorValueInformation.OnOverall : DefaultOn, ActorValueInformation?.GetCrystal()));
+                ret.Add((RadiationStages != null ? RadiationStages.OnOverall : DefaultOn, RadiationStages?.GetCrystal()));
+                ret.Add((CameraShots != null ? CameraShots.OnOverall : DefaultOn, CameraShots?.GetCrystal()));
+                ret.Add((CameraPaths != null ? CameraPaths.OnOverall : DefaultOn, CameraPaths?.GetCrystal()));
+                ret.Add((VoiceTypes != null ? VoiceTypes.OnOverall : DefaultOn, VoiceTypes?.GetCrystal()));
+                ret.Add((Impacts != null ? Impacts.OnOverall : DefaultOn, Impacts?.GetCrystal()));
+                ret.Add((ImpactDataSets != null ? ImpactDataSets.OnOverall : DefaultOn, ImpactDataSets?.GetCrystal()));
+                ret.Add((ArmorAddons != null ? ArmorAddons.OnOverall : DefaultOn, ArmorAddons?.GetCrystal()));
+                ret.Add((EncounterZones != null ? EncounterZones.OnOverall : DefaultOn, EncounterZones?.GetCrystal()));
+                ret.Add((Ragdolls != null ? Ragdolls.OnOverall : DefaultOn, Ragdolls?.GetCrystal()));
+                ret.Add((DefaultObjectManagers != null ? DefaultObjectManagers.OnOverall : DefaultOn, DefaultObjectManagers?.GetCrystal()));
+                ret.Add((LightingTemplates != null ? LightingTemplates.OnOverall : DefaultOn, LightingTemplates?.GetCrystal()));
+                ret.Add((MusicTypes != null ? MusicTypes.OnOverall : DefaultOn, MusicTypes?.GetCrystal()));
+                ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2448,8 +4081,45 @@ namespace Mutagen.Bethesda.Fallout3
             _Ingestibles_Object = new Fallout3Group<Ingestible>(this);
             _IdleMarkers_Object = new Fallout3Group<IdleMarker>(this);
             _Notes_Object = new Fallout3Group<Note>(this);
+            _ConstructibleObjects_Object = new Fallout3Group<ConstructibleObject>(this);
             _Projectiles_Object = new Fallout3Group<Projectile>(this);
             _LeveledItems_Object = new Fallout3Group<LeveledItem>(this);
+            _Weather_Object = new Fallout3Group<Weather>(this);
+            _Climates_Object = new Fallout3Group<Climate>(this);
+            _Regions_Object = new Fallout3Group<Region>(this);
+            _NavigationMeshInfoMaps_Object = new Fallout3Group<NavigationMeshInfoMap>(this);
+            _Worldspaces_Object = new Fallout3Group<Worldspace>(this);
+            _DialogTopics_Object = new Fallout3Group<DialogTopic>(this);
+            _Quests_Object = new Fallout3Group<Quest>(this);
+            _IdleAnimations_Object = new Fallout3Group<IdleAnimation>(this);
+            _Packages_Object = new Fallout3Group<Package>(this);
+            _CombatStyles_Object = new Fallout3Group<CombatStyle>(this);
+            _LoadScreens_Object = new Fallout3Group<LoadScreen>(this);
+            _AnimatedObjects_Object = new Fallout3Group<AnimatedObject>(this);
+            _Waters_Object = new Fallout3Group<Water>(this);
+            _EffectShaders_Object = new Fallout3Group<EffectShader>(this);
+            _Explosions_Object = new Fallout3Group<Explosion>(this);
+            _Debris_Object = new Fallout3Group<Debris>(this);
+            _ImageSpaces_Object = new Fallout3Group<ImageSpace>(this);
+            _ImageSpaceAdapters_Object = new Fallout3Group<ImageSpaceAdapter>(this);
+            _Messages_Object = new Fallout3Group<Message>(this);
+            _Perks_Object = new Fallout3Group<Perk>(this);
+            _BodyParts_Object = new Fallout3Group<BodyPartData>(this);
+            _AddonNodes_Object = new Fallout3Group<AddonNode>(this);
+            _ActorValueInformation_Object = new Fallout3Group<ActorValueInformation>(this);
+            _RadiationStages_Object = new Fallout3Group<RadiationStage>(this);
+            _CameraShots_Object = new Fallout3Group<CameraShot>(this);
+            _CameraPaths_Object = new Fallout3Group<CameraPath>(this);
+            _VoiceTypes_Object = new Fallout3Group<VoiceType>(this);
+            _Impacts_Object = new Fallout3Group<Impact>(this);
+            _ImpactDataSets_Object = new Fallout3Group<ImpactDataSet>(this);
+            _ArmorAddons_Object = new Fallout3Group<ArmorAddon>(this);
+            _EncounterZones_Object = new Fallout3Group<EncounterZone>(this);
+            _Ragdolls_Object = new Fallout3Group<Ragdoll>(this);
+            _DefaultObjectManagers_Object = new Fallout3Group<DefaultObjectManager>(this);
+            _LightingTemplates_Object = new Fallout3Group<LightingTemplate>(this);
+            _MusicTypes_Object = new Fallout3Group<MusicType>(this);
+            _FormLists_Object = new Fallout3Group<FormList>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2632,6 +4302,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Notes.RecordCache.Set(rhsMod.Notes.RecordCache.Items);
             }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
+            }
             if (mask?.Projectiles ?? true)
             {
                 this.Projectiles.RecordCache.Set(rhsMod.Projectiles.RecordCache.Items);
@@ -2640,6 +4314,157 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.LeveledItems.RecordCache.Set(rhsMod.LeveledItems.RecordCache.Items);
             }
+            if (mask?.Weather ?? true)
+            {
+                this.Weather.RecordCache.Set(rhsMod.Weather.RecordCache.Items);
+            }
+            if (mask?.Climates ?? true)
+            {
+                this.Climates.RecordCache.Set(rhsMod.Climates.RecordCache.Items);
+            }
+            if (mask?.Regions ?? true)
+            {
+                this.Regions.RecordCache.Set(rhsMod.Regions.RecordCache.Items);
+            }
+            if (mask?.NavigationMeshInfoMaps ?? true)
+            {
+                this.NavigationMeshInfoMaps.RecordCache.Set(rhsMod.NavigationMeshInfoMaps.RecordCache.Items);
+            }
+            if (mask?.Cells ?? true)
+            {
+                if (rhsMod.Cells.Records.Count > 0)
+                {
+                    throw new NotImplementedException("Cell additions need implementing");
+                }
+            }
+            if (mask?.Worldspaces ?? true)
+            {
+                this.Worldspaces.RecordCache.Set(rhsMod.Worldspaces.RecordCache.Items);
+            }
+            if (mask?.DialogTopics ?? true)
+            {
+                this.DialogTopics.RecordCache.Set(rhsMod.DialogTopics.RecordCache.Items);
+            }
+            if (mask?.Quests ?? true)
+            {
+                this.Quests.RecordCache.Set(rhsMod.Quests.RecordCache.Items);
+            }
+            if (mask?.IdleAnimations ?? true)
+            {
+                this.IdleAnimations.RecordCache.Set(rhsMod.IdleAnimations.RecordCache.Items);
+            }
+            if (mask?.Packages ?? true)
+            {
+                this.Packages.RecordCache.Set(rhsMod.Packages.RecordCache.Items);
+            }
+            if (mask?.CombatStyles ?? true)
+            {
+                this.CombatStyles.RecordCache.Set(rhsMod.CombatStyles.RecordCache.Items);
+            }
+            if (mask?.LoadScreens ?? true)
+            {
+                this.LoadScreens.RecordCache.Set(rhsMod.LoadScreens.RecordCache.Items);
+            }
+            if (mask?.AnimatedObjects ?? true)
+            {
+                this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
+            }
+            if (mask?.Waters ?? true)
+            {
+                this.Waters.RecordCache.Set(rhsMod.Waters.RecordCache.Items);
+            }
+            if (mask?.EffectShaders ?? true)
+            {
+                this.EffectShaders.RecordCache.Set(rhsMod.EffectShaders.RecordCache.Items);
+            }
+            if (mask?.Explosions ?? true)
+            {
+                this.Explosions.RecordCache.Set(rhsMod.Explosions.RecordCache.Items);
+            }
+            if (mask?.Debris ?? true)
+            {
+                this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
+            }
+            if (mask?.ImageSpaces ?? true)
+            {
+                this.ImageSpaces.RecordCache.Set(rhsMod.ImageSpaces.RecordCache.Items);
+            }
+            if (mask?.ImageSpaceAdapters ?? true)
+            {
+                this.ImageSpaceAdapters.RecordCache.Set(rhsMod.ImageSpaceAdapters.RecordCache.Items);
+            }
+            if (mask?.Messages ?? true)
+            {
+                this.Messages.RecordCache.Set(rhsMod.Messages.RecordCache.Items);
+            }
+            if (mask?.Perks ?? true)
+            {
+                this.Perks.RecordCache.Set(rhsMod.Perks.RecordCache.Items);
+            }
+            if (mask?.BodyParts ?? true)
+            {
+                this.BodyParts.RecordCache.Set(rhsMod.BodyParts.RecordCache.Items);
+            }
+            if (mask?.AddonNodes ?? true)
+            {
+                this.AddonNodes.RecordCache.Set(rhsMod.AddonNodes.RecordCache.Items);
+            }
+            if (mask?.ActorValueInformation ?? true)
+            {
+                this.ActorValueInformation.RecordCache.Set(rhsMod.ActorValueInformation.RecordCache.Items);
+            }
+            if (mask?.RadiationStages ?? true)
+            {
+                this.RadiationStages.RecordCache.Set(rhsMod.RadiationStages.RecordCache.Items);
+            }
+            if (mask?.CameraShots ?? true)
+            {
+                this.CameraShots.RecordCache.Set(rhsMod.CameraShots.RecordCache.Items);
+            }
+            if (mask?.CameraPaths ?? true)
+            {
+                this.CameraPaths.RecordCache.Set(rhsMod.CameraPaths.RecordCache.Items);
+            }
+            if (mask?.VoiceTypes ?? true)
+            {
+                this.VoiceTypes.RecordCache.Set(rhsMod.VoiceTypes.RecordCache.Items);
+            }
+            if (mask?.Impacts ?? true)
+            {
+                this.Impacts.RecordCache.Set(rhsMod.Impacts.RecordCache.Items);
+            }
+            if (mask?.ImpactDataSets ?? true)
+            {
+                this.ImpactDataSets.RecordCache.Set(rhsMod.ImpactDataSets.RecordCache.Items);
+            }
+            if (mask?.ArmorAddons ?? true)
+            {
+                this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
+            }
+            if (mask?.EncounterZones ?? true)
+            {
+                this.EncounterZones.RecordCache.Set(rhsMod.EncounterZones.RecordCache.Items);
+            }
+            if (mask?.Ragdolls ?? true)
+            {
+                this.Ragdolls.RecordCache.Set(rhsMod.Ragdolls.RecordCache.Items);
+            }
+            if (mask?.DefaultObjectManagers ?? true)
+            {
+                this.DefaultObjectManagers.RecordCache.Set(rhsMod.DefaultObjectManagers.RecordCache.Items);
+            }
+            if (mask?.LightingTemplates ?? true)
+            {
+                this.LightingTemplates.RecordCache.Set(rhsMod.LightingTemplates.RecordCache.Items);
+            }
+            if (mask?.MusicTypes ?? true)
+            {
+                this.MusicTypes.RecordCache.Set(rhsMod.MusicTypes.RecordCache.Items);
+            }
+            if (mask?.FormLists ?? true)
+            {
+                this.FormLists.RecordCache.Set(rhsMod.FormLists.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2647,7 +4472,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3ModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout3ModCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout3ModSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -2663,8 +4488,10 @@ namespace Mutagen.Bethesda.Fallout3
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -2945,8 +4772,46 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Ingestible> Ingestibles { get; }
         new Fallout3Group<IdleMarker> IdleMarkers { get; }
         new Fallout3Group<Note> Notes { get; }
+        new Fallout3Group<ConstructibleObject> ConstructibleObjects { get; }
         new Fallout3Group<Projectile> Projectiles { get; }
         new Fallout3Group<LeveledItem> LeveledItems { get; }
+        new Fallout3Group<Weather> Weather { get; }
+        new Fallout3Group<Climate> Climates { get; }
+        new Fallout3Group<Region> Regions { get; }
+        new Fallout3Group<NavigationMeshInfoMap> NavigationMeshInfoMaps { get; }
+        new Fallout3ListGroup<CellBlock> Cells { get; }
+        new Fallout3Group<Worldspace> Worldspaces { get; }
+        new Fallout3Group<DialogTopic> DialogTopics { get; }
+        new Fallout3Group<Quest> Quests { get; }
+        new Fallout3Group<IdleAnimation> IdleAnimations { get; }
+        new Fallout3Group<Package> Packages { get; }
+        new Fallout3Group<CombatStyle> CombatStyles { get; }
+        new Fallout3Group<LoadScreen> LoadScreens { get; }
+        new Fallout3Group<AnimatedObject> AnimatedObjects { get; }
+        new Fallout3Group<Water> Waters { get; }
+        new Fallout3Group<EffectShader> EffectShaders { get; }
+        new Fallout3Group<Explosion> Explosions { get; }
+        new Fallout3Group<Debris> Debris { get; }
+        new Fallout3Group<ImageSpace> ImageSpaces { get; }
+        new Fallout3Group<ImageSpaceAdapter> ImageSpaceAdapters { get; }
+        new Fallout3Group<Message> Messages { get; }
+        new Fallout3Group<Perk> Perks { get; }
+        new Fallout3Group<BodyPartData> BodyParts { get; }
+        new Fallout3Group<AddonNode> AddonNodes { get; }
+        new Fallout3Group<ActorValueInformation> ActorValueInformation { get; }
+        new Fallout3Group<RadiationStage> RadiationStages { get; }
+        new Fallout3Group<CameraShot> CameraShots { get; }
+        new Fallout3Group<CameraPath> CameraPaths { get; }
+        new Fallout3Group<VoiceType> VoiceTypes { get; }
+        new Fallout3Group<Impact> Impacts { get; }
+        new Fallout3Group<ImpactDataSet> ImpactDataSets { get; }
+        new Fallout3Group<ArmorAddon> ArmorAddons { get; }
+        new Fallout3Group<EncounterZone> EncounterZones { get; }
+        new Fallout3Group<Ragdoll> Ragdolls { get; }
+        new Fallout3Group<DefaultObjectManager> DefaultObjectManagers { get; }
+        new Fallout3Group<LightingTemplate> LightingTemplates { get; }
+        new Fallout3Group<MusicType> MusicTypes { get; }
+        new Fallout3Group<FormList> FormLists { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -3011,8 +4876,46 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IIngestibleGetter> Ingestibles { get; }
         IFallout3GroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
         IFallout3GroupGetter<INoteGetter> Notes { get; }
+        IFallout3GroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IFallout3GroupGetter<IProjectileGetter> Projectiles { get; }
         IFallout3GroupGetter<ILeveledItemGetter> LeveledItems { get; }
+        IFallout3GroupGetter<IWeatherGetter> Weather { get; }
+        IFallout3GroupGetter<IClimateGetter> Climates { get; }
+        IFallout3GroupGetter<IRegionGetter> Regions { get; }
+        IFallout3GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps { get; }
+        IFallout3ListGroupGetter<ICellBlockGetter> Cells { get; }
+        IFallout3GroupGetter<IWorldspaceGetter> Worldspaces { get; }
+        IFallout3GroupGetter<IDialogTopicGetter> DialogTopics { get; }
+        IFallout3GroupGetter<IQuestGetter> Quests { get; }
+        IFallout3GroupGetter<IIdleAnimationGetter> IdleAnimations { get; }
+        IFallout3GroupGetter<IPackageGetter> Packages { get; }
+        IFallout3GroupGetter<ICombatStyleGetter> CombatStyles { get; }
+        IFallout3GroupGetter<ILoadScreenGetter> LoadScreens { get; }
+        IFallout3GroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
+        IFallout3GroupGetter<IWaterGetter> Waters { get; }
+        IFallout3GroupGetter<IEffectShaderGetter> EffectShaders { get; }
+        IFallout3GroupGetter<IExplosionGetter> Explosions { get; }
+        IFallout3GroupGetter<IDebrisGetter> Debris { get; }
+        IFallout3GroupGetter<IImageSpaceGetter> ImageSpaces { get; }
+        IFallout3GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters { get; }
+        IFallout3GroupGetter<IMessageGetter> Messages { get; }
+        IFallout3GroupGetter<IPerkGetter> Perks { get; }
+        IFallout3GroupGetter<IBodyPartDataGetter> BodyParts { get; }
+        IFallout3GroupGetter<IAddonNodeGetter> AddonNodes { get; }
+        IFallout3GroupGetter<IActorValueInformationGetter> ActorValueInformation { get; }
+        IFallout3GroupGetter<IRadiationStageGetter> RadiationStages { get; }
+        IFallout3GroupGetter<ICameraShotGetter> CameraShots { get; }
+        IFallout3GroupGetter<ICameraPathGetter> CameraPaths { get; }
+        IFallout3GroupGetter<IVoiceTypeGetter> VoiceTypes { get; }
+        IFallout3GroupGetter<IImpactGetter> Impacts { get; }
+        IFallout3GroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
+        IFallout3GroupGetter<IArmorAddonGetter> ArmorAddons { get; }
+        IFallout3GroupGetter<IEncounterZoneGetter> EncounterZones { get; }
+        IFallout3GroupGetter<IRagdollGetter> Ragdolls { get; }
+        IFallout3GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
+        IFallout3GroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
+        IFallout3GroupGetter<IMusicTypeGetter> MusicTypes { get; }
+        IFallout3GroupGetter<IFormListGetter> FormLists { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -3608,8 +5511,46 @@ namespace Mutagen.Bethesda.Fallout3
         Ingestibles = 42,
         IdleMarkers = 43,
         Notes = 44,
-        Projectiles = 45,
-        LeveledItems = 46,
+        ConstructibleObjects = 45,
+        Projectiles = 46,
+        LeveledItems = 47,
+        Weather = 48,
+        Climates = 49,
+        Regions = 50,
+        NavigationMeshInfoMaps = 51,
+        Cells = 52,
+        Worldspaces = 53,
+        DialogTopics = 54,
+        Quests = 55,
+        IdleAnimations = 56,
+        Packages = 57,
+        CombatStyles = 58,
+        LoadScreens = 59,
+        AnimatedObjects = 60,
+        Waters = 61,
+        EffectShaders = 62,
+        Explosions = 63,
+        Debris = 64,
+        ImageSpaces = 65,
+        ImageSpaceAdapters = 66,
+        Messages = 67,
+        Perks = 68,
+        BodyParts = 69,
+        AddonNodes = 70,
+        ActorValueInformation = 71,
+        RadiationStages = 72,
+        CameraShots = 73,
+        CameraPaths = 74,
+        VoiceTypes = 75,
+        Impacts = 76,
+        ImpactDataSets = 77,
+        ArmorAddons = 78,
+        EncounterZones = 79,
+        Ragdolls = 80,
+        DefaultObjectManagers = 81,
+        LightingTemplates = 82,
+        MusicTypes = 83,
+        FormLists = 84,
     }
     #endregion
 
@@ -3620,9 +5561,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 47;
+        public const ushort AdditionalFieldCount = 85;
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 85;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -3733,8 +5674,45 @@ namespace Mutagen.Bethesda.Fallout3
             item.Ingestibles.Clear();
             item.IdleMarkers.Clear();
             item.Notes.Clear();
+            item.ConstructibleObjects.Clear();
             item.Projectiles.Clear();
             item.LeveledItems.Clear();
+            item.Weather.Clear();
+            item.Climates.Clear();
+            item.Regions.Clear();
+            item.NavigationMeshInfoMaps.Clear();
+            item.Worldspaces.Clear();
+            item.DialogTopics.Clear();
+            item.Quests.Clear();
+            item.IdleAnimations.Clear();
+            item.Packages.Clear();
+            item.CombatStyles.Clear();
+            item.LoadScreens.Clear();
+            item.AnimatedObjects.Clear();
+            item.Waters.Clear();
+            item.EffectShaders.Clear();
+            item.Explosions.Clear();
+            item.Debris.Clear();
+            item.ImageSpaces.Clear();
+            item.ImageSpaceAdapters.Clear();
+            item.Messages.Clear();
+            item.Perks.Clear();
+            item.BodyParts.Clear();
+            item.AddonNodes.Clear();
+            item.ActorValueInformation.Clear();
+            item.RadiationStages.Clear();
+            item.CameraShots.Clear();
+            item.CameraPaths.Clear();
+            item.VoiceTypes.Clear();
+            item.Impacts.Clear();
+            item.ImpactDataSets.Clear();
+            item.ArmorAddons.Clear();
+            item.EncounterZones.Clear();
+            item.Ragdolls.Clear();
+            item.DefaultObjectManagers.Clear();
+            item.LightingTemplates.Clear();
+            item.MusicTypes.Clear();
+            item.FormLists.Clear();
         }
         
         #region Mutagen
@@ -3778,8 +5756,37 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ingestibles.RemapLinks(mapping);
             obj.IdleMarkers.RemapLinks(mapping);
             obj.Notes.RemapLinks(mapping);
+            obj.ConstructibleObjects.RemapLinks(mapping);
             obj.Projectiles.RemapLinks(mapping);
             obj.LeveledItems.RemapLinks(mapping);
+            obj.Weather.RemapLinks(mapping);
+            obj.Climates.RemapLinks(mapping);
+            obj.Regions.RemapLinks(mapping);
+            obj.Cells.RemapLinks(mapping);
+            obj.Worldspaces.RemapLinks(mapping);
+            obj.DialogTopics.RemapLinks(mapping);
+            obj.Quests.RemapLinks(mapping);
+            obj.IdleAnimations.RemapLinks(mapping);
+            obj.Packages.RemapLinks(mapping);
+            obj.LoadScreens.RemapLinks(mapping);
+            obj.AnimatedObjects.RemapLinks(mapping);
+            obj.Waters.RemapLinks(mapping);
+            obj.Explosions.RemapLinks(mapping);
+            obj.ImageSpaceAdapters.RemapLinks(mapping);
+            obj.Messages.RemapLinks(mapping);
+            obj.Perks.RemapLinks(mapping);
+            obj.BodyParts.RemapLinks(mapping);
+            obj.AddonNodes.RemapLinks(mapping);
+            obj.RadiationStages.RemapLinks(mapping);
+            obj.CameraShots.RemapLinks(mapping);
+            obj.CameraPaths.RemapLinks(mapping);
+            obj.Impacts.RemapLinks(mapping);
+            obj.ImpactDataSets.RemapLinks(mapping);
+            obj.ArmorAddons.RemapLinks(mapping);
+            obj.EncounterZones.RemapLinks(mapping);
+            obj.Ragdolls.RemapLinks(mapping);
+            obj.DefaultObjectManagers.RemapLinks(mapping);
+            obj.FormLists.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -3836,6 +5843,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public void Remove(
             IFallout3Mod obj,
             HashSet<FormKey> keys)
@@ -3884,8 +5892,46 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ingestibles.Remove(keys);
             obj.IdleMarkers.Remove(keys);
             obj.Notes.Remove(keys);
+            obj.ConstructibleObjects.Remove(keys);
             obj.Projectiles.Remove(keys);
             obj.LeveledItems.Remove(keys);
+            obj.Weather.Remove(keys);
+            obj.Climates.Remove(keys);
+            obj.Regions.Remove(keys);
+            obj.NavigationMeshInfoMaps.Remove(keys);
+            obj.Cells.Remove(keys);
+            obj.Worldspaces.Remove(keys);
+            obj.DialogTopics.Remove(keys);
+            obj.Quests.Remove(keys);
+            obj.IdleAnimations.Remove(keys);
+            obj.Packages.Remove(keys);
+            obj.CombatStyles.Remove(keys);
+            obj.LoadScreens.Remove(keys);
+            obj.AnimatedObjects.Remove(keys);
+            obj.Waters.Remove(keys);
+            obj.EffectShaders.Remove(keys);
+            obj.Explosions.Remove(keys);
+            obj.Debris.Remove(keys);
+            obj.ImageSpaces.Remove(keys);
+            obj.ImageSpaceAdapters.Remove(keys);
+            obj.Messages.Remove(keys);
+            obj.Perks.Remove(keys);
+            obj.BodyParts.Remove(keys);
+            obj.AddonNodes.Remove(keys);
+            obj.ActorValueInformation.Remove(keys);
+            obj.RadiationStages.Remove(keys);
+            obj.CameraShots.Remove(keys);
+            obj.CameraPaths.Remove(keys);
+            obj.VoiceTypes.Remove(keys);
+            obj.Impacts.Remove(keys);
+            obj.ImpactDataSets.Remove(keys);
+            obj.ArmorAddons.Remove(keys);
+            obj.EncounterZones.Remove(keys);
+            obj.Ragdolls.Remove(keys);
+            obj.DefaultObjectManagers.Remove(keys);
+            obj.LightingTemplates.Remove(keys);
+            obj.MusicTypes.Remove(keys);
+            obj.FormLists.Remove(keys);
         }
         
         public void Remove(
@@ -4285,6 +6331,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    obj.ConstructibleObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
@@ -4301,6 +6355,401 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    obj.Weather.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    obj.Climates.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    obj.Regions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    obj.NavigationMeshInfoMaps.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    obj.DialogTopics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    obj.Quests.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    obj.IdleAnimations.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    obj.Packages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    obj.CombatStyles.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    obj.LoadScreens.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    obj.AnimatedObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    obj.Waters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    obj.EffectShaders.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    obj.Explosions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    obj.Debris.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    obj.ImageSpaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ImageSpaceAdapter":
+                case "IImageSpaceAdapterGetter":
+                case "IImageSpaceAdapter":
+                case "IImageSpaceAdapterInternal":
+                    obj.ImageSpaceAdapters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    obj.Messages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    obj.Perks.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    obj.BodyParts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    obj.AddonNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    obj.ActorValueInformation.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    obj.RadiationStages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    obj.CameraShots.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    obj.CameraPaths.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    obj.VoiceTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    obj.Impacts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    obj.ImpactDataSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    obj.ArmorAddons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    obj.EncounterZones.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    obj.Ragdolls.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    obj.DefaultObjectManagers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    obj.LightingTemplates.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    obj.MusicTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    obj.FormLists.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedGrenade":
+                case "IPlacedGrenadeGetter":
+                case "IPlacedGrenade":
+                case "IPlacedGrenadeInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    obj.DialogTopics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
@@ -4313,11 +6762,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IExplodeSpawnGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "IRelatable":
-                case "IRelatableGetter":
-                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IItem":
                 case "IItemGetter":
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
@@ -4325,22 +6769,30 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IAmmoOrList":
                 case "IAmmoOrListGetter":
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IBoundItem":
                 case "IBoundItemGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ICellOrWorldspace":
+                case "ICellOrWorldspaceGetter":
+                    Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
@@ -4349,10 +6801,41 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IRelatable":
+                case "IRelatableGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IIdleRelation":
+                case "IIdleRelationGetter":
+                    Remove(obj, keys, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IEmittance":
+                case "IEmittanceGetter":
+                    Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ISoundOrNpcSpawn":
+                case "ISoundOrNpcSpawnGetter":
+                    Remove(obj, keys, typeof(ISoundGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 default:
                     if (throwIfUnknown)
@@ -4366,6 +6849,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3Mod obj)
         {
             {
@@ -4452,6 +6936,50 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.ConstructibleObjects.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Regions.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Cells is IAssetLinkContainer CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Worldspaces is IAssetLinkContainer WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Quests.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Perks.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ActorValueInformation.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -4475,6 +7003,13 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Keys.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Notes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Regions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Cells.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Worldspaces.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ActorValueInformation.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -4565,8 +7100,46 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
             ret.Notes = MaskItemExt.Factory(item.Notes.GetEqualsMask(rhs.Notes, include), include);
+            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
+            ret.Weather = MaskItemExt.Factory(item.Weather.GetEqualsMask(rhs.Weather, include), include);
+            ret.Climates = MaskItemExt.Factory(item.Climates.GetEqualsMask(rhs.Climates, include), include);
+            ret.Regions = MaskItemExt.Factory(item.Regions.GetEqualsMask(rhs.Regions, include), include);
+            ret.NavigationMeshInfoMaps = MaskItemExt.Factory(item.NavigationMeshInfoMaps.GetEqualsMask(rhs.NavigationMeshInfoMaps, include), include);
+            ret.Cells = MaskItemExt.Factory(item.Cells.GetEqualsMask(rhs.Cells, include), include);
+            ret.Worldspaces = MaskItemExt.Factory(item.Worldspaces.GetEqualsMask(rhs.Worldspaces, include), include);
+            ret.DialogTopics = MaskItemExt.Factory(item.DialogTopics.GetEqualsMask(rhs.DialogTopics, include), include);
+            ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
+            ret.IdleAnimations = MaskItemExt.Factory(item.IdleAnimations.GetEqualsMask(rhs.IdleAnimations, include), include);
+            ret.Packages = MaskItemExt.Factory(item.Packages.GetEqualsMask(rhs.Packages, include), include);
+            ret.CombatStyles = MaskItemExt.Factory(item.CombatStyles.GetEqualsMask(rhs.CombatStyles, include), include);
+            ret.LoadScreens = MaskItemExt.Factory(item.LoadScreens.GetEqualsMask(rhs.LoadScreens, include), include);
+            ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
+            ret.Waters = MaskItemExt.Factory(item.Waters.GetEqualsMask(rhs.Waters, include), include);
+            ret.EffectShaders = MaskItemExt.Factory(item.EffectShaders.GetEqualsMask(rhs.EffectShaders, include), include);
+            ret.Explosions = MaskItemExt.Factory(item.Explosions.GetEqualsMask(rhs.Explosions, include), include);
+            ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
+            ret.ImageSpaces = MaskItemExt.Factory(item.ImageSpaces.GetEqualsMask(rhs.ImageSpaces, include), include);
+            ret.ImageSpaceAdapters = MaskItemExt.Factory(item.ImageSpaceAdapters.GetEqualsMask(rhs.ImageSpaceAdapters, include), include);
+            ret.Messages = MaskItemExt.Factory(item.Messages.GetEqualsMask(rhs.Messages, include), include);
+            ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
+            ret.BodyParts = MaskItemExt.Factory(item.BodyParts.GetEqualsMask(rhs.BodyParts, include), include);
+            ret.AddonNodes = MaskItemExt.Factory(item.AddonNodes.GetEqualsMask(rhs.AddonNodes, include), include);
+            ret.ActorValueInformation = MaskItemExt.Factory(item.ActorValueInformation.GetEqualsMask(rhs.ActorValueInformation, include), include);
+            ret.RadiationStages = MaskItemExt.Factory(item.RadiationStages.GetEqualsMask(rhs.RadiationStages, include), include);
+            ret.CameraShots = MaskItemExt.Factory(item.CameraShots.GetEqualsMask(rhs.CameraShots, include), include);
+            ret.CameraPaths = MaskItemExt.Factory(item.CameraPaths.GetEqualsMask(rhs.CameraPaths, include), include);
+            ret.VoiceTypes = MaskItemExt.Factory(item.VoiceTypes.GetEqualsMask(rhs.VoiceTypes, include), include);
+            ret.Impacts = MaskItemExt.Factory(item.Impacts.GetEqualsMask(rhs.Impacts, include), include);
+            ret.ImpactDataSets = MaskItemExt.Factory(item.ImpactDataSets.GetEqualsMask(rhs.ImpactDataSets, include), include);
+            ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
+            ret.EncounterZones = MaskItemExt.Factory(item.EncounterZones.GetEqualsMask(rhs.EncounterZones, include), include);
+            ret.Ragdolls = MaskItemExt.Factory(item.Ragdolls.GetEqualsMask(rhs.Ragdolls, include), include);
+            ret.DefaultObjectManagers = MaskItemExt.Factory(item.DefaultObjectManagers.GetEqualsMask(rhs.DefaultObjectManagers, include), include);
+            ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
+            ret.MusicTypes = MaskItemExt.Factory(item.MusicTypes.GetEqualsMask(rhs.MusicTypes, include), include);
+            ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
         }
         
         public string Print(
@@ -4791,6 +7364,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Notes?.Print(sb, "Notes");
             }
+            if (printMask?.ConstructibleObjects?.Overall ?? true)
+            {
+                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
+            }
             if (printMask?.Projectiles?.Overall ?? true)
             {
                 item.Projectiles?.Print(sb, "Projectiles");
@@ -4798,6 +7375,154 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.LeveledItems?.Overall ?? true)
             {
                 item.LeveledItems?.Print(sb, "LeveledItems");
+            }
+            if (printMask?.Weather?.Overall ?? true)
+            {
+                item.Weather?.Print(sb, "Weather");
+            }
+            if (printMask?.Climates?.Overall ?? true)
+            {
+                item.Climates?.Print(sb, "Climates");
+            }
+            if (printMask?.Regions?.Overall ?? true)
+            {
+                item.Regions?.Print(sb, "Regions");
+            }
+            if (printMask?.NavigationMeshInfoMaps?.Overall ?? true)
+            {
+                item.NavigationMeshInfoMaps?.Print(sb, "NavigationMeshInfoMaps");
+            }
+            if (printMask?.Cells?.Overall ?? true)
+            {
+                item.Cells?.Print(sb, "Cells");
+            }
+            if (printMask?.Worldspaces?.Overall ?? true)
+            {
+                item.Worldspaces?.Print(sb, "Worldspaces");
+            }
+            if (printMask?.DialogTopics?.Overall ?? true)
+            {
+                item.DialogTopics?.Print(sb, "DialogTopics");
+            }
+            if (printMask?.Quests?.Overall ?? true)
+            {
+                item.Quests?.Print(sb, "Quests");
+            }
+            if (printMask?.IdleAnimations?.Overall ?? true)
+            {
+                item.IdleAnimations?.Print(sb, "IdleAnimations");
+            }
+            if (printMask?.Packages?.Overall ?? true)
+            {
+                item.Packages?.Print(sb, "Packages");
+            }
+            if (printMask?.CombatStyles?.Overall ?? true)
+            {
+                item.CombatStyles?.Print(sb, "CombatStyles");
+            }
+            if (printMask?.LoadScreens?.Overall ?? true)
+            {
+                item.LoadScreens?.Print(sb, "LoadScreens");
+            }
+            if (printMask?.AnimatedObjects?.Overall ?? true)
+            {
+                item.AnimatedObjects?.Print(sb, "AnimatedObjects");
+            }
+            if (printMask?.Waters?.Overall ?? true)
+            {
+                item.Waters?.Print(sb, "Waters");
+            }
+            if (printMask?.EffectShaders?.Overall ?? true)
+            {
+                item.EffectShaders?.Print(sb, "EffectShaders");
+            }
+            if (printMask?.Explosions?.Overall ?? true)
+            {
+                item.Explosions?.Print(sb, "Explosions");
+            }
+            if (printMask?.Debris?.Overall ?? true)
+            {
+                item.Debris?.Print(sb, "Debris");
+            }
+            if (printMask?.ImageSpaces?.Overall ?? true)
+            {
+                item.ImageSpaces?.Print(sb, "ImageSpaces");
+            }
+            if (printMask?.ImageSpaceAdapters?.Overall ?? true)
+            {
+                item.ImageSpaceAdapters?.Print(sb, "ImageSpaceAdapters");
+            }
+            if (printMask?.Messages?.Overall ?? true)
+            {
+                item.Messages?.Print(sb, "Messages");
+            }
+            if (printMask?.Perks?.Overall ?? true)
+            {
+                item.Perks?.Print(sb, "Perks");
+            }
+            if (printMask?.BodyParts?.Overall ?? true)
+            {
+                item.BodyParts?.Print(sb, "BodyParts");
+            }
+            if (printMask?.AddonNodes?.Overall ?? true)
+            {
+                item.AddonNodes?.Print(sb, "AddonNodes");
+            }
+            if (printMask?.ActorValueInformation?.Overall ?? true)
+            {
+                item.ActorValueInformation?.Print(sb, "ActorValueInformation");
+            }
+            if (printMask?.RadiationStages?.Overall ?? true)
+            {
+                item.RadiationStages?.Print(sb, "RadiationStages");
+            }
+            if (printMask?.CameraShots?.Overall ?? true)
+            {
+                item.CameraShots?.Print(sb, "CameraShots");
+            }
+            if (printMask?.CameraPaths?.Overall ?? true)
+            {
+                item.CameraPaths?.Print(sb, "CameraPaths");
+            }
+            if (printMask?.VoiceTypes?.Overall ?? true)
+            {
+                item.VoiceTypes?.Print(sb, "VoiceTypes");
+            }
+            if (printMask?.Impacts?.Overall ?? true)
+            {
+                item.Impacts?.Print(sb, "Impacts");
+            }
+            if (printMask?.ImpactDataSets?.Overall ?? true)
+            {
+                item.ImpactDataSets?.Print(sb, "ImpactDataSets");
+            }
+            if (printMask?.ArmorAddons?.Overall ?? true)
+            {
+                item.ArmorAddons?.Print(sb, "ArmorAddons");
+            }
+            if (printMask?.EncounterZones?.Overall ?? true)
+            {
+                item.EncounterZones?.Print(sb, "EncounterZones");
+            }
+            if (printMask?.Ragdolls?.Overall ?? true)
+            {
+                item.Ragdolls?.Print(sb, "Ragdolls");
+            }
+            if (printMask?.DefaultObjectManagers?.Overall ?? true)
+            {
+                item.DefaultObjectManagers?.Print(sb, "DefaultObjectManagers");
+            }
+            if (printMask?.LightingTemplates?.Overall ?? true)
+            {
+                item.LightingTemplates?.Print(sb, "LightingTemplates");
+            }
+            if (printMask?.MusicTypes?.Overall ?? true)
+            {
+                item.MusicTypes?.Print(sb, "MusicTypes");
+            }
+            if (printMask?.FormLists?.Overall ?? true)
+            {
+                item.FormLists?.Print(sb, "FormLists");
             }
         }
         
@@ -5168,6 +7893,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isNotesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
+                {
+                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
+                }
+                else if (!isConstructibleObjectsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Projectiles) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Projectiles, rhs.Projectiles, out var lhsProjectiles, out var rhsProjectiles, out var isProjectilesEqual))
@@ -5183,6 +7916,302 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!object.Equals(lhsLeveledItems, rhsLeveledItems)) return false;
                 }
                 else if (!isLeveledItemsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Weather) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weather, rhs.Weather, out var lhsWeather, out var rhsWeather, out var isWeatherEqual))
+                {
+                    if (!object.Equals(lhsWeather, rhsWeather)) return false;
+                }
+                else if (!isWeatherEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Climates) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Climates, rhs.Climates, out var lhsClimates, out var rhsClimates, out var isClimatesEqual))
+                {
+                    if (!object.Equals(lhsClimates, rhsClimates)) return false;
+                }
+                else if (!isClimatesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Regions) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Regions, rhs.Regions, out var lhsRegions, out var rhsRegions, out var isRegionsEqual))
+                {
+                    if (!object.Equals(lhsRegions, rhsRegions)) return false;
+                }
+                else if (!isRegionsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps, out var lhsNavigationMeshInfoMaps, out var rhsNavigationMeshInfoMaps, out var isNavigationMeshInfoMapsEqual))
+                {
+                    if (!object.Equals(lhsNavigationMeshInfoMaps, rhsNavigationMeshInfoMaps)) return false;
+                }
+                else if (!isNavigationMeshInfoMapsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Cells) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Cells, rhs.Cells, out var lhsCells, out var rhsCells, out var isCellsEqual))
+                {
+                    if (!object.Equals(lhsCells, rhsCells)) return false;
+                }
+                else if (!isCellsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Worldspaces) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Worldspaces, rhs.Worldspaces, out var lhsWorldspaces, out var rhsWorldspaces, out var isWorldspacesEqual))
+                {
+                    if (!object.Equals(lhsWorldspaces, rhsWorldspaces)) return false;
+                }
+                else if (!isWorldspacesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.DialogTopics) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DialogTopics, rhs.DialogTopics, out var lhsDialogTopics, out var rhsDialogTopics, out var isDialogTopicsEqual))
+                {
+                    if (!object.Equals(lhsDialogTopics, rhsDialogTopics)) return false;
+                }
+                else if (!isDialogTopicsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Quests) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Quests, rhs.Quests, out var lhsQuests, out var rhsQuests, out var isQuestsEqual))
+                {
+                    if (!object.Equals(lhsQuests, rhsQuests)) return false;
+                }
+                else if (!isQuestsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.IdleAnimations) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
+                {
+                    if (!object.Equals(lhsIdleAnimations, rhsIdleAnimations)) return false;
+                }
+                else if (!isIdleAnimationsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Packages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Packages, rhs.Packages, out var lhsPackages, out var rhsPackages, out var isPackagesEqual))
+                {
+                    if (!object.Equals(lhsPackages, rhsPackages)) return false;
+                }
+                else if (!isPackagesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CombatStyles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CombatStyles, rhs.CombatStyles, out var lhsCombatStyles, out var rhsCombatStyles, out var isCombatStylesEqual))
+                {
+                    if (!object.Equals(lhsCombatStyles, rhsCombatStyles)) return false;
+                }
+                else if (!isCombatStylesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.LoadScreens) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LoadScreens, rhs.LoadScreens, out var lhsLoadScreens, out var rhsLoadScreens, out var isLoadScreensEqual))
+                {
+                    if (!object.Equals(lhsLoadScreens, rhsLoadScreens)) return false;
+                }
+                else if (!isLoadScreensEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
+                {
+                    if (!object.Equals(lhsAnimatedObjects, rhsAnimatedObjects)) return false;
+                }
+                else if (!isAnimatedObjectsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Waters) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Waters, rhs.Waters, out var lhsWaters, out var rhsWaters, out var isWatersEqual))
+                {
+                    if (!object.Equals(lhsWaters, rhsWaters)) return false;
+                }
+                else if (!isWatersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.EffectShaders) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EffectShaders, rhs.EffectShaders, out var lhsEffectShaders, out var rhsEffectShaders, out var isEffectShadersEqual))
+                {
+                    if (!object.Equals(lhsEffectShaders, rhsEffectShaders)) return false;
+                }
+                else if (!isEffectShadersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Explosions) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Explosions, rhs.Explosions, out var lhsExplosions, out var rhsExplosions, out var isExplosionsEqual))
+                {
+                    if (!object.Equals(lhsExplosions, rhsExplosions)) return false;
+                }
+                else if (!isExplosionsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Debris) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Debris, rhs.Debris, out var lhsDebris, out var rhsDebris, out var isDebrisEqual))
+                {
+                    if (!object.Equals(lhsDebris, rhsDebris)) return false;
+                }
+                else if (!isDebrisEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ImageSpaces) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ImageSpaces, rhs.ImageSpaces, out var lhsImageSpaces, out var rhsImageSpaces, out var isImageSpacesEqual))
+                {
+                    if (!object.Equals(lhsImageSpaces, rhsImageSpaces)) return false;
+                }
+                else if (!isImageSpacesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ImageSpaceAdapters) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ImageSpaceAdapters, rhs.ImageSpaceAdapters, out var lhsImageSpaceAdapters, out var rhsImageSpaceAdapters, out var isImageSpaceAdaptersEqual))
+                {
+                    if (!object.Equals(lhsImageSpaceAdapters, rhsImageSpaceAdapters)) return false;
+                }
+                else if (!isImageSpaceAdaptersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Messages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Messages, rhs.Messages, out var lhsMessages, out var rhsMessages, out var isMessagesEqual))
+                {
+                    if (!object.Equals(lhsMessages, rhsMessages)) return false;
+                }
+                else if (!isMessagesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Perks) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Perks, rhs.Perks, out var lhsPerks, out var rhsPerks, out var isPerksEqual))
+                {
+                    if (!object.Equals(lhsPerks, rhsPerks)) return false;
+                }
+                else if (!isPerksEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.BodyParts) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.BodyParts, rhs.BodyParts, out var lhsBodyParts, out var rhsBodyParts, out var isBodyPartsEqual))
+                {
+                    if (!object.Equals(lhsBodyParts, rhsBodyParts)) return false;
+                }
+                else if (!isBodyPartsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.AddonNodes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AddonNodes, rhs.AddonNodes, out var lhsAddonNodes, out var rhsAddonNodes, out var isAddonNodesEqual))
+                {
+                    if (!object.Equals(lhsAddonNodes, rhsAddonNodes)) return false;
+                }
+                else if (!isAddonNodesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ActorValueInformation) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ActorValueInformation, rhs.ActorValueInformation, out var lhsActorValueInformation, out var rhsActorValueInformation, out var isActorValueInformationEqual))
+                {
+                    if (!object.Equals(lhsActorValueInformation, rhsActorValueInformation)) return false;
+                }
+                else if (!isActorValueInformationEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.RadiationStages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.RadiationStages, rhs.RadiationStages, out var lhsRadiationStages, out var rhsRadiationStages, out var isRadiationStagesEqual))
+                {
+                    if (!object.Equals(lhsRadiationStages, rhsRadiationStages)) return false;
+                }
+                else if (!isRadiationStagesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CameraShots) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CameraShots, rhs.CameraShots, out var lhsCameraShots, out var rhsCameraShots, out var isCameraShotsEqual))
+                {
+                    if (!object.Equals(lhsCameraShots, rhsCameraShots)) return false;
+                }
+                else if (!isCameraShotsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CameraPaths) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CameraPaths, rhs.CameraPaths, out var lhsCameraPaths, out var rhsCameraPaths, out var isCameraPathsEqual))
+                {
+                    if (!object.Equals(lhsCameraPaths, rhsCameraPaths)) return false;
+                }
+                else if (!isCameraPathsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.VoiceTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VoiceTypes, rhs.VoiceTypes, out var lhsVoiceTypes, out var rhsVoiceTypes, out var isVoiceTypesEqual))
+                {
+                    if (!object.Equals(lhsVoiceTypes, rhsVoiceTypes)) return false;
+                }
+                else if (!isVoiceTypesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Impacts) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Impacts, rhs.Impacts, out var lhsImpacts, out var rhsImpacts, out var isImpactsEqual))
+                {
+                    if (!object.Equals(lhsImpacts, rhsImpacts)) return false;
+                }
+                else if (!isImpactsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ImpactDataSets, rhs.ImpactDataSets, out var lhsImpactDataSets, out var rhsImpactDataSets, out var isImpactDataSetsEqual))
+                {
+                    if (!object.Equals(lhsImpactDataSets, rhsImpactDataSets)) return false;
+                }
+                else if (!isImpactDataSetsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ArmorAddons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ArmorAddons, rhs.ArmorAddons, out var lhsArmorAddons, out var rhsArmorAddons, out var isArmorAddonsEqual))
+                {
+                    if (!object.Equals(lhsArmorAddons, rhsArmorAddons)) return false;
+                }
+                else if (!isArmorAddonsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.EncounterZones) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.EncounterZones, rhs.EncounterZones, out var lhsEncounterZones, out var rhsEncounterZones, out var isEncounterZonesEqual))
+                {
+                    if (!object.Equals(lhsEncounterZones, rhsEncounterZones)) return false;
+                }
+                else if (!isEncounterZonesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Ragdolls) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Ragdolls, rhs.Ragdolls, out var lhsRagdolls, out var rhsRagdolls, out var isRagdollsEqual))
+                {
+                    if (!object.Equals(lhsRagdolls, rhsRagdolls)) return false;
+                }
+                else if (!isRagdollsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers, out var lhsDefaultObjectManagers, out var rhsDefaultObjectManagers, out var isDefaultObjectManagersEqual))
+                {
+                    if (!object.Equals(lhsDefaultObjectManagers, rhsDefaultObjectManagers)) return false;
+                }
+                else if (!isDefaultObjectManagersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.LightingTemplates) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LightingTemplates, rhs.LightingTemplates, out var lhsLightingTemplates, out var rhsLightingTemplates, out var isLightingTemplatesEqual))
+                {
+                    if (!object.Equals(lhsLightingTemplates, rhsLightingTemplates)) return false;
+                }
+                else if (!isLightingTemplatesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MusicTypes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MusicTypes, rhs.MusicTypes, out var lhsMusicTypes, out var rhsMusicTypes, out var isMusicTypesEqual))
+                {
+                    if (!object.Equals(lhsMusicTypes, rhsMusicTypes)) return false;
+                }
+                else if (!isMusicTypesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.FormLists) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FormLists, rhs.FormLists, out var lhsFormLists, out var rhsFormLists, out var isFormListsEqual))
+                {
+                    if (!object.Equals(lhsFormLists, rhsFormLists)) return false;
+                }
+                else if (!isFormListsEqual) return false;
             }
             return true;
         }
@@ -5235,8 +8264,46 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Ingestibles);
             hash.Add(item.IdleMarkers);
             hash.Add(item.Notes);
+            hash.Add(item.ConstructibleObjects);
             hash.Add(item.Projectiles);
             hash.Add(item.LeveledItems);
+            hash.Add(item.Weather);
+            hash.Add(item.Climates);
+            hash.Add(item.Regions);
+            hash.Add(item.NavigationMeshInfoMaps);
+            hash.Add(item.Cells);
+            hash.Add(item.Worldspaces);
+            hash.Add(item.DialogTopics);
+            hash.Add(item.Quests);
+            hash.Add(item.IdleAnimations);
+            hash.Add(item.Packages);
+            hash.Add(item.CombatStyles);
+            hash.Add(item.LoadScreens);
+            hash.Add(item.AnimatedObjects);
+            hash.Add(item.Waters);
+            hash.Add(item.EffectShaders);
+            hash.Add(item.Explosions);
+            hash.Add(item.Debris);
+            hash.Add(item.ImageSpaces);
+            hash.Add(item.ImageSpaceAdapters);
+            hash.Add(item.Messages);
+            hash.Add(item.Perks);
+            hash.Add(item.BodyParts);
+            hash.Add(item.AddonNodes);
+            hash.Add(item.ActorValueInformation);
+            hash.Add(item.RadiationStages);
+            hash.Add(item.CameraShots);
+            hash.Add(item.CameraPaths);
+            hash.Add(item.VoiceTypes);
+            hash.Add(item.Impacts);
+            hash.Add(item.ImpactDataSets);
+            hash.Add(item.ArmorAddons);
+            hash.Add(item.EncounterZones);
+            hash.Add(item.Ragdolls);
+            hash.Add(item.DefaultObjectManagers);
+            hash.Add(item.LightingTemplates);
+            hash.Add(item.MusicTypes);
+            hash.Add(item.FormLists);
             return hash.ToHashCode();
         }
         
@@ -5503,6 +8570,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "INote":
                 case "INoteInternal":
                     return obj.Notes;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    return obj.ConstructibleObjects;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
@@ -5513,6 +8585,190 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
                     return obj.LeveledItems;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    return obj.Weather;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    return obj.Climates;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    return obj.Regions;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    return obj.NavigationMeshInfoMaps;
+                case "CellBlock":
+                case "ICellBlockGetter":
+                case "ICellBlock":
+                    return obj.Cells.Records;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    return obj.Worldspaces;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    return obj.DialogTopics;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    return obj.Quests;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    return obj.IdleAnimations;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    return obj.Packages;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    return obj.CombatStyles;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    return obj.LoadScreens;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    return obj.AnimatedObjects;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    return obj.Waters;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    return obj.EffectShaders;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    return obj.Explosions;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    return obj.Debris;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    return obj.ImageSpaces;
+                case "ImageSpaceAdapter":
+                case "IImageSpaceAdapterGetter":
+                case "IImageSpaceAdapter":
+                case "IImageSpaceAdapterInternal":
+                    return obj.ImageSpaceAdapters;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    return obj.Messages;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    return obj.Perks;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    return obj.BodyParts;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    return obj.AddonNodes;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    return obj.ActorValueInformation;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    return obj.RadiationStages;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    return obj.CameraShots;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    return obj.CameraPaths;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    return obj.VoiceTypes;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    return obj.Impacts;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    return obj.ImpactDataSets;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    return obj.ArmorAddons;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    return obj.EncounterZones;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    return obj.Ragdolls;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    return obj.DefaultObjectManagers;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    return obj.LightingTemplates;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    return obj.MusicTypes;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    return obj.FormLists;
                 default:
                     return null;
             }
@@ -5530,7 +8786,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[46];
+            Stream[] outputStreams = new Stream[84];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -5576,8 +8832,46 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Ingestibles, 41, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 42, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Notes, 43, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, 44, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 45, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 44, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, 45, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 46, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weather, 47, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Climates, 48, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Regions, 49, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 50, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 51, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 52, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 53, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 54, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 55, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 56, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 57, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 58, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 59, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 60, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 61, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, 62, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 63, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 64, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, 65, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Messages, 66, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 67, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, 68, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 69, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 70, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.RadiationStages, 71, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, 72, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 73, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 74, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, 75, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 76, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 77, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, 78, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Ragdolls, 79, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 80, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 81, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, 82, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 83, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -5667,182 +8961,336 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Notes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weather.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Cells.Records.Count > 0 ? 1 : default(uint);
+            count += item.Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DialogTopics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Packages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Explosions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Debris.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Messages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Perks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.RadiationStages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Impacts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ragdolls.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
         
         partial void GetCustomRecordCount(IFallout3ModGetter item, Action<uint> setter);
         
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.ModHeader.EnumerateFormLinks())
+            foreach (var item in obj.ModHeader.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Factions.EnumerateFormLinks())
+            foreach (var item in obj.Factions.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.HeadParts.EnumerateFormLinks())
+            foreach (var item in obj.HeadParts.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Hairs.EnumerateFormLinks())
+            foreach (var item in obj.Hairs.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Races.EnumerateFormLinks())
+            foreach (var item in obj.Races.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.AcousticSpaces.EnumerateFormLinks())
+            foreach (var item in obj.AcousticSpaces.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.MagicEffects.EnumerateFormLinks())
+            foreach (var item in obj.MagicEffects.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Scripts is IFormLinkContainerGetter ScriptslinkCont)
             {
-                foreach (var item in ScriptslinkCont.EnumerateFormLinks())
+                foreach (var item in ScriptslinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.LandscapeTextures.EnumerateFormLinks())
+            foreach (var item in obj.LandscapeTextures.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.ObjectEffects.EnumerateFormLinks())
+            foreach (var item in obj.ObjectEffects.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Spells.EnumerateFormLinks())
+            foreach (var item in obj.Spells.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Activators.EnumerateFormLinks())
+            foreach (var item in obj.Activators.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.TalkingActivators.EnumerateFormLinks())
+            foreach (var item in obj.TalkingActivators.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Terminals.EnumerateFormLinks())
+            foreach (var item in obj.Terminals.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Armors.EnumerateFormLinks())
+            foreach (var item in obj.Armors.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Books.EnumerateFormLinks())
+            foreach (var item in obj.Books.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Containers.EnumerateFormLinks())
+            foreach (var item in obj.Containers.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Doors.EnumerateFormLinks())
+            foreach (var item in obj.Doors.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Ingredients.EnumerateFormLinks())
+            foreach (var item in obj.Ingredients.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Lights.EnumerateFormLinks())
+            foreach (var item in obj.Lights.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.MiscItems.EnumerateFormLinks())
+            foreach (var item in obj.MiscItems.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Statics.EnumerateFormLinks())
+            foreach (var item in obj.Statics.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.StaticCollections.EnumerateFormLinks())
+            foreach (var item in obj.StaticCollections.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.MoveableStatics.EnumerateFormLinks())
+            foreach (var item in obj.MoveableStatics.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.PlaceableWaters.EnumerateFormLinks())
+            foreach (var item in obj.PlaceableWaters.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Grasses.EnumerateFormLinks())
+            foreach (var item in obj.Grasses.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Trees.EnumerateFormLinks())
+            foreach (var item in obj.Trees.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Furniture.EnumerateFormLinks())
+            foreach (var item in obj.Furniture.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Weapons.EnumerateFormLinks())
+            foreach (var item in obj.Weapons.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Ammunitions.EnumerateFormLinks())
+            foreach (var item in obj.Ammunitions.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Npcs.EnumerateFormLinks())
+            foreach (var item in obj.Npcs.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Creatures.EnumerateFormLinks())
+            foreach (var item in obj.Creatures.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.LeveledCreatures is IFormLinkContainerGetter LeveledCreatureslinkCont)
             {
-                foreach (var item in LeveledCreatureslinkCont.EnumerateFormLinks())
+                foreach (var item in LeveledCreatureslinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.LeveledNpcs is IFormLinkContainerGetter LeveledNpcslinkCont)
             {
-                foreach (var item in LeveledNpcslinkCont.EnumerateFormLinks())
+                foreach (var item in LeveledNpcslinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Keys.EnumerateFormLinks())
+            foreach (var item in obj.Keys.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Ingestibles.EnumerateFormLinks())
+            foreach (var item in obj.Ingestibles.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.IdleMarkers.EnumerateFormLinks())
+            foreach (var item in obj.IdleMarkers.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Notes.EnumerateFormLinks())
+            foreach (var item in obj.Notes.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Projectiles.EnumerateFormLinks())
+            foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.LeveledItems.EnumerateFormLinks())
+            foreach (var item in obj.Projectiles.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledItems.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weather.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Climates.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Worldspaces.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogTopics.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Packages.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AnimatedObjects.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Waters.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImageSpaceAdapters.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Messages.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.RadiationStages.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraShots.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraPaths.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImpactDataSets.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EncounterZones.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ragdolls.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjectManagers.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FormLists.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -6037,11 +9485,163 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.Projectiles.EnumerateMajorRecords())
             {
                 yield return item;
             }
             foreach (var item in obj.LeveledItems.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weather.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Climates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Worldspaces.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogTopics.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Packages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CombatStyles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Waters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImageSpaces.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Messages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.RadiationStages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraShots.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraPaths.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VoiceTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EncounterZones.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ragdolls.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LightingTemplates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FormLists.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6492,6 +10092,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
@@ -6506,6 +10115,456 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
                     foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in obj.Weather.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    foreach (var item in obj.Climates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in obj.Explosions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    foreach (var item in obj.ImageSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpaceAdapter":
+                case "IImageSpaceAdapterGetter":
+                case "IImageSpaceAdapter":
+                case "IImageSpaceAdapterInternal":
+                    foreach (var item in obj.ImageSpaceAdapters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    foreach (var item in obj.RadiationStages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    foreach (var item in obj.Impacts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    foreach (var item in obj.Ragdolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedGrenade":
+                case "IPlacedGrenadeGetter":
+                case "IPlacedGrenade":
+                case "IPlacedGrenadeInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -6930,6 +10989,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
                 srcGroup: obj.Projectiles,
                 type: typeof(IProjectileGetter),
@@ -6945,6 +11013,363 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.LeveledItems,
                 groupGetter: (m) => m.LeveledItems))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weather, IWeatherGetter>(
+                srcGroup: obj.Weather,
+                type: typeof(IWeatherGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weather,
+                groupGetter: (m) => m.Weather))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Climate, IClimateGetter>(
+                srcGroup: obj.Climates,
+                type: typeof(IClimateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Climates,
+                groupGetter: (m) => m.Climates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Region, IRegionGetter>(
+                srcGroup: obj.Regions,
+                type: typeof(IRegionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Regions,
+                groupGetter: (m) => m.Regions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                srcGroup: obj.NavigationMeshInfoMaps,
+                type: typeof(INavigationMeshInfoMapGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.NavigationMeshInfoMaps,
+                groupGetter: (m) => m.NavigationMeshInfoMaps))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                linkCache: linkCache,
+                modKey: obj.ModKey,
+                parent: null))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Worldspace, IWorldspaceGetter>(
+                srcGroup: obj.Worldspaces,
+                type: typeof(IWorldspaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Worldspaces,
+                groupGetter: (m) => m.Worldspaces))
+            {
+                yield return item;
+            }
+            foreach (var groupItem in obj.Worldspaces)
+            {
+                foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DialogTopic, IDialogTopicGetter>(
+                srcGroup: obj.DialogTopics,
+                type: typeof(IDialogTopicGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DialogTopics,
+                groupGetter: (m) => m.DialogTopics))
+            {
+                yield return item;
+            }
+            foreach (var groupItem in obj.DialogTopics)
+            {
+                foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Quest, IQuestGetter>(
+                srcGroup: obj.Quests,
+                type: typeof(IQuestGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Quests,
+                groupGetter: (m) => m.Quests))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleAnimation, IIdleAnimationGetter>(
+                srcGroup: obj.IdleAnimations,
+                type: typeof(IIdleAnimationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleAnimations,
+                groupGetter: (m) => m.IdleAnimations))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Package, IPackageGetter>(
+                srcGroup: obj.Packages,
+                type: typeof(IPackageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Packages,
+                groupGetter: (m) => m.Packages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CombatStyle, ICombatStyleGetter>(
+                srcGroup: obj.CombatStyles,
+                type: typeof(ICombatStyleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CombatStyles,
+                groupGetter: (m) => m.CombatStyles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LoadScreen, ILoadScreenGetter>(
+                srcGroup: obj.LoadScreens,
+                type: typeof(ILoadScreenGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LoadScreens,
+                groupGetter: (m) => m.LoadScreens))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                srcGroup: obj.AnimatedObjects,
+                type: typeof(IAnimatedObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AnimatedObjects,
+                groupGetter: (m) => m.AnimatedObjects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Water, IWaterGetter>(
+                srcGroup: obj.Waters,
+                type: typeof(IWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Waters,
+                groupGetter: (m) => m.Waters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EffectShader, IEffectShaderGetter>(
+                srcGroup: obj.EffectShaders,
+                type: typeof(IEffectShaderGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EffectShaders,
+                groupGetter: (m) => m.EffectShaders))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Explosion, IExplosionGetter>(
+                srcGroup: obj.Explosions,
+                type: typeof(IExplosionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Explosions,
+                groupGetter: (m) => m.Explosions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Debris, IDebrisGetter>(
+                srcGroup: obj.Debris,
+                type: typeof(IDebrisGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Debris,
+                groupGetter: (m) => m.Debris))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpace, IImageSpaceGetter>(
+                srcGroup: obj.ImageSpaces,
+                type: typeof(IImageSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaces,
+                groupGetter: (m) => m.ImageSpaces))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
+                srcGroup: obj.ImageSpaceAdapters,
+                type: typeof(IImageSpaceAdapterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaceAdapters,
+                groupGetter: (m) => m.ImageSpaceAdapters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Message, IMessageGetter>(
+                srcGroup: obj.Messages,
+                type: typeof(IMessageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Messages,
+                groupGetter: (m) => m.Messages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Perk, IPerkGetter>(
+                srcGroup: obj.Perks,
+                type: typeof(IPerkGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Perks,
+                groupGetter: (m) => m.Perks))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, BodyPartData, IBodyPartDataGetter>(
+                srcGroup: obj.BodyParts,
+                type: typeof(IBodyPartDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.BodyParts,
+                groupGetter: (m) => m.BodyParts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AddonNode, IAddonNodeGetter>(
+                srcGroup: obj.AddonNodes,
+                type: typeof(IAddonNodeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AddonNodes,
+                groupGetter: (m) => m.AddonNodes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ActorValueInformation, IActorValueInformationGetter>(
+                srcGroup: obj.ActorValueInformation,
+                type: typeof(IActorValueInformationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ActorValueInformation,
+                groupGetter: (m) => m.ActorValueInformation))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, RadiationStage, IRadiationStageGetter>(
+                srcGroup: obj.RadiationStages,
+                type: typeof(IRadiationStageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.RadiationStages,
+                groupGetter: (m) => m.RadiationStages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraShot, ICameraShotGetter>(
+                srcGroup: obj.CameraShots,
+                type: typeof(ICameraShotGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraShots,
+                groupGetter: (m) => m.CameraShots))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraPath, ICameraPathGetter>(
+                srcGroup: obj.CameraPaths,
+                type: typeof(ICameraPathGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraPaths,
+                groupGetter: (m) => m.CameraPaths))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, VoiceType, IVoiceTypeGetter>(
+                srcGroup: obj.VoiceTypes,
+                type: typeof(IVoiceTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.VoiceTypes,
+                groupGetter: (m) => m.VoiceTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Impact, IImpactGetter>(
+                srcGroup: obj.Impacts,
+                type: typeof(IImpactGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Impacts,
+                groupGetter: (m) => m.Impacts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                srcGroup: obj.ImpactDataSets,
+                type: typeof(IImpactDataSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImpactDataSets,
+                groupGetter: (m) => m.ImpactDataSets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ArmorAddon, IArmorAddonGetter>(
+                srcGroup: obj.ArmorAddons,
+                type: typeof(IArmorAddonGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ArmorAddons,
+                groupGetter: (m) => m.ArmorAddons))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EncounterZone, IEncounterZoneGetter>(
+                srcGroup: obj.EncounterZones,
+                type: typeof(IEncounterZoneGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EncounterZones,
+                groupGetter: (m) => m.EncounterZones))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ragdoll, IRagdollGetter>(
+                srcGroup: obj.Ragdolls,
+                type: typeof(IRagdollGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ragdolls,
+                groupGetter: (m) => m.Ragdolls))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                srcGroup: obj.DefaultObjectManagers,
+                type: typeof(IDefaultObjectManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DefaultObjectManagers,
+                groupGetter: (m) => m.DefaultObjectManagers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LightingTemplate, ILightingTemplateGetter>(
+                srcGroup: obj.LightingTemplates,
+                type: typeof(ILightingTemplateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LightingTemplates,
+                groupGetter: (m) => m.LightingTemplates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MusicType, IMusicTypeGetter>(
+                srcGroup: obj.MusicTypes,
+                type: typeof(IMusicTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MusicTypes,
+                groupGetter: (m) => m.MusicTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, FormList, IFormListGetter>(
+                srcGroup: obj.FormLists,
+                type: typeof(IFormListGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FormLists,
+                groupGetter: (m) => m.FormLists))
             {
                 yield return item;
             }
@@ -7595,6 +12020,20 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
@@ -7621,6 +12060,791 @@ namespace Mutagen.Bethesda.Fallout3
                         groupGetter: (m) => m.LeveledItems))
                     {
                         yield return item;
+                    }
+                    yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weather, IWeatherGetter>(
+                        srcGroup: obj.Weather,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weather,
+                        groupGetter: (m) => m.Weather))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Climate, IClimateGetter>(
+                        srcGroup: obj.Climates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Climates,
+                        groupGetter: (m) => m.Climates))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Region, IRegionGetter>(
+                        srcGroup: obj.Regions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Regions,
+                        groupGetter: (m) => m.Regions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                        srcGroup: obj.NavigationMeshInfoMaps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.NavigationMeshInfoMaps,
+                        groupGetter: (m) => m.NavigationMeshInfoMaps))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Worldspace, IWorldspaceGetter>(
+                        srcGroup: obj.Worldspaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Worldspaces,
+                        groupGetter: (m) => m.Worldspaces))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DialogTopic, IDialogTopicGetter>(
+                        srcGroup: obj.DialogTopics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DialogTopics,
+                        groupGetter: (m) => m.DialogTopics))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Quest, IQuestGetter>(
+                        srcGroup: obj.Quests,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Quests,
+                        groupGetter: (m) => m.Quests))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleAnimation, IIdleAnimationGetter>(
+                        srcGroup: obj.IdleAnimations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleAnimations,
+                        groupGetter: (m) => m.IdleAnimations))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Package, IPackageGetter>(
+                        srcGroup: obj.Packages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Packages,
+                        groupGetter: (m) => m.Packages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CombatStyle, ICombatStyleGetter>(
+                        srcGroup: obj.CombatStyles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CombatStyles,
+                        groupGetter: (m) => m.CombatStyles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LoadScreen, ILoadScreenGetter>(
+                        srcGroup: obj.LoadScreens,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LoadScreens,
+                        groupGetter: (m) => m.LoadScreens))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                        srcGroup: obj.AnimatedObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AnimatedObjects,
+                        groupGetter: (m) => m.AnimatedObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Water, IWaterGetter>(
+                        srcGroup: obj.Waters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Waters,
+                        groupGetter: (m) => m.Waters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EffectShader, IEffectShaderGetter>(
+                        srcGroup: obj.EffectShaders,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EffectShaders,
+                        groupGetter: (m) => m.EffectShaders))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Explosion, IExplosionGetter>(
+                        srcGroup: obj.Explosions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Explosions,
+                        groupGetter: (m) => m.Explosions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Debris, IDebrisGetter>(
+                        srcGroup: obj.Debris,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Debris,
+                        groupGetter: (m) => m.Debris))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpace, IImageSpaceGetter>(
+                        srcGroup: obj.ImageSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaces,
+                        groupGetter: (m) => m.ImageSpaces))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpaceAdapter":
+                case "IImageSpaceAdapterGetter":
+                case "IImageSpaceAdapter":
+                case "IImageSpaceAdapterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
+                        srcGroup: obj.ImageSpaceAdapters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaceAdapters,
+                        groupGetter: (m) => m.ImageSpaceAdapters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Message, IMessageGetter>(
+                        srcGroup: obj.Messages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Messages,
+                        groupGetter: (m) => m.Messages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Perk, IPerkGetter>(
+                        srcGroup: obj.Perks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Perks,
+                        groupGetter: (m) => m.Perks))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, BodyPartData, IBodyPartDataGetter>(
+                        srcGroup: obj.BodyParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.BodyParts,
+                        groupGetter: (m) => m.BodyParts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AddonNode, IAddonNodeGetter>(
+                        srcGroup: obj.AddonNodes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AddonNodes,
+                        groupGetter: (m) => m.AddonNodes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ActorValueInformation, IActorValueInformationGetter>(
+                        srcGroup: obj.ActorValueInformation,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ActorValueInformation,
+                        groupGetter: (m) => m.ActorValueInformation))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, RadiationStage, IRadiationStageGetter>(
+                        srcGroup: obj.RadiationStages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.RadiationStages,
+                        groupGetter: (m) => m.RadiationStages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraShot, ICameraShotGetter>(
+                        srcGroup: obj.CameraShots,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CameraShots,
+                        groupGetter: (m) => m.CameraShots))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraPath, ICameraPathGetter>(
+                        srcGroup: obj.CameraPaths,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CameraPaths,
+                        groupGetter: (m) => m.CameraPaths))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, VoiceType, IVoiceTypeGetter>(
+                        srcGroup: obj.VoiceTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.VoiceTypes,
+                        groupGetter: (m) => m.VoiceTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Impact, IImpactGetter>(
+                        srcGroup: obj.Impacts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Impacts,
+                        groupGetter: (m) => m.Impacts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                        srcGroup: obj.ImpactDataSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImpactDataSets,
+                        groupGetter: (m) => m.ImpactDataSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ArmorAddon, IArmorAddonGetter>(
+                        srcGroup: obj.ArmorAddons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ArmorAddons,
+                        groupGetter: (m) => m.ArmorAddons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EncounterZone, IEncounterZoneGetter>(
+                        srcGroup: obj.EncounterZones,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EncounterZones,
+                        groupGetter: (m) => m.EncounterZones))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ragdoll, IRagdollGetter>(
+                        srcGroup: obj.Ragdolls,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ragdolls,
+                        groupGetter: (m) => m.Ragdolls))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                        srcGroup: obj.DefaultObjectManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DefaultObjectManagers,
+                        groupGetter: (m) => m.DefaultObjectManagers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LightingTemplate, ILightingTemplateGetter>(
+                        srcGroup: obj.LightingTemplates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LightingTemplates,
+                        groupGetter: (m) => m.LightingTemplates))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MusicType, IMusicTypeGetter>(
+                        srcGroup: obj.MusicTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MusicTypes,
+                        groupGetter: (m) => m.MusicTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, FormList, IFormListGetter>(
+                        srcGroup: obj.FormLists,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FormLists,
+                        groupGetter: (m) => m.FormLists))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedGrenade":
+                case "IPlacedGrenadeGetter":
+                case "IPlacedGrenade":
+                case "IPlacedGrenadeInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                        linkCache: linkCache,
+                        type: type,
+                        throwIfUnknown: throwIfUnknown,
+                        modKey: obj.ModKey,
+                        parent: null))
+                    {
+                        yield return item;
+                    }
+                    foreach (var groupItem in obj.Worldspaces)
+                    {
+                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var groupItem in obj.DialogTopics)
+                    {
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
                     }
                     yield break;
                 default:
@@ -7703,6 +12927,40 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Notes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            {
+                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Quests.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ActorValueInformation.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }
@@ -8624,6 +13882,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ConstructibleObjects);
+                try
+                {
+                    item.ConstructibleObjects.DeepCopyIn(
+                        rhs: rhs.ConstructibleObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ConstructibleObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Projectiles) ?? true))
             {
                 errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Projectiles);
@@ -8653,6 +13931,746 @@ namespace Mutagen.Bethesda.Fallout3
                         rhs: rhs.LeveledItems,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.LeveledItems));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Weather) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Weather);
+                try
+                {
+                    item.Weather.DeepCopyIn(
+                        rhs: rhs.Weather,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Weather));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Climates) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Climates);
+                try
+                {
+                    item.Climates.DeepCopyIn(
+                        rhs: rhs.Climates,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Climates));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Regions) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Regions);
+                try
+                {
+                    item.Regions.DeepCopyIn(
+                        rhs: rhs.Regions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Regions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.NavigationMeshInfoMaps);
+                try
+                {
+                    item.NavigationMeshInfoMaps.DeepCopyIn(
+                        rhs: rhs.NavigationMeshInfoMaps,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.NavigationMeshInfoMaps));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Cells) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Cells);
+                try
+                {
+                    item.Cells.DeepCopyIn(
+                        rhs: rhs.Cells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Cells));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Worldspaces) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Worldspaces);
+                try
+                {
+                    item.Worldspaces.DeepCopyIn(
+                        rhs: rhs.Worldspaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Worldspaces));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.DialogTopics) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.DialogTopics);
+                try
+                {
+                    item.DialogTopics.DeepCopyIn(
+                        rhs: rhs.DialogTopics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.DialogTopics));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Quests) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Quests);
+                try
+                {
+                    item.Quests.DeepCopyIn(
+                        rhs: rhs.Quests,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Quests));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.IdleAnimations) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.IdleAnimations);
+                try
+                {
+                    item.IdleAnimations.DeepCopyIn(
+                        rhs: rhs.IdleAnimations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.IdleAnimations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Packages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Packages);
+                try
+                {
+                    item.Packages.DeepCopyIn(
+                        rhs: rhs.Packages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Packages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CombatStyles) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.CombatStyles);
+                try
+                {
+                    item.CombatStyles.DeepCopyIn(
+                        rhs: rhs.CombatStyles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.CombatStyles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.LoadScreens) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.LoadScreens);
+                try
+                {
+                    item.LoadScreens.DeepCopyIn(
+                        rhs: rhs.LoadScreens,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.LoadScreens));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.AnimatedObjects);
+                try
+                {
+                    item.AnimatedObjects.DeepCopyIn(
+                        rhs: rhs.AnimatedObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.AnimatedObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Waters) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Waters);
+                try
+                {
+                    item.Waters.DeepCopyIn(
+                        rhs: rhs.Waters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Waters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.EffectShaders) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.EffectShaders);
+                try
+                {
+                    item.EffectShaders.DeepCopyIn(
+                        rhs: rhs.EffectShaders,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.EffectShaders));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Explosions) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Explosions);
+                try
+                {
+                    item.Explosions.DeepCopyIn(
+                        rhs: rhs.Explosions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Explosions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Debris) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Debris);
+                try
+                {
+                    item.Debris.DeepCopyIn(
+                        rhs: rhs.Debris,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Debris));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ImageSpaces) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ImageSpaces);
+                try
+                {
+                    item.ImageSpaces.DeepCopyIn(
+                        rhs: rhs.ImageSpaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ImageSpaces));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ImageSpaceAdapters) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ImageSpaceAdapters);
+                try
+                {
+                    item.ImageSpaceAdapters.DeepCopyIn(
+                        rhs: rhs.ImageSpaceAdapters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ImageSpaceAdapters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Messages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Messages);
+                try
+                {
+                    item.Messages.DeepCopyIn(
+                        rhs: rhs.Messages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Messages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Perks) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Perks);
+                try
+                {
+                    item.Perks.DeepCopyIn(
+                        rhs: rhs.Perks,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Perks));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.BodyParts) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.BodyParts);
+                try
+                {
+                    item.BodyParts.DeepCopyIn(
+                        rhs: rhs.BodyParts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.BodyParts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.AddonNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.AddonNodes);
+                try
+                {
+                    item.AddonNodes.DeepCopyIn(
+                        rhs: rhs.AddonNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.AddonNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ActorValueInformation) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ActorValueInformation);
+                try
+                {
+                    item.ActorValueInformation.DeepCopyIn(
+                        rhs: rhs.ActorValueInformation,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ActorValueInformation));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.RadiationStages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.RadiationStages);
+                try
+                {
+                    item.RadiationStages.DeepCopyIn(
+                        rhs: rhs.RadiationStages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.RadiationStages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CameraShots) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.CameraShots);
+                try
+                {
+                    item.CameraShots.DeepCopyIn(
+                        rhs: rhs.CameraShots,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.CameraShots));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CameraPaths) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.CameraPaths);
+                try
+                {
+                    item.CameraPaths.DeepCopyIn(
+                        rhs: rhs.CameraPaths,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.CameraPaths));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.VoiceTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.VoiceTypes);
+                try
+                {
+                    item.VoiceTypes.DeepCopyIn(
+                        rhs: rhs.VoiceTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.VoiceTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Impacts) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Impacts);
+                try
+                {
+                    item.Impacts.DeepCopyIn(
+                        rhs: rhs.Impacts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Impacts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ImpactDataSets);
+                try
+                {
+                    item.ImpactDataSets.DeepCopyIn(
+                        rhs: rhs.ImpactDataSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ImpactDataSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ArmorAddons) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ArmorAddons);
+                try
+                {
+                    item.ArmorAddons.DeepCopyIn(
+                        rhs: rhs.ArmorAddons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ArmorAddons));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.EncounterZones) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.EncounterZones);
+                try
+                {
+                    item.EncounterZones.DeepCopyIn(
+                        rhs: rhs.EncounterZones,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.EncounterZones));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Ragdolls) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Ragdolls);
+                try
+                {
+                    item.Ragdolls.DeepCopyIn(
+                        rhs: rhs.Ragdolls,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Ragdolls));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.DefaultObjectManagers);
+                try
+                {
+                    item.DefaultObjectManagers.DeepCopyIn(
+                        rhs: rhs.DefaultObjectManagers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.DefaultObjectManagers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.LightingTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.LightingTemplates);
+                try
+                {
+                    item.LightingTemplates.DeepCopyIn(
+                        rhs: rhs.LightingTemplates,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.LightingTemplates));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MusicTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.MusicTypes);
+                try
+                {
+                    item.MusicTypes.DeepCopyIn(
+                        rhs: rhs.MusicTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.MusicTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.FormLists) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.FormLists);
+                try
+                {
+                    item.FormLists.DeepCopyIn(
+                        rhs: rhs.FormLists,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.FormLists));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -8811,8 +14829,46 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Ingestibles;
         public bool IdleMarkers;
         public bool Notes;
+        public bool ConstructibleObjects;
         public bool Projectiles;
         public bool LeveledItems;
+        public bool Weather;
+        public bool Climates;
+        public bool Regions;
+        public bool NavigationMeshInfoMaps;
+        public bool Cells;
+        public bool Worldspaces;
+        public bool DialogTopics;
+        public bool Quests;
+        public bool IdleAnimations;
+        public bool Packages;
+        public bool CombatStyles;
+        public bool LoadScreens;
+        public bool AnimatedObjects;
+        public bool Waters;
+        public bool EffectShaders;
+        public bool Explosions;
+        public bool Debris;
+        public bool ImageSpaces;
+        public bool ImageSpaceAdapters;
+        public bool Messages;
+        public bool Perks;
+        public bool BodyParts;
+        public bool AddonNodes;
+        public bool ActorValueInformation;
+        public bool RadiationStages;
+        public bool CameraShots;
+        public bool CameraPaths;
+        public bool VoiceTypes;
+        public bool Impacts;
+        public bool ImpactDataSets;
+        public bool ArmorAddons;
+        public bool EncounterZones;
+        public bool Ragdolls;
+        public bool DefaultObjectManagers;
+        public bool LightingTemplates;
+        public bool MusicTypes;
+        public bool FormLists;
         public GroupMask()
         {
         }
@@ -8862,8 +14918,46 @@ namespace Mutagen.Bethesda.Fallout3
             Ingestibles = defaultValue;
             IdleMarkers = defaultValue;
             Notes = defaultValue;
+            ConstructibleObjects = defaultValue;
             Projectiles = defaultValue;
             LeveledItems = defaultValue;
+            Weather = defaultValue;
+            Climates = defaultValue;
+            Regions = defaultValue;
+            NavigationMeshInfoMaps = defaultValue;
+            Cells = defaultValue;
+            Worldspaces = defaultValue;
+            DialogTopics = defaultValue;
+            Quests = defaultValue;
+            IdleAnimations = defaultValue;
+            Packages = defaultValue;
+            CombatStyles = defaultValue;
+            LoadScreens = defaultValue;
+            AnimatedObjects = defaultValue;
+            Waters = defaultValue;
+            EffectShaders = defaultValue;
+            Explosions = defaultValue;
+            Debris = defaultValue;
+            ImageSpaces = defaultValue;
+            ImageSpaceAdapters = defaultValue;
+            Messages = defaultValue;
+            Perks = defaultValue;
+            BodyParts = defaultValue;
+            AddonNodes = defaultValue;
+            ActorValueInformation = defaultValue;
+            RadiationStages = defaultValue;
+            CameraShots = defaultValue;
+            CameraPaths = defaultValue;
+            VoiceTypes = defaultValue;
+            Impacts = defaultValue;
+            ImpactDataSets = defaultValue;
+            ArmorAddons = defaultValue;
+            EncounterZones = defaultValue;
+            Ragdolls = defaultValue;
+            DefaultObjectManagers = defaultValue;
+            LightingTemplates = defaultValue;
+            MusicTypes = defaultValue;
+            FormLists = defaultValue;
         }
     }
 
@@ -8876,8 +14970,8 @@ namespace Mutagen.Bethesda.Fallout3
     /// </summary>
     public enum Fallout3Release
     {
-        Fallout3 = 11,
-        FalloutNV = 12
+        Fallout3 = 12,
+        FalloutNV = 13
     }
 
     public static class Fallout3ReleaseExt
@@ -9410,6 +15504,17 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.ConstructibleObjects ?? true)
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                if (ConstructibleObjectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                        item: ConstructibleObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.Projectiles ?? true)
             {
                 var ProjectilesItem = item.Projectiles;
@@ -9428,6 +15533,413 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
                         item: LeveledItemsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Weather ?? true)
+            {
+                var WeatherItem = item.Weather;
+                if (WeatherItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)WeatherItem).BinaryWriteTranslator).Write<IWeatherGetter>(
+                        item: WeatherItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Climates ?? true)
+            {
+                var ClimatesItem = item.Climates;
+                if (ClimatesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ClimatesItem).BinaryWriteTranslator).Write<IClimateGetter>(
+                        item: ClimatesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Regions ?? true)
+            {
+                var RegionsItem = item.Regions;
+                if (RegionsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)RegionsItem).BinaryWriteTranslator).Write<IRegionGetter>(
+                        item: RegionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.NavigationMeshInfoMaps ?? true)
+            {
+                var NavigationMeshInfoMapsItem = item.NavigationMeshInfoMaps;
+                if (NavigationMeshInfoMapsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)NavigationMeshInfoMapsItem).BinaryWriteTranslator).Write<INavigationMeshInfoMapGetter>(
+                        item: NavigationMeshInfoMapsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Cells ?? true)
+            {
+                var CellsItem = item.Cells;
+                if (CellsItem.Records.Count > 0)
+                {
+                    ((Fallout3ListGroupBinaryWriteTranslation)((IBinaryItem)CellsItem).BinaryWriteTranslator).Write<ICellBlockGetter>(
+                        item: CellsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Worldspaces ?? true)
+            {
+                var WorldspacesItem = item.Worldspaces;
+                if (WorldspacesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)WorldspacesItem).BinaryWriteTranslator).Write<IWorldspaceGetter>(
+                        item: WorldspacesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.DialogTopics ?? true)
+            {
+                var DialogTopicsItem = item.DialogTopics;
+                if (DialogTopicsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)DialogTopicsItem).BinaryWriteTranslator).Write<IDialogTopicGetter>(
+                        item: DialogTopicsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Quests ?? true)
+            {
+                var QuestsItem = item.Quests;
+                if (QuestsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
+                        item: QuestsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.IdleAnimations ?? true)
+            {
+                var IdleAnimationsItem = item.IdleAnimations;
+                if (IdleAnimationsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write<IIdleAnimationGetter>(
+                        item: IdleAnimationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Packages ?? true)
+            {
+                var PackagesItem = item.Packages;
+                if (PackagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)PackagesItem).BinaryWriteTranslator).Write<IPackageGetter>(
+                        item: PackagesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CombatStyles ?? true)
+            {
+                var CombatStylesItem = item.CombatStyles;
+                if (CombatStylesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CombatStylesItem).BinaryWriteTranslator).Write<ICombatStyleGetter>(
+                        item: CombatStylesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LoadScreens ?? true)
+            {
+                var LoadScreensItem = item.LoadScreens;
+                if (LoadScreensItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)LoadScreensItem).BinaryWriteTranslator).Write<ILoadScreenGetter>(
+                        item: LoadScreensItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AnimatedObjects ?? true)
+            {
+                var AnimatedObjectsItem = item.AnimatedObjects;
+                if (AnimatedObjectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectsItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
+                        item: AnimatedObjectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Waters ?? true)
+            {
+                var WatersItem = item.Waters;
+                if (WatersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)WatersItem).BinaryWriteTranslator).Write<IWaterGetter>(
+                        item: WatersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EffectShaders ?? true)
+            {
+                var EffectShadersItem = item.EffectShaders;
+                if (EffectShadersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)EffectShadersItem).BinaryWriteTranslator).Write<IEffectShaderGetter>(
+                        item: EffectShadersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Explosions ?? true)
+            {
+                var ExplosionsItem = item.Explosions;
+                if (ExplosionsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ExplosionsItem).BinaryWriteTranslator).Write<IExplosionGetter>(
+                        item: ExplosionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Debris ?? true)
+            {
+                var DebrisItem = item.Debris;
+                if (DebrisItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
+                        item: DebrisItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ImageSpaces ?? true)
+            {
+                var ImageSpacesItem = item.ImageSpaces;
+                if (ImageSpacesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ImageSpacesItem).BinaryWriteTranslator).Write<IImageSpaceGetter>(
+                        item: ImageSpacesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ImageSpaceAdapters ?? true)
+            {
+                var ImageSpaceAdaptersItem = item.ImageSpaceAdapters;
+                if (ImageSpaceAdaptersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ImageSpaceAdaptersItem).BinaryWriteTranslator).Write<IImageSpaceAdapterGetter>(
+                        item: ImageSpaceAdaptersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Messages ?? true)
+            {
+                var MessagesItem = item.Messages;
+                if (MessagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MessagesItem).BinaryWriteTranslator).Write<IMessageGetter>(
+                        item: MessagesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Perks ?? true)
+            {
+                var PerksItem = item.Perks;
+                if (PerksItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
+                        item: PerksItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.BodyParts ?? true)
+            {
+                var BodyPartsItem = item.BodyParts;
+                if (BodyPartsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)BodyPartsItem).BinaryWriteTranslator).Write<IBodyPartDataGetter>(
+                        item: BodyPartsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AddonNodes ?? true)
+            {
+                var AddonNodesItem = item.AddonNodes;
+                if (AddonNodesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)AddonNodesItem).BinaryWriteTranslator).Write<IAddonNodeGetter>(
+                        item: AddonNodesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ActorValueInformation ?? true)
+            {
+                var ActorValueInformationItem = item.ActorValueInformation;
+                if (ActorValueInformationItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ActorValueInformationItem).BinaryWriteTranslator).Write<IActorValueInformationGetter>(
+                        item: ActorValueInformationItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.RadiationStages ?? true)
+            {
+                var RadiationStagesItem = item.RadiationStages;
+                if (RadiationStagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)RadiationStagesItem).BinaryWriteTranslator).Write<IRadiationStageGetter>(
+                        item: RadiationStagesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CameraShots ?? true)
+            {
+                var CameraShotsItem = item.CameraShots;
+                if (CameraShotsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CameraShotsItem).BinaryWriteTranslator).Write<ICameraShotGetter>(
+                        item: CameraShotsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CameraPaths ?? true)
+            {
+                var CameraPathsItem = item.CameraPaths;
+                if (CameraPathsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CameraPathsItem).BinaryWriteTranslator).Write<ICameraPathGetter>(
+                        item: CameraPathsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.VoiceTypes ?? true)
+            {
+                var VoiceTypesItem = item.VoiceTypes;
+                if (VoiceTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)VoiceTypesItem).BinaryWriteTranslator).Write<IVoiceTypeGetter>(
+                        item: VoiceTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Impacts ?? true)
+            {
+                var ImpactsItem = item.Impacts;
+                if (ImpactsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ImpactsItem).BinaryWriteTranslator).Write<IImpactGetter>(
+                        item: ImpactsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ImpactDataSets ?? true)
+            {
+                var ImpactDataSetsItem = item.ImpactDataSets;
+                if (ImpactDataSetsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
+                        item: ImpactDataSetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ArmorAddons ?? true)
+            {
+                var ArmorAddonsItem = item.ArmorAddons;
+                if (ArmorAddonsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ArmorAddonsItem).BinaryWriteTranslator).Write<IArmorAddonGetter>(
+                        item: ArmorAddonsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.EncounterZones ?? true)
+            {
+                var EncounterZonesItem = item.EncounterZones;
+                if (EncounterZonesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)EncounterZonesItem).BinaryWriteTranslator).Write<IEncounterZoneGetter>(
+                        item: EncounterZonesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Ragdolls ?? true)
+            {
+                var RagdollsItem = item.Ragdolls;
+                if (RagdollsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)RagdollsItem).BinaryWriteTranslator).Write<IRagdollGetter>(
+                        item: RagdollsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.DefaultObjectManagers ?? true)
+            {
+                var DefaultObjectManagersItem = item.DefaultObjectManagers;
+                if (DefaultObjectManagersItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectManagersItem).BinaryWriteTranslator).Write<IDefaultObjectManagerGetter>(
+                        item: DefaultObjectManagersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LightingTemplates ?? true)
+            {
+                var LightingTemplatesItem = item.LightingTemplates;
+                if (LightingTemplatesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
+                        item: LightingTemplatesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MusicTypes ?? true)
+            {
+                var MusicTypesItem = item.MusicTypes;
+                if (MusicTypesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MusicTypesItem).BinaryWriteTranslator).Write<IMusicTypeGetter>(
+                        item: MusicTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.FormLists ?? true)
+            {
+                var FormListsItem = item.FormLists;
+                if (FormListsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
+                        item: FormListsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -10118,6 +16630,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Notes;
                 }
+                case RecordTypeInts.COBJ:
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ConstructibleObjects;
+                }
                 case RecordTypeInts.PROJ:
                 {
                     if (importMask?.Projectiles ?? true)
@@ -10145,6 +16671,524 @@ namespace Mutagen.Bethesda.Fallout3
                         frame.Position += contentLength;
                     }
                     return (int)Fallout3Mod_FieldIndex.LeveledItems;
+                }
+                case RecordTypeInts.WTHR:
+                {
+                    if (importMask?.Weather ?? true)
+                    {
+                        item.Weather.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Weather;
+                }
+                case RecordTypeInts.CLMT:
+                {
+                    if (importMask?.Climates ?? true)
+                    {
+                        item.Climates.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Climates;
+                }
+                case RecordTypeInts.REGN:
+                {
+                    if (importMask?.Regions ?? true)
+                    {
+                        item.Regions.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Regions;
+                }
+                case RecordTypeInts.NAVI:
+                {
+                    if (importMask?.NavigationMeshInfoMaps ?? true)
+                    {
+                        item.NavigationMeshInfoMaps.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.NavigationMeshInfoMaps;
+                }
+                case RecordTypeInts.CELL:
+                {
+                    if (importMask?.Cells ?? true)
+                    {
+                        item.Cells.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Cells;
+                }
+                case RecordTypeInts.WRLD:
+                {
+                    if (importMask?.Worldspaces ?? true)
+                    {
+                        item.Worldspaces.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Worldspaces;
+                }
+                case RecordTypeInts.DIAL:
+                {
+                    if (importMask?.DialogTopics ?? true)
+                    {
+                        item.DialogTopics.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.DialogTopics;
+                }
+                case RecordTypeInts.QUST:
+                {
+                    if (importMask?.Quests ?? true)
+                    {
+                        item.Quests.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Quests;
+                }
+                case RecordTypeInts.IDLE:
+                {
+                    if (importMask?.IdleAnimations ?? true)
+                    {
+                        item.IdleAnimations.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.IdleAnimations;
+                }
+                case RecordTypeInts.PACK:
+                {
+                    if (importMask?.Packages ?? true)
+                    {
+                        item.Packages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Packages;
+                }
+                case RecordTypeInts.CSTY:
+                {
+                    if (importMask?.CombatStyles ?? true)
+                    {
+                        item.CombatStyles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.CombatStyles;
+                }
+                case RecordTypeInts.LSCR:
+                {
+                    if (importMask?.LoadScreens ?? true)
+                    {
+                        item.LoadScreens.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.LoadScreens;
+                }
+                case RecordTypeInts.ANIO:
+                {
+                    if (importMask?.AnimatedObjects ?? true)
+                    {
+                        item.AnimatedObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.AnimatedObjects;
+                }
+                case RecordTypeInts.WATR:
+                {
+                    if (importMask?.Waters ?? true)
+                    {
+                        item.Waters.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Waters;
+                }
+                case RecordTypeInts.EFSH:
+                {
+                    if (importMask?.EffectShaders ?? true)
+                    {
+                        item.EffectShaders.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.EffectShaders;
+                }
+                case RecordTypeInts.EXPL:
+                {
+                    if (importMask?.Explosions ?? true)
+                    {
+                        item.Explosions.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Explosions;
+                }
+                case RecordTypeInts.DEBR:
+                {
+                    if (importMask?.Debris ?? true)
+                    {
+                        item.Debris.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Debris;
+                }
+                case RecordTypeInts.IMGS:
+                {
+                    if (importMask?.ImageSpaces ?? true)
+                    {
+                        item.ImageSpaces.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ImageSpaces;
+                }
+                case RecordTypeInts.IMAD:
+                {
+                    if (importMask?.ImageSpaceAdapters ?? true)
+                    {
+                        item.ImageSpaceAdapters.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ImageSpaceAdapters;
+                }
+                case RecordTypeInts.MESG:
+                {
+                    if (importMask?.Messages ?? true)
+                    {
+                        item.Messages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Messages;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    if (importMask?.Perks ?? true)
+                    {
+                        item.Perks.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Perks;
+                }
+                case RecordTypeInts.BPTD:
+                {
+                    if (importMask?.BodyParts ?? true)
+                    {
+                        item.BodyParts.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.BodyParts;
+                }
+                case RecordTypeInts.ADDN:
+                {
+                    if (importMask?.AddonNodes ?? true)
+                    {
+                        item.AddonNodes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.AddonNodes;
+                }
+                case RecordTypeInts.AVIF:
+                {
+                    if (importMask?.ActorValueInformation ?? true)
+                    {
+                        item.ActorValueInformation.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ActorValueInformation;
+                }
+                case RecordTypeInts.RADS:
+                {
+                    if (importMask?.RadiationStages ?? true)
+                    {
+                        item.RadiationStages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.RadiationStages;
+                }
+                case RecordTypeInts.CAMS:
+                {
+                    if (importMask?.CameraShots ?? true)
+                    {
+                        item.CameraShots.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.CameraShots;
+                }
+                case RecordTypeInts.CPTH:
+                {
+                    if (importMask?.CameraPaths ?? true)
+                    {
+                        item.CameraPaths.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.CameraPaths;
+                }
+                case RecordTypeInts.VTYP:
+                {
+                    if (importMask?.VoiceTypes ?? true)
+                    {
+                        item.VoiceTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.VoiceTypes;
+                }
+                case RecordTypeInts.IPCT:
+                {
+                    if (importMask?.Impacts ?? true)
+                    {
+                        item.Impacts.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Impacts;
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    if (importMask?.ImpactDataSets ?? true)
+                    {
+                        item.ImpactDataSets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ImpactDataSets;
+                }
+                case RecordTypeInts.ARMA:
+                {
+                    if (importMask?.ArmorAddons ?? true)
+                    {
+                        item.ArmorAddons.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ArmorAddons;
+                }
+                case RecordTypeInts.ECZN:
+                {
+                    if (importMask?.EncounterZones ?? true)
+                    {
+                        item.EncounterZones.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.EncounterZones;
+                }
+                case RecordTypeInts.RGDL:
+                {
+                    if (importMask?.Ragdolls ?? true)
+                    {
+                        item.Ragdolls.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Ragdolls;
+                }
+                case RecordTypeInts.DOBJ:
+                {
+                    if (importMask?.DefaultObjectManagers ?? true)
+                    {
+                        item.DefaultObjectManagers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.DefaultObjectManagers;
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    if (importMask?.LightingTemplates ?? true)
+                    {
+                        item.LightingTemplates.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.LightingTemplates;
+                }
+                case RecordTypeInts.MUSC:
+                {
+                    if (importMask?.MusicTypes ?? true)
+                    {
+                        item.MusicTypes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.MusicTypes;
+                }
+                case RecordTypeInts.FLST:
+                {
+                    if (importMask?.FormLists ?? true)
+                    {
+                        item.FormLists.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.FormLists;
                 }
                 default:
                     frame.Position += contentLength;
@@ -10277,7 +17321,7 @@ namespace Mutagen.Bethesda.Fallout3
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => false;
         public bool UsingLocalization => false;
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3ModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout3ModCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IModContext<IFallout3Mod, IFallout3ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<IFallout3Mod, IFallout3ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown) => this.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown: throwIfUnknown);
@@ -10531,6 +17575,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? Fallout3GroupBinaryOverlay<INoteGetter>.Fallout3GroupFactory(_stream, _NotesLocations, _package) : default;
         public IFallout3GroupGetter<INoteGetter> Notes => _Notes ?? new Fallout3Group<Note>(this);
         #endregion
+        #region ConstructibleObjects
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private IFallout3GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? Fallout3GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout3GroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        public IFallout3GroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Fallout3Group<ConstructibleObject>(this);
+        #endregion
         #region Projectiles
         private List<RangeInt64>? _ProjectilesLocations;
         private IFallout3GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout3GroupBinaryOverlay<IProjectileGetter>.Fallout3GroupFactory(_stream, _ProjectilesLocations, _package) : default;
@@ -10540,6 +17589,191 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _LeveledItemsLocations;
         private IFallout3GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? Fallout3GroupBinaryOverlay<ILeveledItemGetter>.Fallout3GroupFactory(_stream, _LeveledItemsLocations, _package) : default;
         public IFallout3GroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Fallout3Group<LeveledItem>(this);
+        #endregion
+        #region Weather
+        private List<RangeInt64>? _WeatherLocations;
+        private IFallout3GroupGetter<IWeatherGetter>? _Weather => _WeatherLocations != null ? Fallout3GroupBinaryOverlay<IWeatherGetter>.Fallout3GroupFactory(_stream, _WeatherLocations, _package) : default;
+        public IFallout3GroupGetter<IWeatherGetter> Weather => _Weather ?? new Fallout3Group<Weather>(this);
+        #endregion
+        #region Climates
+        private List<RangeInt64>? _ClimatesLocations;
+        private IFallout3GroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? Fallout3GroupBinaryOverlay<IClimateGetter>.Fallout3GroupFactory(_stream, _ClimatesLocations, _package) : default;
+        public IFallout3GroupGetter<IClimateGetter> Climates => _Climates ?? new Fallout3Group<Climate>(this);
+        #endregion
+        #region Regions
+        private List<RangeInt64>? _RegionsLocations;
+        private IFallout3GroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? Fallout3GroupBinaryOverlay<IRegionGetter>.Fallout3GroupFactory(_stream, _RegionsLocations, _package) : default;
+        public IFallout3GroupGetter<IRegionGetter> Regions => _Regions ?? new Fallout3Group<Region>(this);
+        #endregion
+        #region NavigationMeshInfoMaps
+        private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
+        private IFallout3GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? Fallout3GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout3GroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package) : default;
+        public IFallout3GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Fallout3Group<NavigationMeshInfoMap>(this);
+        #endregion
+        #region Cells
+        private RangeInt64? _CellsLocation;
+        private IFallout3ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? Fallout3ListGroupBinaryOverlay<ICellBlockGetter>.Fallout3ListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
+        public IFallout3ListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new Fallout3ListGroup<CellBlock>();
+        #endregion
+        #region Worldspaces
+        private List<RangeInt64>? _WorldspacesLocations;
+        private IFallout3GroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? Fallout3GroupBinaryOverlay<IWorldspaceGetter>.Fallout3GroupFactory(_stream, _WorldspacesLocations, _package) : default;
+        public IFallout3GroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new Fallout3Group<Worldspace>(this);
+        #endregion
+        #region DialogTopics
+        private List<RangeInt64>? _DialogTopicsLocations;
+        private IFallout3GroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? Fallout3GroupBinaryOverlay<IDialogTopicGetter>.Fallout3GroupFactory(_stream, _DialogTopicsLocations, _package) : default;
+        public IFallout3GroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new Fallout3Group<DialogTopic>(this);
+        #endregion
+        #region Quests
+        private List<RangeInt64>? _QuestsLocations;
+        private IFallout3GroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? Fallout3GroupBinaryOverlay<IQuestGetter>.Fallout3GroupFactory(_stream, _QuestsLocations, _package) : default;
+        public IFallout3GroupGetter<IQuestGetter> Quests => _Quests ?? new Fallout3Group<Quest>(this);
+        #endregion
+        #region IdleAnimations
+        private List<RangeInt64>? _IdleAnimationsLocations;
+        private IFallout3GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? Fallout3GroupBinaryOverlay<IIdleAnimationGetter>.Fallout3GroupFactory(_stream, _IdleAnimationsLocations, _package) : default;
+        public IFallout3GroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Fallout3Group<IdleAnimation>(this);
+        #endregion
+        #region Packages
+        private List<RangeInt64>? _PackagesLocations;
+        private IFallout3GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? Fallout3GroupBinaryOverlay<IPackageGetter>.Fallout3GroupFactory(_stream, _PackagesLocations, _package) : default;
+        public IFallout3GroupGetter<IPackageGetter> Packages => _Packages ?? new Fallout3Group<Package>(this);
+        #endregion
+        #region CombatStyles
+        private List<RangeInt64>? _CombatStylesLocations;
+        private IFallout3GroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? Fallout3GroupBinaryOverlay<ICombatStyleGetter>.Fallout3GroupFactory(_stream, _CombatStylesLocations, _package) : default;
+        public IFallout3GroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Fallout3Group<CombatStyle>(this);
+        #endregion
+        #region LoadScreens
+        private List<RangeInt64>? _LoadScreensLocations;
+        private IFallout3GroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? Fallout3GroupBinaryOverlay<ILoadScreenGetter>.Fallout3GroupFactory(_stream, _LoadScreensLocations, _package) : default;
+        public IFallout3GroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Fallout3Group<LoadScreen>(this);
+        #endregion
+        #region AnimatedObjects
+        private List<RangeInt64>? _AnimatedObjectsLocations;
+        private IFallout3GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? Fallout3GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout3GroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
+        public IFallout3GroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Fallout3Group<AnimatedObject>(this);
+        #endregion
+        #region Waters
+        private List<RangeInt64>? _WatersLocations;
+        private IFallout3GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? Fallout3GroupBinaryOverlay<IWaterGetter>.Fallout3GroupFactory(_stream, _WatersLocations, _package) : default;
+        public IFallout3GroupGetter<IWaterGetter> Waters => _Waters ?? new Fallout3Group<Water>(this);
+        #endregion
+        #region EffectShaders
+        private List<RangeInt64>? _EffectShadersLocations;
+        private IFallout3GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? Fallout3GroupBinaryOverlay<IEffectShaderGetter>.Fallout3GroupFactory(_stream, _EffectShadersLocations, _package) : default;
+        public IFallout3GroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Fallout3Group<EffectShader>(this);
+        #endregion
+        #region Explosions
+        private List<RangeInt64>? _ExplosionsLocations;
+        private IFallout3GroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? Fallout3GroupBinaryOverlay<IExplosionGetter>.Fallout3GroupFactory(_stream, _ExplosionsLocations, _package) : default;
+        public IFallout3GroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Fallout3Group<Explosion>(this);
+        #endregion
+        #region Debris
+        private List<RangeInt64>? _DebrisLocations;
+        private IFallout3GroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? Fallout3GroupBinaryOverlay<IDebrisGetter>.Fallout3GroupFactory(_stream, _DebrisLocations, _package) : default;
+        public IFallout3GroupGetter<IDebrisGetter> Debris => _Debris ?? new Fallout3Group<Debris>(this);
+        #endregion
+        #region ImageSpaces
+        private List<RangeInt64>? _ImageSpacesLocations;
+        private IFallout3GroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? Fallout3GroupBinaryOverlay<IImageSpaceGetter>.Fallout3GroupFactory(_stream, _ImageSpacesLocations, _package) : default;
+        public IFallout3GroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new Fallout3Group<ImageSpace>(this);
+        #endregion
+        #region ImageSpaceAdapters
+        private List<RangeInt64>? _ImageSpaceAdaptersLocations;
+        private IFallout3GroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? Fallout3GroupBinaryOverlay<IImageSpaceAdapterGetter>.Fallout3GroupFactory(_stream, _ImageSpaceAdaptersLocations, _package) : default;
+        public IFallout3GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new Fallout3Group<ImageSpaceAdapter>(this);
+        #endregion
+        #region Messages
+        private List<RangeInt64>? _MessagesLocations;
+        private IFallout3GroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? Fallout3GroupBinaryOverlay<IMessageGetter>.Fallout3GroupFactory(_stream, _MessagesLocations, _package) : default;
+        public IFallout3GroupGetter<IMessageGetter> Messages => _Messages ?? new Fallout3Group<Message>(this);
+        #endregion
+        #region Perks
+        private List<RangeInt64>? _PerksLocations;
+        private IFallout3GroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? Fallout3GroupBinaryOverlay<IPerkGetter>.Fallout3GroupFactory(_stream, _PerksLocations, _package) : default;
+        public IFallout3GroupGetter<IPerkGetter> Perks => _Perks ?? new Fallout3Group<Perk>(this);
+        #endregion
+        #region BodyParts
+        private List<RangeInt64>? _BodyPartsLocations;
+        private IFallout3GroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? Fallout3GroupBinaryOverlay<IBodyPartDataGetter>.Fallout3GroupFactory(_stream, _BodyPartsLocations, _package) : default;
+        public IFallout3GroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new Fallout3Group<BodyPartData>(this);
+        #endregion
+        #region AddonNodes
+        private List<RangeInt64>? _AddonNodesLocations;
+        private IFallout3GroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? Fallout3GroupBinaryOverlay<IAddonNodeGetter>.Fallout3GroupFactory(_stream, _AddonNodesLocations, _package) : default;
+        public IFallout3GroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new Fallout3Group<AddonNode>(this);
+        #endregion
+        #region ActorValueInformation
+        private List<RangeInt64>? _ActorValueInformationLocations;
+        private IFallout3GroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? Fallout3GroupBinaryOverlay<IActorValueInformationGetter>.Fallout3GroupFactory(_stream, _ActorValueInformationLocations, _package) : default;
+        public IFallout3GroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new Fallout3Group<ActorValueInformation>(this);
+        #endregion
+        #region RadiationStages
+        private List<RangeInt64>? _RadiationStagesLocations;
+        private IFallout3GroupGetter<IRadiationStageGetter>? _RadiationStages => _RadiationStagesLocations != null ? Fallout3GroupBinaryOverlay<IRadiationStageGetter>.Fallout3GroupFactory(_stream, _RadiationStagesLocations, _package) : default;
+        public IFallout3GroupGetter<IRadiationStageGetter> RadiationStages => _RadiationStages ?? new Fallout3Group<RadiationStage>(this);
+        #endregion
+        #region CameraShots
+        private List<RangeInt64>? _CameraShotsLocations;
+        private IFallout3GroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? Fallout3GroupBinaryOverlay<ICameraShotGetter>.Fallout3GroupFactory(_stream, _CameraShotsLocations, _package) : default;
+        public IFallout3GroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new Fallout3Group<CameraShot>(this);
+        #endregion
+        #region CameraPaths
+        private List<RangeInt64>? _CameraPathsLocations;
+        private IFallout3GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? Fallout3GroupBinaryOverlay<ICameraPathGetter>.Fallout3GroupFactory(_stream, _CameraPathsLocations, _package) : default;
+        public IFallout3GroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Fallout3Group<CameraPath>(this);
+        #endregion
+        #region VoiceTypes
+        private List<RangeInt64>? _VoiceTypesLocations;
+        private IFallout3GroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? Fallout3GroupBinaryOverlay<IVoiceTypeGetter>.Fallout3GroupFactory(_stream, _VoiceTypesLocations, _package) : default;
+        public IFallout3GroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new Fallout3Group<VoiceType>(this);
+        #endregion
+        #region Impacts
+        private List<RangeInt64>? _ImpactsLocations;
+        private IFallout3GroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? Fallout3GroupBinaryOverlay<IImpactGetter>.Fallout3GroupFactory(_stream, _ImpactsLocations, _package) : default;
+        public IFallout3GroupGetter<IImpactGetter> Impacts => _Impacts ?? new Fallout3Group<Impact>(this);
+        #endregion
+        #region ImpactDataSets
+        private List<RangeInt64>? _ImpactDataSetsLocations;
+        private IFallout3GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? Fallout3GroupBinaryOverlay<IImpactDataSetGetter>.Fallout3GroupFactory(_stream, _ImpactDataSetsLocations, _package) : default;
+        public IFallout3GroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Fallout3Group<ImpactDataSet>(this);
+        #endregion
+        #region ArmorAddons
+        private List<RangeInt64>? _ArmorAddonsLocations;
+        private IFallout3GroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? Fallout3GroupBinaryOverlay<IArmorAddonGetter>.Fallout3GroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
+        public IFallout3GroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Fallout3Group<ArmorAddon>(this);
+        #endregion
+        #region EncounterZones
+        private List<RangeInt64>? _EncounterZonesLocations;
+        private IFallout3GroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? Fallout3GroupBinaryOverlay<IEncounterZoneGetter>.Fallout3GroupFactory(_stream, _EncounterZonesLocations, _package) : default;
+        public IFallout3GroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new Fallout3Group<EncounterZone>(this);
+        #endregion
+        #region Ragdolls
+        private List<RangeInt64>? _RagdollsLocations;
+        private IFallout3GroupGetter<IRagdollGetter>? _Ragdolls => _RagdollsLocations != null ? Fallout3GroupBinaryOverlay<IRagdollGetter>.Fallout3GroupFactory(_stream, _RagdollsLocations, _package) : default;
+        public IFallout3GroupGetter<IRagdollGetter> Ragdolls => _Ragdolls ?? new Fallout3Group<Ragdoll>(this);
+        #endregion
+        #region DefaultObjectManagers
+        private List<RangeInt64>? _DefaultObjectManagersLocations;
+        private IFallout3GroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? Fallout3GroupBinaryOverlay<IDefaultObjectManagerGetter>.Fallout3GroupFactory(_stream, _DefaultObjectManagersLocations, _package) : default;
+        public IFallout3GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new Fallout3Group<DefaultObjectManager>(this);
+        #endregion
+        #region LightingTemplates
+        private List<RangeInt64>? _LightingTemplatesLocations;
+        private IFallout3GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? Fallout3GroupBinaryOverlay<ILightingTemplateGetter>.Fallout3GroupFactory(_stream, _LightingTemplatesLocations, _package) : default;
+        public IFallout3GroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Fallout3Group<LightingTemplate>(this);
+        #endregion
+        #region MusicTypes
+        private List<RangeInt64>? _MusicTypesLocations;
+        private IFallout3GroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? Fallout3GroupBinaryOverlay<IMusicTypeGetter>.Fallout3GroupFactory(_stream, _MusicTypesLocations, _package) : default;
+        public IFallout3GroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Fallout3Group<MusicType>(this);
+        #endregion
+        #region FormLists
+        private List<RangeInt64>? _FormListsLocations;
+        private IFallout3GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? Fallout3GroupBinaryOverlay<IFormListGetter>.Fallout3GroupFactory(_stream, _FormListsLocations, _package) : default;
+        public IFallout3GroupGetter<IFormListGetter> FormLists => _FormLists ?? new Fallout3Group<FormList>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -10879,6 +18113,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _NotesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Notes;
                 }
+                case RecordTypeInts.COBJ:
+                {
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ConstructibleObjects;
+                }
                 case RecordTypeInts.PROJ:
                 {
                     _ProjectilesLocations ??= new();
@@ -10890,6 +18130,227 @@ namespace Mutagen.Bethesda.Fallout3
                     _LeveledItemsLocations ??= new();
                     _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.LeveledItems;
+                }
+                case RecordTypeInts.WTHR:
+                {
+                    _WeatherLocations ??= new();
+                    _WeatherLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Weather;
+                }
+                case RecordTypeInts.CLMT:
+                {
+                    _ClimatesLocations ??= new();
+                    _ClimatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Climates;
+                }
+                case RecordTypeInts.REGN:
+                {
+                    _RegionsLocations ??= new();
+                    _RegionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Regions;
+                }
+                case RecordTypeInts.NAVI:
+                {
+                    _NavigationMeshInfoMapsLocations ??= new();
+                    _NavigationMeshInfoMapsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.NavigationMeshInfoMaps;
+                }
+                case RecordTypeInts.CELL:
+                {
+                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    return (int)Fallout3Mod_FieldIndex.Cells;
+                }
+                case RecordTypeInts.WRLD:
+                {
+                    _WorldspacesLocations ??= new();
+                    _WorldspacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Worldspaces;
+                }
+                case RecordTypeInts.DIAL:
+                {
+                    _DialogTopicsLocations ??= new();
+                    _DialogTopicsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.DialogTopics;
+                }
+                case RecordTypeInts.QUST:
+                {
+                    _QuestsLocations ??= new();
+                    _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Quests;
+                }
+                case RecordTypeInts.IDLE:
+                {
+                    _IdleAnimationsLocations ??= new();
+                    _IdleAnimationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.IdleAnimations;
+                }
+                case RecordTypeInts.PACK:
+                {
+                    _PackagesLocations ??= new();
+                    _PackagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Packages;
+                }
+                case RecordTypeInts.CSTY:
+                {
+                    _CombatStylesLocations ??= new();
+                    _CombatStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.CombatStyles;
+                }
+                case RecordTypeInts.LSCR:
+                {
+                    _LoadScreensLocations ??= new();
+                    _LoadScreensLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.LoadScreens;
+                }
+                case RecordTypeInts.ANIO:
+                {
+                    _AnimatedObjectsLocations ??= new();
+                    _AnimatedObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.AnimatedObjects;
+                }
+                case RecordTypeInts.WATR:
+                {
+                    _WatersLocations ??= new();
+                    _WatersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Waters;
+                }
+                case RecordTypeInts.EFSH:
+                {
+                    _EffectShadersLocations ??= new();
+                    _EffectShadersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.EffectShaders;
+                }
+                case RecordTypeInts.EXPL:
+                {
+                    _ExplosionsLocations ??= new();
+                    _ExplosionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Explosions;
+                }
+                case RecordTypeInts.DEBR:
+                {
+                    _DebrisLocations ??= new();
+                    _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Debris;
+                }
+                case RecordTypeInts.IMGS:
+                {
+                    _ImageSpacesLocations ??= new();
+                    _ImageSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ImageSpaces;
+                }
+                case RecordTypeInts.IMAD:
+                {
+                    _ImageSpaceAdaptersLocations ??= new();
+                    _ImageSpaceAdaptersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ImageSpaceAdapters;
+                }
+                case RecordTypeInts.MESG:
+                {
+                    _MessagesLocations ??= new();
+                    _MessagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Messages;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    _PerksLocations ??= new();
+                    _PerksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Perks;
+                }
+                case RecordTypeInts.BPTD:
+                {
+                    _BodyPartsLocations ??= new();
+                    _BodyPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.BodyParts;
+                }
+                case RecordTypeInts.ADDN:
+                {
+                    _AddonNodesLocations ??= new();
+                    _AddonNodesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.AddonNodes;
+                }
+                case RecordTypeInts.AVIF:
+                {
+                    _ActorValueInformationLocations ??= new();
+                    _ActorValueInformationLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ActorValueInformation;
+                }
+                case RecordTypeInts.RADS:
+                {
+                    _RadiationStagesLocations ??= new();
+                    _RadiationStagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.RadiationStages;
+                }
+                case RecordTypeInts.CAMS:
+                {
+                    _CameraShotsLocations ??= new();
+                    _CameraShotsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.CameraShots;
+                }
+                case RecordTypeInts.CPTH:
+                {
+                    _CameraPathsLocations ??= new();
+                    _CameraPathsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.CameraPaths;
+                }
+                case RecordTypeInts.VTYP:
+                {
+                    _VoiceTypesLocations ??= new();
+                    _VoiceTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.VoiceTypes;
+                }
+                case RecordTypeInts.IPCT:
+                {
+                    _ImpactsLocations ??= new();
+                    _ImpactsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Impacts;
+                }
+                case RecordTypeInts.IPDS:
+                {
+                    _ImpactDataSetsLocations ??= new();
+                    _ImpactDataSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ImpactDataSets;
+                }
+                case RecordTypeInts.ARMA:
+                {
+                    _ArmorAddonsLocations ??= new();
+                    _ArmorAddonsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ArmorAddons;
+                }
+                case RecordTypeInts.ECZN:
+                {
+                    _EncounterZonesLocations ??= new();
+                    _EncounterZonesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.EncounterZones;
+                }
+                case RecordTypeInts.RGDL:
+                {
+                    _RagdollsLocations ??= new();
+                    _RagdollsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Ragdolls;
+                }
+                case RecordTypeInts.DOBJ:
+                {
+                    _DefaultObjectManagersLocations ??= new();
+                    _DefaultObjectManagersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.DefaultObjectManagers;
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    _LightingTemplatesLocations ??= new();
+                    _LightingTemplatesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.LightingTemplates;
+                }
+                case RecordTypeInts.MUSC:
+                {
+                    _MusicTypesLocations ??= new();
+                    _MusicTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.MusicTypes;
+                }
+                case RecordTypeInts.FLST:
+                {
+                    _FormListsLocations ??= new();
+                    _FormListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.FormLists;
                 }
                 default:
                     return default(int?);

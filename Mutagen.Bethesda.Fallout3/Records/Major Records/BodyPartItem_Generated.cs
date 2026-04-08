@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BodyPartItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartItemSetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyPartItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BodyPartItemSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -1045,11 +1045,11 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyPartItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyPartItemGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BodyPartItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyPartItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartItemBinaryWriteTranslation.Instance;

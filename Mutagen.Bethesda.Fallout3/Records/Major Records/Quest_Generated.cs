@@ -7,14 +7,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +57,105 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Script
+        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> IQuestGetter.Script => this.Script;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IQuestGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Icons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IQuestGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
+        #endregion
+        #region QuestData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private QuestData? _QuestData;
+        public QuestData? QuestData
+        {
+            get => _QuestData;
+            set => _QuestData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IQuestDataGetter? IQuestGetter.QuestData => this.QuestData;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IQuestGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Stages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
+        {
+            get => this._Stages;
+            init => this._Stages = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestStageGetter> IQuestGetter.Stages => _Stages;
+        #endregion
+
+        #endregion
+        #region Objectives
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
+        public ExtendedList<QuestObjective> Objectives
+        {
+            get => this._Objectives;
+            init => this._Objectives = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestObjectiveGetter> IQuestGetter.Objectives => _Objectives;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +181,13 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Script = initialValue;
+                this.Name = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
+                this.QuestData = new MaskItem<TItem, QuestData.Mask<TItem>?>(initialValue, new QuestData.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -87,7 +197,14 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Script,
+                TItem Name,
+                TItem Icons,
+                TItem QuestData,
+                TItem Conditions,
+                TItem Stages,
+                TItem Objectives)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +214,13 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Script = Script;
+                this.Name = Name;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
+                this.QuestData = new MaskItem<TItem, QuestData.Mask<TItem>?>(QuestData, new QuestData.Mask<TItem>(QuestData));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, []);
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, []);
             }
 
             #pragma warning disable CS8618
@@ -105,6 +229,16 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Script;
+            public TItem Name;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
+            public MaskItem<TItem, QuestData.Mask<TItem>?>? QuestData { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>? Stages;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
             #endregion
 
             #region Equals
@@ -118,11 +252,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
+                if (!object.Equals(this.QuestData, rhs.QuestData)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Stages, rhs.Stages)) return false;
+                if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Script);
+                hash.Add(this.Name);
+                hash.Add(this.Icons);
+                hash.Add(this.QuestData);
+                hash.Add(this.Conditions);
+                hash.Add(this.Stages);
+                hash.Add(this.Objectives);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +281,54 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Name)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
+                if (QuestData != null)
+                {
+                    if (!eval(this.QuestData.Overall)) return false;
+                    if (this.QuestData.Specific != null && !this.QuestData.Specific.All(eval)) return false;
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (!eval(this.Stages.Overall)) return false;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Objectives != null)
+                {
+                    if (!eval(this.Objectives.Overall)) return false;
+                    if (this.Objectives.Specific != null)
+                    {
+                        foreach (var item in this.Objectives.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +337,54 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Script)) return true;
+                if (eval(this.Name)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
+                if (QuestData != null)
+                {
+                    if (eval(this.QuestData.Overall)) return true;
+                    if (this.QuestData.Specific != null && this.QuestData.Specific.Any(eval)) return true;
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (eval(this.Stages.Overall)) return true;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Objectives != null)
+                {
+                    if (eval(this.Objectives.Overall)) return true;
+                    if (this.Objectives.Specific != null)
+                    {
+                        foreach (var item in this.Objectives.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +400,55 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Script = eval(this.Script);
+                obj.Name = eval(this.Name);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
+                obj.QuestData = this.QuestData == null ? null : new MaskItem<R, QuestData.Mask<R>?>(eval(this.QuestData.Overall), this.QuestData.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Stages != null)
+                {
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), []);
+                    if (Stages.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
+                        obj.Stages.Specific = l;
+                        foreach (var item in Stages.Specific)
+                        {
+                            MaskItemIndexed<R, QuestStage.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestStage.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Objectives != null)
+                {
+                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), []);
+                    if (Objectives.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestObjective.Mask<R>?>>();
+                        obj.Objectives.Specific = l;
+                        foreach (var item in Objectives.Specific)
+                        {
+                            MaskItemIndexed<R, QuestObjective.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestObjective.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +467,79 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Quest.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Script ?? true)
+                    {
+                        sb.AppendItem(Script, "Script");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Icons?.Overall ?? true)
+                    {
+                        Icons?.Print(sb);
+                    }
+                    if (printMask?.QuestData?.Overall ?? true)
+                    {
+                        QuestData?.Print(sb);
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Stages?.Overall ?? true)
+                        && Stages is {} StagesItem)
+                    {
+                        sb.AppendLine("Stages =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(StagesItem.Overall);
+                            if (StagesItem.Specific != null)
+                            {
+                                foreach (var subItem in StagesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Objectives?.Overall ?? true)
+                        && Objectives is {} ObjectivesItem)
+                    {
+                        sb.AppendLine("Objectives =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ObjectivesItem.Overall);
+                            if (ObjectivesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectivesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +550,36 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Script;
+            public Exception? Name;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
+            public MaskItem<Exception?, QuestData.ErrorMask?>? QuestData;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>? Stages;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.Script:
+                        return Script;
+                    case Quest_FieldIndex.Name:
+                        return Name;
+                    case Quest_FieldIndex.Icons:
+                        return Icons;
+                    case Quest_FieldIndex.QuestData:
+                        return QuestData;
+                    case Quest_FieldIndex.Conditions:
+                        return Conditions;
+                    case Quest_FieldIndex.Stages:
+                        return Stages;
+                    case Quest_FieldIndex.Objectives:
+                        return Objectives;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +590,27 @@ namespace Mutagen.Bethesda.Fallout3
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Quest_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Quest_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.QuestData:
+                        this.QuestData = new MaskItem<Exception?, QuestData.ErrorMask?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Stages:
+                        this.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Objectives:
+                        this.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +622,27 @@ namespace Mutagen.Bethesda.Fallout3
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.Script:
+                        this.Script = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
+                        break;
+                    case Quest_FieldIndex.QuestData:
+                        this.QuestData = (MaskItem<Exception?, QuestData.ErrorMask?>?)obj;
+                        break;
+                    case Quest_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Stages:
+                        this.Stages = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Objectives:
+                        this.Objectives = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +652,13 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Script != null) return true;
+                if (Name != null) return true;
+                if (Icons != null) return true;
+                if (QuestData != null) return true;
+                if (Conditions != null) return true;
+                if (Stages != null) return true;
+                if (Objectives != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +685,68 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Icons?.Print(sb);
+                QuestData?.Print(sb);
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Stages is {} StagesItem)
+                {
+                    sb.AppendLine("Stages =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(StagesItem.Overall);
+                        if (StagesItem.Specific != null)
+                        {
+                            foreach (var subItem in StagesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Objectives is {} ObjectivesItem)
+                {
+                    sb.AppendLine("Objectives =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ObjectivesItem.Overall);
+                        if (ObjectivesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectivesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +755,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
+                ret.QuestData = this.QuestData.Combine(rhs.QuestData, (l, r) => l.Combine(r));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +783,39 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Script;
+            public bool Name;
+            public Icons.TranslationMask? Icons;
+            public QuestData.TranslationMask? QuestData;
+            public Condition.TranslationMask? Conditions;
+            public QuestStage.TranslationMask? Stages;
+            public QuestObjective.TranslationMask? Objectives;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Script = defaultOn;
+                this.Name = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Script, null));
+                ret.Add((Name, null));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
+                ret.Add((QuestData != null ? QuestData.OnOverall : DefaultOn, QuestData?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
+                ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +827,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => QuestCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestSetterCommon.Instance.RemapLinks(this, mapping);
         public Quest(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -333,6 +867,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IQuest);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => QuestSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => QuestSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => QuestSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -412,10 +950,28 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IQuest :
+        IAssetLinkContainer,
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
+        IHasIcons,
         ILoquiObjectSetter<IQuestInternal>,
+        INamed,
+        INamedRequired,
         IQuestGetter
     {
+        new IFormLinkNullable<IScriptGetter> Script { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons? Icons { get; set; }
+        new QuestData? QuestData { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestObjective> Objectives { get; }
     }
 
     public partial interface IQuestInternal :
@@ -428,11 +984,33 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.QUST)]
     public partial interface IQuestGetter :
         IFallout3MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHasIconsGetter,
         ILoquiObject<IQuestGetter>,
-        IMapsToGetter<IQuestGetter>
+        IMapsToGetter<IQuestGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Quest_Registration.Instance;
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter? Icons { get; }
+        #endregion
+        IQuestDataGetter? QuestData { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IReadOnlyList<IQuestStageGetter> Stages { get; }
+        IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
 
     }
 
@@ -609,6 +1187,13 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Script = 7,
+        Name = 8,
+        Icons = 9,
+        QuestData = 10,
+        Conditions = 11,
+        Stages = 12,
+        Objectives = 13,
     }
     #endregion
 
@@ -619,9 +1204,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -651,8 +1236,25 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.QUST);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.QUST);
+            var all = RecordCollection.Factory(
+                RecordTypes.QUST,
+                RecordTypes.SCRI,
+                RecordTypes.FULL,
+                RecordTypes.ICON,
+                RecordTypes.DATA,
+                RecordTypes.CTDA,
+                RecordTypes.INDX,
+                RecordTypes.QSDT,
+                RecordTypes.CNAM,
+                RecordTypes.SCHR,
+                RecordTypes.NAM0,
+                RecordTypes.QOBJ,
+                RecordTypes.NNAM,
+                RecordTypes.QSTA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
@@ -694,6 +1296,13 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IQuestInternal item)
         {
             ClearPartial();
+            item.Script.Clear();
+            item.Name = default;
+            item.Icons = null;
+            item.QuestData = null;
+            item.Conditions.Clear();
+            item.Stages.Clear();
+            item.Objectives.Clear();
             base.Clear(item);
         }
         
@@ -711,6 +1320,36 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Script.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Stages.RemapLinks(mapping);
+            obj.Objectives.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IQuest obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IQuest obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Icons?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -778,6 +1417,30 @@ namespace Mutagen.Bethesda.Fallout3
             Quest.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.QuestData = EqualsMaskHelper.EqualsHelper(
+                item.QuestData,
+                rhs.QuestData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Stages = item.Stages.CollectionEqualsHelper(
+                rhs.Stages,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objectives = item.Objectives.CollectionEqualsHelper(
+                rhs.Objectives,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1490,67 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Script ?? true)
+            {
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons is {} IconsItem)
+            {
+                IconsItem?.Print(sb, "Icons");
+            }
+            if ((printMask?.QuestData?.Overall ?? true)
+                && item.QuestData is {} QuestDataItem)
+            {
+                QuestDataItem?.Print(sb, "QuestData");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Stages?.Overall ?? true)
+            {
+                sb.AppendLine("Stages =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Stages)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Objectives?.Overall ?? true)
+            {
+                sb.AppendLine("Objectives =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Objectives)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Quest_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1601,42 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Icons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.QuestData, rhs.QuestData, out var lhsQuestData, out var rhsQuestData, out var isQuestDataEqual))
+                {
+                    if (!((QuestDataCommon)((IQuestDataGetter)lhsQuestData).CommonInstance()!).Equals(lhsQuestData, rhsQuestData, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.QuestData))) return false;
+                }
+                else if (!isQuestDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((QuestStageCommon)((IQuestStageGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Stages)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            {
+                if (!lhs.Objectives.SequenceEqual(rhs.Objectives, (l, r) => ((QuestObjectiveCommon)((IQuestObjectiveGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Objectives)))) return false;
+            }
             return true;
         }
         
@@ -905,6 +1665,22 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IQuestGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Script);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Icons is {} Iconsitem)
+            {
+                hash.Add(Iconsitem);
+            }
+            if (item.QuestData is {} QuestDataitem)
+            {
+                hash.Add(QuestDataitem);
+            }
+            hash.Add(item.Conditions);
+            hash.Add(item.Stages);
+            hash.Add(item.Objectives);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,11 +1704,43 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
+            {
+                yield return ScriptInfo;
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Objectives.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IQuestGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1008,6 +1816,138 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
+            {
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Icons) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons is {} rhsIcons)
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Quest_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestData) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.QuestData);
+                try
+                {
+                    if(rhs.QuestData is {} rhsQuestData)
+                    {
+                        item.QuestData = rhsQuestData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Quest_FieldIndex.QuestData));
+                    }
+                    else
+                    {
+                        item.QuestData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
+                try
+                {
+                    item.Stages.SetTo(
+                        rhs.Stages
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Objectives);
+                try
+                {
+                    item.Objectives.SetTo(
+                        rhs.Objectives
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +2108,73 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly QuestBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IQuestGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Script,
+                header: translationParams.ConvertToCustom(RecordTypes.SCRI));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Icons is {} IconsItem)
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.QuestData is {} QuestDataItem)
+            {
+                ((QuestDataBinaryWriteTranslation)((IBinaryItem)QuestDataItem).BinaryWriteTranslator).Write(
+                    item: QuestDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestStageGetter>.Instance.Write(
+                writer: writer,
+                items: item.Stages,
+                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestObjectiveGetter>.Instance.Write(
+                writer: writer,
+                items: item.Objectives,
+                transl: (MutagenWriter subWriter, IQuestObjectiveGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestObjectiveBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
@@ -1222,6 +2229,87 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.QUST;
+        public static ParseResult FillBinaryRecordTypes(
+            IQuestInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.SCRI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.Script;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Quest_FieldIndex.Name;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    item.Icons = Mutagen.Bethesda.Fallout3.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Quest_FieldIndex.Icons;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    item.QuestData = Mutagen.Bethesda.Fallout3.QuestData.CreateFromBinary(frame: frame);
+                    return (int)Quest_FieldIndex.QuestData;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.INDX:
+                {
+                    item.Stages.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestStage>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: QuestStage_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: QuestStage.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.Stages;
+                }
+                case RecordTypeInts.QOBJ:
+                {
+                    item.Objectives.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestObjective>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: QuestObjective_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: QuestObjective.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.Objectives;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +2342,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => QuestCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +2358,26 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IQuestGetter);
 
 
+        #region Script
+        private int? _ScriptLocation;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        public IIconsGetter? Icons { get; private set; }
+        #region QuestData
+        private RangeInt32? _QuestDataLocation;
+        public IQuestDataGetter? QuestData => _QuestDataLocation.HasValue ? QuestDataBinaryOverlay.QuestDataFactory(_recordData.Slice(_QuestDataLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = [];
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +2435,85 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.SCRI:
+                {
+                    _ScriptLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Script;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Name;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Quest_FieldIndex.Icons;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _QuestDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Quest_FieldIndex.QuestData;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Quest_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.INDX:
+                {
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<IQuestStageGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: QuestStage_Registration.TriggerSpecs,
+                        factory: QuestStageBinaryOverlay.QuestStageFactory);
+                    return (int)Quest_FieldIndex.Stages;
+                }
+                case RecordTypeInts.QOBJ:
+                {
+                    this.Objectives = this.ParseRepeatedTypelessSubrecord<IQuestObjectiveGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: QuestObjective_Registration.TriggerSpecs,
+                        factory: QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
+                    return (int)Quest_FieldIndex.Objectives;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

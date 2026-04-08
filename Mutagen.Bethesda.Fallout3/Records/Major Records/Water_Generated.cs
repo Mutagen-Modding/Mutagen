@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,109 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region NoiseMapTexture
+        public String? NoiseMapTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.NoiseMapTexture => this.NoiseMapTexture;
+        #endregion
+        #region Opacity
+        public Byte Opacity { get; set; } = default(Byte);
+        #endregion
+        #region Flags
+        public Water.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Water.Flag? IWaterGetter.Flags => this.Flags;
+        #endregion
+        #region MaterialId
+        public String? MaterialId { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.MaterialId => this.MaterialId;
+        #endregion
+        #region Material
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _Material = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> Material
+        {
+            get => _Material;
+            set => _Material.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IWaterGetter.Material => this.Material;
+        #endregion
+        #region Sound
+        private readonly IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
+        #endregion
+        #region Effect
+        private readonly IFormLinkNullable<ISpellGetter> _Effect = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> Effect
+        {
+            get => _Effect;
+            set => _Effect.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISpellGetter> IWaterGetter.Effect => this.Effect;
+        #endregion
+        #region DamagePerSecond
+        public UInt16? DamagePerSecond { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IWaterGetter.DamagePerSecond => this.DamagePerSecond;
+        #endregion
+        #region VisualData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WaterData? _VisualData;
+        public WaterData? VisualData
+        {
+            get => _VisualData;
+            set => _VisualData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWaterDataGetter? IWaterGetter.VisualData => this.VisualData;
+        #endregion
+        #region RelatedWaters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RelatedWaters? _RelatedWaters;
+        public RelatedWaters? RelatedWaters
+        {
+            get => _RelatedWaters;
+            set => _RelatedWaters = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRelatedWatersGetter? IWaterGetter.RelatedWaters => this.RelatedWaters;
+        #endregion
+        #region LinearVelocity
+        public P3Float? LinearVelocity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IWaterGetter.LinearVelocity => this.LinearVelocity;
+        #endregion
+        #region AngularVelocity
+        public P3Float? AngularVelocity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        P3Float? IWaterGetter.AngularVelocity => this.AngularVelocity;
+        #endregion
 
         #region To String
 
@@ -78,6 +183,19 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.NoiseMapTexture = initialValue;
+                this.Opacity = initialValue;
+                this.Flags = initialValue;
+                this.MaterialId = initialValue;
+                this.Material = initialValue;
+                this.Sound = initialValue;
+                this.Effect = initialValue;
+                this.DamagePerSecond = initialValue;
+                this.VisualData = new MaskItem<TItem, WaterData.Mask<TItem>?>(initialValue, new WaterData.Mask<TItem>(initialValue));
+                this.RelatedWaters = new MaskItem<TItem, RelatedWaters.Mask<TItem>?>(initialValue, new RelatedWaters.Mask<TItem>(initialValue));
+                this.LinearVelocity = initialValue;
+                this.AngularVelocity = initialValue;
             }
 
             public Mask(
@@ -87,7 +205,20 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Name,
+                TItem NoiseMapTexture,
+                TItem Opacity,
+                TItem Flags,
+                TItem MaterialId,
+                TItem Material,
+                TItem Sound,
+                TItem Effect,
+                TItem DamagePerSecond,
+                TItem VisualData,
+                TItem RelatedWaters,
+                TItem LinearVelocity,
+                TItem AngularVelocity)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +228,19 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Name = Name;
+                this.NoiseMapTexture = NoiseMapTexture;
+                this.Opacity = Opacity;
+                this.Flags = Flags;
+                this.MaterialId = MaterialId;
+                this.Material = Material;
+                this.Sound = Sound;
+                this.Effect = Effect;
+                this.DamagePerSecond = DamagePerSecond;
+                this.VisualData = new MaskItem<TItem, WaterData.Mask<TItem>?>(VisualData, new WaterData.Mask<TItem>(VisualData));
+                this.RelatedWaters = new MaskItem<TItem, RelatedWaters.Mask<TItem>?>(RelatedWaters, new RelatedWaters.Mask<TItem>(RelatedWaters));
+                this.LinearVelocity = LinearVelocity;
+                this.AngularVelocity = AngularVelocity;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +249,22 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem NoiseMapTexture;
+            public TItem Opacity;
+            public TItem Flags;
+            public TItem MaterialId;
+            public TItem Material;
+            public TItem Sound;
+            public TItem Effect;
+            public TItem DamagePerSecond;
+            public MaskItem<TItem, WaterData.Mask<TItem>?>? VisualData { get; set; }
+            public MaskItem<TItem, RelatedWaters.Mask<TItem>?>? RelatedWaters { get; set; }
+            public TItem LinearVelocity;
+            public TItem AngularVelocity;
             #endregion
 
             #region Equals
@@ -118,11 +278,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.NoiseMapTexture, rhs.NoiseMapTexture)) return false;
+                if (!object.Equals(this.Opacity, rhs.Opacity)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.MaterialId, rhs.MaterialId)) return false;
+                if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Effect, rhs.Effect)) return false;
+                if (!object.Equals(this.DamagePerSecond, rhs.DamagePerSecond)) return false;
+                if (!object.Equals(this.VisualData, rhs.VisualData)) return false;
+                if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
+                if (!object.Equals(this.LinearVelocity, rhs.LinearVelocity)) return false;
+                if (!object.Equals(this.AngularVelocity, rhs.AngularVelocity)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.NoiseMapTexture);
+                hash.Add(this.Opacity);
+                hash.Add(this.Flags);
+                hash.Add(this.MaterialId);
+                hash.Add(this.Material);
+                hash.Add(this.Sound);
+                hash.Add(this.Effect);
+                hash.Add(this.DamagePerSecond);
+                hash.Add(this.VisualData);
+                hash.Add(this.RelatedWaters);
+                hash.Add(this.LinearVelocity);
+                hash.Add(this.AngularVelocity);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +319,27 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.NoiseMapTexture)) return false;
+                if (!eval(this.Opacity)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.MaterialId)) return false;
+                if (!eval(this.Material)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.Effect)) return false;
+                if (!eval(this.DamagePerSecond)) return false;
+                if (VisualData != null)
+                {
+                    if (!eval(this.VisualData.Overall)) return false;
+                    if (this.VisualData.Specific != null && !this.VisualData.Specific.All(eval)) return false;
+                }
+                if (RelatedWaters != null)
+                {
+                    if (!eval(this.RelatedWaters.Overall)) return false;
+                    if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LinearVelocity)) return false;
+                if (!eval(this.AngularVelocity)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +348,27 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.NoiseMapTexture)) return true;
+                if (eval(this.Opacity)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.MaterialId)) return true;
+                if (eval(this.Material)) return true;
+                if (eval(this.Sound)) return true;
+                if (eval(this.Effect)) return true;
+                if (eval(this.DamagePerSecond)) return true;
+                if (VisualData != null)
+                {
+                    if (eval(this.VisualData.Overall)) return true;
+                    if (this.VisualData.Specific != null && this.VisualData.Specific.Any(eval)) return true;
+                }
+                if (RelatedWaters != null)
+                {
+                    if (eval(this.RelatedWaters.Overall)) return true;
+                    if (this.RelatedWaters.Specific != null && this.RelatedWaters.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LinearVelocity)) return true;
+                if (eval(this.AngularVelocity)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +384,19 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.NoiseMapTexture = eval(this.NoiseMapTexture);
+                obj.Opacity = eval(this.Opacity);
+                obj.Flags = eval(this.Flags);
+                obj.MaterialId = eval(this.MaterialId);
+                obj.Material = eval(this.Material);
+                obj.Sound = eval(this.Sound);
+                obj.Effect = eval(this.Effect);
+                obj.DamagePerSecond = eval(this.DamagePerSecond);
+                obj.VisualData = this.VisualData == null ? null : new MaskItem<R, WaterData.Mask<R>?>(eval(this.VisualData.Overall), this.VisualData.Specific?.Translate(eval));
+                obj.RelatedWaters = this.RelatedWaters == null ? null : new MaskItem<R, RelatedWaters.Mask<R>?>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
+                obj.LinearVelocity = eval(this.LinearVelocity);
+                obj.AngularVelocity = eval(this.AngularVelocity);
             }
             #endregion
 
@@ -174,6 +415,58 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.NoiseMapTexture ?? true)
+                    {
+                        sb.AppendItem(NoiseMapTexture, "NoiseMapTexture");
+                    }
+                    if (printMask?.Opacity ?? true)
+                    {
+                        sb.AppendItem(Opacity, "Opacity");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.MaterialId ?? true)
+                    {
+                        sb.AppendItem(MaterialId, "MaterialId");
+                    }
+                    if (printMask?.Material ?? true)
+                    {
+                        sb.AppendItem(Material, "Material");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        sb.AppendItem(Sound, "Sound");
+                    }
+                    if (printMask?.Effect ?? true)
+                    {
+                        sb.AppendItem(Effect, "Effect");
+                    }
+                    if (printMask?.DamagePerSecond ?? true)
+                    {
+                        sb.AppendItem(DamagePerSecond, "DamagePerSecond");
+                    }
+                    if (printMask?.VisualData?.Overall ?? true)
+                    {
+                        VisualData?.Print(sb);
+                    }
+                    if (printMask?.RelatedWaters?.Overall ?? true)
+                    {
+                        RelatedWaters?.Print(sb);
+                    }
+                    if (printMask?.LinearVelocity ?? true)
+                    {
+                        sb.AppendItem(LinearVelocity, "LinearVelocity");
+                    }
+                    if (printMask?.AngularVelocity ?? true)
+                    {
+                        sb.AppendItem(AngularVelocity, "AngularVelocity");
+                    }
                 }
             }
             #endregion
@@ -184,12 +477,54 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? NoiseMapTexture;
+            public Exception? Opacity;
+            public Exception? Flags;
+            public Exception? MaterialId;
+            public Exception? Material;
+            public Exception? Sound;
+            public Exception? Effect;
+            public Exception? DamagePerSecond;
+            public MaskItem<Exception?, WaterData.ErrorMask?>? VisualData;
+            public MaskItem<Exception?, RelatedWaters.ErrorMask?>? RelatedWaters;
+            public Exception? LinearVelocity;
+            public Exception? AngularVelocity;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        return Name;
+                    case Water_FieldIndex.NoiseMapTexture:
+                        return NoiseMapTexture;
+                    case Water_FieldIndex.Opacity:
+                        return Opacity;
+                    case Water_FieldIndex.Flags:
+                        return Flags;
+                    case Water_FieldIndex.MaterialId:
+                        return MaterialId;
+                    case Water_FieldIndex.Material:
+                        return Material;
+                    case Water_FieldIndex.Sound:
+                        return Sound;
+                    case Water_FieldIndex.Effect:
+                        return Effect;
+                    case Water_FieldIndex.DamagePerSecond:
+                        return DamagePerSecond;
+                    case Water_FieldIndex.VisualData:
+                        return VisualData;
+                    case Water_FieldIndex.RelatedWaters:
+                        return RelatedWaters;
+                    case Water_FieldIndex.LinearVelocity:
+                        return LinearVelocity;
+                    case Water_FieldIndex.AngularVelocity:
+                        return AngularVelocity;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +535,45 @@ namespace Mutagen.Bethesda.Fallout3
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Water_FieldIndex.NoiseMapTexture:
+                        this.NoiseMapTexture = ex;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = ex;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Water_FieldIndex.MaterialId:
+                        this.MaterialId = ex;
+                        break;
+                    case Water_FieldIndex.Material:
+                        this.Material = ex;
+                        break;
+                    case Water_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case Water_FieldIndex.Effect:
+                        this.Effect = ex;
+                        break;
+                    case Water_FieldIndex.DamagePerSecond:
+                        this.DamagePerSecond = ex;
+                        break;
+                    case Water_FieldIndex.VisualData:
+                        this.VisualData = new MaskItem<Exception?, WaterData.ErrorMask?>(ex, null);
+                        break;
+                    case Water_FieldIndex.RelatedWaters:
+                        this.RelatedWaters = new MaskItem<Exception?, RelatedWaters.ErrorMask?>(ex, null);
+                        break;
+                    case Water_FieldIndex.LinearVelocity:
+                        this.LinearVelocity = ex;
+                        break;
+                    case Water_FieldIndex.AngularVelocity:
+                        this.AngularVelocity = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +585,45 @@ namespace Mutagen.Bethesda.Fallout3
                 Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
+                    case Water_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.NoiseMapTexture:
+                        this.NoiseMapTexture = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Opacity:
+                        this.Opacity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.MaterialId:
+                        this.MaterialId = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Material:
+                        this.Material = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Sound:
+                        this.Sound = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.Effect:
+                        this.Effect = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.DamagePerSecond:
+                        this.DamagePerSecond = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.VisualData:
+                        this.VisualData = (MaskItem<Exception?, WaterData.ErrorMask?>?)obj;
+                        break;
+                    case Water_FieldIndex.RelatedWaters:
+                        this.RelatedWaters = (MaskItem<Exception?, RelatedWaters.ErrorMask?>?)obj;
+                        break;
+                    case Water_FieldIndex.LinearVelocity:
+                        this.LinearVelocity = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.AngularVelocity:
+                        this.AngularVelocity = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +633,19 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (NoiseMapTexture != null) return true;
+                if (Opacity != null) return true;
+                if (Flags != null) return true;
+                if (MaterialId != null) return true;
+                if (Material != null) return true;
+                if (Sound != null) return true;
+                if (Effect != null) return true;
+                if (DamagePerSecond != null) return true;
+                if (VisualData != null) return true;
+                if (RelatedWaters != null) return true;
+                if (LinearVelocity != null) return true;
+                if (AngularVelocity != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +672,41 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(NoiseMapTexture, "NoiseMapTexture");
+                }
+                {
+                    sb.AppendItem(Opacity, "Opacity");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MaterialId, "MaterialId");
+                }
+                {
+                    sb.AppendItem(Material, "Material");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(Effect, "Effect");
+                }
+                {
+                    sb.AppendItem(DamagePerSecond, "DamagePerSecond");
+                }
+                VisualData?.Print(sb);
+                RelatedWaters?.Print(sb);
+                {
+                    sb.AppendItem(LinearVelocity, "LinearVelocity");
+                }
+                {
+                    sb.AppendItem(AngularVelocity, "AngularVelocity");
+                }
             }
             #endregion
 
@@ -254,6 +715,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.NoiseMapTexture = this.NoiseMapTexture.Combine(rhs.NoiseMapTexture);
+                ret.Opacity = this.Opacity.Combine(rhs.Opacity);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.MaterialId = this.MaterialId.Combine(rhs.MaterialId);
+                ret.Material = this.Material.Combine(rhs.Material);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.Effect = this.Effect.Combine(rhs.Effect);
+                ret.DamagePerSecond = this.DamagePerSecond.Combine(rhs.DamagePerSecond);
+                ret.VisualData = this.VisualData.Combine(rhs.VisualData, (l, r) => l.Combine(r));
+                ret.RelatedWaters = this.RelatedWaters.Combine(rhs.RelatedWaters, (l, r) => l.Combine(r));
+                ret.LinearVelocity = this.LinearVelocity.Combine(rhs.LinearVelocity);
+                ret.AngularVelocity = this.AngularVelocity.Combine(rhs.AngularVelocity);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +749,60 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool NoiseMapTexture;
+            public bool Opacity;
+            public bool Flags;
+            public bool MaterialId;
+            public bool Material;
+            public bool Sound;
+            public bool Effect;
+            public bool DamagePerSecond;
+            public WaterData.TranslationMask? VisualData;
+            public RelatedWaters.TranslationMask? RelatedWaters;
+            public bool LinearVelocity;
+            public bool AngularVelocity;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.NoiseMapTexture = defaultOn;
+                this.Opacity = defaultOn;
+                this.Flags = defaultOn;
+                this.MaterialId = defaultOn;
+                this.Material = defaultOn;
+                this.Sound = defaultOn;
+                this.Effect = defaultOn;
+                this.DamagePerSecond = defaultOn;
+                this.LinearVelocity = defaultOn;
+                this.AngularVelocity = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((NoiseMapTexture, null));
+                ret.Add((Opacity, null));
+                ret.Add((Flags, null));
+                ret.Add((MaterialId, null));
+                ret.Add((Material, null));
+                ret.Add((Sound, null));
+                ret.Add((Effect, null));
+                ret.Add((DamagePerSecond, null));
+                ret.Add((VisualData != null ? VisualData.OnOverall : DefaultOn, VisualData?.GetCrystal()));
+                ret.Add((RelatedWaters != null ? RelatedWaters.OnOverall : DefaultOn, RelatedWaters?.GetCrystal()));
+                ret.Add((LinearVelocity, null));
+                ret.Add((AngularVelocity, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +814,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WaterCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterSetterCommon.Instance.RemapLinks(this, mapping);
         public Water(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,9 +934,28 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IWater :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IWaterInternal>,
+        INamed,
+        INamedRequired,
         IWaterGetter
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        new String? NoiseMapTexture { get; set; }
+        new Byte Opacity { get; set; }
+        new Water.Flag? Flags { get; set; }
+        new String? MaterialId { get; set; }
+        new IFormLinkNullable<IFallout3MajorRecordGetter> Material { get; set; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; set; }
+        new IFormLinkNullable<ISpellGetter> Effect { get; set; }
+        new UInt16? DamagePerSecond { get; set; }
+        new WaterData? VisualData { get; set; }
+        new RelatedWaters? RelatedWaters { get; set; }
+        new P3Float? LinearVelocity { get; set; }
+        new P3Float? AngularVelocity { get; set; }
     }
 
     public partial interface IWaterInternal :
@@ -429,10 +969,31 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IWaterGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IWaterGetter>,
-        IMapsToGetter<IWaterGetter>
+        IMapsToGetter<IWaterGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Water_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        String? NoiseMapTexture { get; }
+        Byte Opacity { get; }
+        Water.Flag? Flags { get; }
+        String? MaterialId { get; }
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> Material { get; }
+        IFormLinkNullableGetter<ISoundGetter> Sound { get; }
+        IFormLinkNullableGetter<ISpellGetter> Effect { get; }
+        UInt16? DamagePerSecond { get; }
+        IWaterDataGetter? VisualData { get; }
+        IRelatedWatersGetter? RelatedWaters { get; }
+        P3Float? LinearVelocity { get; }
+        P3Float? AngularVelocity { get; }
 
     }
 
@@ -609,6 +1170,19 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Name = 7,
+        NoiseMapTexture = 8,
+        Opacity = 9,
+        Flags = 10,
+        MaterialId = 11,
+        Material = 12,
+        Sound = 13,
+        Effect = 14,
+        DamagePerSecond = 15,
+        VisualData = 16,
+        RelatedWaters = 17,
+        LinearVelocity = 18,
+        AngularVelocity = 19,
     }
     #endregion
 
@@ -619,9 +1193,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -651,8 +1225,25 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.WATR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.WATR);
+            var all = RecordCollection.Factory(
+                RecordTypes.WATR,
+                RecordTypes.FULL,
+                RecordTypes.NNAM,
+                RecordTypes.ANAM,
+                RecordTypes.FNAM,
+                RecordTypes.MNAM,
+                RecordTypes.TNAM,
+                RecordTypes.SNAM,
+                RecordTypes.XNAM,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM0,
+                RecordTypes.NAM1);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
@@ -694,6 +1285,19 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IWaterInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.NoiseMapTexture = default;
+            item.Opacity = default(Byte);
+            item.Flags = default;
+            item.MaterialId = default;
+            item.Material.Clear();
+            item.Sound.Clear();
+            item.Effect.Clear();
+            item.DamagePerSecond = default;
+            item.VisualData = null;
+            item.RelatedWaters = null;
+            item.LinearVelocity = default;
+            item.AngularVelocity = default;
             base.Clear(item);
         }
         
@@ -711,6 +1315,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IWater obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Material.Relink(mapping);
+            obj.Sound.Relink(mapping);
+            obj.Effect.Relink(mapping);
+            obj.RelatedWaters?.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +1386,27 @@ namespace Mutagen.Bethesda.Fallout3
             Water.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.NoiseMapTexture = string.Equals(item.NoiseMapTexture, rhs.NoiseMapTexture);
+            ret.Opacity = item.Opacity == rhs.Opacity;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.MaterialId = string.Equals(item.MaterialId, rhs.MaterialId);
+            ret.Material = item.Material.Equals(rhs.Material);
+            ret.Sound = item.Sound.Equals(rhs.Sound);
+            ret.Effect = item.Effect.Equals(rhs.Effect);
+            ret.DamagePerSecond = item.DamagePerSecond == rhs.DamagePerSecond;
+            ret.VisualData = EqualsMaskHelper.EqualsHelper(
+                item.VisualData,
+                rhs.VisualData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.RelatedWaters = EqualsMaskHelper.EqualsHelper(
+                item.RelatedWaters,
+                rhs.RelatedWaters,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
+            ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1456,67 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.NoiseMapTexture ?? true)
+                && item.NoiseMapTexture is {} NoiseMapTextureItem)
+            {
+                sb.AppendItem(NoiseMapTextureItem, "NoiseMapTexture");
+            }
+            if (printMask?.Opacity ?? true)
+            {
+                sb.AppendItem(item.Opacity, "Opacity");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.MaterialId ?? true)
+                && item.MaterialId is {} MaterialIdItem)
+            {
+                sb.AppendItem(MaterialIdItem, "MaterialId");
+            }
+            if (printMask?.Material ?? true)
+            {
+                sb.AppendItem(item.Material.FormKeyNullable, "Material");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
+            }
+            if (printMask?.Effect ?? true)
+            {
+                sb.AppendItem(item.Effect.FormKeyNullable, "Effect");
+            }
+            if ((printMask?.DamagePerSecond ?? true)
+                && item.DamagePerSecond is {} DamagePerSecondItem)
+            {
+                sb.AppendItem(DamagePerSecondItem, "DamagePerSecond");
+            }
+            if ((printMask?.VisualData?.Overall ?? true)
+                && item.VisualData is {} VisualDataItem)
+            {
+                VisualDataItem?.Print(sb, "VisualData");
+            }
+            if ((printMask?.RelatedWaters?.Overall ?? true)
+                && item.RelatedWaters is {} RelatedWatersItem)
+            {
+                RelatedWatersItem?.Print(sb, "RelatedWaters");
+            }
+            if ((printMask?.LinearVelocity ?? true)
+                && item.LinearVelocity is {} LinearVelocityItem)
+            {
+                sb.AppendItem(LinearVelocityItem, "LinearVelocity");
+            }
+            if ((printMask?.AngularVelocity ?? true)
+                && item.AngularVelocity is {} AngularVelocityItem)
+            {
+                sb.AppendItem(AngularVelocityItem, "AngularVelocity");
+            }
         }
         
         public static Water_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1567,66 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseMapTexture) ?? true))
+            {
+                if (!string.Equals(lhs.NoiseMapTexture, rhs.NoiseMapTexture)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                if (lhs.Opacity != rhs.Opacity) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialId) ?? true))
+            {
+                if (!string.Equals(lhs.MaterialId, rhs.MaterialId)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            {
+                if (!lhs.Material.Equals(rhs.Material)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.Effect) ?? true))
+            {
+                if (!lhs.Effect.Equals(rhs.Effect)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
+            {
+                if (lhs.DamagePerSecond != rhs.DamagePerSecond) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.VisualData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VisualData, rhs.VisualData, out var lhsVisualData, out var rhsVisualData, out var isVisualDataEqual))
+                {
+                    if (!((WaterDataCommon)((IWaterDataGetter)lhsVisualData).CommonInstance()!).Equals(lhsVisualData, rhsVisualData, equalsMask?.GetSubCrystal((int)Water_FieldIndex.VisualData))) return false;
+                }
+                else if (!isVisualDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.RelatedWaters, rhs.RelatedWaters, out var lhsRelatedWaters, out var rhsRelatedWaters, out var isRelatedWatersEqual))
+                {
+                    if (!((RelatedWatersCommon)((IRelatedWatersGetter)lhsRelatedWaters).CommonInstance()!).Equals(lhsRelatedWaters, rhsRelatedWaters, equalsMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters))) return false;
+                }
+                else if (!isRelatedWatersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            {
+                if (!lhs.LinearVelocity.Equals(rhs.LinearVelocity)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            {
+                if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
+            }
             return true;
         }
         
@@ -905,6 +1655,46 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.NoiseMapTexture is {} NoiseMapTextureitem)
+            {
+                hash.Add(NoiseMapTextureitem);
+            }
+            hash.Add(item.Opacity);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.MaterialId is {} MaterialIditem)
+            {
+                hash.Add(MaterialIditem);
+            }
+            hash.Add(item.Material);
+            hash.Add(item.Sound);
+            hash.Add(item.Effect);
+            if (item.DamagePerSecond is {} DamagePerSeconditem)
+            {
+                hash.Add(DamagePerSeconditem);
+            }
+            if (item.VisualData is {} VisualDataitem)
+            {
+                hash.Add(VisualDataitem);
+            }
+            if (item.RelatedWaters is {} RelatedWatersitem)
+            {
+                hash.Add(RelatedWatersitem);
+            }
+            if (item.LinearVelocity is {} LinearVelocityitem)
+            {
+                hash.Add(LinearVelocityitem);
+            }
+            if (item.AngularVelocity is {} AngularVelocityitem)
+            {
+                hash.Add(AngularVelocityitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,11 +1718,30 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Material, out var MaterialInfo))
+            {
+                yield return MaterialInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
+            {
+                yield return SoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Effect, out var EffectInfo))
+            {
+                yield return EffectInfo;
+            }
+            if (obj.RelatedWaters is {} RelatedWatersItems)
+            {
+                foreach (var item in RelatedWatersItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1008,6 +1817,102 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseMapTexture) ?? true))
+            {
+                item.NoiseMapTexture = rhs.NoiseMapTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                item.Opacity = rhs.Opacity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.MaterialId) ?? true))
+            {
+                item.MaterialId = rhs.MaterialId;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Material) ?? true))
+            {
+                item.Material.SetTo(rhs.Material.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
+            {
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Effect) ?? true))
+            {
+                item.Effect.SetTo(rhs.Effect.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DamagePerSecond) ?? true))
+            {
+                item.DamagePerSecond = rhs.DamagePerSecond;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.VisualData) ?? true))
+            {
+                errorMask?.PushIndex((int)Water_FieldIndex.VisualData);
+                try
+                {
+                    if(rhs.VisualData is {} rhsVisualData)
+                    {
+                        item.VisualData = rhsVisualData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Water_FieldIndex.VisualData));
+                    }
+                    else
+                    {
+                        item.VisualData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
+            {
+                errorMask?.PushIndex((int)Water_FieldIndex.RelatedWaters);
+                try
+                {
+                    if(rhs.RelatedWaters is {} rhsRelatedWaters)
+                    {
+                        item.RelatedWaters = rhsRelatedWaters.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
+                    }
+                    else
+                    {
+                        item.RelatedWaters = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.LinearVelocity) ?? true))
+            {
+                item.LinearVelocity = rhs.LinearVelocity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.AngularVelocity) ?? true))
+            {
+                item.AngularVelocity = rhs.AngularVelocity;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +2073,79 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly WaterBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IWaterGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.NoiseMapTexture,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Opacity,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaterialId,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Material,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Sound,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Effect,
+                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DamagePerSecond,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            if (item.VisualData is {} VisualDataItem)
+            {
+                ((WaterDataBinaryWriteTranslation)((IBinaryItem)VisualDataItem).BinaryWriteTranslator).Write(
+                    item: VisualDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.RelatedWaters is {} RelatedWatersItem)
+            {
+                ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
+                    item: RelatedWatersItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LinearVelocity,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.AngularVelocity,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+        }
+
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
@@ -1222,6 +2200,117 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WATR;
+        public static ParseResult FillBinaryRecordTypes(
+            IWaterInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Water_FieldIndex.Name;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NoiseMapTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Water_FieldIndex.NoiseMapTexture;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Opacity = frame.ReadUInt8();
+                    return (int)Water_FieldIndex.Opacity;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Water_FieldIndex.Flags;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialId = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Water_FieldIndex.MaterialId;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.Material;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.Sound;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Effect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Water_FieldIndex.Effect;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DamagePerSecond = frame.ReadUInt16();
+                    return (int)Water_FieldIndex.DamagePerSecond;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    item.VisualData = Mutagen.Bethesda.Fallout3.WaterData.CreateFromBinary(frame: frame);
+                    return (int)Water_FieldIndex.VisualData;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    item.RelatedWaters = Mutagen.Bethesda.Fallout3.RelatedWaters.CreateFromBinary(frame: frame);
+                    return (int)Water_FieldIndex.RelatedWaters;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LinearVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.LinearVelocity;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Water_FieldIndex.AngularVelocity;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +2343,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WaterCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +2358,62 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IWaterGetter);
 
 
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        #region NoiseMapTexture
+        private int? _NoiseMapTextureLocation;
+        public String? NoiseMapTexture => _NoiseMapTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseMapTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Opacity
+        private int? _OpacityLocation;
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Water.Flag? Flags => EnumBinaryTranslation<Water.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
+        #endregion
+        #region MaterialId
+        private int? _MaterialIdLocation;
+        public String? MaterialId => _MaterialIdLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialIdLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Material
+        private int? _MaterialLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> Material => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _MaterialLocation);
+        #endregion
+        #region Sound
+        private int? _SoundLocation;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _SoundLocation);
+        #endregion
+        #region Effect
+        private int? _EffectLocation;
+        public IFormLinkNullableGetter<ISpellGetter> Effect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _EffectLocation);
+        #endregion
+        #region DamagePerSecond
+        private int? _DamagePerSecondLocation;
+        public UInt16? DamagePerSecond => _DamagePerSecondLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DamagePerSecondLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region VisualData
+        private RangeInt32? _VisualDataLocation;
+        public IWaterDataGetter? VisualData => _VisualDataLocation.HasValue ? WaterDataBinaryOverlay.WaterDataFactory(_recordData.Slice(_VisualDataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region RelatedWaters
+        private RangeInt32? _RelatedWatersLocation;
+        public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(_recordData.Slice(_RelatedWatersLocation!.Value.Min), _package) : default;
+        #endregion
+        #region LinearVelocity
+        private int? _LinearVelocityLocation;
+        public P3Float? LinearVelocity => _LinearVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LinearVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
+        #region AngularVelocity
+        private int? _AngularVelocityLocation;
+        public P3Float? AngularVelocity => _AngularVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AngularVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +2471,94 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Name;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _NoiseMapTextureLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.NoiseMapTexture;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _OpacityLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Opacity;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Flags;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _MaterialIdLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.MaterialId;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _MaterialLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Material;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _SoundLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Sound;
+                }
+                case RecordTypeInts.XNAM:
+                {
+                    _EffectLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.Effect;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DamagePerSecondLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.DamagePerSecond;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _VisualDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Water_FieldIndex.VisualData;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _RelatedWatersLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Water_FieldIndex.RelatedWaters;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _LinearVelocityLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.LinearVelocity;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _AngularVelocityLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.AngularVelocity;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

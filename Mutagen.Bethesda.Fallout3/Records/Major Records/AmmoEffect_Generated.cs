@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -53,6 +54,33 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAmmoEffectGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Type
+        public AmmoEffectType Type { get; set; } = default(AmmoEffectType);
+        #endregion
+        #region Operation
+        public AmmoEffectOperation Operation { get; set; } = default(AmmoEffectOperation);
+        #endregion
+        #region Value
+        public Single Value { get; set; } = default(Single);
+        #endregion
 
         #region To String
 
@@ -78,6 +106,10 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Type = initialValue;
+                this.Operation = initialValue;
+                this.Value = initialValue;
             }
 
             public Mask(
@@ -87,7 +119,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Name,
+                TItem Type,
+                TItem Operation,
+                TItem Value)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +133,10 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Name = Name;
+                this.Type = Type;
+                this.Operation = Operation;
+                this.Value = Value;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +145,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Type;
+            public TItem Operation;
+            public TItem Value;
             #endregion
 
             #region Equals
@@ -118,11 +165,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Operation, rhs.Operation)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Type);
+                hash.Add(this.Operation);
+                hash.Add(this.Value);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +188,10 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Operation)) return false;
+                if (!eval(this.Value)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +200,10 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Operation)) return true;
+                if (eval(this.Value)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +219,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Type = eval(this.Type);
+                obj.Operation = eval(this.Operation);
+                obj.Value = eval(this.Value);
             }
             #endregion
 
@@ -174,6 +241,22 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(AmmoEffect.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Operation ?? true)
+                    {
+                        sb.AppendItem(Operation, "Operation");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        sb.AppendItem(Value, "Value");
+                    }
                 }
             }
             #endregion
@@ -184,12 +267,27 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Type;
+            public Exception? Operation;
+            public Exception? Value;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AmmoEffect_FieldIndex enu = (AmmoEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case AmmoEffect_FieldIndex.Name:
+                        return Name;
+                    case AmmoEffect_FieldIndex.Type:
+                        return Type;
+                    case AmmoEffect_FieldIndex.Operation:
+                        return Operation;
+                    case AmmoEffect_FieldIndex.Value:
+                        return Value;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +298,18 @@ namespace Mutagen.Bethesda.Fallout3
                 AmmoEffect_FieldIndex enu = (AmmoEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case AmmoEffect_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case AmmoEffect_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case AmmoEffect_FieldIndex.Operation:
+                        this.Operation = ex;
+                        break;
+                    case AmmoEffect_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +321,18 @@ namespace Mutagen.Bethesda.Fallout3
                 AmmoEffect_FieldIndex enu = (AmmoEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case AmmoEffect_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case AmmoEffect_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case AmmoEffect_FieldIndex.Operation:
+                        this.Operation = (Exception?)obj;
+                        break;
+                    case AmmoEffect_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +342,10 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Type != null) return true;
+                if (Operation != null) return true;
+                if (Value != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +372,18 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Operation, "Operation");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
             }
             #endregion
 
@@ -254,6 +392,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Operation = this.Operation.Combine(rhs.Operation);
+                ret.Value = this.Value.Combine(rhs.Value);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +417,35 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Type;
+            public bool Operation;
+            public bool Value;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Type = defaultOn;
+                this.Operation = defaultOn;
+                this.Value = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Type, null));
+                ret.Add((Operation, null));
+                ret.Add((Value, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -414,8 +576,17 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IAmmoEffect :
         IAmmoEffectGetter,
         IFallout3MajorRecordInternal,
-        ILoquiObjectSetter<IAmmoEffectInternal>
+        ILoquiObjectSetter<IAmmoEffectInternal>,
+        INamed,
+        INamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
+        new String? Name { get; set; }
+        new AmmoEffectType Type { get; set; }
+        new AmmoEffectOperation Operation { get; set; }
+        new Single Value { get; set; }
     }
 
     public partial interface IAmmoEffectInternal :
@@ -430,9 +601,20 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IAmmoEffectGetter>,
-        IMapsToGetter<IAmmoEffectGetter>
+        IMapsToGetter<IAmmoEffectGetter>,
+        INamedGetter,
+        INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => AmmoEffect_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
+        String? Name { get; }
+        #endregion
+        AmmoEffectType Type { get; }
+        AmmoEffectOperation Operation { get; }
+        Single Value { get; }
 
     }
 
@@ -609,6 +791,10 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Name = 7,
+        Type = 8,
+        Operation = 9,
+        Value = 10,
     }
     #endregion
 
@@ -619,9 +805,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(AmmoEffect.Mask<>);
 
@@ -651,8 +837,14 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.AMEF);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.AMEF);
+            var all = RecordCollection.Factory(
+                RecordTypes.AMEF,
+                RecordTypes.FULL,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AmmoEffectBinaryWriteTranslation);
         #region Interface
@@ -694,6 +886,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IAmmoEffectInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Type = default(AmmoEffectType);
+            item.Operation = default(AmmoEffectOperation);
+            item.Value = default(Single);
             base.Clear(item);
         }
         
@@ -778,6 +974,10 @@ namespace Mutagen.Bethesda.Fallout3
             AmmoEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Type = item.Type == rhs.Type;
+            ret.Operation = item.Operation == rhs.Operation;
+            ret.Value = item.Value.EqualsWithin(rhs.Value);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1027,23 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Type ?? true)
+            {
+                sb.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.Operation ?? true)
+            {
+                sb.AppendItem(item.Operation, "Operation");
+            }
+            if (printMask?.Value ?? true)
+            {
+                sb.AppendItem(item.Value, "Value");
+            }
         }
         
         public static AmmoEffect_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1094,22 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Operation) ?? true))
+            {
+                if (lhs.Operation != rhs.Operation) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Value) ?? true))
+            {
+                if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
+            }
             return true;
         }
         
@@ -905,6 +1138,13 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IAmmoEffectGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Type);
+            hash.Add(item.Operation);
+            hash.Add(item.Value);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,9 +1168,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmmoEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmmoEffectGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1008,6 +1248,22 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Operation) ?? true))
+            {
+                item.Operation = rhs.Operation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +1424,42 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly AmmoEffectBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IAmmoEffectGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                StringBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.Name,
+                    header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                    binaryType: StringBinaryType.NullTerminate);
+            }
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+                {
+                    EnumBinaryTranslation<AmmoEffectType, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        item.Type,
+                        length: 4);
+                    EnumBinaryTranslation<AmmoEffectOperation, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        item.Operation,
+                        length: 4);
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.Value);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IAmmoEffectGetter item,
@@ -1222,6 +1514,58 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly AmmoEffectBinaryCreateTranslation Instance = new AmmoEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AMEF;
+        public static ParseResult FillBinaryRecordTypes(
+            IAmmoEffectInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Name = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                    }
+                    return (int)AmmoEffect_FieldIndex.Name;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Type = EnumBinaryTranslation<AmmoEffectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Operation = EnumBinaryTranslation<AmmoEffectOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)AmmoEffect_FieldIndex.Value;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1268,6 +1612,30 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IAmmoEffectGetter);
 
 
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Type
+        private int _TypeLocation => _DATALocation!.Value.Min;
+        private bool _Type_IsSet => _DATALocation.HasValue;
+        public AmmoEffectType Type => _Type_IsSet ? (AmmoEffectType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        #endregion
+        #region Operation
+        private int _OperationLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Operation_IsSet => _DATALocation.HasValue;
+        public AmmoEffectOperation Operation => _Operation_IsSet ? (AmmoEffectOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OperationLocation, 0x4)) : default;
+        #endregion
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public Single Value => _Value_IsSet ? _recordData.Slice(_ValueLocation, 4).Float() : default(Single);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +1693,39 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)AmmoEffect_FieldIndex.Name;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)AmmoEffect_FieldIndex.Value;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

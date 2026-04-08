@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ModelCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ModelCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1137,11 +1137,11 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModelGetter obj, bool iterateNestedRecords = true)
         {
             if (obj.AlternateTextures is {} AlternateTexturesItem)
             {
-                foreach (var item in AlternateTexturesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in AlternateTexturesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ModelCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ModelCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

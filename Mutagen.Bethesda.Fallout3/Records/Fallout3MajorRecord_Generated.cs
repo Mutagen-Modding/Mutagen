@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, Cell, Class, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MagicEffect, MenuIcon, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType, Water, LandscapeTexture, TalkingActivator, Terminal, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, CombatStyle, Container, Creature, Door, FormList, Furniture, Grass, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, Key, LeveledCreature, LeveledNpc, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, Package, PlaceableWater, Script, Spell, Static, StaticCollection, Tree, Weapon, Quest, DialogTopic, Note, ItemMod, Projectile, LeveledItem]
+    /// Implemented by: [AcousticSpace, Activator, ActorValueInformation, AddonNode, AmmoEffect, Ammunition, AnimatedObject, Armor, ArmorAddon, BodyPartData, Book, CameraPath, CameraShot, CaravanCard, CaravanDeck, CaravanMoney, Casino, CasinoChip, Cell, Challenge, Class, Climate, CombatStyle, ConstructibleObject, Container, Creature, Debris, DefaultObjectManager, DehydrationStage, DialogResponses, DialogTopic, Door, EffectShader, EncounterZone, Explosion, Eye, Eyes, Faction, FormList, Furniture, GameSetting, Global, Grass, Hair, HeadPart, HungerStage, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, Landscape, LandscapeTexture, LeveledCreature, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, LoadScreenType, MagicEffect, MediaLocationController, MediaSet, MenuIcon, Message, MiscItem, MoveableStatic, MusicType, NavigationMesh, NavigationMeshInfoMap, Note, Npc, ObjectEffect, Package, Perk, PlaceableWater, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Projectile, Quest, Race, RadiationStage, Ragdoll, Recipe, RecipeCategory, Region, Reputation, Script, SleepDeprivationStage, Sound, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, VoiceType, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout3MajorRecordCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout3MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public Fallout3MajorRecord(
             FormKey formKey,
@@ -455,8 +455,10 @@ namespace Mutagen.Bethesda.Fallout3
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        #pragma warning disable CS0618 // Type or member is obsolete
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        #pragma warning restore CS0618
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
@@ -534,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, Cell, Class, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MagicEffect, MenuIcon, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType, Water, LandscapeTexture, TalkingActivator, Terminal, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, CombatStyle, Container, Creature, Door, FormList, Furniture, Grass, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, Key, LeveledCreature, LeveledNpc, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, Package, PlaceableWater, Script, Spell, Static, StaticCollection, Tree, Weapon, Quest, DialogTopic, Note, ItemMod, Projectile, LeveledItem]
+    /// Implemented by: [AcousticSpace, Activator, ActorValueInformation, AddonNode, AmmoEffect, Ammunition, AnimatedObject, Armor, ArmorAddon, BodyPartData, Book, CameraPath, CameraShot, CaravanCard, CaravanDeck, CaravanMoney, Casino, CasinoChip, Cell, Challenge, Class, Climate, CombatStyle, ConstructibleObject, Container, Creature, Debris, DefaultObjectManager, DehydrationStage, DialogResponses, DialogTopic, Door, EffectShader, EncounterZone, Explosion, Eye, Eyes, Faction, FormList, Furniture, GameSetting, Global, Grass, Hair, HeadPart, HungerStage, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, Landscape, LandscapeTexture, LeveledCreature, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, LoadScreenType, MagicEffect, MediaLocationController, MediaSet, MenuIcon, Message, MiscItem, MoveableStatic, MusicType, NavigationMesh, NavigationMeshInfoMap, Note, Npc, ObjectEffect, Package, Perk, PlaceableWater, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Projectile, Quest, Race, RadiationStage, Ragdoll, Recipe, RecipeCategory, Region, Reputation, Script, SleepDeprivationStage, Sound, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, VoiceType, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -557,7 +559,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, Cell, Class, Debris, EffectShader, Explosion, Eye, Eyes, Faction, GameSetting, Global, Hair, HeadPart, MagicEffect, MenuIcon, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Race, Region, Sound, TextureSet, VoiceType, Water, LandscapeTexture, TalkingActivator, Terminal, AmmoEffect, Ammunition, Armor, BodyPartData, Book, CaravanCard, CaravanMoney, CasinoChip, CombatStyle, Container, Creature, Door, FormList, Furniture, Grass, IdleAnimation, IdleMarker, ImpactDataSet, Ingestible, Ingredient, Key, LeveledCreature, LeveledNpc, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, Package, PlaceableWater, Script, Spell, Static, StaticCollection, Tree, Weapon, Quest, DialogTopic, Note, ItemMod, Projectile, LeveledItem]
+    /// Implemented by: [AcousticSpace, Activator, ActorValueInformation, AddonNode, AmmoEffect, Ammunition, AnimatedObject, Armor, ArmorAddon, BodyPartData, Book, CameraPath, CameraShot, CaravanCard, CaravanDeck, CaravanMoney, Casino, CasinoChip, Cell, Challenge, Class, Climate, CombatStyle, ConstructibleObject, Container, Creature, Debris, DefaultObjectManager, DehydrationStage, DialogResponses, DialogTopic, Door, EffectShader, EncounterZone, Explosion, Eye, Eyes, Faction, FormList, Furniture, GameSetting, Global, Grass, Hair, HeadPart, HungerStage, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, ItemMod, Key, Landscape, LandscapeTexture, LeveledCreature, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, LoadScreenType, MagicEffect, MediaLocationController, MediaSet, MenuIcon, Message, MiscItem, MoveableStatic, MusicType, NavigationMesh, NavigationMeshInfoMap, Note, Npc, ObjectEffect, Package, Perk, PlaceableWater, PlacedBeam, PlacedCreature, PlacedGrenade, PlacedMissile, PlacedNpc, PlacedObject, Projectile, Quest, Race, RadiationStage, Ragdoll, Recipe, RecipeCategory, Region, Reputation, Script, SleepDeprivationStage, Sound, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, VoiceType, Water, Weapon, Weather, Worldspace]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,
@@ -1112,6 +1114,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
+        #pragma warning disable CS0618 // Type or member is obsolete
         public virtual void Remove(
             IFallout3MajorRecordInternal obj,
             HashSet<FormKey> keys)
@@ -1147,6 +1150,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
+        #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3MajorRecord obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
@@ -1360,9 +1364,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3MajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3MajorRecordGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1743,7 +1747,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout3MajorRecordCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();

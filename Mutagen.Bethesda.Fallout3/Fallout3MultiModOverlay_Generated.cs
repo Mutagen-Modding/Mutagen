@@ -71,8 +71,46 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IIngestibleGetter>? _ingestibles;
     private MergedGroup<IIdleMarkerGetter>? _idleMarkers;
     private MergedGroup<INoteGetter>? _notes;
+    private MergedGroup<IConstructibleObjectGetter>? _constructibleObjects;
     private MergedGroup<IProjectileGetter>? _projectiles;
     private MergedGroup<ILeveledItemGetter>? _leveledItems;
+    private MergedGroup<IWeatherGetter>? _weather;
+    private MergedGroup<IClimateGetter>? _climates;
+    private MergedGroup<IRegionGetter>? _regions;
+    private MergedGroup<INavigationMeshInfoMapGetter>? _navigationMeshInfoMaps;
+    private MergedListGroup? _cells;
+    private MergedGroup<IWorldspaceGetter>? _worldspaces;
+    private MergedGroup<IDialogTopicGetter>? _dialogTopics;
+    private MergedGroup<IQuestGetter>? _quests;
+    private MergedGroup<IIdleAnimationGetter>? _idleAnimations;
+    private MergedGroup<IPackageGetter>? _packages;
+    private MergedGroup<ICombatStyleGetter>? _combatStyles;
+    private MergedGroup<ILoadScreenGetter>? _loadScreens;
+    private MergedGroup<IAnimatedObjectGetter>? _animatedObjects;
+    private MergedGroup<IWaterGetter>? _waters;
+    private MergedGroup<IEffectShaderGetter>? _effectShaders;
+    private MergedGroup<IExplosionGetter>? _explosions;
+    private MergedGroup<IDebrisGetter>? _debris;
+    private MergedGroup<IImageSpaceGetter>? _imageSpaces;
+    private MergedGroup<IImageSpaceAdapterGetter>? _imageSpaceAdapters;
+    private MergedGroup<IMessageGetter>? _messages;
+    private MergedGroup<IPerkGetter>? _perks;
+    private MergedGroup<IBodyPartDataGetter>? _bodyParts;
+    private MergedGroup<IAddonNodeGetter>? _addonNodes;
+    private MergedGroup<IActorValueInformationGetter>? _actorValueInformation;
+    private MergedGroup<IRadiationStageGetter>? _radiationStages;
+    private MergedGroup<ICameraShotGetter>? _cameraShots;
+    private MergedGroup<ICameraPathGetter>? _cameraPaths;
+    private MergedGroup<IVoiceTypeGetter>? _voiceTypes;
+    private MergedGroup<IImpactGetter>? _impacts;
+    private MergedGroup<IImpactDataSetGetter>? _impactDataSets;
+    private MergedGroup<IArmorAddonGetter>? _armorAddons;
+    private MergedGroup<IEncounterZoneGetter>? _encounterZones;
+    private MergedGroup<IRagdollGetter>? _ragdolls;
+    private MergedGroup<IDefaultObjectManagerGetter>? _defaultObjectManagers;
+    private MergedGroup<ILightingTemplateGetter>? _lightingTemplates;
+    private MergedGroup<IMusicTypeGetter>? _musicTypes;
+    private MergedGroup<IFormListGetter>? _formLists;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -240,12 +278,125 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<INoteGetter> Notes =>
         _notes ??= new MergedGroup<INoteGetter>(
             _sourceMods.Select(m => m.Notes));
+    public IFallout3GroupGetter<IConstructibleObjectGetter> ConstructibleObjects =>
+        _constructibleObjects ??= new MergedGroup<IConstructibleObjectGetter>(
+            _sourceMods.Select(m => m.ConstructibleObjects));
     public IFallout3GroupGetter<IProjectileGetter> Projectiles =>
         _projectiles ??= new MergedGroup<IProjectileGetter>(
             _sourceMods.Select(m => m.Projectiles));
     public IFallout3GroupGetter<ILeveledItemGetter> LeveledItems =>
         _leveledItems ??= new MergedGroup<ILeveledItemGetter>(
             _sourceMods.Select(m => m.LeveledItems));
+    public IFallout3GroupGetter<IWeatherGetter> Weather =>
+        _weather ??= new MergedGroup<IWeatherGetter>(
+            _sourceMods.Select(m => m.Weather));
+    public IFallout3GroupGetter<IClimateGetter> Climates =>
+        _climates ??= new MergedGroup<IClimateGetter>(
+            _sourceMods.Select(m => m.Climates));
+    public IFallout3GroupGetter<IRegionGetter> Regions =>
+        _regions ??= new MergedGroup<IRegionGetter>(
+            _sourceMods.Select(m => m.Regions));
+    public IFallout3GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps =>
+        _navigationMeshInfoMaps ??= new MergedGroup<INavigationMeshInfoMapGetter>(
+            _sourceMods.Select(m => m.NavigationMeshInfoMaps));
+    public IFallout3ListGroupGetter<ICellBlockGetter> Cells =>
+        _cells ??= new MergedListGroup(_sourceMods.Select(m => m.Cells));
+    public IFallout3GroupGetter<IWorldspaceGetter> Worldspaces =>
+        _worldspaces ??= new MergedGroup<IWorldspaceGetter>(
+            _sourceMods.Select(m => m.Worldspaces), allowDuplicateOverrides: true);
+    public IFallout3GroupGetter<IDialogTopicGetter> DialogTopics =>
+        _dialogTopics ??= new MergedGroup<IDialogTopicGetter>(
+            _sourceMods.Select(m => m.DialogTopics), allowDuplicateOverrides: true);
+    public IFallout3GroupGetter<IQuestGetter> Quests =>
+        _quests ??= new MergedGroup<IQuestGetter>(
+            _sourceMods.Select(m => m.Quests));
+    public IFallout3GroupGetter<IIdleAnimationGetter> IdleAnimations =>
+        _idleAnimations ??= new MergedGroup<IIdleAnimationGetter>(
+            _sourceMods.Select(m => m.IdleAnimations));
+    public IFallout3GroupGetter<IPackageGetter> Packages =>
+        _packages ??= new MergedGroup<IPackageGetter>(
+            _sourceMods.Select(m => m.Packages));
+    public IFallout3GroupGetter<ICombatStyleGetter> CombatStyles =>
+        _combatStyles ??= new MergedGroup<ICombatStyleGetter>(
+            _sourceMods.Select(m => m.CombatStyles));
+    public IFallout3GroupGetter<ILoadScreenGetter> LoadScreens =>
+        _loadScreens ??= new MergedGroup<ILoadScreenGetter>(
+            _sourceMods.Select(m => m.LoadScreens));
+    public IFallout3GroupGetter<IAnimatedObjectGetter> AnimatedObjects =>
+        _animatedObjects ??= new MergedGroup<IAnimatedObjectGetter>(
+            _sourceMods.Select(m => m.AnimatedObjects));
+    public IFallout3GroupGetter<IWaterGetter> Waters =>
+        _waters ??= new MergedGroup<IWaterGetter>(
+            _sourceMods.Select(m => m.Waters));
+    public IFallout3GroupGetter<IEffectShaderGetter> EffectShaders =>
+        _effectShaders ??= new MergedGroup<IEffectShaderGetter>(
+            _sourceMods.Select(m => m.EffectShaders));
+    public IFallout3GroupGetter<IExplosionGetter> Explosions =>
+        _explosions ??= new MergedGroup<IExplosionGetter>(
+            _sourceMods.Select(m => m.Explosions));
+    public IFallout3GroupGetter<IDebrisGetter> Debris =>
+        _debris ??= new MergedGroup<IDebrisGetter>(
+            _sourceMods.Select(m => m.Debris));
+    public IFallout3GroupGetter<IImageSpaceGetter> ImageSpaces =>
+        _imageSpaces ??= new MergedGroup<IImageSpaceGetter>(
+            _sourceMods.Select(m => m.ImageSpaces));
+    public IFallout3GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters =>
+        _imageSpaceAdapters ??= new MergedGroup<IImageSpaceAdapterGetter>(
+            _sourceMods.Select(m => m.ImageSpaceAdapters));
+    public IFallout3GroupGetter<IMessageGetter> Messages =>
+        _messages ??= new MergedGroup<IMessageGetter>(
+            _sourceMods.Select(m => m.Messages));
+    public IFallout3GroupGetter<IPerkGetter> Perks =>
+        _perks ??= new MergedGroup<IPerkGetter>(
+            _sourceMods.Select(m => m.Perks));
+    public IFallout3GroupGetter<IBodyPartDataGetter> BodyParts =>
+        _bodyParts ??= new MergedGroup<IBodyPartDataGetter>(
+            _sourceMods.Select(m => m.BodyParts));
+    public IFallout3GroupGetter<IAddonNodeGetter> AddonNodes =>
+        _addonNodes ??= new MergedGroup<IAddonNodeGetter>(
+            _sourceMods.Select(m => m.AddonNodes));
+    public IFallout3GroupGetter<IActorValueInformationGetter> ActorValueInformation =>
+        _actorValueInformation ??= new MergedGroup<IActorValueInformationGetter>(
+            _sourceMods.Select(m => m.ActorValueInformation));
+    public IFallout3GroupGetter<IRadiationStageGetter> RadiationStages =>
+        _radiationStages ??= new MergedGroup<IRadiationStageGetter>(
+            _sourceMods.Select(m => m.RadiationStages));
+    public IFallout3GroupGetter<ICameraShotGetter> CameraShots =>
+        _cameraShots ??= new MergedGroup<ICameraShotGetter>(
+            _sourceMods.Select(m => m.CameraShots));
+    public IFallout3GroupGetter<ICameraPathGetter> CameraPaths =>
+        _cameraPaths ??= new MergedGroup<ICameraPathGetter>(
+            _sourceMods.Select(m => m.CameraPaths));
+    public IFallout3GroupGetter<IVoiceTypeGetter> VoiceTypes =>
+        _voiceTypes ??= new MergedGroup<IVoiceTypeGetter>(
+            _sourceMods.Select(m => m.VoiceTypes));
+    public IFallout3GroupGetter<IImpactGetter> Impacts =>
+        _impacts ??= new MergedGroup<IImpactGetter>(
+            _sourceMods.Select(m => m.Impacts));
+    public IFallout3GroupGetter<IImpactDataSetGetter> ImpactDataSets =>
+        _impactDataSets ??= new MergedGroup<IImpactDataSetGetter>(
+            _sourceMods.Select(m => m.ImpactDataSets));
+    public IFallout3GroupGetter<IArmorAddonGetter> ArmorAddons =>
+        _armorAddons ??= new MergedGroup<IArmorAddonGetter>(
+            _sourceMods.Select(m => m.ArmorAddons));
+    public IFallout3GroupGetter<IEncounterZoneGetter> EncounterZones =>
+        _encounterZones ??= new MergedGroup<IEncounterZoneGetter>(
+            _sourceMods.Select(m => m.EncounterZones));
+    public IFallout3GroupGetter<IRagdollGetter> Ragdolls =>
+        _ragdolls ??= new MergedGroup<IRagdollGetter>(
+            _sourceMods.Select(m => m.Ragdolls));
+    public IFallout3GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers =>
+        _defaultObjectManagers ??= new MergedGroup<IDefaultObjectManagerGetter>(
+            _sourceMods.Select(m => m.DefaultObjectManagers));
+    public IFallout3GroupGetter<ILightingTemplateGetter> LightingTemplates =>
+        _lightingTemplates ??= new MergedGroup<ILightingTemplateGetter>(
+            _sourceMods.Select(m => m.LightingTemplates));
+    public IFallout3GroupGetter<IMusicTypeGetter> MusicTypes =>
+        _musicTypes ??= new MergedGroup<IMusicTypeGetter>(
+            _sourceMods.Select(m => m.MusicTypes));
+    public IFallout3GroupGetter<IFormListGetter> FormLists =>
+        _formLists ??= new MergedGroup<IFormListGetter>(
+            _sourceMods.Select(m => m.FormLists));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);
@@ -264,11 +415,11 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
         }
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var mod in _sourceMods)
         {
-            foreach (var link in mod.EnumerateFormLinks())
+            foreach (var link in mod.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return link;
             }
@@ -277,33 +428,45 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords())
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords())
             {
-                yield return record;
+                if (seen.Add(record.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
 
     public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords<T>(throwIfUnknown))
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords<T>(throwIfUnknown))
             {
-                yield return record;
+                if (record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var record in mod.EnumerateMajorRecords(type, throwIfUnknown))
+            foreach (var record in _sourceMods[i].EnumerateMajorRecords(type, throwIfUnknown))
             {
-                yield return record;
+                if (seen.Add(record.FormKey))
+                {
+                    yield return record;
+                }
             }
         }
     }
@@ -447,17 +610,20 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
 /// <summary>
 /// Merged group that combines multiple groups into a single unified view.
 /// Validates no duplicate FormKeys exist and caches results.
+/// When allowDuplicateOverrides is true, duplicate FormKeys are allowed and the later copy wins.
 /// </summary>
 internal class MergedGroup<TGetter> : IFallout3GroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>
     where TGetter : class, IFallout3MajorRecordGetter, IBinaryItem
 {
     private readonly IEnumerable<IGroupGetter<TGetter>> _sourceGroups;
+    private readonly bool _allowDuplicateOverrides;
     private Dictionary<FormKey, TGetter>? _cache;
     private readonly object _cacheLock = new object();
 
-    public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups)
+    public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups, bool allowDuplicateOverrides = false)
     {
         _sourceGroups = sourceGroups;
+        _allowDuplicateOverrides = allowDuplicateOverrides;
     }
 
     private Dictionary<FormKey, TGetter> Cache
@@ -477,9 +643,18 @@ internal class MergedGroup<TGetter> : IFallout3GroupGetter<TGetter>, IReadOnlyCa
                     {
                         if (!cache.TryAdd(record.FormKey, record))
                         {
-                            throw new SplitModException(
-                                $"Duplicate FormKey {record.FormKey} found in split mods. " +
-                                "This indicates corruption or an error in the splitting logic.");
+                            if (_allowDuplicateOverrides)
+                            {
+                                // Parent record duplicated across split files;
+                                // use the later copy following override rules.
+                                cache[record.FormKey] = record;
+                            }
+                            else
+                            {
+                                throw new SplitModException(
+                                    $"Duplicate FormKey {record.FormKey} found in split mods. " +
+                                    "This indicates corruption or an error in the splitting logic.");
+                            }
                         }
                     }
                 }
@@ -538,13 +713,13 @@ internal class MergedGroup<TGetter> : IFallout3GroupGetter<TGetter>, IReadOnlyCa
 
     object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException("Merged groups do not support binary writing.");
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var record in Cache.Values)
         {
             if (record is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }
@@ -740,13 +915,13 @@ internal class MergedListGroup : IFallout3ListGroupGetter<ICellBlockGetter>
 
     object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException("Merged groups do not support binary writing.");
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var block in Cache)
         {
             if (block is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }
@@ -873,13 +1048,13 @@ internal class MergedCellBlock : ICellBlockGetter
         }
     }
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
     {
         foreach (var subBlock in SubBlocks)
         {
             if (subBlock is IFormLinkContainerGetter formLinkContainer)
             {
-                foreach (var link in formLinkContainer.EnumerateFormLinks())
+                foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return link;
                 }

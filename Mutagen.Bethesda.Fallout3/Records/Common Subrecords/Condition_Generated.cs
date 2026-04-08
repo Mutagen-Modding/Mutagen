@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public Condition.VersioningBreaks Versioning { get; set; } = default(Condition.VersioningBreaks);
+        #endregion
         #region CompareOperator
         public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
         #endregion
@@ -132,6 +135,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.CompareOperator = initialValue;
                 this.Flags = initialValue;
                 this.Fluff = initialValue;
@@ -144,6 +148,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
             public Mask(
+                TItem Versioning,
                 TItem CompareOperator,
                 TItem Flags,
                 TItem Fluff,
@@ -154,6 +159,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem RunOnType,
                 TItem Reference)
             {
+                this.Versioning = Versioning;
                 this.CompareOperator = CompareOperator;
                 this.Flags = Flags;
                 this.Fluff = Fluff;
@@ -174,6 +180,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem CompareOperator;
             public TItem Flags;
             public TItem Fluff;
@@ -195,6 +202,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
@@ -209,6 +217,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.CompareOperator);
                 hash.Add(this.Flags);
                 hash.Add(this.Fluff);
@@ -226,6 +235,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.CompareOperator)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Fluff)) return false;
@@ -242,6 +252,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.CompareOperator)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Fluff)) return true;
@@ -265,6 +276,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.CompareOperator = eval(this.CompareOperator);
                 obj.Flags = eval(this.Flags);
                 obj.Fluff = eval(this.Fluff);
@@ -292,6 +304,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Condition.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.CompareOperator ?? true)
                     {
                         sb.AppendItem(CompareOperator, "CompareOperator");
@@ -352,6 +368,7 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? CompareOperator;
             public Exception? Flags;
             public Exception? Fluff;
@@ -369,6 +386,8 @@ namespace Mutagen.Bethesda.Fallout3
                 Condition_FieldIndex enu = (Condition_FieldIndex)index;
                 switch (enu)
                 {
+                    case Condition_FieldIndex.Versioning:
+                        return Versioning;
                     case Condition_FieldIndex.CompareOperator:
                         return CompareOperator;
                     case Condition_FieldIndex.Flags:
@@ -397,6 +416,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Condition_FieldIndex enu = (Condition_FieldIndex)index;
                 switch (enu)
                 {
+                    case Condition_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case Condition_FieldIndex.CompareOperator:
                         this.CompareOperator = ex;
                         break;
@@ -434,6 +456,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Condition_FieldIndex enu = (Condition_FieldIndex)index;
                 switch (enu)
                 {
+                    case Condition_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case Condition_FieldIndex.CompareOperator:
                         this.CompareOperator = (Exception?)obj;
                         break;
@@ -469,6 +494,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (CompareOperator != null) return true;
                 if (Flags != null) return true;
                 if (Fluff != null) return true;
@@ -504,6 +530,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(CompareOperator, "CompareOperator");
                 }
                 {
@@ -538,6 +567,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Fluff = this.Fluff.Combine(rhs.Fluff);
@@ -570,6 +600,7 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool CompareOperator;
             public bool Flags;
             public bool Fluff;
@@ -588,6 +619,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.CompareOperator = defaultOn;
                 this.Flags = defaultOn;
                 this.Fluff = defaultOn;
@@ -612,6 +644,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((CompareOperator, null));
                 ret.Add((Flags, null));
                 ret.Add((Fluff, null));
@@ -632,7 +665,13 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionCommon.Instance.EnumerateFormLinks(this);
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1,
+            Break1 = 2
+        }
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ConditionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -699,6 +738,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<ICondition>
     {
+        new Condition.VersioningBreaks Versioning { get; set; }
         new CompareOperator CompareOperator { get; set; }
         new Condition.Flag Flags { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
@@ -723,6 +763,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Condition_Registration.Instance;
+        Condition.VersioningBreaks Versioning { get; }
         CompareOperator CompareOperator { get; }
         Condition.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
@@ -901,15 +942,16 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum Condition_FieldIndex
     {
-        CompareOperator = 0,
-        Flags = 1,
-        Fluff = 2,
-        ComparisonValue = 3,
-        Function = 4,
-        FirstParameter = 5,
-        SecondParameter = 6,
-        RunOnType = 7,
-        Reference = 8,
+        Versioning = 0,
+        CompareOperator = 1,
+        Flags = 2,
+        Fluff = 3,
+        ComparisonValue = 4,
+        Function = 5,
+        FirstParameter = 6,
+        SecondParameter = 7,
+        RunOnType = 8,
+        Reference = 9,
     }
     #endregion
 
@@ -920,9 +962,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Condition.Mask<>);
 
@@ -995,6 +1037,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICondition item)
         {
             ClearPartial();
+            item.Versioning = default(Condition.VersioningBreaks);
             item.CompareOperator = default(CompareOperator);
             item.Flags = default(Condition.Flag);
             item.Fluff = new byte[3];
@@ -1058,6 +1101,7 @@ namespace Mutagen.Bethesda.Fallout3
             Condition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
@@ -1111,6 +1155,10 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             Condition.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.CompareOperator ?? true)
             {
                 sb.AppendItem(item.CompareOperator, "CompareOperator");
@@ -1156,6 +1204,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)Condition_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
             {
                 if (lhs.CompareOperator != rhs.CompareOperator) return false;
@@ -1198,6 +1250,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IConditionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.CompareOperator);
             hash.Add(item.Flags);
             hash.Add(item.Fluff);
@@ -1219,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
@@ -1240,6 +1293,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
             {
                 item.CompareOperator = rhs.CompareOperator;
@@ -1268,10 +1325,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.SecondParameter = rhs.SecondParameter;
             }
+            if (rhs.Versioning.HasFlag(Condition.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.RunOnType) ?? true))
             {
                 item.RunOnType = rhs.RunOnType;
             }
+            if (rhs.Versioning.HasFlag(Condition.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.Reference) ?? true))
             {
                 item.Reference.SetTo(rhs.Reference.FormKey);
@@ -1399,13 +1458,19 @@ namespace Mutagen.Bethesda.Fallout3
                 length: 4);
             writer.Write(item.FirstParameter);
             writer.Write(item.SecondParameter);
-            EnumBinaryTranslation<Condition.RunOn, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.RunOnType,
-                length: 4);
-            FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Reference);
+            if (!item.Versioning.HasFlag(Condition.VersioningBreaks.Break0))
+            {
+                EnumBinaryTranslation<Condition.RunOn, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.RunOnType,
+                    length: 4);
+                if (!item.Versioning.HasFlag(Condition.VersioningBreaks.Break1))
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Reference);
+                }
+            }
         }
 
         public static partial void WriteBinaryInitialParserCustom(
@@ -1469,9 +1534,19 @@ namespace Mutagen.Bethesda.Fallout3
                 length: 4);
             item.FirstParameter = frame.ReadInt32();
             item.SecondParameter = frame.ReadInt32();
+            if (frame.Complete)
+            {
+                item.Versioning |= Condition.VersioningBreaks.Break0;
+                return;
+            }
             item.RunOnType = EnumBinaryTranslation<Condition.RunOn, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
+            if (frame.Complete)
+            {
+                item.Versioning |= Condition.VersioningBreaks.Break1;
+                return;
+            }
             item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1528,7 +1603,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ConditionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1543,6 +1618,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public Condition.VersioningBreaks Versioning { get; private set; }
         #region InitialParser
         partial void InitialParserCustomParse(
             OverlayStream stream,
@@ -1553,8 +1629,8 @@ namespace Mutagen.Bethesda.Fallout3
         public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
-        public Condition.RunOn RunOnType => (Condition.RunOn)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x14, 0x4));
-        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x18, 0x4));
+        public Condition.RunOn RunOnType => _structData.Span.Length <= 0x14 ? default : (Condition.RunOn)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x14, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => _structData.Length <= 0x18 ? FormLink<IPlacedGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x18, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1586,7 +1662,14 @@ namespace Mutagen.Bethesda.Fallout3
             var ret = new ConditionBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x1C + package.MetaData.Constants.SubConstants.HeaderLength;
+            if (ret._structData.Length <= 0x14)
+            {
+                ret.Versioning |= Condition.VersioningBreaks.Break0;
+            }
+            if (ret._structData.Length <= 0x18)
+            {
+                ret.Versioning |= Condition.VersioningBreaks.Break1;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

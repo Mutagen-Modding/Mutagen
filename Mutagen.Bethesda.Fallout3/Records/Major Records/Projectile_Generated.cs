@@ -251,44 +251,8 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
         #endregion
-        #region RotationX
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RotationX;
-        public Single RotationX
-        {
-            get => this._RotationX;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._RotationX = value;
-            }
-        }
-        #endregion
-        #region RotationY
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RotationY;
-        public Single RotationY
-        {
-            get => this._RotationY;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._RotationY = value;
-            }
-        }
-        #endregion
-        #region RotationZ
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RotationZ;
-        public Single RotationZ
-        {
-            get => this._RotationZ;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._RotationZ = value;
-            }
-        }
+        #region Rotation
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region BouncyMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -370,9 +334,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CountdownSound = initialValue;
                 this.DisableSound = initialValue;
                 this.DefaultWeaponSource = initialValue;
-                this.RotationX = initialValue;
-                this.RotationY = initialValue;
-                this.RotationZ = initialValue;
+                this.Rotation = initialValue;
                 this.BouncyMult = initialValue;
                 this.MuzzleFlashModel = initialValue;
                 this.MuzzleFlashModelTextureHashes = initialValue;
@@ -410,9 +372,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CountdownSound,
                 TItem DisableSound,
                 TItem DefaultWeaponSource,
-                TItem RotationX,
-                TItem RotationY,
-                TItem RotationZ,
+                TItem Rotation,
                 TItem BouncyMult,
                 TItem MuzzleFlashModel,
                 TItem MuzzleFlashModelTextureHashes,
@@ -449,9 +409,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CountdownSound = CountdownSound;
                 this.DisableSound = DisableSound;
                 this.DefaultWeaponSource = DefaultWeaponSource;
-                this.RotationX = RotationX;
-                this.RotationY = RotationY;
-                this.RotationZ = RotationZ;
+                this.Rotation = Rotation;
                 this.BouncyMult = BouncyMult;
                 this.MuzzleFlashModel = MuzzleFlashModel;
                 this.MuzzleFlashModelTextureHashes = MuzzleFlashModelTextureHashes;
@@ -490,9 +448,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem CountdownSound;
             public TItem DisableSound;
             public TItem DefaultWeaponSource;
-            public TItem RotationX;
-            public TItem RotationY;
-            public TItem RotationZ;
+            public TItem Rotation;
             public TItem BouncyMult;
             public TItem MuzzleFlashModel;
             public TItem MuzzleFlashModelTextureHashes;
@@ -533,9 +489,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CountdownSound, rhs.CountdownSound)) return false;
                 if (!object.Equals(this.DisableSound, rhs.DisableSound)) return false;
                 if (!object.Equals(this.DefaultWeaponSource, rhs.DefaultWeaponSource)) return false;
-                if (!object.Equals(this.RotationX, rhs.RotationX)) return false;
-                if (!object.Equals(this.RotationY, rhs.RotationY)) return false;
-                if (!object.Equals(this.RotationZ, rhs.RotationZ)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 if (!object.Equals(this.BouncyMult, rhs.BouncyMult)) return false;
                 if (!object.Equals(this.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
                 if (!object.Equals(this.MuzzleFlashModelTextureHashes, rhs.MuzzleFlashModelTextureHashes)) return false;
@@ -568,9 +522,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CountdownSound);
                 hash.Add(this.DisableSound);
                 hash.Add(this.DefaultWeaponSource);
-                hash.Add(this.RotationX);
-                hash.Add(this.RotationY);
-                hash.Add(this.RotationZ);
+                hash.Add(this.Rotation);
                 hash.Add(this.BouncyMult);
                 hash.Add(this.MuzzleFlashModel);
                 hash.Add(this.MuzzleFlashModelTextureHashes);
@@ -620,9 +572,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.CountdownSound)) return false;
                 if (!eval(this.DisableSound)) return false;
                 if (!eval(this.DefaultWeaponSource)) return false;
-                if (!eval(this.RotationX)) return false;
-                if (!eval(this.RotationY)) return false;
-                if (!eval(this.RotationZ)) return false;
+                if (!eval(this.Rotation)) return false;
                 if (!eval(this.BouncyMult)) return false;
                 if (!eval(this.MuzzleFlashModel)) return false;
                 if (!eval(this.MuzzleFlashModelTextureHashes)) return false;
@@ -670,9 +620,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.CountdownSound)) return true;
                 if (eval(this.DisableSound)) return true;
                 if (eval(this.DefaultWeaponSource)) return true;
-                if (eval(this.RotationX)) return true;
-                if (eval(this.RotationY)) return true;
-                if (eval(this.RotationZ)) return true;
+                if (eval(this.Rotation)) return true;
                 if (eval(this.BouncyMult)) return true;
                 if (eval(this.MuzzleFlashModel)) return true;
                 if (eval(this.MuzzleFlashModelTextureHashes)) return true;
@@ -715,9 +663,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.CountdownSound = eval(this.CountdownSound);
                 obj.DisableSound = eval(this.DisableSound);
                 obj.DefaultWeaponSource = eval(this.DefaultWeaponSource);
-                obj.RotationX = eval(this.RotationX);
-                obj.RotationY = eval(this.RotationY);
-                obj.RotationZ = eval(this.RotationZ);
+                obj.Rotation = eval(this.Rotation);
                 obj.BouncyMult = eval(this.BouncyMult);
                 obj.MuzzleFlashModel = eval(this.MuzzleFlashModel);
                 obj.MuzzleFlashModelTextureHashes = eval(this.MuzzleFlashModelTextureHashes);
@@ -829,17 +775,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
                     }
-                    if (printMask?.RotationX ?? true)
+                    if (printMask?.Rotation ?? true)
                     {
-                        sb.AppendItem(RotationX, "RotationX");
-                    }
-                    if (printMask?.RotationY ?? true)
-                    {
-                        sb.AppendItem(RotationY, "RotationY");
-                    }
-                    if (printMask?.RotationZ ?? true)
-                    {
-                        sb.AppendItem(RotationZ, "RotationZ");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                     if (printMask?.BouncyMult ?? true)
                     {
@@ -894,9 +832,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? CountdownSound;
             public Exception? DisableSound;
             public Exception? DefaultWeaponSource;
-            public Exception? RotationX;
-            public Exception? RotationY;
-            public Exception? RotationZ;
+            public Exception? Rotation;
             public Exception? BouncyMult;
             public Exception? MuzzleFlashModel;
             public Exception? MuzzleFlashModelTextureHashes;
@@ -954,12 +890,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return DisableSound;
                     case Projectile_FieldIndex.DefaultWeaponSource:
                         return DefaultWeaponSource;
-                    case Projectile_FieldIndex.RotationX:
-                        return RotationX;
-                    case Projectile_FieldIndex.RotationY:
-                        return RotationY;
-                    case Projectile_FieldIndex.RotationZ:
-                        return RotationZ;
+                    case Projectile_FieldIndex.Rotation:
+                        return Rotation;
                     case Projectile_FieldIndex.BouncyMult:
                         return BouncyMult;
                     case Projectile_FieldIndex.MuzzleFlashModel:
@@ -1046,14 +978,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Projectile_FieldIndex.DefaultWeaponSource:
                         this.DefaultWeaponSource = ex;
                         break;
-                    case Projectile_FieldIndex.RotationX:
-                        this.RotationX = ex;
-                        break;
-                    case Projectile_FieldIndex.RotationY:
-                        this.RotationY = ex;
-                        break;
-                    case Projectile_FieldIndex.RotationZ:
-                        this.RotationZ = ex;
+                    case Projectile_FieldIndex.Rotation:
+                        this.Rotation = ex;
                         break;
                     case Projectile_FieldIndex.BouncyMult:
                         this.BouncyMult = ex;
@@ -1147,14 +1073,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Projectile_FieldIndex.DefaultWeaponSource:
                         this.DefaultWeaponSource = (Exception?)obj;
                         break;
-                    case Projectile_FieldIndex.RotationX:
-                        this.RotationX = (Exception?)obj;
-                        break;
-                    case Projectile_FieldIndex.RotationY:
-                        this.RotationY = (Exception?)obj;
-                        break;
-                    case Projectile_FieldIndex.RotationZ:
-                        this.RotationZ = (Exception?)obj;
+                    case Projectile_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
                         break;
                     case Projectile_FieldIndex.BouncyMult:
                         this.BouncyMult = (Exception?)obj;
@@ -1202,9 +1122,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CountdownSound != null) return true;
                 if (DisableSound != null) return true;
                 if (DefaultWeaponSource != null) return true;
-                if (RotationX != null) return true;
-                if (RotationY != null) return true;
-                if (RotationZ != null) return true;
+                if (Rotation != null) return true;
                 if (BouncyMult != null) return true;
                 if (MuzzleFlashModel != null) return true;
                 if (MuzzleFlashModelTextureHashes != null) return true;
@@ -1297,13 +1215,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
                 }
                 {
-                    sb.AppendItem(RotationX, "RotationX");
-                }
-                {
-                    sb.AppendItem(RotationY, "RotationY");
-                }
-                {
-                    sb.AppendItem(RotationZ, "RotationZ");
+                    sb.AppendItem(Rotation, "Rotation");
                 }
                 {
                     sb.AppendItem(BouncyMult, "BouncyMult");
@@ -1350,9 +1262,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CountdownSound = this.CountdownSound.Combine(rhs.CountdownSound);
                 ret.DisableSound = this.DisableSound.Combine(rhs.DisableSound);
                 ret.DefaultWeaponSource = this.DefaultWeaponSource.Combine(rhs.DefaultWeaponSource);
-                ret.RotationX = this.RotationX.Combine(rhs.RotationX);
-                ret.RotationY = this.RotationY.Combine(rhs.RotationY);
-                ret.RotationZ = this.RotationZ.Combine(rhs.RotationZ);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.BouncyMult = this.BouncyMult.Combine(rhs.BouncyMult);
                 ret.MuzzleFlashModel = this.MuzzleFlashModel.Combine(rhs.MuzzleFlashModel);
                 ret.MuzzleFlashModelTextureHashes = this.MuzzleFlashModelTextureHashes.Combine(rhs.MuzzleFlashModelTextureHashes);
@@ -1402,9 +1312,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool CountdownSound;
             public bool DisableSound;
             public bool DefaultWeaponSource;
-            public bool RotationX;
-            public bool RotationY;
-            public bool RotationZ;
+            public bool Rotation;
             public bool BouncyMult;
             public bool MuzzleFlashModel;
             public bool MuzzleFlashModelTextureHashes;
@@ -1437,9 +1345,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CountdownSound = defaultOn;
                 this.DisableSound = defaultOn;
                 this.DefaultWeaponSource = defaultOn;
-                this.RotationX = defaultOn;
-                this.RotationY = defaultOn;
-                this.RotationZ = defaultOn;
+                this.Rotation = defaultOn;
                 this.BouncyMult = defaultOn;
                 this.MuzzleFlashModel = defaultOn;
                 this.MuzzleFlashModelTextureHashes = defaultOn;
@@ -1474,9 +1380,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CountdownSound, null));
                 ret.Add((DisableSound, null));
                 ret.Add((DefaultWeaponSource, null));
-                ret.Add((RotationX, null));
-                ret.Add((RotationY, null));
-                ret.Add((RotationZ, null));
+                ret.Add((Rotation, null));
                 ret.Add((BouncyMult, null));
                 ret.Add((MuzzleFlashModel, null));
                 ret.Add((MuzzleFlashModelTextureHashes, null));
@@ -1494,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ProjectileCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileSetterCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
             FormKey formKey,
@@ -1664,9 +1568,7 @@ namespace Mutagen.Bethesda.Fallout3
         new IFormLink<ISoundGetter> CountdownSound { get; set; }
         new IFormLink<ISoundGetter> DisableSound { get; set; }
         new IFormLink<IWeaponGetter> DefaultWeaponSource { get; set; }
-        new Single RotationX { get; set; }
-        new Single RotationY { get; set; }
-        new Single RotationZ { get; set; }
+        new P3Float Rotation { get; set; }
         new Single BouncyMult { get; set; }
         new String MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? MuzzleFlashModelTextureHashes { get; set; }
@@ -1739,9 +1641,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<ISoundGetter> CountdownSound { get; }
         IFormLinkGetter<ISoundGetter> DisableSound { get; }
         IFormLinkGetter<IWeaponGetter> DefaultWeaponSource { get; }
-        Single RotationX { get; }
-        Single RotationY { get; }
-        Single RotationZ { get; }
+        P3Float Rotation { get; }
         Single BouncyMult { get; }
         String MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? MuzzleFlashModelTextureHashes { get; }
@@ -1945,14 +1845,12 @@ namespace Mutagen.Bethesda.Fallout3
         CountdownSound = 26,
         DisableSound = 27,
         DefaultWeaponSource = 28,
-        RotationX = 29,
-        RotationY = 30,
-        RotationZ = 31,
-        BouncyMult = 32,
-        MuzzleFlashModel = 33,
-        MuzzleFlashModelTextureHashes = 34,
-        SoundLevel = 35,
-        DATADataTypeState = 36,
+        Rotation = 29,
+        BouncyMult = 30,
+        MuzzleFlashModel = 31,
+        MuzzleFlashModelTextureHashes = 32,
+        SoundLevel = 33,
+        DATADataTypeState = 34,
     }
     #endregion
 
@@ -1963,9 +1861,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(Projectile.Mask<>);
 
@@ -2077,9 +1975,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CountdownSound.Clear();
             item.DisableSound.Clear();
             item.DefaultWeaponSource.Clear();
-            item.RotationX = default(Single);
-            item.RotationY = default(Single);
-            item.RotationZ = default(Single);
+            item.Rotation = default(P3Float);
             item.BouncyMult = default(Single);
             item.MuzzleFlashModel = string.Empty;
             item.MuzzleFlashModelTextureHashes = default;
@@ -2208,9 +2104,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.CountdownSound = item.CountdownSound.Equals(rhs.CountdownSound);
             ret.DisableSound = item.DisableSound.Equals(rhs.DisableSound);
             ret.DefaultWeaponSource = item.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource);
-            ret.RotationX = item.RotationX.EqualsWithin(rhs.RotationX);
-            ret.RotationY = item.RotationY.EqualsWithin(rhs.RotationY);
-            ret.RotationZ = item.RotationZ.EqualsWithin(rhs.RotationZ);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.BouncyMult = item.BouncyMult.EqualsWithin(rhs.BouncyMult);
             ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
             ret.MuzzleFlashModelTextureHashes = MemorySliceExt.SequenceEqual(item.MuzzleFlashModelTextureHashes, rhs.MuzzleFlashModelTextureHashes);
@@ -2356,17 +2250,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
             }
-            if (printMask?.RotationX ?? true)
+            if (printMask?.Rotation ?? true)
             {
-                sb.AppendItem(item.RotationX, "RotationX");
-            }
-            if (printMask?.RotationY ?? true)
-            {
-                sb.AppendItem(item.RotationY, "RotationY");
-            }
-            if (printMask?.RotationZ ?? true)
-            {
-                sb.AppendItem(item.RotationZ, "RotationZ");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
             if (printMask?.BouncyMult ?? true)
             {
@@ -2539,17 +2425,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.Rotation) ?? true))
             {
-                if (!lhs.RotationX.EqualsWithin(rhs.RotationX)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationY) ?? true))
-            {
-                if (!lhs.RotationY.EqualsWithin(rhs.RotationY)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationZ) ?? true))
-            {
-                if (!lhs.RotationZ.EqualsWithin(rhs.RotationZ)) return false;
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.BouncyMult) ?? true))
             {
@@ -2630,9 +2508,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.CountdownSound);
             hash.Add(item.DisableSound);
             hash.Add(item.DefaultWeaponSource);
-            hash.Add(item.RotationX);
-            hash.Add(item.RotationY);
-            hash.Add(item.RotationZ);
+            hash.Add(item.Rotation);
             hash.Add(item.BouncyMult);
             hash.Add(item.MuzzleFlashModel);
             if (item.MuzzleFlashModelTextureHashes is {} MuzzleFlashModelTextureHashesItem)
@@ -2664,22 +2540,22 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProjectileGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProjectileGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                foreach (var item in DestructibleItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2915,17 +2791,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.DefaultWeaponSource.SetTo(rhs.DefaultWeaponSource.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationX) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.Rotation) ?? true))
             {
-                item.RotationX = rhs.RotationX;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationY) ?? true))
-            {
-                item.RotationY = rhs.RotationY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.RotationZ) ?? true))
-            {
-                item.RotationZ = rhs.RotationZ;
+                item.Rotation = rhs.Rotation;
             }
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.BouncyMult) ?? true))
             {
@@ -3215,20 +3083,20 @@ namespace Mutagen.Bethesda.Fallout3
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DefaultWeaponSource);
+                if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                {
+                    P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.Rotation);
+                }
                 if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break0))
                 {
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.RotationX);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.RotationY);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.RotationZ);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.BouncyMult);
+                    if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.BouncyMult);
+                    }
                 }
             }
             StringBinaryTranslation.Instance.Write(
@@ -3401,19 +3269,21 @@ namespace Mutagen.Bethesda.Fallout3
                     item.DisableSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.DefaultWeaponSource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 12) return null;
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    }
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Projectile.DATADataType.Break0;
-                        return (int)Projectile_FieldIndex.DefaultWeaponSource;
+                        return (int)Projectile_FieldIndex.Rotation;
                     }
                     if (dataFrame.Remaining < 4) return null;
-                    item.RotationX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.RotationY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.RotationZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.BouncyMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        item.BouncyMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    }
                     return (int)Projectile_FieldIndex.BouncyMult;
                 }
                 case RecordTypeInts.NAM1:
@@ -3483,7 +3353,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ProjectileCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3609,25 +3479,17 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _DefaultWeaponSource_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet) : FormLink<IWeaponGetter>.Null;
         #endregion
-        #region RotationX
-        private int _RotationXLocation => _DATALocation!.Value.Min + 0x44;
-        private bool _RotationX_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
-        public Single RotationX => _RotationX_IsSet ? _recordData.Slice(_RotationXLocation, 4).Float() : default(Single);
-        #endregion
-        #region RotationY
-        private int _RotationYLocation => _DATALocation!.Value.Min + 0x48;
-        private bool _RotationY_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
-        public Single RotationY => _RotationY_IsSet ? _recordData.Slice(_RotationYLocation, 4).Float() : default(Single);
-        #endregion
-        #region RotationZ
-        private int _RotationZLocation => _DATALocation!.Value.Min + 0x4C;
-        private bool _RotationZ_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
-        public Single RotationZ => _RotationZ_IsSet ? _recordData.Slice(_RotationZLocation, 4).Float() : default(Single);
+        #region Rotation
+        private int _RotationLocation => _DATALocation!.Value.Min + 0x44;
+        private bool _Rotation_IsSet => _DATALocation.HasValue && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
+        int RotationModHeaderVersioningOffset => _package.MetaData.ModHeaderVersion!.Value < 1.32f ? -12 : 0;
         #endregion
         #region BouncyMult
-        private int _BouncyMultLocation => _DATALocation!.Value.Min + 0x50;
-        private bool _BouncyMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
+        private int _BouncyMultLocation => _DATALocation!.Value.Min + RotationModHeaderVersioningOffset + 0x50;
+        private bool _BouncyMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0) && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
         public Single BouncyMult => _BouncyMult_IsSet ? _recordData.Slice(_BouncyMultLocation, 4).Float() : default(Single);
+        int BouncyMultModHeaderVersioningOffset => RotationModHeaderVersioningOffset + (_package.MetaData.ModHeaderVersion!.Value < 1.32f ? -4 : 0);
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
@@ -3745,7 +3607,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x44)
+                    if (subLen <= RotationModHeaderVersioningOffset + 0x50)
                     {
                         this.DATADataTypeState |= Projectile.DATADataType.Break0;
                     }

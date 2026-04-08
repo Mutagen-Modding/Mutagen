@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AmmunitionExtraDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AmmunitionExtraDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionExtraDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmmunitionExtraDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmmunitionExtraDataGetter obj, bool iterateNestedRecords = true)
         {
             yield return FormLinkInformation.Factory(obj.Projectile);
             yield return FormLinkInformation.Factory(obj.ConsumedAmmo);
@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AmmunitionExtraDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AmmunitionExtraDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AmmunitionExtraDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

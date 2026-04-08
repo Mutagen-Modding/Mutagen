@@ -780,7 +780,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<ISoundInternal>,
         IObjectBoundedOptional,
-        ISoundGetter
+        ISoundGetter,
+        ISoundOrNpcSpawn
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -807,7 +808,8 @@ namespace Mutagen.Bethesda.Fallout3
         IBinaryItem,
         ILoquiObject<ISoundGetter>,
         IMapsToGetter<ISoundGetter>,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        ISoundOrNpcSpawnGetter
     {
         static new ILoquiRegistration StaticRegistration => Sound_Registration.Instance;
         #region ObjectBounds
@@ -1469,9 +1471,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }

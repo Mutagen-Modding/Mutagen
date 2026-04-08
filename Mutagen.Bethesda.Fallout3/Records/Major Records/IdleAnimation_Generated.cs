@@ -11,10 +11,12 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +55,48 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IIdleAnimationGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IIdleAnimationGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region RelatedIdleAnimations
+        public IdleAnimationRelatedAnimations RelatedIdleAnimations { get; set; } = new IdleAnimationRelatedAnimations();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIdleAnimationRelatedAnimationsGetter IIdleAnimationGetter.RelatedIdleAnimations => RelatedIdleAnimations;
+        #endregion
+        #region AnimationData
+        public IdleAnimationData AnimationData { get; set; } = new IdleAnimationData();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIdleAnimationDataGetter IIdleAnimationGetter.AnimationData => AnimationData;
+        #endregion
 
         #region To String
 
@@ -78,6 +122,10 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.RelatedIdleAnimations = new MaskItem<TItem, IdleAnimationRelatedAnimations.Mask<TItem>?>(initialValue, new IdleAnimationRelatedAnimations.Mask<TItem>(initialValue));
+                this.AnimationData = new MaskItem<TItem, IdleAnimationData.Mask<TItem>?>(initialValue, new IdleAnimationData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -87,7 +135,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Model,
+                TItem Conditions,
+                TItem RelatedIdleAnimations,
+                TItem AnimationData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +149,10 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.RelatedIdleAnimations = new MaskItem<TItem, IdleAnimationRelatedAnimations.Mask<TItem>?>(RelatedIdleAnimations, new IdleAnimationRelatedAnimations.Mask<TItem>(RelatedIdleAnimations));
+                this.AnimationData = new MaskItem<TItem, IdleAnimationData.Mask<TItem>?>(AnimationData, new IdleAnimationData.Mask<TItem>(AnimationData));
             }
 
             #pragma warning disable CS8618
@@ -105,6 +161,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IdleAnimationRelatedAnimations.Mask<TItem>?>? RelatedIdleAnimations { get; set; }
+            public MaskItem<TItem, IdleAnimationData.Mask<TItem>?>? AnimationData { get; set; }
             #endregion
 
             #region Equals
@@ -118,11 +181,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.RelatedIdleAnimations, rhs.RelatedIdleAnimations)) return false;
+                if (!object.Equals(this.AnimationData, rhs.AnimationData)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
+                hash.Add(this.Conditions);
+                hash.Add(this.RelatedIdleAnimations);
+                hash.Add(this.AnimationData);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +204,33 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (RelatedIdleAnimations != null)
+                {
+                    if (!eval(this.RelatedIdleAnimations.Overall)) return false;
+                    if (this.RelatedIdleAnimations.Specific != null && !this.RelatedIdleAnimations.Specific.All(eval)) return false;
+                }
+                if (AnimationData != null)
+                {
+                    if (!eval(this.AnimationData.Overall)) return false;
+                    if (this.AnimationData.Specific != null && !this.AnimationData.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -141,6 +239,33 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (RelatedIdleAnimations != null)
+                {
+                    if (eval(this.RelatedIdleAnimations.Overall)) return true;
+                    if (this.RelatedIdleAnimations.Specific != null && this.RelatedIdleAnimations.Specific.Any(eval)) return true;
+                }
+                if (AnimationData != null)
+                {
+                    if (eval(this.AnimationData.Overall)) return true;
+                    if (this.AnimationData.Specific != null && this.AnimationData.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -156,6 +281,24 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.RelatedIdleAnimations = this.RelatedIdleAnimations == null ? null : new MaskItem<R, IdleAnimationRelatedAnimations.Mask<R>?>(eval(this.RelatedIdleAnimations.Overall), this.RelatedIdleAnimations.Specific?.Translate(eval));
+                obj.AnimationData = this.AnimationData == null ? null : new MaskItem<R, IdleAnimationData.Mask<R>?>(eval(this.AnimationData.Overall), this.AnimationData.Specific?.Translate(eval));
             }
             #endregion
 
@@ -174,6 +317,37 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(IdleAnimation.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.RelatedIdleAnimations?.Overall ?? true)
+                    {
+                        RelatedIdleAnimations?.Print(sb);
+                    }
+                    if (printMask?.AnimationData?.Overall ?? true)
+                    {
+                        AnimationData?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -184,12 +358,27 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IdleAnimationRelatedAnimations.ErrorMask?>? RelatedIdleAnimations;
+            public MaskItem<Exception?, IdleAnimationData.ErrorMask?>? AnimationData;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Model:
+                        return Model;
+                    case IdleAnimation_FieldIndex.Conditions:
+                        return Conditions;
+                    case IdleAnimation_FieldIndex.RelatedIdleAnimations:
+                        return RelatedIdleAnimations;
+                    case IdleAnimation_FieldIndex.AnimationData:
+                        return AnimationData;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +389,18 @@ namespace Mutagen.Bethesda.Fallout3
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.RelatedIdleAnimations:
+                        this.RelatedIdleAnimations = new MaskItem<Exception?, IdleAnimationRelatedAnimations.ErrorMask?>(ex, null);
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationData:
+                        this.AnimationData = new MaskItem<Exception?, IdleAnimationData.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +412,18 @@ namespace Mutagen.Bethesda.Fallout3
                 IdleAnimation_FieldIndex enu = (IdleAnimation_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimation_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.RelatedIdleAnimations:
+                        this.RelatedIdleAnimations = (MaskItem<Exception?, IdleAnimationRelatedAnimations.ErrorMask?>?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.AnimationData:
+                        this.AnimationData = (MaskItem<Exception?, IdleAnimationData.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +433,10 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
+                if (Conditions != null) return true;
+                if (RelatedIdleAnimations != null) return true;
+                if (AnimationData != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +463,27 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                Model?.Print(sb);
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                RelatedIdleAnimations?.Print(sb);
+                AnimationData?.Print(sb);
             }
             #endregion
 
@@ -254,6 +492,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.RelatedIdleAnimations = this.RelatedIdleAnimations.Combine(rhs.RelatedIdleAnimations, (l, r) => l.Combine(r));
+                ret.AnimationData = this.AnimationData.Combine(rhs.AnimationData, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,6 +517,13 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public Model.TranslationMask? Model;
+            public Condition.TranslationMask? Conditions;
+            public IdleAnimationRelatedAnimations.TranslationMask? RelatedIdleAnimations;
+            public IdleAnimationData.TranslationMask? AnimationData;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -284,6 +533,15 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((RelatedIdleAnimations != null ? RelatedIdleAnimations.OnOverall : DefaultOn, RelatedIdleAnimations?.GetCrystal()));
+                ret.Add((AnimationData != null ? AnimationData.OnOverall : DefaultOn, AnimationData?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +553,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => IdleAnimationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationSetterCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,9 +673,19 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IIdleAnimation :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         IIdleAnimationGetter,
-        ILoquiObjectSetter<IIdleAnimationInternal>
+        IIdleRelation,
+        ILoquiObjectSetter<IIdleAnimationInternal>,
+        IModeled
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new IdleAnimationRelatedAnimations RelatedIdleAnimations { get; set; }
+        new IdleAnimationData AnimationData { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -429,10 +699,22 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IIdleAnimationGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IIdleRelationGetter,
         ILoquiObject<IIdleAnimationGetter>,
-        IMapsToGetter<IIdleAnimationGetter>
+        IMapsToGetter<IIdleAnimationGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IIdleAnimationRelatedAnimationsGetter RelatedIdleAnimations { get; }
+        IIdleAnimationDataGetter AnimationData { get; }
 
     }
 
@@ -609,6 +891,10 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Model = 7,
+        Conditions = 8,
+        RelatedIdleAnimations = 9,
+        AnimationData = 10,
     }
     #endregion
 
@@ -619,9 +905,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -651,8 +937,20 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.IDLE);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.IDLE);
+            var all = RecordCollection.Factory(
+                RecordTypes.IDLE,
+                RecordTypes.MODL,
+                RecordTypes.MODB,
+                RecordTypes.MODT,
+                RecordTypes.MODS,
+                RecordTypes.MODD,
+                RecordTypes.CTDA,
+                RecordTypes.ANAM,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(IdleAnimationBinaryWriteTranslation);
         #region Interface
@@ -694,6 +992,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IIdleAnimationInternal item)
         {
             ClearPartial();
+            item.Model = null;
+            item.Conditions.Clear();
+            item.RelatedIdleAnimations.Clear();
+            item.AnimationData.Clear();
             base.Clear(item);
         }
         
@@ -711,6 +1013,9 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IIdleAnimation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.RelatedIdleAnimations.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +1083,17 @@ namespace Mutagen.Bethesda.Fallout3
             IdleAnimation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RelatedIdleAnimations = MaskItemExt.Factory(item.RelatedIdleAnimations.GetEqualsMask(rhs.RelatedIdleAnimations, include), include);
+            ret.AnimationData = MaskItemExt.Factory(item.AnimationData.GetEqualsMask(rhs.AnimationData, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +1143,33 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.RelatedIdleAnimations?.Overall ?? true)
+            {
+                item.RelatedIdleAnimations?.Print(sb, "RelatedIdleAnimations");
+            }
+            if (printMask?.AnimationData?.Overall ?? true)
+            {
+                item.AnimationData?.Print(sb, "AnimationData");
+            }
         }
         
         public static IdleAnimation_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +1220,34 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdleAnimations) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.RelatedIdleAnimations, rhs.RelatedIdleAnimations, out var lhsRelatedIdleAnimations, out var rhsRelatedIdleAnimations, out var isRelatedIdleAnimationsEqual))
+                {
+                    if (!((IdleAnimationRelatedAnimationsCommon)((IIdleAnimationRelatedAnimationsGetter)lhsRelatedIdleAnimations).CommonInstance()!).Equals(lhsRelatedIdleAnimations, rhsRelatedIdleAnimations, equalsMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdleAnimations))) return false;
+                }
+                else if (!isRelatedIdleAnimationsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AnimationData, rhs.AnimationData, out var lhsAnimationData, out var rhsAnimationData, out var isAnimationDataEqual))
+                {
+                    if (!((IdleAnimationDataCommon)((IIdleAnimationDataGetter)lhsAnimationData).CommonInstance()!).Equals(lhsAnimationData, rhsAnimationData, equalsMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.AnimationData))) return false;
+                }
+                else if (!isAnimationDataEqual) return false;
+            }
             return true;
         }
         
@@ -905,6 +1276,13 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IIdleAnimationGetter item)
         {
             var hash = new HashCode();
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Conditions);
+            hash.Add(item.RelatedIdleAnimations);
+            hash.Add(item.AnimationData);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,9 +1306,24 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIdleAnimationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIdleAnimationGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.RelatedIdleAnimations.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -1008,6 +1401,100 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdleAnimations) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdleAnimations) ?? true))
+                    {
+                        item.RelatedIdleAnimations = rhs.RelatedIdleAnimations.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.RelatedIdleAnimations),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationData) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.AnimationData);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationData) ?? true))
+                    {
+                        item.AnimationData = rhs.AnimationData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)IdleAnimation_FieldIndex.AnimationData),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +1655,45 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly IdleAnimationBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IIdleAnimationGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            var RelatedIdleAnimationsItem = item.RelatedIdleAnimations;
+            ((IdleAnimationRelatedAnimationsBinaryWriteTranslation)((IBinaryItem)RelatedIdleAnimationsItem).BinaryWriteTranslator).Write(
+                item: RelatedIdleAnimationsItem,
+                writer: writer,
+                translationParams: translationParams);
+            var AnimationDataItem = item.AnimationData;
+            ((IdleAnimationDataBinaryWriteTranslation)((IBinaryItem)AnimationDataItem).BinaryWriteTranslator).Write(
+                item: AnimationDataItem,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
         public void Write(
             MutagenWriter writer,
             IIdleAnimationGetter item,
@@ -1222,6 +1748,61 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly IdleAnimationBinaryCreateTranslation Instance = new IdleAnimationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IDLE;
+        public static ParseResult FillBinaryRecordTypes(
+            IIdleAnimationInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    item.Model = Mutagen.Bethesda.Fallout3.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)IdleAnimation_FieldIndex.Model;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)IdleAnimation_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    item.RelatedIdleAnimations = Mutagen.Bethesda.Fallout3.IdleAnimationRelatedAnimations.CreateFromBinary(frame: frame);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    item.AnimationData = Mutagen.Bethesda.Fallout3.IdleAnimationData.CreateFromBinary(frame: frame);
+                    return (int)IdleAnimation_FieldIndex.AnimationData;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +1835,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => IdleAnimationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +1850,18 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IIdleAnimationGetter);
 
 
+        public IModelGetter? Model { get; private set; }
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        #region RelatedIdleAnimations
+        private RangeInt32? _RelatedIdleAnimationsLocation;
+        private IIdleAnimationRelatedAnimationsGetter? _RelatedIdleAnimations => _RelatedIdleAnimationsLocation.HasValue ? IdleAnimationRelatedAnimationsBinaryOverlay.IdleAnimationRelatedAnimationsFactory(_recordData.Slice(_RelatedIdleAnimationsLocation!.Value.Min), _package) : default;
+        public IIdleAnimationRelatedAnimationsGetter RelatedIdleAnimations => _RelatedIdleAnimations ?? new IdleAnimationRelatedAnimations();
+        #endregion
+        #region AnimationData
+        private RangeInt32? _AnimationDataLocation;
+        private IIdleAnimationDataGetter? _AnimationData => _AnimationDataLocation.HasValue ? IdleAnimationDataBinaryOverlay.IdleAnimationDataFactory(_recordData.Slice(_AnimationDataLocation!.Value.Min), _package) : default;
+        public IIdleAnimationDataGetter AnimationData => _AnimationData ?? new IdleAnimationData();
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +1919,66 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODB:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MODS:
+                case RecordTypeInts.MODD:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)IdleAnimation_FieldIndex.Model;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)IdleAnimation_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _RelatedIdleAnimationsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _AnimationDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)IdleAnimation_FieldIndex.AnimationData;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

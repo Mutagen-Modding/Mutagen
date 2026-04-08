@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,6 +54,233 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Flags
+        public UInt32 Flags { get; set; } = default(UInt32);
+        #endregion
+        #region Type
+        public Byte Type { get; set; } = default(Byte);
+        #endregion
+        #region Unused
+        public Byte Unused { get; set; } = default(Byte);
+        #endregion
+        #region FalloutBehaviorFlags
+        public UInt16 FalloutBehaviorFlags { get; set; } = default(UInt16);
+        #endregion
+        #region TypeSpecificFlags
+        public UInt16 TypeSpecificFlags { get; set; } = default(UInt16);
+        #endregion
+        #region Unused2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused2 = new byte[2];
+        public MemorySlice<Byte> Unused2
+        {
+            get => _Unused2;
+            set => this._Unused2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IPackageGetter.Unused2 => this.Unused2;
+        #endregion
+        #region Location
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageLocation? _Location;
+        public PackageLocation? Location
+        {
+            get => _Location;
+            set => _Location = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageLocationGetter? IPackageGetter.Location => this.Location;
+        #endregion
+        #region Location2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageLocation2? _Location2;
+        public PackageLocation2? Location2
+        {
+            get => _Location2;
+            set => _Location2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageLocation2Getter? IPackageGetter.Location2 => this.Location2;
+        #endregion
+        #region ScheduleMonth
+        public SByte ScheduleMonth { get; set; } = default(SByte);
+        #endregion
+        #region ScheduleDayOfWeek
+        public Byte ScheduleDayOfWeek { get; set; } = default(Byte);
+        #endregion
+        #region ScheduleDate
+        public Byte ScheduleDate { get; set; } = default(Byte);
+        #endregion
+        #region ScheduleHour
+        public SByte ScheduleHour { get; set; } = default(SByte);
+        #endregion
+        #region ScheduleMinute
+        public SByte ScheduleMinute { get; set; } = default(SByte);
+        #endregion
+        #region Unused3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused3 = new byte[3];
+        public MemorySlice<Byte> Unused3
+        {
+            get => _Unused3;
+            set => this._Unused3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IPackageGetter.Unused3 => this.Unused3;
+        #endregion
+        #region Target
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageTarget? _Target;
+        public PackageTarget? Target
+        {
+            get => _Target;
+            set => _Target = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageTargetGetter? IPackageGetter.Target => this.Target;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IPackageGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region IdleAnimations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageIdles? _IdleAnimations;
+        public PackageIdles? IdleAnimations
+        {
+            get => _IdleAnimations;
+            set => _IdleAnimations = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageIdlesGetter? IPackageGetter.IdleAnimations => this.IdleAnimations;
+        #endregion
+        #region CombatStyle
+        private readonly IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        public IFormLinkNullable<ICombatStyleGetter> CombatStyle
+        {
+            get => _CombatStyle;
+            set => _CombatStyle.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
+        #endregion
+        #region EatMarker
+        public Boolean EatMarker { get; set; } = default(Boolean);
+        #endregion
+        #region EscortDistance
+        public UInt32? EscortDistance { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IPackageGetter.EscortDistance => this.EscortDistance;
+        #endregion
+        #region FollowTriggerRadius
+        public Single? FollowTriggerRadius { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPackageGetter.FollowTriggerRadius => this.FollowTriggerRadius;
+        #endregion
+        #region PatrolFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _PatrolFlags;
+        public MemorySlice<Byte>? PatrolFlags
+        {
+            get => this._PatrolFlags;
+            set => this._PatrolFlags = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPackageGetter.PatrolFlags => this.PatrolFlags;
+        #endregion
+        #region WeaponData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageWeaponData? _WeaponData;
+        public PackageWeaponData? WeaponData
+        {
+            get => _WeaponData;
+            set => _WeaponData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageWeaponDataGetter? IPackageGetter.WeaponData => this.WeaponData;
+        #endregion
+        #region Target2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageTarget2? _Target2;
+        public PackageTarget2? Target2
+        {
+            get => _Target2;
+            set => _Target2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageTarget2Getter? IPackageGetter.Target2 => this.Target2;
+        #endregion
+        #region UseItemMarker
+        public Boolean UseItemMarker { get; set; } = default(Boolean);
+        #endregion
+        #region AmbushMarker
+        public Boolean AmbushMarker { get; set; } = default(Boolean);
+        #endregion
+        #region DialogueData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageDialogueData? _DialogueData;
+        public PackageDialogueData? DialogueData
+        {
+            get => _DialogueData;
+            set => _DialogueData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageDialogueDataGetter? IPackageGetter.DialogueData => this.DialogueData;
+        #endregion
+        #region DialogueLocation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageLocation2? _DialogueLocation;
+        public PackageLocation2? DialogueLocation
+        {
+            get => _DialogueLocation;
+            set => _DialogueLocation = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageLocation2Getter? IPackageGetter.DialogueLocation => this.DialogueLocation;
+        #endregion
+        #region OnBegin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageEvent? _OnBegin;
+        public PackageEvent? OnBegin
+        {
+            get => _OnBegin;
+            set => _OnBegin = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageEventGetter? IPackageGetter.OnBegin => this.OnBegin;
+        #endregion
+        #region OnEnd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageEvent? _OnEnd;
+        public PackageEvent? OnEnd
+        {
+            get => _OnEnd;
+            set => _OnEnd = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageEventGetter? IPackageGetter.OnEnd => this.OnEnd;
+        #endregion
+        #region OnChange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PackageEvent? _OnChange;
+        public PackageEvent? OnChange
+        {
+            get => _OnChange;
+            set => _OnChange = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPackageEventGetter? IPackageGetter.OnChange => this.OnChange;
+        #endregion
 
         #region To String
 
@@ -78,6 +306,37 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Flags = initialValue;
+                this.Type = initialValue;
+                this.Unused = initialValue;
+                this.FalloutBehaviorFlags = initialValue;
+                this.TypeSpecificFlags = initialValue;
+                this.Unused2 = initialValue;
+                this.Location = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(initialValue, new PackageLocation.Mask<TItem>(initialValue));
+                this.Location2 = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(initialValue, new PackageLocation2.Mask<TItem>(initialValue));
+                this.ScheduleMonth = initialValue;
+                this.ScheduleDayOfWeek = initialValue;
+                this.ScheduleDate = initialValue;
+                this.ScheduleHour = initialValue;
+                this.ScheduleMinute = initialValue;
+                this.Unused3 = initialValue;
+                this.Target = new MaskItem<TItem, PackageTarget.Mask<TItem>?>(initialValue, new PackageTarget.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.IdleAnimations = new MaskItem<TItem, PackageIdles.Mask<TItem>?>(initialValue, new PackageIdles.Mask<TItem>(initialValue));
+                this.CombatStyle = initialValue;
+                this.EatMarker = initialValue;
+                this.EscortDistance = initialValue;
+                this.FollowTriggerRadius = initialValue;
+                this.PatrolFlags = initialValue;
+                this.WeaponData = new MaskItem<TItem, PackageWeaponData.Mask<TItem>?>(initialValue, new PackageWeaponData.Mask<TItem>(initialValue));
+                this.Target2 = new MaskItem<TItem, PackageTarget2.Mask<TItem>?>(initialValue, new PackageTarget2.Mask<TItem>(initialValue));
+                this.UseItemMarker = initialValue;
+                this.AmbushMarker = initialValue;
+                this.DialogueData = new MaskItem<TItem, PackageDialogueData.Mask<TItem>?>(initialValue, new PackageDialogueData.Mask<TItem>(initialValue));
+                this.DialogueLocation = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(initialValue, new PackageLocation2.Mask<TItem>(initialValue));
+                this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
+                this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
+                this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -87,7 +346,38 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Flags,
+                TItem Type,
+                TItem Unused,
+                TItem FalloutBehaviorFlags,
+                TItem TypeSpecificFlags,
+                TItem Unused2,
+                TItem Location,
+                TItem Location2,
+                TItem ScheduleMonth,
+                TItem ScheduleDayOfWeek,
+                TItem ScheduleDate,
+                TItem ScheduleHour,
+                TItem ScheduleMinute,
+                TItem Unused3,
+                TItem Target,
+                TItem Conditions,
+                TItem IdleAnimations,
+                TItem CombatStyle,
+                TItem EatMarker,
+                TItem EscortDistance,
+                TItem FollowTriggerRadius,
+                TItem PatrolFlags,
+                TItem WeaponData,
+                TItem Target2,
+                TItem UseItemMarker,
+                TItem AmbushMarker,
+                TItem DialogueData,
+                TItem DialogueLocation,
+                TItem OnBegin,
+                TItem OnEnd,
+                TItem OnChange)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +387,37 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Flags = Flags;
+                this.Type = Type;
+                this.Unused = Unused;
+                this.FalloutBehaviorFlags = FalloutBehaviorFlags;
+                this.TypeSpecificFlags = TypeSpecificFlags;
+                this.Unused2 = Unused2;
+                this.Location = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(Location, new PackageLocation.Mask<TItem>(Location));
+                this.Location2 = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(Location2, new PackageLocation2.Mask<TItem>(Location2));
+                this.ScheduleMonth = ScheduleMonth;
+                this.ScheduleDayOfWeek = ScheduleDayOfWeek;
+                this.ScheduleDate = ScheduleDate;
+                this.ScheduleHour = ScheduleHour;
+                this.ScheduleMinute = ScheduleMinute;
+                this.Unused3 = Unused3;
+                this.Target = new MaskItem<TItem, PackageTarget.Mask<TItem>?>(Target, new PackageTarget.Mask<TItem>(Target));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.IdleAnimations = new MaskItem<TItem, PackageIdles.Mask<TItem>?>(IdleAnimations, new PackageIdles.Mask<TItem>(IdleAnimations));
+                this.CombatStyle = CombatStyle;
+                this.EatMarker = EatMarker;
+                this.EscortDistance = EscortDistance;
+                this.FollowTriggerRadius = FollowTriggerRadius;
+                this.PatrolFlags = PatrolFlags;
+                this.WeaponData = new MaskItem<TItem, PackageWeaponData.Mask<TItem>?>(WeaponData, new PackageWeaponData.Mask<TItem>(WeaponData));
+                this.Target2 = new MaskItem<TItem, PackageTarget2.Mask<TItem>?>(Target2, new PackageTarget2.Mask<TItem>(Target2));
+                this.UseItemMarker = UseItemMarker;
+                this.AmbushMarker = AmbushMarker;
+                this.DialogueData = new MaskItem<TItem, PackageDialogueData.Mask<TItem>?>(DialogueData, new PackageDialogueData.Mask<TItem>(DialogueData));
+                this.DialogueLocation = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(DialogueLocation, new PackageLocation2.Mask<TItem>(DialogueLocation));
+                this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnBegin, new PackageEvent.Mask<TItem>(OnBegin));
+                this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnEnd, new PackageEvent.Mask<TItem>(OnEnd));
+                this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnChange, new PackageEvent.Mask<TItem>(OnChange));
             }
 
             #pragma warning disable CS8618
@@ -105,6 +426,40 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Flags;
+            public TItem Type;
+            public TItem Unused;
+            public TItem FalloutBehaviorFlags;
+            public TItem TypeSpecificFlags;
+            public TItem Unused2;
+            public MaskItem<TItem, PackageLocation.Mask<TItem>?>? Location { get; set; }
+            public MaskItem<TItem, PackageLocation2.Mask<TItem>?>? Location2 { get; set; }
+            public TItem ScheduleMonth;
+            public TItem ScheduleDayOfWeek;
+            public TItem ScheduleDate;
+            public TItem ScheduleHour;
+            public TItem ScheduleMinute;
+            public TItem Unused3;
+            public MaskItem<TItem, PackageTarget.Mask<TItem>?>? Target { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, PackageIdles.Mask<TItem>?>? IdleAnimations { get; set; }
+            public TItem CombatStyle;
+            public TItem EatMarker;
+            public TItem EscortDistance;
+            public TItem FollowTriggerRadius;
+            public TItem PatrolFlags;
+            public MaskItem<TItem, PackageWeaponData.Mask<TItem>?>? WeaponData { get; set; }
+            public MaskItem<TItem, PackageTarget2.Mask<TItem>?>? Target2 { get; set; }
+            public TItem UseItemMarker;
+            public TItem AmbushMarker;
+            public MaskItem<TItem, PackageDialogueData.Mask<TItem>?>? DialogueData { get; set; }
+            public MaskItem<TItem, PackageLocation2.Mask<TItem>?>? DialogueLocation { get; set; }
+            public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnBegin { get; set; }
+            public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnEnd { get; set; }
+            public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnChange { get; set; }
             #endregion
 
             #region Equals
@@ -118,11 +473,73 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.FalloutBehaviorFlags, rhs.FalloutBehaviorFlags)) return false;
+                if (!object.Equals(this.TypeSpecificFlags, rhs.TypeSpecificFlags)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Location2, rhs.Location2)) return false;
+                if (!object.Equals(this.ScheduleMonth, rhs.ScheduleMonth)) return false;
+                if (!object.Equals(this.ScheduleDayOfWeek, rhs.ScheduleDayOfWeek)) return false;
+                if (!object.Equals(this.ScheduleDate, rhs.ScheduleDate)) return false;
+                if (!object.Equals(this.ScheduleHour, rhs.ScheduleHour)) return false;
+                if (!object.Equals(this.ScheduleMinute, rhs.ScheduleMinute)) return false;
+                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
+                if (!object.Equals(this.EatMarker, rhs.EatMarker)) return false;
+                if (!object.Equals(this.EscortDistance, rhs.EscortDistance)) return false;
+                if (!object.Equals(this.FollowTriggerRadius, rhs.FollowTriggerRadius)) return false;
+                if (!object.Equals(this.PatrolFlags, rhs.PatrolFlags)) return false;
+                if (!object.Equals(this.WeaponData, rhs.WeaponData)) return false;
+                if (!object.Equals(this.Target2, rhs.Target2)) return false;
+                if (!object.Equals(this.UseItemMarker, rhs.UseItemMarker)) return false;
+                if (!object.Equals(this.AmbushMarker, rhs.AmbushMarker)) return false;
+                if (!object.Equals(this.DialogueData, rhs.DialogueData)) return false;
+                if (!object.Equals(this.DialogueLocation, rhs.DialogueLocation)) return false;
+                if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
+                if (!object.Equals(this.OnEnd, rhs.OnEnd)) return false;
+                if (!object.Equals(this.OnChange, rhs.OnChange)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.Unused);
+                hash.Add(this.FalloutBehaviorFlags);
+                hash.Add(this.TypeSpecificFlags);
+                hash.Add(this.Unused2);
+                hash.Add(this.Location);
+                hash.Add(this.Location2);
+                hash.Add(this.ScheduleMonth);
+                hash.Add(this.ScheduleDayOfWeek);
+                hash.Add(this.ScheduleDate);
+                hash.Add(this.ScheduleHour);
+                hash.Add(this.ScheduleMinute);
+                hash.Add(this.Unused3);
+                hash.Add(this.Target);
+                hash.Add(this.Conditions);
+                hash.Add(this.IdleAnimations);
+                hash.Add(this.CombatStyle);
+                hash.Add(this.EatMarker);
+                hash.Add(this.EscortDistance);
+                hash.Add(this.FollowTriggerRadius);
+                hash.Add(this.PatrolFlags);
+                hash.Add(this.WeaponData);
+                hash.Add(this.Target2);
+                hash.Add(this.UseItemMarker);
+                hash.Add(this.AmbushMarker);
+                hash.Add(this.DialogueData);
+                hash.Add(this.DialogueLocation);
+                hash.Add(this.OnBegin);
+                hash.Add(this.OnEnd);
+                hash.Add(this.OnChange);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +550,92 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.FalloutBehaviorFlags)) return false;
+                if (!eval(this.TypeSpecificFlags)) return false;
+                if (!eval(this.Unused2)) return false;
+                if (Location != null)
+                {
+                    if (!eval(this.Location.Overall)) return false;
+                    if (this.Location.Specific != null && !this.Location.Specific.All(eval)) return false;
+                }
+                if (Location2 != null)
+                {
+                    if (!eval(this.Location2.Overall)) return false;
+                    if (this.Location2.Specific != null && !this.Location2.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ScheduleMonth)) return false;
+                if (!eval(this.ScheduleDayOfWeek)) return false;
+                if (!eval(this.ScheduleDate)) return false;
+                if (!eval(this.ScheduleHour)) return false;
+                if (!eval(this.ScheduleMinute)) return false;
+                if (!eval(this.Unused3)) return false;
+                if (Target != null)
+                {
+                    if (!eval(this.Target.Overall)) return false;
+                    if (this.Target.Specific != null && !this.Target.Specific.All(eval)) return false;
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (IdleAnimations != null)
+                {
+                    if (!eval(this.IdleAnimations.Overall)) return false;
+                    if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
+                }
+                if (!eval(this.CombatStyle)) return false;
+                if (!eval(this.EatMarker)) return false;
+                if (!eval(this.EscortDistance)) return false;
+                if (!eval(this.FollowTriggerRadius)) return false;
+                if (!eval(this.PatrolFlags)) return false;
+                if (WeaponData != null)
+                {
+                    if (!eval(this.WeaponData.Overall)) return false;
+                    if (this.WeaponData.Specific != null && !this.WeaponData.Specific.All(eval)) return false;
+                }
+                if (Target2 != null)
+                {
+                    if (!eval(this.Target2.Overall)) return false;
+                    if (this.Target2.Specific != null && !this.Target2.Specific.All(eval)) return false;
+                }
+                if (!eval(this.UseItemMarker)) return false;
+                if (!eval(this.AmbushMarker)) return false;
+                if (DialogueData != null)
+                {
+                    if (!eval(this.DialogueData.Overall)) return false;
+                    if (this.DialogueData.Specific != null && !this.DialogueData.Specific.All(eval)) return false;
+                }
+                if (DialogueLocation != null)
+                {
+                    if (!eval(this.DialogueLocation.Overall)) return false;
+                    if (this.DialogueLocation.Specific != null && !this.DialogueLocation.Specific.All(eval)) return false;
+                }
+                if (OnBegin != null)
+                {
+                    if (!eval(this.OnBegin.Overall)) return false;
+                    if (this.OnBegin.Specific != null && !this.OnBegin.Specific.All(eval)) return false;
+                }
+                if (OnEnd != null)
+                {
+                    if (!eval(this.OnEnd.Overall)) return false;
+                    if (this.OnEnd.Specific != null && !this.OnEnd.Specific.All(eval)) return false;
+                }
+                if (OnChange != null)
+                {
+                    if (!eval(this.OnChange.Overall)) return false;
+                    if (this.OnChange.Specific != null && !this.OnChange.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -141,6 +644,92 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.FalloutBehaviorFlags)) return true;
+                if (eval(this.TypeSpecificFlags)) return true;
+                if (eval(this.Unused2)) return true;
+                if (Location != null)
+                {
+                    if (eval(this.Location.Overall)) return true;
+                    if (this.Location.Specific != null && this.Location.Specific.Any(eval)) return true;
+                }
+                if (Location2 != null)
+                {
+                    if (eval(this.Location2.Overall)) return true;
+                    if (this.Location2.Specific != null && this.Location2.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ScheduleMonth)) return true;
+                if (eval(this.ScheduleDayOfWeek)) return true;
+                if (eval(this.ScheduleDate)) return true;
+                if (eval(this.ScheduleHour)) return true;
+                if (eval(this.ScheduleMinute)) return true;
+                if (eval(this.Unused3)) return true;
+                if (Target != null)
+                {
+                    if (eval(this.Target.Overall)) return true;
+                    if (this.Target.Specific != null && this.Target.Specific.Any(eval)) return true;
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (IdleAnimations != null)
+                {
+                    if (eval(this.IdleAnimations.Overall)) return true;
+                    if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
+                }
+                if (eval(this.CombatStyle)) return true;
+                if (eval(this.EatMarker)) return true;
+                if (eval(this.EscortDistance)) return true;
+                if (eval(this.FollowTriggerRadius)) return true;
+                if (eval(this.PatrolFlags)) return true;
+                if (WeaponData != null)
+                {
+                    if (eval(this.WeaponData.Overall)) return true;
+                    if (this.WeaponData.Specific != null && this.WeaponData.Specific.Any(eval)) return true;
+                }
+                if (Target2 != null)
+                {
+                    if (eval(this.Target2.Overall)) return true;
+                    if (this.Target2.Specific != null && this.Target2.Specific.Any(eval)) return true;
+                }
+                if (eval(this.UseItemMarker)) return true;
+                if (eval(this.AmbushMarker)) return true;
+                if (DialogueData != null)
+                {
+                    if (eval(this.DialogueData.Overall)) return true;
+                    if (this.DialogueData.Specific != null && this.DialogueData.Specific.Any(eval)) return true;
+                }
+                if (DialogueLocation != null)
+                {
+                    if (eval(this.DialogueLocation.Overall)) return true;
+                    if (this.DialogueLocation.Specific != null && this.DialogueLocation.Specific.Any(eval)) return true;
+                }
+                if (OnBegin != null)
+                {
+                    if (eval(this.OnBegin.Overall)) return true;
+                    if (this.OnBegin.Specific != null && this.OnBegin.Specific.Any(eval)) return true;
+                }
+                if (OnEnd != null)
+                {
+                    if (eval(this.OnEnd.Overall)) return true;
+                    if (this.OnEnd.Specific != null && this.OnEnd.Specific.Any(eval)) return true;
+                }
+                if (OnChange != null)
+                {
+                    if (eval(this.OnChange.Overall)) return true;
+                    if (this.OnChange.Specific != null && this.OnChange.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -156,6 +745,51 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
+                obj.Unused = eval(this.Unused);
+                obj.FalloutBehaviorFlags = eval(this.FalloutBehaviorFlags);
+                obj.TypeSpecificFlags = eval(this.TypeSpecificFlags);
+                obj.Unused2 = eval(this.Unused2);
+                obj.Location = this.Location == null ? null : new MaskItem<R, PackageLocation.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
+                obj.Location2 = this.Location2 == null ? null : new MaskItem<R, PackageLocation2.Mask<R>?>(eval(this.Location2.Overall), this.Location2.Specific?.Translate(eval));
+                obj.ScheduleMonth = eval(this.ScheduleMonth);
+                obj.ScheduleDayOfWeek = eval(this.ScheduleDayOfWeek);
+                obj.ScheduleDate = eval(this.ScheduleDate);
+                obj.ScheduleHour = eval(this.ScheduleHour);
+                obj.ScheduleMinute = eval(this.ScheduleMinute);
+                obj.Unused3 = eval(this.Unused3);
+                obj.Target = this.Target == null ? null : new MaskItem<R, PackageTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, PackageIdles.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
+                obj.CombatStyle = eval(this.CombatStyle);
+                obj.EatMarker = eval(this.EatMarker);
+                obj.EscortDistance = eval(this.EscortDistance);
+                obj.FollowTriggerRadius = eval(this.FollowTriggerRadius);
+                obj.PatrolFlags = eval(this.PatrolFlags);
+                obj.WeaponData = this.WeaponData == null ? null : new MaskItem<R, PackageWeaponData.Mask<R>?>(eval(this.WeaponData.Overall), this.WeaponData.Specific?.Translate(eval));
+                obj.Target2 = this.Target2 == null ? null : new MaskItem<R, PackageTarget2.Mask<R>?>(eval(this.Target2.Overall), this.Target2.Specific?.Translate(eval));
+                obj.UseItemMarker = eval(this.UseItemMarker);
+                obj.AmbushMarker = eval(this.AmbushMarker);
+                obj.DialogueData = this.DialogueData == null ? null : new MaskItem<R, PackageDialogueData.Mask<R>?>(eval(this.DialogueData.Overall), this.DialogueData.Specific?.Translate(eval));
+                obj.DialogueLocation = this.DialogueLocation == null ? null : new MaskItem<R, PackageLocation2.Mask<R>?>(eval(this.DialogueLocation.Overall), this.DialogueLocation.Specific?.Translate(eval));
+                obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
+                obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
+                obj.OnChange = this.OnChange == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnChange.Overall), this.OnChange.Specific?.Translate(eval));
             }
             #endregion
 
@@ -174,6 +808,145 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Package.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.FalloutBehaviorFlags ?? true)
+                    {
+                        sb.AppendItem(FalloutBehaviorFlags, "FalloutBehaviorFlags");
+                    }
+                    if (printMask?.TypeSpecificFlags ?? true)
+                    {
+                        sb.AppendItem(TypeSpecificFlags, "TypeSpecificFlags");
+                    }
+                    if (printMask?.Unused2 ?? true)
+                    {
+                        sb.AppendItem(Unused2, "Unused2");
+                    }
+                    if (printMask?.Location?.Overall ?? true)
+                    {
+                        Location?.Print(sb);
+                    }
+                    if (printMask?.Location2?.Overall ?? true)
+                    {
+                        Location2?.Print(sb);
+                    }
+                    if (printMask?.ScheduleMonth ?? true)
+                    {
+                        sb.AppendItem(ScheduleMonth, "ScheduleMonth");
+                    }
+                    if (printMask?.ScheduleDayOfWeek ?? true)
+                    {
+                        sb.AppendItem(ScheduleDayOfWeek, "ScheduleDayOfWeek");
+                    }
+                    if (printMask?.ScheduleDate ?? true)
+                    {
+                        sb.AppendItem(ScheduleDate, "ScheduleDate");
+                    }
+                    if (printMask?.ScheduleHour ?? true)
+                    {
+                        sb.AppendItem(ScheduleHour, "ScheduleHour");
+                    }
+                    if (printMask?.ScheduleMinute ?? true)
+                    {
+                        sb.AppendItem(ScheduleMinute, "ScheduleMinute");
+                    }
+                    if (printMask?.Unused3 ?? true)
+                    {
+                        sb.AppendItem(Unused3, "Unused3");
+                    }
+                    if (printMask?.Target?.Overall ?? true)
+                    {
+                        Target?.Print(sb);
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.IdleAnimations?.Overall ?? true)
+                    {
+                        IdleAnimations?.Print(sb);
+                    }
+                    if (printMask?.CombatStyle ?? true)
+                    {
+                        sb.AppendItem(CombatStyle, "CombatStyle");
+                    }
+                    if (printMask?.EatMarker ?? true)
+                    {
+                        sb.AppendItem(EatMarker, "EatMarker");
+                    }
+                    if (printMask?.EscortDistance ?? true)
+                    {
+                        sb.AppendItem(EscortDistance, "EscortDistance");
+                    }
+                    if (printMask?.FollowTriggerRadius ?? true)
+                    {
+                        sb.AppendItem(FollowTriggerRadius, "FollowTriggerRadius");
+                    }
+                    if (printMask?.PatrolFlags ?? true)
+                    {
+                        sb.AppendItem(PatrolFlags, "PatrolFlags");
+                    }
+                    if (printMask?.WeaponData?.Overall ?? true)
+                    {
+                        WeaponData?.Print(sb);
+                    }
+                    if (printMask?.Target2?.Overall ?? true)
+                    {
+                        Target2?.Print(sb);
+                    }
+                    if (printMask?.UseItemMarker ?? true)
+                    {
+                        sb.AppendItem(UseItemMarker, "UseItemMarker");
+                    }
+                    if (printMask?.AmbushMarker ?? true)
+                    {
+                        sb.AppendItem(AmbushMarker, "AmbushMarker");
+                    }
+                    if (printMask?.DialogueData?.Overall ?? true)
+                    {
+                        DialogueData?.Print(sb);
+                    }
+                    if (printMask?.DialogueLocation?.Overall ?? true)
+                    {
+                        DialogueLocation?.Print(sb);
+                    }
+                    if (printMask?.OnBegin?.Overall ?? true)
+                    {
+                        OnBegin?.Print(sb);
+                    }
+                    if (printMask?.OnEnd?.Overall ?? true)
+                    {
+                        OnEnd?.Print(sb);
+                    }
+                    if (printMask?.OnChange?.Overall ?? true)
+                    {
+                        OnChange?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -184,12 +957,108 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Flags;
+            public Exception? Type;
+            public Exception? Unused;
+            public Exception? FalloutBehaviorFlags;
+            public Exception? TypeSpecificFlags;
+            public Exception? Unused2;
+            public MaskItem<Exception?, PackageLocation.ErrorMask?>? Location;
+            public MaskItem<Exception?, PackageLocation2.ErrorMask?>? Location2;
+            public Exception? ScheduleMonth;
+            public Exception? ScheduleDayOfWeek;
+            public Exception? ScheduleDate;
+            public Exception? ScheduleHour;
+            public Exception? ScheduleMinute;
+            public Exception? Unused3;
+            public MaskItem<Exception?, PackageTarget.ErrorMask?>? Target;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, PackageIdles.ErrorMask?>? IdleAnimations;
+            public Exception? CombatStyle;
+            public Exception? EatMarker;
+            public Exception? EscortDistance;
+            public Exception? FollowTriggerRadius;
+            public Exception? PatrolFlags;
+            public MaskItem<Exception?, PackageWeaponData.ErrorMask?>? WeaponData;
+            public MaskItem<Exception?, PackageTarget2.ErrorMask?>? Target2;
+            public Exception? UseItemMarker;
+            public Exception? AmbushMarker;
+            public MaskItem<Exception?, PackageDialogueData.ErrorMask?>? DialogueData;
+            public MaskItem<Exception?, PackageLocation2.ErrorMask?>? DialogueLocation;
+            public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnBegin;
+            public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnEnd;
+            public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnChange;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Package_FieldIndex enu = (Package_FieldIndex)index;
                 switch (enu)
                 {
+                    case Package_FieldIndex.Flags:
+                        return Flags;
+                    case Package_FieldIndex.Type:
+                        return Type;
+                    case Package_FieldIndex.Unused:
+                        return Unused;
+                    case Package_FieldIndex.FalloutBehaviorFlags:
+                        return FalloutBehaviorFlags;
+                    case Package_FieldIndex.TypeSpecificFlags:
+                        return TypeSpecificFlags;
+                    case Package_FieldIndex.Unused2:
+                        return Unused2;
+                    case Package_FieldIndex.Location:
+                        return Location;
+                    case Package_FieldIndex.Location2:
+                        return Location2;
+                    case Package_FieldIndex.ScheduleMonth:
+                        return ScheduleMonth;
+                    case Package_FieldIndex.ScheduleDayOfWeek:
+                        return ScheduleDayOfWeek;
+                    case Package_FieldIndex.ScheduleDate:
+                        return ScheduleDate;
+                    case Package_FieldIndex.ScheduleHour:
+                        return ScheduleHour;
+                    case Package_FieldIndex.ScheduleMinute:
+                        return ScheduleMinute;
+                    case Package_FieldIndex.Unused3:
+                        return Unused3;
+                    case Package_FieldIndex.Target:
+                        return Target;
+                    case Package_FieldIndex.Conditions:
+                        return Conditions;
+                    case Package_FieldIndex.IdleAnimations:
+                        return IdleAnimations;
+                    case Package_FieldIndex.CombatStyle:
+                        return CombatStyle;
+                    case Package_FieldIndex.EatMarker:
+                        return EatMarker;
+                    case Package_FieldIndex.EscortDistance:
+                        return EscortDistance;
+                    case Package_FieldIndex.FollowTriggerRadius:
+                        return FollowTriggerRadius;
+                    case Package_FieldIndex.PatrolFlags:
+                        return PatrolFlags;
+                    case Package_FieldIndex.WeaponData:
+                        return WeaponData;
+                    case Package_FieldIndex.Target2:
+                        return Target2;
+                    case Package_FieldIndex.UseItemMarker:
+                        return UseItemMarker;
+                    case Package_FieldIndex.AmbushMarker:
+                        return AmbushMarker;
+                    case Package_FieldIndex.DialogueData:
+                        return DialogueData;
+                    case Package_FieldIndex.DialogueLocation:
+                        return DialogueLocation;
+                    case Package_FieldIndex.OnBegin:
+                        return OnBegin;
+                    case Package_FieldIndex.OnEnd:
+                        return OnEnd;
+                    case Package_FieldIndex.OnChange:
+                        return OnChange;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +1069,99 @@ namespace Mutagen.Bethesda.Fallout3
                 Package_FieldIndex enu = (Package_FieldIndex)index;
                 switch (enu)
                 {
+                    case Package_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Package_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Package_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case Package_FieldIndex.FalloutBehaviorFlags:
+                        this.FalloutBehaviorFlags = ex;
+                        break;
+                    case Package_FieldIndex.TypeSpecificFlags:
+                        this.TypeSpecificFlags = ex;
+                        break;
+                    case Package_FieldIndex.Unused2:
+                        this.Unused2 = ex;
+                        break;
+                    case Package_FieldIndex.Location:
+                        this.Location = new MaskItem<Exception?, PackageLocation.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.Location2:
+                        this.Location2 = new MaskItem<Exception?, PackageLocation2.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.ScheduleMonth:
+                        this.ScheduleMonth = ex;
+                        break;
+                    case Package_FieldIndex.ScheduleDayOfWeek:
+                        this.ScheduleDayOfWeek = ex;
+                        break;
+                    case Package_FieldIndex.ScheduleDate:
+                        this.ScheduleDate = ex;
+                        break;
+                    case Package_FieldIndex.ScheduleHour:
+                        this.ScheduleHour = ex;
+                        break;
+                    case Package_FieldIndex.ScheduleMinute:
+                        this.ScheduleMinute = ex;
+                        break;
+                    case Package_FieldIndex.Unused3:
+                        this.Unused3 = ex;
+                        break;
+                    case Package_FieldIndex.Target:
+                        this.Target = new MaskItem<Exception?, PackageTarget.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Package_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = new MaskItem<Exception?, PackageIdles.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.CombatStyle:
+                        this.CombatStyle = ex;
+                        break;
+                    case Package_FieldIndex.EatMarker:
+                        this.EatMarker = ex;
+                        break;
+                    case Package_FieldIndex.EscortDistance:
+                        this.EscortDistance = ex;
+                        break;
+                    case Package_FieldIndex.FollowTriggerRadius:
+                        this.FollowTriggerRadius = ex;
+                        break;
+                    case Package_FieldIndex.PatrolFlags:
+                        this.PatrolFlags = ex;
+                        break;
+                    case Package_FieldIndex.WeaponData:
+                        this.WeaponData = new MaskItem<Exception?, PackageWeaponData.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.Target2:
+                        this.Target2 = new MaskItem<Exception?, PackageTarget2.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.UseItemMarker:
+                        this.UseItemMarker = ex;
+                        break;
+                    case Package_FieldIndex.AmbushMarker:
+                        this.AmbushMarker = ex;
+                        break;
+                    case Package_FieldIndex.DialogueData:
+                        this.DialogueData = new MaskItem<Exception?, PackageDialogueData.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.DialogueLocation:
+                        this.DialogueLocation = new MaskItem<Exception?, PackageLocation2.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.OnBegin:
+                        this.OnBegin = new MaskItem<Exception?, PackageEvent.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.OnEnd:
+                        this.OnEnd = new MaskItem<Exception?, PackageEvent.ErrorMask?>(ex, null);
+                        break;
+                    case Package_FieldIndex.OnChange:
+                        this.OnChange = new MaskItem<Exception?, PackageEvent.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +1173,99 @@ namespace Mutagen.Bethesda.Fallout3
                 Package_FieldIndex enu = (Package_FieldIndex)index;
                 switch (enu)
                 {
+                    case Package_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.FalloutBehaviorFlags:
+                        this.FalloutBehaviorFlags = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.TypeSpecificFlags:
+                        this.TypeSpecificFlags = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.Location:
+                        this.Location = (MaskItem<Exception?, PackageLocation.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.Location2:
+                        this.Location2 = (MaskItem<Exception?, PackageLocation2.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.ScheduleMonth:
+                        this.ScheduleMonth = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.ScheduleDayOfWeek:
+                        this.ScheduleDayOfWeek = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.ScheduleDate:
+                        this.ScheduleDate = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.ScheduleHour:
+                        this.ScheduleHour = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.ScheduleMinute:
+                        this.ScheduleMinute = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.Unused3:
+                        this.Unused3 = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.Target:
+                        this.Target = (MaskItem<Exception?, PackageTarget.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Package_FieldIndex.IdleAnimations:
+                        this.IdleAnimations = (MaskItem<Exception?, PackageIdles.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.CombatStyle:
+                        this.CombatStyle = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.EatMarker:
+                        this.EatMarker = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.EscortDistance:
+                        this.EscortDistance = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.FollowTriggerRadius:
+                        this.FollowTriggerRadius = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.PatrolFlags:
+                        this.PatrolFlags = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.WeaponData:
+                        this.WeaponData = (MaskItem<Exception?, PackageWeaponData.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.Target2:
+                        this.Target2 = (MaskItem<Exception?, PackageTarget2.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.UseItemMarker:
+                        this.UseItemMarker = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.AmbushMarker:
+                        this.AmbushMarker = (Exception?)obj;
+                        break;
+                    case Package_FieldIndex.DialogueData:
+                        this.DialogueData = (MaskItem<Exception?, PackageDialogueData.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.DialogueLocation:
+                        this.DialogueLocation = (MaskItem<Exception?, PackageLocation2.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.OnBegin:
+                        this.OnBegin = (MaskItem<Exception?, PackageEvent.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.OnEnd:
+                        this.OnEnd = (MaskItem<Exception?, PackageEvent.ErrorMask?>?)obj;
+                        break;
+                    case Package_FieldIndex.OnChange:
+                        this.OnChange = (MaskItem<Exception?, PackageEvent.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +1275,37 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
+                if (Unused != null) return true;
+                if (FalloutBehaviorFlags != null) return true;
+                if (TypeSpecificFlags != null) return true;
+                if (Unused2 != null) return true;
+                if (Location != null) return true;
+                if (Location2 != null) return true;
+                if (ScheduleMonth != null) return true;
+                if (ScheduleDayOfWeek != null) return true;
+                if (ScheduleDate != null) return true;
+                if (ScheduleHour != null) return true;
+                if (ScheduleMinute != null) return true;
+                if (Unused3 != null) return true;
+                if (Target != null) return true;
+                if (Conditions != null) return true;
+                if (IdleAnimations != null) return true;
+                if (CombatStyle != null) return true;
+                if (EatMarker != null) return true;
+                if (EscortDistance != null) return true;
+                if (FollowTriggerRadius != null) return true;
+                if (PatrolFlags != null) return true;
+                if (WeaponData != null) return true;
+                if (Target2 != null) return true;
+                if (UseItemMarker != null) return true;
+                if (AmbushMarker != null) return true;
+                if (DialogueData != null) return true;
+                if (DialogueLocation != null) return true;
+                if (OnBegin != null) return true;
+                if (OnEnd != null) return true;
+                if (OnChange != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +1332,92 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(FalloutBehaviorFlags, "FalloutBehaviorFlags");
+                }
+                {
+                    sb.AppendItem(TypeSpecificFlags, "TypeSpecificFlags");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                Location?.Print(sb);
+                Location2?.Print(sb);
+                {
+                    sb.AppendItem(ScheduleMonth, "ScheduleMonth");
+                }
+                {
+                    sb.AppendItem(ScheduleDayOfWeek, "ScheduleDayOfWeek");
+                }
+                {
+                    sb.AppendItem(ScheduleDate, "ScheduleDate");
+                }
+                {
+                    sb.AppendItem(ScheduleHour, "ScheduleHour");
+                }
+                {
+                    sb.AppendItem(ScheduleMinute, "ScheduleMinute");
+                }
+                {
+                    sb.AppendItem(Unused3, "Unused3");
+                }
+                Target?.Print(sb);
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                IdleAnimations?.Print(sb);
+                {
+                    sb.AppendItem(CombatStyle, "CombatStyle");
+                }
+                {
+                    sb.AppendItem(EatMarker, "EatMarker");
+                }
+                {
+                    sb.AppendItem(EscortDistance, "EscortDistance");
+                }
+                {
+                    sb.AppendItem(FollowTriggerRadius, "FollowTriggerRadius");
+                }
+                {
+                    sb.AppendItem(PatrolFlags, "PatrolFlags");
+                }
+                WeaponData?.Print(sb);
+                Target2?.Print(sb);
+                {
+                    sb.AppendItem(UseItemMarker, "UseItemMarker");
+                }
+                {
+                    sb.AppendItem(AmbushMarker, "AmbushMarker");
+                }
+                DialogueData?.Print(sb);
+                DialogueLocation?.Print(sb);
+                OnBegin?.Print(sb);
+                OnEnd?.Print(sb);
+                OnChange?.Print(sb);
             }
             #endregion
 
@@ -254,6 +1426,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.FalloutBehaviorFlags = this.FalloutBehaviorFlags.Combine(rhs.FalloutBehaviorFlags);
+                ret.TypeSpecificFlags = this.TypeSpecificFlags.Combine(rhs.TypeSpecificFlags);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
+                ret.Location2 = this.Location2.Combine(rhs.Location2, (l, r) => l.Combine(r));
+                ret.ScheduleMonth = this.ScheduleMonth.Combine(rhs.ScheduleMonth);
+                ret.ScheduleDayOfWeek = this.ScheduleDayOfWeek.Combine(rhs.ScheduleDayOfWeek);
+                ret.ScheduleDate = this.ScheduleDate.Combine(rhs.ScheduleDate);
+                ret.ScheduleHour = this.ScheduleHour.Combine(rhs.ScheduleHour);
+                ret.ScheduleMinute = this.ScheduleMinute.Combine(rhs.ScheduleMinute);
+                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
+                ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
+                ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
+                ret.EatMarker = this.EatMarker.Combine(rhs.EatMarker);
+                ret.EscortDistance = this.EscortDistance.Combine(rhs.EscortDistance);
+                ret.FollowTriggerRadius = this.FollowTriggerRadius.Combine(rhs.FollowTriggerRadius);
+                ret.PatrolFlags = this.PatrolFlags.Combine(rhs.PatrolFlags);
+                ret.WeaponData = this.WeaponData.Combine(rhs.WeaponData, (l, r) => l.Combine(r));
+                ret.Target2 = this.Target2.Combine(rhs.Target2, (l, r) => l.Combine(r));
+                ret.UseItemMarker = this.UseItemMarker.Combine(rhs.UseItemMarker);
+                ret.AmbushMarker = this.AmbushMarker.Combine(rhs.AmbushMarker);
+                ret.DialogueData = this.DialogueData.Combine(rhs.DialogueData, (l, r) => l.Combine(r));
+                ret.DialogueLocation = this.DialogueLocation.Combine(rhs.DialogueLocation, (l, r) => l.Combine(r));
+                ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
+                ret.OnEnd = this.OnEnd.Combine(rhs.OnEnd, (l, r) => l.Combine(r));
+                ret.OnChange = this.OnChange.Combine(rhs.OnChange, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +1478,104 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Flags;
+            public bool Type;
+            public bool Unused;
+            public bool FalloutBehaviorFlags;
+            public bool TypeSpecificFlags;
+            public bool Unused2;
+            public PackageLocation.TranslationMask? Location;
+            public PackageLocation2.TranslationMask? Location2;
+            public bool ScheduleMonth;
+            public bool ScheduleDayOfWeek;
+            public bool ScheduleDate;
+            public bool ScheduleHour;
+            public bool ScheduleMinute;
+            public bool Unused3;
+            public PackageTarget.TranslationMask? Target;
+            public Condition.TranslationMask? Conditions;
+            public PackageIdles.TranslationMask? IdleAnimations;
+            public bool CombatStyle;
+            public bool EatMarker;
+            public bool EscortDistance;
+            public bool FollowTriggerRadius;
+            public bool PatrolFlags;
+            public PackageWeaponData.TranslationMask? WeaponData;
+            public PackageTarget2.TranslationMask? Target2;
+            public bool UseItemMarker;
+            public bool AmbushMarker;
+            public PackageDialogueData.TranslationMask? DialogueData;
+            public PackageLocation2.TranslationMask? DialogueLocation;
+            public PackageEvent.TranslationMask? OnBegin;
+            public PackageEvent.TranslationMask? OnEnd;
+            public PackageEvent.TranslationMask? OnChange;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
+                this.Unused = defaultOn;
+                this.FalloutBehaviorFlags = defaultOn;
+                this.TypeSpecificFlags = defaultOn;
+                this.Unused2 = defaultOn;
+                this.ScheduleMonth = defaultOn;
+                this.ScheduleDayOfWeek = defaultOn;
+                this.ScheduleDate = defaultOn;
+                this.ScheduleHour = defaultOn;
+                this.ScheduleMinute = defaultOn;
+                this.Unused3 = defaultOn;
+                this.CombatStyle = defaultOn;
+                this.EatMarker = defaultOn;
+                this.EscortDistance = defaultOn;
+                this.FollowTriggerRadius = defaultOn;
+                this.PatrolFlags = defaultOn;
+                this.UseItemMarker = defaultOn;
+                this.AmbushMarker = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+                ret.Add((Unused, null));
+                ret.Add((FalloutBehaviorFlags, null));
+                ret.Add((TypeSpecificFlags, null));
+                ret.Add((Unused2, null));
+                ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
+                ret.Add((Location2 != null ? Location2.OnOverall : DefaultOn, Location2?.GetCrystal()));
+                ret.Add((ScheduleMonth, null));
+                ret.Add((ScheduleDayOfWeek, null));
+                ret.Add((ScheduleDate, null));
+                ret.Add((ScheduleHour, null));
+                ret.Add((ScheduleMinute, null));
+                ret.Add((Unused3, null));
+                ret.Add((Target != null ? Target.OnOverall : DefaultOn, Target?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
+                ret.Add((CombatStyle, null));
+                ret.Add((EatMarker, null));
+                ret.Add((EscortDistance, null));
+                ret.Add((FollowTriggerRadius, null));
+                ret.Add((PatrolFlags, null));
+                ret.Add((WeaponData != null ? WeaponData.OnOverall : DefaultOn, WeaponData?.GetCrystal()));
+                ret.Add((Target2 != null ? Target2.OnOverall : DefaultOn, Target2?.GetCrystal()));
+                ret.Add((UseItemMarker, null));
+                ret.Add((AmbushMarker, null));
+                ret.Add((DialogueData != null ? DialogueData.OnOverall : DefaultOn, DialogueData?.GetCrystal()));
+                ret.Add((DialogueLocation != null ? DialogueLocation.OnOverall : DefaultOn, DialogueLocation?.GetCrystal()));
+                ret.Add((OnBegin != null ? OnBegin.OnOverall : DefaultOn, OnBegin?.GetCrystal()));
+                ret.Add((OnEnd != null ? OnEnd.OnOverall : DefaultOn, OnEnd?.GetCrystal()));
+                ret.Add((OnChange != null ? OnChange.OnOverall : DefaultOn, OnChange?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1587,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Package_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PackageCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageSetterCommon.Instance.RemapLinks(this, mapping);
         public Package(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -413,9 +1707,41 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IPackage :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPackageInternal>,
         IPackageGetter
     {
+        new UInt32 Flags { get; set; }
+        new Byte Type { get; set; }
+        new Byte Unused { get; set; }
+        new UInt16 FalloutBehaviorFlags { get; set; }
+        new UInt16 TypeSpecificFlags { get; set; }
+        new MemorySlice<Byte> Unused2 { get; set; }
+        new PackageLocation? Location { get; set; }
+        new PackageLocation2? Location2 { get; set; }
+        new SByte ScheduleMonth { get; set; }
+        new Byte ScheduleDayOfWeek { get; set; }
+        new Byte ScheduleDate { get; set; }
+        new SByte ScheduleHour { get; set; }
+        new SByte ScheduleMinute { get; set; }
+        new MemorySlice<Byte> Unused3 { get; set; }
+        new PackageTarget? Target { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new PackageIdles? IdleAnimations { get; set; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new Boolean EatMarker { get; set; }
+        new UInt32? EscortDistance { get; set; }
+        new Single? FollowTriggerRadius { get; set; }
+        new MemorySlice<Byte>? PatrolFlags { get; set; }
+        new PackageWeaponData? WeaponData { get; set; }
+        new PackageTarget2? Target2 { get; set; }
+        new Boolean UseItemMarker { get; set; }
+        new Boolean AmbushMarker { get; set; }
+        new PackageDialogueData? DialogueData { get; set; }
+        new PackageLocation2? DialogueLocation { get; set; }
+        new PackageEvent? OnBegin { get; set; }
+        new PackageEvent? OnEnd { get; set; }
+        new PackageEvent? OnChange { get; set; }
     }
 
     public partial interface IPackageInternal :
@@ -429,10 +1755,42 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IPackageGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IPackageGetter>,
         IMapsToGetter<IPackageGetter>
     {
         static new ILoquiRegistration StaticRegistration => Package_Registration.Instance;
+        UInt32 Flags { get; }
+        Byte Type { get; }
+        Byte Unused { get; }
+        UInt16 FalloutBehaviorFlags { get; }
+        UInt16 TypeSpecificFlags { get; }
+        ReadOnlyMemorySlice<Byte> Unused2 { get; }
+        IPackageLocationGetter? Location { get; }
+        IPackageLocation2Getter? Location2 { get; }
+        SByte ScheduleMonth { get; }
+        Byte ScheduleDayOfWeek { get; }
+        Byte ScheduleDate { get; }
+        SByte ScheduleHour { get; }
+        SByte ScheduleMinute { get; }
+        ReadOnlyMemorySlice<Byte> Unused3 { get; }
+        IPackageTargetGetter? Target { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IPackageIdlesGetter? IdleAnimations { get; }
+        IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle { get; }
+        Boolean EatMarker { get; }
+        UInt32? EscortDistance { get; }
+        Single? FollowTriggerRadius { get; }
+        ReadOnlyMemorySlice<Byte>? PatrolFlags { get; }
+        IPackageWeaponDataGetter? WeaponData { get; }
+        IPackageTarget2Getter? Target2 { get; }
+        Boolean UseItemMarker { get; }
+        Boolean AmbushMarker { get; }
+        IPackageDialogueDataGetter? DialogueData { get; }
+        IPackageLocation2Getter? DialogueLocation { get; }
+        IPackageEventGetter? OnBegin { get; }
+        IPackageEventGetter? OnEnd { get; }
+        IPackageEventGetter? OnChange { get; }
 
     }
 
@@ -609,6 +1967,37 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
+        Flags = 7,
+        Type = 8,
+        Unused = 9,
+        FalloutBehaviorFlags = 10,
+        TypeSpecificFlags = 11,
+        Unused2 = 12,
+        Location = 13,
+        Location2 = 14,
+        ScheduleMonth = 15,
+        ScheduleDayOfWeek = 16,
+        ScheduleDate = 17,
+        ScheduleHour = 18,
+        ScheduleMinute = 19,
+        Unused3 = 20,
+        Target = 21,
+        Conditions = 22,
+        IdleAnimations = 23,
+        CombatStyle = 24,
+        EatMarker = 25,
+        EscortDistance = 26,
+        FollowTriggerRadius = 27,
+        PatrolFlags = 28,
+        WeaponData = 29,
+        Target2 = 30,
+        UseItemMarker = 31,
+        AmbushMarker = 32,
+        DialogueData = 33,
+        DialogueLocation = 34,
+        OnBegin = 35,
+        OnEnd = 36,
+        OnChange = 37,
     }
     #endregion
 
@@ -619,9 +2008,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(Package.Mask<>);
 
@@ -651,8 +2040,32 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PACK);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PACK);
+            var all = RecordCollection.Factory(
+                RecordTypes.PACK,
+                RecordTypes.PKDT,
+                RecordTypes.PLDT,
+                RecordTypes.PLD2,
+                RecordTypes.PSDT,
+                RecordTypes.PTDT,
+                RecordTypes.CTDA,
+                RecordTypes.IDLF,
+                RecordTypes.CNAM,
+                RecordTypes.PKED,
+                RecordTypes.PKE2,
+                RecordTypes.PKFD,
+                RecordTypes.PKPT,
+                RecordTypes.PKW3,
+                RecordTypes.PTD2,
+                RecordTypes.PUID,
+                RecordTypes.PKAM,
+                RecordTypes.PKDD,
+                RecordTypes.POBA,
+                RecordTypes.POEA,
+                RecordTypes.POCA);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageBinaryWriteTranslation);
         #region Interface
@@ -694,6 +2107,37 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageInternal item)
         {
             ClearPartial();
+            item.Flags = default(UInt32);
+            item.Type = default(Byte);
+            item.Unused = default(Byte);
+            item.FalloutBehaviorFlags = default(UInt16);
+            item.TypeSpecificFlags = default(UInt16);
+            item.Unused2 = new byte[2];
+            item.Location = null;
+            item.Location2 = null;
+            item.ScheduleMonth = default(SByte);
+            item.ScheduleDayOfWeek = default(Byte);
+            item.ScheduleDate = default(Byte);
+            item.ScheduleHour = default(SByte);
+            item.ScheduleMinute = default(SByte);
+            item.Unused3 = new byte[3];
+            item.Target = null;
+            item.Conditions.Clear();
+            item.IdleAnimations = null;
+            item.CombatStyle.Clear();
+            item.EatMarker = default(Boolean);
+            item.EscortDistance = default;
+            item.FollowTriggerRadius = default;
+            item.PatrolFlags = default;
+            item.WeaponData = null;
+            item.Target2 = null;
+            item.UseItemMarker = default(Boolean);
+            item.AmbushMarker = default(Boolean);
+            item.DialogueData = null;
+            item.DialogueLocation = null;
+            item.OnBegin = null;
+            item.OnEnd = null;
+            item.OnChange = null;
             base.Clear(item);
         }
         
@@ -711,6 +2155,18 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IPackage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Location?.RemapLinks(mapping);
+            obj.Location2?.RemapLinks(mapping);
+            obj.Target?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.IdleAnimations?.RemapLinks(mapping);
+            obj.CombatStyle.Relink(mapping);
+            obj.Target2?.RemapLinks(mapping);
+            obj.DialogueData?.RemapLinks(mapping);
+            obj.DialogueLocation?.RemapLinks(mapping);
+            obj.OnBegin?.RemapLinks(mapping);
+            obj.OnEnd?.RemapLinks(mapping);
+            obj.OnChange?.RemapLinks(mapping);
         }
         
         #endregion
@@ -778,6 +2234,84 @@ namespace Mutagen.Bethesda.Fallout3
             Package.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.FalloutBehaviorFlags = item.FalloutBehaviorFlags == rhs.FalloutBehaviorFlags;
+            ret.TypeSpecificFlags = item.TypeSpecificFlags == rhs.TypeSpecificFlags;
+            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
+            ret.Location = EqualsMaskHelper.EqualsHelper(
+                item.Location,
+                rhs.Location,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Location2 = EqualsMaskHelper.EqualsHelper(
+                item.Location2,
+                rhs.Location2,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ScheduleMonth = item.ScheduleMonth == rhs.ScheduleMonth;
+            ret.ScheduleDayOfWeek = item.ScheduleDayOfWeek == rhs.ScheduleDayOfWeek;
+            ret.ScheduleDate = item.ScheduleDate == rhs.ScheduleDate;
+            ret.ScheduleHour = item.ScheduleHour == rhs.ScheduleHour;
+            ret.ScheduleMinute = item.ScheduleMinute == rhs.ScheduleMinute;
+            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
+            ret.Target = EqualsMaskHelper.EqualsHelper(
+                item.Target,
+                rhs.Target,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.IdleAnimations = EqualsMaskHelper.EqualsHelper(
+                item.IdleAnimations,
+                rhs.IdleAnimations,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
+            ret.EatMarker = item.EatMarker == rhs.EatMarker;
+            ret.EscortDistance = item.EscortDistance == rhs.EscortDistance;
+            ret.FollowTriggerRadius = item.FollowTriggerRadius.EqualsWithin(rhs.FollowTriggerRadius);
+            ret.PatrolFlags = MemorySliceExt.SequenceEqual(item.PatrolFlags, rhs.PatrolFlags);
+            ret.WeaponData = EqualsMaskHelper.EqualsHelper(
+                item.WeaponData,
+                rhs.WeaponData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Target2 = EqualsMaskHelper.EqualsHelper(
+                item.Target2,
+                rhs.Target2,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.UseItemMarker = item.UseItemMarker == rhs.UseItemMarker;
+            ret.AmbushMarker = item.AmbushMarker == rhs.AmbushMarker;
+            ret.DialogueData = EqualsMaskHelper.EqualsHelper(
+                item.DialogueData,
+                rhs.DialogueData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DialogueLocation = EqualsMaskHelper.EqualsHelper(
+                item.DialogueLocation,
+                rhs.DialogueLocation,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.OnBegin = EqualsMaskHelper.EqualsHelper(
+                item.OnBegin,
+                rhs.OnBegin,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.OnEnd = EqualsMaskHelper.EqualsHelper(
+                item.OnEnd,
+                rhs.OnEnd,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.OnChange = EqualsMaskHelper.EqualsHelper(
+                item.OnChange,
+                rhs.OnChange,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -827,6 +2361,154 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Type ?? true)
+            {
+                sb.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendItem(item.Unused, "Unused");
+            }
+            if (printMask?.FalloutBehaviorFlags ?? true)
+            {
+                sb.AppendItem(item.FalloutBehaviorFlags, "FalloutBehaviorFlags");
+            }
+            if (printMask?.TypeSpecificFlags ?? true)
+            {
+                sb.AppendItem(item.TypeSpecificFlags, "TypeSpecificFlags");
+            }
+            if (printMask?.Unused2 ?? true)
+            {
+                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+            }
+            if ((printMask?.Location?.Overall ?? true)
+                && item.Location is {} LocationItem)
+            {
+                LocationItem?.Print(sb, "Location");
+            }
+            if ((printMask?.Location2?.Overall ?? true)
+                && item.Location2 is {} Location2Item)
+            {
+                Location2Item?.Print(sb, "Location2");
+            }
+            if (printMask?.ScheduleMonth ?? true)
+            {
+                sb.AppendItem(item.ScheduleMonth, "ScheduleMonth");
+            }
+            if (printMask?.ScheduleDayOfWeek ?? true)
+            {
+                sb.AppendItem(item.ScheduleDayOfWeek, "ScheduleDayOfWeek");
+            }
+            if (printMask?.ScheduleDate ?? true)
+            {
+                sb.AppendItem(item.ScheduleDate, "ScheduleDate");
+            }
+            if (printMask?.ScheduleHour ?? true)
+            {
+                sb.AppendItem(item.ScheduleHour, "ScheduleHour");
+            }
+            if (printMask?.ScheduleMinute ?? true)
+            {
+                sb.AppendItem(item.ScheduleMinute, "ScheduleMinute");
+            }
+            if (printMask?.Unused3 ?? true)
+            {
+                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
+            }
+            if ((printMask?.Target?.Overall ?? true)
+                && item.Target is {} TargetItem)
+            {
+                TargetItem?.Print(sb, "Target");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.IdleAnimations?.Overall ?? true)
+                && item.IdleAnimations is {} IdleAnimationsItem)
+            {
+                IdleAnimationsItem?.Print(sb, "IdleAnimations");
+            }
+            if (printMask?.CombatStyle ?? true)
+            {
+                sb.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
+            }
+            if (printMask?.EatMarker ?? true)
+            {
+                sb.AppendItem(item.EatMarker, "EatMarker");
+            }
+            if ((printMask?.EscortDistance ?? true)
+                && item.EscortDistance is {} EscortDistanceItem)
+            {
+                sb.AppendItem(EscortDistanceItem, "EscortDistance");
+            }
+            if ((printMask?.FollowTriggerRadius ?? true)
+                && item.FollowTriggerRadius is {} FollowTriggerRadiusItem)
+            {
+                sb.AppendItem(FollowTriggerRadiusItem, "FollowTriggerRadius");
+            }
+            if ((printMask?.PatrolFlags ?? true)
+                && item.PatrolFlags is {} PatrolFlagsItem)
+            {
+                sb.AppendLine($"PatrolFlags => {SpanExt.ToHexString(PatrolFlagsItem)}");
+            }
+            if ((printMask?.WeaponData?.Overall ?? true)
+                && item.WeaponData is {} WeaponDataItem)
+            {
+                WeaponDataItem?.Print(sb, "WeaponData");
+            }
+            if ((printMask?.Target2?.Overall ?? true)
+                && item.Target2 is {} Target2Item)
+            {
+                Target2Item?.Print(sb, "Target2");
+            }
+            if (printMask?.UseItemMarker ?? true)
+            {
+                sb.AppendItem(item.UseItemMarker, "UseItemMarker");
+            }
+            if (printMask?.AmbushMarker ?? true)
+            {
+                sb.AppendItem(item.AmbushMarker, "AmbushMarker");
+            }
+            if ((printMask?.DialogueData?.Overall ?? true)
+                && item.DialogueData is {} DialogueDataItem)
+            {
+                DialogueDataItem?.Print(sb, "DialogueData");
+            }
+            if ((printMask?.DialogueLocation?.Overall ?? true)
+                && item.DialogueLocation is {} DialogueLocationItem)
+            {
+                DialogueLocationItem?.Print(sb, "DialogueLocation");
+            }
+            if ((printMask?.OnBegin?.Overall ?? true)
+                && item.OnBegin is {} OnBeginItem)
+            {
+                OnBeginItem?.Print(sb, "OnBegin");
+            }
+            if ((printMask?.OnEnd?.Overall ?? true)
+                && item.OnEnd is {} OnEndItem)
+            {
+                OnEndItem?.Print(sb, "OnEnd");
+            }
+            if ((printMask?.OnChange?.Overall ?? true)
+                && item.OnChange is {} OnChangeItem)
+            {
+                OnChangeItem?.Print(sb, "OnChange");
+            }
         }
         
         public static Package_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -877,6 +2559,174 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.FalloutBehaviorFlags) ?? true))
+            {
+                if (lhs.FalloutBehaviorFlags != rhs.FalloutBehaviorFlags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.TypeSpecificFlags) ?? true))
+            {
+                if (lhs.TypeSpecificFlags != rhs.TypeSpecificFlags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unused2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Location) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
+                {
+                    if (!((PackageLocationCommon)((IPackageLocationGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Location))) return false;
+                }
+                else if (!isLocationEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Location2) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Location2, rhs.Location2, out var lhsLocation2, out var rhsLocation2, out var isLocation2Equal))
+                {
+                    if (!((PackageLocation2Common)((IPackageLocation2Getter)lhsLocation2).CommonInstance()!).Equals(lhsLocation2, rhsLocation2, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Location2))) return false;
+                }
+                else if (!isLocation2Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
+            {
+                if (lhs.ScheduleMonth != rhs.ScheduleMonth) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
+            {
+                if (lhs.ScheduleDayOfWeek != rhs.ScheduleDayOfWeek) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
+            {
+                if (lhs.ScheduleDate != rhs.ScheduleDate) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            {
+                if (lhs.ScheduleHour != rhs.ScheduleHour) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            {
+                if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unused3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Target) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
+                {
+                    if (!((PackageTargetCommon)((IPackageTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Target))) return false;
+                }
+                else if (!isTargetEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
+                {
+                    if (!((PackageIdlesCommon)((IPackageIdlesGetter)lhsIdleAnimations).CommonInstance()!).Equals(lhsIdleAnimations, rhsIdleAnimations, equalsMask?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations))) return false;
+                }
+                else if (!isIdleAnimationsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
+            {
+                if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.EatMarker) ?? true))
+            {
+                if (lhs.EatMarker != rhs.EatMarker) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.EscortDistance) ?? true))
+            {
+                if (lhs.EscortDistance != rhs.EscortDistance) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.FollowTriggerRadius) ?? true))
+            {
+                if (!lhs.FollowTriggerRadius.EqualsWithin(rhs.FollowTriggerRadius)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PatrolFlags) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.PatrolFlags, rhs.PatrolFlags)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.WeaponData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WeaponData, rhs.WeaponData, out var lhsWeaponData, out var rhsWeaponData, out var isWeaponDataEqual))
+                {
+                    if (!((PackageWeaponDataCommon)((IPackageWeaponDataGetter)lhsWeaponData).CommonInstance()!).Equals(lhsWeaponData, rhsWeaponData, equalsMask?.GetSubCrystal((int)Package_FieldIndex.WeaponData))) return false;
+                }
+                else if (!isWeaponDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Target2) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Target2, rhs.Target2, out var lhsTarget2, out var rhsTarget2, out var isTarget2Equal))
+                {
+                    if (!((PackageTarget2Common)((IPackageTarget2Getter)lhsTarget2).CommonInstance()!).Equals(lhsTarget2, rhsTarget2, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Target2))) return false;
+                }
+                else if (!isTarget2Equal) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.UseItemMarker) ?? true))
+            {
+                if (lhs.UseItemMarker != rhs.UseItemMarker) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.AmbushMarker) ?? true))
+            {
+                if (lhs.AmbushMarker != rhs.AmbushMarker) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.DialogueData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DialogueData, rhs.DialogueData, out var lhsDialogueData, out var rhsDialogueData, out var isDialogueDataEqual))
+                {
+                    if (!((PackageDialogueDataCommon)((IPackageDialogueDataGetter)lhsDialogueData).CommonInstance()!).Equals(lhsDialogueData, rhsDialogueData, equalsMask?.GetSubCrystal((int)Package_FieldIndex.DialogueData))) return false;
+                }
+                else if (!isDialogueDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.DialogueLocation) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DialogueLocation, rhs.DialogueLocation, out var lhsDialogueLocation, out var rhsDialogueLocation, out var isDialogueLocationEqual))
+                {
+                    if (!((PackageLocation2Common)((IPackageLocation2Getter)lhsDialogueLocation).CommonInstance()!).Equals(lhsDialogueLocation, rhsDialogueLocation, equalsMask?.GetSubCrystal((int)Package_FieldIndex.DialogueLocation))) return false;
+                }
+                else if (!isDialogueLocationEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.OnBegin, rhs.OnBegin, out var lhsOnBegin, out var rhsOnBegin, out var isOnBeginEqual))
+                {
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnBegin))) return false;
+                }
+                else if (!isOnBeginEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.OnEnd, rhs.OnEnd, out var lhsOnEnd, out var rhsOnEnd, out var isOnEndEqual))
+                {
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnEnd))) return false;
+                }
+                else if (!isOnEndEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.OnChange, rhs.OnChange, out var lhsOnChange, out var rhsOnChange, out var isOnChangeEqual))
+                {
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, equalsMask?.GetSubCrystal((int)Package_FieldIndex.OnChange))) return false;
+                }
+                else if (!isOnChangeEqual) return false;
+            }
             return true;
         }
         
@@ -905,6 +2755,79 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPackageGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Flags);
+            hash.Add(item.Type);
+            hash.Add(item.Unused);
+            hash.Add(item.FalloutBehaviorFlags);
+            hash.Add(item.TypeSpecificFlags);
+            hash.Add(item.Unused2);
+            if (item.Location is {} Locationitem)
+            {
+                hash.Add(Locationitem);
+            }
+            if (item.Location2 is {} Location2item)
+            {
+                hash.Add(Location2item);
+            }
+            hash.Add(item.ScheduleMonth);
+            hash.Add(item.ScheduleDayOfWeek);
+            hash.Add(item.ScheduleDate);
+            hash.Add(item.ScheduleHour);
+            hash.Add(item.ScheduleMinute);
+            hash.Add(item.Unused3);
+            if (item.Target is {} Targetitem)
+            {
+                hash.Add(Targetitem);
+            }
+            hash.Add(item.Conditions);
+            if (item.IdleAnimations is {} IdleAnimationsitem)
+            {
+                hash.Add(IdleAnimationsitem);
+            }
+            hash.Add(item.CombatStyle);
+            hash.Add(item.EatMarker);
+            if (item.EscortDistance is {} EscortDistanceitem)
+            {
+                hash.Add(EscortDistanceitem);
+            }
+            if (item.FollowTriggerRadius is {} FollowTriggerRadiusitem)
+            {
+                hash.Add(FollowTriggerRadiusitem);
+            }
+            if (item.PatrolFlags is {} PatrolFlagsItem)
+            {
+                hash.Add(PatrolFlagsItem);
+            }
+            if (item.WeaponData is {} WeaponDataitem)
+            {
+                hash.Add(WeaponDataitem);
+            }
+            if (item.Target2 is {} Target2item)
+            {
+                hash.Add(Target2item);
+            }
+            hash.Add(item.UseItemMarker);
+            hash.Add(item.AmbushMarker);
+            if (item.DialogueData is {} DialogueDataitem)
+            {
+                hash.Add(DialogueDataitem);
+            }
+            if (item.DialogueLocation is {} DialogueLocationitem)
+            {
+                hash.Add(DialogueLocationitem);
+            }
+            if (item.OnBegin is {} OnBeginitem)
+            {
+                hash.Add(OnBeginitem);
+            }
+            if (item.OnEnd is {} OnEnditem)
+            {
+                hash.Add(OnEnditem);
+            }
+            if (item.OnChange is {} OnChangeitem)
+            {
+                hash.Add(OnChangeitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -928,11 +2851,89 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (obj.Location is {} LocationItems)
+            {
+                foreach (var item in LocationItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Location2 is {} Location2Items)
+            {
+                foreach (var item in Location2Items.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Target is {} TargetItems)
+            {
+                foreach (var item in TargetItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.IdleAnimations is {} IdleAnimationsItems)
+            {
+                foreach (var item in IdleAnimationsItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
+            {
+                yield return CombatStyleInfo;
+            }
+            if (obj.Target2 is {} Target2Items)
+            {
+                foreach (var item in Target2Items.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DialogueData is {} DialogueDataItems)
+            {
+                foreach (var item in DialogueDataItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DialogueLocation is {} DialogueLocationItems)
+            {
+                foreach (var item in DialogueLocationItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.OnBegin is {} OnBeginItems)
+            {
+                foreach (var item in OnBeginItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.OnEnd is {} OnEndItems)
+            {
+                foreach (var item in OnEndItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.OnChange is {} OnChangeItems)
+            {
+                foreach (var item in OnChangeItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1008,6 +3009,399 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.FalloutBehaviorFlags) ?? true))
+            {
+                item.FalloutBehaviorFlags = rhs.FalloutBehaviorFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.TypeSpecificFlags) ?? true))
+            {
+                item.TypeSpecificFlags = rhs.TypeSpecificFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unused2) ?? true))
+            {
+                item.Unused2 = rhs.Unused2.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Location) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.Location);
+                try
+                {
+                    if(rhs.Location is {} rhsLocation)
+                    {
+                        item.Location = rhsLocation.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.Location));
+                    }
+                    else
+                    {
+                        item.Location = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Location2) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.Location2);
+                try
+                {
+                    if(rhs.Location2 is {} rhsLocation2)
+                    {
+                        item.Location2 = rhsLocation2.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.Location2));
+                    }
+                    else
+                    {
+                        item.Location2 = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
+            {
+                item.ScheduleMonth = rhs.ScheduleMonth;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
+            {
+                item.ScheduleDayOfWeek = rhs.ScheduleDayOfWeek;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
+            {
+                item.ScheduleDate = rhs.ScheduleDate;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            {
+                item.ScheduleHour = rhs.ScheduleHour;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            {
+                item.ScheduleMinute = rhs.ScheduleMinute;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unused3) ?? true))
+            {
+                item.Unused3 = rhs.Unused3.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Target) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.Target);
+                try
+                {
+                    if(rhs.Target is {} rhsTarget)
+                    {
+                        item.Target = rhsTarget.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.Target));
+                    }
+                    else
+                    {
+                        item.Target = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.IdleAnimations);
+                try
+                {
+                    if(rhs.IdleAnimations is {} rhsIdleAnimations)
+                    {
+                        item.IdleAnimations = rhsIdleAnimations.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations));
+                    }
+                    else
+                    {
+                        item.IdleAnimations = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
+            {
+                item.CombatStyle.SetTo(rhs.CombatStyle.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.EatMarker) ?? true))
+            {
+                item.EatMarker = rhs.EatMarker;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.EscortDistance) ?? true))
+            {
+                item.EscortDistance = rhs.EscortDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.FollowTriggerRadius) ?? true))
+            {
+                item.FollowTriggerRadius = rhs.FollowTriggerRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PatrolFlags) ?? true))
+            {
+                if(rhs.PatrolFlags is {} PatrolFlagsrhs)
+                {
+                    item.PatrolFlags = PatrolFlagsrhs.ToArray();
+                }
+                else
+                {
+                    item.PatrolFlags = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.WeaponData) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.WeaponData);
+                try
+                {
+                    if(rhs.WeaponData is {} rhsWeaponData)
+                    {
+                        item.WeaponData = rhsWeaponData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.WeaponData));
+                    }
+                    else
+                    {
+                        item.WeaponData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Target2) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.Target2);
+                try
+                {
+                    if(rhs.Target2 is {} rhsTarget2)
+                    {
+                        item.Target2 = rhsTarget2.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.Target2));
+                    }
+                    else
+                    {
+                        item.Target2 = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.UseItemMarker) ?? true))
+            {
+                item.UseItemMarker = rhs.UseItemMarker;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.AmbushMarker) ?? true))
+            {
+                item.AmbushMarker = rhs.AmbushMarker;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DialogueData) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.DialogueData);
+                try
+                {
+                    if(rhs.DialogueData is {} rhsDialogueData)
+                    {
+                        item.DialogueData = rhsDialogueData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.DialogueData));
+                    }
+                    else
+                    {
+                        item.DialogueData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DialogueLocation) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.DialogueLocation);
+                try
+                {
+                    if(rhs.DialogueLocation is {} rhsDialogueLocation)
+                    {
+                        item.DialogueLocation = rhsDialogueLocation.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.DialogueLocation));
+                    }
+                    else
+                    {
+                        item.DialogueLocation = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.OnBegin);
+                try
+                {
+                    if(rhs.OnBegin is {} rhsOnBegin)
+                    {
+                        item.OnBegin = rhsOnBegin.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.OnBegin));
+                    }
+                    else
+                    {
+                        item.OnBegin = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.OnEnd);
+                try
+                {
+                    if(rhs.OnEnd is {} rhsOnEnd)
+                    {
+                        item.OnEnd = rhsOnEnd.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.OnEnd));
+                    }
+                    else
+                    {
+                        item.OnEnd = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
+            {
+                errorMask?.PushIndex((int)Package_FieldIndex.OnChange);
+                try
+                {
+                    if(rhs.OnChange is {} rhsOnChange)
+                    {
+                        item.OnChange = rhsOnChange.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.OnChange));
+                    }
+                    else
+                    {
+                        item.OnChange = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1168,6 +3562,158 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly PackageBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPackageGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PKDT)))
+            {
+                writer.Write(item.Flags);
+                writer.Write(item.Type);
+                writer.Write(item.Unused);
+                writer.Write(item.FalloutBehaviorFlags);
+                writer.Write(item.TypeSpecificFlags);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused2);
+            }
+            if (item.Location is {} LocationItem)
+            {
+                ((PackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
+                    item: LocationItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Location2 is {} Location2Item)
+            {
+                ((PackageLocation2BinaryWriteTranslation)((IBinaryItem)Location2Item).BinaryWriteTranslator).Write(
+                    item: Location2Item,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PSDT)))
+            {
+                writer.Write(item.ScheduleMonth);
+                writer.Write(item.ScheduleDayOfWeek);
+                writer.Write(item.ScheduleDate);
+                writer.Write(item.ScheduleHour);
+                writer.Write(item.ScheduleMinute);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused3);
+            }
+            if (item.Target is {} TargetItem)
+            {
+                ((PackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
+                    item: TargetItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.IdleAnimations is {} IdleAnimationsItem)
+            {
+                ((PackageIdlesBinaryWriteTranslation)((IBinaryItem)IdleAnimationsItem).BinaryWriteTranslator).Write(
+                    item: IdleAnimationsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CombatStyle,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.EatMarker,
+                header: translationParams.ConvertToCustom(RecordTypes.PKED));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.EscortDistance,
+                header: translationParams.ConvertToCustom(RecordTypes.PKE2));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FollowTriggerRadius,
+                header: translationParams.ConvertToCustom(RecordTypes.PKFD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.PatrolFlags,
+                header: translationParams.ConvertToCustom(RecordTypes.PKPT));
+            if (item.WeaponData is {} WeaponDataItem)
+            {
+                ((PackageWeaponDataBinaryWriteTranslation)((IBinaryItem)WeaponDataItem).BinaryWriteTranslator).Write(
+                    item: WeaponDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Target2 is {} Target2Item)
+            {
+                ((PackageTarget2BinaryWriteTranslation)((IBinaryItem)Target2Item).BinaryWriteTranslator).Write(
+                    item: Target2Item,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.UseItemMarker,
+                header: translationParams.ConvertToCustom(RecordTypes.PUID));
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
+                writer: writer,
+                item: item.AmbushMarker,
+                header: translationParams.ConvertToCustom(RecordTypes.PKAM));
+            if (item.DialogueData is {} DialogueDataItem)
+            {
+                ((PackageDialogueDataBinaryWriteTranslation)((IBinaryItem)DialogueDataItem).BinaryWriteTranslator).Write(
+                    item: DialogueDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.DialogueLocation is {} DialogueLocationItem)
+            {
+                ((PackageLocation2BinaryWriteTranslation)((IBinaryItem)DialogueLocationItem).BinaryWriteTranslator).Write(
+                    item: DialogueLocationItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.OnBegin is {} OnBeginItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.POBA)) { }
+                ((PackageEventBinaryWriteTranslation)((IBinaryItem)OnBeginItem).BinaryWriteTranslator).Write(
+                    item: OnBeginItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.OnEnd is {} OnEndItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.POEA)) { }
+                ((PackageEventBinaryWriteTranslation)((IBinaryItem)OnEndItem).BinaryWriteTranslator).Write(
+                    item: OnEndItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.OnChange is {} OnChangeItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.POCA)) { }
+                ((PackageEventBinaryWriteTranslation)((IBinaryItem)OnChangeItem).BinaryWriteTranslator).Write(
+                    item: OnChangeItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IPackageGetter item,
@@ -1222,6 +3768,197 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly PackageBinaryCreateTranslation Instance = new PackageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PACK;
+        public static ParseResult FillBinaryRecordTypes(
+            IPackageInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.PKDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Type = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Unused = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.FalloutBehaviorFlags = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.TypeSpecificFlags = dataFrame.ReadUInt16();
+                    item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    return (int)Package_FieldIndex.Unused2;
+                }
+                case RecordTypeInts.PLDT:
+                {
+                    item.Location = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame);
+                    return (int)Package_FieldIndex.Location;
+                }
+                case RecordTypeInts.PLD2:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.Location)
+                    {
+                        item.Location2 = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                        return new ParseResult((int)Package_FieldIndex.Location2, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.DialogueData)
+                    {
+                        item.DialogueLocation = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                        return new ParseResult((int)Package_FieldIndex.DialogueLocation, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                item.Location2 = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                                return new ParseResult((int)Package_FieldIndex.Location2, nextRecordType);
+                            case 1:
+                                item.DialogueLocation = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                                return new ParseResult((int)Package_FieldIndex.DialogueLocation, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.PSDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ScheduleMonth = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ScheduleDayOfWeek = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ScheduleDate = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ScheduleHour = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.ScheduleMinute = dataFrame.ReadInt8();
+                    item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    return (int)Package_FieldIndex.Unused3;
+                }
+                case RecordTypeInts.PTDT:
+                {
+                    item.Target = Mutagen.Bethesda.Fallout3.PackageTarget.CreateFromBinary(frame: frame);
+                    return (int)Package_FieldIndex.Target;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)Package_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.IDLF:
+                {
+                    item.IdleAnimations = Mutagen.Bethesda.Fallout3.PackageIdles.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.IdleAnimations;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Package_FieldIndex.CombatStyle;
+                }
+                case RecordTypeInts.PKED:
+                {
+                    item.EatMarker = true;
+                    return (int)Package_FieldIndex.EatMarker;
+                }
+                case RecordTypeInts.PKE2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EscortDistance = frame.ReadUInt32();
+                    return (int)Package_FieldIndex.EscortDistance;
+                }
+                case RecordTypeInts.PKFD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FollowTriggerRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Package_FieldIndex.FollowTriggerRadius;
+                }
+                case RecordTypeInts.PKPT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PatrolFlags = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Package_FieldIndex.PatrolFlags;
+                }
+                case RecordTypeInts.PKW3:
+                {
+                    item.WeaponData = Mutagen.Bethesda.Fallout3.PackageWeaponData.CreateFromBinary(frame: frame);
+                    return (int)Package_FieldIndex.WeaponData;
+                }
+                case RecordTypeInts.PTD2:
+                {
+                    item.Target2 = Mutagen.Bethesda.Fallout3.PackageTarget2.CreateFromBinary(frame: frame);
+                    return (int)Package_FieldIndex.Target2;
+                }
+                case RecordTypeInts.PUID:
+                {
+                    item.UseItemMarker = true;
+                    return (int)Package_FieldIndex.UseItemMarker;
+                }
+                case RecordTypeInts.PKAM:
+                {
+                    item.AmbushMarker = true;
+                    return (int)Package_FieldIndex.AmbushMarker;
+                }
+                case RecordTypeInts.PKDD:
+                {
+                    item.DialogueData = Mutagen.Bethesda.Fallout3.PackageDialogueData.CreateFromBinary(frame: frame);
+                    return (int)Package_FieldIndex.DialogueData;
+                }
+                case RecordTypeInts.POBA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.OnBegin = Mutagen.Bethesda.Fallout3.PackageEvent.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.OnBegin;
+                }
+                case RecordTypeInts.POEA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.OnEnd = Mutagen.Bethesda.Fallout3.PackageEvent.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.OnEnd;
+                }
+                case RecordTypeInts.POCA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.OnChange = Mutagen.Bethesda.Fallout3.PackageEvent.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.OnChange;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1254,6 +3991,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PackageCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,6 +4006,129 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IPackageGetter);
 
 
+        private RangeInt32? _PKDTLocation;
+        #region Flags
+        private int _FlagsLocation => _PKDTLocation!.Value.Min;
+        private bool _Flags_IsSet => _PKDTLocation.HasValue;
+        public UInt32 Flags => _Flags_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation, 4)) : default(UInt32);
+        #endregion
+        #region Type
+        private int _TypeLocation => _PKDTLocation!.Value.Min + 0x4;
+        private bool _Type_IsSet => _PKDTLocation.HasValue;
+        public Byte Type => _Type_IsSet ? _recordData.Span[_TypeLocation] : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _PKDTLocation!.Value.Min + 0x5;
+        private bool _Unused_IsSet => _PKDTLocation.HasValue;
+        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
+        #endregion
+        #region FalloutBehaviorFlags
+        private int _FalloutBehaviorFlagsLocation => _PKDTLocation!.Value.Min + 0x6;
+        private bool _FalloutBehaviorFlags_IsSet => _PKDTLocation.HasValue;
+        public UInt16 FalloutBehaviorFlags => _FalloutBehaviorFlags_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FalloutBehaviorFlagsLocation, 2)) : default(UInt16);
+        #endregion
+        #region TypeSpecificFlags
+        private int _TypeSpecificFlagsLocation => _PKDTLocation!.Value.Min + 0x8;
+        private bool _TypeSpecificFlags_IsSet => _PKDTLocation.HasValue;
+        public UInt16 TypeSpecificFlags => _TypeSpecificFlags_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_TypeSpecificFlagsLocation, 2)) : default(UInt16);
+        #endregion
+        #region Unused2
+        private int _Unused2Location => _PKDTLocation!.Value.Min + 0xA;
+        private bool _Unused2_IsSet => _PKDTLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unused2 => _Unused2_IsSet ? _recordData.Span.Slice(_Unused2Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        #region Location
+        private RangeInt32? _LocationLocation;
+        public IPackageLocationGetter? Location => _LocationLocation.HasValue ? PackageLocationBinaryOverlay.PackageLocationFactory(_recordData.Slice(_LocationLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Location2
+        private RangeInt32? _Location2Location;
+        public IPackageLocation2Getter? Location2 => _Location2Location.HasValue ? PackageLocation2BinaryOverlay.PackageLocation2Factory(_recordData.Slice(_Location2Location!.Value.Min), _package) : default;
+        #endregion
+        private RangeInt32? _PSDTLocation;
+        #region ScheduleMonth
+        private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
+        private bool _ScheduleMonth_IsSet => _PSDTLocation.HasValue;
+        public SByte ScheduleMonth => _ScheduleMonth_IsSet ? (sbyte)_recordData.Slice(_ScheduleMonthLocation, 1)[0] : default(SByte);
+        #endregion
+        #region ScheduleDayOfWeek
+        private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
+        private bool _ScheduleDayOfWeek_IsSet => _PSDTLocation.HasValue;
+        public Byte ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? _recordData.Span[_ScheduleDayOfWeekLocation] : default;
+        #endregion
+        #region ScheduleDate
+        private int _ScheduleDateLocation => _PSDTLocation!.Value.Min + 0x2;
+        private bool _ScheduleDate_IsSet => _PSDTLocation.HasValue;
+        public Byte ScheduleDate => _ScheduleDate_IsSet ? _recordData.Span[_ScheduleDateLocation] : default;
+        #endregion
+        #region ScheduleHour
+        private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;
+        private bool _ScheduleHour_IsSet => _PSDTLocation.HasValue;
+        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default(SByte);
+        #endregion
+        #region ScheduleMinute
+        private int _ScheduleMinuteLocation => _PSDTLocation!.Value.Min + 0x4;
+        private bool _ScheduleMinute_IsSet => _PSDTLocation.HasValue;
+        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default(SByte);
+        #endregion
+        #region Unused3
+        private int _Unused3Location => _PSDTLocation!.Value.Min + 0x5;
+        private bool _Unused3_IsSet => _PSDTLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unused3 => _Unused3_IsSet ? _recordData.Span.Slice(_Unused3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        #region Target
+        private RangeInt32? _TargetLocation;
+        public IPackageTargetGetter? Target => _TargetLocation.HasValue ? PackageTargetBinaryOverlay.PackageTargetFactory(_recordData.Slice(_TargetLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
+        public IPackageIdlesGetter? IdleAnimations { get; private set; }
+        #region CombatStyle
+        private int? _CombatStyleLocation;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
+        #endregion
+        #region EatMarker
+        private int? _EatMarkerLocation;
+        public Boolean EatMarker => _EatMarkerLocation.HasValue ? true : default(Boolean);
+        #endregion
+        #region EscortDistance
+        private int? _EscortDistanceLocation;
+        public UInt32? EscortDistance => _EscortDistanceLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EscortDistanceLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        #region FollowTriggerRadius
+        private int? _FollowTriggerRadiusLocation;
+        public Single? FollowTriggerRadius => _FollowTriggerRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FollowTriggerRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region PatrolFlags
+        private int? _PatrolFlagsLocation;
+        public ReadOnlyMemorySlice<Byte>? PatrolFlags => _PatrolFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PatrolFlagsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region WeaponData
+        private RangeInt32? _WeaponDataLocation;
+        public IPackageWeaponDataGetter? WeaponData => _WeaponDataLocation.HasValue ? PackageWeaponDataBinaryOverlay.PackageWeaponDataFactory(_recordData.Slice(_WeaponDataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Target2
+        private RangeInt32? _Target2Location;
+        public IPackageTarget2Getter? Target2 => _Target2Location.HasValue ? PackageTarget2BinaryOverlay.PackageTarget2Factory(_recordData.Slice(_Target2Location!.Value.Min), _package) : default;
+        #endregion
+        #region UseItemMarker
+        private int? _UseItemMarkerLocation;
+        public Boolean UseItemMarker => _UseItemMarkerLocation.HasValue ? true : default(Boolean);
+        #endregion
+        #region AmbushMarker
+        private int? _AmbushMarkerLocation;
+        public Boolean AmbushMarker => _AmbushMarkerLocation.HasValue ? true : default(Boolean);
+        #endregion
+        #region DialogueData
+        private RangeInt32? _DialogueDataLocation;
+        public IPackageDialogueDataGetter? DialogueData => _DialogueDataLocation.HasValue ? PackageDialogueDataBinaryOverlay.PackageDialogueDataFactory(_recordData.Slice(_DialogueDataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region DialogueLocation
+        private RangeInt32? _DialogueLocationLocation;
+        public IPackageLocation2Getter? DialogueLocation => _DialogueLocationLocation.HasValue ? PackageLocation2BinaryOverlay.PackageLocation2Factory(_recordData.Slice(_DialogueLocationLocation!.Value.Min), _package) : default;
+        #endregion
+        public IPackageEventGetter? OnBegin { get; private set; }
+        public IPackageEventGetter? OnEnd { get; private set; }
+        public IPackageEventGetter? OnChange { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1325,6 +4186,181 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.PKDT:
+                {
+                    _PKDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Package_FieldIndex.Unused2;
+                }
+                case RecordTypeInts.PLDT:
+                {
+                    _LocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Package_FieldIndex.Location;
+                }
+                case RecordTypeInts.PLD2:
+                {
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.Location)
+                    {
+                        _Location2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        return new ParseResult((int)Package_FieldIndex.Location2, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.DialogueData)
+                    {
+                        _DialogueLocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        return new ParseResult((int)Package_FieldIndex.DialogueLocation, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _Location2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                return new ParseResult((int)Package_FieldIndex.Location2, type);
+                            }
+                            case 1:
+                            {
+                                _DialogueLocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                return new ParseResult((int)Package_FieldIndex.DialogueLocation, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.PSDT:
+                {
+                    _PSDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Package_FieldIndex.Unused3;
+                }
+                case RecordTypeInts.PTDT:
+                {
+                    _TargetLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Package_FieldIndex.Target;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)Package_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.IDLF:
+                {
+                    this.IdleAnimations = PackageIdlesBinaryOverlay.PackageIdlesFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.IdleAnimations;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CombatStyleLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.CombatStyle;
+                }
+                case RecordTypeInts.PKED:
+                {
+                    _EatMarkerLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.EatMarker;
+                }
+                case RecordTypeInts.PKE2:
+                {
+                    _EscortDistanceLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.EscortDistance;
+                }
+                case RecordTypeInts.PKFD:
+                {
+                    _FollowTriggerRadiusLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.FollowTriggerRadius;
+                }
+                case RecordTypeInts.PKPT:
+                {
+                    _PatrolFlagsLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.PatrolFlags;
+                }
+                case RecordTypeInts.PKW3:
+                {
+                    _WeaponDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Package_FieldIndex.WeaponData;
+                }
+                case RecordTypeInts.PTD2:
+                {
+                    _Target2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Package_FieldIndex.Target2;
+                }
+                case RecordTypeInts.PUID:
+                {
+                    _UseItemMarkerLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.UseItemMarker;
+                }
+                case RecordTypeInts.PKAM:
+                {
+                    _AmbushMarkerLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.AmbushMarker;
+                }
+                case RecordTypeInts.PKDD:
+                {
+                    _DialogueDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Package_FieldIndex.DialogueData;
+                }
+                case RecordTypeInts.POBA:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.OnBegin = PackageEventBinaryOverlay.PackageEventFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.OnBegin;
+                }
+                case RecordTypeInts.POEA:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.OnEnd = PackageEventBinaryOverlay.PackageEventFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.OnEnd;
+                }
+                case RecordTypeInts.POCA:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.OnChange = PackageEventBinaryOverlay.PackageEventFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Package_FieldIndex.OnChange;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

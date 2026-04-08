@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FactionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionSetterCommon.Instance.RemapLinks(this, mapping);
         public Faction(
             FormKey formKey,
@@ -810,6 +810,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IFactionInternal>,
         INamed,
         INamedRequired,
+        IOwner,
         IRelatable
     {
         /// <summary>
@@ -839,6 +840,7 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IFactionGetter>,
         INamedGetter,
         INamedRequiredGetter,
+        IOwnerGetter,
         IRelatableGetter
     {
         static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
@@ -1469,13 +1471,13 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1912,13 +1914,51 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    item.Relations.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Relation>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: Relation_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: Relation.TryCreateFromBinary));
-                    return (int)Faction_FieldIndex.Relations;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Faction_FieldIndex.Name)
+                    {
+                        item.Relations.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Relation>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: Relation_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: Relation.TryCreateFromBinary));
+                        return new ParseResult((int)Faction_FieldIndex.Relations, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Faction_FieldIndex.CrimeGoldMultiplier)
+                    {
+                        item.Ranks.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: Rank_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: Rank.TryCreateFromBinary));
+                        return new ParseResult((int)Faction_FieldIndex.Ranks, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                item.Relations.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Relation>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: Relation_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: Relation.TryCreateFromBinary));
+                                return new ParseResult((int)Faction_FieldIndex.Relations, nextRecordType);
+                            case 1:
+                                item.Ranks.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: Rank_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: Rank.TryCreateFromBinary));
+                                return new ParseResult((int)Faction_FieldIndex.Ranks, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2000,7 +2040,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => FactionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2113,18 +2153,63 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
-                        mem: stream.RemainingMemory,
-                        package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
-                        locs: ParseRecordLocations(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Faction_FieldIndex.Name)
+                    {
+                        this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
+                            mem: stream.RemainingMemory,
+                            package: _package,
+                            translationParams: translationParams,
+                            getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
+                            locs: ParseRecordLocations(
+                                stream: stream,
+                                trigger: Relation_Registration.TriggerSpecs,
+                                triggersAlwaysAreNewRecords: true,
+                                constants: _package.MetaData.Constants.SubConstants,
+                                skipHeader: false));
+                        return new ParseResult((int)Faction_FieldIndex.Relations, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Faction_FieldIndex.CrimeGoldMultiplier)
+                    {
+                        this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
                             stream: stream,
-                            trigger: Relation_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
-                    return (int)Faction_FieldIndex.Relations;
+                            translationParams: translationParams,
+                            trigger: Rank_Registration.TriggerSpecs,
+                            factory: RankBinaryOverlay.RankFactory);
+                        return new ParseResult((int)Faction_FieldIndex.Ranks, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
+                                    mem: stream.RemainingMemory,
+                                    package: _package,
+                                    translationParams: translationParams,
+                                    getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
+                                    locs: ParseRecordLocations(
+                                        stream: stream,
+                                        trigger: Relation_Registration.TriggerSpecs,
+                                        triggersAlwaysAreNewRecords: true,
+                                        constants: _package.MetaData.Constants.SubConstants,
+                                        skipHeader: false));
+                                return new ParseResult((int)Faction_FieldIndex.Relations, type);
+                            }
+                            case 1:
+                            {
+                                this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: Rank_Registration.TriggerSpecs,
+                                    factory: RankBinaryOverlay.RankFactory);
+                                return new ParseResult((int)Faction_FieldIndex.Ranks, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.DATA:
                 {
