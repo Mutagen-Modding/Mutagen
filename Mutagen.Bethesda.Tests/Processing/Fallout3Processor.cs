@@ -102,6 +102,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.PROJ, ProcessProjectiles);
         AddDynamicProcessing(RecordTypes.ASPC, ProcessAcousticSpaces);
         AddDynamicProcessing(RecordTypes.ANIO, ProcessAnimatedObjects);
+        AddDynamicProcessing(RecordTypes.WTHR, ProcessWeather);
         AddDynamicProcessing(
             ProcessDestructible,
             RecordTypes.ACTI, RecordTypes.TACT, RecordTypes.ARMO,
@@ -237,6 +238,58 @@ public class Fallout3Processor : Processor
                 Instructions.SetSubstitution(dat2LenPos, BitConverter.GetBytes((ushort)20));
                 ProcessLengths(majorFrame, 8, fileOffset);
             }
+        }
+    }
+
+    private void ProcessWeather(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+        // FNV records can store PNAM/NAM0 in the older FO3-shape (4 colors per layer/type, 16
+        // bytes each) instead of the FNV-shape (6 colors, 24 bytes each — adds HighNoon and
+        // Midnight). Mutagen always emits the FNV-shape on FNV writes (with zeros for the
+        // missing trailing slots), so we transform the reference's FO3-shape into FNV-shape.
+        // The transformation isn't a trailing append — the 8 missing bytes (HighNoon+Midnight)
+        // must be inserted AFTER each slot's existing 16 bytes, interleaved.
+        // FO3 records intrinsically use the 4-color form and need no padding.
+        if (!_isFalloutNV) return;
+
+        long totalAdded = 0;
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.PNAM, out var pnam))
+        {
+            if (pnam.ContentLength == 64)
+            {
+                // 4 cloud layers, each 16 bytes; insert 8 zeros after each layer.
+                var contentStart = fileOffset + pnam.Location + Meta.SubConstants.HeaderLength;
+                for (int layer = 0; layer < 4; layer++)
+                {
+                    Instructions.SetAddition(contentStart + (layer + 1) * 16, new byte[8]);
+                }
+                ProcessLengths(pnam, 32, fileOffset);
+                totalAdded += 32;
+            }
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.NAM0, out var nam0))
+        {
+            if (nam0.ContentLength == 160)
+            {
+                // 10 typed color slots, each 16 bytes; insert 8 zeros after each slot.
+                var contentStart = fileOffset + nam0.Location + Meta.SubConstants.HeaderLength;
+                for (int slot = 0; slot < 10; slot++)
+                {
+                    Instructions.SetAddition(contentStart + (slot + 1) * 16, new byte[8]);
+                }
+                ProcessLengths(nam0, 80, fileOffset);
+                totalAdded += 80;
+            }
+        }
+
+        if (totalAdded > 0)
+        {
+            ProcessLengths(majorFrame, totalAdded, fileOffset);
         }
     }
 

@@ -153,8 +153,8 @@ namespace Mutagen.Bethesda.Fallout3
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region MaxCloudLayers
-        public UInt32 MaxCloudLayers { get; set; } = default(UInt32);
+        #region LNAM
+        public UInt32 LNAM { get; set; } = default(UInt32);
         #endregion
         #region CloudSpeeds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -167,30 +167,27 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWeatherCloudSpeedsGetter? IWeatherGetter.CloudSpeeds => this.CloudSpeeds;
         #endregion
-        #region PNAM
+        #region CloudLayerColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PNAM;
-        public MemorySlice<Byte>? PNAM
+        private WeatherCloudLayerColors? _CloudLayerColors;
+        public WeatherCloudLayerColors? CloudLayerColors
         {
-            get => this._PNAM;
-            set => this._PNAM = value;
+            get => _CloudLayerColors;
+            set => _CloudLayerColors = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.PNAM => this.PNAM;
+        IWeatherCloudLayerColorsGetter? IWeatherGetter.CloudLayerColors => this.CloudLayerColors;
         #endregion
         #region Colors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherColors>? _Colors;
-        public ExtendedList<WeatherColors>? Colors
+        private WeatherColors? _Colors;
+        public WeatherColors? Colors
         {
-            get => this._Colors;
-            set => this._Colors = value;
+            get => _Colors;
+            set => _Colors = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IWeatherColorsGetter>? IWeatherGetter.Colors => _Colors;
-        #endregion
-
+        IWeatherColorsGetter? IWeatherGetter.Colors => this.Colors;
         #endregion
         #region FogDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -275,10 +272,10 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CloudTextureLayer2 = initialValue;
                 this.CloudTextureLayer3 = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.MaxCloudLayers = initialValue;
+                this.LNAM = initialValue;
                 this.CloudSpeeds = new MaskItem<TItem, WeatherCloudSpeeds.Mask<TItem>?>(initialValue, new WeatherCloudSpeeds.Mask<TItem>(initialValue));
-                this.PNAM = initialValue;
-                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(initialValue, []);
+                this.CloudLayerColors = new MaskItem<TItem, WeatherCloudLayerColors.Mask<TItem>?>(initialValue, new WeatherCloudLayerColors.Mask<TItem>(initialValue));
+                this.Colors = new MaskItem<TItem, WeatherColors.Mask<TItem>?>(initialValue, new WeatherColors.Mask<TItem>(initialValue));
                 this.FogDistance = new MaskItem<TItem, WeatherFogDistance.Mask<TItem>?>(initialValue, new WeatherFogDistance.Mask<TItem>(initialValue));
                 this.INAM = initialValue;
                 this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(initialValue, new WeatherData.Mask<TItem>(initialValue));
@@ -304,9 +301,9 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CloudTextureLayer2,
                 TItem CloudTextureLayer3,
                 TItem Model,
-                TItem MaxCloudLayers,
+                TItem LNAM,
                 TItem CloudSpeeds,
-                TItem PNAM,
+                TItem CloudLayerColors,
                 TItem Colors,
                 TItem FogDistance,
                 TItem INAM,
@@ -332,10 +329,10 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CloudTextureLayer2 = CloudTextureLayer2;
                 this.CloudTextureLayer3 = CloudTextureLayer3;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.MaxCloudLayers = MaxCloudLayers;
+                this.LNAM = LNAM;
                 this.CloudSpeeds = new MaskItem<TItem, WeatherCloudSpeeds.Mask<TItem>?>(CloudSpeeds, new WeatherCloudSpeeds.Mask<TItem>(CloudSpeeds));
-                this.PNAM = PNAM;
-                this.Colors = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>(Colors, []);
+                this.CloudLayerColors = new MaskItem<TItem, WeatherCloudLayerColors.Mask<TItem>?>(CloudLayerColors, new WeatherCloudLayerColors.Mask<TItem>(CloudLayerColors));
+                this.Colors = new MaskItem<TItem, WeatherColors.Mask<TItem>?>(Colors, new WeatherColors.Mask<TItem>(Colors));
                 this.FogDistance = new MaskItem<TItem, WeatherFogDistance.Mask<TItem>?>(FogDistance, new WeatherFogDistance.Mask<TItem>(FogDistance));
                 this.INAM = INAM;
                 this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(Data, new WeatherData.Mask<TItem>(Data));
@@ -362,10 +359,10 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem CloudTextureLayer2;
             public TItem CloudTextureLayer3;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem MaxCloudLayers;
+            public TItem LNAM;
             public MaskItem<TItem, WeatherCloudSpeeds.Mask<TItem>?>? CloudSpeeds { get; set; }
-            public TItem PNAM;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherColors.Mask<TItem>?>>?>? Colors;
+            public MaskItem<TItem, WeatherCloudLayerColors.Mask<TItem>?>? CloudLayerColors { get; set; }
+            public MaskItem<TItem, WeatherColors.Mask<TItem>?>? Colors { get; set; }
             public MaskItem<TItem, WeatherFogDistance.Mask<TItem>?>? FogDistance { get; set; }
             public TItem INAM;
             public MaskItem<TItem, WeatherData.Mask<TItem>?>? Data { get; set; }
@@ -394,9 +391,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CloudTextureLayer2, rhs.CloudTextureLayer2)) return false;
                 if (!object.Equals(this.CloudTextureLayer3, rhs.CloudTextureLayer3)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.MaxCloudLayers, rhs.MaxCloudLayers)) return false;
+                if (!object.Equals(this.LNAM, rhs.LNAM)) return false;
                 if (!object.Equals(this.CloudSpeeds, rhs.CloudSpeeds)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.CloudLayerColors, rhs.CloudLayerColors)) return false;
                 if (!object.Equals(this.Colors, rhs.Colors)) return false;
                 if (!object.Equals(this.FogDistance, rhs.FogDistance)) return false;
                 if (!object.Equals(this.INAM, rhs.INAM)) return false;
@@ -418,9 +415,9 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CloudTextureLayer2);
                 hash.Add(this.CloudTextureLayer3);
                 hash.Add(this.Model);
-                hash.Add(this.MaxCloudLayers);
+                hash.Add(this.LNAM);
                 hash.Add(this.CloudSpeeds);
-                hash.Add(this.PNAM);
+                hash.Add(this.CloudLayerColors);
                 hash.Add(this.Colors);
                 hash.Add(this.FogDistance);
                 hash.Add(this.INAM);
@@ -451,24 +448,21 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.MaxCloudLayers)) return false;
+                if (!eval(this.LNAM)) return false;
                 if (CloudSpeeds != null)
                 {
                     if (!eval(this.CloudSpeeds.Overall)) return false;
                     if (this.CloudSpeeds.Specific != null && !this.CloudSpeeds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.PNAM)) return false;
-                if (this.Colors != null)
+                if (CloudLayerColors != null)
+                {
+                    if (!eval(this.CloudLayerColors.Overall)) return false;
+                    if (this.CloudLayerColors.Specific != null && !this.CloudLayerColors.Specific.All(eval)) return false;
+                }
+                if (Colors != null)
                 {
                     if (!eval(this.Colors.Overall)) return false;
-                    if (this.Colors.Specific != null)
-                    {
-                        foreach (var item in this.Colors.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (this.Colors.Specific != null && !this.Colors.Specific.All(eval)) return false;
                 }
                 if (FogDistance != null)
                 {
@@ -516,24 +510,21 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.MaxCloudLayers)) return true;
+                if (eval(this.LNAM)) return true;
                 if (CloudSpeeds != null)
                 {
                     if (eval(this.CloudSpeeds.Overall)) return true;
                     if (this.CloudSpeeds.Specific != null && this.CloudSpeeds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.PNAM)) return true;
-                if (this.Colors != null)
+                if (CloudLayerColors != null)
+                {
+                    if (eval(this.CloudLayerColors.Overall)) return true;
+                    if (this.CloudLayerColors.Specific != null && this.CloudLayerColors.Specific.Any(eval)) return true;
+                }
+                if (Colors != null)
                 {
                     if (eval(this.Colors.Overall)) return true;
-                    if (this.Colors.Specific != null)
-                    {
-                        foreach (var item in this.Colors.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (this.Colors.Specific != null && this.Colors.Specific.Any(eval)) return true;
                 }
                 if (FogDistance != null)
                 {
@@ -584,24 +575,10 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.CloudTextureLayer2 = eval(this.CloudTextureLayer2);
                 obj.CloudTextureLayer3 = eval(this.CloudTextureLayer3);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.MaxCloudLayers = eval(this.MaxCloudLayers);
+                obj.LNAM = eval(this.LNAM);
                 obj.CloudSpeeds = this.CloudSpeeds == null ? null : new MaskItem<R, WeatherCloudSpeeds.Mask<R>?>(eval(this.CloudSpeeds.Overall), this.CloudSpeeds.Specific?.Translate(eval));
-                obj.PNAM = eval(this.PNAM);
-                if (Colors != null)
-                {
-                    obj.Colors = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherColors.Mask<R>?>>?>(eval(this.Colors.Overall), []);
-                    if (Colors.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, WeatherColors.Mask<R>?>>();
-                        obj.Colors.Specific = l;
-                        foreach (var item in Colors.Specific)
-                        {
-                            MaskItemIndexed<R, WeatherColors.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherColors.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.CloudLayerColors = this.CloudLayerColors == null ? null : new MaskItem<R, WeatherCloudLayerColors.Mask<R>?>(eval(this.CloudLayerColors.Overall), this.CloudLayerColors.Specific?.Translate(eval));
+                obj.Colors = this.Colors == null ? null : new MaskItem<R, WeatherColors.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
                 obj.FogDistance = this.FogDistance == null ? null : new MaskItem<R, WeatherFogDistance.Mask<R>?>(eval(this.FogDistance.Overall), this.FogDistance.Specific?.Translate(eval));
                 obj.INAM = eval(this.INAM);
                 obj.Data = this.Data == null ? null : new MaskItem<R, WeatherData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
@@ -682,36 +659,21 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.MaxCloudLayers ?? true)
+                    if (printMask?.LNAM ?? true)
                     {
-                        sb.AppendItem(MaxCloudLayers, "MaxCloudLayers");
+                        sb.AppendItem(LNAM, "LNAM");
                     }
                     if (printMask?.CloudSpeeds?.Overall ?? true)
                     {
                         CloudSpeeds?.Print(sb);
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.CloudLayerColors?.Overall ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        CloudLayerColors?.Print(sb);
                     }
-                    if ((printMask?.Colors?.Overall ?? true)
-                        && Colors is {} ColorsItem)
+                    if (printMask?.Colors?.Overall ?? true)
                     {
-                        sb.AppendLine("Colors =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(ColorsItem.Overall);
-                            if (ColorsItem.Specific != null)
-                            {
-                                foreach (var subItem in ColorsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
+                        Colors?.Print(sb);
                     }
                     if (printMask?.FogDistance?.Overall ?? true)
                     {
@@ -766,10 +728,10 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? CloudTextureLayer2;
             public Exception? CloudTextureLayer3;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? MaxCloudLayers;
+            public Exception? LNAM;
             public MaskItem<Exception?, WeatherCloudSpeeds.ErrorMask?>? CloudSpeeds;
-            public Exception? PNAM;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>? Colors;
+            public MaskItem<Exception?, WeatherCloudLayerColors.ErrorMask?>? CloudLayerColors;
+            public MaskItem<Exception?, WeatherColors.ErrorMask?>? Colors;
             public MaskItem<Exception?, WeatherFogDistance.ErrorMask?>? FogDistance;
             public Exception? INAM;
             public MaskItem<Exception?, WeatherData.ErrorMask?>? Data;
@@ -804,12 +766,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return CloudTextureLayer3;
                     case Weather_FieldIndex.Model:
                         return Model;
-                    case Weather_FieldIndex.MaxCloudLayers:
-                        return MaxCloudLayers;
+                    case Weather_FieldIndex.LNAM:
+                        return LNAM;
                     case Weather_FieldIndex.CloudSpeeds:
                         return CloudSpeeds;
-                    case Weather_FieldIndex.PNAM:
-                        return PNAM;
+                    case Weather_FieldIndex.CloudLayerColors:
+                        return CloudLayerColors;
                     case Weather_FieldIndex.Colors:
                         return Colors;
                     case Weather_FieldIndex.FogDistance:
@@ -863,17 +825,17 @@ namespace Mutagen.Bethesda.Fallout3
                     case Weather_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Weather_FieldIndex.MaxCloudLayers:
-                        this.MaxCloudLayers = ex;
+                    case Weather_FieldIndex.LNAM:
+                        this.LNAM = ex;
                         break;
                     case Weather_FieldIndex.CloudSpeeds:
                         this.CloudSpeeds = new MaskItem<Exception?, WeatherCloudSpeeds.ErrorMask?>(ex, null);
                         break;
-                    case Weather_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case Weather_FieldIndex.CloudLayerColors:
+                        this.CloudLayerColors = new MaskItem<Exception?, WeatherCloudLayerColors.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.Colors:
-                        this.Colors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>(ex, null);
+                        this.Colors = new MaskItem<Exception?, WeatherColors.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.FogDistance:
                         this.FogDistance = new MaskItem<Exception?, WeatherFogDistance.ErrorMask?>(ex, null);
@@ -931,17 +893,17 @@ namespace Mutagen.Bethesda.Fallout3
                     case Weather_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Weather_FieldIndex.MaxCloudLayers:
-                        this.MaxCloudLayers = (Exception?)obj;
+                    case Weather_FieldIndex.LNAM:
+                        this.LNAM = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.CloudSpeeds:
                         this.CloudSpeeds = (MaskItem<Exception?, WeatherCloudSpeeds.ErrorMask?>?)obj;
                         break;
-                    case Weather_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case Weather_FieldIndex.CloudLayerColors:
+                        this.CloudLayerColors = (MaskItem<Exception?, WeatherCloudLayerColors.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.Colors:
-                        this.Colors = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>)obj;
+                        this.Colors = (MaskItem<Exception?, WeatherColors.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.FogDistance:
                         this.FogDistance = (MaskItem<Exception?, WeatherFogDistance.ErrorMask?>?)obj;
@@ -975,9 +937,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CloudTextureLayer2 != null) return true;
                 if (CloudTextureLayer3 != null) return true;
                 if (Model != null) return true;
-                if (MaxCloudLayers != null) return true;
+                if (LNAM != null) return true;
                 if (CloudSpeeds != null) return true;
-                if (PNAM != null) return true;
+                if (CloudLayerColors != null) return true;
                 if (Colors != null) return true;
                 if (FogDistance != null) return true;
                 if (INAM != null) return true;
@@ -1041,30 +1003,11 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(MaxCloudLayers, "MaxCloudLayers");
+                    sb.AppendItem(LNAM, "LNAM");
                 }
                 CloudSpeeds?.Print(sb);
-                {
-                    sb.AppendItem(PNAM, "PNAM");
-                }
-                if (Colors is {} ColorsItem)
-                {
-                    sb.AppendLine("Colors =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(ColorsItem.Overall);
-                        if (ColorsItem.Specific != null)
-                        {
-                            foreach (var subItem in ColorsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
+                CloudLayerColors?.Print(sb);
+                Colors?.Print(sb);
                 FogDistance?.Print(sb);
                 {
                     sb.AppendItem(INAM, "INAM");
@@ -1107,10 +1050,10 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CloudTextureLayer2 = this.CloudTextureLayer2.Combine(rhs.CloudTextureLayer2);
                 ret.CloudTextureLayer3 = this.CloudTextureLayer3.Combine(rhs.CloudTextureLayer3);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.MaxCloudLayers = this.MaxCloudLayers.Combine(rhs.MaxCloudLayers);
+                ret.LNAM = this.LNAM.Combine(rhs.LNAM);
                 ret.CloudSpeeds = this.CloudSpeeds.Combine(rhs.CloudSpeeds, (l, r) => l.Combine(r));
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
-                ret.Colors = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherColors.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Colors?.Overall, rhs.Colors?.Overall), Noggog.ExceptionExt.Combine(this.Colors?.Specific, rhs.Colors?.Specific));
+                ret.CloudLayerColors = this.CloudLayerColors.Combine(rhs.CloudLayerColors, (l, r) => l.Combine(r));
+                ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
                 ret.FogDistance = this.FogDistance.Combine(rhs.FogDistance, (l, r) => l.Combine(r));
                 ret.INAM = this.INAM.Combine(rhs.INAM);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
@@ -1148,9 +1091,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool CloudTextureLayer2;
             public bool CloudTextureLayer3;
             public Model.TranslationMask? Model;
-            public bool MaxCloudLayers;
+            public bool LNAM;
             public WeatherCloudSpeeds.TranslationMask? CloudSpeeds;
-            public bool PNAM;
+            public WeatherCloudLayerColors.TranslationMask? CloudLayerColors;
             public WeatherColors.TranslationMask? Colors;
             public WeatherFogDistance.TranslationMask? FogDistance;
             public bool INAM;
@@ -1174,8 +1117,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CloudTextureLayer1 = defaultOn;
                 this.CloudTextureLayer2 = defaultOn;
                 this.CloudTextureLayer3 = defaultOn;
-                this.MaxCloudLayers = defaultOn;
-                this.PNAM = defaultOn;
+                this.LNAM = defaultOn;
                 this.INAM = defaultOn;
             }
 
@@ -1195,10 +1137,10 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CloudTextureLayer2, null));
                 ret.Add((CloudTextureLayer3, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((MaxCloudLayers, null));
+                ret.Add((LNAM, null));
                 ret.Add((CloudSpeeds != null ? CloudSpeeds.OnOverall : DefaultOn, CloudSpeeds?.GetCrystal()));
-                ret.Add((PNAM, null));
-                ret.Add((Colors == null ? DefaultOn : !Colors.GetCrystal().CopyNothing, Colors?.GetCrystal()));
+                ret.Add((CloudLayerColors != null ? CloudLayerColors.OnOverall : DefaultOn, CloudLayerColors?.GetCrystal()));
+                ret.Add((Colors != null ? Colors.OnOverall : DefaultOn, Colors?.GetCrystal()));
                 ret.Add((FogDistance != null ? FogDistance.OnOverall : DefaultOn, FogDistance?.GetCrystal()));
                 ret.Add((INAM, null));
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
@@ -1354,10 +1296,10 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new UInt32 MaxCloudLayers { get; set; }
+        new UInt32 LNAM { get; set; }
         new WeatherCloudSpeeds? CloudSpeeds { get; set; }
-        new MemorySlice<Byte>? PNAM { get; set; }
-        new ExtendedList<WeatherColors>? Colors { get; set; }
+        new WeatherCloudLayerColors? CloudLayerColors { get; set; }
+        new WeatherColors? Colors { get; set; }
         new WeatherFogDistance? FogDistance { get; set; }
         new MemorySlice<Byte>? INAM { get; set; }
         new WeatherData? Data { get; set; }
@@ -1397,10 +1339,10 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        UInt32 MaxCloudLayers { get; }
+        UInt32 LNAM { get; }
         IWeatherCloudSpeedsGetter? CloudSpeeds { get; }
-        ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        IReadOnlyList<IWeatherColorsGetter>? Colors { get; }
+        IWeatherCloudLayerColorsGetter? CloudLayerColors { get; }
+        IWeatherColorsGetter? Colors { get; }
         IWeatherFogDistanceGetter? FogDistance { get; }
         ReadOnlyMemorySlice<Byte>? INAM { get; }
         IWeatherDataGetter? Data { get; }
@@ -1592,9 +1534,9 @@ namespace Mutagen.Bethesda.Fallout3
         CloudTextureLayer2 = 15,
         CloudTextureLayer3 = 16,
         Model = 17,
-        MaxCloudLayers = 18,
+        LNAM = 18,
         CloudSpeeds = 19,
-        PNAM = 20,
+        CloudLayerColors = 20,
         Colors = 21,
         FogDistance = 22,
         INAM = 23,
@@ -1723,9 +1665,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.CloudTextureLayer2 = default;
             item.CloudTextureLayer3 = default;
             item.Model = null;
-            item.MaxCloudLayers = default(UInt32);
+            item.LNAM = default(UInt32);
             item.CloudSpeeds = null;
-            item.PNAM = default;
+            item.CloudLayerColors = null;
             item.Colors = null;
             item.FogDistance = null;
             item.INAM = default;
@@ -1838,16 +1780,21 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MaxCloudLayers = item.MaxCloudLayers == rhs.MaxCloudLayers;
+            ret.LNAM = item.LNAM == rhs.LNAM;
             ret.CloudSpeeds = EqualsMaskHelper.EqualsHelper(
                 item.CloudSpeeds,
                 rhs.CloudSpeeds,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
-            ret.Colors = item.Colors.CollectionEqualsHelper(
+            ret.CloudLayerColors = EqualsMaskHelper.EqualsHelper(
+                item.CloudLayerColors,
+                rhs.CloudLayerColors,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Colors = EqualsMaskHelper.EqualsHelper(
+                item.Colors,
                 rhs.Colors,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.FogDistance = EqualsMaskHelper.EqualsHelper(
                 item.FogDistance,
@@ -1962,34 +1909,24 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if (printMask?.MaxCloudLayers ?? true)
+            if (printMask?.LNAM ?? true)
             {
-                sb.AppendItem(item.MaxCloudLayers, "MaxCloudLayers");
+                sb.AppendItem(item.LNAM, "LNAM");
             }
             if ((printMask?.CloudSpeeds?.Overall ?? true)
                 && item.CloudSpeeds is {} CloudSpeedsItem)
             {
                 CloudSpeedsItem?.Print(sb, "CloudSpeeds");
             }
-            if ((printMask?.PNAM ?? true)
-                && item.PNAM is {} PNAMItem)
+            if ((printMask?.CloudLayerColors?.Overall ?? true)
+                && item.CloudLayerColors is {} CloudLayerColorsItem)
             {
-                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+                CloudLayerColorsItem?.Print(sb, "CloudLayerColors");
             }
             if ((printMask?.Colors?.Overall ?? true)
                 && item.Colors is {} ColorsItem)
             {
-                sb.AppendLine("Colors =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in ColorsItem)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
+                ColorsItem?.Print(sb, "Colors");
             }
             if ((printMask?.FogDistance?.Overall ?? true)
                 && item.FogDistance is {} FogDistanceItem)
@@ -2118,9 +2055,9 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.MaxCloudLayers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                if (lhs.MaxCloudLayers != rhs.MaxCloudLayers) return false;
+                if (lhs.LNAM != rhs.LNAM) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeeds) ?? true))
             {
@@ -2130,13 +2067,21 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isCloudSpeedsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudLayerColors) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CloudLayerColors, rhs.CloudLayerColors, out var lhsCloudLayerColors, out var rhsCloudLayerColors, out var isCloudLayerColorsEqual))
+                {
+                    if (!((WeatherCloudLayerColorsCommon)((IWeatherCloudLayerColorsGetter)lhsCloudLayerColors).CommonInstance()!).Equals(lhsCloudLayerColors, rhsCloudLayerColors, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLayerColors))) return false;
+                }
+                else if (!isCloudLayerColorsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Colors) ?? true))
             {
-                if (!lhs.Colors.SequenceEqualNullable(rhs.Colors, (l, r) => ((WeatherColorsCommon)((IWeatherColorsGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Colors)))) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Colors, rhs.Colors, out var lhsColors, out var rhsColors, out var isColorsEqual))
+                {
+                    if (!((WeatherColorsCommon)((IWeatherColorsGetter)lhsColors).CommonInstance()!).Equals(lhsColors, rhsColors, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Colors))) return false;
+                }
+                else if (!isColorsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistance) ?? true))
             {
@@ -2216,16 +2161,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.MaxCloudLayers);
+            hash.Add(item.LNAM);
             if (item.CloudSpeeds is {} CloudSpeedsitem)
             {
                 hash.Add(CloudSpeedsitem);
             }
-            if (item.PNAM is {} PNAMItem)
+            if (item.CloudLayerColors is {} CloudLayerColorsitem)
             {
-                hash.Add(PNAMItem);
+                hash.Add(CloudLayerColorsitem);
             }
-            hash.Add(item.Colors);
+            if (item.Colors is {} Colorsitem)
+            {
+                hash.Add(Colorsitem);
+            }
             if (item.FogDistance is {} FogDistanceitem)
             {
                 hash.Add(FogDistanceitem);
@@ -2443,9 +2391,9 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.MaxCloudLayers) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
-                item.MaxCloudLayers = rhs.MaxCloudLayers;
+                item.LNAM = rhs.LNAM;
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeeds) ?? true))
             {
@@ -2473,15 +2421,30 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.PNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudLayerColors) ?? true))
             {
-                if(rhs.PNAM is {} PNAMrhs)
+                errorMask?.PushIndex((int)Weather_FieldIndex.CloudLayerColors);
+                try
                 {
-                    item.PNAM = PNAMrhs.ToArray();
+                    if(rhs.CloudLayerColors is {} rhsCloudLayerColors)
+                    {
+                        item.CloudLayerColors = rhsCloudLayerColors.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.CloudLayerColors));
+                    }
+                    else
+                    {
+                        item.CloudLayerColors = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.PNAM = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Colors) ?? true))
@@ -2489,21 +2452,15 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)Weather_FieldIndex.Colors);
                 try
                 {
-                    if ((rhs.Colors != null))
+                    if(rhs.Colors is {} rhsColors)
                     {
-                        item.Colors = 
-                            rhs.Colors
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<WeatherColors>();
+                        item.Colors = rhsColors.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.Colors));
                     }
                     else
                     {
-                        item.Colors = null;
+                        item.Colors = default;
                     }
                 }
                 catch (Exception ex)
@@ -2831,7 +2788,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.MaxCloudLayers,
+                item: item.LNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.LNAM));
             if (item.CloudSpeeds is {} CloudSpeedsItem)
             {
@@ -2840,22 +2797,12 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            WeatherBinaryWriteTranslation.WriteBinaryCloudLayerColors(
                 writer: writer,
-                item: item.PNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWeatherColorsGetter>.Instance.Write(
+                item: item);
+            WeatherBinaryWriteTranslation.WriteBinaryColors(
                 writer: writer,
-                items: item.Colors,
-                recordType: translationParams.ConvertToCustom(RecordTypes.NAM0),
-                transl: (MutagenWriter subWriter, IWeatherColorsGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((WeatherColorsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                item: item);
             if (item.FogDistance is {} FogDistanceItem)
             {
                 ((WeatherFogDistanceBinaryWriteTranslation)((IBinaryItem)FogDistanceItem).BinaryWriteTranslator).Write(
@@ -2885,6 +2832,32 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
+        }
+
+        public static partial void WriteBinaryCloudLayerColorsCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryCloudLayerColors(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryCloudLayerColorsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryColorsCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryColors(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryColorsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -3045,8 +3018,8 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxCloudLayers = frame.ReadUInt32();
-                    return (int)Weather_FieldIndex.MaxCloudLayers;
+                    item.LNAM = frame.ReadUInt32();
+                    return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3055,18 +3028,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Weather_FieldIndex.PNAM;
+                    WeatherBinaryCreateTranslation.FillBinaryCloudLayerColorsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                    return (int)Weather_FieldIndex.CloudLayerColors;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Colors = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WeatherColors>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: WeatherColors.TryCreateFromBinary)
-                        .CastExtendedList<WeatherColors>();
+                    WeatherBinaryCreateTranslation.FillBinaryColorsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.Colors;
                 }
                 case RecordTypeInts.FNAM:
@@ -3106,6 +3079,16 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryCloudLayerColorsCustom(
+            MutagenFrame frame,
+            IWeatherInternal item,
+            PreviousParse lastParsed);
+
+        public static partial void FillBinaryColorsCustom(
+            MutagenFrame frame,
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -3195,19 +3178,30 @@ namespace Mutagen.Bethesda.Fallout3
         public String? CloudTextureLayer3 => _CloudTextureLayer3Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CloudTextureLayer3Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region MaxCloudLayers
-        private int? _MaxCloudLayersLocation;
-        public UInt32 MaxCloudLayers => _MaxCloudLayersLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxCloudLayersLocation.Value, _package.MetaData.Constants)) : default(UInt32);
+        #region LNAM
+        private int? _LNAMLocation;
+        public UInt32 LNAM => _LNAMLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants)) : default(UInt32);
         #endregion
         #region CloudSpeeds
         private RangeInt32? _CloudSpeedsLocation;
         public IWeatherCloudSpeedsGetter? CloudSpeeds => _CloudSpeedsLocation.HasValue ? WeatherCloudSpeedsBinaryOverlay.WeatherCloudSpeedsFactory(_recordData.Slice(_CloudSpeedsLocation!.Value.Min), _package) : default;
         #endregion
-        #region PNAM
-        private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region CloudLayerColors
+        partial void CloudLayerColorsCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        public partial IWeatherCloudLayerColorsGetter? GetCloudLayerColorsCustom();
+        public IWeatherCloudLayerColorsGetter? CloudLayerColors => GetCloudLayerColorsCustom();
         #endregion
-        public IReadOnlyList<IWeatherColorsGetter>? Colors { get; private set; }
+        #region Colors
+        partial void ColorsCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        public partial IWeatherColorsGetter? GetColorsCustom();
+        public IWeatherColorsGetter? Colors => GetColorsCustom();
+        #endregion
         #region FogDistance
         private RangeInt32? _FogDistanceLocation;
         public IWeatherFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? WeatherFogDistanceBinaryOverlay.WeatherFogDistanceFactory(_recordData.Slice(_FogDistanceLocation!.Value.Min), _package) : default;
@@ -3354,8 +3348,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _MaxCloudLayersLocation = (stream.Position - offset);
-                    return (int)Weather_FieldIndex.MaxCloudLayers;
+                    _LNAMLocation = (stream.Position - offset);
+                    return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3364,17 +3358,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)Weather_FieldIndex.PNAM;
+                    CloudLayerColorsCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)Weather_FieldIndex.CloudLayerColors;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    this.Colors = BinaryOverlayList.FactoryByStartIndexWithTrigger<IWeatherColorsGetter>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        itemLength: 16,
-                        getter: (s, p) => WeatherColorsBinaryOverlay.WeatherColorsFactory(s, p));
+                    ColorsCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
                     return (int)Weather_FieldIndex.Colors;
                 }
                 case RecordTypeInts.FNAM:

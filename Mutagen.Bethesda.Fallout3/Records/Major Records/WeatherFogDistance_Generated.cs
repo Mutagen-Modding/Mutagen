@@ -50,23 +50,23 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region FogDistanceDayNear
-        public Single FogDistanceDayNear { get; set; } = default(Single);
+        #region DayNear
+        public Single DayNear { get; set; } = default(Single);
         #endregion
-        #region FogDistanceDayFar
-        public Single FogDistanceDayFar { get; set; } = default(Single);
+        #region DayFar
+        public Single DayFar { get; set; } = default(Single);
         #endregion
-        #region FogDistanceNightNear
-        public Single FogDistanceNightNear { get; set; } = default(Single);
+        #region NightNear
+        public Single NightNear { get; set; } = default(Single);
         #endregion
-        #region FogDistanceNightFar
-        public Single FogDistanceNightFar { get; set; } = default(Single);
+        #region NightFar
+        public Single NightFar { get; set; } = default(Single);
         #endregion
-        #region FogDistanceDayPower
-        public Single FogDistanceDayPower { get; set; } = default(Single);
+        #region DayPower
+        public Single DayPower { get; set; } = default(Single);
         #endregion
-        #region FogDistanceNightPower
-        public Single FogDistanceNightPower { get; set; } = default(Single);
+        #region NightPower
+        public Single NightPower { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -107,28 +107,28 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.FogDistanceDayNear = initialValue;
-                this.FogDistanceDayFar = initialValue;
-                this.FogDistanceNightNear = initialValue;
-                this.FogDistanceNightFar = initialValue;
-                this.FogDistanceDayPower = initialValue;
-                this.FogDistanceNightPower = initialValue;
+                this.DayNear = initialValue;
+                this.DayFar = initialValue;
+                this.NightNear = initialValue;
+                this.NightFar = initialValue;
+                this.DayPower = initialValue;
+                this.NightPower = initialValue;
             }
 
             public Mask(
-                TItem FogDistanceDayNear,
-                TItem FogDistanceDayFar,
-                TItem FogDistanceNightNear,
-                TItem FogDistanceNightFar,
-                TItem FogDistanceDayPower,
-                TItem FogDistanceNightPower)
+                TItem DayNear,
+                TItem DayFar,
+                TItem NightNear,
+                TItem NightFar,
+                TItem DayPower,
+                TItem NightPower)
             {
-                this.FogDistanceDayNear = FogDistanceDayNear;
-                this.FogDistanceDayFar = FogDistanceDayFar;
-                this.FogDistanceNightNear = FogDistanceNightNear;
-                this.FogDistanceNightFar = FogDistanceNightFar;
-                this.FogDistanceDayPower = FogDistanceDayPower;
-                this.FogDistanceNightPower = FogDistanceNightPower;
+                this.DayNear = DayNear;
+                this.DayFar = DayFar;
+                this.NightNear = NightNear;
+                this.NightFar = NightFar;
+                this.DayPower = DayPower;
+                this.NightPower = NightPower;
             }
 
             #pragma warning disable CS8618
@@ -140,12 +140,12 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem FogDistanceDayNear;
-            public TItem FogDistanceDayFar;
-            public TItem FogDistanceNightNear;
-            public TItem FogDistanceNightFar;
-            public TItem FogDistanceDayPower;
-            public TItem FogDistanceNightPower;
+            public TItem DayNear;
+            public TItem DayFar;
+            public TItem NightNear;
+            public TItem NightFar;
+            public TItem DayPower;
+            public TItem NightPower;
             #endregion
 
             #region Equals
@@ -158,23 +158,23 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.FogDistanceDayNear, rhs.FogDistanceDayNear)) return false;
-                if (!object.Equals(this.FogDistanceDayFar, rhs.FogDistanceDayFar)) return false;
-                if (!object.Equals(this.FogDistanceNightNear, rhs.FogDistanceNightNear)) return false;
-                if (!object.Equals(this.FogDistanceNightFar, rhs.FogDistanceNightFar)) return false;
-                if (!object.Equals(this.FogDistanceDayPower, rhs.FogDistanceDayPower)) return false;
-                if (!object.Equals(this.FogDistanceNightPower, rhs.FogDistanceNightPower)) return false;
+                if (!object.Equals(this.DayNear, rhs.DayNear)) return false;
+                if (!object.Equals(this.DayFar, rhs.DayFar)) return false;
+                if (!object.Equals(this.NightNear, rhs.NightNear)) return false;
+                if (!object.Equals(this.NightFar, rhs.NightFar)) return false;
+                if (!object.Equals(this.DayPower, rhs.DayPower)) return false;
+                if (!object.Equals(this.NightPower, rhs.NightPower)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FogDistanceDayNear);
-                hash.Add(this.FogDistanceDayFar);
-                hash.Add(this.FogDistanceNightNear);
-                hash.Add(this.FogDistanceNightFar);
-                hash.Add(this.FogDistanceDayPower);
-                hash.Add(this.FogDistanceNightPower);
+                hash.Add(this.DayNear);
+                hash.Add(this.DayFar);
+                hash.Add(this.NightNear);
+                hash.Add(this.NightFar);
+                hash.Add(this.DayPower);
+                hash.Add(this.NightPower);
                 return hash.ToHashCode();
             }
 
@@ -183,12 +183,12 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.FogDistanceDayNear)) return false;
-                if (!eval(this.FogDistanceDayFar)) return false;
-                if (!eval(this.FogDistanceNightNear)) return false;
-                if (!eval(this.FogDistanceNightFar)) return false;
-                if (!eval(this.FogDistanceDayPower)) return false;
-                if (!eval(this.FogDistanceNightPower)) return false;
+                if (!eval(this.DayNear)) return false;
+                if (!eval(this.DayFar)) return false;
+                if (!eval(this.NightNear)) return false;
+                if (!eval(this.NightFar)) return false;
+                if (!eval(this.DayPower)) return false;
+                if (!eval(this.NightPower)) return false;
                 return true;
             }
             #endregion
@@ -196,12 +196,12 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.FogDistanceDayNear)) return true;
-                if (eval(this.FogDistanceDayFar)) return true;
-                if (eval(this.FogDistanceNightNear)) return true;
-                if (eval(this.FogDistanceNightFar)) return true;
-                if (eval(this.FogDistanceDayPower)) return true;
-                if (eval(this.FogDistanceNightPower)) return true;
+                if (eval(this.DayNear)) return true;
+                if (eval(this.DayFar)) return true;
+                if (eval(this.NightNear)) return true;
+                if (eval(this.NightFar)) return true;
+                if (eval(this.DayPower)) return true;
+                if (eval(this.NightPower)) return true;
                 return false;
             }
             #endregion
@@ -216,12 +216,12 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.FogDistanceDayNear = eval(this.FogDistanceDayNear);
-                obj.FogDistanceDayFar = eval(this.FogDistanceDayFar);
-                obj.FogDistanceNightNear = eval(this.FogDistanceNightNear);
-                obj.FogDistanceNightFar = eval(this.FogDistanceNightFar);
-                obj.FogDistanceDayPower = eval(this.FogDistanceDayPower);
-                obj.FogDistanceNightPower = eval(this.FogDistanceNightPower);
+                obj.DayNear = eval(this.DayNear);
+                obj.DayFar = eval(this.DayFar);
+                obj.NightNear = eval(this.NightNear);
+                obj.NightFar = eval(this.NightFar);
+                obj.DayPower = eval(this.DayPower);
+                obj.NightPower = eval(this.NightPower);
             }
             #endregion
 
@@ -240,29 +240,29 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(WeatherFogDistance.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FogDistanceDayNear ?? true)
+                    if (printMask?.DayNear ?? true)
                     {
-                        sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
+                        sb.AppendItem(DayNear, "DayNear");
                     }
-                    if (printMask?.FogDistanceDayFar ?? true)
+                    if (printMask?.DayFar ?? true)
                     {
-                        sb.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
+                        sb.AppendItem(DayFar, "DayFar");
                     }
-                    if (printMask?.FogDistanceNightNear ?? true)
+                    if (printMask?.NightNear ?? true)
                     {
-                        sb.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
+                        sb.AppendItem(NightNear, "NightNear");
                     }
-                    if (printMask?.FogDistanceNightFar ?? true)
+                    if (printMask?.NightFar ?? true)
                     {
-                        sb.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
+                        sb.AppendItem(NightFar, "NightFar");
                     }
-                    if (printMask?.FogDistanceDayPower ?? true)
+                    if (printMask?.DayPower ?? true)
                     {
-                        sb.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
+                        sb.AppendItem(DayPower, "DayPower");
                     }
-                    if (printMask?.FogDistanceNightPower ?? true)
+                    if (printMask?.NightPower ?? true)
                     {
-                        sb.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
+                        sb.AppendItem(NightPower, "NightPower");
                     }
                 }
             }
@@ -288,12 +288,12 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? FogDistanceDayNear;
-            public Exception? FogDistanceDayFar;
-            public Exception? FogDistanceNightNear;
-            public Exception? FogDistanceNightFar;
-            public Exception? FogDistanceDayPower;
-            public Exception? FogDistanceNightPower;
+            public Exception? DayNear;
+            public Exception? DayFar;
+            public Exception? NightNear;
+            public Exception? NightFar;
+            public Exception? DayPower;
+            public Exception? NightPower;
             #endregion
 
             #region IErrorMask
@@ -302,18 +302,18 @@ namespace Mutagen.Bethesda.Fallout3
                 WeatherFogDistance_FieldIndex enu = (WeatherFogDistance_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayNear:
-                        return FogDistanceDayNear;
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayFar:
-                        return FogDistanceDayFar;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightNear:
-                        return FogDistanceNightNear;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightFar:
-                        return FogDistanceNightFar;
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayPower:
-                        return FogDistanceDayPower;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightPower:
-                        return FogDistanceNightPower;
+                    case WeatherFogDistance_FieldIndex.DayNear:
+                        return DayNear;
+                    case WeatherFogDistance_FieldIndex.DayFar:
+                        return DayFar;
+                    case WeatherFogDistance_FieldIndex.NightNear:
+                        return NightNear;
+                    case WeatherFogDistance_FieldIndex.NightFar:
+                        return NightFar;
+                    case WeatherFogDistance_FieldIndex.DayPower:
+                        return DayPower;
+                    case WeatherFogDistance_FieldIndex.NightPower:
+                        return NightPower;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -324,23 +324,23 @@ namespace Mutagen.Bethesda.Fallout3
                 WeatherFogDistance_FieldIndex enu = (WeatherFogDistance_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayNear:
-                        this.FogDistanceDayNear = ex;
+                    case WeatherFogDistance_FieldIndex.DayNear:
+                        this.DayNear = ex;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayFar:
-                        this.FogDistanceDayFar = ex;
+                    case WeatherFogDistance_FieldIndex.DayFar:
+                        this.DayFar = ex;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightNear:
-                        this.FogDistanceNightNear = ex;
+                    case WeatherFogDistance_FieldIndex.NightNear:
+                        this.NightNear = ex;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightFar:
-                        this.FogDistanceNightFar = ex;
+                    case WeatherFogDistance_FieldIndex.NightFar:
+                        this.NightFar = ex;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayPower:
-                        this.FogDistanceDayPower = ex;
+                    case WeatherFogDistance_FieldIndex.DayPower:
+                        this.DayPower = ex;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightPower:
-                        this.FogDistanceNightPower = ex;
+                    case WeatherFogDistance_FieldIndex.NightPower:
+                        this.NightPower = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -352,23 +352,23 @@ namespace Mutagen.Bethesda.Fallout3
                 WeatherFogDistance_FieldIndex enu = (WeatherFogDistance_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayNear:
-                        this.FogDistanceDayNear = (Exception?)obj;
+                    case WeatherFogDistance_FieldIndex.DayNear:
+                        this.DayNear = (Exception?)obj;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayFar:
-                        this.FogDistanceDayFar = (Exception?)obj;
+                    case WeatherFogDistance_FieldIndex.DayFar:
+                        this.DayFar = (Exception?)obj;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightNear:
-                        this.FogDistanceNightNear = (Exception?)obj;
+                    case WeatherFogDistance_FieldIndex.NightNear:
+                        this.NightNear = (Exception?)obj;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightFar:
-                        this.FogDistanceNightFar = (Exception?)obj;
+                    case WeatherFogDistance_FieldIndex.NightFar:
+                        this.NightFar = (Exception?)obj;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceDayPower:
-                        this.FogDistanceDayPower = (Exception?)obj;
+                    case WeatherFogDistance_FieldIndex.DayPower:
+                        this.DayPower = (Exception?)obj;
                         break;
-                    case WeatherFogDistance_FieldIndex.FogDistanceNightPower:
-                        this.FogDistanceNightPower = (Exception?)obj;
+                    case WeatherFogDistance_FieldIndex.NightPower:
+                        this.NightPower = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -378,12 +378,12 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FogDistanceDayNear != null) return true;
-                if (FogDistanceDayFar != null) return true;
-                if (FogDistanceNightNear != null) return true;
-                if (FogDistanceNightFar != null) return true;
-                if (FogDistanceDayPower != null) return true;
-                if (FogDistanceNightPower != null) return true;
+                if (DayNear != null) return true;
+                if (DayFar != null) return true;
+                if (NightNear != null) return true;
+                if (NightFar != null) return true;
+                if (DayPower != null) return true;
+                if (NightPower != null) return true;
                 return false;
             }
             #endregion
@@ -410,22 +410,22 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
+                    sb.AppendItem(DayNear, "DayNear");
                 }
                 {
-                    sb.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
+                    sb.AppendItem(DayFar, "DayFar");
                 }
                 {
-                    sb.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
+                    sb.AppendItem(NightNear, "NightNear");
                 }
                 {
-                    sb.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
+                    sb.AppendItem(NightFar, "NightFar");
                 }
                 {
-                    sb.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
+                    sb.AppendItem(DayPower, "DayPower");
                 }
                 {
-                    sb.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
+                    sb.AppendItem(NightPower, "NightPower");
                 }
             }
             #endregion
@@ -435,12 +435,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FogDistanceDayNear = this.FogDistanceDayNear.Combine(rhs.FogDistanceDayNear);
-                ret.FogDistanceDayFar = this.FogDistanceDayFar.Combine(rhs.FogDistanceDayFar);
-                ret.FogDistanceNightNear = this.FogDistanceNightNear.Combine(rhs.FogDistanceNightNear);
-                ret.FogDistanceNightFar = this.FogDistanceNightFar.Combine(rhs.FogDistanceNightFar);
-                ret.FogDistanceDayPower = this.FogDistanceDayPower.Combine(rhs.FogDistanceDayPower);
-                ret.FogDistanceNightPower = this.FogDistanceNightPower.Combine(rhs.FogDistanceNightPower);
+                ret.DayNear = this.DayNear.Combine(rhs.DayNear);
+                ret.DayFar = this.DayFar.Combine(rhs.DayFar);
+                ret.NightNear = this.NightNear.Combine(rhs.NightNear);
+                ret.NightFar = this.NightFar.Combine(rhs.NightFar);
+                ret.DayPower = this.DayPower.Combine(rhs.DayPower);
+                ret.NightPower = this.NightPower.Combine(rhs.NightPower);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -464,12 +464,12 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool FogDistanceDayNear;
-            public bool FogDistanceDayFar;
-            public bool FogDistanceNightNear;
-            public bool FogDistanceNightFar;
-            public bool FogDistanceDayPower;
-            public bool FogDistanceNightPower;
+            public bool DayNear;
+            public bool DayFar;
+            public bool NightNear;
+            public bool NightFar;
+            public bool DayPower;
+            public bool NightPower;
             #endregion
 
             #region Ctors
@@ -479,12 +479,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.FogDistanceDayNear = defaultOn;
-                this.FogDistanceDayFar = defaultOn;
-                this.FogDistanceNightNear = defaultOn;
-                this.FogDistanceNightFar = defaultOn;
-                this.FogDistanceDayPower = defaultOn;
-                this.FogDistanceNightPower = defaultOn;
+                this.DayNear = defaultOn;
+                this.DayFar = defaultOn;
+                this.NightNear = defaultOn;
+                this.NightFar = defaultOn;
+                this.DayPower = defaultOn;
+                this.NightPower = defaultOn;
             }
 
             #endregion
@@ -500,12 +500,12 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((FogDistanceDayNear, null));
-                ret.Add((FogDistanceDayFar, null));
-                ret.Add((FogDistanceNightNear, null));
-                ret.Add((FogDistanceNightFar, null));
-                ret.Add((FogDistanceDayPower, null));
-                ret.Add((FogDistanceNightPower, null));
+                ret.Add((DayNear, null));
+                ret.Add((DayFar, null));
+                ret.Add((NightNear, null));
+                ret.Add((NightFar, null));
+                ret.Add((DayPower, null));
+                ret.Add((NightPower, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -578,12 +578,12 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IWeatherFogDistance>,
         IWeatherFogDistanceGetter
     {
-        new Single FogDistanceDayNear { get; set; }
-        new Single FogDistanceDayFar { get; set; }
-        new Single FogDistanceNightNear { get; set; }
-        new Single FogDistanceNightFar { get; set; }
-        new Single FogDistanceDayPower { get; set; }
-        new Single FogDistanceNightPower { get; set; }
+        new Single DayNear { get; set; }
+        new Single DayFar { get; set; }
+        new Single NightNear { get; set; }
+        new Single NightFar { get; set; }
+        new Single DayPower { get; set; }
+        new Single NightPower { get; set; }
     }
 
     public partial interface IWeatherFogDistanceGetter :
@@ -598,12 +598,12 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeatherFogDistance_Registration.Instance;
-        Single FogDistanceDayNear { get; }
-        Single FogDistanceDayFar { get; }
-        Single FogDistanceNightNear { get; }
-        Single FogDistanceNightFar { get; }
-        Single FogDistanceDayPower { get; }
-        Single FogDistanceNightPower { get; }
+        Single DayNear { get; }
+        Single DayFar { get; }
+        Single NightNear { get; }
+        Single NightFar { get; }
+        Single DayPower { get; }
+        Single NightPower { get; }
 
     }
 
@@ -773,12 +773,12 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum WeatherFogDistance_FieldIndex
     {
-        FogDistanceDayNear = 0,
-        FogDistanceDayFar = 1,
-        FogDistanceNightNear = 2,
-        FogDistanceNightFar = 3,
-        FogDistanceDayPower = 4,
-        FogDistanceNightPower = 5,
+        DayNear = 0,
+        DayFar = 1,
+        NightNear = 2,
+        NightFar = 3,
+        DayPower = 4,
+        NightPower = 5,
     }
     #endregion
 
@@ -864,12 +864,12 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IWeatherFogDistance item)
         {
             ClearPartial();
-            item.FogDistanceDayNear = default(Single);
-            item.FogDistanceDayFar = default(Single);
-            item.FogDistanceNightNear = default(Single);
-            item.FogDistanceNightFar = default(Single);
-            item.FogDistanceDayPower = default(Single);
-            item.FogDistanceNightPower = default(Single);
+            item.DayNear = default(Single);
+            item.DayFar = default(Single);
+            item.NightNear = default(Single);
+            item.NightFar = default(Single);
+            item.DayPower = default(Single);
+            item.NightPower = default(Single);
         }
         
         #region Mutagen
@@ -923,12 +923,12 @@ namespace Mutagen.Bethesda.Fallout3
             WeatherFogDistance.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FogDistanceDayNear = item.FogDistanceDayNear.EqualsWithin(rhs.FogDistanceDayNear);
-            ret.FogDistanceDayFar = item.FogDistanceDayFar.EqualsWithin(rhs.FogDistanceDayFar);
-            ret.FogDistanceNightNear = item.FogDistanceNightNear.EqualsWithin(rhs.FogDistanceNightNear);
-            ret.FogDistanceNightFar = item.FogDistanceNightFar.EqualsWithin(rhs.FogDistanceNightFar);
-            ret.FogDistanceDayPower = item.FogDistanceDayPower.EqualsWithin(rhs.FogDistanceDayPower);
-            ret.FogDistanceNightPower = item.FogDistanceNightPower.EqualsWithin(rhs.FogDistanceNightPower);
+            ret.DayNear = item.DayNear.EqualsWithin(rhs.DayNear);
+            ret.DayFar = item.DayFar.EqualsWithin(rhs.DayFar);
+            ret.NightNear = item.NightNear.EqualsWithin(rhs.NightNear);
+            ret.NightFar = item.NightFar.EqualsWithin(rhs.NightFar);
+            ret.DayPower = item.DayPower.EqualsWithin(rhs.DayPower);
+            ret.NightPower = item.NightPower.EqualsWithin(rhs.NightPower);
         }
         
         public string Print(
@@ -973,29 +973,29 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             WeatherFogDistance.Mask<bool>? printMask = null)
         {
-            if (printMask?.FogDistanceDayNear ?? true)
+            if (printMask?.DayNear ?? true)
             {
-                sb.AppendItem(item.FogDistanceDayNear, "FogDistanceDayNear");
+                sb.AppendItem(item.DayNear, "DayNear");
             }
-            if (printMask?.FogDistanceDayFar ?? true)
+            if (printMask?.DayFar ?? true)
             {
-                sb.AppendItem(item.FogDistanceDayFar, "FogDistanceDayFar");
+                sb.AppendItem(item.DayFar, "DayFar");
             }
-            if (printMask?.FogDistanceNightNear ?? true)
+            if (printMask?.NightNear ?? true)
             {
-                sb.AppendItem(item.FogDistanceNightNear, "FogDistanceNightNear");
+                sb.AppendItem(item.NightNear, "NightNear");
             }
-            if (printMask?.FogDistanceNightFar ?? true)
+            if (printMask?.NightFar ?? true)
             {
-                sb.AppendItem(item.FogDistanceNightFar, "FogDistanceNightFar");
+                sb.AppendItem(item.NightFar, "NightFar");
             }
-            if (printMask?.FogDistanceDayPower ?? true)
+            if (printMask?.DayPower ?? true)
             {
-                sb.AppendItem(item.FogDistanceDayPower, "FogDistanceDayPower");
+                sb.AppendItem(item.DayPower, "DayPower");
             }
-            if (printMask?.FogDistanceNightPower ?? true)
+            if (printMask?.NightPower ?? true)
             {
-                sb.AppendItem(item.FogDistanceNightPower, "FogDistanceNightPower");
+                sb.AppendItem(item.NightPower, "NightPower");
             }
         }
         
@@ -1006,29 +1006,29 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceDayNear) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.DayNear) ?? true))
             {
-                if (!lhs.FogDistanceDayNear.EqualsWithin(rhs.FogDistanceDayNear)) return false;
+                if (!lhs.DayNear.EqualsWithin(rhs.DayNear)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceDayFar) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.DayFar) ?? true))
             {
-                if (!lhs.FogDistanceDayFar.EqualsWithin(rhs.FogDistanceDayFar)) return false;
+                if (!lhs.DayFar.EqualsWithin(rhs.DayFar)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceNightNear) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.NightNear) ?? true))
             {
-                if (!lhs.FogDistanceNightNear.EqualsWithin(rhs.FogDistanceNightNear)) return false;
+                if (!lhs.NightNear.EqualsWithin(rhs.NightNear)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceNightFar) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.NightFar) ?? true))
             {
-                if (!lhs.FogDistanceNightFar.EqualsWithin(rhs.FogDistanceNightFar)) return false;
+                if (!lhs.NightFar.EqualsWithin(rhs.NightFar)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceDayPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.DayPower) ?? true))
             {
-                if (!lhs.FogDistanceDayPower.EqualsWithin(rhs.FogDistanceDayPower)) return false;
+                if (!lhs.DayPower.EqualsWithin(rhs.DayPower)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceNightPower) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.NightPower) ?? true))
             {
-                if (!lhs.FogDistanceNightPower.EqualsWithin(rhs.FogDistanceNightPower)) return false;
+                if (!lhs.NightPower.EqualsWithin(rhs.NightPower)) return false;
             }
             return true;
         }
@@ -1036,12 +1036,12 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IWeatherFogDistanceGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FogDistanceDayNear);
-            hash.Add(item.FogDistanceDayFar);
-            hash.Add(item.FogDistanceNightNear);
-            hash.Add(item.FogDistanceNightFar);
-            hash.Add(item.FogDistanceDayPower);
-            hash.Add(item.FogDistanceNightPower);
+            hash.Add(item.DayNear);
+            hash.Add(item.DayFar);
+            hash.Add(item.NightNear);
+            hash.Add(item.NightFar);
+            hash.Add(item.DayPower);
+            hash.Add(item.NightPower);
             return hash.ToHashCode();
         }
         
@@ -1074,29 +1074,29 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceDayNear) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.DayNear) ?? true))
             {
-                item.FogDistanceDayNear = rhs.FogDistanceDayNear;
+                item.DayNear = rhs.DayNear;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceDayFar) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.DayFar) ?? true))
             {
-                item.FogDistanceDayFar = rhs.FogDistanceDayFar;
+                item.DayFar = rhs.DayFar;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceNightNear) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.NightNear) ?? true))
             {
-                item.FogDistanceNightNear = rhs.FogDistanceNightNear;
+                item.NightNear = rhs.NightNear;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceNightFar) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.NightFar) ?? true))
             {
-                item.FogDistanceNightFar = rhs.FogDistanceNightFar;
+                item.NightFar = rhs.NightFar;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceDayPower) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.DayPower) ?? true))
             {
-                item.FogDistanceDayPower = rhs.FogDistanceDayPower;
+                item.DayPower = rhs.DayPower;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.FogDistanceNightPower) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherFogDistance_FieldIndex.NightPower) ?? true))
             {
-                item.FogDistanceNightPower = rhs.FogDistanceNightPower;
+                item.NightPower = rhs.NightPower;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1208,22 +1208,22 @@ namespace Mutagen.Bethesda.Fallout3
         {
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogDistanceDayNear);
+                item: item.DayNear);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogDistanceDayFar);
+                item: item.DayFar);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogDistanceNightNear);
+                item: item.NightNear);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogDistanceNightFar);
+                item: item.NightFar);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogDistanceDayPower);
+                item: item.DayPower);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogDistanceNightPower);
+                item: item.NightPower);
         }
 
         public void Write(
@@ -1264,12 +1264,12 @@ namespace Mutagen.Bethesda.Fallout3
             IWeatherFogDistance item,
             MutagenFrame frame)
         {
-            item.FogDistanceDayNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogDistanceDayFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogDistanceNightNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogDistanceNightFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogDistanceDayPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogDistanceNightPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DayNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DayFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NightNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NightFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DayPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NightPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1335,12 +1335,12 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Single FogDistanceDayNear => _structData.Slice(0x0, 0x4).Float();
-        public Single FogDistanceDayFar => _structData.Slice(0x4, 0x4).Float();
-        public Single FogDistanceNightNear => _structData.Slice(0x8, 0x4).Float();
-        public Single FogDistanceNightFar => _structData.Slice(0xC, 0x4).Float();
-        public Single FogDistanceDayPower => _structData.Slice(0x10, 0x4).Float();
-        public Single FogDistanceNightPower => _structData.Slice(0x14, 0x4).Float();
+        public Single DayNear => _structData.Slice(0x0, 0x4).Float();
+        public Single DayFar => _structData.Slice(0x4, 0x4).Float();
+        public Single NightNear => _structData.Slice(0x8, 0x4).Float();
+        public Single NightFar => _structData.Slice(0xC, 0x4).Float();
+        public Single DayPower => _structData.Slice(0x10, 0x4).Float();
+        public Single NightPower => _structData.Slice(0x14, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

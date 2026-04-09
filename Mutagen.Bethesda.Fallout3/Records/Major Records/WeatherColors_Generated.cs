@@ -8,6 +8,7 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -29,7 +30,6 @@ using RecordTypes = Mutagen.Bethesda.Fallout3.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -51,17 +51,55 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Sunrise
-        public Color Sunrise { get; set; } = default(Color);
+        #region SkyUpper
+        public WeatherColorSet SkyUpper { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.SkyUpper => SkyUpper;
         #endregion
-        #region Day
-        public Color Day { get; set; } = default(Color);
+        #region Fog
+        public WeatherColorSet Fog { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.Fog => Fog;
         #endregion
-        #region Sunset
-        public Color Sunset { get; set; } = default(Color);
+        #region UnusedA
+        public WeatherColorSet UnusedA { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.UnusedA => UnusedA;
         #endregion
-        #region Night
-        public Color Night { get; set; } = default(Color);
+        #region Ambient
+        public WeatherColorSet Ambient { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.Ambient => Ambient;
+        #endregion
+        #region Sunlight
+        public WeatherColorSet Sunlight { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.Sunlight => Sunlight;
+        #endregion
+        #region Sun
+        public WeatherColorSet Sun { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.Sun => Sun;
+        #endregion
+        #region Stars
+        public WeatherColorSet Stars { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.Stars => Stars;
+        #endregion
+        #region SkyLower
+        public WeatherColorSet SkyLower { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.SkyLower => SkyLower;
+        #endregion
+        #region Horizon
+        public WeatherColorSet Horizon { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.Horizon => Horizon;
+        #endregion
+        #region UnusedB
+        public WeatherColorSet UnusedB { get; set; } = new WeatherColorSet();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherColorSetGetter IWeatherColorsGetter.UnusedB => UnusedB;
         #endregion
 
         #region To String
@@ -102,22 +140,40 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Sunrise = initialValue;
-                this.Day = initialValue;
-                this.Sunset = initialValue;
-                this.Night = initialValue;
+                this.SkyUpper = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.Fog = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.UnusedA = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.Ambient = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.Sunlight = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.Sun = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.Stars = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.SkyLower = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.Horizon = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
+                this.UnusedB = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(initialValue, new WeatherColorSet.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem Sunrise,
-                TItem Day,
-                TItem Sunset,
-                TItem Night)
+                TItem SkyUpper,
+                TItem Fog,
+                TItem UnusedA,
+                TItem Ambient,
+                TItem Sunlight,
+                TItem Sun,
+                TItem Stars,
+                TItem SkyLower,
+                TItem Horizon,
+                TItem UnusedB)
             {
-                this.Sunrise = Sunrise;
-                this.Day = Day;
-                this.Sunset = Sunset;
-                this.Night = Night;
+                this.SkyUpper = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(SkyUpper, new WeatherColorSet.Mask<TItem>(SkyUpper));
+                this.Fog = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(Fog, new WeatherColorSet.Mask<TItem>(Fog));
+                this.UnusedA = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(UnusedA, new WeatherColorSet.Mask<TItem>(UnusedA));
+                this.Ambient = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(Ambient, new WeatherColorSet.Mask<TItem>(Ambient));
+                this.Sunlight = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(Sunlight, new WeatherColorSet.Mask<TItem>(Sunlight));
+                this.Sun = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(Sun, new WeatherColorSet.Mask<TItem>(Sun));
+                this.Stars = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(Stars, new WeatherColorSet.Mask<TItem>(Stars));
+                this.SkyLower = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(SkyLower, new WeatherColorSet.Mask<TItem>(SkyLower));
+                this.Horizon = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(Horizon, new WeatherColorSet.Mask<TItem>(Horizon));
+                this.UnusedB = new MaskItem<TItem, WeatherColorSet.Mask<TItem>?>(UnusedB, new WeatherColorSet.Mask<TItem>(UnusedB));
             }
 
             #pragma warning disable CS8618
@@ -129,10 +185,16 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Sunrise;
-            public TItem Day;
-            public TItem Sunset;
-            public TItem Night;
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? SkyUpper { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? Fog { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? UnusedA { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? Ambient { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? Sunlight { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? Sun { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? Stars { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? SkyLower { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? Horizon { get; set; }
+            public MaskItem<TItem, WeatherColorSet.Mask<TItem>?>? UnusedB { get; set; }
             #endregion
 
             #region Equals
@@ -145,19 +207,31 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Sunrise, rhs.Sunrise)) return false;
-                if (!object.Equals(this.Day, rhs.Day)) return false;
-                if (!object.Equals(this.Sunset, rhs.Sunset)) return false;
-                if (!object.Equals(this.Night, rhs.Night)) return false;
+                if (!object.Equals(this.SkyUpper, rhs.SkyUpper)) return false;
+                if (!object.Equals(this.Fog, rhs.Fog)) return false;
+                if (!object.Equals(this.UnusedA, rhs.UnusedA)) return false;
+                if (!object.Equals(this.Ambient, rhs.Ambient)) return false;
+                if (!object.Equals(this.Sunlight, rhs.Sunlight)) return false;
+                if (!object.Equals(this.Sun, rhs.Sun)) return false;
+                if (!object.Equals(this.Stars, rhs.Stars)) return false;
+                if (!object.Equals(this.SkyLower, rhs.SkyLower)) return false;
+                if (!object.Equals(this.Horizon, rhs.Horizon)) return false;
+                if (!object.Equals(this.UnusedB, rhs.UnusedB)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Sunrise);
-                hash.Add(this.Day);
-                hash.Add(this.Sunset);
-                hash.Add(this.Night);
+                hash.Add(this.SkyUpper);
+                hash.Add(this.Fog);
+                hash.Add(this.UnusedA);
+                hash.Add(this.Ambient);
+                hash.Add(this.Sunlight);
+                hash.Add(this.Sun);
+                hash.Add(this.Stars);
+                hash.Add(this.SkyLower);
+                hash.Add(this.Horizon);
+                hash.Add(this.UnusedB);
                 return hash.ToHashCode();
             }
 
@@ -166,10 +240,56 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Sunrise)) return false;
-                if (!eval(this.Day)) return false;
-                if (!eval(this.Sunset)) return false;
-                if (!eval(this.Night)) return false;
+                if (SkyUpper != null)
+                {
+                    if (!eval(this.SkyUpper.Overall)) return false;
+                    if (this.SkyUpper.Specific != null && !this.SkyUpper.Specific.All(eval)) return false;
+                }
+                if (Fog != null)
+                {
+                    if (!eval(this.Fog.Overall)) return false;
+                    if (this.Fog.Specific != null && !this.Fog.Specific.All(eval)) return false;
+                }
+                if (UnusedA != null)
+                {
+                    if (!eval(this.UnusedA.Overall)) return false;
+                    if (this.UnusedA.Specific != null && !this.UnusedA.Specific.All(eval)) return false;
+                }
+                if (Ambient != null)
+                {
+                    if (!eval(this.Ambient.Overall)) return false;
+                    if (this.Ambient.Specific != null && !this.Ambient.Specific.All(eval)) return false;
+                }
+                if (Sunlight != null)
+                {
+                    if (!eval(this.Sunlight.Overall)) return false;
+                    if (this.Sunlight.Specific != null && !this.Sunlight.Specific.All(eval)) return false;
+                }
+                if (Sun != null)
+                {
+                    if (!eval(this.Sun.Overall)) return false;
+                    if (this.Sun.Specific != null && !this.Sun.Specific.All(eval)) return false;
+                }
+                if (Stars != null)
+                {
+                    if (!eval(this.Stars.Overall)) return false;
+                    if (this.Stars.Specific != null && !this.Stars.Specific.All(eval)) return false;
+                }
+                if (SkyLower != null)
+                {
+                    if (!eval(this.SkyLower.Overall)) return false;
+                    if (this.SkyLower.Specific != null && !this.SkyLower.Specific.All(eval)) return false;
+                }
+                if (Horizon != null)
+                {
+                    if (!eval(this.Horizon.Overall)) return false;
+                    if (this.Horizon.Specific != null && !this.Horizon.Specific.All(eval)) return false;
+                }
+                if (UnusedB != null)
+                {
+                    if (!eval(this.UnusedB.Overall)) return false;
+                    if (this.UnusedB.Specific != null && !this.UnusedB.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -177,10 +297,56 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Sunrise)) return true;
-                if (eval(this.Day)) return true;
-                if (eval(this.Sunset)) return true;
-                if (eval(this.Night)) return true;
+                if (SkyUpper != null)
+                {
+                    if (eval(this.SkyUpper.Overall)) return true;
+                    if (this.SkyUpper.Specific != null && this.SkyUpper.Specific.Any(eval)) return true;
+                }
+                if (Fog != null)
+                {
+                    if (eval(this.Fog.Overall)) return true;
+                    if (this.Fog.Specific != null && this.Fog.Specific.Any(eval)) return true;
+                }
+                if (UnusedA != null)
+                {
+                    if (eval(this.UnusedA.Overall)) return true;
+                    if (this.UnusedA.Specific != null && this.UnusedA.Specific.Any(eval)) return true;
+                }
+                if (Ambient != null)
+                {
+                    if (eval(this.Ambient.Overall)) return true;
+                    if (this.Ambient.Specific != null && this.Ambient.Specific.Any(eval)) return true;
+                }
+                if (Sunlight != null)
+                {
+                    if (eval(this.Sunlight.Overall)) return true;
+                    if (this.Sunlight.Specific != null && this.Sunlight.Specific.Any(eval)) return true;
+                }
+                if (Sun != null)
+                {
+                    if (eval(this.Sun.Overall)) return true;
+                    if (this.Sun.Specific != null && this.Sun.Specific.Any(eval)) return true;
+                }
+                if (Stars != null)
+                {
+                    if (eval(this.Stars.Overall)) return true;
+                    if (this.Stars.Specific != null && this.Stars.Specific.Any(eval)) return true;
+                }
+                if (SkyLower != null)
+                {
+                    if (eval(this.SkyLower.Overall)) return true;
+                    if (this.SkyLower.Specific != null && this.SkyLower.Specific.Any(eval)) return true;
+                }
+                if (Horizon != null)
+                {
+                    if (eval(this.Horizon.Overall)) return true;
+                    if (this.Horizon.Specific != null && this.Horizon.Specific.Any(eval)) return true;
+                }
+                if (UnusedB != null)
+                {
+                    if (eval(this.UnusedB.Overall)) return true;
+                    if (this.UnusedB.Specific != null && this.UnusedB.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -195,10 +361,16 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Sunrise = eval(this.Sunrise);
-                obj.Day = eval(this.Day);
-                obj.Sunset = eval(this.Sunset);
-                obj.Night = eval(this.Night);
+                obj.SkyUpper = this.SkyUpper == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.SkyUpper.Overall), this.SkyUpper.Specific?.Translate(eval));
+                obj.Fog = this.Fog == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.Fog.Overall), this.Fog.Specific?.Translate(eval));
+                obj.UnusedA = this.UnusedA == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.UnusedA.Overall), this.UnusedA.Specific?.Translate(eval));
+                obj.Ambient = this.Ambient == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.Ambient.Overall), this.Ambient.Specific?.Translate(eval));
+                obj.Sunlight = this.Sunlight == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.Sunlight.Overall), this.Sunlight.Specific?.Translate(eval));
+                obj.Sun = this.Sun == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.Sun.Overall), this.Sun.Specific?.Translate(eval));
+                obj.Stars = this.Stars == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.Stars.Overall), this.Stars.Specific?.Translate(eval));
+                obj.SkyLower = this.SkyLower == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.SkyLower.Overall), this.SkyLower.Specific?.Translate(eval));
+                obj.Horizon = this.Horizon == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.Horizon.Overall), this.Horizon.Specific?.Translate(eval));
+                obj.UnusedB = this.UnusedB == null ? null : new MaskItem<R, WeatherColorSet.Mask<R>?>(eval(this.UnusedB.Overall), this.UnusedB.Specific?.Translate(eval));
             }
             #endregion
 
@@ -217,21 +389,45 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(WeatherColors.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Sunrise ?? true)
+                    if (printMask?.SkyUpper?.Overall ?? true)
                     {
-                        sb.AppendItem(Sunrise, "Sunrise");
+                        SkyUpper?.Print(sb);
                     }
-                    if (printMask?.Day ?? true)
+                    if (printMask?.Fog?.Overall ?? true)
                     {
-                        sb.AppendItem(Day, "Day");
+                        Fog?.Print(sb);
                     }
-                    if (printMask?.Sunset ?? true)
+                    if (printMask?.UnusedA?.Overall ?? true)
                     {
-                        sb.AppendItem(Sunset, "Sunset");
+                        UnusedA?.Print(sb);
                     }
-                    if (printMask?.Night ?? true)
+                    if (printMask?.Ambient?.Overall ?? true)
                     {
-                        sb.AppendItem(Night, "Night");
+                        Ambient?.Print(sb);
+                    }
+                    if (printMask?.Sunlight?.Overall ?? true)
+                    {
+                        Sunlight?.Print(sb);
+                    }
+                    if (printMask?.Sun?.Overall ?? true)
+                    {
+                        Sun?.Print(sb);
+                    }
+                    if (printMask?.Stars?.Overall ?? true)
+                    {
+                        Stars?.Print(sb);
+                    }
+                    if (printMask?.SkyLower?.Overall ?? true)
+                    {
+                        SkyLower?.Print(sb);
+                    }
+                    if (printMask?.Horizon?.Overall ?? true)
+                    {
+                        Horizon?.Print(sb);
+                    }
+                    if (printMask?.UnusedB?.Overall ?? true)
+                    {
+                        UnusedB?.Print(sb);
                     }
                 }
             }
@@ -257,10 +453,16 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? Sunrise;
-            public Exception? Day;
-            public Exception? Sunset;
-            public Exception? Night;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? SkyUpper;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? Fog;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? UnusedA;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? Ambient;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? Sunlight;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? Sun;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? Stars;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? SkyLower;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? Horizon;
+            public MaskItem<Exception?, WeatherColorSet.ErrorMask?>? UnusedB;
             #endregion
 
             #region IErrorMask
@@ -269,14 +471,26 @@ namespace Mutagen.Bethesda.Fallout3
                 WeatherColors_FieldIndex enu = (WeatherColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherColors_FieldIndex.Sunrise:
-                        return Sunrise;
-                    case WeatherColors_FieldIndex.Day:
-                        return Day;
-                    case WeatherColors_FieldIndex.Sunset:
-                        return Sunset;
-                    case WeatherColors_FieldIndex.Night:
-                        return Night;
+                    case WeatherColors_FieldIndex.SkyUpper:
+                        return SkyUpper;
+                    case WeatherColors_FieldIndex.Fog:
+                        return Fog;
+                    case WeatherColors_FieldIndex.UnusedA:
+                        return UnusedA;
+                    case WeatherColors_FieldIndex.Ambient:
+                        return Ambient;
+                    case WeatherColors_FieldIndex.Sunlight:
+                        return Sunlight;
+                    case WeatherColors_FieldIndex.Sun:
+                        return Sun;
+                    case WeatherColors_FieldIndex.Stars:
+                        return Stars;
+                    case WeatherColors_FieldIndex.SkyLower:
+                        return SkyLower;
+                    case WeatherColors_FieldIndex.Horizon:
+                        return Horizon;
+                    case WeatherColors_FieldIndex.UnusedB:
+                        return UnusedB;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -287,17 +501,35 @@ namespace Mutagen.Bethesda.Fallout3
                 WeatherColors_FieldIndex enu = (WeatherColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherColors_FieldIndex.Sunrise:
-                        this.Sunrise = ex;
+                    case WeatherColors_FieldIndex.SkyUpper:
+                        this.SkyUpper = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
                         break;
-                    case WeatherColors_FieldIndex.Day:
-                        this.Day = ex;
+                    case WeatherColors_FieldIndex.Fog:
+                        this.Fog = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
                         break;
-                    case WeatherColors_FieldIndex.Sunset:
-                        this.Sunset = ex;
+                    case WeatherColors_FieldIndex.UnusedA:
+                        this.UnusedA = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
                         break;
-                    case WeatherColors_FieldIndex.Night:
-                        this.Night = ex;
+                    case WeatherColors_FieldIndex.Ambient:
+                        this.Ambient = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
+                        break;
+                    case WeatherColors_FieldIndex.Sunlight:
+                        this.Sunlight = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
+                        break;
+                    case WeatherColors_FieldIndex.Sun:
+                        this.Sun = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
+                        break;
+                    case WeatherColors_FieldIndex.Stars:
+                        this.Stars = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
+                        break;
+                    case WeatherColors_FieldIndex.SkyLower:
+                        this.SkyLower = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
+                        break;
+                    case WeatherColors_FieldIndex.Horizon:
+                        this.Horizon = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
+                        break;
+                    case WeatherColors_FieldIndex.UnusedB:
+                        this.UnusedB = new MaskItem<Exception?, WeatherColorSet.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -309,17 +541,35 @@ namespace Mutagen.Bethesda.Fallout3
                 WeatherColors_FieldIndex enu = (WeatherColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherColors_FieldIndex.Sunrise:
-                        this.Sunrise = (Exception?)obj;
+                    case WeatherColors_FieldIndex.SkyUpper:
+                        this.SkyUpper = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
                         break;
-                    case WeatherColors_FieldIndex.Day:
-                        this.Day = (Exception?)obj;
+                    case WeatherColors_FieldIndex.Fog:
+                        this.Fog = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
                         break;
-                    case WeatherColors_FieldIndex.Sunset:
-                        this.Sunset = (Exception?)obj;
+                    case WeatherColors_FieldIndex.UnusedA:
+                        this.UnusedA = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
                         break;
-                    case WeatherColors_FieldIndex.Night:
-                        this.Night = (Exception?)obj;
+                    case WeatherColors_FieldIndex.Ambient:
+                        this.Ambient = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
+                        break;
+                    case WeatherColors_FieldIndex.Sunlight:
+                        this.Sunlight = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
+                        break;
+                    case WeatherColors_FieldIndex.Sun:
+                        this.Sun = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
+                        break;
+                    case WeatherColors_FieldIndex.Stars:
+                        this.Stars = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
+                        break;
+                    case WeatherColors_FieldIndex.SkyLower:
+                        this.SkyLower = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
+                        break;
+                    case WeatherColors_FieldIndex.Horizon:
+                        this.Horizon = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
+                        break;
+                    case WeatherColors_FieldIndex.UnusedB:
+                        this.UnusedB = (MaskItem<Exception?, WeatherColorSet.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -329,10 +579,16 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Sunrise != null) return true;
-                if (Day != null) return true;
-                if (Sunset != null) return true;
-                if (Night != null) return true;
+                if (SkyUpper != null) return true;
+                if (Fog != null) return true;
+                if (UnusedA != null) return true;
+                if (Ambient != null) return true;
+                if (Sunlight != null) return true;
+                if (Sun != null) return true;
+                if (Stars != null) return true;
+                if (SkyLower != null) return true;
+                if (Horizon != null) return true;
+                if (UnusedB != null) return true;
                 return false;
             }
             #endregion
@@ -358,18 +614,16 @@ namespace Mutagen.Bethesda.Fallout3
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                {
-                    sb.AppendItem(Sunrise, "Sunrise");
-                }
-                {
-                    sb.AppendItem(Day, "Day");
-                }
-                {
-                    sb.AppendItem(Sunset, "Sunset");
-                }
-                {
-                    sb.AppendItem(Night, "Night");
-                }
+                SkyUpper?.Print(sb);
+                Fog?.Print(sb);
+                UnusedA?.Print(sb);
+                Ambient?.Print(sb);
+                Sunlight?.Print(sb);
+                Sun?.Print(sb);
+                Stars?.Print(sb);
+                SkyLower?.Print(sb);
+                Horizon?.Print(sb);
+                UnusedB?.Print(sb);
             }
             #endregion
 
@@ -378,10 +632,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Sunrise = this.Sunrise.Combine(rhs.Sunrise);
-                ret.Day = this.Day.Combine(rhs.Day);
-                ret.Sunset = this.Sunset.Combine(rhs.Sunset);
-                ret.Night = this.Night.Combine(rhs.Night);
+                ret.SkyUpper = this.SkyUpper.Combine(rhs.SkyUpper, (l, r) => l.Combine(r));
+                ret.Fog = this.Fog.Combine(rhs.Fog, (l, r) => l.Combine(r));
+                ret.UnusedA = this.UnusedA.Combine(rhs.UnusedA, (l, r) => l.Combine(r));
+                ret.Ambient = this.Ambient.Combine(rhs.Ambient, (l, r) => l.Combine(r));
+                ret.Sunlight = this.Sunlight.Combine(rhs.Sunlight, (l, r) => l.Combine(r));
+                ret.Sun = this.Sun.Combine(rhs.Sun, (l, r) => l.Combine(r));
+                ret.Stars = this.Stars.Combine(rhs.Stars, (l, r) => l.Combine(r));
+                ret.SkyLower = this.SkyLower.Combine(rhs.SkyLower, (l, r) => l.Combine(r));
+                ret.Horizon = this.Horizon.Combine(rhs.Horizon, (l, r) => l.Combine(r));
+                ret.UnusedB = this.UnusedB.Combine(rhs.UnusedB, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -405,10 +665,16 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Sunrise;
-            public bool Day;
-            public bool Sunset;
-            public bool Night;
+            public WeatherColorSet.TranslationMask? SkyUpper;
+            public WeatherColorSet.TranslationMask? Fog;
+            public WeatherColorSet.TranslationMask? UnusedA;
+            public WeatherColorSet.TranslationMask? Ambient;
+            public WeatherColorSet.TranslationMask? Sunlight;
+            public WeatherColorSet.TranslationMask? Sun;
+            public WeatherColorSet.TranslationMask? Stars;
+            public WeatherColorSet.TranslationMask? SkyLower;
+            public WeatherColorSet.TranslationMask? Horizon;
+            public WeatherColorSet.TranslationMask? UnusedB;
             #endregion
 
             #region Ctors
@@ -418,10 +684,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Sunrise = defaultOn;
-                this.Day = defaultOn;
-                this.Sunset = defaultOn;
-                this.Night = defaultOn;
             }
 
             #endregion
@@ -437,10 +699,16 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Sunrise, null));
-                ret.Add((Day, null));
-                ret.Add((Sunset, null));
-                ret.Add((Night, null));
+                ret.Add((SkyUpper != null ? SkyUpper.OnOverall : DefaultOn, SkyUpper?.GetCrystal()));
+                ret.Add((Fog != null ? Fog.OnOverall : DefaultOn, Fog?.GetCrystal()));
+                ret.Add((UnusedA != null ? UnusedA.OnOverall : DefaultOn, UnusedA?.GetCrystal()));
+                ret.Add((Ambient != null ? Ambient.OnOverall : DefaultOn, Ambient?.GetCrystal()));
+                ret.Add((Sunlight != null ? Sunlight.OnOverall : DefaultOn, Sunlight?.GetCrystal()));
+                ret.Add((Sun != null ? Sun.OnOverall : DefaultOn, Sun?.GetCrystal()));
+                ret.Add((Stars != null ? Stars.OnOverall : DefaultOn, Stars?.GetCrystal()));
+                ret.Add((SkyLower != null ? SkyLower.OnOverall : DefaultOn, SkyLower?.GetCrystal()));
+                ret.Add((Horizon != null ? Horizon.OnOverall : DefaultOn, Horizon?.GetCrystal()));
+                ret.Add((UnusedB != null ? UnusedB.OnOverall : DefaultOn, UnusedB?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -513,10 +781,16 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IWeatherColors>,
         IWeatherColorsGetter
     {
-        new Color Sunrise { get; set; }
-        new Color Day { get; set; }
-        new Color Sunset { get; set; }
-        new Color Night { get; set; }
+        new WeatherColorSet SkyUpper { get; set; }
+        new WeatherColorSet Fog { get; set; }
+        new WeatherColorSet UnusedA { get; set; }
+        new WeatherColorSet Ambient { get; set; }
+        new WeatherColorSet Sunlight { get; set; }
+        new WeatherColorSet Sun { get; set; }
+        new WeatherColorSet Stars { get; set; }
+        new WeatherColorSet SkyLower { get; set; }
+        new WeatherColorSet Horizon { get; set; }
+        new WeatherColorSet UnusedB { get; set; }
     }
 
     public partial interface IWeatherColorsGetter :
@@ -531,10 +805,16 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeatherColors_Registration.Instance;
-        Color Sunrise { get; }
-        Color Day { get; }
-        Color Sunset { get; }
-        Color Night { get; }
+        IWeatherColorSetGetter SkyUpper { get; }
+        IWeatherColorSetGetter Fog { get; }
+        IWeatherColorSetGetter UnusedA { get; }
+        IWeatherColorSetGetter Ambient { get; }
+        IWeatherColorSetGetter Sunlight { get; }
+        IWeatherColorSetGetter Sun { get; }
+        IWeatherColorSetGetter Stars { get; }
+        IWeatherColorSetGetter SkyLower { get; }
+        IWeatherColorSetGetter Horizon { get; }
+        IWeatherColorSetGetter UnusedB { get; }
 
     }
 
@@ -704,10 +984,16 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum WeatherColors_FieldIndex
     {
-        Sunrise = 0,
-        Day = 1,
-        Sunset = 2,
-        Night = 3,
+        SkyUpper = 0,
+        Fog = 1,
+        UnusedA = 2,
+        Ambient = 3,
+        Sunlight = 4,
+        Sun = 5,
+        Stars = 6,
+        SkyLower = 7,
+        Horizon = 8,
+        UnusedB = 9,
     }
     #endregion
 
@@ -718,9 +1004,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(WeatherColors.Mask<>);
 
@@ -746,6 +1032,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.NAM0;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.NAM0);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherColorsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -786,10 +1079,16 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IWeatherColors item)
         {
             ClearPartial();
-            item.Sunrise = default(Color);
-            item.Day = default(Color);
-            item.Sunset = default(Color);
-            item.Night = default(Color);
+            item.SkyUpper.Clear();
+            item.Fog.Clear();
+            item.UnusedA.Clear();
+            item.Ambient.Clear();
+            item.Sunlight.Clear();
+            item.Sun.Clear();
+            item.Stars.Clear();
+            item.SkyLower.Clear();
+            item.Horizon.Clear();
+            item.UnusedB.Clear();
         }
         
         #region Mutagen
@@ -805,6 +1104,10 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.NAM0),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -839,10 +1142,16 @@ namespace Mutagen.Bethesda.Fallout3
             WeatherColors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Sunrise = item.Sunrise.ColorOnlyEquals(rhs.Sunrise);
-            ret.Day = item.Day.ColorOnlyEquals(rhs.Day);
-            ret.Sunset = item.Sunset.ColorOnlyEquals(rhs.Sunset);
-            ret.Night = item.Night.ColorOnlyEquals(rhs.Night);
+            ret.SkyUpper = MaskItemExt.Factory(item.SkyUpper.GetEqualsMask(rhs.SkyUpper, include), include);
+            ret.Fog = MaskItemExt.Factory(item.Fog.GetEqualsMask(rhs.Fog, include), include);
+            ret.UnusedA = MaskItemExt.Factory(item.UnusedA.GetEqualsMask(rhs.UnusedA, include), include);
+            ret.Ambient = MaskItemExt.Factory(item.Ambient.GetEqualsMask(rhs.Ambient, include), include);
+            ret.Sunlight = MaskItemExt.Factory(item.Sunlight.GetEqualsMask(rhs.Sunlight, include), include);
+            ret.Sun = MaskItemExt.Factory(item.Sun.GetEqualsMask(rhs.Sun, include), include);
+            ret.Stars = MaskItemExt.Factory(item.Stars.GetEqualsMask(rhs.Stars, include), include);
+            ret.SkyLower = MaskItemExt.Factory(item.SkyLower.GetEqualsMask(rhs.SkyLower, include), include);
+            ret.Horizon = MaskItemExt.Factory(item.Horizon.GetEqualsMask(rhs.Horizon, include), include);
+            ret.UnusedB = MaskItemExt.Factory(item.UnusedB.GetEqualsMask(rhs.UnusedB, include), include);
         }
         
         public string Print(
@@ -887,21 +1196,45 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             WeatherColors.Mask<bool>? printMask = null)
         {
-            if (printMask?.Sunrise ?? true)
+            if (printMask?.SkyUpper?.Overall ?? true)
             {
-                sb.AppendItem(item.Sunrise, "Sunrise");
+                item.SkyUpper?.Print(sb, "SkyUpper");
             }
-            if (printMask?.Day ?? true)
+            if (printMask?.Fog?.Overall ?? true)
             {
-                sb.AppendItem(item.Day, "Day");
+                item.Fog?.Print(sb, "Fog");
             }
-            if (printMask?.Sunset ?? true)
+            if (printMask?.UnusedA?.Overall ?? true)
             {
-                sb.AppendItem(item.Sunset, "Sunset");
+                item.UnusedA?.Print(sb, "UnusedA");
             }
-            if (printMask?.Night ?? true)
+            if (printMask?.Ambient?.Overall ?? true)
             {
-                sb.AppendItem(item.Night, "Night");
+                item.Ambient?.Print(sb, "Ambient");
+            }
+            if (printMask?.Sunlight?.Overall ?? true)
+            {
+                item.Sunlight?.Print(sb, "Sunlight");
+            }
+            if (printMask?.Sun?.Overall ?? true)
+            {
+                item.Sun?.Print(sb, "Sun");
+            }
+            if (printMask?.Stars?.Overall ?? true)
+            {
+                item.Stars?.Print(sb, "Stars");
+            }
+            if (printMask?.SkyLower?.Overall ?? true)
+            {
+                item.SkyLower?.Print(sb, "SkyLower");
+            }
+            if (printMask?.Horizon?.Overall ?? true)
+            {
+                item.Horizon?.Print(sb, "Horizon");
+            }
+            if (printMask?.UnusedB?.Overall ?? true)
+            {
+                item.UnusedB?.Print(sb, "UnusedB");
             }
         }
         
@@ -912,21 +1245,85 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunrise) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.SkyUpper) ?? true))
             {
-                if (!lhs.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkyUpper, rhs.SkyUpper, out var lhsSkyUpper, out var rhsSkyUpper, out var isSkyUpperEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsSkyUpper).CommonInstance()!).Equals(lhsSkyUpper, rhsSkyUpper, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.SkyUpper))) return false;
+                }
+                else if (!isSkyUpperEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Day) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Fog) ?? true))
             {
-                if (!lhs.Day.ColorOnlyEquals(rhs.Day)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Fog, rhs.Fog, out var lhsFog, out var rhsFog, out var isFogEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsFog).CommonInstance()!).Equals(lhsFog, rhsFog, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Fog))) return false;
+                }
+                else if (!isFogEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunset) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.UnusedA) ?? true))
             {
-                if (!lhs.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.UnusedA, rhs.UnusedA, out var lhsUnusedA, out var rhsUnusedA, out var isUnusedAEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsUnusedA).CommonInstance()!).Equals(lhsUnusedA, rhsUnusedA, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.UnusedA))) return false;
+                }
+                else if (!isUnusedAEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Night) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Ambient) ?? true))
             {
-                if (!lhs.Night.ColorOnlyEquals(rhs.Night)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ambient, rhs.Ambient, out var lhsAmbient, out var rhsAmbient, out var isAmbientEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsAmbient).CommonInstance()!).Equals(lhsAmbient, rhsAmbient, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Ambient))) return false;
+                }
+                else if (!isAmbientEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunlight) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sunlight, rhs.Sunlight, out var lhsSunlight, out var rhsSunlight, out var isSunlightEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsSunlight).CommonInstance()!).Equals(lhsSunlight, rhsSunlight, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Sunlight))) return false;
+                }
+                else if (!isSunlightEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sun) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sun, rhs.Sun, out var lhsSun, out var rhsSun, out var isSunEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsSun).CommonInstance()!).Equals(lhsSun, rhsSun, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Sun))) return false;
+                }
+                else if (!isSunEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Stars) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Stars, rhs.Stars, out var lhsStars, out var rhsStars, out var isStarsEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsStars).CommonInstance()!).Equals(lhsStars, rhsStars, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Stars))) return false;
+                }
+                else if (!isStarsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.SkyLower) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SkyLower, rhs.SkyLower, out var lhsSkyLower, out var rhsSkyLower, out var isSkyLowerEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsSkyLower).CommonInstance()!).Equals(lhsSkyLower, rhsSkyLower, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.SkyLower))) return false;
+                }
+                else if (!isSkyLowerEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Horizon) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Horizon, rhs.Horizon, out var lhsHorizon, out var rhsHorizon, out var isHorizonEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsHorizon).CommonInstance()!).Equals(lhsHorizon, rhsHorizon, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Horizon))) return false;
+                }
+                else if (!isHorizonEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.UnusedB) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.UnusedB, rhs.UnusedB, out var lhsUnusedB, out var rhsUnusedB, out var isUnusedBEqual))
+                {
+                    if (!((WeatherColorSetCommon)((IWeatherColorSetGetter)lhsUnusedB).CommonInstance()!).Equals(lhsUnusedB, rhsUnusedB, equalsMask?.GetSubCrystal((int)WeatherColors_FieldIndex.UnusedB))) return false;
+                }
+                else if (!isUnusedBEqual) return false;
             }
             return true;
         }
@@ -934,10 +1331,16 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IWeatherColorsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Sunrise);
-            hash.Add(item.Day);
-            hash.Add(item.Sunset);
-            hash.Add(item.Night);
+            hash.Add(item.SkyUpper);
+            hash.Add(item.Fog);
+            hash.Add(item.UnusedA);
+            hash.Add(item.Ambient);
+            hash.Add(item.Sunlight);
+            hash.Add(item.Sun);
+            hash.Add(item.Stars);
+            hash.Add(item.SkyLower);
+            hash.Add(item.Horizon);
+            hash.Add(item.UnusedB);
             return hash.ToHashCode();
         }
         
@@ -970,21 +1373,225 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunrise) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.SkyUpper) ?? true))
             {
-                item.Sunrise = rhs.Sunrise;
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.SkyUpper);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.SkyUpper) ?? true))
+                    {
+                        item.SkyUpper = rhs.SkyUpper.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.SkyUpper),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Day) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Fog) ?? true))
             {
-                item.Day = rhs.Day;
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.Fog);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Fog) ?? true))
+                    {
+                        item.Fog = rhs.Fog.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Fog),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.UnusedA) ?? true))
             {
-                item.Sunset = rhs.Sunset;
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.UnusedA);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.UnusedA) ?? true))
+                    {
+                        item.UnusedA = rhs.UnusedA.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.UnusedA),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Night) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Ambient) ?? true))
             {
-                item.Night = rhs.Night;
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.Ambient);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Ambient) ?? true))
+                    {
+                        item.Ambient = rhs.Ambient.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Ambient),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunlight) ?? true))
+            {
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.Sunlight);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunlight) ?? true))
+                    {
+                        item.Sunlight = rhs.Sunlight.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Sunlight),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sun) ?? true))
+            {
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.Sun);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sun) ?? true))
+                    {
+                        item.Sun = rhs.Sun.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Sun),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Stars) ?? true))
+            {
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.Stars);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Stars) ?? true))
+                    {
+                        item.Stars = rhs.Stars.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Stars),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.SkyLower) ?? true))
+            {
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.SkyLower);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.SkyLower) ?? true))
+                    {
+                        item.SkyLower = rhs.SkyLower.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.SkyLower),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Horizon) ?? true))
+            {
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.Horizon);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.Horizon) ?? true))
+                    {
+                        item.Horizon = rhs.Horizon.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.Horizon),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.UnusedB) ?? true))
+            {
+                errorMask?.PushIndex((int)WeatherColors_FieldIndex.UnusedB);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)WeatherColors_FieldIndex.UnusedB) ?? true))
+                    {
+                        item.UnusedB = rhs.UnusedB.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)WeatherColors_FieldIndex.UnusedB),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1094,18 +1701,46 @@ namespace Mutagen.Bethesda.Fallout3
             IWeatherColorsGetter item,
             MutagenWriter writer)
         {
-            ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Sunrise);
-            ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Day);
-            ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Sunset);
-            ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Night);
+            var SkyUpperItem = item.SkyUpper;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)SkyUpperItem).BinaryWriteTranslator).Write(
+                item: SkyUpperItem,
+                writer: writer);
+            var FogItem = item.Fog;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)FogItem).BinaryWriteTranslator).Write(
+                item: FogItem,
+                writer: writer);
+            var UnusedAItem = item.UnusedA;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)UnusedAItem).BinaryWriteTranslator).Write(
+                item: UnusedAItem,
+                writer: writer);
+            var AmbientItem = item.Ambient;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)AmbientItem).BinaryWriteTranslator).Write(
+                item: AmbientItem,
+                writer: writer);
+            var SunlightItem = item.Sunlight;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)SunlightItem).BinaryWriteTranslator).Write(
+                item: SunlightItem,
+                writer: writer);
+            var SunItem = item.Sun;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)SunItem).BinaryWriteTranslator).Write(
+                item: SunItem,
+                writer: writer);
+            var StarsItem = item.Stars;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)StarsItem).BinaryWriteTranslator).Write(
+                item: StarsItem,
+                writer: writer);
+            var SkyLowerItem = item.SkyLower;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)SkyLowerItem).BinaryWriteTranslator).Write(
+                item: SkyLowerItem,
+                writer: writer);
+            var HorizonItem = item.Horizon;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)HorizonItem).BinaryWriteTranslator).Write(
+                item: HorizonItem,
+                writer: writer);
+            var UnusedBItem = item.UnusedB;
+            ((WeatherColorSetBinaryWriteTranslation)((IBinaryItem)UnusedBItem).BinaryWriteTranslator).Write(
+                item: UnusedBItem,
+                writer: writer);
         }
 
         public void Write(
@@ -1113,9 +1748,16 @@ namespace Mutagen.Bethesda.Fallout3
             IWeatherColorsGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.Subrecord(
+                writer: writer,
+                record: translationParams.ConvertToCustom(RecordTypes.NAM0),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+            }
         }
 
         public void Write(
@@ -1139,10 +1781,16 @@ namespace Mutagen.Bethesda.Fallout3
             IWeatherColors item,
             MutagenFrame frame)
         {
-            item.Sunrise = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Day = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Sunset = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Night = frame.ReadColor(ColorBinaryType.Alpha);
+            item.SkyUpper = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.Fog = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.UnusedA = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.Ambient = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.Sunlight = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.Sun = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.Stars = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.SkyLower = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.Horizon = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
+            item.UnusedB = Mutagen.Bethesda.Fallout3.WeatherColorSet.CreateFromBinary(frame: frame);
         }
 
     }
@@ -1208,10 +1856,16 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Color Sunrise => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Day => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Sunset => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Night => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public IWeatherColorSetGetter SkyUpper => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData, _package, default(TypedParseParams));
+        public IWeatherColorSetGetter Fog => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0x18), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter UnusedA => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0x30), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter Ambient => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0x48), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter Sunlight => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0x60), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter Sun => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0x78), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter Stars => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0x90), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter SkyLower => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0xA8), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter Horizon => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0xC0), _package, default(TypedParseParams));
+        public IWeatherColorSetGetter UnusedB => WeatherColorSetBinaryOverlay.WeatherColorSetFactory(_structData.Slice(0xD8), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1233,17 +1887,17 @@ namespace Mutagen.Bethesda.Fallout3
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordStructMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x10,
+                length: 0xF0,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
             var ret = new WeatherColorsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x10;
+            stream.Position += 0xF0 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

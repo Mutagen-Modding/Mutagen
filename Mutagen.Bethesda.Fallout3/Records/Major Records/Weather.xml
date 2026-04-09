@@ -18,12 +18,10 @@
       <String name="CloudTextureLayer2" recordType="ANAM" />
       <String name="CloudTextureLayer3" recordType="BNAM" />
       <RefDirect name="Model" refName="Model" />
-      <UInt32 name="MaxCloudLayers" recordType="LNAM" nullable="False" />
+      <UInt32 name="LNAM" recordType="LNAM" nullable="False" />
       <RefDirect name="CloudSpeeds" refName="WeatherCloudSpeeds" />
-      <ByteArray name="PNAM" recordType="PNAM" />
-      <List name="Colors" recordType="NAM0">
-        <RefDirect refName="WeatherColors" />
-      </List>
+      <RefDirect name="CloudLayerColors" refName="WeatherCloudLayerColors" binary="Custom" />
+      <RefDirect name="Colors" refName="WeatherColors" binary="Custom" />
       <RefDirect name="FogDistance" refName="WeatherFogDistance" />
       <ByteArray name="INAM" recordType="INAM" />
       <RefDirect name="Data" refName="WeatherData" />
@@ -38,29 +36,53 @@
       <UInt8 name="Layer3Speed" />
     </Fields>
   </Object>
-  <Object name="WeatherColors" objType="Subrecord">
+  <Object name="WeatherColorSet" objType="Subrecord">
     <Fields>
       <Color name="Sunrise" binaryType="Alpha" />
       <Color name="Day" binaryType="Alpha" />
       <Color name="Sunset" binaryType="Alpha" />
       <Color name="Night" binaryType="Alpha" />
+      <Color name="HighNoon" binaryType="Alpha" />
+      <Color name="Midnight" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="WeatherCloudLayerColors" objType="Subrecord" recordType="PNAM">
+    <Fields>
+      <RefDirect name="Layer0" refName="WeatherColorSet" />
+      <RefDirect name="Layer1" refName="WeatherColorSet" />
+      <RefDirect name="Layer2" refName="WeatherColorSet" />
+      <RefDirect name="Layer3" refName="WeatherColorSet" />
+    </Fields>
+  </Object>
+  <Object name="WeatherColors" objType="Subrecord" recordType="NAM0">
+    <Fields>
+      <RefDirect name="SkyUpper" refName="WeatherColorSet" />
+      <RefDirect name="Fog" refName="WeatherColorSet" />
+      <RefDirect name="UnusedA" refName="WeatherColorSet" />
+      <RefDirect name="Ambient" refName="WeatherColorSet" />
+      <RefDirect name="Sunlight" refName="WeatherColorSet" />
+      <RefDirect name="Sun" refName="WeatherColorSet" />
+      <RefDirect name="Stars" refName="WeatherColorSet" />
+      <RefDirect name="SkyLower" refName="WeatherColorSet" />
+      <RefDirect name="Horizon" refName="WeatherColorSet" />
+      <RefDirect name="UnusedB" refName="WeatherColorSet" />
     </Fields>
   </Object>
   <Object name="WeatherFogDistance" objType="Subrecord" recordType="FNAM">
     <Fields>
-      <Float name="FogDistanceDayNear" />
-      <Float name="FogDistanceDayFar" />
-      <Float name="FogDistanceNightNear" />
-      <Float name="FogDistanceNightFar" />
-      <Float name="FogDistanceDayPower" />
-      <Float name="FogDistanceNightPower" />
+      <Float name="DayNear" />
+      <Float name="DayFar" />
+      <Float name="NightNear" />
+      <Float name="NightFar" />
+      <Float name="DayPower" />
+      <Float name="NightPower" />
     </Fields>
   </Object>
   <Object name="WeatherData" objType="Subrecord" recordType="DATA">
     <Fields>
       <UInt8 name="WindSpeed" />
-      <UInt8 name="Unused1" />
-      <UInt8 name="Unused2" />
+      <UInt8 name="CloudSpeedLower" />
+      <UInt8 name="CloudSpeedUpper" />
       <UInt8 name="TransDelta" />
       <UInt8 name="SunGlare" />
       <UInt8 name="SunDamage" />
@@ -69,14 +91,14 @@
       <UInt8 name="ThunderLightningBeginFadeIn" />
       <UInt8 name="ThunderLightningEndFadeOut" />
       <UInt8 name="ThunderLightningFrequency" />
-      <UInt8 name="Flags" />
+      <Enum name="WeatherClassification" enumName="Weather.Classification" byteLength="1" />
       <Color name="LightningColor" binaryType="NoAlpha" />
     </Fields>
   </Object>
   <Object name="WeatherSound" objType="Subrecord" recordType="SNAM">
     <Fields>
       <FormLink name="Sound" refName="Sound" />
-      <UInt32 name="Type" />
+      <Enum name="Type" enumName="WeatherSound.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

@@ -807,6 +807,9 @@
     <Compile Include="Records\Major Records\Ragdoll_Generated.cs">
       <DependentUpon>Ragdoll.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Weather.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Weather_Generated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -1129,6 +1132,12 @@
     </Compile>
     <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
     <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
+    <Compile Include="Records\Major Records\WeatherColorSet_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherCloudLayerColors_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\WeatherColors_Generated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>

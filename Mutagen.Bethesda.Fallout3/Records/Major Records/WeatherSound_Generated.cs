@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
         #region Type
-        public UInt32 Type { get; set; } = default(UInt32);
+        public WeatherSound.TypeEnum Type { get; set; } = default(WeatherSound.TypeEnum);
         #endregion
 
         #region To String
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout3
         IWeatherSoundGetter
     {
         new IFormLink<ISoundGetter> Sound { get; set; }
-        new UInt32 Type { get; set; }
+        new WeatherSound.TypeEnum Type { get; set; }
     }
 
     public partial interface IWeatherSoundGetter :
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeatherSound_Registration.Instance;
         IFormLinkGetter<ISoundGetter> Sound { get; }
-        UInt32 Type { get; }
+        WeatherSound.TypeEnum Type { get; }
 
     }
 
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Sound.Clear();
-            item.Type = default(UInt32);
+            item.Type = default(WeatherSound.TypeEnum);
         }
         
         #region Mutagen
@@ -1022,7 +1022,10 @@ namespace Mutagen.Bethesda.Fallout3
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound);
-            writer.Write(item.Type);
+            EnumBinaryTranslation<WeatherSound.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4);
         }
 
         public void Write(
@@ -1064,7 +1067,9 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Type = frame.ReadUInt32();
+            item.Type = EnumBinaryTranslation<WeatherSound.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1132,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public IFormLinkGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public UInt32 Type => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public WeatherSound.TypeEnum Type => (WeatherSound.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

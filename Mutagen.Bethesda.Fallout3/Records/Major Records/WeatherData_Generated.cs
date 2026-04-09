@@ -54,11 +54,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region WindSpeed
         public Byte WindSpeed { get; set; } = default(Byte);
         #endregion
-        #region Unused1
-        public Byte Unused1 { get; set; } = default(Byte);
+        #region CloudSpeedLower
+        public Byte CloudSpeedLower { get; set; } = default(Byte);
         #endregion
-        #region Unused2
-        public Byte Unused2 { get; set; } = default(Byte);
+        #region CloudSpeedUpper
+        public Byte CloudSpeedUpper { get; set; } = default(Byte);
         #endregion
         #region TransDelta
         public Byte TransDelta { get; set; } = default(Byte);
@@ -84,8 +84,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region ThunderLightningFrequency
         public Byte ThunderLightningFrequency { get; set; } = default(Byte);
         #endregion
-        #region Flags
-        public Byte Flags { get; set; } = default(Byte);
+        #region WeatherClassification
+        public Weather.Classification WeatherClassification { get; set; } = default(Weather.Classification);
         #endregion
         #region LightningColor
         public Color LightningColor { get; set; } = default(Color);
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.WindSpeed = initialValue;
-                this.Unused1 = initialValue;
-                this.Unused2 = initialValue;
+                this.CloudSpeedLower = initialValue;
+                this.CloudSpeedUpper = initialValue;
                 this.TransDelta = initialValue;
                 this.SunGlare = initialValue;
                 this.SunDamage = initialValue;
@@ -140,14 +140,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ThunderLightningBeginFadeIn = initialValue;
                 this.ThunderLightningEndFadeOut = initialValue;
                 this.ThunderLightningFrequency = initialValue;
-                this.Flags = initialValue;
+                this.WeatherClassification = initialValue;
                 this.LightningColor = initialValue;
             }
 
             public Mask(
                 TItem WindSpeed,
-                TItem Unused1,
-                TItem Unused2,
+                TItem CloudSpeedLower,
+                TItem CloudSpeedUpper,
                 TItem TransDelta,
                 TItem SunGlare,
                 TItem SunDamage,
@@ -156,12 +156,12 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ThunderLightningBeginFadeIn,
                 TItem ThunderLightningEndFadeOut,
                 TItem ThunderLightningFrequency,
-                TItem Flags,
+                TItem WeatherClassification,
                 TItem LightningColor)
             {
                 this.WindSpeed = WindSpeed;
-                this.Unused1 = Unused1;
-                this.Unused2 = Unused2;
+                this.CloudSpeedLower = CloudSpeedLower;
+                this.CloudSpeedUpper = CloudSpeedUpper;
                 this.TransDelta = TransDelta;
                 this.SunGlare = SunGlare;
                 this.SunDamage = SunDamage;
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeIn;
                 this.ThunderLightningEndFadeOut = ThunderLightningEndFadeOut;
                 this.ThunderLightningFrequency = ThunderLightningFrequency;
-                this.Flags = Flags;
+                this.WeatherClassification = WeatherClassification;
                 this.LightningColor = LightningColor;
             }
 
@@ -184,8 +184,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem WindSpeed;
-            public TItem Unused1;
-            public TItem Unused2;
+            public TItem CloudSpeedLower;
+            public TItem CloudSpeedUpper;
             public TItem TransDelta;
             public TItem SunGlare;
             public TItem SunDamage;
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem ThunderLightningBeginFadeIn;
             public TItem ThunderLightningEndFadeOut;
             public TItem ThunderLightningFrequency;
-            public TItem Flags;
+            public TItem WeatherClassification;
             public TItem LightningColor;
             #endregion
 
@@ -209,8 +209,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.WindSpeed, rhs.WindSpeed)) return false;
-                if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
-                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.CloudSpeedLower, rhs.CloudSpeedLower)) return false;
+                if (!object.Equals(this.CloudSpeedUpper, rhs.CloudSpeedUpper)) return false;
                 if (!object.Equals(this.TransDelta, rhs.TransDelta)) return false;
                 if (!object.Equals(this.SunGlare, rhs.SunGlare)) return false;
                 if (!object.Equals(this.SunDamage, rhs.SunDamage)) return false;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ThunderLightningBeginFadeIn, rhs.ThunderLightningBeginFadeIn)) return false;
                 if (!object.Equals(this.ThunderLightningEndFadeOut, rhs.ThunderLightningEndFadeOut)) return false;
                 if (!object.Equals(this.ThunderLightningFrequency, rhs.ThunderLightningFrequency)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.WeatherClassification, rhs.WeatherClassification)) return false;
                 if (!object.Equals(this.LightningColor, rhs.LightningColor)) return false;
                 return true;
             }
@@ -227,8 +227,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.WindSpeed);
-                hash.Add(this.Unused1);
-                hash.Add(this.Unused2);
+                hash.Add(this.CloudSpeedLower);
+                hash.Add(this.CloudSpeedUpper);
                 hash.Add(this.TransDelta);
                 hash.Add(this.SunGlare);
                 hash.Add(this.SunDamage);
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ThunderLightningBeginFadeIn);
                 hash.Add(this.ThunderLightningEndFadeOut);
                 hash.Add(this.ThunderLightningFrequency);
-                hash.Add(this.Flags);
+                hash.Add(this.WeatherClassification);
                 hash.Add(this.LightningColor);
                 return hash.ToHashCode();
             }
@@ -248,8 +248,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.WindSpeed)) return false;
-                if (!eval(this.Unused1)) return false;
-                if (!eval(this.Unused2)) return false;
+                if (!eval(this.CloudSpeedLower)) return false;
+                if (!eval(this.CloudSpeedUpper)) return false;
                 if (!eval(this.TransDelta)) return false;
                 if (!eval(this.SunGlare)) return false;
                 if (!eval(this.SunDamage)) return false;
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.ThunderLightningBeginFadeIn)) return false;
                 if (!eval(this.ThunderLightningEndFadeOut)) return false;
                 if (!eval(this.ThunderLightningFrequency)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.WeatherClassification)) return false;
                 if (!eval(this.LightningColor)) return false;
                 return true;
             }
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.WindSpeed)) return true;
-                if (eval(this.Unused1)) return true;
-                if (eval(this.Unused2)) return true;
+                if (eval(this.CloudSpeedLower)) return true;
+                if (eval(this.CloudSpeedUpper)) return true;
                 if (eval(this.TransDelta)) return true;
                 if (eval(this.SunGlare)) return true;
                 if (eval(this.SunDamage)) return true;
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.ThunderLightningBeginFadeIn)) return true;
                 if (eval(this.ThunderLightningEndFadeOut)) return true;
                 if (eval(this.ThunderLightningFrequency)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.WeatherClassification)) return true;
                 if (eval(this.LightningColor)) return true;
                 return false;
             }
@@ -295,8 +295,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.WindSpeed = eval(this.WindSpeed);
-                obj.Unused1 = eval(this.Unused1);
-                obj.Unused2 = eval(this.Unused2);
+                obj.CloudSpeedLower = eval(this.CloudSpeedLower);
+                obj.CloudSpeedUpper = eval(this.CloudSpeedUpper);
                 obj.TransDelta = eval(this.TransDelta);
                 obj.SunGlare = eval(this.SunGlare);
                 obj.SunDamage = eval(this.SunDamage);
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ThunderLightningBeginFadeIn = eval(this.ThunderLightningBeginFadeIn);
                 obj.ThunderLightningEndFadeOut = eval(this.ThunderLightningEndFadeOut);
                 obj.ThunderLightningFrequency = eval(this.ThunderLightningFrequency);
-                obj.Flags = eval(this.Flags);
+                obj.WeatherClassification = eval(this.WeatherClassification);
                 obj.LightningColor = eval(this.LightningColor);
             }
             #endregion
@@ -329,13 +329,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(WindSpeed, "WindSpeed");
                     }
-                    if (printMask?.Unused1 ?? true)
+                    if (printMask?.CloudSpeedLower ?? true)
                     {
-                        sb.AppendItem(Unused1, "Unused1");
+                        sb.AppendItem(CloudSpeedLower, "CloudSpeedLower");
                     }
-                    if (printMask?.Unused2 ?? true)
+                    if (printMask?.CloudSpeedUpper ?? true)
                     {
-                        sb.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
@@ -369,9 +369,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.WeatherClassification ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(WeatherClassification, "WeatherClassification");
                     }
                     if (printMask?.LightningColor ?? true)
                     {
@@ -402,8 +402,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? WindSpeed;
-            public Exception? Unused1;
-            public Exception? Unused2;
+            public Exception? CloudSpeedLower;
+            public Exception? CloudSpeedUpper;
             public Exception? TransDelta;
             public Exception? SunGlare;
             public Exception? SunDamage;
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? ThunderLightningBeginFadeIn;
             public Exception? ThunderLightningEndFadeOut;
             public Exception? ThunderLightningFrequency;
-            public Exception? Flags;
+            public Exception? WeatherClassification;
             public Exception? LightningColor;
             #endregion
 
@@ -424,10 +424,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case WeatherData_FieldIndex.WindSpeed:
                         return WindSpeed;
-                    case WeatherData_FieldIndex.Unused1:
-                        return Unused1;
-                    case WeatherData_FieldIndex.Unused2:
-                        return Unused2;
+                    case WeatherData_FieldIndex.CloudSpeedLower:
+                        return CloudSpeedLower;
+                    case WeatherData_FieldIndex.CloudSpeedUpper:
+                        return CloudSpeedUpper;
                     case WeatherData_FieldIndex.TransDelta:
                         return TransDelta;
                     case WeatherData_FieldIndex.SunGlare:
@@ -444,8 +444,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return ThunderLightningEndFadeOut;
                     case WeatherData_FieldIndex.ThunderLightningFrequency:
                         return ThunderLightningFrequency;
-                    case WeatherData_FieldIndex.Flags:
-                        return Flags;
+                    case WeatherData_FieldIndex.WeatherClassification:
+                        return WeatherClassification;
                     case WeatherData_FieldIndex.LightningColor:
                         return LightningColor;
                     default:
@@ -461,11 +461,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case WeatherData_FieldIndex.WindSpeed:
                         this.WindSpeed = ex;
                         break;
-                    case WeatherData_FieldIndex.Unused1:
-                        this.Unused1 = ex;
+                    case WeatherData_FieldIndex.CloudSpeedLower:
+                        this.CloudSpeedLower = ex;
                         break;
-                    case WeatherData_FieldIndex.Unused2:
-                        this.Unused2 = ex;
+                    case WeatherData_FieldIndex.CloudSpeedUpper:
+                        this.CloudSpeedUpper = ex;
                         break;
                     case WeatherData_FieldIndex.TransDelta:
                         this.TransDelta = ex;
@@ -491,8 +491,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case WeatherData_FieldIndex.ThunderLightningFrequency:
                         this.ThunderLightningFrequency = ex;
                         break;
-                    case WeatherData_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case WeatherData_FieldIndex.WeatherClassification:
+                        this.WeatherClassification = ex;
                         break;
                     case WeatherData_FieldIndex.LightningColor:
                         this.LightningColor = ex;
@@ -510,11 +510,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case WeatherData_FieldIndex.WindSpeed:
                         this.WindSpeed = (Exception?)obj;
                         break;
-                    case WeatherData_FieldIndex.Unused1:
-                        this.Unused1 = (Exception?)obj;
+                    case WeatherData_FieldIndex.CloudSpeedLower:
+                        this.CloudSpeedLower = (Exception?)obj;
                         break;
-                    case WeatherData_FieldIndex.Unused2:
-                        this.Unused2 = (Exception?)obj;
+                    case WeatherData_FieldIndex.CloudSpeedUpper:
+                        this.CloudSpeedUpper = (Exception?)obj;
                         break;
                     case WeatherData_FieldIndex.TransDelta:
                         this.TransDelta = (Exception?)obj;
@@ -540,8 +540,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case WeatherData_FieldIndex.ThunderLightningFrequency:
                         this.ThunderLightningFrequency = (Exception?)obj;
                         break;
-                    case WeatherData_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case WeatherData_FieldIndex.WeatherClassification:
+                        this.WeatherClassification = (Exception?)obj;
                         break;
                     case WeatherData_FieldIndex.LightningColor:
                         this.LightningColor = (Exception?)obj;
@@ -555,8 +555,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (WindSpeed != null) return true;
-                if (Unused1 != null) return true;
-                if (Unused2 != null) return true;
+                if (CloudSpeedLower != null) return true;
+                if (CloudSpeedUpper != null) return true;
                 if (TransDelta != null) return true;
                 if (SunGlare != null) return true;
                 if (SunDamage != null) return true;
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ThunderLightningBeginFadeIn != null) return true;
                 if (ThunderLightningEndFadeOut != null) return true;
                 if (ThunderLightningFrequency != null) return true;
-                if (Flags != null) return true;
+                if (WeatherClassification != null) return true;
                 if (LightningColor != null) return true;
                 return false;
             }
@@ -596,10 +596,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(WindSpeed, "WindSpeed");
                 }
                 {
-                    sb.AppendItem(Unused1, "Unused1");
+                    sb.AppendItem(CloudSpeedLower, "CloudSpeedLower");
                 }
                 {
-                    sb.AppendItem(Unused2, "Unused2");
+                    sb.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
                 }
                 {
                     sb.AppendItem(TransDelta, "TransDelta");
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(WeatherClassification, "WeatherClassification");
                 }
                 {
                     sb.AppendItem(LightningColor, "LightningColor");
@@ -640,8 +640,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.WindSpeed = this.WindSpeed.Combine(rhs.WindSpeed);
-                ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
-                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.CloudSpeedLower = this.CloudSpeedLower.Combine(rhs.CloudSpeedLower);
+                ret.CloudSpeedUpper = this.CloudSpeedUpper.Combine(rhs.CloudSpeedUpper);
                 ret.TransDelta = this.TransDelta.Combine(rhs.TransDelta);
                 ret.SunGlare = this.SunGlare.Combine(rhs.SunGlare);
                 ret.SunDamage = this.SunDamage.Combine(rhs.SunDamage);
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ThunderLightningBeginFadeIn = this.ThunderLightningBeginFadeIn.Combine(rhs.ThunderLightningBeginFadeIn);
                 ret.ThunderLightningEndFadeOut = this.ThunderLightningEndFadeOut.Combine(rhs.ThunderLightningEndFadeOut);
                 ret.ThunderLightningFrequency = this.ThunderLightningFrequency.Combine(rhs.ThunderLightningFrequency);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.WeatherClassification = this.WeatherClassification.Combine(rhs.WeatherClassification);
                 ret.LightningColor = this.LightningColor.Combine(rhs.LightningColor);
                 return ret;
             }
@@ -676,8 +676,8 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool WindSpeed;
-            public bool Unused1;
-            public bool Unused2;
+            public bool CloudSpeedLower;
+            public bool CloudSpeedUpper;
             public bool TransDelta;
             public bool SunGlare;
             public bool SunDamage;
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool ThunderLightningBeginFadeIn;
             public bool ThunderLightningEndFadeOut;
             public bool ThunderLightningFrequency;
-            public bool Flags;
+            public bool WeatherClassification;
             public bool LightningColor;
             #endregion
 
@@ -698,8 +698,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.WindSpeed = defaultOn;
-                this.Unused1 = defaultOn;
-                this.Unused2 = defaultOn;
+                this.CloudSpeedLower = defaultOn;
+                this.CloudSpeedUpper = defaultOn;
                 this.TransDelta = defaultOn;
                 this.SunGlare = defaultOn;
                 this.SunDamage = defaultOn;
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ThunderLightningBeginFadeIn = defaultOn;
                 this.ThunderLightningEndFadeOut = defaultOn;
                 this.ThunderLightningFrequency = defaultOn;
-                this.Flags = defaultOn;
+                this.WeatherClassification = defaultOn;
                 this.LightningColor = defaultOn;
             }
 
@@ -726,8 +726,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((WindSpeed, null));
-                ret.Add((Unused1, null));
-                ret.Add((Unused2, null));
+                ret.Add((CloudSpeedLower, null));
+                ret.Add((CloudSpeedUpper, null));
                 ret.Add((TransDelta, null));
                 ret.Add((SunGlare, null));
                 ret.Add((SunDamage, null));
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ThunderLightningBeginFadeIn, null));
                 ret.Add((ThunderLightningEndFadeOut, null));
                 ret.Add((ThunderLightningFrequency, null));
-                ret.Add((Flags, null));
+                ret.Add((WeatherClassification, null));
                 ret.Add((LightningColor, null));
             }
 
@@ -811,8 +811,8 @@ namespace Mutagen.Bethesda.Fallout3
         IWeatherDataGetter
     {
         new Byte WindSpeed { get; set; }
-        new Byte Unused1 { get; set; }
-        new Byte Unused2 { get; set; }
+        new Byte CloudSpeedLower { get; set; }
+        new Byte CloudSpeedUpper { get; set; }
         new Byte TransDelta { get; set; }
         new Byte SunGlare { get; set; }
         new Byte SunDamage { get; set; }
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Byte ThunderLightningBeginFadeIn { get; set; }
         new Byte ThunderLightningEndFadeOut { get; set; }
         new Byte ThunderLightningFrequency { get; set; }
-        new Byte Flags { get; set; }
+        new Weather.Classification WeatherClassification { get; set; }
         new Color LightningColor { get; set; }
     }
 
@@ -838,8 +838,8 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeatherData_Registration.Instance;
         Byte WindSpeed { get; }
-        Byte Unused1 { get; }
-        Byte Unused2 { get; }
+        Byte CloudSpeedLower { get; }
+        Byte CloudSpeedUpper { get; }
         Byte TransDelta { get; }
         Byte SunGlare { get; }
         Byte SunDamage { get; }
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Fallout3
         Byte ThunderLightningBeginFadeIn { get; }
         Byte ThunderLightningEndFadeOut { get; }
         Byte ThunderLightningFrequency { get; }
-        Byte Flags { get; }
+        Weather.Classification WeatherClassification { get; }
         Color LightningColor { get; }
 
     }
@@ -1020,8 +1020,8 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum WeatherData_FieldIndex
     {
         WindSpeed = 0,
-        Unused1 = 1,
-        Unused2 = 2,
+        CloudSpeedLower = 1,
+        CloudSpeedUpper = 2,
         TransDelta = 3,
         SunGlare = 4,
         SunDamage = 5,
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Fallout3
         ThunderLightningBeginFadeIn = 8,
         ThunderLightningEndFadeOut = 9,
         ThunderLightningFrequency = 10,
-        Flags = 11,
+        WeatherClassification = 11,
         LightningColor = 12,
     }
     #endregion
@@ -1118,8 +1118,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.WindSpeed = default(Byte);
-            item.Unused1 = default(Byte);
-            item.Unused2 = default(Byte);
+            item.CloudSpeedLower = default(Byte);
+            item.CloudSpeedUpper = default(Byte);
             item.TransDelta = default(Byte);
             item.SunGlare = default(Byte);
             item.SunDamage = default(Byte);
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.ThunderLightningBeginFadeIn = default(Byte);
             item.ThunderLightningEndFadeOut = default(Byte);
             item.ThunderLightningFrequency = default(Byte);
-            item.Flags = default(Byte);
+            item.WeatherClassification = default(Weather.Classification);
             item.LightningColor = default(Color);
         }
         
@@ -1184,8 +1184,8 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
-            ret.Unused1 = item.Unused1 == rhs.Unused1;
-            ret.Unused2 = item.Unused2 == rhs.Unused2;
+            ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
+            ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
             ret.TransDelta = item.TransDelta == rhs.TransDelta;
             ret.SunGlare = item.SunGlare == rhs.SunGlare;
             ret.SunDamage = item.SunDamage == rhs.SunDamage;
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ThunderLightningBeginFadeIn = item.ThunderLightningBeginFadeIn == rhs.ThunderLightningBeginFadeIn;
             ret.ThunderLightningEndFadeOut = item.ThunderLightningEndFadeOut == rhs.ThunderLightningEndFadeOut;
             ret.ThunderLightningFrequency = item.ThunderLightningFrequency == rhs.ThunderLightningFrequency;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.WeatherClassification = item.WeatherClassification == rhs.WeatherClassification;
             ret.LightningColor = item.LightningColor.ColorOnlyEquals(rhs.LightningColor);
         }
         
@@ -1244,13 +1244,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.WindSpeed, "WindSpeed");
             }
-            if (printMask?.Unused1 ?? true)
+            if (printMask?.CloudSpeedLower ?? true)
             {
-                sb.AppendItem(item.Unused1, "Unused1");
+                sb.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
             }
-            if (printMask?.Unused2 ?? true)
+            if (printMask?.CloudSpeedUpper ?? true)
             {
-                sb.AppendItem(item.Unused2, "Unused2");
+                sb.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
             }
             if (printMask?.TransDelta ?? true)
             {
@@ -1284,9 +1284,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.WeatherClassification ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.WeatherClassification, "WeatherClassification");
             }
             if (printMask?.LightningColor ?? true)
             {
@@ -1305,13 +1305,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.WindSpeed != rhs.WindSpeed) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Unused1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedLower) ?? true))
             {
-                if (lhs.Unused1 != rhs.Unused1) return false;
+                if (lhs.CloudSpeedLower != rhs.CloudSpeedLower) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedUpper) ?? true))
             {
-                if (lhs.Unused2 != rhs.Unused2) return false;
+                if (lhs.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.TransDelta) ?? true))
             {
@@ -1345,9 +1345,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.WeatherClassification) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.WeatherClassification != rhs.WeatherClassification) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WeatherData_FieldIndex.LightningColor) ?? true))
             {
@@ -1360,8 +1360,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.WindSpeed);
-            hash.Add(item.Unused1);
-            hash.Add(item.Unused2);
+            hash.Add(item.CloudSpeedLower);
+            hash.Add(item.CloudSpeedUpper);
             hash.Add(item.TransDelta);
             hash.Add(item.SunGlare);
             hash.Add(item.SunDamage);
@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.ThunderLightningBeginFadeIn);
             hash.Add(item.ThunderLightningEndFadeOut);
             hash.Add(item.ThunderLightningFrequency);
-            hash.Add(item.Flags);
+            hash.Add(item.WeatherClassification);
             hash.Add(item.LightningColor);
             return hash.ToHashCode();
         }
@@ -1408,13 +1408,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.WindSpeed = rhs.WindSpeed;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Unused1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedLower) ?? true))
             {
-                item.Unused1 = rhs.Unused1;
+                item.CloudSpeedLower = rhs.CloudSpeedLower;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Unused2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.CloudSpeedUpper) ?? true))
             {
-                item.Unused2 = rhs.Unused2;
+                item.CloudSpeedUpper = rhs.CloudSpeedUpper;
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.TransDelta) ?? true))
             {
@@ -1448,9 +1448,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ThunderLightningFrequency = rhs.ThunderLightningFrequency;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.WeatherClassification) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.WeatherClassification = rhs.WeatherClassification;
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherData_FieldIndex.LightningColor) ?? true))
             {
@@ -1565,8 +1565,8 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer)
         {
             writer.Write(item.WindSpeed);
-            writer.Write(item.Unused1);
-            writer.Write(item.Unused2);
+            writer.Write(item.CloudSpeedLower);
+            writer.Write(item.CloudSpeedUpper);
             writer.Write(item.TransDelta);
             writer.Write(item.SunGlare);
             writer.Write(item.SunDamage);
@@ -1575,7 +1575,10 @@ namespace Mutagen.Bethesda.Fallout3
             writer.Write(item.ThunderLightningBeginFadeIn);
             writer.Write(item.ThunderLightningEndFadeOut);
             writer.Write(item.ThunderLightningFrequency);
-            writer.Write(item.Flags);
+            EnumBinaryTranslation<Weather.Classification, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.WeatherClassification,
+                length: 1);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LightningColor,
@@ -1621,8 +1624,8 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.WindSpeed = frame.ReadUInt8();
-            item.Unused1 = frame.ReadUInt8();
-            item.Unused2 = frame.ReadUInt8();
+            item.CloudSpeedLower = frame.ReadUInt8();
+            item.CloudSpeedUpper = frame.ReadUInt8();
             item.TransDelta = frame.ReadUInt8();
             item.SunGlare = frame.ReadUInt8();
             item.SunDamage = frame.ReadUInt8();
@@ -1631,7 +1634,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.ThunderLightningBeginFadeIn = frame.ReadUInt8();
             item.ThunderLightningEndFadeOut = frame.ReadUInt8();
             item.ThunderLightningFrequency = frame.ReadUInt8();
-            item.Flags = frame.ReadUInt8();
+            item.WeatherClassification = EnumBinaryTranslation<Weather.Classification, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.LightningColor = frame.ReadColor(ColorBinaryType.NoAlpha);
         }
 
@@ -1699,8 +1704,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public Byte WindSpeed => _structData.Span[0x0];
-        public Byte Unused1 => _structData.Span[0x1];
-        public Byte Unused2 => _structData.Span[0x2];
+        public Byte CloudSpeedLower => _structData.Span[0x1];
+        public Byte CloudSpeedUpper => _structData.Span[0x2];
         public Byte TransDelta => _structData.Span[0x3];
         public Byte SunGlare => _structData.Span[0x4];
         public Byte SunDamage => _structData.Span[0x5];
@@ -1709,7 +1714,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Byte ThunderLightningBeginFadeIn => _structData.Span[0x8];
         public Byte ThunderLightningEndFadeOut => _structData.Span[0x9];
         public Byte ThunderLightningFrequency => _structData.Span[0xA];
-        public Byte Flags => _structData.Span[0xB];
+        public Weather.Classification WeatherClassification => (Weather.Classification)_structData.Span.Slice(0xB, 0x1)[0];
         public Color LightningColor => _structData.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
