@@ -172,11 +172,6 @@ public readonly struct RecordType : IEquatable<RecordType>, IEquatable<string>
             ret = ret.Remove(i, 1);
             ret = ret.Insert(i, $"_{b:X}_");
         }
-        // This is for Fallout 76, some record types start with 76_ which broke things
-        if (ret.Length > 0 && char.IsDigit(ret[0]))
-        {
-            ret = "_" + ret;
-        }
         return ret;
     }
 
