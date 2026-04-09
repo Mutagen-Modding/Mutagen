@@ -1088,17 +1088,6 @@ public class Fallout3Processor : Processor
                     ProcessZeroFloat(data, fileOffset, ref fLoc);
                 }
             }
-
-            // FNV DATA is 84 bytes, FO3 is 68 — pad FNV records that came in short
-            if (_isFalloutNV && data.ContentLength == 68)
-            {
-                var padPos = fileOffset + data.Location + Meta.SubConstants.HeaderLength + 68;
-                Instructions.SetAddition(padPos, new byte[16]); // 12 (P3Float) + 4 (Float)
-                Instructions.SetSubstitution(
-                    loc: fileOffset + data.Location + 4,
-                    sub: BitConverter.GetBytes((ushort)84));
-                ProcessLengths(majorFrame, 16, fileOffset);
-            }
         }
     }
 
