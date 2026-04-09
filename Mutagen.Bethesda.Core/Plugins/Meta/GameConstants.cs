@@ -181,6 +181,12 @@ public sealed record GameConstants
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
+    public static readonly GameConstants OblivionRE = Oblivion with
+    {
+        PluginsFileInGameFolder = true,
+        DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
+    };
+
     public static readonly GameConstants Fallout3 = new GameConstants(
         release: GameRelease.Fallout3,
         modHeaderLength: 24,
@@ -250,15 +256,9 @@ public sealed record GameConstants
         IniName = "FalloutNV",
     };
 
-    public static readonly GameConstants OblivionRE = Oblivion with
-    {
-        PluginsFileInGameFolder = true,
-        DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
-    };
-
     /// <summary>
     /// Readonly singleton of Skyrim LE game constants
-    /// </summary> 
+    /// </summary>
     public static readonly GameConstants SkyrimLE = new GameConstants(
         release: GameRelease.SkyrimLE,
         modHeaderLength: 24,
