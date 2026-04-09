@@ -241,11 +241,8 @@ public enum Function
     HasLoaded3D = 558,
 
     // FOSE (Fallout 3 Script Extender)
-    // We have the same enum values in FNV... this should be fine I think. Need to test.
-    GetFOSEVersion = 1024,
-    GetNVSEVersion = 1024,
-    GetFOSERevision = 1025,
-    GetNVSERevision = 1025,
+    GetScriptExtenderVersion = 1024,
+    GetScriptExtenderRevision = 1025,
     GetWeight = 1028,
     IsKeyPressed = 1082,
     GetWeaponHasScope = 1165,
