@@ -252,7 +252,17 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<IWeaponGetter> IProjectileGetter.DefaultWeaponSource => this.DefaultWeaponSource;
         #endregion
         #region Rotation
-        public P3Float Rotation { get; set; } = default(P3Float);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P3Float _Rotation;
+        public P3Float Rotation
+        {
+            get => this._Rotation;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._Rotation = value;
+            }
+        }
         #endregion
         #region BouncyMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -263,6 +273,7 @@ namespace Mutagen.Bethesda.Fallout3
             set
             {
                 this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
                 this._BouncyMult = value;
             }
         }
@@ -1441,7 +1452,8 @@ namespace Mutagen.Bethesda.Fallout3
         [Flags]
         public enum DATADataType
         {
-            Break0 = 1
+            Break0 = 1,
+            Break1 = 2
         }
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -3083,19 +3095,22 @@ namespace Mutagen.Bethesda.Fallout3
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DefaultWeaponSource);
-                if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
-                {
-                    P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.Rotation);
-                }
                 if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break0))
                 {
                     if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
-                            item: item.BouncyMult);
+                            item: item.Rotation);
+                    }
+                    if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break1))
+                    {
+                        if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                        {
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                writer: writer,
+                                item: item.BouncyMult);
+                        }
                     }
                 }
             }
@@ -3269,6 +3284,11 @@ namespace Mutagen.Bethesda.Fallout3
                     item.DisableSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.DefaultWeaponSource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= Projectile.DATADataType.Break0;
+                        return (int)Projectile_FieldIndex.DefaultWeaponSource;
+                    }
                     if (dataFrame.Remaining < 12) return null;
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
@@ -3276,7 +3296,7 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     if (dataFrame.Complete)
                     {
-                        item.DATADataTypeState |= Projectile.DATADataType.Break0;
+                        item.DATADataTypeState |= Projectile.DATADataType.Break1;
                         return (int)Projectile_FieldIndex.Rotation;
                     }
                     if (dataFrame.Remaining < 4) return null;
@@ -3481,13 +3501,13 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value.Min + 0x44;
-        private bool _Rotation_IsSet => _DATALocation.HasValue && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
+        private bool _Rotation_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0) && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
         public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default(P3Float);
         int RotationModHeaderVersioningOffset => _package.MetaData.ModHeaderVersion!.Value < 1.32f ? -12 : 0;
         #endregion
         #region BouncyMult
         private int _BouncyMultLocation => _DATALocation!.Value.Min + RotationModHeaderVersioningOffset + 0x50;
-        private bool _BouncyMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0) && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
+        private bool _BouncyMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break1) && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
         public Single BouncyMult => _BouncyMult_IsSet ? _recordData.Slice(_BouncyMultLocation, 4).Float() : default(Single);
         int BouncyMultModHeaderVersioningOffset => RotationModHeaderVersioningOffset + (_package.MetaData.ModHeaderVersion!.Value < 1.32f ? -4 : 0);
         #endregion
@@ -3607,9 +3627,13 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= RotationModHeaderVersioningOffset + 0x50)
+                    if (subLen <= 0x44)
                     {
                         this.DATADataTypeState |= Projectile.DATADataType.Break0;
+                    }
+                    if (subLen <= RotationModHeaderVersioningOffset + 0x50)
+                    {
+                        this.DATADataTypeState |= Projectile.DATADataType.Break1;
                     }
                     return (int)Projectile_FieldIndex.BouncyMult;
                 }

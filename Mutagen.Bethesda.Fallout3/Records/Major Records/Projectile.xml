@@ -26,6 +26,7 @@
           <FormLink name="CountdownSound" refName="Sound" />
           <FormLink name="DisableSound" refName="Sound" />
           <FormLink name="DefaultWeaponSource" refName="Weapon" />
+          <Break />
           <P3Float name="Rotation">
             <ModHeaderVersioning version="1.32" />
           </P3Float>
