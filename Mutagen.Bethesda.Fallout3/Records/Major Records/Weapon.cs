@@ -85,7 +85,7 @@ public partial class Weapon
         Sawtooth = 3,
     }
 
-    public enum ReloadAnim : byte
+    public enum ReloadAnim
     {
         ReloadA = 0,
         ReloadB = 1,
@@ -113,7 +113,7 @@ public partial class Weapon
         None = 255,
     }
 
-    public enum AttackAnim : byte
+    public enum AttackAnim
     {
         AttackLeft = 26,
         AttackRight = 32,
@@ -140,7 +140,7 @@ public partial class Weapon
         Default = 255,
     }
 
-    public enum EmbeddedWeaponAV : byte
+    public enum EmbeddedWeaponAV
     {
         Perception = 0,
         Endurance = 1,

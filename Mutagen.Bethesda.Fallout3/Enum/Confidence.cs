@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Fallout3;
 
-public enum Confidence : byte
+public enum Confidence
 {
     Cowardly = 0,
     Cautious = 1,

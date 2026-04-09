@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Fallout3;
 
-public enum Aggression : byte
+public enum Aggression
 {
     Unaggressive = 0,
     Aggressive = 1,

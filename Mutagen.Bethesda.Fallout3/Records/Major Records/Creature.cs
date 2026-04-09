@@ -60,7 +60,7 @@ public partial class Creature
         Script = 0x0200,
     }
 
-    public enum CreatureType : byte
+    public enum CreatureType
     {
         Animal = 0,
         MutatedAnimal = 1,

@@ -15,7 +15,7 @@ public partial class Static
         NavMeshGround = 0x4000_0000,
     }
 
-    public enum PassthroughSoundType : byte
+    public enum PassthroughSoundType
     {
         None = 0xFF,
         BushA = 0,

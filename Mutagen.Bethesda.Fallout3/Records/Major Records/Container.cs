@@ -14,7 +14,7 @@ public partial class Container
     }
 
     [Flags]
-    public enum ContainerFlag : byte
+    public enum ContainerFlag
     {
         Respawns = 0x02,
     }
