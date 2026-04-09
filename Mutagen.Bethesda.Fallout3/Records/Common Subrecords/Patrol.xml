@@ -3,7 +3,7 @@
   <Object name="Patrol" objType="Subrecord">
     <Fields>
       <Float name="IdleTime" recordType="XPRD" nullable="False" />
-      <CustomLogic name="PatrolScriptMarker" recordType="XPPA" />
+      <Marker name="PatrolScriptMarker" recordType="XPPA" />
       <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" nullable="False" />
       <ByteArray name="SCHR" recordType="SCHR" nullable="True" />
       <ByteArray name="SCTX" recordType="SCTX" nullable="True" />

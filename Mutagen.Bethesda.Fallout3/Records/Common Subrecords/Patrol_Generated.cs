@@ -1168,9 +1168,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.IdleTime,
                 header: translationParams.ConvertToCustom(RecordTypes.XPRD));
-            PatrolBinaryWriteTranslation.WriteBinaryPatrolScriptMarker(
-                writer: writer,
-                item: item);
+            using (HeaderExport.Subrecord(writer, RecordTypes.XPPA)) { }
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Idle,
@@ -1183,19 +1181,6 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.SCTX,
                 header: translationParams.ConvertToCustom(RecordTypes.SCTX));
-        }
-
-        public static partial void WriteBinaryPatrolScriptMarkerCustom(
-            MutagenWriter writer,
-            IPatrolGetter item);
-
-        public static void WriteBinaryPatrolScriptMarker(
-            MutagenWriter writer,
-            IPatrolGetter item)
-        {
-            WriteBinaryPatrolScriptMarkerCustom(
-                writer: writer,
-                item: item);
         }
 
         public void Write(
@@ -1247,10 +1232,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XPPA:
                 {
-                    return PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -1274,11 +1257,6 @@ namespace Mutagen.Bethesda.Fallout3
                     return ParseResult.Stop;
             }
         }
-
-        public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(
-            MutagenFrame frame,
-            IPatrol item,
-            PreviousParse lastParsed);
 
     }
 
@@ -1347,12 +1325,6 @@ namespace Mutagen.Bethesda.Fallout3
         #region IdleTime
         private int? _IdleTimeLocation;
         public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default(Single);
-        #endregion
-        #region PatrolScriptMarker
-        public partial ParseResult PatrolScriptMarkerCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
         #endregion
         #region Idle
         private int? _IdleLocation;
@@ -1437,10 +1409,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XPPA:
                 {
-                    return PatrolScriptMarkerCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    stream.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.INAM:
                 {
