@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
+    /// Implemented by: [DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter, VirtualMachineAdapter]
     /// </summary>
     public abstract partial class AVirtualMachineAdapter :
         IAVirtualMachineAdapter,
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
+    /// Implemented by: [DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter, VirtualMachineAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapter :
         IAssetLinkContainer,
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter]
+    /// Implemented by: [DialogResponsesAdapter, PackageAdapter, PerkAdapter, QuestAdapter, SceneAdapter, VirtualMachineAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,

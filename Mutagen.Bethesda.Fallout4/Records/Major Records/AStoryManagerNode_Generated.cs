@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerEventNode, StoryManagerQuestNode]
     /// </summary>
     public abstract partial class AStoryManagerNode :
         Fallout4MajorRecord,
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerEventNode, StoryManagerQuestNode]
     /// </summary>
     public partial interface IAStoryManagerNode :
         IAStoryManagerNodeGetter,
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerEventNode, StoryManagerQuestNode]
     /// </summary>
     public partial interface IAStoryManagerNodeGetter :
         IFallout4MajorRecordGetter,

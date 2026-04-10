@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
+    /// Implemented by: [ScriptBoolListProperty, ScriptBoolProperty, ScriptFloatListProperty, ScriptFloatProperty, ScriptIntListProperty, ScriptIntProperty, ScriptObjectListProperty, ScriptObjectProperty, ScriptStringListProperty, ScriptStringProperty]
     /// </summary>
     public partial class ScriptProperty :
         IEquatable<IScriptPropertyGetter>,
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
+    /// Implemented by: [ScriptBoolListProperty, ScriptBoolProperty, ScriptFloatListProperty, ScriptFloatProperty, ScriptIntListProperty, ScriptIntProperty, ScriptObjectListProperty, ScriptObjectProperty, ScriptStringListProperty, ScriptStringProperty]
     /// </summary>
     public partial interface IScriptProperty :
         IFormLinkContainer,
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty]
+    /// Implemented by: [ScriptBoolListProperty, ScriptBoolProperty, ScriptFloatListProperty, ScriptFloatProperty, ScriptIntListProperty, ScriptIntProperty, ScriptObjectListProperty, ScriptObjectProperty, ScriptStringListProperty, ScriptStringProperty]
     /// </summary>
     public partial interface IScriptPropertyGetter :
         ILoquiObject,

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetLinkedReference, PackageTargetAlias, PackageTargetInterruptData, PackageTargetSelf, PackageTargetKeyword, PackageTargetUnknown]
+    /// Implemented by: [PackageTargetAlias, PackageTargetInterruptData, PackageTargetKeyword, PackageTargetLinkedReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetSelf, PackageTargetSpecificReference, PackageTargetUnknown]
     /// </summary>
     public abstract partial class APackageTarget :
         IAPackageTarget,
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetLinkedReference, PackageTargetAlias, PackageTargetInterruptData, PackageTargetSelf, PackageTargetKeyword, PackageTargetUnknown]
+    /// Implemented by: [PackageTargetAlias, PackageTargetInterruptData, PackageTargetKeyword, PackageTargetLinkedReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetSelf, PackageTargetSpecificReference, PackageTargetUnknown]
     /// </summary>
     public partial interface IAPackageTarget :
         IAPackageTargetGetter,
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [PackageTargetSpecificReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetLinkedReference, PackageTargetAlias, PackageTargetInterruptData, PackageTargetSelf, PackageTargetKeyword, PackageTargetUnknown]
+    /// Implemented by: [PackageTargetAlias, PackageTargetInterruptData, PackageTargetKeyword, PackageTargetLinkedReference, PackageTargetObjectID, PackageTargetObjectType, PackageTargetSelf, PackageTargetSpecificReference, PackageTargetUnknown]
     /// </summary>
     public partial interface IAPackageTargetGetter :
         ILoquiObject,

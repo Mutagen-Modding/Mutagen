@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// Implemented by: [PerkEntryPointAbsoluteValue, PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
     /// </summary>
     public abstract partial class APerkEntryPointEffect :
         APerkEffect,
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// Implemented by: [PerkEntryPointAbsoluteValue, PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
     /// </summary>
     public partial interface IAPerkEntryPointEffect :
         IAPerkEffect,
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointAbsoluteValue, PerkEntryPointAddLeveledItem, PerkEntryPointAddActivateChoice, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// Implemented by: [PerkEntryPointAbsoluteValue, PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
     /// </summary>
     public partial interface IAPerkEntryPointEffectGetter :
         IAPerkEffectGetter,

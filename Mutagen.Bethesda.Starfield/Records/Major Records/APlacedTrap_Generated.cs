@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public abstract partial class APlacedTrap :
         StarfieldMajorRecord,
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrap :
         IAPlacedTrapGetter,
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrapGetter :
         IStarfieldMajorRecordGetter,

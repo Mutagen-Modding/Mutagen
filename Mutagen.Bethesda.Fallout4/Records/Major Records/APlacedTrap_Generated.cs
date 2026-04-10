@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public abstract partial class APlacedTrap :
         Fallout4MajorRecord,
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrap :
         IAPlacedTrapGetter,
@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [PlacedArrow, PlacedBeam, PlacedFlame, PlacedCone, PlacedBarrier, PlacedTrap, PlacedHazard, PlacedMissile]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrapGetter :
         IFallout4MajorRecordGetter,

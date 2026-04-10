@@ -1096,9 +1096,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetContentManagerTreeInternal item)
         {
             ClearPartial();
-            item.NAM1 = Array.Empty<byte>();
-            item.NAM2 = Array.Empty<byte>();
-            item.NAM5 = Array.Empty<byte>();
+            item.NAM1 = [];
+            item.NAM2 = [];
+            item.NAM5 = [];
             item.Nodes.Clear();
             item.Conditions = null;
             base.Clear(item);

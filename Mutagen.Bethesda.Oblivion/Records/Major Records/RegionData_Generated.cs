@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     /// <summary>
-    /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
+    /// Implemented by: [RegionGrasses, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public abstract partial class RegionData :
         IEquatable<IRegionDataGetter>,
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     /// <summary>
-    /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
+    /// Implemented by: [RegionGrasses, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionData :
         IFormLinkContainer,
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [RegionObjects, RegionMap, RegionGrasses, RegionSounds, RegionWeather]
+    /// Implemented by: [RegionGrasses, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,

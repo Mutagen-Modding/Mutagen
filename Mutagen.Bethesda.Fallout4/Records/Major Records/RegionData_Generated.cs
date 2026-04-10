@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// Implemented by: [RegionGrasses, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public abstract partial class RegionData :
         IEquatable<IRegionDataGetter>,
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// Implemented by: [RegionGrasses, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionData :
         IFormLinkContainer,
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// Implemented by: [RegionGrasses, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,

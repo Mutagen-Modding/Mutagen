@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [OverdriveAudioEffect, StateVariableFilterAudioEffect, DelayAudioEffect]
+    /// Implemented by: [DelayAudioEffect, OverdriveAudioEffect, StateVariableFilterAudioEffect]
     /// </summary>
     public abstract partial class AAudioEffect :
         IAAudioEffect,
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [OverdriveAudioEffect, StateVariableFilterAudioEffect, DelayAudioEffect]
+    /// Implemented by: [DelayAudioEffect, OverdriveAudioEffect, StateVariableFilterAudioEffect]
     /// </summary>
     public partial interface IAAudioEffect :
         IAAudioEffectGetter,
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [OverdriveAudioEffect, StateVariableFilterAudioEffect, DelayAudioEffect]
+    /// Implemented by: [DelayAudioEffect, OverdriveAudioEffect, StateVariableFilterAudioEffect]
     /// </summary>
     public partial interface IAAudioEffectGetter :
         ILoquiObject,

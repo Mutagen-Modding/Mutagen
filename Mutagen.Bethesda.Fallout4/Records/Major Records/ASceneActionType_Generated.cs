@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [SceneActionTypicalType, SceneActionStartScene]
+    /// Implemented by: [SceneActionStartScene, SceneActionTypicalType]
     /// </summary>
     public partial class ASceneActionType :
         IASceneActionType,
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [SceneActionTypicalType, SceneActionStartScene]
+    /// Implemented by: [SceneActionStartScene, SceneActionTypicalType]
     /// </summary>
     public partial interface IASceneActionType :
         IASceneActionTypeGetter,
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [SceneActionTypicalType, SceneActionStartScene]
+    /// Implemented by: [SceneActionStartScene, SceneActionTypicalType]
     /// </summary>
     public partial interface IASceneActionTypeGetter :
         ILoquiObject,

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [NoInstanceNamingRules, ArmorInstanceNamingRules, FloraInstanceNamingRules, FurnitureInstanceNamingRules, WeaponInstanceNamingRules, ActorInstanceNamingRules, ContainerInstanceNamingRules]
+    /// Implemented by: [ActorInstanceNamingRules, ArmorInstanceNamingRules, ContainerInstanceNamingRules, FloraInstanceNamingRules, FurnitureInstanceNamingRules, NoInstanceNamingRules, WeaponInstanceNamingRules]
     /// </summary>
     public abstract partial class AInstanceNamingRules :
         IAInstanceNamingRules,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [NoInstanceNamingRules, ArmorInstanceNamingRules, FloraInstanceNamingRules, FurnitureInstanceNamingRules, WeaponInstanceNamingRules, ActorInstanceNamingRules, ContainerInstanceNamingRules]
+    /// Implemented by: [ActorInstanceNamingRules, ArmorInstanceNamingRules, ContainerInstanceNamingRules, FloraInstanceNamingRules, FurnitureInstanceNamingRules, NoInstanceNamingRules, WeaponInstanceNamingRules]
     /// </summary>
     public partial interface IAInstanceNamingRules :
         IAInstanceNamingRulesGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [NoInstanceNamingRules, ArmorInstanceNamingRules, FloraInstanceNamingRules, FurnitureInstanceNamingRules, WeaponInstanceNamingRules, ActorInstanceNamingRules, ContainerInstanceNamingRules]
+    /// Implemented by: [ActorInstanceNamingRules, ArmorInstanceNamingRules, ContainerInstanceNamingRules, FloraInstanceNamingRules, FurnitureInstanceNamingRules, NoInstanceNamingRules, WeaponInstanceNamingRules]
     /// </summary>
     public partial interface IAInstanceNamingRulesGetter :
         ILoquiObject,

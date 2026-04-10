@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// Implemented by: [GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public abstract partial class GameSetting :
         OblivionMajorRecord,
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// Implemented by: [GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public partial interface IGameSetting :
         IGameSettingGetter,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// Implemented by: [GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public partial interface IGameSettingGetter :
         IOblivionMajorRecordGetter,

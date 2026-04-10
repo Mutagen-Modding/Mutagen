@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [LocationTarget, LocationCell, LocationObjectId, LocationObjectType, LocationKeyword, LocationFallback]
+    /// Implemented by: [LocationCell, LocationFallback, LocationKeyword, LocationObjectId, LocationObjectType, LocationTarget]
     /// </summary>
     public abstract partial class ALocationTarget :
         IALocationTarget,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [LocationTarget, LocationCell, LocationObjectId, LocationObjectType, LocationKeyword, LocationFallback]
+    /// Implemented by: [LocationCell, LocationFallback, LocationKeyword, LocationObjectId, LocationObjectType, LocationTarget]
     /// </summary>
     public partial interface IALocationTarget :
         IALocationTargetGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [LocationTarget, LocationCell, LocationObjectId, LocationObjectType, LocationKeyword, LocationFallback]
+    /// Implemented by: [LocationCell, LocationFallback, LocationKeyword, LocationObjectId, LocationObjectType, LocationTarget]
     /// </summary>
     public partial interface IALocationTargetGetter :
         ILoquiObject,

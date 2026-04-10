@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectSummonCreatureArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectCloakArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectPeakValueModArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundArchetype, MagicEffectCloakArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectGuideArchetype, MagicEffectLightArchetype, MagicEffectPeakValueModArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public abstract partial class AMagicEffectArchetype :
         IAMagicEffectArchetype,
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectSummonCreatureArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectCloakArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectPeakValueModArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundArchetype, MagicEffectCloakArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectGuideArchetype, MagicEffectLightArchetype, MagicEffectPeakValueModArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public partial interface IAMagicEffectArchetype :
         IAMagicEffectArchetypeGetter,
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectSummonCreatureArchetype, MagicEffectGuideArchetype, MagicEffectSpawnHazardArchetype, MagicEffectCloakArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectPeakValueModArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundArchetype, MagicEffectCloakArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectGuideArchetype, MagicEffectLightArchetype, MagicEffectPeakValueModArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public partial interface IAMagicEffectArchetypeGetter :
         ILoquiObject,

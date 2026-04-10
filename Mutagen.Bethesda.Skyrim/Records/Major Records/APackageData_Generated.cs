@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataFloat, PackageDataInt, PackageDataLocation, PackageDataObjectList, PackageDataTarget, PackageDataTopic]
     /// </summary>
     public partial class APackageData :
         IAPackageData,
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataFloat, PackageDataInt, PackageDataLocation, PackageDataObjectList, PackageDataTarget, PackageDataTopic]
     /// </summary>
     public partial interface IAPackageData :
         IAPackageDataGetter,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataFloat, PackageDataInt, PackageDataLocation, PackageDataObjectList, PackageDataTarget, PackageDataTopic]
     /// </summary>
     public partial interface IAPackageDataGetter :
         ILoquiObject,
