@@ -1376,6 +1376,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             WorldspaceParent_Registration.Instance,
             WorldspaceReference_Registration.Instance,
             WorldspaceSubBlock_Registration.Instance,
+            WorldspaceWorldMapOffset_Registration.Instance,
             WornApparelHasKeywordCountConditionData_Registration.Instance,
             WornCoversBipedSlotConditionData_Registration.Instance,
             WornHasKeywordConditionData_Registration.Instance,

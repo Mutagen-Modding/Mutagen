@@ -6215,6 +6215,9 @@
     <Compile Include="Records\Major Records\WorldspaceMap_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\WorldspaceWorldMapOffset_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\WorldSpaceOverlayComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>

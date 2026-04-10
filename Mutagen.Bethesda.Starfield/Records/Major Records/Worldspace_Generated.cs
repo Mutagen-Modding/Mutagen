@@ -225,11 +225,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWorldspaceMapGetter? IWorldspaceGetter.MapData => this.MapData;
         #endregion
-        #region WorldMapOffsetScale
-        public Single WorldMapOffsetScale { get; set; } = default(Single);
-        #endregion
-        #region WorldMapCellOffset
-        public P3Float WorldMapCellOffset { get; set; } = default(P3Float);
+        #region WorldMapOffset
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WorldspaceWorldMapOffset? _WorldMapOffset;
+        public WorldspaceWorldMapOffset? WorldMapOffset
+        {
+            get => _WorldMapOffset;
+            set => _WorldMapOffset = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWorldspaceWorldMapOffsetGetter? IWorldspaceGetter.WorldMapOffset => this.WorldMapOffset;
         #endregion
         #region DistantLodMultiplier
         public Single? DistantLodMultiplier { get; set; }
@@ -237,7 +242,9 @@ namespace Mutagen.Bethesda.Starfield
         Single? IWorldspaceGetter.DistantLodMultiplier => this.DistantLodMultiplier;
         #endregion
         #region Flags
-        public Worldspace.Flag Flags { get; set; } = default(Worldspace.Flag);
+        public Worldspace.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Worldspace.Flag? IWorldspaceGetter.Flags => this.Flags;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -436,8 +443,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LodWaterHeight = initialValue;
                 this.LandDefaults = new MaskItem<TItem, WorldspaceLandDefaults.Mask<TItem>?>(initialValue, new WorldspaceLandDefaults.Mask<TItem>(initialValue));
                 this.MapData = new MaskItem<TItem, WorldspaceMap.Mask<TItem>?>(initialValue, new WorldspaceMap.Mask<TItem>(initialValue));
-                this.WorldMapOffsetScale = initialValue;
-                this.WorldMapCellOffset = initialValue;
+                this.WorldMapOffset = new MaskItem<TItem, WorldspaceWorldMapOffset.Mask<TItem>?>(initialValue, new WorldspaceWorldMapOffset.Mask<TItem>(initialValue));
                 this.DistantLodMultiplier = initialValue;
                 this.Flags = initialValue;
                 this.FNAM = initialValue;
@@ -482,8 +488,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LodWaterHeight,
                 TItem LandDefaults,
                 TItem MapData,
-                TItem WorldMapOffsetScale,
-                TItem WorldMapCellOffset,
+                TItem WorldMapOffset,
                 TItem DistantLodMultiplier,
                 TItem Flags,
                 TItem FNAM,
@@ -527,8 +532,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LodWaterHeight = LodWaterHeight;
                 this.LandDefaults = new MaskItem<TItem, WorldspaceLandDefaults.Mask<TItem>?>(LandDefaults, new WorldspaceLandDefaults.Mask<TItem>(LandDefaults));
                 this.MapData = new MaskItem<TItem, WorldspaceMap.Mask<TItem>?>(MapData, new WorldspaceMap.Mask<TItem>(MapData));
-                this.WorldMapOffsetScale = WorldMapOffsetScale;
-                this.WorldMapCellOffset = WorldMapCellOffset;
+                this.WorldMapOffset = new MaskItem<TItem, WorldspaceWorldMapOffset.Mask<TItem>?>(WorldMapOffset, new WorldspaceWorldMapOffset.Mask<TItem>(WorldMapOffset));
                 this.DistantLodMultiplier = DistantLodMultiplier;
                 this.Flags = Flags;
                 this.FNAM = FNAM;
@@ -574,8 +578,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem LodWaterHeight;
             public MaskItem<TItem, WorldspaceLandDefaults.Mask<TItem>?>? LandDefaults { get; set; }
             public MaskItem<TItem, WorldspaceMap.Mask<TItem>?>? MapData { get; set; }
-            public TItem WorldMapOffsetScale;
-            public TItem WorldMapCellOffset;
+            public MaskItem<TItem, WorldspaceWorldMapOffset.Mask<TItem>?>? WorldMapOffset { get; set; }
             public TItem DistantLodMultiplier;
             public TItem Flags;
             public TItem FNAM;
@@ -623,8 +626,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LodWaterHeight, rhs.LodWaterHeight)) return false;
                 if (!object.Equals(this.LandDefaults, rhs.LandDefaults)) return false;
                 if (!object.Equals(this.MapData, rhs.MapData)) return false;
-                if (!object.Equals(this.WorldMapOffsetScale, rhs.WorldMapOffsetScale)) return false;
-                if (!object.Equals(this.WorldMapCellOffset, rhs.WorldMapCellOffset)) return false;
+                if (!object.Equals(this.WorldMapOffset, rhs.WorldMapOffset)) return false;
                 if (!object.Equals(this.DistantLodMultiplier, rhs.DistantLodMultiplier)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
@@ -664,8 +666,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LodWaterHeight);
                 hash.Add(this.LandDefaults);
                 hash.Add(this.MapData);
-                hash.Add(this.WorldMapOffsetScale);
-                hash.Add(this.WorldMapCellOffset);
+                hash.Add(this.WorldMapOffset);
                 hash.Add(this.DistantLodMultiplier);
                 hash.Add(this.Flags);
                 hash.Add(this.FNAM);
@@ -744,8 +745,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.MapData.Overall)) return false;
                     if (this.MapData.Specific != null && !this.MapData.Specific.All(eval)) return false;
                 }
-                if (!eval(this.WorldMapOffsetScale)) return false;
-                if (!eval(this.WorldMapCellOffset)) return false;
+                if (WorldMapOffset != null)
+                {
+                    if (!eval(this.WorldMapOffset.Overall)) return false;
+                    if (this.WorldMapOffset.Specific != null && !this.WorldMapOffset.Specific.All(eval)) return false;
+                }
                 if (!eval(this.DistantLodMultiplier)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.FNAM)) return false;
@@ -867,8 +871,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.MapData.Overall)) return true;
                     if (this.MapData.Specific != null && this.MapData.Specific.Any(eval)) return true;
                 }
-                if (eval(this.WorldMapOffsetScale)) return true;
-                if (eval(this.WorldMapCellOffset)) return true;
+                if (WorldMapOffset != null)
+                {
+                    if (eval(this.WorldMapOffset.Overall)) return true;
+                    if (this.WorldMapOffset.Specific != null && this.WorldMapOffset.Specific.Any(eval)) return true;
+                }
                 if (eval(this.DistantLodMultiplier)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.FNAM)) return true;
@@ -991,8 +998,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LodWaterHeight = eval(this.LodWaterHeight);
                 obj.LandDefaults = this.LandDefaults == null ? null : new MaskItem<R, WorldspaceLandDefaults.Mask<R>?>(eval(this.LandDefaults.Overall), this.LandDefaults.Specific?.Translate(eval));
                 obj.MapData = this.MapData == null ? null : new MaskItem<R, WorldspaceMap.Mask<R>?>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
-                obj.WorldMapOffsetScale = eval(this.WorldMapOffsetScale);
-                obj.WorldMapCellOffset = eval(this.WorldMapCellOffset);
+                obj.WorldMapOffset = this.WorldMapOffset == null ? null : new MaskItem<R, WorldspaceWorldMapOffset.Mask<R>?>(eval(this.WorldMapOffset.Overall), this.WorldMapOffset.Specific?.Translate(eval));
                 obj.DistantLodMultiplier = eval(this.DistantLodMultiplier);
                 obj.Flags = eval(this.Flags);
                 obj.FNAM = eval(this.FNAM);
@@ -1170,13 +1176,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         MapData?.Print(sb);
                     }
-                    if (printMask?.WorldMapOffsetScale ?? true)
+                    if (printMask?.WorldMapOffset?.Overall ?? true)
                     {
-                        sb.AppendItem(WorldMapOffsetScale, "WorldMapOffsetScale");
-                    }
-                    if (printMask?.WorldMapCellOffset ?? true)
-                    {
-                        sb.AppendItem(WorldMapCellOffset, "WorldMapCellOffset");
+                        WorldMapOffset?.Print(sb);
                     }
                     if (printMask?.DistantLodMultiplier ?? true)
                     {
@@ -1349,8 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? LodWaterHeight;
             public MaskItem<Exception?, WorldspaceLandDefaults.ErrorMask?>? LandDefaults;
             public MaskItem<Exception?, WorldspaceMap.ErrorMask?>? MapData;
-            public Exception? WorldMapOffsetScale;
-            public Exception? WorldMapCellOffset;
+            public MaskItem<Exception?, WorldspaceWorldMapOffset.ErrorMask?>? WorldMapOffset;
             public Exception? DistantLodMultiplier;
             public Exception? Flags;
             public Exception? FNAM;
@@ -1407,10 +1408,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LandDefaults;
                     case Worldspace_FieldIndex.MapData:
                         return MapData;
-                    case Worldspace_FieldIndex.WorldMapOffsetScale:
-                        return WorldMapOffsetScale;
-                    case Worldspace_FieldIndex.WorldMapCellOffset:
-                        return WorldMapCellOffset;
+                    case Worldspace_FieldIndex.WorldMapOffset:
+                        return WorldMapOffset;
                     case Worldspace_FieldIndex.DistantLodMultiplier:
                         return DistantLodMultiplier;
                     case Worldspace_FieldIndex.Flags:
@@ -1503,11 +1502,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Worldspace_FieldIndex.MapData:
                         this.MapData = new MaskItem<Exception?, WorldspaceMap.ErrorMask?>(ex, null);
                         break;
-                    case Worldspace_FieldIndex.WorldMapOffsetScale:
-                        this.WorldMapOffsetScale = ex;
-                        break;
-                    case Worldspace_FieldIndex.WorldMapCellOffset:
-                        this.WorldMapCellOffset = ex;
+                    case Worldspace_FieldIndex.WorldMapOffset:
+                        this.WorldMapOffset = new MaskItem<Exception?, WorldspaceWorldMapOffset.ErrorMask?>(ex, null);
                         break;
                     case Worldspace_FieldIndex.DistantLodMultiplier:
                         this.DistantLodMultiplier = ex;
@@ -1622,11 +1618,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Worldspace_FieldIndex.MapData:
                         this.MapData = (MaskItem<Exception?, WorldspaceMap.ErrorMask?>?)obj;
                         break;
-                    case Worldspace_FieldIndex.WorldMapOffsetScale:
-                        this.WorldMapOffsetScale = (Exception?)obj;
-                        break;
-                    case Worldspace_FieldIndex.WorldMapCellOffset:
-                        this.WorldMapCellOffset = (Exception?)obj;
+                    case Worldspace_FieldIndex.WorldMapOffset:
+                        this.WorldMapOffset = (MaskItem<Exception?, WorldspaceWorldMapOffset.ErrorMask?>?)obj;
                         break;
                     case Worldspace_FieldIndex.DistantLodMultiplier:
                         this.DistantLodMultiplier = (Exception?)obj;
@@ -1711,8 +1704,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LodWaterHeight != null) return true;
                 if (LandDefaults != null) return true;
                 if (MapData != null) return true;
-                if (WorldMapOffsetScale != null) return true;
-                if (WorldMapCellOffset != null) return true;
+                if (WorldMapOffset != null) return true;
                 if (DistantLodMultiplier != null) return true;
                 if (Flags != null) return true;
                 if (FNAM != null) return true;
@@ -1825,12 +1817,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 LandDefaults?.Print(sb);
                 MapData?.Print(sb);
-                {
-                    sb.AppendItem(WorldMapOffsetScale, "WorldMapOffsetScale");
-                }
-                {
-                    sb.AppendItem(WorldMapCellOffset, "WorldMapCellOffset");
-                }
+                WorldMapOffset?.Print(sb);
                 {
                     sb.AppendItem(DistantLodMultiplier, "DistantLodMultiplier");
                 }
@@ -1977,8 +1964,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LodWaterHeight = this.LodWaterHeight.Combine(rhs.LodWaterHeight);
                 ret.LandDefaults = this.LandDefaults.Combine(rhs.LandDefaults, (l, r) => l.Combine(r));
                 ret.MapData = this.MapData.Combine(rhs.MapData, (l, r) => l.Combine(r));
-                ret.WorldMapOffsetScale = this.WorldMapOffsetScale.Combine(rhs.WorldMapOffsetScale);
-                ret.WorldMapCellOffset = this.WorldMapCellOffset.Combine(rhs.WorldMapCellOffset);
+                ret.WorldMapOffset = this.WorldMapOffset.Combine(rhs.WorldMapOffset, (l, r) => l.Combine(r));
                 ret.DistantLodMultiplier = this.DistantLodMultiplier.Combine(rhs.DistantLodMultiplier);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
@@ -2035,8 +2021,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool LodWaterHeight;
             public WorldspaceLandDefaults.TranslationMask? LandDefaults;
             public WorldspaceMap.TranslationMask? MapData;
-            public bool WorldMapOffsetScale;
-            public bool WorldMapCellOffset;
+            public WorldspaceWorldMapOffset.TranslationMask? WorldMapOffset;
             public bool DistantLodMultiplier;
             public bool Flags;
             public bool FNAM;
@@ -2074,8 +2059,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.NAM7 = defaultOn;
                 this.LodWater = defaultOn;
                 this.LodWaterHeight = defaultOn;
-                this.WorldMapOffsetScale = defaultOn;
-                this.WorldMapCellOffset = defaultOn;
                 this.DistantLodMultiplier = defaultOn;
                 this.Flags = defaultOn;
                 this.FNAM = defaultOn;
@@ -2115,8 +2098,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LodWaterHeight, null));
                 ret.Add((LandDefaults != null ? LandDefaults.OnOverall : DefaultOn, LandDefaults?.GetCrystal()));
                 ret.Add((MapData != null ? MapData.OnOverall : DefaultOn, MapData?.GetCrystal()));
-                ret.Add((WorldMapOffsetScale, null));
-                ret.Add((WorldMapCellOffset, null));
+                ret.Add((WorldMapOffset != null ? WorldMapOffset.OnOverall : DefaultOn, WorldMapOffset?.GetCrystal()));
                 ret.Add((DistantLodMultiplier, null));
                 ret.Add((Flags, null));
                 ret.Add((FNAM, null));
@@ -2356,10 +2338,9 @@ namespace Mutagen.Bethesda.Starfield
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
         new WorldspaceMap? MapData { get; set; }
-        new Single WorldMapOffsetScale { get; set; }
-        new P3Float WorldMapCellOffset { get; set; }
+        new WorldspaceWorldMapOffset? WorldMapOffset { get; set; }
         new Single? DistantLodMultiplier { get; set; }
-        new Worldspace.Flag Flags { get; set; }
+        new Worldspace.Flag? Flags { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new P2Float ObjectBoundsMin { get; set; }
         new P2Float ObjectBoundsMax { get; set; }
@@ -2427,10 +2408,9 @@ namespace Mutagen.Bethesda.Starfield
         Single? LodWaterHeight { get; }
         IWorldspaceLandDefaultsGetter? LandDefaults { get; }
         IWorldspaceMapGetter? MapData { get; }
-        Single WorldMapOffsetScale { get; }
-        P3Float WorldMapCellOffset { get; }
+        IWorldspaceWorldMapOffsetGetter? WorldMapOffset { get; }
         Single? DistantLodMultiplier { get; }
-        Worldspace.Flag Flags { get; }
+        Worldspace.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         P2Float ObjectBoundsMin { get; }
         P2Float ObjectBoundsMax { get; }
@@ -2869,28 +2849,27 @@ namespace Mutagen.Bethesda.Starfield
         LodWaterHeight = 18,
         LandDefaults = 19,
         MapData = 20,
-        WorldMapOffsetScale = 21,
-        WorldMapCellOffset = 22,
-        DistantLodMultiplier = 23,
-        Flags = 24,
-        FNAM = 25,
-        ObjectBoundsMin = 26,
-        ObjectBoundsMax = 27,
-        Music = 28,
-        AmbienceSet = 29,
-        EnvironmentMap = 30,
-        WaterEnvironmentMap = 31,
-        GNAM = 32,
-        LandscapeTextures = 33,
-        CellWaterHeightLocations = 34,
-        WaterHeights = 35,
-        HNAM = 36,
-        OffsetData = 37,
-        CellSizeData = 38,
-        TopCell = 39,
-        SubCellsTimestamp = 40,
-        SubCellsUnknown = 41,
-        SubCells = 42,
+        WorldMapOffset = 21,
+        DistantLodMultiplier = 22,
+        Flags = 23,
+        FNAM = 24,
+        ObjectBoundsMin = 25,
+        ObjectBoundsMax = 26,
+        Music = 27,
+        AmbienceSet = 28,
+        EnvironmentMap = 29,
+        WaterEnvironmentMap = 30,
+        GNAM = 31,
+        LandscapeTextures = 32,
+        CellWaterHeightLocations = 33,
+        WaterHeights = 34,
+        HNAM = 35,
+        OffsetData = 36,
+        CellSizeData = 37,
+        TopCell = 38,
+        SubCellsTimestamp = 39,
+        SubCellsUnknown = 40,
+        SubCells = 41,
     }
     #endregion
 
@@ -2901,9 +2880,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 36;
+        public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 42;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -3072,10 +3051,9 @@ namespace Mutagen.Bethesda.Starfield
             item.LodWaterHeight = default;
             item.LandDefaults = null;
             item.MapData = null;
-            item.WorldMapOffsetScale = default(Single);
-            item.WorldMapCellOffset = default(P3Float);
+            item.WorldMapOffset = null;
             item.DistantLodMultiplier = default;
-            item.Flags = default(Worldspace.Flag);
+            item.Flags = default;
             item.FNAM = default;
             item.ObjectBoundsMin = default(P2Float);
             item.ObjectBoundsMax = default(P2Float);
@@ -3786,8 +3764,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.MapData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WorldMapOffsetScale = item.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale);
-            ret.WorldMapCellOffset = item.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset);
+            ret.WorldMapOffset = EqualsMaskHelper.EqualsHelper(
+                item.WorldMapOffset,
+                rhs.WorldMapOffset,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.DistantLodMultiplier = item.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier);
             ret.Flags = item.Flags == rhs.Flags;
             ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
@@ -3955,22 +3936,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 MapDataItem?.Print(sb, "MapData");
             }
-            if (printMask?.WorldMapOffsetScale ?? true)
+            if ((printMask?.WorldMapOffset?.Overall ?? true)
+                && item.WorldMapOffset is {} WorldMapOffsetItem)
             {
-                sb.AppendItem(item.WorldMapOffsetScale, "WorldMapOffsetScale");
-            }
-            if (printMask?.WorldMapCellOffset ?? true)
-            {
-                sb.AppendItem(item.WorldMapCellOffset, "WorldMapCellOffset");
+                WorldMapOffsetItem?.Print(sb, "WorldMapOffset");
             }
             if ((printMask?.DistantLodMultiplier ?? true)
                 && item.DistantLodMultiplier is {} DistantLodMultiplierItem)
             {
                 sb.AppendItem(DistantLodMultiplierItem, "DistantLodMultiplier");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
@@ -4212,13 +4191,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isMapDataEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffset) ?? true))
             {
-                if (!lhs.WorldMapOffsetScale.EqualsWithin(rhs.WorldMapOffsetScale)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
-            {
-                if (!lhs.WorldMapCellOffset.Equals(rhs.WorldMapCellOffset)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.WorldMapOffset, rhs.WorldMapOffset, out var lhsWorldMapOffset, out var rhsWorldMapOffset, out var isWorldMapOffsetEqual))
+                {
+                    if (!((WorldspaceWorldMapOffsetCommon)((IWorldspaceWorldMapOffsetGetter)lhsWorldMapOffset).CommonInstance()!).Equals(lhsWorldMapOffset, rhsWorldMapOffset, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.WorldMapOffset))) return false;
+                }
+                else if (!isWorldMapOffsetEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
             {
@@ -4364,13 +4343,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(MapDataitem);
             }
-            hash.Add(item.WorldMapOffsetScale);
-            hash.Add(item.WorldMapCellOffset);
+            if (item.WorldMapOffset is {} WorldMapOffsetitem)
+            {
+                hash.Add(WorldMapOffsetitem);
+            }
             if (item.DistantLodMultiplier is {} DistantLodMultiplieritem)
             {
                 hash.Add(DistantLodMultiplieritem);
             }
-            hash.Add(item.Flags);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
             if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
@@ -5403,13 +5387,31 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffsetScale) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapOffset) ?? true))
             {
-                item.WorldMapOffsetScale = rhs.WorldMapOffsetScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WorldMapCellOffset) ?? true))
-            {
-                item.WorldMapCellOffset = rhs.WorldMapCellOffset;
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.WorldMapOffset);
+                try
+                {
+                    if(rhs.WorldMapOffset is {} rhsWorldMapOffset)
+                    {
+                        item.WorldMapOffset = rhsWorldMapOffset.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.WorldMapOffset));
+                    }
+                    else
+                    {
+                        item.WorldMapOffset = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
             {
@@ -5880,20 +5882,18 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ONAM)))
+            if (item.WorldMapOffset is {} WorldMapOffsetItem)
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                ((WorldspaceWorldMapOffsetBinaryWriteTranslation)((IBinaryItem)WorldMapOffsetItem).BinaryWriteTranslator).Write(
+                    item: WorldMapOffsetItem,
                     writer: writer,
-                    item: item.WorldMapOffsetScale);
-                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.WorldMapCellOffset);
+                    translationParams: translationParams);
             }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DistantLodMultiplier,
                 header: translationParams.ConvertToCustom(RecordTypes.NAMA));
-            EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
@@ -6188,13 +6188,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.WorldMapOffsetScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 12) return null;
-                    item.WorldMapCellOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)Worldspace_FieldIndex.WorldMapCellOffset;
+                    item.WorldMapOffset = Mutagen.Bethesda.Starfield.WorldspaceWorldMapOffset.CreateFromBinary(frame: frame);
+                    return (int)Worldspace_FieldIndex.WorldMapOffset;
                 }
                 case RecordTypeInts.NAMA:
                 {
@@ -6463,16 +6458,9 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _MapDataLocation;
         public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(_recordData.Slice(_MapDataLocation!.Value.Min), _package) : default;
         #endregion
-        private RangeInt32? _ONAMLocation;
-        #region WorldMapOffsetScale
-        private int _WorldMapOffsetScaleLocation => _ONAMLocation!.Value.Min;
-        private bool _WorldMapOffsetScale_IsSet => _ONAMLocation.HasValue;
-        public Single WorldMapOffsetScale => _WorldMapOffsetScale_IsSet ? _recordData.Slice(_WorldMapOffsetScaleLocation, 4).Float() : default(Single);
-        #endregion
-        #region WorldMapCellOffset
-        private int _WorldMapCellOffsetLocation => _ONAMLocation!.Value.Min + 0x4;
-        private bool _WorldMapCellOffset_IsSet => _ONAMLocation.HasValue;
-        public P3Float WorldMapCellOffset => _WorldMapCellOffset_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_WorldMapCellOffsetLocation, 12)) : default(P3Float);
+        #region WorldMapOffset
+        private RangeInt32? _WorldMapOffsetLocation;
+        public IWorldspaceWorldMapOffsetGetter? WorldMapOffset => _WorldMapOffsetLocation.HasValue ? WorldspaceWorldMapOffsetBinaryOverlay.WorldspaceWorldMapOffsetFactory(_recordData.Slice(_WorldMapOffsetLocation!.Value.Min), _package) : default;
         #endregion
         #region DistantLodMultiplier
         private int? _DistantLodMultiplierLocation;
@@ -6480,7 +6468,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Worldspace.Flag Flags => EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
+        public Worldspace.Flag? Flags => EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -6712,8 +6700,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _ONAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Worldspace_FieldIndex.WorldMapCellOffset;
+                    _WorldMapOffsetLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Worldspace_FieldIndex.WorldMapOffset;
                 }
                 case RecordTypeInts.NAMA:
                 {
