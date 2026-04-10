@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ConditionGlobal, ConditionFloat]
+    /// Implemented by: [ConditionFloat, ConditionGlobal]
     /// </summary>
     public abstract partial class Condition :
         ICondition,
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ConditionGlobal, ConditionFloat]
+    /// Implemented by: [ConditionFloat, ConditionGlobal]
     /// </summary>
     public partial interface ICondition :
         IConditionGetter,
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [ConditionGlobal, ConditionFloat]
+    /// Implemented by: [ConditionFloat, ConditionGlobal]
     /// </summary>
     public partial interface IConditionGetter :
         ILoquiObject,

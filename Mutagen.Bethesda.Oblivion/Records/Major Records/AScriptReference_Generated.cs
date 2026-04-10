@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ScriptVariableReference, ScriptObjectReference]
+    /// Implemented by: [ScriptObjectReference, ScriptVariableReference]
     /// </summary>
     public abstract partial class AScriptReference :
         IAScriptReference,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ScriptVariableReference, ScriptObjectReference]
+    /// Implemented by: [ScriptObjectReference, ScriptVariableReference]
     /// </summary>
     public partial interface IAScriptReference :
         IAScriptReferenceGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [ScriptVariableReference, ScriptObjectReference]
+    /// Implemented by: [ScriptObjectReference, ScriptVariableReference]
     /// </summary>
     public partial interface IAScriptReferenceGetter :
         ILoquiObject,

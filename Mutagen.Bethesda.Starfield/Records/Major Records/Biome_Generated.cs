@@ -2737,7 +2737,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Terrain.Clear();
             item.GroundLayerNormal = default;
             item.BTPS = default;
-            item.DistantView = Array.Empty<byte>();
+            item.DistantView = [];
             item.GlobalLayerMaterial = default;
             item.BlockDensityMultGlobal.Clear();
             item.CellDensityMultGlobal.Clear();

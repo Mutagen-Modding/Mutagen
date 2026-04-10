@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerEventNode, StoryManagerQuestNode]
     /// </summary>
     public abstract partial class AStoryManagerNode :
         SkyrimMajorRecord,
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerEventNode, StoryManagerQuestNode]
     /// </summary>
     public partial interface IAStoryManagerNode :
         IAStoryManagerNodeGetter,
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [StoryManagerBranchNode, StoryManagerQuestNode, StoryManagerEventNode]
+    /// Implemented by: [StoryManagerBranchNode, StoryManagerEventNode, StoryManagerQuestNode]
     /// </summary>
     public partial interface IAStoryManagerNodeGetter :
         ISkyrimMajorRecordGetter,

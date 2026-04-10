@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ArmorModification, NpcModification, WeaponModification, ObjectModification, UnknownObjectModification]
+    /// Implemented by: [ArmorModification, NpcModification, ObjectModification, UnknownObjectModification, WeaponModification]
     /// </summary>
     public abstract partial class AObjectModification :
         Fallout4MajorRecord,
@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ArmorModification, NpcModification, WeaponModification, ObjectModification, UnknownObjectModification]
+    /// Implemented by: [ArmorModification, NpcModification, ObjectModification, UnknownObjectModification, WeaponModification]
     /// </summary>
     public partial interface IAObjectModification :
         IAObjectModificationGetter,
@@ -1428,7 +1428,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ArmorModification, NpcModification, WeaponModification, ObjectModification, UnknownObjectModification]
+    /// Implemented by: [ArmorModification, NpcModification, ObjectModification, UnknownObjectModification, WeaponModification]
     /// </summary>
     public partial interface IAObjectModificationGetter :
         IFallout4MajorRecordGetter,

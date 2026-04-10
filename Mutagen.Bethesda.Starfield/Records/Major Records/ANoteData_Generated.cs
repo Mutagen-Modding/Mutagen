@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [NoteVoice, NoteProgram, NoteTerminal]
+    /// Implemented by: [NoteProgram, NoteTerminal, NoteVoice]
     /// </summary>
     public abstract partial class ANoteData :
         IANoteData,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [NoteVoice, NoteProgram, NoteTerminal]
+    /// Implemented by: [NoteProgram, NoteTerminal, NoteVoice]
     /// </summary>
     public partial interface IANoteData :
         IANoteDataGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [NoteVoice, NoteProgram, NoteTerminal]
+    /// Implemented by: [NoteProgram, NoteTerminal, NoteVoice]
     /// </summary>
     public partial interface IANoteDataGetter :
         ILoquiObject,

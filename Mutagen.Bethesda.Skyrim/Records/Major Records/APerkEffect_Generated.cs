@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// Implemented by: [APerkEntryPointEffect, PerkAbilityEffect, PerkQuestEffect]
     /// </summary>
     public abstract partial class APerkEffect :
         IAPerkEffect,
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// Implemented by: [APerkEntryPointEffect, PerkAbilityEffect, PerkQuestEffect]
     /// </summary>
     public partial interface IAPerkEffect :
         IAPerkEffectGetter,
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// Implemented by: [APerkEntryPointEffect, PerkAbilityEffect, PerkQuestEffect]
     /// </summary>
     public partial interface IAPerkEffectGetter :
         ILoquiObject,

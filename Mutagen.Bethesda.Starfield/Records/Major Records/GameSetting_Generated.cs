@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
+    /// Implemented by: [GameSettingBool, GameSettingFloat, GameSettingInt, GameSettingString, GameSettingUInt]
     /// </summary>
     public abstract partial class GameSetting :
         StarfieldMajorRecord,
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
+    /// Implemented by: [GameSettingBool, GameSettingFloat, GameSettingInt, GameSettingString, GameSettingUInt]
     /// </summary>
     public partial interface IGameSetting :
         IGameSettingGetter,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool, GameSettingUInt]
+    /// Implemented by: [GameSettingBool, GameSettingFloat, GameSettingInt, GameSettingString, GameSettingUInt]
     /// </summary>
     public partial interface IGameSettingGetter :
         IStarfieldMajorRecordGetter,

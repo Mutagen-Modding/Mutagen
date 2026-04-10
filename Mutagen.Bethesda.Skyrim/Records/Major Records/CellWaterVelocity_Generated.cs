@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Offset = default(P3Float);
             item.Unknown = default(Int32);
             item.Angle = default(P3Float);
-            item.Unknown2 = Array.Empty<byte>();
+            item.Unknown2 = [];
         }
         
         #region Mutagen

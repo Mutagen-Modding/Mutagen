@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [DialogueSceneAction, PackageSceneAction, TimerSceneAction, PlayerDialogueSceneAction, StartSceneAction, RadioSceneAction, MoveSceneAction, CameraSceneAction, FxSceneAction, AnimationSceneAction, TimelineSceneAction]
+    /// Implemented by: [AnimationSceneAction, CameraSceneAction, DialogueSceneAction, FxSceneAction, MoveSceneAction, PackageSceneAction, PlayerDialogueSceneAction, RadioSceneAction, StartSceneAction, TimelineSceneAction, TimerSceneAction]
     /// </summary>
     public abstract partial class ASceneAction :
         IASceneAction,
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [DialogueSceneAction, PackageSceneAction, TimerSceneAction, PlayerDialogueSceneAction, StartSceneAction, RadioSceneAction, MoveSceneAction, CameraSceneAction, FxSceneAction, AnimationSceneAction, TimelineSceneAction]
+    /// Implemented by: [AnimationSceneAction, CameraSceneAction, DialogueSceneAction, FxSceneAction, MoveSceneAction, PackageSceneAction, PlayerDialogueSceneAction, RadioSceneAction, StartSceneAction, TimelineSceneAction, TimerSceneAction]
     /// </summary>
     public partial interface IASceneAction :
         IASceneActionGetter,
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [DialogueSceneAction, PackageSceneAction, TimerSceneAction, PlayerDialogueSceneAction, StartSceneAction, RadioSceneAction, MoveSceneAction, CameraSceneAction, FxSceneAction, AnimationSceneAction, TimelineSceneAction]
+    /// Implemented by: [AnimationSceneAction, CameraSceneAction, DialogueSceneAction, FxSceneAction, MoveSceneAction, PackageSceneAction, PlayerDialogueSceneAction, RadioSceneAction, StartSceneAction, TimelineSceneAction, TimerSceneAction]
     /// </summary>
     public partial interface IASceneActionGetter :
         ILoquiObject,

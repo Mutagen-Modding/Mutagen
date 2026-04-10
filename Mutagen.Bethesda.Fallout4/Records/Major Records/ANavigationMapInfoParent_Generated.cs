@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [NavigationMapInfoWorldspaceParent, NavigationMapInfoCellParent]
+    /// Implemented by: [NavigationMapInfoCellParent, NavigationMapInfoWorldspaceParent]
     /// </summary>
     public abstract partial class ANavigationMapInfoParent :
         IANavigationMapInfoParent,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [NavigationMapInfoWorldspaceParent, NavigationMapInfoCellParent]
+    /// Implemented by: [NavigationMapInfoCellParent, NavigationMapInfoWorldspaceParent]
     /// </summary>
     public partial interface IANavigationMapInfoParent :
         IANavigationMapInfoParentGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [NavigationMapInfoWorldspaceParent, NavigationMapInfoCellParent]
+    /// Implemented by: [NavigationMapInfoCellParent, NavigationMapInfoWorldspaceParent]
     /// </summary>
     public partial interface IANavigationMapInfoParentGetter :
         ILoquiObject,

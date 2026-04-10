@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [TerminalMenuItemDisplayText, TerminalMenuItemSubmenu, TerminalMenuItemDataslate, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemForceRedraw]
+    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemSubmenu]
     /// </summary>
     public abstract partial class ATerminalMenuItemTarget :
         IATerminalMenuItemTarget,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [TerminalMenuItemDisplayText, TerminalMenuItemSubmenu, TerminalMenuItemDataslate, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemForceRedraw]
+    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemSubmenu]
     /// </summary>
     public partial interface IATerminalMenuItemTarget :
         IATerminalMenuItemTargetGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [TerminalMenuItemDisplayText, TerminalMenuItemSubmenu, TerminalMenuItemDataslate, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemForceRedraw]
+    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemSubmenu]
     /// </summary>
     public partial interface IATerminalMenuItemTargetGetter :
         ILoquiObject,

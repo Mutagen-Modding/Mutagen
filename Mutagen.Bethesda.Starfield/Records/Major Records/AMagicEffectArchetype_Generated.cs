@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectSummonCreatureArchetype, MagicEffectGuideArchetype, MagicEffectPeakValueModArchetype, MagicEffectCloakArchetype, MagicEffectImmunityModArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectSpawnHazardArchetype, MagicEffectDamageTypeModArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundArchetype, MagicEffectCloakArchetype, MagicEffectDamageTypeModArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectGuideArchetype, MagicEffectImmunityModArchetype, MagicEffectLightArchetype, MagicEffectPeakValueModArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public abstract partial class AMagicEffectArchetype :
         IAMagicEffectArchetype,
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectSummonCreatureArchetype, MagicEffectGuideArchetype, MagicEffectPeakValueModArchetype, MagicEffectCloakArchetype, MagicEffectImmunityModArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectSpawnHazardArchetype, MagicEffectDamageTypeModArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundArchetype, MagicEffectCloakArchetype, MagicEffectDamageTypeModArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectGuideArchetype, MagicEffectImmunityModArchetype, MagicEffectLightArchetype, MagicEffectPeakValueModArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public partial interface IAMagicEffectArchetype :
         IAMagicEffectArchetypeGetter,
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectLightArchetype, MagicEffectBoundArchetype, MagicEffectSummonCreatureArchetype, MagicEffectGuideArchetype, MagicEffectPeakValueModArchetype, MagicEffectCloakArchetype, MagicEffectImmunityModArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectSpawnHazardArchetype, MagicEffectDamageTypeModArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundArchetype, MagicEffectCloakArchetype, MagicEffectDamageTypeModArchetype, MagicEffectEnhanceWeaponArchetype, MagicEffectGuideArchetype, MagicEffectImmunityModArchetype, MagicEffectLightArchetype, MagicEffectPeakValueModArchetype, MagicEffectSpawnHazardArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public partial interface IAMagicEffectArchetypeGetter :
         ILoquiObject,

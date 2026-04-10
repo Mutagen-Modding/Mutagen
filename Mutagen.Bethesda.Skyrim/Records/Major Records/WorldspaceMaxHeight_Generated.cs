@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Min = default(P2Int16);
             item.Max = default(P2Int16);
-            item.CellData = Array.Empty<byte>();
+            item.CellData = [];
         }
         
         #region Mutagen
