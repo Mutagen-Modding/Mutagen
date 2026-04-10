@@ -145,6 +145,11 @@
       <FormLink name="Projectile" refName="Projectile" />
     </Fields>
   </Object>
+  <Object name="PerkEntryPointLegendaryGravitational" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
   <Object name="PerkCondition" objType="Subrecord">
     <Fields>
       <UInt8 name="RunOnTabIndex" nullable="False" recordType="PRKC" />

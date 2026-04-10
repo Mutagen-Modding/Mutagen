@@ -5565,6 +5565,9 @@
     <Compile Include="Records\Major Records\PerkEntryPointLegendaryMagicEffectEvent_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointLegendaryGravitational_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ItemResource_Generated.cs">
       <DependentUpon>ItemResource.xml</DependentUpon>
     </Compile>

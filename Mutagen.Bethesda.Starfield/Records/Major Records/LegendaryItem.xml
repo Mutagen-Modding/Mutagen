@@ -15,10 +15,15 @@
       <FormLink name="RankTemplate" refName="LegendaryItem" recordType="ENAM" />
       <FormLink name="MNAM" refName="LegendaryItem" recordType="MNAM" unknown="true" />
       <RefList name="LegendaryMods" refName="LegendaryMod" recordType="BNAM" />
-      <RefList name="GNAM" refName="LegendaryMod" recordType="GNAM" unknown="true" />
+      <ByteArray name="LNAM" recordType="LNAM" unknown="true" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
       <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
-      <RefList name="HNAM" refName="LegendaryItemHNAMEntry" recordType="HNAM" unknown="true" />
       <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <ByteArray name="KNAM" recordType="KNAM" unknown="true" />
+      <RefList name="GNAM" refName="LegendaryMod" recordType="GNAM" unknown="true" />
+      <RefList name="HNAM" refName="LegendaryItemHNAMEntry" recordType="HNAM" unknown="true" />
+      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>

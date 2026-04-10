@@ -1078,6 +1078,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PerkEntryPointAddActivateChoice_Registration.Instance,
             PerkEntryPointAddLeveledItem_Registration.Instance,
             PerkEntryPointAddRangeToValue_Registration.Instance,
+            PerkEntryPointLegendaryGravitational_Registration.Instance,
             PerkEntryPointLegendaryMagicEffectEvent_Registration.Instance,
             PerkEntryPointModifyActorValue_Registration.Instance,
             PerkEntryPointModifyValue_Registration.Instance,
