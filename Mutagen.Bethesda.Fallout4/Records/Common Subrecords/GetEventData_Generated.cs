@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region EventFunction
-        public UInt16 EventFunction { get; set; } = default(UInt16);
+        #region Function
+        public GetEventData.EventFunction Function { get; set; } = default(GetEventData.EventFunction);
         #endregion
-        #region EventMember
-        public UInt16 EventMember { get; set; } = default(UInt16);
+        #region Member
+        public GetEventData.EventMember Member { get; set; } = default(GetEventData.EventMember);
         #endregion
         #region Parameter3
         private readonly IFormLink<IFallout4MajorRecordGetter> _Parameter3 = new FormLink<IFallout4MajorRecordGetter>();
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.EventFunction = initialValue;
-                this.EventMember = initialValue;
+                this.Function = initialValue;
+                this.Member = initialValue;
                 this.Parameter3 = initialValue;
             }
 
@@ -119,16 +119,16 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem RunOnType,
                 TItem Reference,
                 TItem Unknown3,
-                TItem EventFunction,
-                TItem EventMember,
+                TItem Function,
+                TItem Member,
                 TItem Parameter3)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3)
             {
-                this.EventFunction = EventFunction;
-                this.EventMember = EventMember;
+                this.Function = Function;
+                this.Member = Member;
                 this.Parameter3 = Parameter3;
             }
 
@@ -141,8 +141,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public TItem EventFunction;
-            public TItem EventMember;
+            public TItem Function;
+            public TItem Member;
             public TItem Parameter3;
             #endregion
 
@@ -157,16 +157,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.EventFunction, rhs.EventFunction)) return false;
-                if (!object.Equals(this.EventMember, rhs.EventMember)) return false;
+                if (!object.Equals(this.Function, rhs.Function)) return false;
+                if (!object.Equals(this.Member, rhs.Member)) return false;
                 if (!object.Equals(this.Parameter3, rhs.Parameter3)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.EventFunction);
-                hash.Add(this.EventMember);
+                hash.Add(this.Function);
+                hash.Add(this.Member);
                 hash.Add(this.Parameter3);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -178,8 +178,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.EventFunction)) return false;
-                if (!eval(this.EventMember)) return false;
+                if (!eval(this.Function)) return false;
+                if (!eval(this.Member)) return false;
                 if (!eval(this.Parameter3)) return false;
                 return true;
             }
@@ -189,8 +189,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.EventFunction)) return true;
-                if (eval(this.EventMember)) return true;
+                if (eval(this.Function)) return true;
+                if (eval(this.Member)) return true;
                 if (eval(this.Parameter3)) return true;
                 return false;
             }
@@ -207,8 +207,8 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.EventFunction = eval(this.EventFunction);
-                obj.EventMember = eval(this.EventMember);
+                obj.Function = eval(this.Function);
+                obj.Member = eval(this.Member);
                 obj.Parameter3 = eval(this.Parameter3);
             }
             #endregion
@@ -228,13 +228,13 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(GetEventData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.EventFunction ?? true)
+                    if (printMask?.Function ?? true)
                     {
-                        sb.AppendItem(EventFunction, "EventFunction");
+                        sb.AppendItem(Function, "Function");
                     }
-                    if (printMask?.EventMember ?? true)
+                    if (printMask?.Member ?? true)
                     {
-                        sb.AppendItem(EventMember, "EventMember");
+                        sb.AppendItem(Member, "Member");
                     }
                     if (printMask?.Parameter3 ?? true)
                     {
@@ -251,8 +251,8 @@ namespace Mutagen.Bethesda.Fallout4
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? EventFunction;
-            public Exception? EventMember;
+            public Exception? Function;
+            public Exception? Member;
             public Exception? Parameter3;
             #endregion
 
@@ -262,10 +262,10 @@ namespace Mutagen.Bethesda.Fallout4
                 GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetEventData_FieldIndex.EventFunction:
-                        return EventFunction;
-                    case GetEventData_FieldIndex.EventMember:
-                        return EventMember;
+                    case GetEventData_FieldIndex.Function:
+                        return Function;
+                    case GetEventData_FieldIndex.Member:
+                        return Member;
                     case GetEventData_FieldIndex.Parameter3:
                         return Parameter3;
                     default:
@@ -278,11 +278,11 @@ namespace Mutagen.Bethesda.Fallout4
                 GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetEventData_FieldIndex.EventFunction:
-                        this.EventFunction = ex;
+                    case GetEventData_FieldIndex.Function:
+                        this.Function = ex;
                         break;
-                    case GetEventData_FieldIndex.EventMember:
-                        this.EventMember = ex;
+                    case GetEventData_FieldIndex.Member:
+                        this.Member = ex;
                         break;
                     case GetEventData_FieldIndex.Parameter3:
                         this.Parameter3 = ex;
@@ -298,11 +298,11 @@ namespace Mutagen.Bethesda.Fallout4
                 GetEventData_FieldIndex enu = (GetEventData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetEventData_FieldIndex.EventFunction:
-                        this.EventFunction = (Exception?)obj;
+                    case GetEventData_FieldIndex.Function:
+                        this.Function = (Exception?)obj;
                         break;
-                    case GetEventData_FieldIndex.EventMember:
-                        this.EventMember = (Exception?)obj;
+                    case GetEventData_FieldIndex.Member:
+                        this.Member = (Exception?)obj;
                         break;
                     case GetEventData_FieldIndex.Parameter3:
                         this.Parameter3 = (Exception?)obj;
@@ -316,8 +316,8 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (EventFunction != null) return true;
-                if (EventMember != null) return true;
+                if (Function != null) return true;
+                if (Member != null) return true;
                 if (Parameter3 != null) return true;
                 return false;
             }
@@ -346,10 +346,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(EventFunction, "EventFunction");
+                    sb.AppendItem(Function, "Function");
                 }
                 {
-                    sb.AppendItem(EventMember, "EventMember");
+                    sb.AppendItem(Member, "Member");
                 }
                 {
                     sb.AppendItem(Parameter3, "Parameter3");
@@ -362,8 +362,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.EventFunction = this.EventFunction.Combine(rhs.EventFunction);
-                ret.EventMember = this.EventMember.Combine(rhs.EventMember);
+                ret.Function = this.Function.Combine(rhs.Function);
+                ret.Member = this.Member.Combine(rhs.Member);
                 ret.Parameter3 = this.Parameter3.Combine(rhs.Parameter3);
                 return ret;
             }
@@ -387,8 +387,8 @@ namespace Mutagen.Bethesda.Fallout4
             ITranslationMask
         {
             #region Members
-            public bool EventFunction;
-            public bool EventMember;
+            public bool Function;
+            public bool Member;
             public bool Parameter3;
             #endregion
 
@@ -398,8 +398,8 @@ namespace Mutagen.Bethesda.Fallout4
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.EventFunction = defaultOn;
-                this.EventMember = defaultOn;
+                this.Function = defaultOn;
+                this.Member = defaultOn;
                 this.Parameter3 = defaultOn;
             }
 
@@ -408,8 +408,8 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((EventFunction, null));
-                ret.Add((EventMember, null));
+                ret.Add((Function, null));
+                ret.Add((Member, null));
                 ret.Add((Parameter3, null));
             }
 
@@ -488,8 +488,8 @@ namespace Mutagen.Bethesda.Fallout4
         IGetEventDataGetter,
         ILoquiObjectSetter<IGetEventData>
     {
-        new UInt16 EventFunction { get; set; }
-        new UInt16 EventMember { get; set; }
+        new GetEventData.EventFunction Function { get; set; }
+        new GetEventData.EventMember Member { get; set; }
         new IFormLink<IFallout4MajorRecordGetter> Parameter3 { get; set; }
     }
 
@@ -500,8 +500,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IGetEventDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetEventData_Registration.Instance;
-        UInt16 EventFunction { get; }
-        UInt16 EventMember { get; }
+        GetEventData.EventFunction Function { get; }
+        GetEventData.EventMember Member { get; }
         IFormLinkGetter<IFallout4MajorRecordGetter> Parameter3 { get; }
 
     }
@@ -650,8 +650,8 @@ namespace Mutagen.Bethesda.Fallout4
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
-        EventFunction = 3,
-        EventMember = 4,
+        Function = 3,
+        Member = 4,
         Parameter3 = 5,
     }
     #endregion
@@ -731,8 +731,8 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IGetEventData item)
         {
             ClearPartial();
-            item.EventFunction = default(UInt16);
-            item.EventMember = default(UInt16);
+            item.Function = default(GetEventData.EventFunction);
+            item.Member = default(GetEventData.EventMember);
             item.Parameter3.Clear();
             base.Clear(item);
         }
@@ -802,8 +802,8 @@ namespace Mutagen.Bethesda.Fallout4
             GetEventData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.EventFunction = item.EventFunction == rhs.EventFunction;
-            ret.EventMember = item.EventMember == rhs.EventMember;
+            ret.Function = item.Function == rhs.Function;
+            ret.Member = item.Member == rhs.Member;
             ret.Parameter3 = item.Parameter3.Equals(rhs.Parameter3);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -854,13 +854,13 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.EventFunction ?? true)
+            if (printMask?.Function ?? true)
             {
-                sb.AppendItem(item.EventFunction, "EventFunction");
+                sb.AppendItem(item.Function, "Function");
             }
-            if (printMask?.EventMember ?? true)
+            if (printMask?.Member ?? true)
             {
-                sb.AppendItem(item.EventMember, "EventMember");
+                sb.AppendItem(item.Member, "Member");
             }
             if (printMask?.Parameter3 ?? true)
             {
@@ -891,13 +891,13 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetEventData_FieldIndex.EventFunction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Function) ?? true))
             {
-                if (lhs.EventFunction != rhs.EventFunction) return false;
+                if (lhs.Function != rhs.Function) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetEventData_FieldIndex.EventMember) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Member) ?? true))
             {
-                if (lhs.EventMember != rhs.EventMember) return false;
+                if (lhs.Member != rhs.Member) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
             {
@@ -920,8 +920,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IGetEventDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.EventFunction);
-            hash.Add(item.EventMember);
+            hash.Add(item.Function);
+            hash.Add(item.Member);
             hash.Add(item.Parameter3);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -972,13 +972,13 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.EventFunction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Function) ?? true))
             {
-                item.EventFunction = rhs.EventFunction;
+                item.Function = rhs.Function;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.EventMember) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Member) ?? true))
             {
-                item.EventMember = rhs.EventMember;
+                item.Member = rhs.Member;
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
             {
@@ -1107,8 +1107,14 @@ namespace Mutagen.Bethesda.Fallout4
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.EventFunction);
-            writer.Write(item.EventMember);
+            EnumBinaryTranslation<GetEventData.EventFunction, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Function,
+                length: 2);
+            EnumBinaryTranslation<GetEventData.EventMember, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Member,
+                length: 2);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Parameter3);
@@ -1175,8 +1181,12 @@ namespace Mutagen.Bethesda.Fallout4
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.EventFunction = frame.ReadUInt16();
-            item.EventMember = frame.ReadUInt16();
+            item.Function = EnumBinaryTranslation<GetEventData.EventFunction, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.Member = EnumBinaryTranslation<GetEventData.EventMember, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.Parameter3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             GetEventDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,
@@ -1232,8 +1242,8 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
-        public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public GetEventData.EventFunction Function => (GetEventData.EventFunction)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
+        public GetEventData.EventMember Member => (GetEventData.EventMember)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x2, 0x2));
         public IFormLinkGetter<IFallout4MajorRecordGetter> Parameter3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         #region ParameterParsing
         partial void ParameterParsingCustomParse(

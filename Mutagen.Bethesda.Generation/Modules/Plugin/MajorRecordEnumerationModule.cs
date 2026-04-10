@@ -656,14 +656,21 @@ public class MajorRecordEnumerationModule : GenerationModule
                             }
                         }
 
-                        foreach (var kv in generationDict)
+                        foreach (var kv in generationDict
+                                     .OrderBy(x => x.Key switch
+                                     {
+                                         LoquiType l => l.Interface(getter: true),
+                                         ObjectGeneration o => o.Name,
+                                         string s => s,
+                                         _ => x.Key.ToString()
+                                     }))
                         {
                             switch (kv.Key)
                             {
                                 case LoquiType loqui:
                                     if (loqui.RefType == LoquiType.LoquiRefType.Generic)
                                     {
-                                        // Handled in default case  
+                                        // Handled in default case
                                         continue;
                                     }
                                     else

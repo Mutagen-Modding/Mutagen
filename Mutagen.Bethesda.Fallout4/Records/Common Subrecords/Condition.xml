@@ -43,10 +43,8 @@
   </Object>
   <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" generateConditionData="false">
     <Fields>
-      <!-- ToDo change to enum -->
-      <UInt16 name="EventFunction" />
-      <!-- ToDo change to enum -->
-      <UInt16 name="EventMember" />
+      <Enum enumName="GetEventData.EventFunction" name="Function" byteLength="2" />
+      <Enum enumName="GetEventData.EventMember" name="Member" byteLength="2" />
       <FormLink name="Parameter3" refName="Fallout4MajorRecord" />
       <CustomLogic name="ParameterParsing" />
     </Fields>

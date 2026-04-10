@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [QuestReferenceAlias, QuestLocationAlias, QuestCollectionAlias]
+    /// Implemented by: [QuestCollectionAlias, QuestLocationAlias, QuestReferenceAlias]
     /// </summary>
     public abstract partial class AQuestAlias :
         IAQuestAlias,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [QuestReferenceAlias, QuestLocationAlias, QuestCollectionAlias]
+    /// Implemented by: [QuestCollectionAlias, QuestLocationAlias, QuestReferenceAlias]
     /// </summary>
     public partial interface IAQuestAlias :
         IAQuestAliasGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [QuestReferenceAlias, QuestLocationAlias, QuestCollectionAlias]
+    /// Implemented by: [QuestCollectionAlias, QuestLocationAlias, QuestReferenceAlias]
     /// </summary>
     public partial interface IAQuestAliasGetter :
         ILoquiObject,

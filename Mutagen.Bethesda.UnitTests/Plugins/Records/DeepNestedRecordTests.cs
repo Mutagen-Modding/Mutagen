@@ -18,17 +18,31 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 /// </summary>
 public class DeepNestedRecordTests
 {
+    private static readonly ModKey TestModKey = new("DeepNested", ModType.Plugin);
+    private static readonly FormKey PlacedFormKey1 = new(TestModKey, 0x800);
+    private static readonly FormKey PlacedFormKey2 = new(TestModKey, 0x801);
+    private static readonly FormKey CellFormKey1 = new(TestModKey, 0x802);
+    private static readonly FormKey CellFormKey2 = new(TestModKey, 0x803);
+    private static readonly FormKey WorldspaceFormKey1 = new(TestModKey, 0x804);
+    private static readonly FormKey WorldspaceFormKey2 = new(TestModKey, 0x805);
+    private static readonly FormKey TopCellFormKey1 = new(TestModKey, 0x806);
+    private static readonly FormKey TopCellFormKey2 = new(TestModKey, 0x807);
+    private static readonly FormKey TopicFormKey1 = new(TestModKey, 0x808);
+    private static readonly FormKey TopicFormKey2 = new(TestModKey, 0x809);
+    private static readonly FormKey ResponseFormKey1 = new(TestModKey, 0x80A);
+    private static readonly FormKey ResponseFormKey2 = new(TestModKey, 0x80B);
+
     [Theory, MutagenModAutoData]
     public void CellsWithPlacedObjects_AcrossSplitFiles(
         DirectoryPath existingOutputDirectory,
         IFileSystem fileSystem)
     {
         // Create a mod with Cells containing PlacedObjects
-        var modKey = new ModKey("DeepNested", ModType.Plugin);
+        var modKey = TestModKey;
         var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
 
         // Add a Cell with PlacedObjects to the first mod
-        var placedObject1 = new PlacedObject(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+        var placedObject1 = new PlacedObject(PlacedFormKey1, SkyrimRelease.SkyrimSE);
         placedObject1.EditorID = "PlacedObject1";
 
         mod1.Cells.Records.Add(new CellBlock()
@@ -45,7 +59,7 @@ public class DeepNestedRecordTests
                     LastModified = 4,
                     Cells =
                     {
-                        new Cell(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+                        new Cell(CellFormKey1, SkyrimRelease.SkyrimSE)
                         {
                             EditorID = "Cell1",
                             Temporary =
@@ -70,7 +84,7 @@ public class DeepNestedRecordTests
 
         // Create a second mod with another Cell containing PlacedObjects
         var mod2 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
-        var placedObject2 = new PlacedObject(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+        var placedObject2 = new PlacedObject(PlacedFormKey2, SkyrimRelease.SkyrimSE);
         placedObject2.EditorID = "PlacedObject2";
 
         mod2.Cells.Records.Add(new CellBlock()
@@ -87,7 +101,7 @@ public class DeepNestedRecordTests
                     LastModified = 4,
                     Cells =
                     {
-                        new Cell(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+                        new Cell(CellFormKey2, SkyrimRelease.SkyrimSE)
                         {
                             EditorID = "Cell2",
                             Temporary =
@@ -135,17 +149,17 @@ public class DeepNestedRecordTests
         IFileSystem fileSystem)
     {
         // Create a mod with a Worldspace containing SubCells
-        var modKey = new ModKey("WorldspaceNested", ModType.Plugin);
+        var modKey = TestModKey;
         var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
 
         // Add a Worldspace with TopCell to the first mod
-        var placedInTop = new PlacedObject(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+        var placedInTop = new PlacedObject(PlacedFormKey1, SkyrimRelease.SkyrimSE);
         placedInTop.EditorID = "PlacedInTopCell";
 
-        mod1.Worldspaces.Add(new Worldspace(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        mod1.Worldspaces.Add(new Worldspace(WorldspaceFormKey1, SkyrimRelease.SkyrimSE)
         {
             EditorID = "Worldspace1",
-            TopCell = new Cell(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+            TopCell = new Cell(TopCellFormKey1, SkyrimRelease.SkyrimSE)
             {
                 EditorID = "TopCell1",
                 Temporary =
@@ -167,13 +181,13 @@ public class DeepNestedRecordTests
 
         // Create a second mod with another Worldspace
         var mod2 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
-        var placedInTop2 = new PlacedObject(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+        var placedInTop2 = new PlacedObject(PlacedFormKey2, SkyrimRelease.SkyrimSE);
         placedInTop2.EditorID = "PlacedInTopCell2";
 
-        mod2.Worldspaces.Add(new Worldspace(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        mod2.Worldspaces.Add(new Worldspace(WorldspaceFormKey2, SkyrimRelease.SkyrimSE)
         {
             EditorID = "Worldspace2",
-            TopCell = new Cell(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+            TopCell = new Cell(TopCellFormKey2, SkyrimRelease.SkyrimSE)
             {
                 EditorID = "TopCell2",
                 Temporary =
@@ -221,14 +235,14 @@ public class DeepNestedRecordTests
         IFileSystem fileSystem)
     {
         // Create a mod with DialogTopics containing Responses
-        var modKey = new ModKey("DialogNested", ModType.Plugin);
+        var modKey = TestModKey;
         var mod1 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
 
         // Add a DialogTopic with Responses to the first mod
-        var response1 = new DialogResponses(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+        var response1 = new DialogResponses(ResponseFormKey1, SkyrimRelease.SkyrimSE);
         response1.EditorID = "Response1";
 
-        mod1.DialogTopics.Add(new DialogTopic(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        mod1.DialogTopics.Add(new DialogTopic(TopicFormKey1, SkyrimRelease.SkyrimSE)
         {
             EditorID = "Topic1",
             Responses =
@@ -249,10 +263,10 @@ public class DeepNestedRecordTests
 
         // Create a second mod with another DialogTopic
         var mod2 = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
-        var response2 = new DialogResponses(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE);
+        var response2 = new DialogResponses(ResponseFormKey2, SkyrimRelease.SkyrimSE);
         response2.EditorID = "Response2";
 
-        mod2.DialogTopics.Add(new DialogTopic(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        mod2.DialogTopics.Add(new DialogTopic(TopicFormKey2, SkyrimRelease.SkyrimSE)
         {
             EditorID = "Topic2",
             Responses =

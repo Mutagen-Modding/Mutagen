@@ -224,7 +224,7 @@
   <Object name="FindMatchingRefFromEvent" objType="Subrecord">
     <Fields>
       <RecordType name="FromEvent" recordType="ALFE" />
-      <ByteArray name="EventData" recordType="ALFD" />
+      <Enum enumName="GetEventData.EventMember" name="EventData" byteLength="4" recordType="ALFD" />
     </Fields>
   </Object>
   <Object name="ExternalAliasLocation" objType="Subrecord">

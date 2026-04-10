@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [NavigationMapInfoWorldParent, NavigationMapInfoCellParent]
+    /// Implemented by: [NavigationMapInfoCellParent, NavigationMapInfoWorldParent]
     /// </summary>
     public abstract partial class ANavigationMapInfoParent :
         IANavigationMapInfoParent,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [NavigationMapInfoWorldParent, NavigationMapInfoCellParent]
+    /// Implemented by: [NavigationMapInfoCellParent, NavigationMapInfoWorldParent]
     /// </summary>
     public partial interface IANavigationMapInfoParent :
         IANavigationMapInfoParentGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [NavigationMapInfoWorldParent, NavigationMapInfoCellParent]
+    /// Implemented by: [NavigationMapInfoCellParent, NavigationMapInfoWorldParent]
     /// </summary>
     public partial interface IANavigationMapInfoParentGetter :
         ILoquiObject,

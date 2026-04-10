@@ -146,6 +146,8 @@
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
         <Compile Include="Inis\DI\IniModule.cs" />
         <Compile Include="Installs\DI\GameLocatorLookupCache.cs" />
+        <Compile Include="Installs\DI\IProtonPrefixProvider.cs" />
+        <Compile Include="Installs\DI\ProtonPrefixProvider.cs" />
         <Compile Include="Installs\DI\InstallsModule.cs" />
         <Compile Include="Installs\GameLocator.cs" />
         <Compile Include="Installs\GameSource.cs" />

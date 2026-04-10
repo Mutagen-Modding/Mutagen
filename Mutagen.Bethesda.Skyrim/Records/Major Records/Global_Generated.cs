@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
+    /// Implemented by: [GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public abstract partial class Global :
         SkyrimMajorRecord,
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
+    /// Implemented by: [GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public partial interface IGlobal :
         IGlobalGetter,
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
+    /// Implemented by: [GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public partial interface IGlobalGetter :
         ISkyrimMajorRecordGetter,

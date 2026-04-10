@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool]
+    /// Implemented by: [GameSettingBool, GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public abstract partial class GameSetting :
         SkyrimMajorRecord,
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool]
+    /// Implemented by: [GameSettingBool, GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public partial interface IGameSetting :
         IGameSettingGetter,
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString, GameSettingBool]
+    /// Implemented by: [GameSettingBool, GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public partial interface IGameSettingGetter :
         ISkyrimMajorRecordGetter,

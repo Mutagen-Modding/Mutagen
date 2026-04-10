@@ -19,6 +19,7 @@ static class CliHelpers
             using var consumer = new WorkConsumer(
                 new NumWorkThreadsConstant(null),
                 dropoff, dropoff);
+            consumer.Start();
             Stopwatch sw = new Stopwatch();
             sw.Start();
             await TestBattery.RunTests(settings, dropoff);

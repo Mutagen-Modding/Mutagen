@@ -2841,9 +2841,52 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "WorldspaceGridReference":
-                case "IWorldspaceGridReferenceGetter":
-                case "IWorldspaceGridReference":
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    {
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
+                        {
+                            APlacedTrapTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "Cell":
                 case "ICellGetter":
@@ -2860,9 +2903,86 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
+                case "IComplexLocation":
+                case "IComplexLocationGetter":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IExplodeSpawn":
+                case "IExplodeSpawnGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlacedSimple":
+                case "IPlacedSimpleGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlacedThing":
+                case "IPlacedThingGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPreCutMapEntryReference":
+                case "IPreCutMapEntryReferenceGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
                     foreach (var subItem in obj.SubCells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -2928,137 +3048,17 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
-                case "PlacedArrow":
-                case "IPlacedArrowGetter":
-                case "IPlacedArrow":
-                case "IPlacedArrowInternal":
-                case "PlacedBeam":
-                case "IPlacedBeamGetter":
-                case "IPlacedBeam":
-                case "IPlacedBeamInternal":
-                case "PlacedFlame":
-                case "IPlacedFlameGetter":
-                case "IPlacedFlame":
-                case "IPlacedFlameInternal":
-                case "PlacedCone":
-                case "IPlacedConeGetter":
-                case "IPlacedCone":
-                case "IPlacedConeInternal":
-                case "PlacedBarrier":
-                case "IPlacedBarrierGetter":
-                case "IPlacedBarrier":
-                case "IPlacedBarrierInternal":
-                case "PlacedTrap":
-                case "IPlacedTrapGetter":
-                case "IPlacedTrap":
-                case "IPlacedTrapInternal":
-                case "PlacedHazard":
-                case "IPlacedHazardGetter":
-                case "IPlacedHazard":
-                case "IPlacedHazardInternal":
-                case "PlacedMissile":
-                case "IPlacedMissileGetter":
-                case "IPlacedMissile":
-                case "IPlacedMissileInternal":
-                    {
-                        if (obj.TopCell is {} APlacedTrapTopCellitem)
-                        {
-                            APlacedTrapTopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IExplodeSpawn":
-                case "IExplodeSpawnGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IComplexLocation":
-                case "IComplexLocationGetter":
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IKeywordLinkedReference":
-                case "IKeywordLinkedReferenceGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IPreCutMapEntryReference":
-                case "IPreCutMapEntryReferenceGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IPlaced":
-                case "IPlacedGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IPlacedSimple":
-                case "IPlacedSimpleGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IPlacedThing":
-                case "IPlacedThingGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
                     break;
                 default:
                     if (throwIfUnknown)
@@ -3955,9 +3955,26 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceGridReference":
-                case "IWorldspaceGridReferenceGetter":
-                case "IWorldspaceGridReference":
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
+                        {
+                            foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
                     yield break;
                 case "Cell":
                 case "ICellGetter":
@@ -3973,17 +3990,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4076,19 +4082,9 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                     yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
-                    {
-                        if (obj.TopCell is {} APlacedTrapTopCellitem)
-                        {
-                            foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4096,6 +4092,10 @@ namespace Mutagen.Bethesda.Fallout4
                             yield return item;
                         }
                     }
+                    yield break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
                     yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
@@ -4238,9 +4238,51 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceGridReference":
-                case "IWorldspaceGridReferenceGetter":
-                case "IWorldspaceGridReference":
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
                     yield break;
                 case "Cell":
                 case "ICellGetter":
@@ -4295,21 +4337,6 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
-                        type: type,
-                        modKey: modKey,
-                        parent: curContext,
-                        linkCache: linkCache,
-                        throwIfUnknown: false,
-                        worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
                         modKey: modKey,
@@ -4506,40 +4533,9 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
-                    {
-                        if (obj.TopCell is {} WorldspaceTopCellitem)
-                        {
-                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
-                                obj: WorldspaceTopCellitem,
-                                linkCache: linkCache,
-                                type: type,
-                                modKey: modKey,
-                                parent: curContext,
-                                throwIfUnknown: false,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    if (baseRec.TopCell != null) return baseRec.TopCell;
-                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = copy;
-                                    return copy;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = dupRec;
-                                    return dupRec;
-                                }))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
                         modKey: modKey,
@@ -4551,6 +4547,10 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         yield return item;
                     }
+                    yield break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
                     yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IWorldspaceGetter, IFallout4Mod, IFallout4ModGetter>(

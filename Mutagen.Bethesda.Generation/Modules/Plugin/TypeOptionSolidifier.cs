@@ -107,7 +107,7 @@ public class TypeOptionSolidifier : GenerationModule
                 {
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(proto.Protocol, out var interfs))
                     {
-                        foreach (var interf in interfs)
+                        foreach (var interf in interfs.OrderBy(x => x.Key))
                         {
                             var getter = $"{interf.Key}Getter";
                             using (var comment = sb.Comment())

@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
-    /// Implemented by: [PlacedObject, APlacedTrap]
+    /// Implemented by: [APlacedTrap, PlacedObject]
     /// </summary>
     public partial interface IPlacedThing :
         IPlacedThingGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [PlacedObject, APlacedTrap]
+    /// Implemented by: [APlacedTrap, PlacedObject]
     /// </summary>
     public partial interface IPlacedThingGetter : ISkyrimMajorRecordGetter
     {

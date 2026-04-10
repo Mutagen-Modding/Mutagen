@@ -42,6 +42,8 @@ public record DataFolderLocations
         {
             case GameRelease.Oblivion:
                 return Oblivion;
+            case GameRelease.OblivionRE:
+                return OblivionRE;
             case GameRelease.SkyrimLE:
                 return Skyrim;
             case GameRelease.SkyrimSE:
@@ -88,6 +90,9 @@ public record DataFolderLocations
                 break;
             case GameRelease.Starfield:
                 Starfield = path;
+                break;
+            case GameRelease.OblivionRE:
+                OblivionRE = path;
                 break;
             default:
                 throw new NotImplementedException();

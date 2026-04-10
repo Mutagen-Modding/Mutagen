@@ -1268,43 +1268,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
-                    obj.Cells.RemoveWhere(i => keys.Contains(i.FormKey));
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "NavigationMesh":
-                case "INavigationMeshGetter":
-                case "INavigationMesh":
-                case "INavigationMeshInternal":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PlacedNpc":
-                case "IPlacedNpcGetter":
-                case "IPlacedNpc":
-                case "IPlacedNpcInternal":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PlacedObject":
-                case "IPlacedObjectGetter":
-                case "IPlacedObject":
-                case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -1346,15 +1309,25 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ICellOrObject":
-                case "ICellOrObjectGetter":
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    obj.Cells.RemoveWhere(i => keys.Contains(i.FormKey));
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IOwner":
-                case "IOwnerGetter":
+                case "IBiomeObjectPackInTarget":
+                case "IBiomeObjectPackInTargetGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ICellOrObject":
+                case "ICellOrObjectGetter":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1367,8 +1340,8 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IBiomeObjectPackInTarget":
-                case "IBiomeObjectPackInTargetGetter":
+                case "IOwner":
+                case "IOwnerGetter":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1397,6 +1370,33 @@ namespace Mutagen.Bethesda.Starfield
                     break;
                 case "ITraversalTarget":
                 case "ITraversalTargetGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1684,6 +1684,22 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -1736,22 +1752,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
                     foreach (var subItem in obj.Cells)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))

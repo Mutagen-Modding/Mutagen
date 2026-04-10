@@ -1297,8 +1297,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.CNAM = Array.Empty<byte>();
-            item.DNAM = Array.Empty<byte>();
+            item.CNAM = [];
+            item.DNAM = [];
             item.SurfacePatterns.Fill(FormLink<ISurfacePatternGetter>.Null);
             item.GNAM = default;
             item.SurfacePatterns2.Fill(FormLink<ISurfacePatternGetter>.Null);

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [HolotapeSound, HolotapeVoice, HolotapeProgram, HolotapeTerminal]
+    /// Implemented by: [HolotapeProgram, HolotapeSound, HolotapeTerminal, HolotapeVoice]
     /// </summary>
     public abstract partial class AHolotapeData :
         IAHolotapeData,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [HolotapeSound, HolotapeVoice, HolotapeProgram, HolotapeTerminal]
+    /// Implemented by: [HolotapeProgram, HolotapeSound, HolotapeTerminal, HolotapeVoice]
     /// </summary>
     public partial interface IAHolotapeData :
         IAHolotapeDataGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [HolotapeSound, HolotapeVoice, HolotapeProgram, HolotapeTerminal]
+    /// Implemented by: [HolotapeProgram, HolotapeSound, HolotapeTerminal, HolotapeVoice]
     /// </summary>
     public partial interface IAHolotapeDataGetter :
         ILoquiObject,

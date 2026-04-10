@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -41,4 +42,10 @@ public record BinaryReadParameters
     /// Required when reading records that reference records from other mods and need type information about those records.
     /// </summary>
     public ILinkCache? LinkCache { get; init; }
+
+    /// <summary>
+    /// Optional master reference overrides to use instead of reading from the file header.
+    /// Used for split mod imports where split file ModKeys are remapped to the base ModKey.
+    /// </summary>
+    public IReadOnlyMasterReferenceCollection? MasterOverrides { get; init; }
 }

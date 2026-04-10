@@ -4007,7 +4007,7 @@ namespace Mutagen.Bethesda.Starfield
         #region BoneDataModifiers
         private int? _BoneDataModifiersLocation;
         private IGenderedItemGetter<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>>? _BoneDataModifiersOverlay;
-        public IGenderedItemGetter<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>> BoneDataModifiers => _BoneDataModifiersOverlay ?? new GenderedItem<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>>(Array.Empty<IFormLinkGetter<IBoneModifierGetter>>(), Array.Empty<IFormLinkGetter<IBoneModifierGetter>>());
+        public IGenderedItemGetter<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>> BoneDataModifiers => _BoneDataModifiersOverlay ?? new GenderedItem<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>>([], []);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4318,7 +4318,7 @@ namespace Mutagen.Bethesda.Starfield
                     _BoneDataModifiersOverlay = GenderedItemBinaryOverlay.Factory<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>>(
                         package: _package,
                         genderEnumRecord: RecordTypes.BSMP,
-                        getDefault: () => Array.Empty<IFormLinkGetter<IBoneModifierGetter>>(),
+                        getDefault: () => [],
                         stream: stream,
                         creator: (s, p) => 
                         {

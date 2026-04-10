@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptVariableProperty, ScriptStructProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty, ScriptVariableListProperty, ScriptStructListProperty]
+    /// Implemented by: [ScriptBoolListProperty, ScriptBoolProperty, ScriptFloatListProperty, ScriptFloatProperty, ScriptIntListProperty, ScriptIntProperty, ScriptObjectListProperty, ScriptObjectProperty, ScriptStringListProperty, ScriptStringProperty, ScriptStructListProperty, ScriptStructProperty, ScriptVariableListProperty, ScriptVariableProperty]
     /// </summary>
     public partial class ScriptProperty :
         IEquatable<IScriptPropertyGetter>,
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptVariableProperty, ScriptStructProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty, ScriptVariableListProperty, ScriptStructListProperty]
+    /// Implemented by: [ScriptBoolListProperty, ScriptBoolProperty, ScriptFloatListProperty, ScriptFloatProperty, ScriptIntListProperty, ScriptIntProperty, ScriptObjectListProperty, ScriptObjectProperty, ScriptStringListProperty, ScriptStringProperty, ScriptStructListProperty, ScriptStructProperty, ScriptVariableListProperty, ScriptVariableProperty]
     /// </summary>
     public partial interface IScriptProperty :
         IFormLinkContainer,
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [ScriptObjectProperty, ScriptStringProperty, ScriptIntProperty, ScriptFloatProperty, ScriptBoolProperty, ScriptVariableProperty, ScriptStructProperty, ScriptObjectListProperty, ScriptStringListProperty, ScriptIntListProperty, ScriptFloatListProperty, ScriptBoolListProperty, ScriptVariableListProperty, ScriptStructListProperty]
+    /// Implemented by: [ScriptBoolListProperty, ScriptBoolProperty, ScriptFloatListProperty, ScriptFloatProperty, ScriptIntListProperty, ScriptIntProperty, ScriptObjectListProperty, ScriptObjectProperty, ScriptStringListProperty, ScriptStringProperty, ScriptStructListProperty, ScriptStructProperty, ScriptVariableListProperty, ScriptVariableProperty]
     /// </summary>
     public partial interface IScriptPropertyGetter :
         ILoquiObject,

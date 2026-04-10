@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [SoundDescriptorStandardData, SoundDescriptorCompoundData, SoundDescriptorAutoweaponData]
+    /// Implemented by: [SoundDescriptorAutoweaponData, SoundDescriptorCompoundData, SoundDescriptorStandardData]
     /// </summary>
     public abstract partial class ASoundDescriptor :
         IASoundDescriptor,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [SoundDescriptorStandardData, SoundDescriptorCompoundData, SoundDescriptorAutoweaponData]
+    /// Implemented by: [SoundDescriptorAutoweaponData, SoundDescriptorCompoundData, SoundDescriptorStandardData]
     /// </summary>
     public partial interface IASoundDescriptor :
         IASoundDescriptorGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [SoundDescriptorStandardData, SoundDescriptorCompoundData, SoundDescriptorAutoweaponData]
+    /// Implemented by: [SoundDescriptorAutoweaponData, SoundDescriptorCompoundData, SoundDescriptorStandardData]
     /// </summary>
     public partial interface IASoundDescriptorGetter :
         ILoquiObject,

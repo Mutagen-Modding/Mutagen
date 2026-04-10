@@ -2397,16 +2397,11 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
-                    {
-                        if (obj.PathGrid is {} PathGriditem)
-                        {
-                            PathGriditem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
                     break;
                 case "Landscape":
                 case "ILandscapeGetter":
@@ -2421,6 +2416,17 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    {
+                        if (obj.PathGrid is {} PathGriditem)
+                        {
+                            PathGriditem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
                     break;
                 case "PlacedCreature":
                 case "IPlacedCreatureGetter":
@@ -2442,12 +2448,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
-                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
-                    obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
-                    break;
-                case "IPlaced":
-                case "IPlacedGetter":
                     obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
@@ -3225,18 +3225,27 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
                     {
-                        if (obj.PathGrid is {} PathGriditem)
+                        if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return PathGriditem;
-                            foreach (var item in PathGriditem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
                         }
                     }
                     yield break;
@@ -3276,27 +3285,18 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     yield break;
-                case "IPlacedGetter":
-                case "IPlaced":
-                    foreach (var subItem in obj.Persistent)
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
+                        if (obj.PathGrid is {} PathGriditem)
                         {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.VisibleWhenDistant)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
+                            yield return PathGriditem;
+                            foreach (var item in PathGriditem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
                         }
                     }
                     yield break;
@@ -3412,54 +3412,6 @@ namespace Mutagen.Bethesda.Oblivion
                 getOrAddAsOverride: getOrAddAsOverride,
                 duplicateInto: duplicateInto,
                 parent: parent);
-            {
-                if (obj.PathGrid is {} CellPathGriditem)
-                {
-                    yield return new ModContext<IOblivionMod, IOblivionModGetter, IPathGridInternal, IPathGridGetter>(
-                        modKey: modKey,
-                        record: CellPathGriditem,
-                        parent: curContext,
-                        getOrAddAsOverride: (m, r) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            if (baseRec.PathGrid != null) return baseRec.PathGrid;
-                            var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
-                            baseRec.PathGrid = copy;
-                            return copy;
-                        },
-                        duplicateInto: (m, r, e, f) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
-                            baseRec.PathGrid = dupRec;
-                            return dupRec;
-                        });
-                }
-            }
-            {
-                if (obj.Landscape is {} CellLandscapeitem)
-                {
-                    yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandscapeInternal, ILandscapeGetter>(
-                        modKey: modKey,
-                        record: CellLandscapeitem,
-                        parent: curContext,
-                        getOrAddAsOverride: (m, r) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            if (baseRec.Landscape != null) return baseRec.Landscape;
-                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
-                            baseRec.Landscape = copy;
-                            return copy;
-                        },
-                        duplicateInto: (m, r, e, f) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
-                            baseRec.Landscape = dupRec;
-                            return dupRec;
-                        });
-                }
-            }
             foreach (var subItem in obj.Persistent)
             {
                 yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
@@ -3526,6 +3478,54 @@ namespace Mutagen.Bethesda.Oblivion
                         return dup;
                     });
             }
+            {
+                if (obj.Landscape is {} CellLandscapeitem)
+                {
+                    yield return new ModContext<IOblivionMod, IOblivionModGetter, ILandscapeInternal, ILandscapeGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e, f) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
+            {
+                if (obj.PathGrid is {} CellPathGriditem)
+                {
+                    yield return new ModContext<IOblivionMod, IOblivionModGetter, IPathGridInternal, IPathGridGetter>(
+                        modKey: modKey,
+                        record: CellPathGriditem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.PathGrid != null) return baseRec.PathGrid;
+                            var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
+                            baseRec.PathGrid = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e, f) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
+                            baseRec.PathGrid = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
         }
         
         public IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
@@ -3575,31 +3575,80 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
                     {
-                        if (obj.PathGrid is {} CellPathGriditem)
+                        if (type.IsAssignableFrom(subItem.GetType()))
                         {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPathGridInternal, IPathGridGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
                                 modKey: modKey,
-                                record: CellPathGriditem,
+                                record: subItem,
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    if (baseRec.PathGrid != null) return baseRec.PathGrid;
-                                    var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
-                                    baseRec.PathGrid = copy;
-                                    return copy;
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
                                 },
                                 duplicateInto: (m, r, e, f) =>
                                 {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
-                                    baseRec.PathGrid = dupRec;
-                                    return dupRec;
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.VisibleWhenDistant.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.VisibleWhenDistant.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
                                 });
                         }
                     }
@@ -3708,80 +3757,31 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     yield break;
-                case "IPlacedGetter":
-                case "IPlaced":
-                    foreach (var subItem in obj.Persistent)
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
                     {
-                        if (type.IsAssignableFrom(subItem.GetType()))
+                        if (obj.PathGrid is {} CellPathGriditem)
                         {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPathGridInternal, IPathGridGetter>(
                                 modKey: modKey,
-                                record: subItem,
+                                record: CellPathGriditem,
                                 parent: curContext,
                                 getOrAddAsOverride: (m, r) =>
                                 {
-                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
-                                    if (ret != null) return ret;
-                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    parent.Persistent.Add(ret);
-                                    return ret;
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    if (baseRec.PathGrid != null) return baseRec.PathGrid;
+                                    var copy = r.DeepCopy(ModContextExt.PathGridCopyMask);
+                                    baseRec.PathGrid = copy;
+                                    return copy;
                                 },
                                 duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
-                                    return dup;
-                                });
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
-                                modKey: modKey,
-                                record: subItem,
-                                parent: curContext,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
-                                    if (ret != null) return ret;
-                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    parent.Temporary.Add(ret);
-                                    return ret;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
-                                    return dup;
-                                });
-                        }
-                    }
-                    foreach (var subItem in obj.VisibleWhenDistant)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IPlaced, IPlacedGetter>(
-                                modKey: modKey,
-                                record: subItem,
-                                parent: curContext,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var ret = parent.VisibleWhenDistant.FirstOrDefault(x => x.FormKey == r.FormKey);
-                                    if (ret != null) return ret;
-                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
-                                    parent.VisibleWhenDistant.Add(ret);
-                                    return ret;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
-                                    return dup;
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
+                                    baseRec.PathGrid = dupRec;
+                                    return dupRec;
                                 });
                         }
                     }

@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [PlacedObject, APlacedTrap]
+    /// Implemented by: [APlacedTrap, PlacedObject]
     /// </summary>
     public partial interface IPlacedThing :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [PlacedObject, APlacedTrap]
+    /// Implemented by: [APlacedTrap, PlacedObject]
     /// </summary>
     public partial interface IPlacedThingGetter : IFallout4MajorRecordGetter
     {

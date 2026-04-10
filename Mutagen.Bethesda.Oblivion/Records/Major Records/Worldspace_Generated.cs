@@ -1859,17 +1859,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "Road":
-                case "IRoadGetter":
-                case "IRoad":
-                case "IRoadInternal":
-                    {
-                        if (obj.Road is {} Roaditem)
-                        {
-                            Roaditem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -1885,22 +1874,12 @@ namespace Mutagen.Bethesda.Oblivion
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
-                    foreach (var subItem in obj.SubCells)
+                case "IPlaced":
+                case "IPlacedGetter":
                     {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
-                    {
-                        if (obj.TopCell is {} PathGridTopCellitem)
+                        if (obj.TopCell is {} TopCellitem)
                         {
-                            PathGridTopCellitem.Remove(keys, type, throwIfUnknown);
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -1916,6 +1895,21 @@ namespace Mutagen.Bethesda.Oblivion
                         if (obj.TopCell is {} LandscapeTopCellitem)
                         {
                             LandscapeTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    {
+                        if (obj.TopCell is {} PathGridTopCellitem)
+                        {
+                            PathGridTopCellitem.Remove(keys, type, throwIfUnknown);
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -1968,14 +1962,20 @@ namespace Mutagen.Bethesda.Oblivion
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IPlaced":
-                case "IPlacedGetter":
+                case "Road":
+                case "IRoadGetter":
+                case "IRoad":
+                case "IRoadInternal":
                     {
-                        if (obj.TopCell is {} TopCellitem)
+                        if (obj.Road is {} Roaditem)
                         {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                            Roaditem.Remove(keys, type, throwIfUnknown);
                         }
                     }
+                    break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -2582,21 +2582,6 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "Road":
-                case "IRoadGetter":
-                case "IRoad":
-                case "IRoadInternal":
-                    {
-                        if (obj.Road is {} Roaditem)
-                        {
-                            yield return Roaditem;
-                            foreach (var item in Roaditem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -2619,9 +2604,19 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.TopCell is {} LandscapeTopCellitem)
+                        {
+                            foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
                     foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -2638,27 +2633,6 @@ namespace Mutagen.Bethesda.Oblivion
                         if (obj.TopCell is {} PathGridTopCellitem)
                         {
                             foreach (var item in PathGridTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
-                    {
-                        if (obj.TopCell is {} LandscapeTopCellitem)
-                        {
-                            foreach (var item in LandscapeTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
                             {
                                 yield return item;
                             }
@@ -2735,6 +2709,32 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     yield break;
+                case "Road":
+                case "IRoadGetter":
+                case "IRoad":
+                case "IRoadInternal":
+                    {
+                        if (obj.Road is {} Roaditem)
+                        {
+                            yield return Roaditem;
+                            foreach (var item in Roaditem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
                     {
@@ -2769,30 +2769,6 @@ namespace Mutagen.Bethesda.Oblivion
                 getOrAddAsOverride: getOrAddAsOverride,
                 duplicateInto: duplicateInto,
                 parent: parent);
-            {
-                if (obj.Road is {} WorldspaceRoaditem)
-                {
-                    yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
-                        modKey: modKey,
-                        record: WorldspaceRoaditem,
-                        parent: curContext,
-                        getOrAddAsOverride: (m, r) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            if (baseRec.Road != null) return baseRec.Road;
-                            var copy = r.DeepCopy(ModContextExt.RoadCopyMask);
-                            baseRec.Road = copy;
-                            return copy;
-                        },
-                        duplicateInto: (m, r, e, f) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
-                            baseRec.Road = dupRec;
-                            return dupRec;
-                        });
-                }
-            }
             {
                 if (obj.TopCell is {} WorldspaceTopCellitem)
                 {
@@ -2838,6 +2814,30 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         yield return item;
                     }
+                }
+            }
+            {
+                if (obj.Road is {} WorldspaceRoaditem)
+                {
+                    yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
+                        modKey: modKey,
+                        record: WorldspaceRoaditem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            if (baseRec.Road != null) return baseRec.Road;
+                            var copy = r.DeepCopy(ModContextExt.RoadCopyMask);
+                            baseRec.Road = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e, f) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
+                            baseRec.Road = dupRec;
+                            return dupRec;
+                        });
                 }
             }
             foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
@@ -2898,35 +2898,6 @@ namespace Mutagen.Bethesda.Oblivion
                         duplicateInto: duplicateInto))
                     {
                         yield return item;
-                    }
-                    yield break;
-                case "Road":
-                case "IRoadGetter":
-                case "IRoad":
-                case "IRoadInternal":
-                    {
-                        if (obj.Road is {} WorldspaceRoaditem)
-                        {
-                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
-                                modKey: modKey,
-                                record: WorldspaceRoaditem,
-                                parent: curContext,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    if (baseRec.Road != null) return baseRec.Road;
-                                    var copy = r.DeepCopy(ModContextExt.RoadCopyMask);
-                                    baseRec.Road = copy;
-                                    return copy;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
-                                    baseRec.Road = dupRec;
-                                    return dupRec;
-                                });
-                        }
                     }
                     yield break;
                 case "Cell":
@@ -2994,25 +2965,10 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
-                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
-                        type: type,
-                        modKey: modKey,
-                        parent: curContext,
-                        linkCache: linkCache,
-                        throwIfUnknown: false,
-                        worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
                     {
                         if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
@@ -3055,10 +3011,10 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
                     {
                         if (obj.TopCell is {} WorldspaceTopCellitem)
                         {
@@ -3227,6 +3183,50 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Road":
+                case "IRoadGetter":
+                case "IRoad":
+                case "IRoadInternal":
+                    {
+                        if (obj.Road is {} WorldspaceRoaditem)
+                        {
+                            yield return new ModContext<IOblivionMod, IOblivionModGetter, IRoadInternal, IRoadGetter>(
+                                modKey: modKey,
+                                record: WorldspaceRoaditem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.Road != null) return baseRec.Road;
+                                    var copy = r.DeepCopy(ModContextExt.RoadCopyMask);
+                                    baseRec.Road = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.RoadCopyMask);
+                                    baseRec.Road = dupRec;
+                                    return dupRec;
+                                });
+                        }
+                    }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
                         modKey: modKey,

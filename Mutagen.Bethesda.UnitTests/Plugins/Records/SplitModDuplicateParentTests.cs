@@ -23,6 +23,8 @@ public class SplitModDuplicateParentTests
     private static readonly ModKey SplitModKey2 = new("SplitTest_2", ModType.Plugin);
     private static readonly ModKey MasterModKey = new("Master", ModType.Master);
     private static readonly FormKey SharedFormKey = new(MasterModKey, 0x3C);
+    private static readonly FormKey ChildFormKey1 = new(TestModKey, 0x800);
+    private static readonly FormKey ChildFormKey2 = new(TestModKey, 0x801);
 
     #region Skyrim - CELL, WRLD, DIAL
 
@@ -31,9 +33,9 @@ public class SplitModDuplicateParentTests
         DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
         var mod1 = new SkyrimMod(TestModKey, SkyrimRelease.SkyrimSE);
-        AddSkyrimCell(mod1, SharedFormKey, "PlacedA");
+        AddSkyrimCell(mod1, SharedFormKey, ChildFormKey1, "PlacedA");
         var mod2 = new SkyrimMod(SplitModKey2, SkyrimRelease.SkyrimSE);
-        AddSkyrimCell(mod2, SharedFormKey, "PlacedB");
+        AddSkyrimCell(mod2, SharedFormKey, ChildFormKey2, "PlacedB");
 
         ImportShouldSucceed(mod1, mod2, GameRelease.SkyrimSE, existingOutputDirectory, fileSystem, result =>
         {
@@ -54,13 +56,13 @@ public class SplitModDuplicateParentTests
         mod1.Worldspaces.Add(new Mutagen.Bethesda.Skyrim.Worldspace(SharedFormKey, SkyrimRelease.SkyrimSE)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Skyrim.Cell(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE) { EditorID = "TopCellA" }
+            TopCell = new Mutagen.Bethesda.Skyrim.Cell(ChildFormKey1, SkyrimRelease.SkyrimSE) { EditorID = "TopCellA" }
         });
         var mod2 = new SkyrimMod(SplitModKey2, SkyrimRelease.SkyrimSE);
         mod2.Worldspaces.Add(new Mutagen.Bethesda.Skyrim.Worldspace(SharedFormKey, SkyrimRelease.SkyrimSE)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Skyrim.Cell(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE) { EditorID = "TopCellB" }
+            TopCell = new Mutagen.Bethesda.Skyrim.Cell(ChildFormKey2, SkyrimRelease.SkyrimSE) { EditorID = "TopCellB" }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.SkyrimSE, existingOutputDirectory, fileSystem, result =>
@@ -83,13 +85,13 @@ public class SplitModDuplicateParentTests
         mod1.DialogTopics.Add(new Mutagen.Bethesda.Skyrim.DialogTopic(SharedFormKey, SkyrimRelease.SkyrimSE)
         {
             EditorID = "SharedTopic",
-            Responses = { new Mutagen.Bethesda.Skyrim.DialogResponses(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE) { EditorID = "ResponseA" } }
+            Responses = { new Mutagen.Bethesda.Skyrim.DialogResponses(ChildFormKey1, SkyrimRelease.SkyrimSE) { EditorID = "ResponseA" } }
         });
         var mod2 = new SkyrimMod(SplitModKey2, SkyrimRelease.SkyrimSE);
         mod2.DialogTopics.Add(new Mutagen.Bethesda.Skyrim.DialogTopic(SharedFormKey, SkyrimRelease.SkyrimSE)
         {
             EditorID = "SharedTopic",
-            Responses = { new Mutagen.Bethesda.Skyrim.DialogResponses(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE) { EditorID = "ResponseB" } }
+            Responses = { new Mutagen.Bethesda.Skyrim.DialogResponses(ChildFormKey2, SkyrimRelease.SkyrimSE) { EditorID = "ResponseB" } }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.SkyrimSE, existingOutputDirectory, fileSystem, result =>
@@ -125,9 +127,9 @@ public class SplitModDuplicateParentTests
         DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
         var mod1 = new Mutagen.Bethesda.Oblivion.OblivionMod(TestModKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion);
-        AddOblivionCell(mod1, SharedFormKey, "PlacedA");
+        AddOblivionCell(mod1, SharedFormKey, ChildFormKey1, "PlacedA");
         var mod2 = new Mutagen.Bethesda.Oblivion.OblivionMod(SplitModKey2, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion);
-        AddOblivionCell(mod2, SharedFormKey, "PlacedB");
+        AddOblivionCell(mod2, SharedFormKey, ChildFormKey2, "PlacedB");
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Oblivion, existingOutputDirectory, fileSystem, result =>
         {
@@ -148,13 +150,13 @@ public class SplitModDuplicateParentTests
         mod1.Worldspaces.Add(new Mutagen.Bethesda.Oblivion.Worldspace(SharedFormKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Oblivion.Cell(mod1.GetNextFormKey(), Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "TopCellA" }
+            TopCell = new Mutagen.Bethesda.Oblivion.Cell(ChildFormKey1, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "TopCellA" }
         });
         var mod2 = new Mutagen.Bethesda.Oblivion.OblivionMod(SplitModKey2, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion);
         mod2.Worldspaces.Add(new Mutagen.Bethesda.Oblivion.Worldspace(SharedFormKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Oblivion.Cell(mod2.GetNextFormKey(), Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "TopCellB" }
+            TopCell = new Mutagen.Bethesda.Oblivion.Cell(ChildFormKey2, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "TopCellB" }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Oblivion, existingOutputDirectory, fileSystem, result =>
@@ -177,13 +179,13 @@ public class SplitModDuplicateParentTests
         mod1.DialogTopics.Add(new Mutagen.Bethesda.Oblivion.DialogTopic(SharedFormKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion)
         {
             EditorID = "SharedTopic",
-            Items = { new Mutagen.Bethesda.Oblivion.DialogItem(mod1.GetNextFormKey(), Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "ItemA" } }
+            Items = { new Mutagen.Bethesda.Oblivion.DialogItem(ChildFormKey1, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "ItemA" } }
         });
         var mod2 = new Mutagen.Bethesda.Oblivion.OblivionMod(SplitModKey2, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion);
         mod2.DialogTopics.Add(new Mutagen.Bethesda.Oblivion.DialogTopic(SharedFormKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion)
         {
             EditorID = "SharedTopic",
-            Items = { new Mutagen.Bethesda.Oblivion.DialogItem(mod2.GetNextFormKey(), Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "ItemB" } }
+            Items = { new Mutagen.Bethesda.Oblivion.DialogItem(ChildFormKey2, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = "ItemB" } }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Oblivion, existingOutputDirectory, fileSystem, result =>
@@ -219,9 +221,9 @@ public class SplitModDuplicateParentTests
         DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
         var mod1 = new Mutagen.Bethesda.Fallout4.Fallout4Mod(TestModKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4);
-        AddFallout4Cell(mod1, SharedFormKey, "PlacedA");
+        AddFallout4Cell(mod1, SharedFormKey, ChildFormKey1, "PlacedA");
         var mod2 = new Mutagen.Bethesda.Fallout4.Fallout4Mod(SplitModKey2, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4);
-        AddFallout4Cell(mod2, SharedFormKey, "PlacedB");
+        AddFallout4Cell(mod2, SharedFormKey, ChildFormKey2, "PlacedB");
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Fallout4, existingOutputDirectory, fileSystem, result =>
         {
@@ -242,13 +244,13 @@ public class SplitModDuplicateParentTests
         mod1.Worldspaces.Add(new Mutagen.Bethesda.Fallout4.Worldspace(SharedFormKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Fallout4.Cell(mod1.GetNextFormKey(), Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopCellA" }
+            TopCell = new Mutagen.Bethesda.Fallout4.Cell(ChildFormKey1, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopCellA" }
         });
         var mod2 = new Mutagen.Bethesda.Fallout4.Fallout4Mod(SplitModKey2, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4);
         mod2.Worldspaces.Add(new Mutagen.Bethesda.Fallout4.Worldspace(SharedFormKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Fallout4.Cell(mod2.GetNextFormKey(), Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopCellB" }
+            TopCell = new Mutagen.Bethesda.Fallout4.Cell(ChildFormKey2, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopCellB" }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Fallout4, existingOutputDirectory, fileSystem, result =>
@@ -271,13 +273,13 @@ public class SplitModDuplicateParentTests
         mod1.Quests.Add(new Mutagen.Bethesda.Fallout4.Quest(SharedFormKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4)
         {
             EditorID = "SharedQuest",
-            DialogTopics = { new Mutagen.Bethesda.Fallout4.DialogTopic(mod1.GetNextFormKey(), Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopicA" } }
+            DialogTopics = { new Mutagen.Bethesda.Fallout4.DialogTopic(ChildFormKey1, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopicA" } }
         });
         var mod2 = new Mutagen.Bethesda.Fallout4.Fallout4Mod(SplitModKey2, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4);
         mod2.Quests.Add(new Mutagen.Bethesda.Fallout4.Quest(SharedFormKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4)
         {
             EditorID = "SharedQuest",
-            DialogTopics = { new Mutagen.Bethesda.Fallout4.DialogTopic(mod2.GetNextFormKey(), Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopicB" } }
+            DialogTopics = { new Mutagen.Bethesda.Fallout4.DialogTopic(ChildFormKey2, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = "TopicB" } }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Fallout4, existingOutputDirectory, fileSystem, result =>
@@ -316,9 +318,9 @@ public class SplitModDuplicateParentTests
         DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
         var mod1 = new Mutagen.Bethesda.Starfield.StarfieldMod(TestModKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield);
-        AddStarfieldCell(mod1, SharedFormKey, "PlacedA");
+        AddStarfieldCell(mod1, SharedFormKey, ChildFormKey1, "PlacedA");
         var mod2 = new Mutagen.Bethesda.Starfield.StarfieldMod(SplitModKey2, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield);
-        AddStarfieldCell(mod2, SharedFormKey, "PlacedB");
+        AddStarfieldCell(mod2, SharedFormKey, ChildFormKey2, "PlacedB");
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Starfield, existingOutputDirectory, fileSystem, result =>
         {
@@ -339,13 +341,13 @@ public class SplitModDuplicateParentTests
         mod1.Worldspaces.Add(new Mutagen.Bethesda.Starfield.Worldspace(SharedFormKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Starfield.Cell(mod1.GetNextFormKey(), Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopCellA" }
+            TopCell = new Mutagen.Bethesda.Starfield.Cell(ChildFormKey1, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopCellA" }
         });
         var mod2 = new Mutagen.Bethesda.Starfield.StarfieldMod(SplitModKey2, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield);
         mod2.Worldspaces.Add(new Mutagen.Bethesda.Starfield.Worldspace(SharedFormKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield)
         {
             EditorID = "SharedWorld",
-            TopCell = new Mutagen.Bethesda.Starfield.Cell(mod2.GetNextFormKey(), Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopCellB" }
+            TopCell = new Mutagen.Bethesda.Starfield.Cell(ChildFormKey2, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopCellB" }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Starfield, existingOutputDirectory, fileSystem, result =>
@@ -368,13 +370,13 @@ public class SplitModDuplicateParentTests
         mod1.Quests.Add(new Mutagen.Bethesda.Starfield.Quest(SharedFormKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield)
         {
             EditorID = "SharedQuest",
-            DialogTopics = { new Mutagen.Bethesda.Starfield.DialogTopic(mod1.GetNextFormKey(), Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopicA" } }
+            DialogTopics = { new Mutagen.Bethesda.Starfield.DialogTopic(ChildFormKey1, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopicA" } }
         });
         var mod2 = new Mutagen.Bethesda.Starfield.StarfieldMod(SplitModKey2, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield);
         mod2.Quests.Add(new Mutagen.Bethesda.Starfield.Quest(SharedFormKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield)
         {
             EditorID = "SharedQuest",
-            DialogTopics = { new Mutagen.Bethesda.Starfield.DialogTopic(mod2.GetNextFormKey(), Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopicB" } }
+            DialogTopics = { new Mutagen.Bethesda.Starfield.DialogTopic(ChildFormKey2, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = "TopicB" } }
         });
 
         ImportShouldSucceed(mod1, mod2, GameRelease.Starfield, existingOutputDirectory, fileSystem, result =>
@@ -405,7 +407,7 @@ public class SplitModDuplicateParentTests
 
     #region Helpers
 
-    private static void AddSkyrimCell(SkyrimMod mod, FormKey cellFormKey, string placedEditorId)
+    private static void AddSkyrimCell(SkyrimMod mod, FormKey cellFormKey, FormKey placedFormKey, string placedEditorId)
     {
         mod.Cells.Records.Add(new Mutagen.Bethesda.Skyrim.CellBlock()
         {
@@ -416,13 +418,13 @@ public class SplitModDuplicateParentTests
                 Cells = { new Mutagen.Bethesda.Skyrim.Cell(cellFormKey, SkyrimRelease.SkyrimSE)
                 {
                     EditorID = "SharedCell",
-                    Persistent = { new Mutagen.Bethesda.Skyrim.PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE) { EditorID = placedEditorId } }
+                    Persistent = { new Mutagen.Bethesda.Skyrim.PlacedObject(placedFormKey, SkyrimRelease.SkyrimSE) { EditorID = placedEditorId } }
                 }}
             }}
         });
     }
 
-    private static void AddOblivionCell(Mutagen.Bethesda.Oblivion.OblivionMod mod, FormKey cellFormKey, string placedEditorId)
+    private static void AddOblivionCell(Mutagen.Bethesda.Oblivion.OblivionMod mod, FormKey cellFormKey, FormKey placedFormKey, string placedEditorId)
     {
         mod.Cells.Records.Add(new Mutagen.Bethesda.Oblivion.CellBlock()
         {
@@ -433,13 +435,13 @@ public class SplitModDuplicateParentTests
                 Cells = { new Mutagen.Bethesda.Oblivion.Cell(cellFormKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion)
                 {
                     EditorID = "SharedCell",
-                    Persistent = { new Mutagen.Bethesda.Oblivion.PlacedObject(mod.GetNextFormKey(), Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = placedEditorId } }
+                    Persistent = { new Mutagen.Bethesda.Oblivion.PlacedObject(placedFormKey, Mutagen.Bethesda.Oblivion.OblivionRelease.Oblivion) { EditorID = placedEditorId } }
                 }}
             }}
         });
     }
 
-    private static void AddFallout4Cell(Mutagen.Bethesda.Fallout4.Fallout4Mod mod, FormKey cellFormKey, string placedEditorId)
+    private static void AddFallout4Cell(Mutagen.Bethesda.Fallout4.Fallout4Mod mod, FormKey cellFormKey, FormKey placedFormKey, string placedEditorId)
     {
         mod.Cells.Records.Add(new Mutagen.Bethesda.Fallout4.CellBlock()
         {
@@ -450,13 +452,13 @@ public class SplitModDuplicateParentTests
                 Cells = { new Mutagen.Bethesda.Fallout4.Cell(cellFormKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4)
                 {
                     EditorID = "SharedCell",
-                    Persistent = { new Mutagen.Bethesda.Fallout4.PlacedObject(mod.GetNextFormKey(), Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = placedEditorId } }
+                    Persistent = { new Mutagen.Bethesda.Fallout4.PlacedObject(placedFormKey, Mutagen.Bethesda.Fallout4.Fallout4Release.Fallout4) { EditorID = placedEditorId } }
                 }}
             }}
         });
     }
 
-    private static void AddStarfieldCell(Mutagen.Bethesda.Starfield.StarfieldMod mod, FormKey cellFormKey, string placedEditorId)
+    private static void AddStarfieldCell(Mutagen.Bethesda.Starfield.StarfieldMod mod, FormKey cellFormKey, FormKey placedFormKey, string placedEditorId)
     {
         mod.Cells.Records.Add(new Mutagen.Bethesda.Starfield.CellBlock()
         {
@@ -467,7 +469,7 @@ public class SplitModDuplicateParentTests
                 Cells = { new Mutagen.Bethesda.Starfield.Cell(cellFormKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield)
                 {
                     EditorID = "SharedCell",
-                    Persistent = { new Mutagen.Bethesda.Starfield.PlacedObject(mod.GetNextFormKey(), Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = placedEditorId } }
+                    Persistent = { new Mutagen.Bethesda.Starfield.PlacedObject(placedFormKey, Mutagen.Bethesda.Starfield.StarfieldRelease.Starfield) { EditorID = placedEditorId } }
                 }}
             }}
         });

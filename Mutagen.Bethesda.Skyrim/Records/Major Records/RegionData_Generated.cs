@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// Implemented by: [RegionGrasses, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public abstract partial class RegionData :
         IEquatable<IRegionDataGetter>,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// Implemented by: [RegionGrasses, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionData :
         IAssetLinkContainer,
@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [RegionSounds, RegionMap, RegionObjects, RegionWeather, RegionGrasses, RegionLand]
+    /// Implemented by: [RegionGrasses, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
