@@ -1268,14 +1268,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "WorldspaceSubBlock":
-                case "IWorldspaceSubBlockGetter":
-                case "IWorldspaceSubBlock":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -1286,10 +1278,8 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     obj.Items.RemoveWhere(i => i.Items.Count == 0);
                     break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
+                case "IPlaced":
+                case "IPlacedGetter":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1299,6 +1289,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ILandscapeGetter":
                 case "ILandscape":
                 case "ILandscapeInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1331,8 +1330,9 @@ namespace Mutagen.Bethesda.Oblivion
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IPlaced":
-                case "IPlacedGetter":
+                case "WorldspaceSubBlock":
+                case "IWorldspaceSubBlockGetter":
+                case "IWorldspaceSubBlock":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1616,17 +1616,6 @@ namespace Mutagen.Bethesda.Oblivion
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceSubBlock":
-                case "IWorldspaceSubBlockGetter":
-                case "IWorldspaceSubBlock":
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -1639,10 +1628,10 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     yield break;
-                case "PathGrid":
-                case "IPathGridGetter":
-                case "IPathGrid":
-                case "IPathGridInternal":
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
                     foreach (var subItem in obj.Items)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -1651,10 +1640,10 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                     yield break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
                     foreach (var subItem in obj.Items)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -1691,6 +1680,17 @@ namespace Mutagen.Bethesda.Oblivion
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "WorldspaceSubBlock":
+                case "IWorldspaceSubBlockGetter":
+                case "IWorldspaceSubBlock":
                     foreach (var subItem in obj.Items)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))

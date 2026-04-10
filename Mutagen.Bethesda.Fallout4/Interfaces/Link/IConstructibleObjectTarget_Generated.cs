@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Activator, Ammunition, Armor, Book, Container, Door, Flora, FormList, Furniture, Holotape, Ingestible, Ingredient, Key, LeveledItem, Light, MiscItem, MovableStatic, Npc, AObjectModification, Static, StaticCollection, Terminal, Weapon]
+    /// Implemented by: [Activator, Ammunition, AObjectModification, Armor, Book, Container, Door, Flora, FormList, Furniture, Holotape, Ingestible, Ingredient, Key, LeveledItem, Light, MiscItem, MovableStatic, Npc, Static, StaticCollection, Terminal, Weapon]
     /// </summary>
     public partial interface IConstructibleObjectTarget :
         IConstructibleObjectTargetGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Activator, Ammunition, Armor, Book, Container, Door, Flora, FormList, Furniture, Holotape, Ingestible, Ingredient, Key, LeveledItem, Light, MiscItem, MovableStatic, Npc, AObjectModification, Static, StaticCollection, Terminal, Weapon]
+    /// Implemented by: [Activator, Ammunition, AObjectModification, Armor, Book, Container, Door, Flora, FormList, Furniture, Holotape, Ingestible, Ingredient, Key, LeveledItem, Light, MiscItem, MovableStatic, Npc, Static, StaticCollection, Terminal, Weapon]
     /// </summary>
     public partial interface IConstructibleObjectTargetGetter : IFallout4MajorRecordGetter
     {

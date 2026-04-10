@@ -2772,93 +2772,6 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "WorldspaceGridReference":
-                case "IWorldspaceGridReferenceGetter":
-                case "IWorldspaceGridReference":
-                    break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
-                    {
-                        if (obj.TopCell is {} LandscapeTopCellitem)
-                        {
-                            LandscapeTopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "NavigationMesh":
-                case "INavigationMeshGetter":
-                case "INavigationMesh":
-                case "INavigationMeshInternal":
-                    {
-                        if (obj.TopCell is {} NavigationMeshTopCellitem)
-                        {
-                            NavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PlacedNpc":
-                case "IPlacedNpcGetter":
-                case "IPlacedNpc":
-                case "IPlacedNpcInternal":
-                    {
-                        if (obj.TopCell is {} PlacedNpcTopCellitem)
-                        {
-                            PlacedNpcTopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PlacedObject":
-                case "IPlacedObjectGetter":
-                case "IPlacedObject":
-                case "IPlacedObjectInternal":
-                    {
-                        if (obj.TopCell is {} PlacedObjectTopCellitem)
-                        {
-                            PlacedObjectTopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -2899,6 +2812,21 @@ namespace Mutagen.Bethesda.Skyrim
                         if (obj.TopCell is {} APlacedTrapTopCellitem)
                         {
                             APlacedTrapTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
                         }
                     }
                     foreach (var subItem in obj.SubCells)
@@ -2964,6 +2892,78 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.TopCell is {} LandscapeTopCellitem)
+                        {
+                            LandscapeTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    {
+                        if (obj.TopCell is {} NavigationMeshTopCellitem)
+                        {
+                            NavigationMeshTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    {
+                        if (obj.TopCell is {} PlacedNpcTopCellitem)
+                        {
+                            PlacedNpcTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    {
+                        if (obj.TopCell is {} PlacedObjectTopCellitem)
+                        {
+                            PlacedObjectTopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
                     break;
                 default:
                     if (throwIfUnknown)
@@ -3879,9 +3879,26 @@ namespace Mutagen.Bethesda.Skyrim
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceGridReference":
-                case "IWorldspaceGridReferenceGetter":
-                case "IWorldspaceGridReference":
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell is {} APlacedTrapTopCellitem)
+                        {
+                            foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
                     yield break;
                 case "Cell":
                 case "ICellGetter":
@@ -3897,17 +3914,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4000,19 +4006,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                     yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
-                    {
-                        if (obj.TopCell is {} APlacedTrapTopCellitem)
-                        {
-                            foreach (var item in APlacedTrapTopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -4020,6 +4016,10 @@ namespace Mutagen.Bethesda.Skyrim
                             yield return item;
                         }
                     }
+                    yield break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
                     yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
@@ -4162,9 +4162,51 @@ namespace Mutagen.Bethesda.Skyrim
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceGridReference":
-                case "IWorldspaceGridReferenceGetter":
-                case "IWorldspaceGridReference":
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    {
+                        if (obj.TopCell is {} WorldspaceTopCellitem)
+                        {
+                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
+                                obj: WorldspaceTopCellitem,
+                                linkCache: linkCache,
+                                type: type,
+                                modKey: modKey,
+                                parent: curContext,
+                                throwIfUnknown: false,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    if (baseRec.TopCell != null) return baseRec.TopCell;
+                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    baseRec.TopCell = dupRec;
+                                    return dupRec;
+                                }))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
                     yield break;
                 case "Cell":
                 case "ICellGetter":
@@ -4219,21 +4261,6 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
-                        type: type,
-                        modKey: modKey,
-                        parent: curContext,
-                        linkCache: linkCache,
-                        throwIfUnknown: false,
-                        worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
                         modKey: modKey,
@@ -4430,40 +4457,9 @@ namespace Mutagen.Bethesda.Skyrim
                         yield return item;
                     }
                     yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
-                    {
-                        if (obj.TopCell is {} WorldspaceTopCellitem)
-                        {
-                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
-                                obj: WorldspaceTopCellitem,
-                                linkCache: linkCache,
-                                type: type,
-                                modKey: modKey,
-                                parent: curContext,
-                                throwIfUnknown: false,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    if (baseRec.TopCell != null) return baseRec.TopCell;
-                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = copy;
-                                    return copy;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = dupRec;
-                                    return dupRec;
-                                }))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
                         modKey: modKey,
@@ -4475,6 +4471,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         yield return item;
                     }
+                    yield break;
+                case "WorldspaceGridReference":
+                case "IWorldspaceGridReferenceGetter":
+                case "IWorldspaceGridReference":
                     yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IWorldspaceGetter, ISkyrimMod, ISkyrimModGetter>(

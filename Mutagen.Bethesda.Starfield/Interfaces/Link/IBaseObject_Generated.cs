@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArtObject, AudioOcclusionPrimitive, BendableSpline, BiomeMarker, Book, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, GenericBaseForm, Grass, Hazard, IdleMarker, Ingestible, LegendaryItem, LeveledItem, LeveledNpc, LeveledPackIn, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, AObjectModification, PackIn, ProjectedDecal, Projectile, Resource, SoundEchoMarker, SoundMarker, Spell, Static, StaticCollection, Terminal, TextureSet, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, AObjectModification, Armor, ArtObject, AudioOcclusionPrimitive, BendableSpline, BiomeMarker, Book, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, GenericBaseForm, Grass, Hazard, IdleMarker, Ingestible, LegendaryItem, LeveledItem, LeveledNpc, LeveledPackIn, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, PackIn, ProjectedDecal, Projectile, Resource, SoundEchoMarker, SoundMarker, Spell, Static, StaticCollection, Terminal, TextureSet, Water, Weapon]
     /// </summary>
     public partial interface IBaseObject :
         IBaseObjectGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArtObject, AudioOcclusionPrimitive, BendableSpline, BiomeMarker, Book, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, GenericBaseForm, Grass, Hazard, IdleMarker, Ingestible, LegendaryItem, LeveledItem, LeveledNpc, LeveledPackIn, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, AObjectModification, PackIn, ProjectedDecal, Projectile, Resource, SoundEchoMarker, SoundMarker, Spell, Static, StaticCollection, Terminal, TextureSet, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, AObjectModification, Armor, ArtObject, AudioOcclusionPrimitive, BendableSpline, BiomeMarker, Book, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, GenericBaseForm, Grass, Hazard, IdleMarker, Ingestible, LegendaryItem, LeveledItem, LeveledNpc, LeveledPackIn, Light, MiscItem, MoveableStatic, Npc, ObjectEffect, PackIn, ProjectedDecal, Projectile, Resource, SoundEchoMarker, SoundMarker, Spell, Static, StaticCollection, Terminal, TextureSet, Water, Weapon]
     /// </summary>
     public partial interface IBaseObjectGetter : IStarfieldMajorRecordGetter
     {

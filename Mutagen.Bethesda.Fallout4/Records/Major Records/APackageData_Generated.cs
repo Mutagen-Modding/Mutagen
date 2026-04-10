@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation]
     /// </summary>
     public partial class APackageData :
         IAPackageData,
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation]
     /// </summary>
     public partial interface IAPackageData :
         IAPackageDataGetter,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataInt, PackageDataFloat, PackageDataObjectList, PackageDataLocation]
     /// </summary>
     public partial interface IAPackageDataGetter :
         ILoquiObject,

@@ -39,7 +39,7 @@ public class LinkInterfaceModule : GenerationModule
 
         // Generate interface files themselves
         if (!ObjectMappings.TryGetValue(proto.Protocol, out var mappings)) return;
-        foreach (var interf in mappings)
+        foreach (var interf in mappings.OrderBy(x => x.Key))
         {
             StructuredStringBuilder sb = new StructuredStringBuilder();
             ObjectGeneration.AddAutogenerationComment(sb);
@@ -65,7 +65,7 @@ public class LinkInterfaceModule : GenerationModule
             using (sb.Namespace(proto.DefaultNamespace, fileScoped: false))
             {
                 sb.AppendLine("/// <summary>");
-                sb.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
+                sb.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName).OrderBy(x => x))}]");
                 sb.AppendLine("/// </summary>");
                 using (var c = sb.Class(interf.Key))
                 {
@@ -84,7 +84,7 @@ public class LinkInterfaceModule : GenerationModule
                 sb.AppendLine();
 
                 sb.AppendLine("/// <summary>");
-                sb.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName))}]");
+                sb.AppendLine($"/// Implemented by: [{string.Join(", ", implementedObjs.Select(o => o.ObjectName).OrderBy(x => x))}]");
                 sb.AppendLine("/// </summary>");
                 using (var c = sb.Class($"{interf.Key}Getter"))
                 {
@@ -141,7 +141,7 @@ public class LinkInterfaceModule : GenerationModule
                 using (mappingGen.CurlyBrace())
                 {
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
-                    foreach (var interf in mappings)
+                    foreach (var interf in mappings.OrderBy(x => x.Key))
                     {
                         using (var args = mappingGen.Call(
                                    $"dict[typeof({interf.Key})] = new {nameof(InterfaceMappingResult)}"))
@@ -152,7 +152,7 @@ public class LinkInterfaceModule : GenerationModule
                                 regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
                                 using (regisSb.CurlyBrace())
                                 {
-                                    foreach (var obj in interf.Value)
+                                    foreach (var obj in interf.Value.OrderBy(x => x.RegistrationName))
                                     {
                                         regisSb.AppendLine($"{obj.RegistrationName}.Instance,");
                                     }
