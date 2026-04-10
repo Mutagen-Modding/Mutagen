@@ -1324,9 +1324,6 @@
     <Compile Include="Records\Common Subrecords\EnableParent_Generated.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\Patrol.cs">
-      <DependentUpon>Patrol.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Patrol_Generated.cs">
       <DependentUpon>Patrol.xml</DependentUpon>
     </Compile>
