@@ -1268,14 +1268,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!CellBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "CellSubBlock":
-                case "ICellSubBlockGetter":
-                case "ICellSubBlock":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -1285,6 +1277,28 @@ namespace Mutagen.Bethesda.Fallout3
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     obj.SubBlocks.RemoveWhere(i => i.Cells.Count == 0);
+                    break;
+                case "CellSubBlock":
+                case "ICellSubBlockGetter":
+                case "ICellSubBlock":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ICellOrWorldspace":
+                case "ICellOrWorldspaceGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "Landscape":
                 case "ILandscapeGetter":
@@ -1353,20 +1367,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "ICellOrWorldspace":
-                case "ICellOrWorldspaceGetter":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IPlaced":
-                case "IPlacedGetter":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1650,9 +1650,10 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "CellSubBlock":
-                case "ICellSubBlockGetter":
-                case "ICellSubBlock":
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -1661,10 +1662,9 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                     yield break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
+                case "CellSubBlock":
+                case "ICellSubBlockGetter":
+                case "ICellSubBlock":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))

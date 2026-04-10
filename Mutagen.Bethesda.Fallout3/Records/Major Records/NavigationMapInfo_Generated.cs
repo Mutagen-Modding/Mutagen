@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(INavigationMapInfo item)
         {
             ClearPartial();
-            item.Data = Array.Empty<byte>();
+            item.Data = [];
         }
         
         #region Mutagen

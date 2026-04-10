@@ -5951,6 +5951,257 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!Fallout3Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    obj.AcousticSpaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Activator":
+                case "IActivatorGetter":
+                case "IActivator":
+                case "IActivatorInternal":
+                    obj.Activators.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    obj.ActorValueInformation.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    obj.AddonNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    obj.Ammunitions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    obj.AnimatedObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Armor":
+                case "IArmorGetter":
+                case "IArmor":
+                case "IArmorInternal":
+                    obj.Armors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    obj.ArmorAddons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    obj.BodyParts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    obj.Books.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    obj.CameraPaths.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    obj.CameraShots.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    obj.Classes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    obj.Climates.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    obj.CombatStyles.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    obj.ConstructibleObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    obj.Containers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    obj.Creatures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    obj.Debris.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    obj.DefaultObjectManagers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    obj.DialogTopics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    obj.DialogTopics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    obj.Doors.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    obj.EffectShaders.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    obj.EncounterZones.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    obj.Explosions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    obj.Eyes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    obj.Factions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    obj.FormLists.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    obj.Furniture.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "GameSetting":
                 case "IGameSettingGetter":
                 case "IGameSetting":
@@ -5968,22 +6219,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IGameSettingString":
                 case "IGameSettingStringInternal":
                     obj.GameSettings.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "TextureSet":
-                case "ITextureSetGetter":
-                case "ITextureSet":
-                case "ITextureSetInternal":
-                    obj.TextureSets.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "MenuIcon":
-                case "IMenuIconGetter":
-                case "IMenuIcon":
-                case "IMenuIconInternal":
-                    obj.MenuIcons.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6011,27 +6246,11 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
-                case "Class":
-                case "IClassGetter":
-                case "IClass":
-                case "IClassInternal":
-                    obj.Classes.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Faction":
-                case "IFactionGetter":
-                case "IFaction":
-                case "IFactionInternal":
-                    obj.Factions.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "HeadPart":
-                case "IHeadPartGetter":
-                case "IHeadPart":
-                case "IHeadPartInternal":
-                    obj.HeadParts.Remove(
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    obj.Grasses.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6043,371 +6262,28 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
-                case "Eyes":
-                case "IEyesGetter":
-                case "IEyes":
-                case "IEyesInternal":
-                    obj.Eyes.Remove(
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    obj.HeadParts.Remove(
                         type: type,
                         keys: keys);
                     break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    obj.Races.Remove(
-                        type: type,
-                        keys: keys);
+                case "IAmmoOrList":
+                case "IAmmoOrListGetter":
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "Sound":
-                case "ISoundGetter":
-                case "ISound":
-                case "ISoundInternal":
-                    obj.Sounds.Remove(
-                        type: type,
-                        keys: keys);
+                case "IBoundItem":
+                case "IBoundItemGetter":
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "AcousticSpace":
-                case "IAcousticSpaceGetter":
-                case "IAcousticSpace":
-                case "IAcousticSpaceInternal":
-                    obj.AcousticSpaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "MagicEffect":
-                case "IMagicEffectGetter":
-                case "IMagicEffect":
-                case "IMagicEffectInternal":
-                    obj.MagicEffects.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Script":
-                case "IScriptGetter":
-                case "IScript":
-                case "IScriptInternal":
-                    obj.Scripts.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "LandscapeTexture":
-                case "ILandscapeTextureGetter":
-                case "ILandscapeTexture":
-                case "ILandscapeTextureInternal":
-                    obj.LandscapeTextures.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "ObjectEffect":
-                case "IObjectEffectGetter":
-                case "IObjectEffect":
-                case "IObjectEffectInternal":
-                    obj.ObjectEffects.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Spell":
-                case "ISpellGetter":
-                case "ISpell":
-                case "ISpellInternal":
-                    obj.Spells.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Activator":
-                case "IActivatorGetter":
-                case "IActivator":
-                case "IActivatorInternal":
-                    obj.Activators.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "TalkingActivator":
-                case "ITalkingActivatorGetter":
-                case "ITalkingActivator":
-                case "ITalkingActivatorInternal":
-                    obj.TalkingActivators.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Terminal":
-                case "ITerminalGetter":
-                case "ITerminal":
-                case "ITerminalInternal":
-                    obj.Terminals.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Armor":
-                case "IArmorGetter":
-                case "IArmor":
-                case "IArmorInternal":
-                    obj.Armors.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Book":
-                case "IBookGetter":
-                case "IBook":
-                case "IBookInternal":
-                    obj.Books.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Container":
-                case "IContainerGetter":
-                case "IContainer":
-                case "IContainerInternal":
-                    obj.Containers.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Door":
-                case "IDoorGetter":
-                case "IDoor":
-                case "IDoorInternal":
-                    obj.Doors.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Ingredient":
-                case "IIngredientGetter":
-                case "IIngredient":
-                case "IIngredientInternal":
-                    obj.Ingredients.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Light":
-                case "ILightGetter":
-                case "ILight":
-                case "ILightInternal":
-                    obj.Lights.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    obj.MiscItems.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Static":
-                case "IStaticGetter":
-                case "IStatic":
-                case "IStaticInternal":
-                    obj.Statics.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "StaticCollection":
-                case "IStaticCollectionGetter":
-                case "IStaticCollection":
-                case "IStaticCollectionInternal":
-                    obj.StaticCollections.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "MoveableStatic":
-                case "IMoveableStaticGetter":
-                case "IMoveableStatic":
-                case "IMoveableStaticInternal":
-                    obj.MoveableStatics.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "PlaceableWater":
-                case "IPlaceableWaterGetter":
-                case "IPlaceableWater":
-                case "IPlaceableWaterInternal":
-                    obj.PlaceableWaters.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Grass":
-                case "IGrassGetter":
-                case "IGrass":
-                case "IGrassInternal":
-                    obj.Grasses.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Tree":
-                case "ITreeGetter":
-                case "ITree":
-                case "ITreeInternal":
-                    obj.Trees.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Furniture":
-                case "IFurnitureGetter":
-                case "IFurniture":
-                case "IFurnitureInternal":
-                    obj.Furniture.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    obj.Weapons.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Ammunition":
-                case "IAmmunitionGetter":
-                case "IAmmunition":
-                case "IAmmunitionInternal":
-                    obj.Ammunitions.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    obj.Npcs.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Creature":
-                case "ICreatureGetter":
-                case "ICreature":
-                case "ICreatureInternal":
-                    obj.Creatures.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "LeveledCreature":
-                case "ILeveledCreatureGetter":
-                case "ILeveledCreature":
-                case "ILeveledCreatureInternal":
-                    obj.LeveledCreatures.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "LeveledNpc":
-                case "ILeveledNpcGetter":
-                case "ILeveledNpc":
-                case "ILeveledNpcInternal":
-                    obj.LeveledNpcs.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Key":
-                case "IKeyGetter":
-                case "IKey":
-                case "IKeyInternal":
-                    obj.Keys.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    obj.Ingestibles.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "IdleMarker":
-                case "IIdleMarkerGetter":
-                case "IIdleMarker":
-                case "IIdleMarkerInternal":
-                    obj.IdleMarkers.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Note":
-                case "INoteGetter":
-                case "INote":
-                case "INoteInternal":
-                    obj.Notes.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    obj.ConstructibleObjects.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Projectile":
-                case "IProjectileGetter":
-                case "IProjectile":
-                case "IProjectileInternal":
-                    obj.Projectiles.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "LeveledItem":
-                case "ILeveledItemGetter":
-                case "ILeveledItem":
-                case "ILeveledItemInternal":
-                    obj.LeveledItems.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    obj.Weather.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Climate":
-                case "IClimateGetter":
-                case "IClimate":
-                case "IClimateInternal":
-                    obj.Climates.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Region":
-                case "IRegionGetter":
-                case "IRegion":
-                case "IRegionInternal":
-                    obj.Regions.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "NavigationMeshInfoMap":
-                case "INavigationMeshInfoMapGetter":
-                case "INavigationMeshInfoMap":
-                case "INavigationMeshInfoMapInternal":
-                    obj.NavigationMeshInfoMaps.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Worldspace":
-                case "IWorldspaceGetter":
-                case "IWorldspace":
-                case "IWorldspaceInternal":
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "DialogTopic":
-                case "IDialogTopicGetter":
-                case "IDialogTopic":
-                case "IDialogTopicInternal":
-                    obj.DialogTopics.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Quest":
-                case "IQuestGetter":
-                case "IQuest":
-                case "IQuestInternal":
-                    obj.Quests.Remove(
+                case "ICellOrWorldspace":
+                case "ICellOrWorldspaceGetter":
+                    Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
+                    obj.Cells.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6419,69 +6295,45 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
-                case "Package":
-                case "IPackageGetter":
-                case "IPackage":
-                case "IPackageInternal":
-                    obj.Packages.Remove(
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    obj.IdleMarkers.Remove(
                         type: type,
                         keys: keys);
                     break;
-                case "CombatStyle":
-                case "ICombatStyleGetter":
-                case "ICombatStyle":
-                case "ICombatStyleInternal":
-                    obj.CombatStyles.Remove(
-                        type: type,
-                        keys: keys);
+                case "IEffectRecord":
+                case "IEffectRecordGetter":
+                    Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "LoadScreen":
-                case "ILoadScreenGetter":
-                case "ILoadScreen":
-                case "ILoadScreenInternal":
-                    obj.LoadScreens.Remove(
-                        type: type,
-                        keys: keys);
+                case "IEmittance":
+                case "IEmittanceGetter":
+                    Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    obj.AnimatedObjects.Remove(
-                        type: type,
-                        keys: keys);
+                case "IExplodeSpawn":
+                case "IExplodeSpawnGetter":
+                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "Water":
-                case "IWaterGetter":
-                case "IWater":
-                case "IWaterInternal":
-                    obj.Waters.Remove(
-                        type: type,
-                        keys: keys);
+                case "IIdleRelation":
+                case "IIdleRelationGetter":
+                    Remove(obj, keys, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "EffectShader":
-                case "IEffectShaderGetter":
-                case "IEffectShader":
-                case "IEffectShaderInternal":
-                    obj.EffectShaders.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Explosion":
-                case "IExplosionGetter":
-                case "IExplosion":
-                case "IExplosionInternal":
-                    obj.Explosions.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    obj.Debris.Remove(
-                        type: type,
-                        keys: keys);
+                case "IItem":
+                case "IItemGetter":
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "ImageSpace":
                 case "IImageSpaceGetter":
@@ -6496,78 +6348,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
                     obj.ImageSpaceAdapters.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Message":
-                case "IMessageGetter":
-                case "IMessage":
-                case "IMessageInternal":
-                    obj.Messages.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    obj.Perks.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "BodyPartData":
-                case "IBodyPartDataGetter":
-                case "IBodyPartData":
-                case "IBodyPartDataInternal":
-                    obj.BodyParts.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "AddonNode":
-                case "IAddonNodeGetter":
-                case "IAddonNode":
-                case "IAddonNodeInternal":
-                    obj.AddonNodes.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "ActorValueInformation":
-                case "IActorValueInformationGetter":
-                case "IActorValueInformation":
-                case "IActorValueInformationInternal":
-                    obj.ActorValueInformation.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "RadiationStage":
-                case "IRadiationStageGetter":
-                case "IRadiationStage":
-                case "IRadiationStageInternal":
-                    obj.RadiationStages.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "CameraShot":
-                case "ICameraShotGetter":
-                case "ICameraShot":
-                case "ICameraShotInternal":
-                    obj.CameraShots.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "CameraPath":
-                case "ICameraPathGetter":
-                case "ICameraPath":
-                case "ICameraPathInternal":
-                    obj.CameraPaths.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "VoiceType":
-                case "IVoiceTypeGetter":
-                case "IVoiceType":
-                case "IVoiceTypeInternal":
-                    obj.VoiceTypes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6587,70 +6367,65 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
-                case "ArmorAddon":
-                case "IArmorAddonGetter":
-                case "IArmorAddon":
-                case "IArmorAddonInternal":
-                    obj.ArmorAddons.Remove(
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    obj.Ingestibles.Remove(
                         type: type,
                         keys: keys);
                     break;
-                case "EncounterZone":
-                case "IEncounterZoneGetter":
-                case "IEncounterZone":
-                case "IEncounterZoneInternal":
-                    obj.EncounterZones.Remove(
+                case "Ingredient":
+                case "IIngredientGetter":
+                case "IIngredient":
+                case "IIngredientInternal":
+                    obj.Ingredients.Remove(
                         type: type,
                         keys: keys);
                     break;
-                case "Ragdoll":
-                case "IRagdollGetter":
-                case "IRagdoll":
-                case "IRagdollInternal":
-                    obj.Ragdolls.Remove(
-                        type: type,
-                        keys: keys);
+                case "INpcSpawn":
+                case "INpcSpawnGetter":
+                    Remove(obj, keys, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "DefaultObjectManager":
-                case "IDefaultObjectManagerGetter":
-                case "IDefaultObjectManager":
-                case "IDefaultObjectManagerInternal":
-                    obj.DefaultObjectManagers.Remove(
-                        type: type,
-                        keys: keys);
+                case "IOwner":
+                case "IOwnerGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "LightingTemplate":
-                case "ILightingTemplateGetter":
-                case "ILightingTemplate":
-                case "ILightingTemplateInternal":
-                    obj.LightingTemplates.Remove(
-                        type: type,
-                        keys: keys);
+                case "IPlaceableObject":
+                case "IPlaceableObjectGetter":
+                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "MusicType":
-                case "IMusicTypeGetter":
-                case "IMusicType":
-                case "IMusicTypeInternal":
-                    obj.MusicTypes.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "FormList":
-                case "IFormListGetter":
-                case "IFormList":
-                case "IFormListInternal":
-                    obj.FormLists.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
+                case "IPlaced":
+                case "IPlacedGetter":
                     obj.Cells.Remove(
                         type: type,
                         keys: keys);
                     obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IReferenceableObject":
+                case "IReferenceableObjectGetter":
+                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IRelatable":
+                case "IRelatableGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ISoundOrNpcSpawn":
+                case "ISoundOrNpcSpawnGetter":
+                    Remove(obj, keys, typeof(ISoundGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "Key":
+                case "IKeyGetter":
+                case "IKey":
+                case "IKeyInternal":
+                    obj.Keys.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6665,6 +6440,110 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    obj.LandscapeTextures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LeveledCreature":
+                case "ILeveledCreatureGetter":
+                case "ILeveledCreature":
+                case "ILeveledCreatureInternal":
+                    obj.LeveledCreatures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    obj.LeveledItems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    obj.LeveledNpcs.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Light":
+                case "ILightGetter":
+                case "ILight":
+                case "ILightInternal":
+                    obj.Lights.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    obj.LightingTemplates.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    obj.LoadScreens.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    obj.MagicEffects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    obj.MenuIcons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    obj.Messages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    obj.MiscItems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    obj.MoveableStatics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    obj.MusicTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
                 case "INavigationMesh":
@@ -6673,6 +6552,62 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    obj.NavigationMeshInfoMaps.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    obj.Notes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Npc":
+                case "INpcGetter":
+                case "INpc":
+                case "INpcInternal":
+                    obj.Npcs.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ObjectEffect":
+                case "IObjectEffectGetter":
+                case "IObjectEffect":
+                case "IObjectEffectInternal":
+                    obj.ObjectEffects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    obj.Packages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    obj.Perks.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    obj.PlaceableWaters.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6742,100 +6677,165 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
-                case "DialogResponses":
-                case "IDialogResponsesGetter":
-                case "IDialogResponses":
-                case "IDialogResponsesInternal":
-                    obj.DialogTopics.Remove(
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    obj.Projectiles.Remove(
                         type: type,
                         keys: keys);
                     break;
-                case "IPlaceableObject":
-                case "IPlaceableObjectGetter":
-                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IReferenceableObject":
-                case "IReferenceableObjectGetter":
-                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IExplodeSpawn":
-                case "IExplodeSpawnGetter":
-                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IItem":
-                case "IItemGetter":
-                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IAmmoOrList":
-                case "IAmmoOrListGetter":
-                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IBoundItem":
-                case "IBoundItemGetter":
-                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "ICellOrWorldspace":
-                case "ICellOrWorldspaceGetter":
-                    Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
-                    obj.Cells.Remove(
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    obj.Quests.Remove(
                         type: type,
                         keys: keys);
                     break;
-                case "INpcSpawn":
-                case "INpcSpawnGetter":
-                    Remove(obj, keys, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IRelatable":
-                case "IRelatableGetter":
-                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IOwner":
-                case "IOwnerGetter":
-                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IIdleRelation":
-                case "IIdleRelationGetter":
-                    Remove(obj, keys, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IEffectRecord":
-                case "IEffectRecordGetter":
-                    Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IPlaced":
-                case "IPlacedGetter":
-                    obj.Cells.Remove(
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    obj.Races.Remove(
                         type: type,
                         keys: keys);
+                    break;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    obj.RadiationStages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    obj.Ragdolls.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    obj.Regions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Script":
+                case "IScriptGetter":
+                case "IScript":
+                case "IScriptInternal":
+                    obj.Scripts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    obj.Sounds.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
+                    obj.Spells.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    obj.Statics.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    obj.StaticCollections.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "TalkingActivator":
+                case "ITalkingActivatorGetter":
+                case "ITalkingActivator":
+                case "ITalkingActivatorInternal":
+                    obj.TalkingActivators.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    obj.Terminals.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    obj.TextureSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Tree":
+                case "ITreeGetter":
+                case "ITree":
+                case "ITreeInternal":
+                    obj.Trees.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    obj.VoiceTypes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    obj.Waters.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    obj.Weapons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    obj.Weather.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
                     obj.Worldspaces.Remove(
                         type: type,
                         keys: keys);
-                    break;
-                case "IEmittance":
-                case "IEmittanceGetter":
-                    Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "ISoundOrNpcSpawn":
-                case "ISoundOrNpcSpawnGetter":
-                    Remove(obj, keys, typeof(ISoundGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 default:
                     if (throwIfUnknown)
@@ -9696,155 +9696,11 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "GameSetting":
-                case "IGameSettingGetter":
-                case "IGameSetting":
-                case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "TextureSet":
-                case "ITextureSetGetter":
-                case "ITextureSet":
-                case "ITextureSetInternal":
-                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MenuIcon":
-                case "IMenuIconGetter":
-                case "IMenuIcon":
-                case "IMenuIconInternal":
-                    foreach (var item in obj.MenuIcons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Global":
-                case "IGlobalGetter":
-                case "IGlobal":
-                case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Class":
-                case "IClassGetter":
-                case "IClass":
-                case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Faction":
-                case "IFactionGetter":
-                case "IFaction":
-                case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "HeadPart":
-                case "IHeadPartGetter":
-                case "IHeadPart":
-                case "IHeadPartInternal":
-                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Hair":
-                case "IHairGetter":
-                case "IHair":
-                case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Eyes":
-                case "IEyesGetter":
-                case "IEyes":
-                case "IEyesInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Sound":
-                case "ISoundGetter":
-                case "ISound":
-                case "ISoundInternal":
-                    foreach (var item in obj.Sounds.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 case "AcousticSpace":
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
                     foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MagicEffect":
-                case "IMagicEffectGetter":
-                case "IMagicEffect":
-                case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Script":
-                case "IScriptGetter":
-                case "IScript":
-                case "IScriptInternal":
-                    foreach (var item in obj.Scripts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LandscapeTexture":
-                case "ILandscapeTextureGetter":
-                case "ILandscapeTexture":
-                case "ILandscapeTextureInternal":
-                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ObjectEffect":
-                case "IObjectEffectGetter":
-                case "IObjectEffect":
-                case "IObjectEffectInternal":
-                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Spell":
-                case "ISpellGetter":
-                case "ISpell":
-                case "ISpellInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -9858,155 +9714,20 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "TalkingActivator":
-                case "ITalkingActivatorGetter":
-                case "ITalkingActivator":
-                case "ITalkingActivatorInternal":
-                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Terminal":
-                case "ITerminalGetter":
-                case "ITerminal":
-                case "ITerminalInternal":
-                    foreach (var item in obj.Terminals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Armor":
-                case "IArmorGetter":
-                case "IArmor":
-                case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Book":
-                case "IBookGetter":
-                case "IBook":
-                case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Container":
-                case "IContainerGetter":
-                case "IContainer":
-                case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Door":
-                case "IDoorGetter":
-                case "IDoor":
-                case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Ingredient":
-                case "IIngredientGetter":
-                case "IIngredient":
-                case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Light":
-                case "ILightGetter":
-                case "ILight":
-                case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Static":
-                case "IStaticGetter":
-                case "IStatic":
-                case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "StaticCollection":
-                case "IStaticCollectionGetter":
-                case "IStaticCollection":
-                case "IStaticCollectionInternal":
-                    foreach (var item in obj.StaticCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MoveableStatic":
-                case "IMoveableStaticGetter":
-                case "IMoveableStatic":
-                case "IMoveableStaticInternal":
-                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "PlaceableWater":
-                case "IPlaceableWaterGetter":
-                case "IPlaceableWater":
-                case "IPlaceableWaterInternal":
-                    foreach (var item in obj.PlaceableWaters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Grass":
-                case "IGrassGetter":
-                case "IGrass":
-                case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Tree":
-                case "ITreeGetter":
-                case "ITree":
-                case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Furniture":
-                case "IFurnitureGetter":
-                case "IFurniture":
-                case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "AddonNode":
+                case "IAddonNodeGetter":
+                case "IAddonNode":
+                case "IAddonNodeInternal":
+                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10020,110 +9741,87 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Creature":
-                case "ICreatureGetter":
-                case "ICreature":
-                case "ICreatureInternal":
-                    foreach (var item in obj.Creatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Armor":
+                case "IArmorGetter":
+                case "IArmor":
+                case "IArmorInternal":
+                    foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "LeveledCreature":
-                case "ILeveledCreatureGetter":
-                case "ILeveledCreature":
-                case "ILeveledCreatureInternal":
-                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "LeveledNpc":
-                case "ILeveledNpcGetter":
-                case "ILeveledNpc":
-                case "ILeveledNpcInternal":
-                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Key":
-                case "IKeyGetter":
-                case "IKey":
-                case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "IdleMarker":
-                case "IIdleMarkerGetter":
-                case "IIdleMarker":
-                case "IIdleMarkerInternal":
-                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Note":
-                case "INoteGetter":
-                case "INote":
-                case "INoteInternal":
-                    foreach (var item in obj.Notes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Projectile":
-                case "IProjectileGetter":
-                case "IProjectile":
-                case "IProjectileInternal":
-                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LeveledItem":
-                case "ILeveledItemGetter":
-                case "ILeveledItem":
-                case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    foreach (var item in obj.Weather.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10137,29 +9835,65 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "Region":
-                case "IRegionGetter":
-                case "IRegion":
-                case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "NavigationMeshInfoMap":
-                case "INavigationMeshInfoMapGetter":
-                case "INavigationMeshInfoMap":
-                case "INavigationMeshInfoMapInternal":
-                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Worldspace":
-                case "IWorldspaceGetter":
-                case "IWorldspace":
-                case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    foreach (var item in obj.Containers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    foreach (var item in obj.Creatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10173,65 +9907,11 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "Quest":
-                case "IQuestGetter":
-                case "IQuest":
-                case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "IdleAnimation":
-                case "IIdleAnimationGetter":
-                case "IIdleAnimation":
-                case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Package":
-                case "IPackageGetter":
-                case "IPackage":
-                case "IPackageInternal":
-                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CombatStyle":
-                case "ICombatStyleGetter":
-                case "ICombatStyle":
-                case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LoadScreen":
-                case "ILoadScreenGetter":
-                case "ILoadScreen":
-                case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Water":
-                case "IWaterGetter":
-                case "IWater":
-                case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    foreach (var item in obj.Doors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10245,6 +9925,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Explosion":
                 case "IExplosionGetter":
                 case "IExplosion":
@@ -10254,11 +9943,101 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Global":
+                case "IGlobalGetter":
+                case "IGlobal":
+                case "IGlobalInternal":
+                    foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10281,87 +10060,6 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "Message":
-                case "IMessageGetter":
-                case "IMessage":
-                case "IMessageInternal":
-                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "BodyPartData":
-                case "IBodyPartDataGetter":
-                case "IBodyPartData":
-                case "IBodyPartDataInternal":
-                    foreach (var item in obj.BodyParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AddonNode":
-                case "IAddonNodeGetter":
-                case "IAddonNode":
-                case "IAddonNodeInternal":
-                    foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ActorValueInformation":
-                case "IActorValueInformationGetter":
-                case "IActorValueInformation":
-                case "IActorValueInformationInternal":
-                    foreach (var item in obj.ActorValueInformation.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "RadiationStage":
-                case "IRadiationStageGetter":
-                case "IRadiationStage":
-                case "IRadiationStageInternal":
-                    foreach (var item in obj.RadiationStages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CameraShot":
-                case "ICameraShotGetter":
-                case "ICameraShot":
-                case "ICameraShotInternal":
-                    foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CameraPath":
-                case "ICameraPathGetter":
-                case "ICameraPath":
-                case "ICameraPathInternal":
-                    foreach (var item in obj.CameraPaths.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "VoiceType":
-                case "IVoiceTypeGetter":
-                case "IVoiceType":
-                case "IVoiceTypeInternal":
-                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 case "Impact":
                 case "IImpactGetter":
                 case "IImpact":
@@ -10380,78 +10078,29 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "ArmorAddon":
-                case "IArmorAddonGetter":
-                case "IArmorAddon":
-                case "IArmorAddonInternal":
-                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "EncounterZone":
-                case "IEncounterZoneGetter":
-                case "IEncounterZone":
-                case "IEncounterZoneInternal":
-                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Ingredient":
+                case "IIngredientGetter":
+                case "IIngredient":
+                case "IIngredientInternal":
+                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Ragdoll":
-                case "IRagdollGetter":
-                case "IRagdoll":
-                case "IRagdollInternal":
-                    foreach (var item in obj.Ragdolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "DefaultObjectManager":
-                case "IDefaultObjectManagerGetter":
-                case "IDefaultObjectManager":
-                case "IDefaultObjectManagerInternal":
-                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LightingTemplate":
-                case "ILightingTemplateGetter":
-                case "ILightingTemplate":
-                case "ILightingTemplateInternal":
-                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MusicType":
-                case "IMusicTypeGetter":
-                case "IMusicType":
-                case "IMusicTypeInternal":
-                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "FormList":
-                case "IFormListGetter":
-                case "IFormList":
-                case "IFormListInternal":
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Key":
+                case "IKeyGetter":
+                case "IKey":
+                case "IKeyInternal":
+                    foreach (var item in obj.Keys.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10469,6 +10118,123 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledCreature":
+                case "ILeveledCreatureGetter":
+                case "ILeveledCreature":
+                case "ILeveledCreatureInternal":
+                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Light":
+                case "ILightGetter":
+                case "ILight":
+                case "ILightInternal":
+                    foreach (var item in obj.Lights.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    foreach (var item in obj.MenuIcons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in obj.Messages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
                 case "INavigationMesh":
@@ -10478,6 +10244,69 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in obj.NavigationMeshInfoMaps.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    foreach (var item in obj.Notes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Npc":
+                case "INpcGetter":
+                case "INpc":
+                case "INpcInternal":
+                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectEffect":
+                case "IObjectEffectGetter":
+                case "IObjectEffect":
+                case "IObjectEffectInternal":
+                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in obj.Packages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    foreach (var item in obj.PlaceableWaters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10560,11 +10389,182 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "DialogResponses":
-                case "IDialogResponsesGetter":
-                case "IDialogResponses":
-                case "IDialogResponsesInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    foreach (var item in obj.RadiationStages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    foreach (var item in obj.Ragdolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    foreach (var item in obj.Regions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Script":
+                case "IScriptGetter":
+                case "IScript":
+                case "IScriptInternal":
+                    foreach (var item in obj.Scripts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    foreach (var item in obj.Sounds.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
+                    foreach (var item in obj.Spells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    foreach (var item in obj.Statics.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    foreach (var item in obj.StaticCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TalkingActivator":
+                case "ITalkingActivatorGetter":
+                case "ITalkingActivator":
+                case "ITalkingActivatorInternal":
+                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    foreach (var item in obj.Terminals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Tree":
+                case "ITreeGetter":
+                case "ITree":
+                case "ITreeInternal":
+                    foreach (var item in obj.Trees.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in obj.VoiceTypes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in obj.Waters.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in obj.Weather.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -10593,156 +10593,12 @@ namespace Mutagen.Bethesda.Fallout3
             IFallout3ModGetter obj,
             ILinkCache linkCache)
         {
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, GameSetting, IGameSettingGetter>(
-                srcGroup: obj.GameSettings,
-                type: typeof(IGameSettingGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.GameSettings,
-                groupGetter: (m) => m.GameSettings))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TextureSet, ITextureSetGetter>(
-                srcGroup: obj.TextureSets,
-                type: typeof(ITextureSetGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.TextureSets,
-                groupGetter: (m) => m.TextureSets))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MenuIcon, IMenuIconGetter>(
-                srcGroup: obj.MenuIcons,
-                type: typeof(IMenuIconGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.MenuIcons,
-                groupGetter: (m) => m.MenuIcons))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Global, IGlobalGetter>(
-                srcGroup: obj.Globals,
-                type: typeof(IGlobalGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Globals,
-                groupGetter: (m) => m.Globals))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Class, IClassGetter>(
-                srcGroup: obj.Classes,
-                type: typeof(IClassGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Classes,
-                groupGetter: (m) => m.Classes))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Faction, IFactionGetter>(
-                srcGroup: obj.Factions,
-                type: typeof(IFactionGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Factions,
-                groupGetter: (m) => m.Factions))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, HeadPart, IHeadPartGetter>(
-                srcGroup: obj.HeadParts,
-                type: typeof(IHeadPartGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.HeadParts,
-                groupGetter: (m) => m.HeadParts))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Hair, IHairGetter>(
-                srcGroup: obj.Hairs,
-                type: typeof(IHairGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Hairs,
-                groupGetter: (m) => m.Hairs))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Eyes, IEyesGetter>(
-                srcGroup: obj.Eyes,
-                type: typeof(IEyesGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Eyes,
-                groupGetter: (m) => m.Eyes))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
-                srcGroup: obj.Races,
-                type: typeof(IRaceGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Races,
-                groupGetter: (m) => m.Races))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Sound, ISoundGetter>(
-                srcGroup: obj.Sounds,
-                type: typeof(ISoundGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Sounds,
-                groupGetter: (m) => m.Sounds))
-            {
-                yield return item;
-            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AcousticSpace, IAcousticSpaceGetter>(
                 srcGroup: obj.AcousticSpaces,
                 type: typeof(IAcousticSpaceGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.AcousticSpaces,
                 groupGetter: (m) => m.AcousticSpaces))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MagicEffect, IMagicEffectGetter>(
-                srcGroup: obj.MagicEffects,
-                type: typeof(IMagicEffectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.MagicEffects,
-                groupGetter: (m) => m.MagicEffects))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Script, IScriptGetter>(
-                srcGroup: obj.Scripts,
-                type: typeof(IScriptGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Scripts,
-                groupGetter: (m) => m.Scripts))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
-                srcGroup: obj.LandscapeTextures,
-                type: typeof(ILandscapeTextureGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.LandscapeTextures,
-                groupGetter: (m) => m.LandscapeTextures))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ObjectEffect, IObjectEffectGetter>(
-                srcGroup: obj.ObjectEffects,
-                type: typeof(IObjectEffectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ObjectEffects,
-                groupGetter: (m) => m.ObjectEffects))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Spell, ISpellGetter>(
-                srcGroup: obj.Spells,
-                type: typeof(ISpellGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Spells,
-                groupGetter: (m) => m.Spells))
             {
                 yield return item;
             }
@@ -10755,21 +10611,39 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TalkingActivator, ITalkingActivatorGetter>(
-                srcGroup: obj.TalkingActivators,
-                type: typeof(ITalkingActivatorGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ActorValueInformation, IActorValueInformationGetter>(
+                srcGroup: obj.ActorValueInformation,
+                type: typeof(IActorValueInformationGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.TalkingActivators,
-                groupGetter: (m) => m.TalkingActivators))
+                group: (m) => m.ActorValueInformation,
+                groupGetter: (m) => m.ActorValueInformation))
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Terminal, ITerminalGetter>(
-                srcGroup: obj.Terminals,
-                type: typeof(ITerminalGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AddonNode, IAddonNodeGetter>(
+                srcGroup: obj.AddonNodes,
+                type: typeof(IAddonNodeGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.Terminals,
-                groupGetter: (m) => m.Terminals))
+                group: (m) => m.AddonNodes,
+                groupGetter: (m) => m.AddonNodes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ammunition, IAmmunitionGetter>(
+                srcGroup: obj.Ammunitions,
+                type: typeof(IAmmunitionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ammunitions,
+                groupGetter: (m) => m.Ammunitions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                srcGroup: obj.AnimatedObjects,
+                type: typeof(IAnimatedObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AnimatedObjects,
+                groupGetter: (m) => m.AnimatedObjects))
             {
                 yield return item;
             }
@@ -10782,12 +10656,91 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ArmorAddon, IArmorAddonGetter>(
+                srcGroup: obj.ArmorAddons,
+                type: typeof(IArmorAddonGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ArmorAddons,
+                groupGetter: (m) => m.ArmorAddons))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, BodyPartData, IBodyPartDataGetter>(
+                srcGroup: obj.BodyParts,
+                type: typeof(IBodyPartDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.BodyParts,
+                groupGetter: (m) => m.BodyParts))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Book, IBookGetter>(
                 srcGroup: obj.Books,
                 type: typeof(IBookGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.Books,
                 groupGetter: (m) => m.Books))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraPath, ICameraPathGetter>(
+                srcGroup: obj.CameraPaths,
+                type: typeof(ICameraPathGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraPaths,
+                groupGetter: (m) => m.CameraPaths))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraShot, ICameraShotGetter>(
+                srcGroup: obj.CameraShots,
+                type: typeof(ICameraShotGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CameraShots,
+                groupGetter: (m) => m.CameraShots))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                linkCache: linkCache,
+                modKey: obj.ModKey,
+                parent: null))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Class, IClassGetter>(
+                srcGroup: obj.Classes,
+                type: typeof(IClassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Classes,
+                groupGetter: (m) => m.Classes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Climate, IClimateGetter>(
+                srcGroup: obj.Climates,
+                type: typeof(IClimateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Climates,
+                groupGetter: (m) => m.Climates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CombatStyle, ICombatStyleGetter>(
+                srcGroup: obj.CombatStyles,
+                type: typeof(ICombatStyleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CombatStyles,
+                groupGetter: (m) => m.CombatStyles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
             {
                 yield return item;
             }
@@ -10800,12 +10753,232 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Creature, ICreatureGetter>(
+                srcGroup: obj.Creatures,
+                type: typeof(ICreatureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Creatures,
+                groupGetter: (m) => m.Creatures))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Debris, IDebrisGetter>(
+                srcGroup: obj.Debris,
+                type: typeof(IDebrisGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Debris,
+                groupGetter: (m) => m.Debris))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                srcGroup: obj.DefaultObjectManagers,
+                type: typeof(IDefaultObjectManagerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DefaultObjectManagers,
+                groupGetter: (m) => m.DefaultObjectManagers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DialogTopic, IDialogTopicGetter>(
+                srcGroup: obj.DialogTopics,
+                type: typeof(IDialogTopicGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DialogTopics,
+                groupGetter: (m) => m.DialogTopics))
+            {
+                yield return item;
+            }
+            foreach (var groupItem in obj.DialogTopics)
+            {
+                foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                    groupItem,
+                    linkCache: linkCache,
+                    modKey: obj.ModKey,
+                    parent: null,
+                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                    duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Door, IDoorGetter>(
                 srcGroup: obj.Doors,
                 type: typeof(IDoorGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.Doors,
                 groupGetter: (m) => m.Doors))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EffectShader, IEffectShaderGetter>(
+                srcGroup: obj.EffectShaders,
+                type: typeof(IEffectShaderGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EffectShaders,
+                groupGetter: (m) => m.EffectShaders))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EncounterZone, IEncounterZoneGetter>(
+                srcGroup: obj.EncounterZones,
+                type: typeof(IEncounterZoneGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.EncounterZones,
+                groupGetter: (m) => m.EncounterZones))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Explosion, IExplosionGetter>(
+                srcGroup: obj.Explosions,
+                type: typeof(IExplosionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Explosions,
+                groupGetter: (m) => m.Explosions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Eyes, IEyesGetter>(
+                srcGroup: obj.Eyes,
+                type: typeof(IEyesGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Eyes,
+                groupGetter: (m) => m.Eyes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Faction, IFactionGetter>(
+                srcGroup: obj.Factions,
+                type: typeof(IFactionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Factions,
+                groupGetter: (m) => m.Factions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, FormList, IFormListGetter>(
+                srcGroup: obj.FormLists,
+                type: typeof(IFormListGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FormLists,
+                groupGetter: (m) => m.FormLists))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Furniture, IFurnitureGetter>(
+                srcGroup: obj.Furniture,
+                type: typeof(IFurnitureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Furniture,
+                groupGetter: (m) => m.Furniture))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, GameSetting, IGameSettingGetter>(
+                srcGroup: obj.GameSettings,
+                type: typeof(IGameSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GameSettings,
+                groupGetter: (m) => m.GameSettings))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Global, IGlobalGetter>(
+                srcGroup: obj.Globals,
+                type: typeof(IGlobalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Globals,
+                groupGetter: (m) => m.Globals))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Grass, IGrassGetter>(
+                srcGroup: obj.Grasses,
+                type: typeof(IGrassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Grasses,
+                groupGetter: (m) => m.Grasses))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Hair, IHairGetter>(
+                srcGroup: obj.Hairs,
+                type: typeof(IHairGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Hairs,
+                groupGetter: (m) => m.Hairs))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, HeadPart, IHeadPartGetter>(
+                srcGroup: obj.HeadParts,
+                type: typeof(IHeadPartGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.HeadParts,
+                groupGetter: (m) => m.HeadParts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleAnimation, IIdleAnimationGetter>(
+                srcGroup: obj.IdleAnimations,
+                type: typeof(IIdleAnimationGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleAnimations,
+                groupGetter: (m) => m.IdleAnimations))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleMarker, IIdleMarkerGetter>(
+                srcGroup: obj.IdleMarkers,
+                type: typeof(IIdleMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.IdleMarkers,
+                groupGetter: (m) => m.IdleMarkers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpace, IImageSpaceGetter>(
+                srcGroup: obj.ImageSpaces,
+                type: typeof(IImageSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaces,
+                groupGetter: (m) => m.ImageSpaces))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
+                srcGroup: obj.ImageSpaceAdapters,
+                type: typeof(IImageSpaceAdapterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImageSpaceAdapters,
+                groupGetter: (m) => m.ImageSpaceAdapters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Impact, IImpactGetter>(
+                srcGroup: obj.Impacts,
+                type: typeof(IImpactGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Impacts,
+                groupGetter: (m) => m.Impacts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                srcGroup: obj.ImpactDataSets,
+                type: typeof(IImpactDataSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ImpactDataSets,
+                groupGetter: (m) => m.ImpactDataSets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ingestible, IIngestibleGetter>(
+                srcGroup: obj.Ingestibles,
+                type: typeof(IIngestibleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ingestibles,
+                groupGetter: (m) => m.Ingestibles))
             {
                 yield return item;
             }
@@ -10818,6 +10991,51 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Key, IKeyGetter>(
+                srcGroup: obj.Keys,
+                type: typeof(IKeyGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Keys,
+                groupGetter: (m) => m.Keys))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                srcGroup: obj.LandscapeTextures,
+                type: typeof(ILandscapeTextureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LandscapeTextures,
+                groupGetter: (m) => m.LandscapeTextures))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledCreature, ILeveledCreatureGetter>(
+                srcGroup: obj.LeveledCreatures,
+                type: typeof(ILeveledCreatureGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledCreatures,
+                groupGetter: (m) => m.LeveledCreatures))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledItem, ILeveledItemGetter>(
+                srcGroup: obj.LeveledItems,
+                type: typeof(ILeveledItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledItems,
+                groupGetter: (m) => m.LeveledItems))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledNpc, ILeveledNpcGetter>(
+                srcGroup: obj.LeveledNpcs,
+                type: typeof(ILeveledNpcGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledNpcs,
+                groupGetter: (m) => m.LeveledNpcs))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Light, ILightGetter>(
                 srcGroup: obj.Lights,
                 type: typeof(ILightGetter),
@@ -10827,12 +11045,219 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LightingTemplate, ILightingTemplateGetter>(
+                srcGroup: obj.LightingTemplates,
+                type: typeof(ILightingTemplateGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LightingTemplates,
+                groupGetter: (m) => m.LightingTemplates))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LoadScreen, ILoadScreenGetter>(
+                srcGroup: obj.LoadScreens,
+                type: typeof(ILoadScreenGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LoadScreens,
+                groupGetter: (m) => m.LoadScreens))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MagicEffect, IMagicEffectGetter>(
+                srcGroup: obj.MagicEffects,
+                type: typeof(IMagicEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MagicEffects,
+                groupGetter: (m) => m.MagicEffects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MenuIcon, IMenuIconGetter>(
+                srcGroup: obj.MenuIcons,
+                type: typeof(IMenuIconGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MenuIcons,
+                groupGetter: (m) => m.MenuIcons))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Message, IMessageGetter>(
+                srcGroup: obj.Messages,
+                type: typeof(IMessageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Messages,
+                groupGetter: (m) => m.Messages))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MiscItem, IMiscItemGetter>(
                 srcGroup: obj.MiscItems,
                 type: typeof(IMiscItemGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.MiscItems,
                 groupGetter: (m) => m.MiscItems))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MoveableStatic, IMoveableStaticGetter>(
+                srcGroup: obj.MoveableStatics,
+                type: typeof(IMoveableStaticGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MoveableStatics,
+                groupGetter: (m) => m.MoveableStatics))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MusicType, IMusicTypeGetter>(
+                srcGroup: obj.MusicTypes,
+                type: typeof(IMusicTypeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MusicTypes,
+                groupGetter: (m) => m.MusicTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                srcGroup: obj.NavigationMeshInfoMaps,
+                type: typeof(INavigationMeshInfoMapGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.NavigationMeshInfoMaps,
+                groupGetter: (m) => m.NavigationMeshInfoMaps))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Note, INoteGetter>(
+                srcGroup: obj.Notes,
+                type: typeof(INoteGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Notes,
+                groupGetter: (m) => m.Notes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Npc, INpcGetter>(
+                srcGroup: obj.Npcs,
+                type: typeof(INpcGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Npcs,
+                groupGetter: (m) => m.Npcs))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ObjectEffect, IObjectEffectGetter>(
+                srcGroup: obj.ObjectEffects,
+                type: typeof(IObjectEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ObjectEffects,
+                groupGetter: (m) => m.ObjectEffects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Package, IPackageGetter>(
+                srcGroup: obj.Packages,
+                type: typeof(IPackageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Packages,
+                groupGetter: (m) => m.Packages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Perk, IPerkGetter>(
+                srcGroup: obj.Perks,
+                type: typeof(IPerkGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Perks,
+                groupGetter: (m) => m.Perks))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, PlaceableWater, IPlaceableWaterGetter>(
+                srcGroup: obj.PlaceableWaters,
+                type: typeof(IPlaceableWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.PlaceableWaters,
+                groupGetter: (m) => m.PlaceableWaters))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
+                srcGroup: obj.Projectiles,
+                type: typeof(IProjectileGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Projectiles,
+                groupGetter: (m) => m.Projectiles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Quest, IQuestGetter>(
+                srcGroup: obj.Quests,
+                type: typeof(IQuestGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Quests,
+                groupGetter: (m) => m.Quests))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
+                srcGroup: obj.Races,
+                type: typeof(IRaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Races,
+                groupGetter: (m) => m.Races))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, RadiationStage, IRadiationStageGetter>(
+                srcGroup: obj.RadiationStages,
+                type: typeof(IRadiationStageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.RadiationStages,
+                groupGetter: (m) => m.RadiationStages))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ragdoll, IRagdollGetter>(
+                srcGroup: obj.Ragdolls,
+                type: typeof(IRagdollGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ragdolls,
+                groupGetter: (m) => m.Ragdolls))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Region, IRegionGetter>(
+                srcGroup: obj.Regions,
+                type: typeof(IRegionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Regions,
+                groupGetter: (m) => m.Regions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Script, IScriptGetter>(
+                srcGroup: obj.Scripts,
+                type: typeof(IScriptGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Scripts,
+                groupGetter: (m) => m.Scripts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Sound, ISoundGetter>(
+                srcGroup: obj.Sounds,
+                type: typeof(ISoundGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Sounds,
+                groupGetter: (m) => m.Sounds))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Spell, ISpellGetter>(
+                srcGroup: obj.Spells,
+                type: typeof(ISpellGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Spells,
+                groupGetter: (m) => m.Spells))
             {
                 yield return item;
             }
@@ -10854,30 +11279,30 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MoveableStatic, IMoveableStaticGetter>(
-                srcGroup: obj.MoveableStatics,
-                type: typeof(IMoveableStaticGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TalkingActivator, ITalkingActivatorGetter>(
+                srcGroup: obj.TalkingActivators,
+                type: typeof(ITalkingActivatorGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.MoveableStatics,
-                groupGetter: (m) => m.MoveableStatics))
+                group: (m) => m.TalkingActivators,
+                groupGetter: (m) => m.TalkingActivators))
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, PlaceableWater, IPlaceableWaterGetter>(
-                srcGroup: obj.PlaceableWaters,
-                type: typeof(IPlaceableWaterGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Terminal, ITerminalGetter>(
+                srcGroup: obj.Terminals,
+                type: typeof(ITerminalGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.PlaceableWaters,
-                groupGetter: (m) => m.PlaceableWaters))
+                group: (m) => m.Terminals,
+                groupGetter: (m) => m.Terminals))
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Grass, IGrassGetter>(
-                srcGroup: obj.Grasses,
-                type: typeof(IGrassGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TextureSet, ITextureSetGetter>(
+                srcGroup: obj.TextureSets,
+                type: typeof(ITextureSetGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.Grasses,
-                groupGetter: (m) => m.Grasses))
+                group: (m) => m.TextureSets,
+                groupGetter: (m) => m.TextureSets))
             {
                 yield return item;
             }
@@ -10890,12 +11315,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Furniture, IFurnitureGetter>(
-                srcGroup: obj.Furniture,
-                type: typeof(IFurnitureGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, VoiceType, IVoiceTypeGetter>(
+                srcGroup: obj.VoiceTypes,
+                type: typeof(IVoiceTypeGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.Furniture,
-                groupGetter: (m) => m.Furniture))
+                group: (m) => m.VoiceTypes,
+                groupGetter: (m) => m.VoiceTypes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Water, IWaterGetter>(
+                srcGroup: obj.Waters,
+                type: typeof(IWaterGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Waters,
+                groupGetter: (m) => m.Waters))
             {
                 yield return item;
             }
@@ -10908,154 +11342,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ammunition, IAmmunitionGetter>(
-                srcGroup: obj.Ammunitions,
-                type: typeof(IAmmunitionGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Ammunitions,
-                groupGetter: (m) => m.Ammunitions))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Npc, INpcGetter>(
-                srcGroup: obj.Npcs,
-                type: typeof(INpcGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Npcs,
-                groupGetter: (m) => m.Npcs))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Creature, ICreatureGetter>(
-                srcGroup: obj.Creatures,
-                type: typeof(ICreatureGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Creatures,
-                groupGetter: (m) => m.Creatures))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledCreature, ILeveledCreatureGetter>(
-                srcGroup: obj.LeveledCreatures,
-                type: typeof(ILeveledCreatureGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.LeveledCreatures,
-                groupGetter: (m) => m.LeveledCreatures))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledNpc, ILeveledNpcGetter>(
-                srcGroup: obj.LeveledNpcs,
-                type: typeof(ILeveledNpcGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.LeveledNpcs,
-                groupGetter: (m) => m.LeveledNpcs))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Key, IKeyGetter>(
-                srcGroup: obj.Keys,
-                type: typeof(IKeyGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Keys,
-                groupGetter: (m) => m.Keys))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ingestible, IIngestibleGetter>(
-                srcGroup: obj.Ingestibles,
-                type: typeof(IIngestibleGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Ingestibles,
-                groupGetter: (m) => m.Ingestibles))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleMarker, IIdleMarkerGetter>(
-                srcGroup: obj.IdleMarkers,
-                type: typeof(IIdleMarkerGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.IdleMarkers,
-                groupGetter: (m) => m.IdleMarkers))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Note, INoteGetter>(
-                srcGroup: obj.Notes,
-                type: typeof(INoteGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Notes,
-                groupGetter: (m) => m.Notes))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                srcGroup: obj.ConstructibleObjects,
-                type: typeof(IConstructibleObjectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ConstructibleObjects,
-                groupGetter: (m) => m.ConstructibleObjects))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
-                srcGroup: obj.Projectiles,
-                type: typeof(IProjectileGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Projectiles,
-                groupGetter: (m) => m.Projectiles))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledItem, ILeveledItemGetter>(
-                srcGroup: obj.LeveledItems,
-                type: typeof(ILeveledItemGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.LeveledItems,
-                groupGetter: (m) => m.LeveledItems))
-            {
-                yield return item;
-            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weather, IWeatherGetter>(
                 srcGroup: obj.Weather,
                 type: typeof(IWeatherGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.Weather,
                 groupGetter: (m) => m.Weather))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Climate, IClimateGetter>(
-                srcGroup: obj.Climates,
-                type: typeof(IClimateGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Climates,
-                groupGetter: (m) => m.Climates))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Region, IRegionGetter>(
-                srcGroup: obj.Regions,
-                type: typeof(IRegionGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Regions,
-                groupGetter: (m) => m.Regions))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
-                srcGroup: obj.NavigationMeshInfoMaps,
-                type: typeof(INavigationMeshInfoMapGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.NavigationMeshInfoMaps,
-                groupGetter: (m) => m.NavigationMeshInfoMaps))
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                linkCache: linkCache,
-                modKey: obj.ModKey,
-                parent: null))
             {
                 yield return item;
             }
@@ -11080,298 +11372,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     yield return item;
                 }
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DialogTopic, IDialogTopicGetter>(
-                srcGroup: obj.DialogTopics,
-                type: typeof(IDialogTopicGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.DialogTopics,
-                groupGetter: (m) => m.DialogTopics))
-            {
-                yield return item;
-            }
-            foreach (var groupItem in obj.DialogTopics)
-            {
-                foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
-                    groupItem,
-                    linkCache: linkCache,
-                    modKey: obj.ModKey,
-                    parent: null,
-                    getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
-                    duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
-                {
-                    yield return item;
-                }
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Quest, IQuestGetter>(
-                srcGroup: obj.Quests,
-                type: typeof(IQuestGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Quests,
-                groupGetter: (m) => m.Quests))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleAnimation, IIdleAnimationGetter>(
-                srcGroup: obj.IdleAnimations,
-                type: typeof(IIdleAnimationGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.IdleAnimations,
-                groupGetter: (m) => m.IdleAnimations))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Package, IPackageGetter>(
-                srcGroup: obj.Packages,
-                type: typeof(IPackageGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Packages,
-                groupGetter: (m) => m.Packages))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CombatStyle, ICombatStyleGetter>(
-                srcGroup: obj.CombatStyles,
-                type: typeof(ICombatStyleGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.CombatStyles,
-                groupGetter: (m) => m.CombatStyles))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LoadScreen, ILoadScreenGetter>(
-                srcGroup: obj.LoadScreens,
-                type: typeof(ILoadScreenGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.LoadScreens,
-                groupGetter: (m) => m.LoadScreens))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                srcGroup: obj.AnimatedObjects,
-                type: typeof(IAnimatedObjectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.AnimatedObjects,
-                groupGetter: (m) => m.AnimatedObjects))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Water, IWaterGetter>(
-                srcGroup: obj.Waters,
-                type: typeof(IWaterGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Waters,
-                groupGetter: (m) => m.Waters))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EffectShader, IEffectShaderGetter>(
-                srcGroup: obj.EffectShaders,
-                type: typeof(IEffectShaderGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.EffectShaders,
-                groupGetter: (m) => m.EffectShaders))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Explosion, IExplosionGetter>(
-                srcGroup: obj.Explosions,
-                type: typeof(IExplosionGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Explosions,
-                groupGetter: (m) => m.Explosions))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Debris, IDebrisGetter>(
-                srcGroup: obj.Debris,
-                type: typeof(IDebrisGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Debris,
-                groupGetter: (m) => m.Debris))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpace, IImageSpaceGetter>(
-                srcGroup: obj.ImageSpaces,
-                type: typeof(IImageSpaceGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ImageSpaces,
-                groupGetter: (m) => m.ImageSpaces))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
-                srcGroup: obj.ImageSpaceAdapters,
-                type: typeof(IImageSpaceAdapterGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ImageSpaceAdapters,
-                groupGetter: (m) => m.ImageSpaceAdapters))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Message, IMessageGetter>(
-                srcGroup: obj.Messages,
-                type: typeof(IMessageGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Messages,
-                groupGetter: (m) => m.Messages))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Perk, IPerkGetter>(
-                srcGroup: obj.Perks,
-                type: typeof(IPerkGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Perks,
-                groupGetter: (m) => m.Perks))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, BodyPartData, IBodyPartDataGetter>(
-                srcGroup: obj.BodyParts,
-                type: typeof(IBodyPartDataGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.BodyParts,
-                groupGetter: (m) => m.BodyParts))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AddonNode, IAddonNodeGetter>(
-                srcGroup: obj.AddonNodes,
-                type: typeof(IAddonNodeGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.AddonNodes,
-                groupGetter: (m) => m.AddonNodes))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ActorValueInformation, IActorValueInformationGetter>(
-                srcGroup: obj.ActorValueInformation,
-                type: typeof(IActorValueInformationGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ActorValueInformation,
-                groupGetter: (m) => m.ActorValueInformation))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, RadiationStage, IRadiationStageGetter>(
-                srcGroup: obj.RadiationStages,
-                type: typeof(IRadiationStageGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.RadiationStages,
-                groupGetter: (m) => m.RadiationStages))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraShot, ICameraShotGetter>(
-                srcGroup: obj.CameraShots,
-                type: typeof(ICameraShotGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.CameraShots,
-                groupGetter: (m) => m.CameraShots))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraPath, ICameraPathGetter>(
-                srcGroup: obj.CameraPaths,
-                type: typeof(ICameraPathGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.CameraPaths,
-                groupGetter: (m) => m.CameraPaths))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, VoiceType, IVoiceTypeGetter>(
-                srcGroup: obj.VoiceTypes,
-                type: typeof(IVoiceTypeGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.VoiceTypes,
-                groupGetter: (m) => m.VoiceTypes))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Impact, IImpactGetter>(
-                srcGroup: obj.Impacts,
-                type: typeof(IImpactGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Impacts,
-                groupGetter: (m) => m.Impacts))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImpactDataSet, IImpactDataSetGetter>(
-                srcGroup: obj.ImpactDataSets,
-                type: typeof(IImpactDataSetGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ImpactDataSets,
-                groupGetter: (m) => m.ImpactDataSets))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ArmorAddon, IArmorAddonGetter>(
-                srcGroup: obj.ArmorAddons,
-                type: typeof(IArmorAddonGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ArmorAddons,
-                groupGetter: (m) => m.ArmorAddons))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EncounterZone, IEncounterZoneGetter>(
-                srcGroup: obj.EncounterZones,
-                type: typeof(IEncounterZoneGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.EncounterZones,
-                groupGetter: (m) => m.EncounterZones))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ragdoll, IRagdollGetter>(
-                srcGroup: obj.Ragdolls,
-                type: typeof(IRagdollGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Ragdolls,
-                groupGetter: (m) => m.Ragdolls))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
-                srcGroup: obj.DefaultObjectManagers,
-                type: typeof(IDefaultObjectManagerGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.DefaultObjectManagers,
-                groupGetter: (m) => m.DefaultObjectManagers))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LightingTemplate, ILightingTemplateGetter>(
-                srcGroup: obj.LightingTemplates,
-                type: typeof(ILightingTemplateGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.LightingTemplates,
-                groupGetter: (m) => m.LightingTemplates))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MusicType, IMusicTypeGetter>(
-                srcGroup: obj.MusicTypes,
-                type: typeof(IMusicTypeGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.MusicTypes,
-                groupGetter: (m) => m.MusicTypes))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, FormList, IFormListGetter>(
-                srcGroup: obj.FormLists,
-                type: typeof(IFormListGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.FormLists,
-                groupGetter: (m) => m.FormLists))
-            {
-                yield return item;
             }
         }
         
@@ -11404,160 +11404,6 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "GameSetting":
-                case "IGameSettingGetter":
-                case "IGameSetting":
-                case "IGameSettingInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, GameSetting, IGameSettingGetter>(
-                        srcGroup: obj.GameSettings,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.GameSettings,
-                        groupGetter: (m) => m.GameSettings))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "TextureSet":
-                case "ITextureSetGetter":
-                case "ITextureSet":
-                case "ITextureSetInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TextureSet, ITextureSetGetter>(
-                        srcGroup: obj.TextureSets,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.TextureSets,
-                        groupGetter: (m) => m.TextureSets))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MenuIcon":
-                case "IMenuIconGetter":
-                case "IMenuIcon":
-                case "IMenuIconInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MenuIcon, IMenuIconGetter>(
-                        srcGroup: obj.MenuIcons,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.MenuIcons,
-                        groupGetter: (m) => m.MenuIcons))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Global":
-                case "IGlobalGetter":
-                case "IGlobal":
-                case "IGlobalInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Global, IGlobalGetter>(
-                        srcGroup: obj.Globals,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Globals,
-                        groupGetter: (m) => m.Globals))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Class":
-                case "IClassGetter":
-                case "IClass":
-                case "IClassInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Class, IClassGetter>(
-                        srcGroup: obj.Classes,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Classes,
-                        groupGetter: (m) => m.Classes))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Faction":
-                case "IFactionGetter":
-                case "IFaction":
-                case "IFactionInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Faction, IFactionGetter>(
-                        srcGroup: obj.Factions,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Factions,
-                        groupGetter: (m) => m.Factions))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "HeadPart":
-                case "IHeadPartGetter":
-                case "IHeadPart":
-                case "IHeadPartInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, HeadPart, IHeadPartGetter>(
-                        srcGroup: obj.HeadParts,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.HeadParts,
-                        groupGetter: (m) => m.HeadParts))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Hair":
-                case "IHairGetter":
-                case "IHair":
-                case "IHairInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Hair, IHairGetter>(
-                        srcGroup: obj.Hairs,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Hairs,
-                        groupGetter: (m) => m.Hairs))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Eyes":
-                case "IEyesGetter":
-                case "IEyes":
-                case "IEyesInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Eyes, IEyesGetter>(
-                        srcGroup: obj.Eyes,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Eyes,
-                        groupGetter: (m) => m.Eyes))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
-                        srcGroup: obj.Races,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Races,
-                        groupGetter: (m) => m.Races))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Sound":
-                case "ISoundGetter":
-                case "ISound":
-                case "ISoundInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Sound, ISoundGetter>(
-                        srcGroup: obj.Sounds,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Sounds,
-                        groupGetter: (m) => m.Sounds))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 case "AcousticSpace":
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
@@ -11568,76 +11414,6 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.AcousticSpaces,
                         groupGetter: (m) => m.AcousticSpaces))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MagicEffect":
-                case "IMagicEffectGetter":
-                case "IMagicEffect":
-                case "IMagicEffectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MagicEffect, IMagicEffectGetter>(
-                        srcGroup: obj.MagicEffects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.MagicEffects,
-                        groupGetter: (m) => m.MagicEffects))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Script":
-                case "IScriptGetter":
-                case "IScript":
-                case "IScriptInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Script, IScriptGetter>(
-                        srcGroup: obj.Scripts,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Scripts,
-                        groupGetter: (m) => m.Scripts))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LandscapeTexture":
-                case "ILandscapeTextureGetter":
-                case "ILandscapeTexture":
-                case "ILandscapeTextureInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
-                        srcGroup: obj.LandscapeTextures,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.LandscapeTextures,
-                        groupGetter: (m) => m.LandscapeTextures))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ObjectEffect":
-                case "IObjectEffectGetter":
-                case "IObjectEffect":
-                case "IObjectEffectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ObjectEffect, IObjectEffectGetter>(
-                        srcGroup: obj.ObjectEffects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ObjectEffects,
-                        groupGetter: (m) => m.ObjectEffects))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Spell":
-                case "ISpellGetter":
-                case "ISpell":
-                case "ISpellInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Spell, ISpellGetter>(
-                        srcGroup: obj.Spells,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Spells,
-                        groupGetter: (m) => m.Spells))
                     {
                         yield return item;
                     }
@@ -11656,702 +11432,16 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "TalkingActivator":
-                case "ITalkingActivatorGetter":
-                case "ITalkingActivator":
-                case "ITalkingActivatorInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TalkingActivator, ITalkingActivatorGetter>(
-                        srcGroup: obj.TalkingActivators,
+                case "ActorValueInformation":
+                case "IActorValueInformationGetter":
+                case "IActorValueInformation":
+                case "IActorValueInformationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ActorValueInformation, IActorValueInformationGetter>(
+                        srcGroup: obj.ActorValueInformation,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.TalkingActivators,
-                        groupGetter: (m) => m.TalkingActivators))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Terminal":
-                case "ITerminalGetter":
-                case "ITerminal":
-                case "ITerminalInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Terminal, ITerminalGetter>(
-                        srcGroup: obj.Terminals,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Terminals,
-                        groupGetter: (m) => m.Terminals))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Armor":
-                case "IArmorGetter":
-                case "IArmor":
-                case "IArmorInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Armor, IArmorGetter>(
-                        srcGroup: obj.Armors,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Armors,
-                        groupGetter: (m) => m.Armors))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Book":
-                case "IBookGetter":
-                case "IBook":
-                case "IBookInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Book, IBookGetter>(
-                        srcGroup: obj.Books,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Books,
-                        groupGetter: (m) => m.Books))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Container":
-                case "IContainerGetter":
-                case "IContainer":
-                case "IContainerInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Container, IContainerGetter>(
-                        srcGroup: obj.Containers,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Containers,
-                        groupGetter: (m) => m.Containers))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Door":
-                case "IDoorGetter":
-                case "IDoor":
-                case "IDoorInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Door, IDoorGetter>(
-                        srcGroup: obj.Doors,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Doors,
-                        groupGetter: (m) => m.Doors))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Ingredient":
-                case "IIngredientGetter":
-                case "IIngredient":
-                case "IIngredientInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ingredient, IIngredientGetter>(
-                        srcGroup: obj.Ingredients,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Ingredients,
-                        groupGetter: (m) => m.Ingredients))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Light":
-                case "ILightGetter":
-                case "ILight":
-                case "ILightInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Light, ILightGetter>(
-                        srcGroup: obj.Lights,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Lights,
-                        groupGetter: (m) => m.Lights))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MiscItem, IMiscItemGetter>(
-                        srcGroup: obj.MiscItems,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.MiscItems,
-                        groupGetter: (m) => m.MiscItems))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Static":
-                case "IStaticGetter":
-                case "IStatic":
-                case "IStaticInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Static, IStaticGetter>(
-                        srcGroup: obj.Statics,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Statics,
-                        groupGetter: (m) => m.Statics))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "StaticCollection":
-                case "IStaticCollectionGetter":
-                case "IStaticCollection":
-                case "IStaticCollectionInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, StaticCollection, IStaticCollectionGetter>(
-                        srcGroup: obj.StaticCollections,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.StaticCollections,
-                        groupGetter: (m) => m.StaticCollections))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MoveableStatic":
-                case "IMoveableStaticGetter":
-                case "IMoveableStatic":
-                case "IMoveableStaticInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MoveableStatic, IMoveableStaticGetter>(
-                        srcGroup: obj.MoveableStatics,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.MoveableStatics,
-                        groupGetter: (m) => m.MoveableStatics))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "PlaceableWater":
-                case "IPlaceableWaterGetter":
-                case "IPlaceableWater":
-                case "IPlaceableWaterInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, PlaceableWater, IPlaceableWaterGetter>(
-                        srcGroup: obj.PlaceableWaters,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.PlaceableWaters,
-                        groupGetter: (m) => m.PlaceableWaters))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Grass":
-                case "IGrassGetter":
-                case "IGrass":
-                case "IGrassInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Grass, IGrassGetter>(
-                        srcGroup: obj.Grasses,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Grasses,
-                        groupGetter: (m) => m.Grasses))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Tree":
-                case "ITreeGetter":
-                case "ITree":
-                case "ITreeInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Tree, ITreeGetter>(
-                        srcGroup: obj.Trees,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Trees,
-                        groupGetter: (m) => m.Trees))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Furniture":
-                case "IFurnitureGetter":
-                case "IFurniture":
-                case "IFurnitureInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Furniture, IFurnitureGetter>(
-                        srcGroup: obj.Furniture,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Furniture,
-                        groupGetter: (m) => m.Furniture))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weapon, IWeaponGetter>(
-                        srcGroup: obj.Weapons,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Weapons,
-                        groupGetter: (m) => m.Weapons))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Ammunition":
-                case "IAmmunitionGetter":
-                case "IAmmunition":
-                case "IAmmunitionInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ammunition, IAmmunitionGetter>(
-                        srcGroup: obj.Ammunitions,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Ammunitions,
-                        groupGetter: (m) => m.Ammunitions))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Npc, INpcGetter>(
-                        srcGroup: obj.Npcs,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Npcs,
-                        groupGetter: (m) => m.Npcs))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Creature":
-                case "ICreatureGetter":
-                case "ICreature":
-                case "ICreatureInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Creature, ICreatureGetter>(
-                        srcGroup: obj.Creatures,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Creatures,
-                        groupGetter: (m) => m.Creatures))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LeveledCreature":
-                case "ILeveledCreatureGetter":
-                case "ILeveledCreature":
-                case "ILeveledCreatureInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledCreature, ILeveledCreatureGetter>(
-                        srcGroup: obj.LeveledCreatures,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.LeveledCreatures,
-                        groupGetter: (m) => m.LeveledCreatures))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LeveledNpc":
-                case "ILeveledNpcGetter":
-                case "ILeveledNpc":
-                case "ILeveledNpcInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledNpc, ILeveledNpcGetter>(
-                        srcGroup: obj.LeveledNpcs,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.LeveledNpcs,
-                        groupGetter: (m) => m.LeveledNpcs))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Key":
-                case "IKeyGetter":
-                case "IKey":
-                case "IKeyInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Key, IKeyGetter>(
-                        srcGroup: obj.Keys,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Keys,
-                        groupGetter: (m) => m.Keys))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ingestible, IIngestibleGetter>(
-                        srcGroup: obj.Ingestibles,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Ingestibles,
-                        groupGetter: (m) => m.Ingestibles))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "IdleMarker":
-                case "IIdleMarkerGetter":
-                case "IIdleMarker":
-                case "IIdleMarkerInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleMarker, IIdleMarkerGetter>(
-                        srcGroup: obj.IdleMarkers,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.IdleMarkers,
-                        groupGetter: (m) => m.IdleMarkers))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Note":
-                case "INoteGetter":
-                case "INote":
-                case "INoteInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Note, INoteGetter>(
-                        srcGroup: obj.Notes,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Notes,
-                        groupGetter: (m) => m.Notes))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                        srcGroup: obj.ConstructibleObjects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ConstructibleObjects,
-                        groupGetter: (m) => m.ConstructibleObjects))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Projectile":
-                case "IProjectileGetter":
-                case "IProjectile":
-                case "IProjectileInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
-                        srcGroup: obj.Projectiles,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Projectiles,
-                        groupGetter: (m) => m.Projectiles))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LeveledItem":
-                case "ILeveledItemGetter":
-                case "ILeveledItem":
-                case "ILeveledItemInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledItem, ILeveledItemGetter>(
-                        srcGroup: obj.LeveledItems,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.LeveledItems,
-                        groupGetter: (m) => m.LeveledItems))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weather, IWeatherGetter>(
-                        srcGroup: obj.Weather,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Weather,
-                        groupGetter: (m) => m.Weather))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Climate":
-                case "IClimateGetter":
-                case "IClimate":
-                case "IClimateInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Climate, IClimateGetter>(
-                        srcGroup: obj.Climates,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Climates,
-                        groupGetter: (m) => m.Climates))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Region":
-                case "IRegionGetter":
-                case "IRegion":
-                case "IRegionInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Region, IRegionGetter>(
-                        srcGroup: obj.Regions,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Regions,
-                        groupGetter: (m) => m.Regions))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "NavigationMeshInfoMap":
-                case "INavigationMeshInfoMapGetter":
-                case "INavigationMeshInfoMap":
-                case "INavigationMeshInfoMapInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
-                        srcGroup: obj.NavigationMeshInfoMaps,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.NavigationMeshInfoMaps,
-                        groupGetter: (m) => m.NavigationMeshInfoMaps))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Worldspace":
-                case "IWorldspaceGetter":
-                case "IWorldspace":
-                case "IWorldspaceInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Worldspace, IWorldspaceGetter>(
-                        srcGroup: obj.Worldspaces,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Worldspaces,
-                        groupGetter: (m) => m.Worldspaces))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "DialogTopic":
-                case "IDialogTopicGetter":
-                case "IDialogTopic":
-                case "IDialogTopicInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DialogTopic, IDialogTopicGetter>(
-                        srcGroup: obj.DialogTopics,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.DialogTopics,
-                        groupGetter: (m) => m.DialogTopics))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Quest":
-                case "IQuestGetter":
-                case "IQuest":
-                case "IQuestInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Quest, IQuestGetter>(
-                        srcGroup: obj.Quests,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Quests,
-                        groupGetter: (m) => m.Quests))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "IdleAnimation":
-                case "IIdleAnimationGetter":
-                case "IIdleAnimation":
-                case "IIdleAnimationInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleAnimation, IIdleAnimationGetter>(
-                        srcGroup: obj.IdleAnimations,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.IdleAnimations,
-                        groupGetter: (m) => m.IdleAnimations))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Package":
-                case "IPackageGetter":
-                case "IPackage":
-                case "IPackageInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Package, IPackageGetter>(
-                        srcGroup: obj.Packages,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Packages,
-                        groupGetter: (m) => m.Packages))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CombatStyle":
-                case "ICombatStyleGetter":
-                case "ICombatStyle":
-                case "ICombatStyleInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CombatStyle, ICombatStyleGetter>(
-                        srcGroup: obj.CombatStyles,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.CombatStyles,
-                        groupGetter: (m) => m.CombatStyles))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "LoadScreen":
-                case "ILoadScreenGetter":
-                case "ILoadScreen":
-                case "ILoadScreenInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LoadScreen, ILoadScreenGetter>(
-                        srcGroup: obj.LoadScreens,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.LoadScreens,
-                        groupGetter: (m) => m.LoadScreens))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "AnimatedObject":
-                case "IAnimatedObjectGetter":
-                case "IAnimatedObject":
-                case "IAnimatedObjectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AnimatedObject, IAnimatedObjectGetter>(
-                        srcGroup: obj.AnimatedObjects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.AnimatedObjects,
-                        groupGetter: (m) => m.AnimatedObjects))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Water":
-                case "IWaterGetter":
-                case "IWater":
-                case "IWaterInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Water, IWaterGetter>(
-                        srcGroup: obj.Waters,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Waters,
-                        groupGetter: (m) => m.Waters))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "EffectShader":
-                case "IEffectShaderGetter":
-                case "IEffectShader":
-                case "IEffectShaderInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EffectShader, IEffectShaderGetter>(
-                        srcGroup: obj.EffectShaders,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.EffectShaders,
-                        groupGetter: (m) => m.EffectShaders))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Explosion":
-                case "IExplosionGetter":
-                case "IExplosion":
-                case "IExplosionInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Explosion, IExplosionGetter>(
-                        srcGroup: obj.Explosions,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Explosions,
-                        groupGetter: (m) => m.Explosions))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Debris":
-                case "IDebrisGetter":
-                case "IDebris":
-                case "IDebrisInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Debris, IDebrisGetter>(
-                        srcGroup: obj.Debris,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Debris,
-                        groupGetter: (m) => m.Debris))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ImageSpace":
-                case "IImageSpaceGetter":
-                case "IImageSpace":
-                case "IImageSpaceInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpace, IImageSpaceGetter>(
-                        srcGroup: obj.ImageSpaces,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ImageSpaces,
-                        groupGetter: (m) => m.ImageSpaces))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ImageSpaceAdapter":
-                case "IImageSpaceAdapterGetter":
-                case "IImageSpaceAdapter":
-                case "IImageSpaceAdapterInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
-                        srcGroup: obj.ImageSpaceAdapters,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ImageSpaceAdapters,
-                        groupGetter: (m) => m.ImageSpaceAdapters))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Message":
-                case "IMessageGetter":
-                case "IMessage":
-                case "IMessageInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Message, IMessageGetter>(
-                        srcGroup: obj.Messages,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Messages,
-                        groupGetter: (m) => m.Messages))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Perk, IPerkGetter>(
-                        srcGroup: obj.Perks,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Perks,
-                        groupGetter: (m) => m.Perks))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "BodyPartData":
-                case "IBodyPartDataGetter":
-                case "IBodyPartData":
-                case "IBodyPartDataInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, BodyPartData, IBodyPartDataGetter>(
-                        srcGroup: obj.BodyParts,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.BodyParts,
-                        groupGetter: (m) => m.BodyParts))
+                        group: (m) => m.ActorValueInformation,
+                        groupGetter: (m) => m.ActorValueInformation))
                     {
                         yield return item;
                     }
@@ -12370,100 +11460,44 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "ActorValueInformation":
-                case "IActorValueInformationGetter":
-                case "IActorValueInformation":
-                case "IActorValueInformationInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ActorValueInformation, IActorValueInformationGetter>(
-                        srcGroup: obj.ActorValueInformation,
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ammunition, IAmmunitionGetter>(
+                        srcGroup: obj.Ammunitions,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.ActorValueInformation,
-                        groupGetter: (m) => m.ActorValueInformation))
+                        group: (m) => m.Ammunitions,
+                        groupGetter: (m) => m.Ammunitions))
                     {
                         yield return item;
                     }
                     yield break;
-                case "RadiationStage":
-                case "IRadiationStageGetter":
-                case "IRadiationStage":
-                case "IRadiationStageInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, RadiationStage, IRadiationStageGetter>(
-                        srcGroup: obj.RadiationStages,
+                case "AnimatedObject":
+                case "IAnimatedObjectGetter":
+                case "IAnimatedObject":
+                case "IAnimatedObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AnimatedObject, IAnimatedObjectGetter>(
+                        srcGroup: obj.AnimatedObjects,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.RadiationStages,
-                        groupGetter: (m) => m.RadiationStages))
+                        group: (m) => m.AnimatedObjects,
+                        groupGetter: (m) => m.AnimatedObjects))
                     {
                         yield return item;
                     }
                     yield break;
-                case "CameraShot":
-                case "ICameraShotGetter":
-                case "ICameraShot":
-                case "ICameraShotInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraShot, ICameraShotGetter>(
-                        srcGroup: obj.CameraShots,
+                case "Armor":
+                case "IArmorGetter":
+                case "IArmor":
+                case "IArmorInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Armor, IArmorGetter>(
+                        srcGroup: obj.Armors,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.CameraShots,
-                        groupGetter: (m) => m.CameraShots))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "CameraPath":
-                case "ICameraPathGetter":
-                case "ICameraPath":
-                case "ICameraPathInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraPath, ICameraPathGetter>(
-                        srcGroup: obj.CameraPaths,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.CameraPaths,
-                        groupGetter: (m) => m.CameraPaths))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "VoiceType":
-                case "IVoiceTypeGetter":
-                case "IVoiceType":
-                case "IVoiceTypeInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, VoiceType, IVoiceTypeGetter>(
-                        srcGroup: obj.VoiceTypes,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.VoiceTypes,
-                        groupGetter: (m) => m.VoiceTypes))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Impact":
-                case "IImpactGetter":
-                case "IImpact":
-                case "IImpactInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Impact, IImpactGetter>(
-                        srcGroup: obj.Impacts,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Impacts,
-                        groupGetter: (m) => m.Impacts))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ImpactDataSet":
-                case "IImpactDataSetGetter":
-                case "IImpactDataSet":
-                case "IImpactDataSetInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImpactDataSet, IImpactDataSetGetter>(
-                        srcGroup: obj.ImpactDataSets,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ImpactDataSets,
-                        groupGetter: (m) => m.ImpactDataSets))
+                        group: (m) => m.Armors,
+                        groupGetter: (m) => m.Armors))
                     {
                         yield return item;
                     }
@@ -12482,86 +11516,58 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "EncounterZone":
-                case "IEncounterZoneGetter":
-                case "IEncounterZone":
-                case "IEncounterZoneInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EncounterZone, IEncounterZoneGetter>(
-                        srcGroup: obj.EncounterZones,
+                case "BodyPartData":
+                case "IBodyPartDataGetter":
+                case "IBodyPartData":
+                case "IBodyPartDataInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, BodyPartData, IBodyPartDataGetter>(
+                        srcGroup: obj.BodyParts,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.EncounterZones,
-                        groupGetter: (m) => m.EncounterZones))
+                        group: (m) => m.BodyParts,
+                        groupGetter: (m) => m.BodyParts))
                     {
                         yield return item;
                     }
                     yield break;
-                case "Ragdoll":
-                case "IRagdollGetter":
-                case "IRagdoll":
-                case "IRagdollInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ragdoll, IRagdollGetter>(
-                        srcGroup: obj.Ragdolls,
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Book, IBookGetter>(
+                        srcGroup: obj.Books,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.Ragdolls,
-                        groupGetter: (m) => m.Ragdolls))
+                        group: (m) => m.Books,
+                        groupGetter: (m) => m.Books))
                     {
                         yield return item;
                     }
                     yield break;
-                case "DefaultObjectManager":
-                case "IDefaultObjectManagerGetter":
-                case "IDefaultObjectManager":
-                case "IDefaultObjectManagerInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
-                        srcGroup: obj.DefaultObjectManagers,
+                case "CameraPath":
+                case "ICameraPathGetter":
+                case "ICameraPath":
+                case "ICameraPathInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraPath, ICameraPathGetter>(
+                        srcGroup: obj.CameraPaths,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.DefaultObjectManagers,
-                        groupGetter: (m) => m.DefaultObjectManagers))
+                        group: (m) => m.CameraPaths,
+                        groupGetter: (m) => m.CameraPaths))
                     {
                         yield return item;
                     }
                     yield break;
-                case "LightingTemplate":
-                case "ILightingTemplateGetter":
-                case "ILightingTemplate":
-                case "ILightingTemplateInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LightingTemplate, ILightingTemplateGetter>(
-                        srcGroup: obj.LightingTemplates,
+                case "CameraShot":
+                case "ICameraShotGetter":
+                case "ICameraShot":
+                case "ICameraShotInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CameraShot, ICameraShotGetter>(
+                        srcGroup: obj.CameraShots,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.LightingTemplates,
-                        groupGetter: (m) => m.LightingTemplates))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MusicType":
-                case "IMusicTypeGetter":
-                case "IMusicType":
-                case "IMusicTypeInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MusicType, IMusicTypeGetter>(
-                        srcGroup: obj.MusicTypes,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.MusicTypes,
-                        groupGetter: (m) => m.MusicTypes))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "FormList":
-                case "IFormListGetter":
-                case "IFormList":
-                case "IFormListInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, FormList, IFormListGetter>(
-                        srcGroup: obj.FormLists,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.FormLists,
-                        groupGetter: (m) => m.FormLists))
+                        group: (m) => m.CameraShots,
+                        groupGetter: (m) => m.CameraShots))
                     {
                         yield return item;
                     }
@@ -12595,6 +11601,460 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                     yield break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Class, IClassGetter>(
+                        srcGroup: obj.Classes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Classes,
+                        groupGetter: (m) => m.Classes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Climate":
+                case "IClimateGetter":
+                case "IClimate":
+                case "IClimateInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Climate, IClimateGetter>(
+                        srcGroup: obj.Climates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Climates,
+                        groupGetter: (m) => m.Climates))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CombatStyle":
+                case "ICombatStyleGetter":
+                case "ICombatStyle":
+                case "ICombatStyleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CombatStyle, ICombatStyleGetter>(
+                        srcGroup: obj.CombatStyles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CombatStyles,
+                        groupGetter: (m) => m.CombatStyles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Container":
+                case "IContainerGetter":
+                case "IContainer":
+                case "IContainerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Container, IContainerGetter>(
+                        srcGroup: obj.Containers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Containers,
+                        groupGetter: (m) => m.Containers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Creature":
+                case "ICreatureGetter":
+                case "ICreature":
+                case "ICreatureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Creature, ICreatureGetter>(
+                        srcGroup: obj.Creatures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Creatures,
+                        groupGetter: (m) => m.Creatures))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Debris, IDebrisGetter>(
+                        srcGroup: obj.Debris,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Debris,
+                        groupGetter: (m) => m.Debris))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DefaultObjectManager, IDefaultObjectManagerGetter>(
+                        srcGroup: obj.DefaultObjectManagers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DefaultObjectManagers,
+                        groupGetter: (m) => m.DefaultObjectManagers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var groupItem in obj.DialogTopics)
+                    {
+                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
+                            groupItem,
+                            linkCache: linkCache,
+                            type: type,
+                            throwIfUnknown: throwIfUnknown,
+                            modKey: obj.ModKey,
+                            parent: null,
+                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
+                            duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "DialogTopic":
+                case "IDialogTopicGetter":
+                case "IDialogTopic":
+                case "IDialogTopicInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DialogTopic, IDialogTopicGetter>(
+                        srcGroup: obj.DialogTopics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DialogTopics,
+                        groupGetter: (m) => m.DialogTopics))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Door":
+                case "IDoorGetter":
+                case "IDoor":
+                case "IDoorInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Door, IDoorGetter>(
+                        srcGroup: obj.Doors,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Doors,
+                        groupGetter: (m) => m.Doors))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EffectShader":
+                case "IEffectShaderGetter":
+                case "IEffectShader":
+                case "IEffectShaderInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EffectShader, IEffectShaderGetter>(
+                        srcGroup: obj.EffectShaders,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EffectShaders,
+                        groupGetter: (m) => m.EffectShaders))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, EncounterZone, IEncounterZoneGetter>(
+                        srcGroup: obj.EncounterZones,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.EncounterZones,
+                        groupGetter: (m) => m.EncounterZones))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Explosion":
+                case "IExplosionGetter":
+                case "IExplosion":
+                case "IExplosionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Explosion, IExplosionGetter>(
+                        srcGroup: obj.Explosions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Explosions,
+                        groupGetter: (m) => m.Explosions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Eyes, IEyesGetter>(
+                        srcGroup: obj.Eyes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Eyes,
+                        groupGetter: (m) => m.Eyes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Faction, IFactionGetter>(
+                        srcGroup: obj.Factions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Factions,
+                        groupGetter: (m) => m.Factions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, FormList, IFormListGetter>(
+                        srcGroup: obj.FormLists,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FormLists,
+                        groupGetter: (m) => m.FormLists))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Furniture, IFurnitureGetter>(
+                        srcGroup: obj.Furniture,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Furniture,
+                        groupGetter: (m) => m.Furniture))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, GameSetting, IGameSettingGetter>(
+                        srcGroup: obj.GameSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GameSettings,
+                        groupGetter: (m) => m.GameSettings))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Global":
+                case "IGlobalGetter":
+                case "IGlobal":
+                case "IGlobalInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Global, IGlobalGetter>(
+                        srcGroup: obj.Globals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Globals,
+                        groupGetter: (m) => m.Globals))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Grass, IGrassGetter>(
+                        srcGroup: obj.Grasses,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Grasses,
+                        groupGetter: (m) => m.Grasses))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Hair, IHairGetter>(
+                        srcGroup: obj.Hairs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Hairs,
+                        groupGetter: (m) => m.Hairs))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, HeadPart, IHeadPartGetter>(
+                        srcGroup: obj.HeadParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.HeadParts,
+                        groupGetter: (m) => m.HeadParts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleAnimation":
+                case "IIdleAnimationGetter":
+                case "IIdleAnimation":
+                case "IIdleAnimationInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleAnimation, IIdleAnimationGetter>(
+                        srcGroup: obj.IdleAnimations,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleAnimations,
+                        groupGetter: (m) => m.IdleAnimations))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, IdleMarker, IIdleMarkerGetter>(
+                        srcGroup: obj.IdleMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.IdleMarkers,
+                        groupGetter: (m) => m.IdleMarkers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpace":
+                case "IImageSpaceGetter":
+                case "IImageSpace":
+                case "IImageSpaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpace, IImageSpaceGetter>(
+                        srcGroup: obj.ImageSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaces,
+                        groupGetter: (m) => m.ImageSpaces))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImageSpaceAdapter":
+                case "IImageSpaceAdapterGetter":
+                case "IImageSpaceAdapter":
+                case "IImageSpaceAdapterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImageSpaceAdapter, IImageSpaceAdapterGetter>(
+                        srcGroup: obj.ImageSpaceAdapters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImageSpaceAdapters,
+                        groupGetter: (m) => m.ImageSpaceAdapters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Impact":
+                case "IImpactGetter":
+                case "IImpact":
+                case "IImpactInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Impact, IImpactGetter>(
+                        srcGroup: obj.Impacts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Impacts,
+                        groupGetter: (m) => m.Impacts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ImpactDataSet":
+                case "IImpactDataSetGetter":
+                case "IImpactDataSet":
+                case "IImpactDataSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ImpactDataSet, IImpactDataSetGetter>(
+                        srcGroup: obj.ImpactDataSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ImpactDataSets,
+                        groupGetter: (m) => m.ImpactDataSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ingestible, IIngestibleGetter>(
+                        srcGroup: obj.Ingestibles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ingestibles,
+                        groupGetter: (m) => m.Ingestibles))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ingredient":
+                case "IIngredientGetter":
+                case "IIngredient":
+                case "IIngredientInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ingredient, IIngredientGetter>(
+                        srcGroup: obj.Ingredients,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ingredients,
+                        groupGetter: (m) => m.Ingredients))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Key":
+                case "IKeyGetter":
+                case "IKey":
+                case "IKeyInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Key, IKeyGetter>(
+                        srcGroup: obj.Keys,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Keys,
+                        groupGetter: (m) => m.Keys))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":
@@ -12624,6 +12084,188 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                     yield break;
+                case "LandscapeTexture":
+                case "ILandscapeTextureGetter":
+                case "ILandscapeTexture":
+                case "ILandscapeTextureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LandscapeTexture, ILandscapeTextureGetter>(
+                        srcGroup: obj.LandscapeTextures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LandscapeTextures,
+                        groupGetter: (m) => m.LandscapeTextures))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledCreature":
+                case "ILeveledCreatureGetter":
+                case "ILeveledCreature":
+                case "ILeveledCreatureInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledCreature, ILeveledCreatureGetter>(
+                        srcGroup: obj.LeveledCreatures,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledCreatures,
+                        groupGetter: (m) => m.LeveledCreatures))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledItem, ILeveledItemGetter>(
+                        srcGroup: obj.LeveledItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledItems,
+                        groupGetter: (m) => m.LeveledItems))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LeveledNpc, ILeveledNpcGetter>(
+                        srcGroup: obj.LeveledNpcs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledNpcs,
+                        groupGetter: (m) => m.LeveledNpcs))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Light":
+                case "ILightGetter":
+                case "ILight":
+                case "ILightInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Light, ILightGetter>(
+                        srcGroup: obj.Lights,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Lights,
+                        groupGetter: (m) => m.Lights))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LightingTemplate, ILightingTemplateGetter>(
+                        srcGroup: obj.LightingTemplates,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LightingTemplates,
+                        groupGetter: (m) => m.LightingTemplates))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LoadScreen":
+                case "ILoadScreenGetter":
+                case "ILoadScreen":
+                case "ILoadScreenInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, LoadScreen, ILoadScreenGetter>(
+                        srcGroup: obj.LoadScreens,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LoadScreens,
+                        groupGetter: (m) => m.LoadScreens))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MagicEffect, IMagicEffectGetter>(
+                        srcGroup: obj.MagicEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MagicEffects,
+                        groupGetter: (m) => m.MagicEffects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MenuIcon, IMenuIconGetter>(
+                        srcGroup: obj.MenuIcons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MenuIcons,
+                        groupGetter: (m) => m.MenuIcons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Message, IMessageGetter>(
+                        srcGroup: obj.Messages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Messages,
+                        groupGetter: (m) => m.Messages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MiscItem, IMiscItemGetter>(
+                        srcGroup: obj.MiscItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MiscItems,
+                        groupGetter: (m) => m.MiscItems))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MoveableStatic, IMoveableStaticGetter>(
+                        srcGroup: obj.MoveableStatics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MoveableStatics,
+                        groupGetter: (m) => m.MoveableStatics))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MusicType, IMusicTypeGetter>(
+                        srcGroup: obj.MusicTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MusicTypes,
+                        groupGetter: (m) => m.MusicTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "NavigationMesh":
                 case "INavigationMeshGetter":
                 case "INavigationMesh":
@@ -12651,6 +12293,104 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             yield return item;
                         }
+                    }
+                    yield break;
+                case "NavigationMeshInfoMap":
+                case "INavigationMeshInfoMapGetter":
+                case "INavigationMeshInfoMap":
+                case "INavigationMeshInfoMapInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, NavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
+                        srcGroup: obj.NavigationMeshInfoMaps,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.NavigationMeshInfoMaps,
+                        groupGetter: (m) => m.NavigationMeshInfoMaps))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Note":
+                case "INoteGetter":
+                case "INote":
+                case "INoteInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Note, INoteGetter>(
+                        srcGroup: obj.Notes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Notes,
+                        groupGetter: (m) => m.Notes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Npc":
+                case "INpcGetter":
+                case "INpc":
+                case "INpcInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Npc, INpcGetter>(
+                        srcGroup: obj.Npcs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Npcs,
+                        groupGetter: (m) => m.Npcs))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectEffect":
+                case "IObjectEffectGetter":
+                case "IObjectEffect":
+                case "IObjectEffectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ObjectEffect, IObjectEffectGetter>(
+                        srcGroup: obj.ObjectEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ObjectEffects,
+                        groupGetter: (m) => m.ObjectEffects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Package":
+                case "IPackageGetter":
+                case "IPackage":
+                case "IPackageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Package, IPackageGetter>(
+                        srcGroup: obj.Packages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Packages,
+                        groupGetter: (m) => m.Packages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Perk, IPerkGetter>(
+                        srcGroup: obj.Perks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Perks,
+                        groupGetter: (m) => m.Perks))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "PlaceableWater":
+                case "IPlaceableWaterGetter":
+                case "IPlaceableWater":
+                case "IPlaceableWaterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, PlaceableWater, IPlaceableWaterGetter>(
+                        srcGroup: obj.PlaceableWaters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.PlaceableWaters,
+                        groupGetter: (m) => m.PlaceableWaters))
+                    {
+                        yield return item;
                     }
                     yield break;
                 case "PlacedBeam":
@@ -12827,24 +12567,284 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                     yield break;
-                case "DialogResponses":
-                case "IDialogResponsesGetter":
-                case "IDialogResponses":
-                case "IDialogResponsesInternal":
-                    foreach (var groupItem in obj.DialogTopics)
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Projectile, IProjectileGetter>(
+                        srcGroup: obj.Projectiles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Projectiles,
+                        groupGetter: (m) => m.Projectiles))
                     {
-                        foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
-                        {
-                            yield return item;
-                        }
+                        yield return item;
+                    }
+                    yield break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Quest, IQuestGetter>(
+                        srcGroup: obj.Quests,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Quests,
+                        groupGetter: (m) => m.Quests))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
+                        srcGroup: obj.Races,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Races,
+                        groupGetter: (m) => m.Races))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "RadiationStage":
+                case "IRadiationStageGetter":
+                case "IRadiationStage":
+                case "IRadiationStageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, RadiationStage, IRadiationStageGetter>(
+                        srcGroup: obj.RadiationStages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.RadiationStages,
+                        groupGetter: (m) => m.RadiationStages))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ragdoll":
+                case "IRagdollGetter":
+                case "IRagdoll":
+                case "IRagdollInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ragdoll, IRagdollGetter>(
+                        srcGroup: obj.Ragdolls,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ragdolls,
+                        groupGetter: (m) => m.Ragdolls))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Region":
+                case "IRegionGetter":
+                case "IRegion":
+                case "IRegionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Region, IRegionGetter>(
+                        srcGroup: obj.Regions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Regions,
+                        groupGetter: (m) => m.Regions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Script":
+                case "IScriptGetter":
+                case "IScript":
+                case "IScriptInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Script, IScriptGetter>(
+                        srcGroup: obj.Scripts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Scripts,
+                        groupGetter: (m) => m.Scripts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Sound, ISoundGetter>(
+                        srcGroup: obj.Sounds,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Sounds,
+                        groupGetter: (m) => m.Sounds))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Spell, ISpellGetter>(
+                        srcGroup: obj.Spells,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Spells,
+                        groupGetter: (m) => m.Spells))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Static, IStaticGetter>(
+                        srcGroup: obj.Statics,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Statics,
+                        groupGetter: (m) => m.Statics))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, StaticCollection, IStaticCollectionGetter>(
+                        srcGroup: obj.StaticCollections,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StaticCollections,
+                        groupGetter: (m) => m.StaticCollections))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TalkingActivator":
+                case "ITalkingActivatorGetter":
+                case "ITalkingActivator":
+                case "ITalkingActivatorInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TalkingActivator, ITalkingActivatorGetter>(
+                        srcGroup: obj.TalkingActivators,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TalkingActivators,
+                        groupGetter: (m) => m.TalkingActivators))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Terminal":
+                case "ITerminalGetter":
+                case "ITerminal":
+                case "ITerminalInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Terminal, ITerminalGetter>(
+                        srcGroup: obj.Terminals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Terminals,
+                        groupGetter: (m) => m.Terminals))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TextureSet, ITextureSetGetter>(
+                        srcGroup: obj.TextureSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TextureSets,
+                        groupGetter: (m) => m.TextureSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Tree":
+                case "ITreeGetter":
+                case "ITree":
+                case "ITreeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Tree, ITreeGetter>(
+                        srcGroup: obj.Trees,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Trees,
+                        groupGetter: (m) => m.Trees))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VoiceType":
+                case "IVoiceTypeGetter":
+                case "IVoiceType":
+                case "IVoiceTypeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, VoiceType, IVoiceTypeGetter>(
+                        srcGroup: obj.VoiceTypes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.VoiceTypes,
+                        groupGetter: (m) => m.VoiceTypes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Water":
+                case "IWaterGetter":
+                case "IWater":
+                case "IWaterInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Water, IWaterGetter>(
+                        srcGroup: obj.Waters,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Waters,
+                        groupGetter: (m) => m.Waters))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weapon, IWeaponGetter>(
+                        srcGroup: obj.Weapons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weapons,
+                        groupGetter: (m) => m.Weapons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Weather, IWeatherGetter>(
+                        srcGroup: obj.Weather,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weather,
+                        groupGetter: (m) => m.Weather))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Worldspace":
+                case "IWorldspaceGetter":
+                case "IWorldspace":
+                case "IWorldspaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Worldspace, IWorldspaceGetter>(
+                        srcGroup: obj.Worldspaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Worldspaces,
+                        groupGetter: (m) => m.Worldspaces))
+                    {
+                        yield return item;
                     }
                     yield break;
                 default:

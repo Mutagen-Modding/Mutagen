@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.TimeMultiplierPlayer = default(Single);
             item.TimeMultiplierTarget = default(Single);
             item.TimeMultiplierGlobal = default(Single);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

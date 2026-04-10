@@ -2810,7 +2810,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.ColorKey1ColorKeyTime = default(Single);
             item.ColorKey2ColorKeyTime = default(Single);
             item.ColorKey3ColorKeyTime = default(Single);
-            item.ExtendedData = Array.Empty<byte>();
+            item.ExtendedData = [];
         }
         
         #region Mutagen

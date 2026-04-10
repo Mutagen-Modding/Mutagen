@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.NumRanks = default(Byte);
             item.Playable = default(Boolean);
             item.Hidden = default(Boolean);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

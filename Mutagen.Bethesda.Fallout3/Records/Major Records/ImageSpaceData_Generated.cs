@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CinematicTintGreen = default(Single);
             item.CinematicTintBlue = default(Single);
             item.CinematicTintValue = default(Single);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

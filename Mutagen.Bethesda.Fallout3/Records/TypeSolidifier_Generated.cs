@@ -2699,102 +2699,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Link Interfaces
         /// <summary>
-        /// Scope a load order query to IPlaceableObject
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IPlaceableObject</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter> IPlaceableObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IPlaceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IPlaceableObject
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IPlaceableObject</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter> IPlaceableObject(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IPlaceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IReferenceableObject
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IReferenceableObject</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter> IReferenceableObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IReferenceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IReferenceableObject
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IReferenceableObject</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter> IReferenceableObject(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IReferenceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IExplodeSpawn
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IExplodeSpawn</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter> IExplodeSpawn(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IExplodeSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IExplodeSpawn
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IExplodeSpawn</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter> IExplodeSpawn(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IExplodeSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IItem
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IItem</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter> IItem(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IItem
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IItem</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter> IItem(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to IAmmoOrList
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -2867,75 +2771,75 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
-        /// Scope a load order query to INpcSpawn
+        /// Scope a load order query to IEffectRecord
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on INpcSpawn</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        /// <returns>A typed object to do further queries on IEffectRecord</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter> IEffectRecord(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to INpcSpawn
+        /// Scope a load order query to IEffectRecord
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on INpcSpawn</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IFallout3ModGetter> mods)
+        /// <returns>A typed object to do further queries on IEffectRecord</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter> IEffectRecord(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to IRelatable
+        /// Scope a load order query to IEmittance
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IRelatable</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter> IRelatable(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        /// <returns>A typed object to do further queries on IEmittance</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter> IEmittance(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to IRelatable
+        /// Scope a load order query to IEmittance
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IRelatable</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter> IRelatable(this IEnumerable<IFallout3ModGetter> mods)
+        /// <returns>A typed object to do further queries on IEmittance</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter> IEmittance(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to IOwner
+        /// Scope a load order query to IExplodeSpawn
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IOwner</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter> IOwner(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        /// <returns>A typed object to do further queries on IExplodeSpawn</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter> IExplodeSpawn(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IExplodeSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to IOwner
+        /// Scope a load order query to IExplodeSpawn
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IOwner</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter> IOwner(this IEnumerable<IFallout3ModGetter> mods)
+        /// <returns>A typed object to do further queries on IExplodeSpawn</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter> IExplodeSpawn(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IExplodeSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IExplodeSpawn, IExplodeSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -2963,27 +2867,99 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
-        /// Scope a load order query to IEffectRecord
+        /// Scope a load order query to IItem
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IEffectRecord</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter> IEffectRecord(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        /// <returns>A typed object to do further queries on IItem</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter> IItem(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to IEffectRecord
+        /// Scope a load order query to IItem
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IEffectRecord</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter> IEffectRecord(this IEnumerable<IFallout3ModGetter> mods)
+        /// <returns>A typed object to do further queries on IItem</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter> IItem(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEffectRecord, IEffectRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IItem, IItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcSpawn
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on INpcSpawn</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcSpawn
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on INpcSpawn</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, INpcSpawn, INpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IOwner
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IOwner</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter> IOwner(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IOwner
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IOwner</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter> IOwner(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IOwner, IOwnerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPlaceableObject
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IPlaceableObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter> IPlaceableObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPlaceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPlaceableObject
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IPlaceableObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter> IPlaceableObject(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPlaceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaceableObject, IPlaceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -3011,27 +2987,51 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
-        /// Scope a load order query to IEmittance
+        /// Scope a load order query to IReferenceableObject
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IEmittance</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter> IEmittance(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        /// <returns>A typed object to do further queries on IReferenceableObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter> IReferenceableObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IReferenceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to IEmittance
+        /// Scope a load order query to IReferenceableObject
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IEmittance</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter> IEmittance(this IEnumerable<IFallout3ModGetter> mods)
+        /// <returns>A typed object to do further queries on IReferenceableObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter> IReferenceableObject(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IEmittance, IEmittanceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IReferenceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IRelatable
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IRelatable</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter> IRelatable(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IRelatable
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IRelatable</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter> IRelatable(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

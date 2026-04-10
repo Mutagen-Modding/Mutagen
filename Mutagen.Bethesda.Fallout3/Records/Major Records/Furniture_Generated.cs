@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Model = null;
             item.Script.Clear();
             item.Destructible = null;
-            item.MarkerFlags = Array.Empty<byte>();
+            item.MarkerFlags = [];
             base.Clear(item);
         }
         

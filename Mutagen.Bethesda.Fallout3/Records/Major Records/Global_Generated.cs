@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
+    /// Implemented by: [GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public abstract partial class Global :
         Fallout3MajorRecord,
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
+    /// Implemented by: [GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public partial interface IGlobal :
         IFallout3MajorRecordInternal,
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
+    /// Implemented by: [GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public partial interface IGlobalGetter :
         IFallout3MajorRecordGetter,

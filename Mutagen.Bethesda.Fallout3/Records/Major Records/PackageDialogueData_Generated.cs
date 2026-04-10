@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.DialogueFOV = default(Single);
             item.DialogueTopic.Clear();
             item.DialogueFlags = default(UInt32);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

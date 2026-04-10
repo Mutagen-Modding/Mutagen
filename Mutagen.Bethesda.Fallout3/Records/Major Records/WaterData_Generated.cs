@@ -2640,7 +2640,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.NoiseLayerOneUVScale = default(Single);
             item.NoiseLayerTwoUVScale = default(Single);
             item.NoiseLayerThreeUVScale = default(Single);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

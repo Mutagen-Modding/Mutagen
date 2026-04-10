@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectScriptArchetype, MagicEffectBoundItemArchetype, MagicEffectSummonCreatureArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundItemArchetype, MagicEffectScriptArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public abstract partial class AMagicEffectArchetype :
         IAMagicEffectArchetype,
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectScriptArchetype, MagicEffectBoundItemArchetype, MagicEffectSummonCreatureArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundItemArchetype, MagicEffectScriptArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public partial interface IAMagicEffectArchetype :
         IAMagicEffectArchetypeGetter,
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [MagicEffectArchetype, MagicEffectScriptArchetype, MagicEffectBoundItemArchetype, MagicEffectSummonCreatureArchetype]
+    /// Implemented by: [MagicEffectArchetype, MagicEffectBoundItemArchetype, MagicEffectScriptArchetype, MagicEffectSummonCreatureArchetype]
     /// </summary>
     public partial interface IAMagicEffectArchetypeGetter :
         ILoquiObject,

@@ -2517,10 +2517,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "WorldspaceImpactSwap":
-                case "IWorldspaceImpactSwapGetter":
-                case "IWorldspaceImpactSwap":
-                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -2536,9 +2532,21 @@ namespace Mutagen.Bethesda.Fallout3
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
+                case "ICellOrWorldspace":
+                case "ICellOrWorldspaceGetter":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
                     foreach (var subItem in obj.SubCells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -2664,25 +2672,17 @@ namespace Mutagen.Bethesda.Fallout3
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ICellOrWorldspace":
-                case "ICellOrWorldspaceGetter":
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IPlaced":
-                case "IPlacedGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
+                case "WorldspaceImpactSwap":
+                case "IWorldspaceImpactSwapGetter":
+                case "IWorldspaceImpactSwap":
                     break;
                 default:
                     if (throwIfUnknown)
@@ -3466,10 +3466,6 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceImpactSwap":
-                case "IWorldspaceImpactSwapGetter":
-                case "IWorldspaceImpactSwap":
-                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -3484,17 +3480,6 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -3671,6 +3656,21 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                     yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "WorldspaceImpactSwap":
+                case "IWorldspaceImpactSwapGetter":
+                case "IWorldspaceImpactSwap":
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -3812,10 +3812,6 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceImpactSwap":
-                case "IWorldspaceImpactSwapGetter":
-                case "IWorldspaceImpactSwap":
-                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -3869,21 +3865,6 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
-                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
-                        type: type,
-                        modKey: modKey,
-                        parent: curContext,
-                        linkCache: linkCache,
-                        throwIfUnknown: false,
-                        worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "WorldspaceBlock":
-                case "IWorldspaceBlockGetter":
-                case "IWorldspaceBlock":
                     foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
                         type: type,
                         modKey: modKey,
@@ -4263,6 +4244,25 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         yield return item;
                     }
+                    yield break;
+                case "WorldspaceBlock":
+                case "IWorldspaceBlockGetter":
+                case "IWorldspaceBlock":
+                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
+                        type: type,
+                        modKey: modKey,
+                        parent: curContext,
+                        linkCache: linkCache,
+                        throwIfUnknown: false,
+                        worldspace: obj,
+                        getOrAddAsOverride: getOrAddAsOverride))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WorldspaceImpactSwap":
+                case "IWorldspaceImpactSwapGetter":
+                case "IWorldspaceImpactSwap":
                     yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IWorldspaceGetter, IFallout3Mod, IFallout3ModGetter>(

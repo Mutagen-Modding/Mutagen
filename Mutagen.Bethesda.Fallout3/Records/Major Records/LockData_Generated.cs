@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Key.Clear();
             item.LockFlags = default(Byte);
             item.Unused2 = new byte[3];
-            item.Unknown = Array.Empty<byte>();
+            item.Unknown = [];
         }
         
         #region Mutagen

@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// Implemented by: [GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public abstract partial class GameSetting :
         Fallout3MajorRecord,
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// Implemented by: [GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public partial interface IGameSetting :
         IFallout3MajorRecordInternal,
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [GameSettingInt, GameSettingFloat, GameSettingString]
+    /// Implemented by: [GameSettingFloat, GameSettingInt, GameSettingString]
     /// </summary>
     public partial interface IGameSettingGetter :
         IFallout3MajorRecordGetter,

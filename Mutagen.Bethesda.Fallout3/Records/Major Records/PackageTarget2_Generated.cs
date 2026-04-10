@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.TargetType = default(Int32);
             item.TargetValue.Clear();
             item.TargetCountOrDistance = default(Int32);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

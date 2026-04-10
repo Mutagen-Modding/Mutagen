@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.FogFar = default(Single);
             item.DirectionalRotationXY = default(Int32);
             item.DirectionalRotationZ = default(Int32);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

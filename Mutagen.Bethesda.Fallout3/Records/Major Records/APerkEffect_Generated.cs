@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// Implemented by: [APerkEntryPointEffect, PerkAbilityEffect, PerkQuestEffect]
     /// </summary>
     public abstract partial class APerkEffect :
         IAPerkEffect,
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// Implemented by: [APerkEntryPointEffect, PerkAbilityEffect, PerkQuestEffect]
     /// </summary>
     public partial interface IAPerkEffect :
         IAPerkEffectGetter,
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [PerkQuestEffect, PerkAbilityEffect, APerkEntryPointEffect]
+    /// Implemented by: [APerkEntryPointEffect, PerkAbilityEffect, PerkQuestEffect]
     /// </summary>
     public partial interface IAPerkEffectGetter :
         ILoquiObject,

@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Organic.Clear();
             item.Cloth.Clear();
             item.Water.Clear();
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

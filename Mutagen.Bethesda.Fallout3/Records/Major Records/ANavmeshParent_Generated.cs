@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [WorldspaceNavmeshParent, CellNavmeshParent]
+    /// Implemented by: [CellNavmeshParent, WorldspaceNavmeshParent]
     /// </summary>
     public abstract partial class ANavmeshParent :
         IANavmeshParent,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [WorldspaceNavmeshParent, CellNavmeshParent]
+    /// Implemented by: [CellNavmeshParent, WorldspaceNavmeshParent]
     /// </summary>
     public partial interface IANavmeshParent :
         IANavmeshParentGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [WorldspaceNavmeshParent, CellNavmeshParent]
+    /// Implemented by: [CellNavmeshParent, WorldspaceNavmeshParent]
     /// </summary>
     public partial interface IANavmeshParentGetter :
         ILoquiObject,

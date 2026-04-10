@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.LoopingMax = default(Byte);
             item.Unused1 = default(Byte);
             item.ReplayDelay = default(Int16);
-            item.Remaining = Array.Empty<byte>();
+            item.Remaining = [];
         }
         
         #region Mutagen

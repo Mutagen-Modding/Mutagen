@@ -1278,6 +1278,13 @@ namespace Mutagen.Bethesda.Fallout3
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    foreach (var subItem in obj.Cells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":
@@ -1345,13 +1352,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IPlaced":
-                case "IPlacedGetter":
                     foreach (var subItem in obj.Cells)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);

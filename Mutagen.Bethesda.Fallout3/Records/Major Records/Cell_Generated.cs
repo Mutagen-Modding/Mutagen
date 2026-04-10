@@ -2904,6 +2904,12 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":
@@ -2965,12 +2971,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
-                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
-                    obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
-                    break;
-                case "IPlaced":
-                case "IPlacedGetter":
                     obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
                     obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
@@ -3877,6 +3877,30 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
                 case "Landscape":
                 case "ILandscapeGetter":
                 case "ILandscape":
@@ -3905,30 +3929,6 @@ namespace Mutagen.Bethesda.Fallout3
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
-                        }
-                    }
-                    yield break;
-                case "IPlacedGetter":
-                case "IPlaced":
-                    foreach (var subItem in obj.Persistent)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.Temporary)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    foreach (var subItem in obj.VisibleWhenDistant)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
                         }
                     }
                     yield break;
@@ -4122,52 +4122,6 @@ namespace Mutagen.Bethesda.Fallout3
                 getOrAddAsOverride: getOrAddAsOverride,
                 duplicateInto: duplicateInto,
                 parent: parent);
-            {
-                if (obj.Landscape is {} CellLandscapeitem)
-                {
-                    yield return new ModContext<IFallout3Mod, IFallout3ModGetter, ILandscapeInternal, ILandscapeGetter>(
-                        modKey: modKey,
-                        record: CellLandscapeitem,
-                        parent: curContext,
-                        getOrAddAsOverride: (m, r) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            if (baseRec.Landscape != null) return baseRec.Landscape;
-                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
-                            baseRec.Landscape = copy;
-                            return copy;
-                        },
-                        duplicateInto: (m, r, e, f) =>
-                        {
-                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
-                            baseRec.Landscape = dupRec;
-                            return dupRec;
-                        });
-                }
-            }
-            foreach (var subItem in obj.NavigationMeshes)
-            {
-                yield return new ModContext<IFallout3Mod, IFallout3ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
-                    modKey: modKey,
-                    record: subItem,
-                    parent: curContext,
-                    getOrAddAsOverride: (m, r) =>
-                    {
-                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                        var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
-                        if (ret != null) return ret;
-                        ret = (NavigationMesh)((INavigationMeshGetter)r).DeepCopy();
-                        parent.NavigationMeshes.Add(ret);
-                        return ret;
-                    },
-                    duplicateInto: (m, r, e, f) =>
-                    {
-                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
-                        return dup;
-                    });
-            }
             foreach (var subItem in obj.Persistent)
             {
                 yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
@@ -4234,6 +4188,52 @@ namespace Mutagen.Bethesda.Fallout3
                         return dup;
                     });
             }
+            {
+                if (obj.Landscape is {} CellLandscapeitem)
+                {
+                    yield return new ModContext<IFallout3Mod, IFallout3ModGetter, ILandscapeInternal, ILandscapeGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e, f) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
+            foreach (var subItem in obj.NavigationMeshes)
+            {
+                yield return new ModContext<IFallout3Mod, IFallout3ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (NavigationMesh)((INavigationMeshGetter)r).DeepCopy();
+                        parent.NavigationMeshes.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e, f) =>
+                    {
+                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
+                        return dup;
+                    });
+            }
         }
         
         public IEnumerable<IModContext<IFallout3Mod, IFallout3ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
@@ -4281,65 +4281,6 @@ namespace Mutagen.Bethesda.Fallout3
                         duplicateInto: duplicateInto))
                     {
                         yield return item;
-                    }
-                    yield break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
-                    {
-                        if (obj.Landscape is {} CellLandscapeitem)
-                        {
-                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, ILandscapeInternal, ILandscapeGetter>(
-                                modKey: modKey,
-                                record: CellLandscapeitem,
-                                parent: curContext,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    if (baseRec.Landscape != null) return baseRec.Landscape;
-                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
-                                    baseRec.Landscape = copy;
-                                    return copy;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
-                                    baseRec.Landscape = dupRec;
-                                    return dupRec;
-                                });
-                        }
-                    }
-                    yield break;
-                case "NavigationMesh":
-                case "INavigationMeshGetter":
-                case "INavigationMesh":
-                case "INavigationMeshInternal":
-                    foreach (var subItem in obj.NavigationMeshes)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
-                                modKey: modKey,
-                                record: subItem,
-                                parent: curContext,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
-                                    if (ret != null) return ret;
-                                    ret = (NavigationMesh)((INavigationMeshGetter)r).DeepCopy();
-                                    parent.NavigationMeshes.Add(ret);
-                                    return ret;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
-                                    return dup;
-                                });
-                        }
                     }
                     yield break;
                 case "IPlacedGetter":
@@ -4415,6 +4356,65 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} CellLandscapeitem)
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, ILandscapeInternal, ILandscapeGetter>(
+                                modKey: modKey,
+                                record: CellLandscapeitem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    if (baseRec.Landscape != null) return baseRec.Landscape;
+                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = dupRec;
+                                    return dupRec;
+                                });
+                        }
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var subItem in obj.NavigationMeshes)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (NavigationMesh)((INavigationMeshGetter)r).DeepCopy();
+                                    parent.NavigationMeshes.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
                                     return dup;
                                 });
                         }
