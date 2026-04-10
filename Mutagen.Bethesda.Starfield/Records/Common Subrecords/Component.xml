@@ -590,4 +590,17 @@
       <P2Int32 name="Point" />
     </Fields>
   </Object>
+  <Object name="AdaptiveTriggerDataComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="WFIR" recordType="WFIR" unknown="true" />
+      <ByteArray name="WAIM" recordType="WAIM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="QualityUpgradeComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <List name="QualityMods" recordType="QUPA">
+        <FormLink refName="ObjectModification" />
+      </List>
+    </Fields>
+  </Object>
 </Loqui>

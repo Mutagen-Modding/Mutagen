@@ -3375,6 +3375,12 @@ namespace Mutagen.Bethesda.Starfield
                 case "OverlayDesignatedPlacementInfoComponent":
                 case "IOverlayDesignatedPlacementInfoComponentGetter":
                 case "IOverlayDesignatedPlacementInfoComponent":
+                case "AdaptiveTriggerDataComponent":
+                case "IAdaptiveTriggerDataComponentGetter":
+                case "IAdaptiveTriggerDataComponent":
+                case "QualityUpgradeComponent":
+                case "IQualityUpgradeComponentGetter":
+                case "IQualityUpgradeComponent":
                     break;
                 case "WorldspaceGridReference":
                 case "IWorldspaceGridReferenceGetter":

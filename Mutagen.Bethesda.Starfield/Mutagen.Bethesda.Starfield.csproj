@@ -6677,6 +6677,12 @@
     <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\AdaptiveTriggerDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\QualityUpgradeComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PlacedObjectGoboAnimatedProperties_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>

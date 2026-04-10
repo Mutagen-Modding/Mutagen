@@ -859,6 +859,7 @@ public partial class RecordTypes
     public static readonly RecordType QTLM = new(0x4D4C5451);
     public static readonly RecordType QTYP = new(0x50595451);
     public static readonly RecordType QUAL = new(0x4C415551);
+    public static readonly RecordType QUPA = new(0x41505551);
     public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RABG = new(0x47424152);
     public static readonly RecordType RACE = new(0x45434152);
