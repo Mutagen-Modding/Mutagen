@@ -16,8 +16,7 @@
       <ByteArray name="NNAM" recordType="NNAM" />
     </Fields>
   </Object>
-  <Object name="ANavmeshParent" abstract="true" objType="Subrecord">
-  </Object>
+  <Object name="ANavmeshParent" abstract="true" objType="Subrecord" />
   <Object name="WorldspaceNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
     <Fields>
       <FormLink name="Parent" refName="Worldspace" />

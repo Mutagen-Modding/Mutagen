@@ -3,14 +3,10 @@
   <Object name="Reputation" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="REPU">
     <Fields>
-      <String name="Name" recordType="FULL">
-      </String>
-      <String name="LargeIconFilename" recordType="ICON">
-      </String>
-      <String name="SmallIconFilename" recordType="MICO">
-      </String>
-      <Float name="Value" recordType="DATA">
-      </Float>
+      <String name="Name" recordType="FULL" />
+      <String name="LargeIconFilename" recordType="ICON" />
+      <String name="SmallIconFilename" recordType="MICO" />
+      <Float name="Value" recordType="DATA" />
     </Fields>
   </Object>
 </Loqui>
