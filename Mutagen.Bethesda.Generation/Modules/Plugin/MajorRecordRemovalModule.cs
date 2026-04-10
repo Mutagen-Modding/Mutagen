@@ -632,12 +632,12 @@ public class MajorRecordRemovalModule : GenerationModule
                     }
 
                     // Generate for major record marker interfaces 
-                    foreach (var interf in interfs.EmptyIfNull())
+                    foreach (var interf in interfs.EmptyIfNull().OrderBy(x => x.Key))
                     {
                         StructuredStringBuilder subFg = new StructuredStringBuilder();
                         HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
                         HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
-                        foreach (var subObj in interf.Value)
+                        foreach (var subObj in interf.Value.OrderBy(x => x.Name))
                         {
                             var grup = obj.Fields
                                 .WhereCastable<TypeGeneration, GroupType>()
@@ -683,7 +683,15 @@ public class MajorRecordRemovalModule : GenerationModule
                         }
                     }
 
-                    foreach (var kv in generationDict)
+                    foreach (var kv in generationDict
+                                 .OrderBy(x => x.Key switch
+                                 {
+                                     LoquiType l => l.Interface(getter: true),
+                                     ObjectGeneration o => o.Name,
+                                     InterfInstr i => i.Interf,
+                                     string s => s,
+                                     _ => x.Key.ToString()
+                                 }))
                     {
                         switch (kv.Key)
                         {

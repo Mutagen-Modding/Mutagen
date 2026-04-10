@@ -1305,60 +1305,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
                     break;
-                case "WorldspaceSubBlock":
-                case "IWorldspaceSubBlockGetter":
-                case "IWorldspaceSubBlock":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "Cell":
-                case "ICellGetter":
-                case "ICell":
-                case "ICellInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    obj.Items.RemoveWhere(i => i.Items.Count == 0);
-                    break;
-                case "Landscape":
-                case "ILandscapeGetter":
-                case "ILandscape":
-                case "ILandscapeInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "NavigationMesh":
-                case "INavigationMeshGetter":
-                case "INavigationMesh":
-                case "INavigationMeshInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PlacedNpc":
-                case "IPlacedNpcGetter":
-                case "IPlacedNpc":
-                case "IPlacedNpcInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "PlacedObject":
-                case "IPlacedObjectGetter":
-                case "IPlacedObject":
-                case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -1400,12 +1346,15 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IExplodeSpawn":
-                case "IExplodeSpawnGetter":
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
+                    obj.Items.RemoveWhere(i => i.Items.Count == 0);
                     break;
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
@@ -1414,15 +1363,15 @@ namespace Mutagen.Bethesda.Fallout4
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IKeywordLinkedReference":
-                case "IKeywordLinkedReferenceGetter":
+                case "IExplodeSpawn":
+                case "IExplodeSpawnGetter":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IPreCutMapEntryReference":
-                case "IPreCutMapEntryReferenceGetter":
+                case "IKeywordLinkedReference":
+                case "IKeywordLinkedReferenceGetter":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1444,6 +1393,57 @@ namespace Mutagen.Bethesda.Fallout4
                     break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPreCutMapEntryReference":
+                case "IPreCutMapEntryReferenceGetter":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "WorldspaceSubBlock":
+                case "IWorldspaceSubBlockGetter":
+                case "IWorldspaceSubBlock":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1737,9 +1737,10 @@ namespace Mutagen.Bethesda.Fallout4
                         yield return item;
                     }
                     yield break;
-                case "WorldspaceSubBlock":
-                case "IWorldspaceSubBlockGetter":
-                case "IWorldspaceSubBlock":
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
                     foreach (var subItem in obj.Items)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -1808,10 +1809,9 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                     yield break;
-                case "APlacedTrap":
-                case "IAPlacedTrapGetter":
-                case "IAPlacedTrap":
-                case "IAPlacedTrapInternal":
+                case "WorldspaceSubBlock":
+                case "IWorldspaceSubBlockGetter":
+                case "IWorldspaceSubBlock":
                     foreach (var subItem in obj.Items)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))

@@ -373,7 +373,14 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     hasTarget: typesWithDeepTargets.Any(f => f.Name == field.Name));
             }
 
-            foreach (var kv in generationDict)
+            foreach (var kv in generationDict
+                         .OrderBy(x => x.Key switch
+                         {
+                             LoquiType l => l.Interface(getter: true),
+                             ObjectGeneration o => o.Name,
+                             string s => s,
+                             _ => x.Key.ToString()
+                         }))
             {
                 sb.AppendLines(kv.Value);
             }
@@ -567,14 +574,21 @@ public class MajorRecordContextEnumerationModule : GenerationModule
                     }
 
                     HashSet<string> blackList = new HashSet<string>();
-                    foreach (var kv in generationDict)
+                    foreach (var kv in generationDict
+                                 .OrderBy(x => x.Key switch
+                                 {
+                                     LoquiType l => l.Interface(getter: true),
+                                     ObjectGeneration o => o.Name,
+                                     string s => s,
+                                     _ => x.Key.ToString()
+                                 }))
                     {
                         switch (kv.Key)
                         {
                             case LoquiType loqui:
                                 if (loqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
-                                    // Handled in default case  
+                                    // Handled in default case
                                     continue;
                                 }
                                 else

@@ -3929,24 +3929,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IQualityUpgradeComponentGetter":
                 case "IQualityUpgradeComponent":
                     break;
-                case "Condition":
-                case "IConditionGetter":
-                case "ICondition":
-                case "ConditionGlobal":
-                case "IConditionGlobalGetter":
-                case "IConditionGlobal":
-                case "ConditionFloat":
-                case "IConditionFloatGetter":
-                case "IConditionFloat":
-                    break;
-                case "QuestStage":
-                case "IQuestStageGetter":
-                case "IQuestStage":
-                    break;
-                case "QuestObjective":
-                case "IQuestObjectiveGetter":
-                case "IQuestObjective":
-                    break;
                 case "AQuestAlias":
                 case "IAQuestAliasGetter":
                 case "IAQuestAlias":
@@ -3960,15 +3942,30 @@ namespace Mutagen.Bethesda.Starfield
                 case "IQuestCollectionAliasGetter":
                 case "IQuestCollectionAlias":
                     break;
-                case "QuestMissionBoardPanel":
-                case "IQuestMissionBoardPanelGetter":
-                case "IQuestMissionBoardPanel":
+                case "Condition":
+                case "IConditionGetter":
+                case "ICondition":
+                case "ConditionGlobal":
+                case "IConditionGlobalGetter":
+                case "IConditionGlobal":
+                case "ConditionFloat":
+                case "IConditionFloatGetter":
+                case "IConditionFloat":
                     break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
                     obj.DialogBranches.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.DialogTopics)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
                     break;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
@@ -3980,20 +3977,23 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "QuestMissionBoardPanel":
+                case "IQuestMissionBoardPanelGetter":
+                case "IQuestMissionBoardPanel":
+                    break;
+                case "QuestObjective":
+                case "IQuestObjectiveGetter":
+                case "IQuestObjective":
+                    break;
+                case "QuestStage":
+                case "IQuestStageGetter":
+                case "IQuestStage":
+                    break;
                 case "Scene":
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
                     obj.Scenes.RemoveWhere(i => keys.Contains(i.FormKey));
-                    break;
-                case "DialogResponses":
-                case "IDialogResponsesGetter":
-                case "IDialogResponses":
-                case "IDialogResponsesInternal":
-                    foreach (var subItem in obj.DialogTopics)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
                     break;
                 default:
                     if (throwIfUnknown)
@@ -4987,31 +4987,35 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAComponentGetter":
                 case "IAComponent":
                     yield break;
-                case "Condition":
-                case "IConditionGetter":
-                case "ICondition":
-                    yield break;
-                case "QuestStage":
-                case "IQuestStageGetter":
-                case "IQuestStage":
-                    yield break;
-                case "QuestObjective":
-                case "IQuestObjectiveGetter":
-                case "IQuestObjective":
-                    yield break;
                 case "AQuestAlias":
                 case "IAQuestAliasGetter":
                 case "IAQuestAlias":
                     yield break;
-                case "QuestMissionBoardPanel":
-                case "IQuestMissionBoardPanelGetter":
-                case "IQuestMissionBoardPanel":
+                case "Condition":
+                case "IConditionGetter":
+                case "ICondition":
                     yield break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
                     foreach (var subItem in obj.DialogBranches)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.DialogTopics)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
@@ -5039,27 +5043,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                     yield break;
+                case "QuestMissionBoardPanel":
+                case "IQuestMissionBoardPanelGetter":
+                case "IQuestMissionBoardPanel":
+                    yield break;
+                case "QuestObjective":
+                case "IQuestObjectiveGetter":
+                case "IQuestObjective":
+                    yield break;
+                case "QuestStage":
+                case "IQuestStageGetter":
+                case "IQuestStage":
+                    yield break;
                 case "Scene":
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
                     foreach (var subItem in obj.Scenes)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "DialogResponses":
-                case "IDialogResponsesGetter":
-                case "IDialogResponses":
-                case "IDialogResponsesInternal":
-                    foreach (var subItem in obj.DialogTopics)
                     {
                         if (type.IsAssignableFrom(subItem.GetType()))
                         {
@@ -5247,25 +5247,13 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAComponentGetter":
                 case "IAComponent":
                     yield break;
-                case "Condition":
-                case "IConditionGetter":
-                case "ICondition":
-                    yield break;
-                case "QuestStage":
-                case "IQuestStageGetter":
-                case "IQuestStage":
-                    yield break;
-                case "QuestObjective":
-                case "IQuestObjectiveGetter":
-                case "IQuestObjective":
-                    yield break;
                 case "AQuestAlias":
                 case "IAQuestAliasGetter":
                 case "IAQuestAlias":
                     yield break;
-                case "QuestMissionBoardPanel":
-                case "IQuestMissionBoardPanelGetter":
-                case "IQuestMissionBoardPanel":
+                case "Condition":
+                case "IConditionGetter":
+                case "ICondition":
                     yield break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
@@ -5294,6 +5282,61 @@ namespace Mutagen.Bethesda.Starfield
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                                     return dup;
                                 });
+                        }
+                    }
+                    yield break;
+                case "DialogResponses":
+                case "IDialogResponsesGetter":
+                case "IDialogResponses":
+                case "IDialogResponsesInternal":
+                    foreach (var subItem in obj.DialogTopics)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IStarfieldMod, IStarfieldModGetter, IDialogTopicInternal, IDialogTopicGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
+                                    var ret = parent.DialogTopics.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (DialogTopic)((IDialogTopicGetter)r).DeepCopy();
+                                    parent.DialogTopics.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
+                                    return dup;
+                                });
+                        }
+                        foreach (var item in ((DialogTopicCommon)((IDialogTopicGetter)subItem).CommonInstance()!).EnumerateMajorRecordContexts(
+                            obj: subItem,
+                            linkCache: linkCache,
+                            type: type,
+                            modKey: modKey,
+                            parent: curContext,
+                            throwIfUnknown: false,
+                            getOrAddAsOverride: (m, r) =>
+                            {
+                                var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
+                                var ret = parent.DialogTopics.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                if (ret != null) return ret;
+                                ret = (DialogTopic)((IDialogTopicGetter)r).DeepCopy();
+                                parent.DialogTopics.Add(ret);
+                                return ret;
+                            },
+                            duplicateInto: (m, r, e, f) =>
+                            {
+                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
+                                return dup;
+                            }))
+                        {
+                            yield return item;
                         }
                     }
                     yield break;
@@ -5352,6 +5395,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                     yield break;
+                case "QuestMissionBoardPanel":
+                case "IQuestMissionBoardPanelGetter":
+                case "IQuestMissionBoardPanel":
+                    yield break;
+                case "QuestObjective":
+                case "IQuestObjectiveGetter":
+                case "IQuestObjective":
+                    yield break;
+                case "QuestStage":
+                case "IQuestStageGetter":
+                case "IQuestStage":
+                    yield break;
                 case "Scene":
                 case "ISceneGetter":
                 case "IScene":
@@ -5379,61 +5434,6 @@ namespace Mutagen.Bethesda.Starfield
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                                     return dup;
                                 });
-                        }
-                    }
-                    yield break;
-                case "DialogResponses":
-                case "IDialogResponsesGetter":
-                case "IDialogResponses":
-                case "IDialogResponsesInternal":
-                    foreach (var subItem in obj.DialogTopics)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return new ModContext<IStarfieldMod, IStarfieldModGetter, IDialogTopicInternal, IDialogTopicGetter>(
-                                modKey: modKey,
-                                record: subItem,
-                                parent: curContext,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
-                                    var ret = parent.DialogTopics.FirstOrDefault(x => x.FormKey == r.FormKey);
-                                    if (ret != null) return ret;
-                                    ret = (DialogTopic)((IDialogTopicGetter)r).DeepCopy();
-                                    parent.DialogTopics.Add(ret);
-                                    return ret;
-                                },
-                                duplicateInto: (m, r, e, f) =>
-                                {
-                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                                    getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
-                                    return dup;
-                                });
-                        }
-                        foreach (var item in ((DialogTopicCommon)((IDialogTopicGetter)subItem).CommonInstance()!).EnumerateMajorRecordContexts(
-                            obj: subItem,
-                            linkCache: linkCache,
-                            type: type,
-                            modKey: modKey,
-                            parent: curContext,
-                            throwIfUnknown: false,
-                            getOrAddAsOverride: (m, r) =>
-                            {
-                                var parent = getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey));
-                                var ret = parent.DialogTopics.FirstOrDefault(x => x.FormKey == r.FormKey);
-                                if (ret != null) return ret;
-                                ret = (DialogTopic)((IDialogTopicGetter)r).DeepCopy();
-                                parent.DialogTopics.Add(ret);
-                                return ret;
-                            },
-                            duplicateInto: (m, r, e, f) =>
-                            {
-                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
-                                getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
-                                return dup;
-                            }))
-                        {
-                            yield return item;
                         }
                     }
                     yield break;
