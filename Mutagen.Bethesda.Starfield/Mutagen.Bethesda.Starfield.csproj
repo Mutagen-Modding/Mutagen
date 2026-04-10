@@ -5161,6 +5161,9 @@
     <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
       <DependentUpon>LegendaryItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LegendaryItemHNAMEntry_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LensFlare_Generated.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
