@@ -18,6 +18,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
+      <FormLink name="FeaturedItemMessage" refName="Message" recordType="FIMD" />
       <RefList name="Resources" refName="ItemResource" recordType="CVPA" />
       <Data>
         <Fields>
