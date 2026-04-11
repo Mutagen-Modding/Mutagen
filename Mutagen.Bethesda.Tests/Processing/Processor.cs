@@ -1119,6 +1119,40 @@ public abstract class Processor
                 }
             }
 
+            // String not found in the primary language (English).
+            // Check if it exists in any other language — if so, register it
+            // to keep the string index counter in sync with Mutagen's export,
+            // which resolves and registers strings across all languages.
+            if (entry.OrigIndex != 0 && !entry.IsInDeletedRecord)
+            {
+                var otherLangPairs = new List<KeyValuePair<Language, string>>();
+                foreach (var (lang, langOverlayEntry) in dict.Item1)
+                {
+                    if (lang == language) continue;
+                    if (langOverlayEntry.Value.StringsLookup.TryLookup(entry.OrigIndex, out var otherStr))
+                    {
+                        otherLangPairs.Add(new KeyValuePair<Language, string>(lang, otherStr));
+                    }
+                }
+
+                if (otherLangPairs.Count > 0)
+                {
+                    var bytes = new byte[4];
+                    var regis = writer.Register(entry.Source, otherLangPairs);
+                    BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
+                    Instructions.SetSubstitution(entry.FileLocation, bytes);
+                    // Also remove from other language tracking dicts
+                    foreach (var (lang, _) in otherLangPairs)
+                    {
+                        if (dict.Item2.TryGetValue(lang, out var otherLangDict))
+                        {
+                            otherLangDict.Remove(entry.OrigIndex);
+                        }
+                    }
+                    continue;
+                }
+            }
+
             Instructions.SetSubstitution(entry.FileLocation, new byte[4]);
         }
 
