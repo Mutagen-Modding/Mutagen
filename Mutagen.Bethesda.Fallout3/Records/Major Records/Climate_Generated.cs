@@ -97,16 +97,6 @@ namespace Mutagen.Bethesda.Fallout3
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region WeatherOverride
-        private readonly IFormLinkNullable<IWeatherGetter> _WeatherOverride = new FormLinkNullable<IWeatherGetter>();
-        public IFormLinkNullable<IWeatherGetter> WeatherOverride
-        {
-            get => _WeatherOverride;
-            set => _WeatherOverride.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IWeatherGetter> IClimateGetter.WeatherOverride => this.WeatherOverride;
-        #endregion
         #region SunriseBegin
         public TimeOnly SunriseBegin { get; set; } = default(TimeOnly);
         #endregion
@@ -158,7 +148,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.SunTexture = initialValue;
                 this.SunGlareTexture = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.WeatherOverride = initialValue;
                 this.SunriseBegin = initialValue;
                 this.SunriseEnd = initialValue;
                 this.SunsetBegin = initialValue;
@@ -180,7 +169,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem SunTexture,
                 TItem SunGlareTexture,
                 TItem Model,
-                TItem WeatherOverride,
                 TItem SunriseBegin,
                 TItem SunriseEnd,
                 TItem SunsetBegin,
@@ -201,7 +189,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.SunTexture = SunTexture;
                 this.SunGlareTexture = SunGlareTexture;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.WeatherOverride = WeatherOverride;
                 this.SunriseBegin = SunriseBegin;
                 this.SunriseEnd = SunriseEnd;
                 this.SunsetBegin = SunsetBegin;
@@ -224,7 +211,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem SunTexture;
             public TItem SunGlareTexture;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem WeatherOverride;
             public TItem SunriseBegin;
             public TItem SunriseEnd;
             public TItem SunsetBegin;
@@ -249,7 +235,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
                 if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.WeatherOverride, rhs.WeatherOverride)) return false;
                 if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
                 if (!object.Equals(this.SunriseEnd, rhs.SunriseEnd)) return false;
                 if (!object.Equals(this.SunsetBegin, rhs.SunsetBegin)) return false;
@@ -266,7 +251,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.SunTexture);
                 hash.Add(this.SunGlareTexture);
                 hash.Add(this.Model);
-                hash.Add(this.WeatherOverride);
                 hash.Add(this.SunriseBegin);
                 hash.Add(this.SunriseEnd);
                 hash.Add(this.SunsetBegin);
@@ -303,7 +287,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.WeatherOverride)) return false;
                 if (!eval(this.SunriseBegin)) return false;
                 if (!eval(this.SunriseEnd)) return false;
                 if (!eval(this.SunsetBegin)) return false;
@@ -338,7 +321,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.WeatherOverride)) return true;
                 if (eval(this.SunriseBegin)) return true;
                 if (eval(this.SunriseEnd)) return true;
                 if (eval(this.SunsetBegin)) return true;
@@ -379,7 +361,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.SunTexture = eval(this.SunTexture);
                 obj.SunGlareTexture = eval(this.SunGlareTexture);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.WeatherOverride = eval(this.WeatherOverride);
                 obj.SunriseBegin = eval(this.SunriseBegin);
                 obj.SunriseEnd = eval(this.SunriseEnd);
                 obj.SunsetBegin = eval(this.SunsetBegin);
@@ -436,10 +417,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.WeatherOverride ?? true)
-                    {
-                        sb.AppendItem(WeatherOverride, "WeatherOverride");
-                    }
                     if (printMask?.SunriseBegin ?? true)
                     {
                         sb.AppendItem(SunriseBegin, "SunriseBegin");
@@ -483,7 +460,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? SunTexture;
             public Exception? SunGlareTexture;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? WeatherOverride;
             public Exception? SunriseBegin;
             public Exception? SunriseEnd;
             public Exception? SunsetBegin;
@@ -507,8 +483,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return SunGlareTexture;
                     case Climate_FieldIndex.Model:
                         return Model;
-                    case Climate_FieldIndex.WeatherOverride:
-                        return WeatherOverride;
                     case Climate_FieldIndex.SunriseBegin:
                         return SunriseBegin;
                     case Climate_FieldIndex.SunriseEnd:
@@ -544,9 +518,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Climate_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case Climate_FieldIndex.WeatherOverride:
-                        this.WeatherOverride = ex;
                         break;
                     case Climate_FieldIndex.SunriseBegin:
                         this.SunriseBegin = ex;
@@ -592,9 +563,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case Climate_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Climate_FieldIndex.WeatherOverride:
-                        this.WeatherOverride = (Exception?)obj;
-                        break;
                     case Climate_FieldIndex.SunriseBegin:
                         this.SunriseBegin = (Exception?)obj;
                         break;
@@ -629,7 +597,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (SunTexture != null) return true;
                 if (SunGlareTexture != null) return true;
                 if (Model != null) return true;
-                if (WeatherOverride != null) return true;
                 if (SunriseBegin != null) return true;
                 if (SunriseEnd != null) return true;
                 if (SunsetBegin != null) return true;
@@ -689,9 +656,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(WeatherOverride, "WeatherOverride");
-                }
-                {
                     sb.AppendItem(SunriseBegin, "SunriseBegin");
                 }
                 {
@@ -724,7 +688,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
                 ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.WeatherOverride = this.WeatherOverride.Combine(rhs.WeatherOverride);
                 ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
                 ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
                 ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
@@ -758,7 +721,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool SunTexture;
             public bool SunGlareTexture;
             public Model.TranslationMask? Model;
-            public bool WeatherOverride;
             public bool SunriseBegin;
             public bool SunriseEnd;
             public bool SunsetBegin;
@@ -776,7 +738,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
-                this.WeatherOverride = defaultOn;
                 this.SunriseBegin = defaultOn;
                 this.SunriseEnd = defaultOn;
                 this.SunsetBegin = defaultOn;
@@ -795,7 +756,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((WeatherOverride, null));
                 ret.Add((SunriseBegin, null));
                 ret.Add((SunriseEnd, null));
                 ret.Add((SunsetBegin, null));
@@ -947,7 +907,6 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IWeatherGetter> WeatherOverride { get; set; }
         new TimeOnly SunriseBegin { get; set; }
         new TimeOnly SunriseEnd { get; set; }
         new TimeOnly SunsetBegin { get; set; }
@@ -983,7 +942,6 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        IFormLinkNullableGetter<IWeatherGetter> WeatherOverride { get; }
         TimeOnly SunriseBegin { get; }
         TimeOnly SunriseEnd { get; }
         TimeOnly SunsetBegin { get; }
@@ -1171,14 +1129,13 @@ namespace Mutagen.Bethesda.Fallout3
         SunTexture = 8,
         SunGlareTexture = 9,
         Model = 10,
-        WeatherOverride = 11,
-        SunriseBegin = 12,
-        SunriseEnd = 13,
-        SunsetBegin = 14,
-        SunsetEnd = 15,
-        Volatility = 16,
-        Moons = 17,
-        PhaseLength = 18,
+        SunriseBegin = 11,
+        SunriseEnd = 12,
+        SunsetBegin = 13,
+        SunsetEnd = 14,
+        Volatility = 15,
+        Moons = 16,
+        PhaseLength = 17,
     }
     #endregion
 
@@ -1189,9 +1146,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Climate.Mask<>);
 
@@ -1232,7 +1189,6 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.MODT,
                 RecordTypes.MODS,
                 RecordTypes.MODD,
-                RecordTypes.WTHR,
                 RecordTypes.TNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1282,7 +1238,6 @@ namespace Mutagen.Bethesda.Fallout3
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
-            item.WeatherOverride.Clear();
             item.SunriseBegin = default(TimeOnly);
             item.SunriseEnd = default(TimeOnly);
             item.SunsetBegin = default(TimeOnly);
@@ -1309,7 +1264,6 @@ namespace Mutagen.Bethesda.Fallout3
             base.RemapLinks(obj, mapping);
             obj.WeatherTypes?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.WeatherOverride.Relink(mapping);
         }
         
         #endregion
@@ -1388,7 +1342,6 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WeatherOverride = item.WeatherOverride.Equals(rhs.WeatherOverride);
             ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
             ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
             ret.SunsetBegin = item.SunsetBegin == rhs.SunsetBegin;
@@ -1474,10 +1427,6 @@ namespace Mutagen.Bethesda.Fallout3
                 && item.Model is {} ModelItem)
             {
                 ModelItem?.Print(sb, "Model");
-            }
-            if (printMask?.WeatherOverride ?? true)
-            {
-                sb.AppendItem(item.WeatherOverride.FormKeyNullable, "WeatherOverride");
             }
             if (printMask?.SunriseBegin ?? true)
             {
@@ -1577,10 +1526,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.WeatherOverride) ?? true))
-            {
-                if (!lhs.WeatherOverride.Equals(rhs.WeatherOverride)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
             {
                 if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
@@ -1650,7 +1595,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.WeatherOverride);
             hash.Add(item.SunriseBegin);
             hash.Add(item.SunriseEnd);
             hash.Add(item.SunsetBegin);
@@ -1700,10 +1644,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     yield return item;
                 }
-            }
-            if (FormLinkInformation.TryFactory(obj.WeatherOverride, out var WeatherOverrideInfo))
-            {
-                yield return WeatherOverrideInfo;
             }
             yield break;
         }
@@ -1844,10 +1784,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.WeatherOverride) ?? true))
-            {
-                item.WeatherOverride.SetTo(rhs.WeatherOverride.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
             {
@@ -2075,10 +2011,6 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.WeatherOverride,
-                header: translationParams.ConvertToCustom(RecordTypes.WTHR));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TNAM)))
             {
                 ClimateBinaryWriteTranslation.WriteBinarySunriseBegin(
@@ -2270,12 +2202,6 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Climate_FieldIndex.Model;
                 }
-                case RecordTypeInts.WTHR:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WeatherOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Climate_FieldIndex.WeatherOverride;
-                }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2388,10 +2314,6 @@ namespace Mutagen.Bethesda.Fallout3
         public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region WeatherOverride
-        private int? _WeatherOverrideLocation;
-        public IFormLinkNullableGetter<IWeatherGetter> WeatherOverride => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeatherGetter>(_package, _recordData, _WeatherOverrideLocation);
-        #endregion
         private RangeInt32? _TNAMLocation;
         #region SunriseBegin
         private int _SunriseBeginLocation => _TNAMLocation!.Value.Min;
@@ -2528,11 +2450,6 @@ namespace Mutagen.Bethesda.Fallout3
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Climate_FieldIndex.Model;
-                }
-                case RecordTypeInts.WTHR:
-                {
-                    _WeatherOverrideLocation = (stream.Position - offset);
-                    return (int)Climate_FieldIndex.WeatherOverride;
                 }
                 case RecordTypeInts.TNAM:
                 {

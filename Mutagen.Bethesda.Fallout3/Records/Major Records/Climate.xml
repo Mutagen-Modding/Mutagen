@@ -7,7 +7,6 @@
       <String name="SunTexture" recordType="FNAM" />
       <String name="SunGlareTexture" recordType="GNAM" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="WeatherOverride" refName="Weather" recordType="WTHR" />
       <Data recordType="TNAM">
         <Fields>
           <TimeOnly name="SunriseBegin" binary="Custom" byteLength="1" />
