@@ -286,6 +286,15 @@ public class StarfieldProcessor : Processor
         ProcessComponents(majorFrame, fileOffset);
         ProcessObjectPaletteDefaults(majorFrame, fileOffset);
         ProcessFEIndices(majorFrame, fileOffset);
+        foreach (var ctda in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDA))
+        {
+            // Offset 4 is ComparisonValue — only a float when UseGlobal flag (0x04) is not set
+            if (!Enums.HasFlag(ctda.Content[0], (byte)Condition.UseGlobal))
+            {
+                int loc = 4;
+                ProcessZeroFloat(ctda, fileOffset, ref loc);
+            }
+        }
     }
 
     private void ProcessFEIndices(
