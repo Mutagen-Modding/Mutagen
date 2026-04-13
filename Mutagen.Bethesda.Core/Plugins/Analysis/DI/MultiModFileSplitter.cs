@@ -186,7 +186,7 @@ public class MultiModFileSplitter : IMultiModFileSplitter
         return clusters;
     }
         
-    public IReadOnlyCollection<TMod> Split<TMod, TModGetter>(TMod inputMod, int masterLimit)
+    public IReadOnlyList<TMod> Split<TMod, TModGetter>(TMod inputMod, int masterLimit)
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
         where TModGetter : IModGetter
     {

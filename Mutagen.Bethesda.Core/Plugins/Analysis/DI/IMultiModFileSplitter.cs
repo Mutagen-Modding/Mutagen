@@ -16,7 +16,7 @@ public interface IMultiModFileSplitter
     /// <param name="inputMod">The mod to split</param>
     /// <param name="masterLimit">Maximum number of masters allowed per output mod</param>
     /// <returns>Collection of split mods</returns>
-    IReadOnlyCollection<TMod> Split<TMod, TModGetter>(TMod inputMod, int masterLimit)
+    IReadOnlyList<TMod> Split<TMod, TModGetter>(TMod inputMod, int masterLimit)
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
         where TModGetter : IModGetter;
 }

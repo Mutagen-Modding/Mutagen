@@ -76,10 +76,9 @@ public class AutoSplitModWriter : IAutoSplitModWriter
         var splitParam = AugmentParamsWithSplitModKeys(param, splitMods);
 
         // Write each split mod
-        for (int i = 0; i < splitMods.Count; i++)
+        foreach (var splitMod in splitMods)
         {
-            var splitMod = splitMods.ElementAt(i);
-            var splitPath = GetSplitFilePath(path, i);
+            var splitPath = Path.Combine(Path.GetDirectoryName(path)!, splitMod.ModKey.FileName);
 
             // Write the split mod using WriteToBinary (TMod implements IMod which has WriteToBinary)
             splitMod.WriteToBinary(splitPath, splitParam);
@@ -91,11 +90,8 @@ public class AutoSplitModWriter : IAutoSplitModWriter
         IReadOnlyCollection<TMod> splitMods)
         where TMod : IModGetter
     {
-        // Correct ModKey to path since split files have different names
-        var result = param with { ModKey = ModKeyOption.CorrectToPath };
-
-        if (result.MastersListOrdering is not MastersListOrderingByLoadOrder loadOrderOrdering)
-            return result;
+        if (param.MastersListOrdering is not MastersListOrderingByLoadOrder loadOrderOrdering)
+            return param;
 
         var splitModKeys = splitMods.Select(m => m.ModKey).ToList();
 
@@ -105,11 +101,11 @@ public class AutoSplitModWriter : IAutoSplitModWriter
         var existingKeys = loadOrderOrdering.LoadOrder.ToHashSet();
         var missingKeys = splitModKeys.Where(k => !existingKeys.Contains(k)).ToList();
         if (missingKeys.Count == 0)
-            return result;
+            return param;
 
         // Append split file ModKeys to the end of the existing load order
         var augmentedOrder = loadOrderOrdering.LoadOrder.Concat(missingKeys);
-        return result with
+        return param with
         {
             MastersListOrdering = new MastersListOrderingByLoadOrder(augmentedOrder)
         };
