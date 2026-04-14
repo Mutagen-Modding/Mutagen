@@ -1053,13 +1053,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine($"IEnumerable<IModContext<I{gameName}Mod, I{gameName}ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<I{gameName}Mod, I{gameName}ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (context.Record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1068,13 +1073,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine($"IEnumerable<IModContext<I{gameName}Mod, I{gameName}ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<I{gameName}Mod, I{gameName}ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (seen.Add(context.Record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1084,13 +1094,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts()");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordSimpleContexts())");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts())");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (seen.Add(context.Record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1099,13 +1114,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IModContext<TGetter>> EnumerateMajorRecordSimpleContexts<TGetter>(bool throwIfUnknown = true) where TGetter : class, IMajorRecordQueryableGetter");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordSimpleContexts<TGetter>(throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts<TGetter>(throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (context.Record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1114,13 +1134,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown = true)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordSimpleContexts(type, throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts(type, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (seen.Add(context.Record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }

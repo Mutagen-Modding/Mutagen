@@ -607,55 +607,75 @@ internal class SkyrimMultiModOverlay : ISkyrimModDisposableGetter
 
     IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown)
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var context in mod.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown))
+            foreach (var context in _sourceMods[i].EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown))
             {
-                yield return context;
+                if (context.Record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))
+                {
+                    yield return context;
+                }
             }
         }
     }
 
     IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<ISkyrimMod, ISkyrimModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown)
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var context in mod.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown))
+            foreach (var context in _sourceMods[i].EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown))
             {
-                yield return context;
+                if (seen.Add(context.Record.FormKey))
+                {
+                    yield return context;
+                }
             }
         }
     }
 
     public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts()
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var context in mod.EnumerateMajorRecordSimpleContexts())
+            foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts())
             {
-                yield return context;
+                if (seen.Add(context.Record.FormKey))
+                {
+                    yield return context;
+                }
             }
         }
     }
 
     public IEnumerable<IModContext<TGetter>> EnumerateMajorRecordSimpleContexts<TGetter>(bool throwIfUnknown = true) where TGetter : class, IMajorRecordQueryableGetter
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var context in mod.EnumerateMajorRecordSimpleContexts<TGetter>(throwIfUnknown))
+            foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts<TGetter>(throwIfUnknown))
             {
-                yield return context;
+                if (context.Record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))
+                {
+                    yield return context;
+                }
             }
         }
     }
 
     public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown = true)
     {
-        foreach (var mod in _sourceMods)
+        var seen = new HashSet<FormKey>();
+        for (int i = _sourceMods.Count - 1; i >= 0; i--)
         {
-            foreach (var context in mod.EnumerateMajorRecordSimpleContexts(type, throwIfUnknown))
+            foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts(type, throwIfUnknown))
             {
-                yield return context;
+                if (seen.Add(context.Record.FormKey))
+                {
+                    yield return context;
+                }
             }
         }
     }
