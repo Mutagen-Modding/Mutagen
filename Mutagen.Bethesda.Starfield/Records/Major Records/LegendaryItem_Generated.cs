@@ -201,28 +201,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region LNAM
+        #region LnamEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _LNAM;
-        public MemorySlice<Byte>? LNAM
+        private ExtendedList<LegendaryItemLnamEntry>? _LnamEntries;
+        public ExtendedList<LegendaryItemLnamEntry>? LnamEntries
         {
-            get => this._LNAM;
-            set => this._LNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILegendaryItemGetter.LNAM => this.LNAM;
-        #endregion
-        #region Conditions
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
-        {
-            get => this._Conditions;
-            set => this._Conditions = value;
+            get => this._LnamEntries;
+            set => this._LnamEntries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? ILegendaryItemGetter.Conditions => _Conditions;
+        IReadOnlyList<ILegendaryItemLnamEntryGetter>? ILegendaryItemGetter.LnamEntries => _LnamEntries;
         #endregion
 
         #endregion
@@ -352,8 +341,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RankTemplate = initialValue;
                 this.MNAM = initialValue;
                 this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(initialValue, []);
-                this.LNAM = initialValue;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
+                this.LnamEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryItemLnamEntry.Mask<TItem>?>>?>(initialValue, []);
                 this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, []);
                 this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, []);
                 this.FNAM = initialValue;
@@ -383,8 +371,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem RankTemplate,
                 TItem MNAM,
                 TItem LegendaryMods,
-                TItem LNAM,
-                TItem Conditions,
+                TItem LnamEntries,
                 TItem IncludeFilters,
                 TItem ExcludeFilters,
                 TItem FNAM,
@@ -413,8 +400,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RankTemplate = RankTemplate;
                 this.MNAM = MNAM;
                 this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(LegendaryMods, []);
-                this.LNAM = LNAM;
-                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
+                this.LnamEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryItemLnamEntry.Mask<TItem>?>>?>(LnamEntries, []);
                 this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(IncludeFilters, []);
                 this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(ExcludeFilters, []);
                 this.FNAM = FNAM;
@@ -445,8 +431,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem RankTemplate;
             public TItem MNAM;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>? LegendaryMods;
-            public TItem LNAM;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryItemLnamEntry.Mask<TItem>?>>?>? LnamEntries;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>? IncludeFilters;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>? ExcludeFilters;
             public TItem FNAM;
@@ -479,8 +464,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.RankTemplate, rhs.RankTemplate)) return false;
                 if (!object.Equals(this.MNAM, rhs.MNAM)) return false;
                 if (!object.Equals(this.LegendaryMods, rhs.LegendaryMods)) return false;
-                if (!object.Equals(this.LNAM, rhs.LNAM)) return false;
-                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.LnamEntries, rhs.LnamEntries)) return false;
                 if (!object.Equals(this.IncludeFilters, rhs.IncludeFilters)) return false;
                 if (!object.Equals(this.ExcludeFilters, rhs.ExcludeFilters)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
@@ -505,8 +489,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.RankTemplate);
                 hash.Add(this.MNAM);
                 hash.Add(this.LegendaryMods);
-                hash.Add(this.LNAM);
-                hash.Add(this.Conditions);
+                hash.Add(this.LnamEntries);
                 hash.Add(this.IncludeFilters);
                 hash.Add(this.ExcludeFilters);
                 hash.Add(this.FNAM);
@@ -578,13 +561,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.LNAM)) return false;
-                if (this.Conditions != null)
+                if (this.LnamEntries != null)
                 {
-                    if (!eval(this.Conditions.Overall)) return false;
-                    if (this.Conditions.Specific != null)
+                    if (!eval(this.LnamEntries.Overall)) return false;
+                    if (this.LnamEntries.Specific != null)
                     {
-                        foreach (var item in this.Conditions.Specific)
+                        foreach (var item in this.LnamEntries.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -704,13 +686,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.LNAM)) return true;
-                if (this.Conditions != null)
+                if (this.LnamEntries != null)
                 {
-                    if (eval(this.Conditions.Overall)) return true;
-                    if (this.Conditions.Specific != null)
+                    if (eval(this.LnamEntries.Overall)) return true;
+                    if (this.LnamEntries.Specific != null)
                     {
-                        foreach (var item in this.Conditions.Specific)
+                        foreach (var item in this.LnamEntries.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -823,17 +804,16 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.LNAM = eval(this.LNAM);
-                if (Conditions != null)
+                if (LnamEntries != null)
                 {
-                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
-                    if (Conditions.Specific != null)
+                    obj.LnamEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryItemLnamEntry.Mask<R>?>>?>(eval(this.LnamEntries.Overall), []);
+                    if (LnamEntries.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
-                        obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific)
+                        var l = new List<MaskItemIndexed<R, LegendaryItemLnamEntry.Mask<R>?>>();
+                        obj.LnamEntries.Specific = l;
+                        foreach (var item in LnamEntries.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LegendaryItemLnamEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LegendaryItemLnamEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -998,20 +978,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.LNAM ?? true)
+                    if ((printMask?.LnamEntries?.Overall ?? true)
+                        && LnamEntries is {} LnamEntriesItem)
                     {
-                        sb.AppendItem(LNAM, "LNAM");
-                    }
-                    if ((printMask?.Conditions?.Overall ?? true)
-                        && Conditions is {} ConditionsItem)
-                    {
-                        sb.AppendLine("Conditions =>");
+                        sb.AppendLine("LnamEntries =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ConditionsItem.Overall);
-                            if (ConditionsItem.Specific != null)
+                            sb.AppendItem(LnamEntriesItem.Overall);
+                            if (LnamEntriesItem.Specific != null)
                             {
-                                foreach (var subItem in ConditionsItem.Specific)
+                                foreach (var subItem in LnamEntriesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1132,8 +1108,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? RankTemplate;
             public Exception? MNAM;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>? LegendaryMods;
-            public Exception? LNAM;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryItemLnamEntry.ErrorMask?>>?>? LnamEntries;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>? IncludeFilters;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>? ExcludeFilters;
             public Exception? FNAM;
@@ -1173,10 +1148,8 @@ namespace Mutagen.Bethesda.Starfield
                         return MNAM;
                     case LegendaryItem_FieldIndex.LegendaryMods:
                         return LegendaryMods;
-                    case LegendaryItem_FieldIndex.LNAM:
-                        return LNAM;
-                    case LegendaryItem_FieldIndex.Conditions:
-                        return Conditions;
+                    case LegendaryItem_FieldIndex.LnamEntries:
+                        return LnamEntries;
                     case LegendaryItem_FieldIndex.IncludeFilters:
                         return IncludeFilters;
                     case LegendaryItem_FieldIndex.ExcludeFilters:
@@ -1237,11 +1210,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.LegendaryMods:
                         this.LegendaryMods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>(ex, null);
                         break;
-                    case LegendaryItem_FieldIndex.LNAM:
-                        this.LNAM = ex;
-                        break;
-                    case LegendaryItem_FieldIndex.Conditions:
-                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                    case LegendaryItem_FieldIndex.LnamEntries:
+                        this.LnamEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryItemLnamEntry.ErrorMask?>>?>(ex, null);
                         break;
                     case LegendaryItem_FieldIndex.IncludeFilters:
                         this.IncludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(ex, null);
@@ -1311,11 +1281,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.LegendaryMods:
                         this.LegendaryMods = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>)obj;
                         break;
-                    case LegendaryItem_FieldIndex.LNAM:
-                        this.LNAM = (Exception?)obj;
-                        break;
-                    case LegendaryItem_FieldIndex.Conditions:
-                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                    case LegendaryItem_FieldIndex.LnamEntries:
+                        this.LnamEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryItemLnamEntry.ErrorMask?>>?>)obj;
                         break;
                     case LegendaryItem_FieldIndex.IncludeFilters:
                         this.IncludeFilters = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>)obj;
@@ -1359,8 +1326,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (RankTemplate != null) return true;
                 if (MNAM != null) return true;
                 if (LegendaryMods != null) return true;
-                if (LNAM != null) return true;
-                if (Conditions != null) return true;
+                if (LnamEntries != null) return true;
                 if (IncludeFilters != null) return true;
                 if (ExcludeFilters != null) return true;
                 if (FNAM != null) return true;
@@ -1450,18 +1416,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (LnamEntries is {} LnamEntriesItem)
                 {
-                    sb.AppendItem(LNAM, "LNAM");
-                }
-                if (Conditions is {} ConditionsItem)
-                {
-                    sb.AppendLine("Conditions =>");
+                    sb.AppendLine("LnamEntries =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ConditionsItem.Overall);
-                        if (ConditionsItem.Specific != null)
+                        sb.AppendItem(LnamEntriesItem.Overall);
+                        if (LnamEntriesItem.Specific != null)
                         {
-                            foreach (var subItem in ConditionsItem.Specific)
+                            foreach (var subItem in LnamEntriesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1572,8 +1535,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.RankTemplate = this.RankTemplate.Combine(rhs.RankTemplate);
                 ret.MNAM = this.MNAM.Combine(rhs.MNAM);
                 ret.LegendaryMods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LegendaryMods?.Overall, rhs.LegendaryMods?.Overall), Noggog.ExceptionExt.Combine(this.LegendaryMods?.Specific, rhs.LegendaryMods?.Specific));
-                ret.LNAM = this.LNAM.Combine(rhs.LNAM);
-                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.LnamEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryItemLnamEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LnamEntries?.Overall, rhs.LnamEntries?.Overall), Noggog.ExceptionExt.Combine(this.LnamEntries?.Specific, rhs.LnamEntries?.Specific));
                 ret.IncludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.IncludeFilters?.Overall, rhs.IncludeFilters?.Overall), Noggog.ExceptionExt.Combine(this.IncludeFilters?.Specific, rhs.IncludeFilters?.Specific));
                 ret.ExcludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ExcludeFilters?.Overall, rhs.ExcludeFilters?.Overall), Noggog.ExceptionExt.Combine(this.ExcludeFilters?.Specific, rhs.ExcludeFilters?.Specific));
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
@@ -1615,8 +1577,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool RankTemplate;
             public bool MNAM;
             public LegendaryMod.TranslationMask? LegendaryMods;
-            public bool LNAM;
-            public Condition.TranslationMask? Conditions;
+            public LegendaryItemLnamEntry.TranslationMask? LnamEntries;
             public LegendaryFilter.TranslationMask? IncludeFilters;
             public LegendaryFilter.TranslationMask? ExcludeFilters;
             public bool FNAM;
@@ -1637,7 +1598,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseObjectList = defaultOn;
                 this.RankTemplate = defaultOn;
                 this.MNAM = defaultOn;
-                this.LNAM = defaultOn;
                 this.FNAM = defaultOn;
                 this.KNAM = defaultOn;
                 this.JNAM = defaultOn;
@@ -1660,8 +1620,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((RankTemplate, null));
                 ret.Add((MNAM, null));
                 ret.Add((LegendaryMods == null ? DefaultOn : !LegendaryMods.GetCrystal().CopyNothing, LegendaryMods?.GetCrystal()));
-                ret.Add((LNAM, null));
-                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((LnamEntries == null ? DefaultOn : !LnamEntries.GetCrystal().CopyNothing, LnamEntries?.GetCrystal()));
                 ret.Add((IncludeFilters == null ? DefaultOn : !IncludeFilters.GetCrystal().CopyNothing, IncludeFilters?.GetCrystal()));
                 ret.Add((ExcludeFilters == null ? DefaultOn : !ExcludeFilters.GetCrystal().CopyNothing, ExcludeFilters?.GetCrystal()));
                 ret.Add((FNAM, null));
@@ -1848,8 +1807,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<ILegendaryItemGetter> RankTemplate { get; set; }
         new IFormLinkNullable<ILegendaryItemGetter> MNAM { get; set; }
         new ExtendedList<LegendaryMod>? LegendaryMods { get; set; }
-        new MemorySlice<Byte>? LNAM { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<LegendaryItemLnamEntry>? LnamEntries { get; set; }
         new ExtendedList<LegendaryFilter>? IncludeFilters { get; set; }
         new ExtendedList<LegendaryFilter>? ExcludeFilters { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -1909,8 +1867,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ILegendaryItemGetter> RankTemplate { get; }
         IFormLinkNullableGetter<ILegendaryItemGetter> MNAM { get; }
         IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; }
-        ReadOnlyMemorySlice<Byte>? LNAM { get; }
-        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<ILegendaryItemLnamEntryGetter>? LnamEntries { get; }
         IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; }
         IReadOnlyList<ILegendaryFilterGetter>? ExcludeFilters { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
@@ -2106,15 +2063,14 @@ namespace Mutagen.Bethesda.Starfield
         RankTemplate = 16,
         MNAM = 17,
         LegendaryMods = 18,
-        LNAM = 19,
-        Conditions = 20,
-        IncludeFilters = 21,
-        ExcludeFilters = 22,
-        FNAM = 23,
-        KNAM = 24,
-        GNAM = 25,
-        HNAM = 26,
-        JNAM = 27,
+        LnamEntries = 19,
+        IncludeFilters = 20,
+        ExcludeFilters = 21,
+        FNAM = 22,
+        KNAM = 23,
+        GNAM = 24,
+        HNAM = 25,
+        JNAM = 26,
     }
     #endregion
 
@@ -2125,9 +2081,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(LegendaryItem.Mask<>);
 
@@ -2160,6 +2116,10 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.LGDI);
             var all = RecordCollection.Factory(
                 RecordTypes.LGDI,
+                RecordTypes.CITC,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.VMAD,
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
@@ -2182,10 +2142,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MNAM,
                 RecordTypes.BNAM,
                 RecordTypes.LNAM,
-                RecordTypes.CTDA,
-                RecordTypes.CITC,
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,
                 RecordTypes.FNAM,
@@ -2249,8 +2205,7 @@ namespace Mutagen.Bethesda.Starfield
             item.RankTemplate.Clear();
             item.MNAM.Clear();
             item.LegendaryMods = null;
-            item.LNAM = default;
-            item.Conditions = null;
+            item.LnamEntries = null;
             item.IncludeFilters = null;
             item.ExcludeFilters = null;
             item.FNAM = default;
@@ -2283,7 +2238,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.RankTemplate.Relink(mapping);
             obj.MNAM.Relink(mapping);
             obj.LegendaryMods?.RemapLinks(mapping);
-            obj.Conditions?.RemapLinks(mapping);
+            obj.LnamEntries?.RemapLinks(mapping);
             obj.IncludeFilters?.RemapLinks(mapping);
             obj.ExcludeFilters?.RemapLinks(mapping);
             obj.GNAM?.RemapLinks(mapping);
@@ -2425,9 +2380,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.LegendaryMods,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
-            ret.Conditions = item.Conditions.CollectionEqualsHelper(
-                rhs.Conditions,
+            ret.LnamEntries = item.LnamEntries.CollectionEqualsHelper(
+                rhs.LnamEntries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.IncludeFilters = item.IncludeFilters.CollectionEqualsHelper(
@@ -2573,18 +2527,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.LNAM ?? true)
-                && item.LNAM is {} LNAMItem)
+            if ((printMask?.LnamEntries?.Overall ?? true)
+                && item.LnamEntries is {} LnamEntriesItem)
             {
-                sb.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
-            }
-            if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions is {} ConditionsItem)
-            {
-                sb.AppendLine("Conditions =>");
+                sb.AppendLine("LnamEntries =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ConditionsItem)
+                    foreach (var subItem in LnamEntriesItem)
                     {
                         using (sb.Brace())
                         {
@@ -2786,13 +2735,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.LegendaryMods.SequenceEqualNullable(rhs.LegendaryMods, (l, r) => ((LegendaryModCommon)((ILegendaryModGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.LegendaryMods)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LnamEntries) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.LNAM, rhs.LNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Conditions) ?? true))
-            {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.Conditions)))) return false;
+                if (!lhs.LnamEntries.SequenceEqualNullable(rhs.LnamEntries, (l, r) => ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.LnamEntries)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.IncludeFilters) ?? true))
             {
@@ -2880,11 +2825,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.RankTemplate);
             hash.Add(item.MNAM);
             hash.Add(item.LegendaryMods);
-            if (item.LNAM is {} LNAMItem)
-            {
-                hash.Add(LNAMItem);
-            }
-            hash.Add(item.Conditions);
+            hash.Add(item.LnamEntries);
             hash.Add(item.IncludeFilters);
             hash.Add(item.ExcludeFilters);
             if (item.FNAM is {} FNAMItem)
@@ -2975,9 +2916,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Conditions is {} ConditionsItem)
+            if (obj.LnamEntries is {} LnamEntriesItem)
             {
-                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                foreach (var item in LnamEntriesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3311,37 +3252,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LnamEntries) ?? true))
             {
-                if(rhs.LNAM is {} LNAMrhs)
-                {
-                    item.LNAM = LNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.LNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Conditions) ?? true))
-            {
-                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.Conditions);
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.LnamEntries);
                 try
                 {
-                    if ((rhs.Conditions != null))
+                    if ((rhs.LnamEntries != null))
                     {
-                        item.Conditions = 
-                            rhs.Conditions
+                        item.LnamEntries = 
+                            rhs.LnamEntries
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<Condition>();
+                            .ToExtendedList<LegendaryItemLnamEntry>();
                     }
                     else
                     {
-                        item.Conditions = null;
+                        item.LnamEntries = null;
                     }
                 }
                 catch (Exception ex)
@@ -3764,23 +3694,9 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            LegendaryItemBinaryWriteTranslation.WriteBinaryLnamEntries(
                 writer: writer,
-                item: item.LNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
-                writer: writer,
-                items: item.Conditions,
-                counterType: RecordTypes.CITC,
-                counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                item: item);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILegendaryFilterGetter>.Instance.Write(
                 writer: writer,
                 items: item.IncludeFilters,
@@ -3841,6 +3757,19 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.JNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.JNAM));
+        }
+
+        public static partial void WriteBinaryLnamEntriesCustom(
+            MutagenWriter writer,
+            ILegendaryItemGetter item);
+
+        public static void WriteBinaryLnamEntries(
+            MutagenWriter writer,
+            ILegendaryItemGetter item)
+        {
+            WriteBinaryLnamEntriesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -4003,23 +3932,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LegendaryItem_FieldIndex.LNAM;
-                }
-                case RecordTypeInts.CTDA:
-                case RecordTypeInts.CITC:
-                {
-                    item.Conditions = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
-                            reader: frame,
-                            countLengthLength: 4,
-                            countRecord: RecordTypes.CITC,
-                            triggeringRecord: Condition_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: Condition.TryCreateFromBinary)
-                        .CastExtendedList<Condition>();
-                    return (int)LegendaryItem_FieldIndex.Conditions;
+                    LegendaryItemBinaryCreateTranslation.FillBinaryLnamEntriesCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                    return (int)LegendaryItem_FieldIndex.LnamEntries;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -4095,6 +4012,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryLnamEntriesCustom(
+            MutagenFrame frame,
+            ILegendaryItemInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -4185,11 +4107,14 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkNullableGetter<ILegendaryItemGetter> MNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILegendaryItemGetter>(_package, _recordData, _MNAMLocation);
         #endregion
         public IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; private set; }
-        #region LNAM
-        private int? _LNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region LnamEntries
+        partial void LnamEntriesCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
         #endregion
-        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         public IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; private set; }
         public IReadOnlyList<ILegendaryFilterGetter>? ExcludeFilters { get; private set; }
         #region FNAM
@@ -4365,22 +4290,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LNAMLocation = (stream.Position - offset);
-                    return (int)LegendaryItem_FieldIndex.LNAM;
-                }
-                case RecordTypeInts.CTDA:
-                case RecordTypeInts.CITC:
-                {
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
+                    LnamEntriesCustomParse(
                         stream: stream,
-                        package: _package,
-                        countLength: 4,
-                        trigger: Condition_Registration.TriggerSpecs,
-                        countType: RecordTypes.CITC,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
-                    return (int)LegendaryItem_FieldIndex.Conditions;
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)LegendaryItem_FieldIndex.LnamEntries;
                 }
                 case RecordTypeInts.CNAM:
                 {

@@ -15,8 +15,7 @@
       <FormLink name="RankTemplate" refName="LegendaryItem" recordType="ENAM" />
       <FormLink name="MNAM" refName="LegendaryItem" recordType="MNAM" unknown="true" />
       <RefList name="LegendaryMods" refName="LegendaryMod" recordType="BNAM" />
-      <ByteArray name="LNAM" recordType="LNAM" unknown="true" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <RefList name="LnamEntries" refName="LegendaryItemLnamEntry" recordType="LNAM" binary="Custom" />
       <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
       <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
@@ -27,6 +26,18 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <!-- CITC/CTDA/CIS1/CIS2 consumed by ConditionalEntries custom binary handler -->
+    <AdditionalContainedRecordType>CITC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CTDA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CIS1</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CIS2</AdditionalContainedRecordType>
+  </Object>
+  <Object name="LegendaryItemLnamEntry" objType="Subrecord">
+    <Fields>
+      <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
+      <UInt32 name="Unknown" unknown="true" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
   </Object>
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>

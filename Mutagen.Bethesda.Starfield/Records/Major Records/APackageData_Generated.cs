@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataLocation, PackageDataScene, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataFloat, PackageDataInt, PackageDataLocation, PackageDataObjectList, PackageDataScene, PackageDataTarget, PackageDataTopic]
     /// </summary>
     public partial class APackageData :
         IAPackageData,
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataLocation, PackageDataScene, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataFloat, PackageDataInt, PackageDataLocation, PackageDataObjectList, PackageDataScene, PackageDataTarget, PackageDataTopic]
     /// </summary>
     public partial interface IAPackageData :
         IAPackageDataGetter,
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [PackageDataBool, PackageDataLocation, PackageDataScene, PackageDataTarget, PackageDataTopic]
+    /// Implemented by: [PackageDataBool, PackageDataFloat, PackageDataInt, PackageDataLocation, PackageDataObjectList, PackageDataScene, PackageDataTarget, PackageDataTopic]
     /// </summary>
     public partial interface IAPackageDataGetter :
         ILoquiObject,

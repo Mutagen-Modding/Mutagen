@@ -6896,5 +6896,8 @@
     <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LegendaryItemLnamEntry_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
