@@ -304,12 +304,11 @@ public class AutoSplitModWriterTests
         };
     }
 
-    [Fact]
-    public void WriteWithSplit_WithLoadOrder_ExcludingOutputMod()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_WithLoadOrder_ExcludingOutputMod(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithCrossClusterReferences(modKey);
@@ -340,12 +339,11 @@ public class AutoSplitModWriterTests
         allMiscItems.First().EditorID.ShouldBe("CrossRefTarget");
     }
 
-    [Fact]
-    public void WriteWithSplit_SplitKeysInLoadOrder_CorrectOrder_MasterOrderPreserved()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_SplitKeysInLoadOrder_CorrectOrder_MasterOrderPreserved(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithCrossClusterReferences(modKey);
@@ -381,12 +379,11 @@ public class AutoSplitModWriterTests
         synthIndex.ShouldBeGreaterThanOrEqualTo(0);
     }
 
-    [Fact]
-    public void WriteWithSplit_SplitKeysInLoadOrder_ReversedOrder_Throws()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_SplitKeysInLoadOrder_ReversedOrder_Throws(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithCrossClusterReferences(modKey);
@@ -415,12 +412,11 @@ public class AutoSplitModWriterTests
         ex.Message.ShouldContain("out of order");
     }
 
-    [Fact]
-    public void WriteWithSplit_OnlyBaseModInLoadOrder_SplitKeyMissing_StillSucceeds()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_OnlyBaseModInLoadOrder_SplitKeyMissing_StillSucceeds(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithCrossClusterReferences(modKey);
@@ -450,12 +446,11 @@ public class AutoSplitModWriterTests
         fileSystem.File.Exists(Path.Combine(outputDir, "Synthesis_2.esp")).ShouldBeTrue();
     }
 
-    [Fact]
-    public void WriteWithSplit_SplitKeysInLoadOrder_CorrectOrder_ExternalMastersNotReordered()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_SplitKeysInLoadOrder_CorrectOrder_ExternalMastersNotReordered(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithCrossClusterReferences(modKey);
@@ -527,12 +522,11 @@ public class AutoSplitModWriterTests
         return mod;
     }
 
-    [Fact]
-    public void WriteWithSplit_ThreeSplits_2After3InLoadOrder_Throws()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_ThreeSplits_2After3InLoadOrder_Throws(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithThreeClusters(modKey);
@@ -561,12 +555,11 @@ public class AutoSplitModWriterTests
         ex.Message.ShouldContain("out of order");
     }
 
-    [Fact]
-    public void WriteWithSplit_ThreeSplits_CorrectOrder_Succeeds()
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_ThreeSplits_CorrectOrder_Succeeds(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
     {
-        var fileSystem = new MockFileSystem();
-        var outputDir = "C:/Output";
-        fileSystem.Directory.CreateDirectory(outputDir);
+        var outputDir = existingOutputDirectory.Path;
 
         var modKey = new ModKey("Synthesis", ModType.Plugin);
         var mod = CreateModWithThreeClusters(modKey);
