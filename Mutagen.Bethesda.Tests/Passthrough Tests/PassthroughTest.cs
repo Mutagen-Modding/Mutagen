@@ -631,7 +631,7 @@ public abstract class PassthroughTest
     {
         return builder
             .WithLoadOrderFromHeaderMasters()
-            .WithDefaultDataFolder()
+            .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
             .WithStringsWriter(stringsWriter)
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.NoCheck)

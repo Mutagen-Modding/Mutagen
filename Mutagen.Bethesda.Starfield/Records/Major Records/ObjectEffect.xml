@@ -5,6 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <Int32 name="MAGF" recordType="MAGF" unknown="true" />
       <Int32 name="MUID" recordType="MUID" unknown="true" />

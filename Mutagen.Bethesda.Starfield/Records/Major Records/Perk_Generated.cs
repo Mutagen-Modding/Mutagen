@@ -1417,6 +1417,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ATAV,
+                RecordTypes.PRUC,
                 RecordTypes.RNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,

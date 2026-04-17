@@ -468,6 +468,7 @@ public partial class RecordTypes
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType GTYP = new(0x50595447);
     public static readonly RecordType GVAL = new(0x4C415647);
+    public static readonly RecordType GWED = new(0x44455747);
     public static readonly RecordType GWEI = new(0x49455747);
     public static readonly RecordType GWOR = new(0x524F5747);
     public static readonly RecordType HACK = new(0x4B434148);
@@ -486,6 +487,7 @@ public partial class RecordTypes
     public static readonly RecordType HSTT = new(0x54545348);
     public static readonly RecordType HTID = new(0x44495448);
     public static readonly RecordType HULL = new(0x4C4C5548);
+    public static readonly RecordType IBIN = new(0x4E494249);
     public static readonly RecordType ICON = new(0x4E4F4349);
     public static readonly RecordType IDAT = new(0x54414449);
     public static readonly RecordType IDLA = new(0x414C4449);
@@ -823,6 +825,7 @@ public partial class RecordTypes
     public static readonly RecordType PRRF = new(0x46525250);
     public static readonly RecordType PRRK = new(0x4B525250);
     public static readonly RecordType PRTN = new(0x4E545250);
+    public static readonly RecordType PRUC = new(0x43555250);
     public static readonly RecordType PRVN = new(0x4E565250);
     public static readonly RecordType PSDC = new(0x43445350);
     public static readonly RecordType PSDF = new(0x46445350);
@@ -858,6 +861,7 @@ public partial class RecordTypes
     public static readonly RecordType QTLM = new(0x4D4C5451);
     public static readonly RecordType QTYP = new(0x50595451);
     public static readonly RecordType QUAL = new(0x4C415551);
+    public static readonly RecordType QUPA = new(0x41505551);
     public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RABG = new(0x47424152);
     public static readonly RecordType RACE = new(0x45434152);

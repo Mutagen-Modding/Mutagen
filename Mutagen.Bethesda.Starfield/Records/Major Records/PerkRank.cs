@@ -302,6 +302,18 @@ partial class PerkRankBinaryCreateTranslation
                                     Projectile = FormLinkBinaryTranslation.Instance.Factory<IProjectileGetter>(stream.MetaData, payload.EPFD?.Content),
                                 };
                                 break;
+                            case APerkEntryPointEffect.FunctionType.LegendaryGravitational:
+                                if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointLegendaryGravitational)} did not have expected EPFT record");
+                                if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
+                                {
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointLegendaryGravitational)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
+                                }
+
+                                entryPointEffect = new PerkEntryPointLegendaryGravitational()
+                                {
+                                    Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, payload.EPFD?.Content),
+                                };
+                                break;
                             default:
                                 throw new NotImplementedException();
                         }
@@ -421,6 +433,7 @@ partial class PerkRankBinaryWriteTranslation
                             PerkEntryPointSelectText text => APerkEntryPointEffect.FunctionType.SelectText,
                             PerkEntryPointSetText ltext => APerkEntryPointEffect.FunctionType.SetText,
                             PerkEntryPointLegendaryMagicEffectEvent leg => APerkEntryPointEffect.FunctionType.LegendaryMagicEffectEvent,
+                            PerkEntryPointLegendaryGravitational leg => APerkEntryPointEffect.FunctionType.LegendaryGravitational,
                             _ => throw new NotImplementedException()
                         }));
                         writer.Write(entryPt.PerkConditionTabCount);
@@ -448,6 +461,7 @@ partial class PerkRankBinaryWriteTranslation
                     PerkEntryPointSelectText _ => APerkEntryPointEffect.ParameterType.String,
                     PerkEntryPointSetText _ => APerkEntryPointEffect.ParameterType.LString,
                     PerkEntryPointLegendaryMagicEffectEvent _ => APerkEntryPointEffect.ParameterType.ReplacementProjectile,
+                    PerkEntryPointLegendaryGravitational _ => APerkEntryPointEffect.ParameterType.Spell,
                     _ => throw new NotImplementedException()
                 };
                 if ((effect is not PerkEntryPointModifyValue modValEpft
@@ -549,7 +563,11 @@ partial class PerkRankBinaryWriteTranslation
                         break;
                     case PerkEntryPointLegendaryMagicEffectEvent leg:
                         FormKeyBinaryTranslation.Instance.Write(writer, leg.Projectile, RecordTypes.EPFD);
-                        
+
+                        break;
+                    case PerkEntryPointLegendaryGravitational leg:
+                        FormKeyBinaryTranslation.Instance.Write(writer, leg.Spell, RecordTypes.EPFD);
+
                         break;
                     default:
                         throw new NotImplementedException();

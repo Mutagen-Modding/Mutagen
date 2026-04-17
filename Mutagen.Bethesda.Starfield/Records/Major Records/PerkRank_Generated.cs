@@ -99,6 +99,16 @@ namespace Mutagen.Bethesda.Starfield
         public TranslatedString Description { get; set; } = string.Empty;
         ITranslatedStringGetter IPerkRankGetter.Description => this.Description;
         #endregion
+        #region UnknownStatic
+        private readonly IFormLinkNullable<IStaticGetter> _UnknownStatic = new FormLinkNullable<IStaticGetter>();
+        public IFormLinkNullable<IStaticGetter> UnknownStatic
+        {
+            get => _UnknownStatic;
+            set => _UnknownStatic.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStaticGetter> IPerkRankGetter.UnknownStatic => this.UnknownStatic;
+        #endregion
 
         #region To String
 
@@ -142,18 +152,21 @@ namespace Mutagen.Bethesda.Starfield
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Activities = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
+                this.UnknownStatic = initialValue;
             }
 
             public Mask(
                 TItem Effects,
                 TItem Conditions,
                 TItem Activities,
-                TItem Description)
+                TItem Description,
+                TItem UnknownStatic)
             {
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, []);
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Activities = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>(Activities, []);
                 this.Description = Description;
+                this.UnknownStatic = UnknownStatic;
             }
 
             #pragma warning disable CS8618
@@ -169,6 +182,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Activity.Mask<TItem>?>>?>? Activities;
             public TItem Description;
+            public TItem UnknownStatic;
             #endregion
 
             #region Equals
@@ -185,6 +199,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Activities, rhs.Activities)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.UnknownStatic, rhs.UnknownStatic)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -194,6 +209,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Conditions);
                 hash.Add(this.Activities);
                 hash.Add(this.Description);
+                hash.Add(this.UnknownStatic);
                 return hash.ToHashCode();
             }
 
@@ -239,6 +255,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Description)) return false;
+                if (!eval(this.UnknownStatic)) return false;
                 return true;
             }
             #endregion
@@ -283,6 +300,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Description)) return true;
+                if (eval(this.UnknownStatic)) return true;
                 return false;
             }
             #endregion
@@ -343,6 +361,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Description = eval(this.Description);
+                obj.UnknownStatic = eval(this.UnknownStatic);
             }
             #endregion
 
@@ -422,6 +441,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Description, "Description");
                     }
+                    if (printMask?.UnknownStatic ?? true)
+                    {
+                        sb.AppendItem(UnknownStatic, "UnknownStatic");
+                    }
                 }
             }
             #endregion
@@ -450,6 +473,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Activity.ErrorMask?>>?>? Activities;
             public Exception? Description;
+            public Exception? UnknownStatic;
             #endregion
 
             #region IErrorMask
@@ -466,6 +490,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Activities;
                     case PerkRank_FieldIndex.Description:
                         return Description;
+                    case PerkRank_FieldIndex.UnknownStatic:
+                        return UnknownStatic;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -487,6 +513,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PerkRank_FieldIndex.Description:
                         this.Description = ex;
+                        break;
+                    case PerkRank_FieldIndex.UnknownStatic:
+                        this.UnknownStatic = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -510,6 +539,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PerkRank_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
+                    case PerkRank_FieldIndex.UnknownStatic:
+                        this.UnknownStatic = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -522,6 +554,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Conditions != null) return true;
                 if (Activities != null) return true;
                 if (Description != null) return true;
+                if (UnknownStatic != null) return true;
                 return false;
             }
             #endregion
@@ -604,6 +637,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Description, "Description");
                 }
+                {
+                    sb.AppendItem(UnknownStatic, "UnknownStatic");
+                }
             }
             #endregion
 
@@ -616,6 +652,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Activities = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Activity.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Activities?.Overall, rhs.Activities?.Overall), Noggog.ExceptionExt.Combine(this.Activities?.Specific, rhs.Activities?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
+                ret.UnknownStatic = this.UnknownStatic.Combine(rhs.UnknownStatic);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -643,6 +680,7 @@ namespace Mutagen.Bethesda.Starfield
             public Condition.TranslationMask? Conditions;
             public Activity.TranslationMask? Activities;
             public bool Description;
+            public bool UnknownStatic;
             #endregion
 
             #region Ctors
@@ -653,6 +691,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Description = defaultOn;
+                this.UnknownStatic = defaultOn;
             }
 
             #endregion
@@ -672,6 +711,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Activities == null ? DefaultOn : !Activities.GetCrystal().CopyNothing, Activities?.GetCrystal()));
                 ret.Add((Description, null));
+                ret.Add((UnknownStatic, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -754,6 +794,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<Activity>? Activities { get; set; }
         new TranslatedString Description { get; set; }
+        new IFormLinkNullable<IStaticGetter> UnknownStatic { get; set; }
     }
 
     public partial interface IPerkRankGetter :
@@ -773,6 +814,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IActivityGetter>? Activities { get; }
         ITranslatedStringGetter Description { get; }
+        IFormLinkNullableGetter<IStaticGetter> UnknownStatic { get; }
 
     }
 
@@ -946,6 +988,7 @@ namespace Mutagen.Bethesda.Starfield
         Conditions = 1,
         Activities = 2,
         Description = 3,
+        UnknownStatic = 4,
     }
     #endregion
 
@@ -956,9 +999,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(PerkRank.Mask<>);
 
@@ -1012,7 +1055,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FULL,
                 RecordTypes.DNAM,
                 RecordTypes.ANAM,
-                RecordTypes.ATAV);
+                RecordTypes.ATAV,
+                RecordTypes.PRUC);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1061,6 +1105,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Conditions.Clear();
             item.Activities = null;
             item.Description.Clear();
+            item.UnknownStatic.Clear();
         }
         
         #region Mutagen
@@ -1069,6 +1114,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Effects.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.Activities?.RemapLinks(mapping);
+            obj.UnknownStatic.Relink(mapping);
         }
         
         #endregion
@@ -1126,6 +1172,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.UnknownStatic = item.UnknownStatic.Equals(rhs.UnknownStatic);
         }
         
         public string Print(
@@ -1217,6 +1264,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Description, "Description");
             }
+            if (printMask?.UnknownStatic ?? true)
+            {
+                sb.AppendItem(item.UnknownStatic.FormKeyNullable, "UnknownStatic");
+            }
         }
         
         #region Equals and Hash
@@ -1242,6 +1293,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PerkRank_FieldIndex.UnknownStatic) ?? true))
+            {
+                if (!lhs.UnknownStatic.Equals(rhs.UnknownStatic)) return false;
+            }
             return true;
         }
         
@@ -1252,6 +1307,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Conditions);
             hash.Add(item.Activities);
             hash.Add(item.Description);
+            hash.Add(item.UnknownStatic);
             return hash.ToHashCode();
         }
         
@@ -1280,6 +1336,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.UnknownStatic, out var UnknownStaticInfo))
+            {
+                yield return UnknownStaticInfo;
             }
             yield break;
         }
@@ -1382,6 +1442,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)PerkRank_FieldIndex.Description) ?? true))
             {
                 item.Description = rhs.Description.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)PerkRank_FieldIndex.UnknownStatic) ?? true))
+            {
+                item.UnknownStatic.SetTo(rhs.UnknownStatic.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1525,6 +1589,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.UnknownStatic,
+                header: translationParams.ConvertToCustom(RecordTypes.PRUC));
         }
 
         public static partial void WriteBinaryEffectsCustom(
@@ -1627,6 +1695,12 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)PerkRank_FieldIndex.Description;
                 }
+                case RecordTypeInts.PRUC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UnknownStatic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PerkRank_FieldIndex.UnknownStatic;
+                }
                 default:
                     return ParseResult.Stop;
             }
@@ -1714,6 +1788,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
+        #endregion
+        #region UnknownStatic
+        private int? _UnknownStaticLocation;
+        public IFormLinkNullableGetter<IStaticGetter> UnknownStatic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _UnknownStaticLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1825,6 +1903,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)PerkRank_FieldIndex.Description, translationParams)) return ParseResult.Stop;
                     _DescriptionLocation = (stream.Position - offset);
                     return (int)PerkRank_FieldIndex.Description;
+                }
+                case RecordTypeInts.PRUC:
+                {
+                    _UnknownStaticLocation = (stream.Position - offset);
+                    return (int)PerkRank_FieldIndex.UnknownStatic;
                 }
                 default:
                     return ParseResult.Stop;

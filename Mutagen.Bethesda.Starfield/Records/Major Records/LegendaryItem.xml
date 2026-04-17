@@ -5,6 +5,8 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <UInt64 name="XALG" recordType="XALG" unknown="true" />
@@ -13,17 +15,43 @@
       <Marker name="DATA" recordType="DATA" />
       <FormLink name="BaseObjectList" refName="LeveledItem" recordType="ANAM" />
       <FormLink name="RankTemplate" refName="LegendaryItem" recordType="ENAM" />
+      <FormLink name="MNAM" refName="LegendaryItem" recordType="MNAM" unknown="true" />
       <RefList name="LegendaryMods" refName="LegendaryMod" recordType="BNAM" />
+      <RefList name="LnamEntries" refName="LegendaryItemLnamEntry" recordType="LNAM" binary="Custom" />
       <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
       <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <ByteArray name="KNAM" recordType="KNAM" unknown="true" />
+      <RefList name="GNAM" refName="LegendaryMod" recordType="GNAM" unknown="true" />
+      <RefList name="HNAM" refName="LegendaryItemHNAMEntry" recordType="HNAM" unknown="true" />
+      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <!-- CITC/CTDA/CIS1/CIS2 consumed by ConditionalEntries custom binary handler -->
+    <AdditionalContainedRecordType>CITC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CTDA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CIS1</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CIS2</AdditionalContainedRecordType>
+  </Object>
+  <Object name="LegendaryItemLnamEntry" objType="Subrecord">
+    <Fields>
+      <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
+      <UInt32 name="Unknown" unknown="true" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+    </Fields>
   </Object>
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>
       <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
       <FormLink name="ObjectMod" refName="AObjectModification" />
+    </Fields>
+  </Object>
+  <Object name="LegendaryItemHNAMEntry" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Unknown1" unknown="true" />
+      <UInt32 name="Unknown2" unknown="true" />
+      <FormLink name="Keyword" refName="Keyword" />
     </Fields>
   </Object>
   <Object name="LegendaryFilter" objType="Subrecord">

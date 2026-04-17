@@ -151,15 +151,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IQuestLocationAliasGetter.ClosestToAlias => this.ClosestToAlias;
         #endregion
-        #region ParentSystemLocationAliasID
-        public Int32? ParentSystemLocationAliasID { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IQuestLocationAliasGetter.ParentSystemLocationAliasID => this.ParentSystemLocationAliasID;
-        #endregion
         #region SystemLocationAliasID
         public Int32? SystemLocationAliasID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IQuestLocationAliasGetter.SystemLocationAliasID => this.SystemLocationAliasID;
+        #endregion
+        #region ParentSystemLocationAliasID
+        public Int32? ParentSystemLocationAliasID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IQuestLocationAliasGetter.ParentSystemLocationAliasID => this.ParentSystemLocationAliasID;
         #endregion
         #region LocationTypeKeyword
         private readonly IFormLinkNullable<IKeywordGetter> _LocationTypeKeyword = new FormLinkNullable<IKeywordGetter>();
@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.ALPS = new MaskItem<TItem, QuestLocationAliasALPS.Mask<TItem>?>(initialValue, new QuestLocationAliasALPS.Mask<TItem>(initialValue));
                 this.ClosestToAlias = initialValue;
-                this.ParentSystemLocationAliasID = initialValue;
                 this.SystemLocationAliasID = initialValue;
+                this.ParentSystemLocationAliasID = initialValue;
                 this.LocationTypeKeyword = initialValue;
                 this.DisplayName = initialValue;
             }
@@ -253,8 +253,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Conditions,
                 TItem ALPS,
                 TItem ClosestToAlias,
-                TItem ParentSystemLocationAliasID,
                 TItem SystemLocationAliasID,
+                TItem ParentSystemLocationAliasID,
                 TItem LocationTypeKeyword,
                 TItem DisplayName)
             : base()
@@ -271,8 +271,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.ALPS = new MaskItem<TItem, QuestLocationAliasALPS.Mask<TItem>?>(ALPS, new QuestLocationAliasALPS.Mask<TItem>(ALPS));
                 this.ClosestToAlias = ClosestToAlias;
-                this.ParentSystemLocationAliasID = ParentSystemLocationAliasID;
                 this.SystemLocationAliasID = SystemLocationAliasID;
+                this.ParentSystemLocationAliasID = ParentSystemLocationAliasID;
                 this.LocationTypeKeyword = LocationTypeKeyword;
                 this.DisplayName = DisplayName;
             }
@@ -298,8 +298,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, QuestLocationAliasALPS.Mask<TItem>?>? ALPS { get; set; }
             public TItem ClosestToAlias;
-            public TItem ParentSystemLocationAliasID;
             public TItem SystemLocationAliasID;
+            public TItem ParentSystemLocationAliasID;
             public TItem LocationTypeKeyword;
             public TItem DisplayName;
             #endregion
@@ -327,8 +327,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.ALPS, rhs.ALPS)) return false;
                 if (!object.Equals(this.ClosestToAlias, rhs.ClosestToAlias)) return false;
-                if (!object.Equals(this.ParentSystemLocationAliasID, rhs.ParentSystemLocationAliasID)) return false;
                 if (!object.Equals(this.SystemLocationAliasID, rhs.SystemLocationAliasID)) return false;
+                if (!object.Equals(this.ParentSystemLocationAliasID, rhs.ParentSystemLocationAliasID)) return false;
                 if (!object.Equals(this.LocationTypeKeyword, rhs.LocationTypeKeyword)) return false;
                 if (!object.Equals(this.DisplayName, rhs.DisplayName)) return false;
                 return true;
@@ -348,8 +348,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Conditions);
                 hash.Add(this.ALPS);
                 hash.Add(this.ClosestToAlias);
-                hash.Add(this.ParentSystemLocationAliasID);
                 hash.Add(this.SystemLocationAliasID);
+                hash.Add(this.ParentSystemLocationAliasID);
                 hash.Add(this.LocationTypeKeyword);
                 hash.Add(this.DisplayName);
                 hash.Add(base.GetHashCode());
@@ -401,8 +401,8 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ALPS.Specific != null && !this.ALPS.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ClosestToAlias)) return false;
-                if (!eval(this.ParentSystemLocationAliasID)) return false;
                 if (!eval(this.SystemLocationAliasID)) return false;
+                if (!eval(this.ParentSystemLocationAliasID)) return false;
                 if (!eval(this.LocationTypeKeyword)) return false;
                 if (!eval(this.DisplayName)) return false;
                 return true;
@@ -452,8 +452,8 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ALPS.Specific != null && this.ALPS.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ClosestToAlias)) return true;
-                if (eval(this.ParentSystemLocationAliasID)) return true;
                 if (eval(this.SystemLocationAliasID)) return true;
+                if (eval(this.ParentSystemLocationAliasID)) return true;
                 if (eval(this.LocationTypeKeyword)) return true;
                 if (eval(this.DisplayName)) return true;
                 return false;
@@ -497,8 +497,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.ALPS = this.ALPS == null ? null : new MaskItem<R, QuestLocationAliasALPS.Mask<R>?>(eval(this.ALPS.Overall), this.ALPS.Specific?.Translate(eval));
                 obj.ClosestToAlias = eval(this.ClosestToAlias);
-                obj.ParentSystemLocationAliasID = eval(this.ParentSystemLocationAliasID);
                 obj.SystemLocationAliasID = eval(this.SystemLocationAliasID);
+                obj.ParentSystemLocationAliasID = eval(this.ParentSystemLocationAliasID);
                 obj.LocationTypeKeyword = eval(this.LocationTypeKeyword);
                 obj.DisplayName = eval(this.DisplayName);
             }
@@ -582,13 +582,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ClosestToAlias, "ClosestToAlias");
                     }
-                    if (printMask?.ParentSystemLocationAliasID ?? true)
-                    {
-                        sb.AppendItem(ParentSystemLocationAliasID, "ParentSystemLocationAliasID");
-                    }
                     if (printMask?.SystemLocationAliasID ?? true)
                     {
                         sb.AppendItem(SystemLocationAliasID, "SystemLocationAliasID");
+                    }
+                    if (printMask?.ParentSystemLocationAliasID ?? true)
+                    {
+                        sb.AppendItem(ParentSystemLocationAliasID, "ParentSystemLocationAliasID");
                     }
                     if (printMask?.LocationTypeKeyword ?? true)
                     {
@@ -621,8 +621,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, QuestLocationAliasALPS.ErrorMask?>? ALPS;
             public Exception? ClosestToAlias;
-            public Exception? ParentSystemLocationAliasID;
             public Exception? SystemLocationAliasID;
+            public Exception? ParentSystemLocationAliasID;
             public Exception? LocationTypeKeyword;
             public Exception? DisplayName;
             #endregion
@@ -657,10 +657,10 @@ namespace Mutagen.Bethesda.Starfield
                         return ALPS;
                     case QuestLocationAlias_FieldIndex.ClosestToAlias:
                         return ClosestToAlias;
-                    case QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID:
-                        return ParentSystemLocationAliasID;
                     case QuestLocationAlias_FieldIndex.SystemLocationAliasID:
                         return SystemLocationAliasID;
+                    case QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID:
+                        return ParentSystemLocationAliasID;
                     case QuestLocationAlias_FieldIndex.LocationTypeKeyword:
                         return LocationTypeKeyword;
                     case QuestLocationAlias_FieldIndex.DisplayName:
@@ -711,11 +711,11 @@ namespace Mutagen.Bethesda.Starfield
                     case QuestLocationAlias_FieldIndex.ClosestToAlias:
                         this.ClosestToAlias = ex;
                         break;
-                    case QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID:
-                        this.ParentSystemLocationAliasID = ex;
-                        break;
                     case QuestLocationAlias_FieldIndex.SystemLocationAliasID:
                         this.SystemLocationAliasID = ex;
+                        break;
+                    case QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID:
+                        this.ParentSystemLocationAliasID = ex;
                         break;
                     case QuestLocationAlias_FieldIndex.LocationTypeKeyword:
                         this.LocationTypeKeyword = ex;
@@ -770,11 +770,11 @@ namespace Mutagen.Bethesda.Starfield
                     case QuestLocationAlias_FieldIndex.ClosestToAlias:
                         this.ClosestToAlias = (Exception?)obj;
                         break;
-                    case QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID:
-                        this.ParentSystemLocationAliasID = (Exception?)obj;
-                        break;
                     case QuestLocationAlias_FieldIndex.SystemLocationAliasID:
                         this.SystemLocationAliasID = (Exception?)obj;
+                        break;
+                    case QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID:
+                        this.ParentSystemLocationAliasID = (Exception?)obj;
                         break;
                     case QuestLocationAlias_FieldIndex.LocationTypeKeyword:
                         this.LocationTypeKeyword = (Exception?)obj;
@@ -803,8 +803,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (Conditions != null) return true;
                 if (ALPS != null) return true;
                 if (ClosestToAlias != null) return true;
-                if (ParentSystemLocationAliasID != null) return true;
                 if (SystemLocationAliasID != null) return true;
+                if (ParentSystemLocationAliasID != null) return true;
                 if (LocationTypeKeyword != null) return true;
                 if (DisplayName != null) return true;
                 return false;
@@ -877,10 +877,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ClosestToAlias, "ClosestToAlias");
                 }
                 {
-                    sb.AppendItem(ParentSystemLocationAliasID, "ParentSystemLocationAliasID");
+                    sb.AppendItem(SystemLocationAliasID, "SystemLocationAliasID");
                 }
                 {
-                    sb.AppendItem(SystemLocationAliasID, "SystemLocationAliasID");
+                    sb.AppendItem(ParentSystemLocationAliasID, "ParentSystemLocationAliasID");
                 }
                 {
                     sb.AppendItem(LocationTypeKeyword, "LocationTypeKeyword");
@@ -908,8 +908,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.ALPS = this.ALPS.Combine(rhs.ALPS, (l, r) => l.Combine(r));
                 ret.ClosestToAlias = this.ClosestToAlias.Combine(rhs.ClosestToAlias);
-                ret.ParentSystemLocationAliasID = this.ParentSystemLocationAliasID.Combine(rhs.ParentSystemLocationAliasID);
                 ret.SystemLocationAliasID = this.SystemLocationAliasID.Combine(rhs.SystemLocationAliasID);
+                ret.ParentSystemLocationAliasID = this.ParentSystemLocationAliasID.Combine(rhs.ParentSystemLocationAliasID);
                 ret.LocationTypeKeyword = this.LocationTypeKeyword.Combine(rhs.LocationTypeKeyword);
                 ret.DisplayName = this.DisplayName.Combine(rhs.DisplayName);
                 return ret;
@@ -946,8 +946,8 @@ namespace Mutagen.Bethesda.Starfield
             public Condition.TranslationMask? Conditions;
             public QuestLocationAliasALPS.TranslationMask? ALPS;
             public bool ClosestToAlias;
-            public bool ParentSystemLocationAliasID;
             public bool SystemLocationAliasID;
+            public bool ParentSystemLocationAliasID;
             public bool LocationTypeKeyword;
             public bool DisplayName;
             #endregion
@@ -965,8 +965,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.AliasIDToForceIntoWhenFilled = defaultOn;
                 this.SpecificLocation = defaultOn;
                 this.ClosestToAlias = defaultOn;
-                this.ParentSystemLocationAliasID = defaultOn;
                 this.SystemLocationAliasID = defaultOn;
+                this.ParentSystemLocationAliasID = defaultOn;
                 this.LocationTypeKeyword = defaultOn;
                 this.DisplayName = defaultOn;
             }
@@ -988,8 +988,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((ALPS != null ? ALPS.OnOverall : DefaultOn, ALPS?.GetCrystal()));
                 ret.Add((ClosestToAlias, null));
-                ret.Add((ParentSystemLocationAliasID, null));
                 ret.Add((SystemLocationAliasID, null));
+                ret.Add((ParentSystemLocationAliasID, null));
                 ret.Add((LocationTypeKeyword, null));
                 ret.Add((DisplayName, null));
             }
@@ -1085,8 +1085,8 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<Condition> Conditions { get; }
         new QuestLocationAliasALPS? ALPS { get; set; }
         new Int32? ClosestToAlias { get; set; }
-        new Int32? ParentSystemLocationAliasID { get; set; }
         new Int32? SystemLocationAliasID { get; set; }
+        new Int32? ParentSystemLocationAliasID { get; set; }
         new IFormLinkNullable<IKeywordGetter> LocationTypeKeyword { get; set; }
         new IFormLinkNullable<IMessageGetter> DisplayName { get; set; }
     }
@@ -1116,8 +1116,8 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IQuestLocationAliasALPSGetter? ALPS { get; }
         Int32? ClosestToAlias { get; }
-        Int32? ParentSystemLocationAliasID { get; }
         Int32? SystemLocationAliasID { get; }
+        Int32? ParentSystemLocationAliasID { get; }
         IFormLinkNullableGetter<IKeywordGetter> LocationTypeKeyword { get; }
         IFormLinkNullableGetter<IMessageGetter> DisplayName { get; }
 
@@ -1276,8 +1276,8 @@ namespace Mutagen.Bethesda.Starfield
         Conditions = 9,
         ALPS = 10,
         ClosestToAlias = 11,
-        ParentSystemLocationAliasID = 12,
-        SystemLocationAliasID = 13,
+        SystemLocationAliasID = 12,
+        ParentSystemLocationAliasID = 13,
         LocationTypeKeyword = 14,
         DisplayName = 15,
     }
@@ -1342,8 +1342,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS2,
                 RecordTypes.ALPS,
                 RecordTypes.ALCC,
-                RecordTypes.ALPN,
                 RecordTypes.ALSY,
+                RecordTypes.ALPN,
                 RecordTypes.ALKF,
                 RecordTypes.ALDN);
             return new RecordTriggerSpecs(
@@ -1402,8 +1402,8 @@ namespace Mutagen.Bethesda.Starfield
             item.Conditions.Clear();
             item.ALPS = null;
             item.ClosestToAlias = default;
-            item.ParentSystemLocationAliasID = default;
             item.SystemLocationAliasID = default;
+            item.ParentSystemLocationAliasID = default;
             item.LocationTypeKeyword.Clear();
             item.DisplayName.Clear();
             base.Clear(item);
@@ -1511,8 +1511,8 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ClosestToAlias = item.ClosestToAlias == rhs.ClosestToAlias;
-            ret.ParentSystemLocationAliasID = item.ParentSystemLocationAliasID == rhs.ParentSystemLocationAliasID;
             ret.SystemLocationAliasID = item.SystemLocationAliasID == rhs.SystemLocationAliasID;
+            ret.ParentSystemLocationAliasID = item.ParentSystemLocationAliasID == rhs.ParentSystemLocationAliasID;
             ret.LocationTypeKeyword = item.LocationTypeKeyword.Equals(rhs.LocationTypeKeyword);
             ret.DisplayName = item.DisplayName.Equals(rhs.DisplayName);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1630,15 +1630,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ClosestToAliasItem, "ClosestToAlias");
             }
-            if ((printMask?.ParentSystemLocationAliasID ?? true)
-                && item.ParentSystemLocationAliasID is {} ParentSystemLocationAliasIDItem)
-            {
-                sb.AppendItem(ParentSystemLocationAliasIDItem, "ParentSystemLocationAliasID");
-            }
             if ((printMask?.SystemLocationAliasID ?? true)
                 && item.SystemLocationAliasID is {} SystemLocationAliasIDItem)
             {
                 sb.AppendItem(SystemLocationAliasIDItem, "SystemLocationAliasID");
+            }
+            if ((printMask?.ParentSystemLocationAliasID ?? true)
+                && item.ParentSystemLocationAliasID is {} ParentSystemLocationAliasIDItem)
+            {
+                sb.AppendItem(ParentSystemLocationAliasIDItem, "ParentSystemLocationAliasID");
             }
             if (printMask?.LocationTypeKeyword ?? true)
             {
@@ -1731,13 +1731,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.ClosestToAlias != rhs.ClosestToAlias) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID) ?? true))
-            {
-                if (lhs.ParentSystemLocationAliasID != rhs.ParentSystemLocationAliasID) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.SystemLocationAliasID) ?? true))
             {
                 if (lhs.SystemLocationAliasID != rhs.SystemLocationAliasID) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID) ?? true))
+            {
+                if (lhs.ParentSystemLocationAliasID != rhs.ParentSystemLocationAliasID) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.LocationTypeKeyword) ?? true))
             {
@@ -1800,13 +1800,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ClosestToAliasitem);
             }
-            if (item.ParentSystemLocationAliasID is {} ParentSystemLocationAliasIDitem)
-            {
-                hash.Add(ParentSystemLocationAliasIDitem);
-            }
             if (item.SystemLocationAliasID is {} SystemLocationAliasIDitem)
             {
                 hash.Add(SystemLocationAliasIDitem);
+            }
+            if (item.ParentSystemLocationAliasID is {} ParentSystemLocationAliasIDitem)
+            {
+                hash.Add(ParentSystemLocationAliasIDitem);
             }
             hash.Add(item.LocationTypeKeyword);
             hash.Add(item.DisplayName);
@@ -2051,13 +2051,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ClosestToAlias = rhs.ClosestToAlias;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID) ?? true))
-            {
-                item.ParentSystemLocationAliasID = rhs.ParentSystemLocationAliasID;
-            }
             if ((copyMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.SystemLocationAliasID) ?? true))
             {
                 item.SystemLocationAliasID = rhs.SystemLocationAliasID;
+            }
+            if ((copyMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID) ?? true))
+            {
+                item.ParentSystemLocationAliasID = rhs.ParentSystemLocationAliasID;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestLocationAlias_FieldIndex.LocationTypeKeyword) ?? true))
             {
@@ -2259,12 +2259,12 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ALCC));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParentSystemLocationAliasID,
-                header: translationParams.ConvertToCustom(RecordTypes.ALPN));
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
                 item: item.SystemLocationAliasID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALSY));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParentSystemLocationAliasID,
+                header: translationParams.ConvertToCustom(RecordTypes.ALPN));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LocationTypeKeyword,
@@ -2415,17 +2415,17 @@ namespace Mutagen.Bethesda.Starfield
                     item.ClosestToAlias = frame.ReadInt32();
                     return (int)QuestLocationAlias_FieldIndex.ClosestToAlias;
                 }
-                case RecordTypeInts.ALPN:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentSystemLocationAliasID = frame.ReadInt32();
-                    return (int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID;
-                }
                 case RecordTypeInts.ALSY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SystemLocationAliasID = frame.ReadInt32();
                     return (int)QuestLocationAlias_FieldIndex.SystemLocationAliasID;
+                }
+                case RecordTypeInts.ALPN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParentSystemLocationAliasID = frame.ReadInt32();
+                    return (int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID;
                 }
                 case RecordTypeInts.ALKF:
                 {
@@ -2522,13 +2522,13 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ClosestToAliasLocation;
         public Int32? ClosestToAlias => _ClosestToAliasLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClosestToAliasLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
-        #region ParentSystemLocationAliasID
-        private int? _ParentSystemLocationAliasIDLocation;
-        public Int32? ParentSystemLocationAliasID => _ParentSystemLocationAliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentSystemLocationAliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
         #region SystemLocationAliasID
         private int? _SystemLocationAliasIDLocation;
         public Int32? SystemLocationAliasID => _SystemLocationAliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SystemLocationAliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region ParentSystemLocationAliasID
+        private int? _ParentSystemLocationAliasIDLocation;
+        public Int32? ParentSystemLocationAliasID => _ParentSystemLocationAliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentSystemLocationAliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region LocationTypeKeyword
         private int? _LocationTypeKeywordLocation;
@@ -2687,15 +2687,15 @@ namespace Mutagen.Bethesda.Starfield
                     _ClosestToAliasLocation = (stream.Position - offset);
                     return (int)QuestLocationAlias_FieldIndex.ClosestToAlias;
                 }
-                case RecordTypeInts.ALPN:
-                {
-                    _ParentSystemLocationAliasIDLocation = (stream.Position - offset);
-                    return (int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID;
-                }
                 case RecordTypeInts.ALSY:
                 {
                     _SystemLocationAliasIDLocation = (stream.Position - offset);
                     return (int)QuestLocationAlias_FieldIndex.SystemLocationAliasID;
+                }
+                case RecordTypeInts.ALPN:
+                {
+                    _ParentSystemLocationAliasIDLocation = (stream.Position - offset);
+                    return (int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID;
                 }
                 case RecordTypeInts.ALKF:
                 {

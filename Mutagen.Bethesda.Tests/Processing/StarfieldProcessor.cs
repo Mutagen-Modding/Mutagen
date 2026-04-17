@@ -128,7 +128,7 @@ public class StarfieldProcessor : Processor
     {
         return new Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>
         {
-            { (Constants.Starfield, StringsSource.Normal), new() { 0x71B7 } }
+            { (Constants.Starfield, StringsSource.Normal), new() { 0x71B7 } },
         };
     }
 
@@ -201,6 +201,11 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "GBFM", "FULL" },
                     new RecordType[] { "GPOG", "NNAM" },
                     new RecordType[] { "GPOF", "RESN", "VOVS", "NNAM", "DNAM" },
+                    new RecordType[] { "AACT", "FULL" },
+                    new RecordType[] { "LIGH", "FULL" },
+                    new RecordType[] { "NOTE", "FULL" },
+                    new RecordType[] { "SCOL", "FULL" },
+                    new RecordType[] { "LGDI", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -286,6 +291,15 @@ public class StarfieldProcessor : Processor
         ProcessComponents(majorFrame, fileOffset);
         ProcessObjectPaletteDefaults(majorFrame, fileOffset);
         ProcessFEIndices(majorFrame, fileOffset);
+        foreach (var ctda in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDA))
+        {
+            // Offset 4 is ComparisonValue — only a float when UseGlobal flag (0x04) is not set
+            if (!Enums.HasFlag(ctda.Content[0], (byte)Condition.UseGlobal))
+            {
+                int loc = 4;
+                ProcessZeroFloat(ctda, fileOffset, ref loc);
+            }
+        }
     }
 
     private void ProcessFEIndices(

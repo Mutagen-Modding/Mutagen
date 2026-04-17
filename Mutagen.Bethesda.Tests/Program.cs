@@ -12,10 +12,11 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        await Parser.Default.ParseArguments(args, typeof(RunConfigCommand), typeof(RunSinglePassthrough))
+        await Parser.Default.ParseArguments(args, typeof(RunConfigCommand), typeof(RunSinglePassthrough), typeof(AnalyzeSubrecord))
             .MapResult(
                 (RunConfigCommand runConfig) => RunConfig(runConfig),
                 (RunSinglePassthrough singlePassthrough) => RunSingle(singlePassthrough),
+                (AnalyzeSubrecord analyze) => Task.FromResult(analyze.Execute()),
                 async _ => -1);
     }
 

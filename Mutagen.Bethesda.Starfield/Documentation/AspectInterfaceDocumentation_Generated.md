@@ -117,6 +117,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Projectile
 - Quest
 - Race
+- ReferenceGroup
 - Resource
 - ReverbParameters
 - Scene
@@ -288,6 +289,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingestible
 - Key
 - Keyword
+- LegendaryItem
 - Light
 - Location
 - MagicEffect
@@ -510,6 +512,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ProjectedDecal
 - Projectile
 - Race
+- ReferenceGroup
 - Resource
 - ReverbParameters
 - ShaderParticleGeometry
@@ -853,6 +856,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### LegendaryItem
 - IHaveVirtualMachineAdapter
 - IModeled
+- INamed
 - IObjectBounded
 - IScripted
 ### LensFlare
@@ -1105,7 +1109,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### RagdollData
 - IPositionRotation
 ### ReferenceGroup
+- IHaveVirtualMachineAdapter
 - INamed
+- IScripted
 ### ResearchProject
 - INamed
 ### Resource

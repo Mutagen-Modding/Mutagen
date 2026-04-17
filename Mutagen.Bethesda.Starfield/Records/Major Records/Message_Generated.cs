@@ -1230,6 +1230,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BNAM,
                 RecordTypes.NNAM,
                 RecordTypes.ITXT,
+                RecordTypes.IBIN,
                 RecordTypes.CTDA,
                 RecordTypes.DODT,
                 RecordTypes.CITC,
@@ -2211,6 +2212,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Message_FieldIndex.ShortTitle;
                 }
                 case RecordTypeInts.ITXT:
+                case RecordTypeInts.IBIN:
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.DODT:
                 {
@@ -2453,6 +2455,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Message_FieldIndex.ShortTitle;
                 }
                 case RecordTypeInts.ITXT:
+                case RecordTypeInts.IBIN:
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.DODT:
                 {

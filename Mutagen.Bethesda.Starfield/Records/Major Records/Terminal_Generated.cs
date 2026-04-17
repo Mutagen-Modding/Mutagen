@@ -110,6 +110,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITransformsGetter? ITerminalGetter.Transforms => this.Transforms;
         #endregion
+        #region SnapTemplate
+        private readonly IFormLinkNullable<ISnapTemplateGetter> _SnapTemplate = new FormLinkNullable<ISnapTemplateGetter>();
+        public IFormLinkNullable<ISnapTemplateGetter> SnapTemplate
+        {
+            get => _SnapTemplate;
+            set => _SnapTemplate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISnapTemplateGetter> ITerminalGetter.SnapTemplate => this.SnapTemplate;
+        #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
@@ -371,6 +381,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.SnapTemplate = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Menu = initialValue;
                 this.Background = initialValue;
@@ -403,6 +414,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ObjectBounds,
                 TItem DirtinessScale,
                 TItem Transforms,
+                TItem SnapTemplate,
                 TItem Components,
                 TItem Menu,
                 TItem Background,
@@ -434,6 +446,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.SnapTemplate = SnapTemplate;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Menu = Menu;
                 this.Background = Background;
@@ -467,6 +480,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem SnapTemplate;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Menu;
             public TItem Background;
@@ -502,6 +516,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Menu, rhs.Menu)) return false;
                 if (!object.Equals(this.Background, rhs.Background)) return false;
@@ -529,6 +544,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
                 hash.Add(this.Transforms);
+                hash.Add(this.SnapTemplate);
                 hash.Add(this.Components);
                 hash.Add(this.Menu);
                 hash.Add(this.Background);
@@ -573,6 +589,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Transforms.Overall)) return false;
                     if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
                 }
+                if (!eval(this.SnapTemplate)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -672,6 +689,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Transforms.Overall)) return true;
                     if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
                 }
+                if (eval(this.SnapTemplate)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -766,6 +784,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.SnapTemplate = eval(this.SnapTemplate);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
@@ -885,6 +904,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Transforms?.Overall ?? true)
                     {
                         Transforms?.Print(sb);
+                    }
+                    if (printMask?.SnapTemplate ?? true)
+                    {
+                        sb.AppendItem(SnapTemplate, "SnapTemplate");
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -1052,6 +1075,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? SnapTemplate;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Menu;
             public Exception? Background;
@@ -1086,6 +1110,8 @@ namespace Mutagen.Bethesda.Starfield
                         return DirtinessScale;
                     case Terminal_FieldIndex.Transforms:
                         return Transforms;
+                    case Terminal_FieldIndex.SnapTemplate:
+                        return SnapTemplate;
                     case Terminal_FieldIndex.Components:
                         return Components;
                     case Terminal_FieldIndex.Menu:
@@ -1143,6 +1169,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Terminal_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case Terminal_FieldIndex.SnapTemplate:
+                        this.SnapTemplate = ex;
                         break;
                     case Terminal_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
@@ -1221,6 +1250,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Terminal_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
                         break;
+                    case Terminal_FieldIndex.SnapTemplate:
+                        this.SnapTemplate = (Exception?)obj;
+                        break;
                     case Terminal_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
@@ -1288,6 +1320,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
                 if (Transforms != null) return true;
+                if (SnapTemplate != null) return true;
                 if (Components != null) return true;
                 if (Menu != null) return true;
                 if (Background != null) return true;
@@ -1338,6 +1371,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 Transforms?.Print(sb);
+                {
+                    sb.AppendItem(SnapTemplate, "SnapTemplate");
+                }
                 if (Components is {} ComponentsItem)
                 {
                     sb.AppendLine("Components =>");
@@ -1481,6 +1517,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Menu = this.Menu.Combine(rhs.Menu);
                 ret.Background = this.Background.Combine(rhs.Background);
@@ -1525,6 +1562,7 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
             public Transforms.TranslationMask? Transforms;
+            public bool SnapTemplate;
             public AComponent.TranslationMask? Components;
             public bool Menu;
             public bool Background;
@@ -1552,6 +1590,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
+                this.SnapTemplate = defaultOn;
                 this.Menu = defaultOn;
                 this.Background = defaultOn;
                 this.Name = defaultOn;
@@ -1577,6 +1616,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((SnapTemplate, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Menu, null));
                 ret.Add((Background, null));
@@ -1773,6 +1813,7 @@ namespace Mutagen.Bethesda.Starfield
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
         new Transforms? Transforms { get; set; }
+        new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new IFormLinkNullable<ITerminalMenuGetter> Menu { get; set; }
         new Terminal.BackgroundType? Background { get; set; }
@@ -1848,6 +1889,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         Percent DirtinessScale { get; }
         ITransformsGetter? Transforms { get; }
+        IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkNullableGetter<ITerminalMenuGetter> Menu { get; }
         Terminal.BackgroundType? Background { get; }
@@ -2065,24 +2107,25 @@ namespace Mutagen.Bethesda.Starfield
         ObjectBounds = 8,
         DirtinessScale = 9,
         Transforms = 10,
-        Components = 11,
-        Menu = 12,
-        Background = 13,
-        Name = 14,
-        Model = 15,
-        Keywords = 16,
-        Properties = 17,
-        ForcedLocations = 18,
-        PNAM = 19,
-        FNAM = 20,
-        JNAM = 21,
-        MarkerFlags = 22,
-        GNAM = 23,
-        WorkbenchData = 24,
-        FurnitureTemplate = 25,
-        FNPR = 26,
-        MarkerModel = 27,
-        MarkerParameters = 28,
+        SnapTemplate = 11,
+        Components = 12,
+        Menu = 13,
+        Background = 14,
+        Name = 15,
+        Model = 16,
+        Keywords = 17,
+        Properties = 18,
+        ForcedLocations = 19,
+        PNAM = 20,
+        FNAM = 21,
+        JNAM = 22,
+        MarkerFlags = 23,
+        GNAM = 24,
+        WorkbenchData = 25,
+        FurnitureTemplate = 26,
+        FNPR = 27,
+        MarkerModel = 28,
+        MarkerParameters = 29,
     }
     #endregion
 
@@ -2093,9 +2136,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 30;
 
         public static readonly Type MaskType = typeof(Terminal.Mask<>);
 
@@ -2135,6 +2178,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
                 RecordTypes.PTT2,
+                RecordTypes.SNTP,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.DNAM,
@@ -2210,6 +2254,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
             item.Transforms = null;
+            item.SnapTemplate.Clear();
             item.Components.Clear();
             item.Menu.Clear();
             item.Background = default;
@@ -2247,6 +2292,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
+            obj.SnapTemplate.Relink(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Menu.Relink(mapping);
             obj.Model?.RemapLinks(mapping);
@@ -2366,6 +2412,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Transforms,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.SnapTemplate = item.SnapTemplate.Equals(rhs.SnapTemplate);
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2469,6 +2516,10 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Transforms is {} TransformsItem)
             {
                 TransformsItem?.Print(sb, "Transforms");
+            }
+            if (printMask?.SnapTemplate ?? true)
+            {
+                sb.AppendItem(item.SnapTemplate.FormKeyNullable, "SnapTemplate");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -2685,6 +2736,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isTransformsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Terminal_FieldIndex.SnapTemplate) ?? true))
+            {
+                if (!lhs.SnapTemplate.Equals(rhs.SnapTemplate)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Terminal_FieldIndex.Components) ?? true))
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Terminal_FieldIndex.Components)))) return false;
@@ -2799,6 +2854,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Transformsitem);
             }
+            hash.Add(item.SnapTemplate);
             hash.Add(item.Components);
             hash.Add(item.Menu);
             if (item.Background is {} Backgrounditem)
@@ -2892,6 +2948,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.SnapTemplate, out var SnapTemplateInfo))
+            {
+                yield return SnapTemplateInfo;
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
@@ -3113,6 +3173,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Terminal_FieldIndex.SnapTemplate) ?? true))
+            {
+                item.SnapTemplate.SetTo(rhs.SnapTemplate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Terminal_FieldIndex.Components) ?? true))
             {
@@ -3565,6 +3629,10 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SnapTemplate,
+                header: translationParams.ConvertToCustom(RecordTypes.SNTP));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -3775,6 +3843,12 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
                     return (int)Terminal_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.SNTP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Terminal_FieldIndex.SnapTemplate;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -4016,6 +4090,10 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
         #endregion
+        #region SnapTemplate
+        private int? _SnapTemplateLocation;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
+        #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         #region Menu
         private int? _MenuLocation;
@@ -4174,6 +4252,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Terminal_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.SNTP:
+                {
+                    _SnapTemplateLocation = (stream.Position - offset);
+                    return (int)Terminal_FieldIndex.SnapTemplate;
                 }
                 case RecordTypeInts.BFCB:
                 {
