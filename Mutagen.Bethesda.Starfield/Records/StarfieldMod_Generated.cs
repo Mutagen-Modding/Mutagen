@@ -236,6 +236,7 @@ namespace Mutagen.Bethesda.Starfield
             _Challenges_Object = new StarfieldGroup<Challenge>(this);
             _FacialExpressions_Object = new StarfieldGroup<FacialExpression>(this);
             _PERS_Object = new StarfieldGroup<PERS>(this);
+            _GravityWielderEffectDatas_Object = new StarfieldGroup<GravityWielderEffectData>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1480,6 +1481,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IPERSGetter> IStarfieldModGetter.PERS => _PERS_Object;
         #endregion
+        #region GravityWielderEffectDatas
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<GravityWielderEffectData> _GravityWielderEffectDatas_Object;
+        public StarfieldGroup<GravityWielderEffectData> GravityWielderEffectDatas => _GravityWielderEffectDatas_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IGravityWielderEffectDataGetter> IStarfieldModGetter.GravityWielderEffectDatas => _GravityWielderEffectDatas_Object;
+        #endregion
 
         #region To String
 
@@ -1696,6 +1704,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FacialExpressions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.PERS = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.GravityWielderEffectDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1875,7 +1884,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ActorValueModulations,
                 TItem Challenges,
                 TItem FacialExpressions,
-                TItem PERS)
+                TItem PERS,
+                TItem GravityWielderEffectDatas)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -2054,6 +2064,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Challenges = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Challenges, new StarfieldGroup.Mask<TItem>(Challenges));
                 this.FacialExpressions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FacialExpressions, new StarfieldGroup.Mask<TItem>(FacialExpressions));
                 this.PERS = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(PERS, new StarfieldGroup.Mask<TItem>(PERS));
+                this.GravityWielderEffectDatas = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GravityWielderEffectDatas, new StarfieldGroup.Mask<TItem>(GravityWielderEffectDatas));
             }
 
             #pragma warning disable CS8618
@@ -2242,6 +2253,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Challenges { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FacialExpressions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? PERS { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GravityWielderEffectDatas { get; set; }
             #endregion
 
             #region Equals
@@ -2431,6 +2443,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
                 if (!object.Equals(this.FacialExpressions, rhs.FacialExpressions)) return false;
                 if (!object.Equals(this.PERS, rhs.PERS)) return false;
+                if (!object.Equals(this.GravityWielderEffectDatas, rhs.GravityWielderEffectDatas)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -2613,6 +2626,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Challenges);
                 hash.Add(this.FacialExpressions);
                 hash.Add(this.PERS);
+                hash.Add(this.GravityWielderEffectDatas);
                 return hash.ToHashCode();
             }
 
@@ -3506,6 +3520,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.PERS.Overall)) return false;
                     if (this.PERS.Specific != null && !this.PERS.Specific.All(eval)) return false;
                 }
+                if (GravityWielderEffectDatas != null)
+                {
+                    if (!eval(this.GravityWielderEffectDatas.Overall)) return false;
+                    if (this.GravityWielderEffectDatas.Specific != null && !this.GravityWielderEffectDatas.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -4398,6 +4417,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.PERS.Overall)) return true;
                     if (this.PERS.Specific != null && this.PERS.Specific.Any(eval)) return true;
                 }
+                if (GravityWielderEffectDatas != null)
+                {
+                    if (eval(this.GravityWielderEffectDatas.Overall)) return true;
+                    if (this.GravityWielderEffectDatas.Specific != null && this.GravityWielderEffectDatas.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -4589,6 +4613,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Challenges = this.Challenges == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
                 obj.FacialExpressions = this.FacialExpressions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FacialExpressions.Overall), this.FacialExpressions.Specific?.Translate(eval));
                 obj.PERS = this.PERS == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.PERS.Overall), this.PERS.Specific?.Translate(eval));
+                obj.GravityWielderEffectDatas = this.GravityWielderEffectDatas == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GravityWielderEffectDatas.Overall), this.GravityWielderEffectDatas.Specific?.Translate(eval));
             }
             #endregion
 
@@ -5315,6 +5340,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         PERS?.Print(sb);
                     }
+                    if (printMask?.GravityWielderEffectDatas?.Overall ?? true)
+                    {
+                        GravityWielderEffectDatas?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -5516,6 +5545,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Challenge.ErrorMask>?>? Challenges;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FacialExpression.ErrorMask>?>? FacialExpressions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>? PERS;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<GravityWielderEffectData.ErrorMask>?>? GravityWielderEffectDatas;
             #endregion
 
             #region IErrorMask
@@ -5878,6 +5908,8 @@ namespace Mutagen.Bethesda.Starfield
                         return FacialExpressions;
                     case StarfieldMod_FieldIndex.PERS:
                         return PERS;
+                    case StarfieldMod_FieldIndex.GravityWielderEffectDatas:
+                        return GravityWielderEffectDatas;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -6418,6 +6450,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.PERS:
                         this.PERS = new MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.GravityWielderEffectDatas:
+                        this.GravityWielderEffectDatas = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GravityWielderEffectData.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -6960,6 +6995,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.PERS:
                         this.PERS = (MaskItem<Exception?, StarfieldGroup.ErrorMask<PERS.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.GravityWielderEffectDatas:
+                        this.GravityWielderEffectDatas = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GravityWielderEffectData.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -7145,6 +7183,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Challenges != null) return true;
                 if (FacialExpressions != null) return true;
                 if (PERS != null) return true;
+                if (GravityWielderEffectDatas != null) return true;
                 return false;
             }
             #endregion
@@ -7347,6 +7386,7 @@ namespace Mutagen.Bethesda.Starfield
                 Challenges?.Print(sb);
                 FacialExpressions?.Print(sb);
                 PERS?.Print(sb);
+                GravityWielderEffectDatas?.Print(sb);
             }
             #endregion
 
@@ -7532,6 +7572,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
                 ret.FacialExpressions = this.FacialExpressions.Combine(rhs.FacialExpressions, (l, r) => l.Combine(r));
                 ret.PERS = this.PERS.Combine(rhs.PERS, (l, r) => l.Combine(r));
+                ret.GravityWielderEffectDatas = this.GravityWielderEffectDatas.Combine(rhs.GravityWielderEffectDatas, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -7732,6 +7773,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Challenge.TranslationMask>? Challenges;
             public StarfieldGroup.TranslationMask<FacialExpression.TranslationMask>? FacialExpressions;
             public StarfieldGroup.TranslationMask<PERS.TranslationMask>? PERS;
+            public StarfieldGroup.TranslationMask<GravityWielderEffectData.TranslationMask>? GravityWielderEffectDatas;
             #endregion
 
             #region Ctors
@@ -7933,6 +7975,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
                 ret.Add((FacialExpressions != null ? FacialExpressions.OnOverall : DefaultOn, FacialExpressions?.GetCrystal()));
                 ret.Add((PERS != null ? PERS.OnOverall : DefaultOn, PERS?.GetCrystal()));
+                ret.Add((GravityWielderEffectDatas != null ? GravityWielderEffectDatas.OnOverall : DefaultOn, GravityWielderEffectDatas?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -8168,6 +8211,7 @@ namespace Mutagen.Bethesda.Starfield
             _Challenges_Object = new StarfieldGroup<Challenge>(this);
             _FacialExpressions_Object = new StarfieldGroup<FacialExpression>(this);
             _PERS_Object = new StarfieldGroup<PERS>(this);
+            _GravityWielderEffectDatas_Object = new StarfieldGroup<GravityWielderEffectData>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -8881,6 +8925,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.PERS.RecordCache.Set(rhsMod.PERS.RecordCache.Items);
             }
+            if (mask?.GravityWielderEffectDatas ?? true)
+            {
+                this.GravityWielderEffectDatas.RecordCache.Set(rhsMod.GravityWielderEffectDatas.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -9338,6 +9386,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Challenge> Challenges { get; }
         new StarfieldGroup<FacialExpression> FacialExpressions { get; }
         new StarfieldGroup<PERS> PERS { get; }
+        new StarfieldGroup<GravityWielderEffectData> GravityWielderEffectDatas { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -9534,6 +9583,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IChallengeGetter> Challenges { get; }
         IStarfieldGroupGetter<IFacialExpressionGetter> FacialExpressions { get; }
         IStarfieldGroupGetter<IPERSGetter> PERS { get; }
+        IStarfieldGroupGetter<IGravityWielderEffectDataGetter> GravityWielderEffectDatas { get; }
 
         #region Mutagen
         StarfieldRelease StarfieldRelease { get; }
@@ -10270,6 +10320,7 @@ namespace Mutagen.Bethesda.Starfield
         Challenges = 174,
         FacialExpressions = 175,
         PERS = 176,
+        GravityWielderEffectDatas = 177,
     }
     #endregion
 
@@ -10280,9 +10331,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 177;
+        public const ushort AdditionalFieldCount = 178;
 
-        public const ushort FieldCount = 177;
+        public const ushort FieldCount = 178;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -10524,6 +10575,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Challenges.Clear();
             item.FacialExpressions.Clear();
             item.PERS.Clear();
+            item.GravityWielderEffectDatas.Clear();
         }
         
         #region Mutagen
@@ -10917,6 +10969,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Challenges.Remove(keys);
             obj.FacialExpressions.Remove(keys);
             obj.PERS.Remove(keys);
+            obj.GravityWielderEffectDatas.Remove(keys);
         }
         
         public void Remove(
@@ -11603,6 +11656,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IGrass":
                 case "IGrassInternal":
                     obj.Grasses.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "GravityWielderEffectData":
+                case "IGravityWielderEffectDataGetter":
+                case "IGravityWielderEffectData":
+                case "IGravityWielderEffectDataInternal":
+                    obj.GravityWielderEffectDatas.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -12914,6 +12975,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.ObjectEffects is IAssetLinkContainer ObjectEffectslinkCont)
+            {
+                foreach (var item in ObjectEffectslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Activators is IAssetLinkContainer ActivatorslinkCont)
             {
                 foreach (var item in ActivatorslinkCont.EnumerateListedAssetLinks())
@@ -13426,6 +13494,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.MagicEffects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ProjectedDecals.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ObjectEffects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Armors.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Books.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -13719,6 +13788,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
             ret.FacialExpressions = MaskItemExt.Factory(item.FacialExpressions.GetEqualsMask(rhs.FacialExpressions, include), include);
             ret.PERS = MaskItemExt.Factory(item.PERS.GetEqualsMask(rhs.PERS, include), include);
+            ret.GravityWielderEffectDatas = MaskItemExt.Factory(item.GravityWielderEffectDatas.GetEqualsMask(rhs.GravityWielderEffectDatas, include), include);
         }
         
         public string Print(
@@ -14470,6 +14540,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.PERS?.Overall ?? true)
             {
                 item.PERS?.Print(sb, "PERS");
+            }
+            if (printMask?.GravityWielderEffectDatas?.Overall ?? true)
+            {
+                item.GravityWielderEffectDatas?.Print(sb, "GravityWielderEffectDatas");
             }
         }
         
@@ -15896,6 +15970,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isPERSEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GravityWielderEffectDatas) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GravityWielderEffectDatas, rhs.GravityWielderEffectDatas, out var lhsGravityWielderEffectDatas, out var rhsGravityWielderEffectDatas, out var isGravityWielderEffectDatasEqual))
+                {
+                    if (!object.Equals(lhsGravityWielderEffectDatas, rhsGravityWielderEffectDatas)) return false;
+                }
+                else if (!isGravityWielderEffectDatasEqual) return false;
+            }
             return true;
         }
         
@@ -16079,6 +16161,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Challenges);
             hash.Add(item.FacialExpressions);
             hash.Add(item.PERS);
+            hash.Add(item.GravityWielderEffectDatas);
             return hash.ToHashCode();
         }
         
@@ -17024,6 +17107,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPERS":
                 case "IPERSInternal":
                     return obj.PERS;
+                case "GravityWielderEffectData":
+                case "IGravityWielderEffectDataGetter":
+                case "IGravityWielderEffectData":
+                case "IGravityWielderEffectDataInternal":
+                    return obj.GravityWielderEffectDatas;
                 default:
                     return null;
             }
@@ -17041,7 +17129,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[176];
+            Stream[] outputStreams = new Stream[177];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -17219,6 +17307,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Challenges, 173, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.FacialExpressions, 174, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.PERS, 175, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GravityWielderEffectDatas, 176, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -17440,6 +17529,7 @@ namespace Mutagen.Bethesda.Starfield
             count += item.Challenges.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.FacialExpressions.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.PERS.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.GravityWielderEffectDatas.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -18864,6 +18954,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.GravityWielderEffectDatas.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -19576,6 +19670,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IGrass":
                 case "IGrassInternal":
                     foreach (var item in obj.Grasses.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GravityWielderEffectData":
+                case "IGravityWielderEffectDataGetter":
+                case "IGravityWielderEffectData":
+                case "IGravityWielderEffectDataInternal":
+                    foreach (var item in obj.GravityWielderEffectDatas.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -21231,6 +21334,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Grasses,
                 groupGetter: (m) => m.Grasses))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GravityWielderEffectData, IGravityWielderEffectDataGetter>(
+                srcGroup: obj.GravityWielderEffectDatas,
+                type: typeof(IGravityWielderEffectDataGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GravityWielderEffectDatas,
+                groupGetter: (m) => m.GravityWielderEffectDatas))
             {
                 yield return item;
             }
@@ -23324,6 +23436,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "GravityWielderEffectData":
+                case "IGravityWielderEffectDataGetter":
+                case "IGravityWielderEffectData":
+                case "IGravityWielderEffectDataInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GravityWielderEffectData, IGravityWielderEffectDataGetter>(
+                        srcGroup: obj.GravityWielderEffectDatas,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GravityWielderEffectDatas,
+                        groupGetter: (m) => m.GravityWielderEffectDatas))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "GroundCover":
                 case "IGroundCoverGetter":
                 case "IGroundCover":
@@ -25020,6 +25146,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.ProjectedDecals is IAssetLinkContainerGetter ProjectedDecalslinkCont)
             {
                 foreach (var item in ProjectedDecalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ObjectEffects is IAssetLinkContainerGetter ObjectEffectslinkCont)
+            {
+                foreach (var item in ObjectEffectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -29052,6 +29185,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GravityWielderEffectDatas) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.GravityWielderEffectDatas);
+                try
+                {
+                    item.GravityWielderEffectDatas.DeepCopyIn(
+                        rhs: rhs.GravityWielderEffectDatas,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.GravityWielderEffectDatas));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -29331,6 +29484,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Challenges;
         public bool FacialExpressions;
         public bool PERS;
+        public bool GravityWielderEffectDatas;
         public GroupMask()
         {
         }
@@ -29512,6 +29666,7 @@ namespace Mutagen.Bethesda.Starfield
             Challenges = defaultValue;
             FacialExpressions = defaultValue;
             PERS = defaultValue;
+            GravityWielderEffectDatas = defaultValue;
         }
     }
 
@@ -31503,6 +31658,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PERSItem).BinaryWriteTranslator).Write<IPERSGetter>(
                         item: PERSItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.GravityWielderEffectDatas ?? true)
+            {
+                var GravityWielderEffectDatasItem = item.GravityWielderEffectDatas;
+                if (GravityWielderEffectDatasItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)GravityWielderEffectDatasItem).BinaryWriteTranslator).Write<IGravityWielderEffectDataGetter>(
+                        item: GravityWielderEffectDatasItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -34041,6 +34207,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.PERS;
                 }
+                case RecordTypeInts.GWED:
+                {
+                    if (importMask?.GravityWielderEffectDatas ?? true)
+                    {
+                        item.GravityWielderEffectDatas.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.GravityWielderEffectDatas;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -35086,6 +35266,11 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _PERSLocations;
         private IStarfieldGroupGetter<IPERSGetter>? _PERS => _PERSLocations != null ? StarfieldGroupBinaryOverlay<IPERSGetter>.StarfieldGroupFactory(_stream, _PERSLocations, _package) : default;
         public IStarfieldGroupGetter<IPERSGetter> PERS => _PERS ?? new StarfieldGroup<PERS>(this);
+        #endregion
+        #region GravityWielderEffectDatas
+        private List<RangeInt64>? _GravityWielderEffectDatasLocations;
+        private IStarfieldGroupGetter<IGravityWielderEffectDataGetter>? _GravityWielderEffectDatas => _GravityWielderEffectDatasLocations != null ? StarfieldGroupBinaryOverlay<IGravityWielderEffectDataGetter>.StarfieldGroupFactory(_stream, _GravityWielderEffectDatasLocations, _package) : default;
+        public IStarfieldGroupGetter<IGravityWielderEffectDataGetter> GravityWielderEffectDatas => _GravityWielderEffectDatas ?? new StarfieldGroup<GravityWielderEffectData>(this);
         #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
@@ -36224,6 +36409,12 @@ namespace Mutagen.Bethesda.Starfield
                     _PERSLocations ??= new();
                     _PERSLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.PERS;
+                }
+                case RecordTypeInts.GWED:
+                {
+                    _GravityWielderEffectDatasLocations ??= new();
+                    _GravityWielderEffectDatasLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.GravityWielderEffectDatas;
                 }
                 default:
                     return default(int?);

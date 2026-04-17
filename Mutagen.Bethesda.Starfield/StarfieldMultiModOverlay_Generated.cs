@@ -203,6 +203,7 @@ internal class StarfieldMultiModOverlay : IStarfieldModDisposableGetter
     private MergedGroup<IChallengeGetter>? _challenges;
     private MergedGroup<IFacialExpressionGetter>? _facialExpressions;
     private MergedGroup<IPERSGetter>? _pERS;
+    private MergedGroup<IGravityWielderEffectDataGetter>? _gravityWielderEffectDatas;
 
     /// <summary>
     /// Creates a new StarfieldMultiModOverlay from multiple source mod files.
@@ -765,6 +766,9 @@ internal class StarfieldMultiModOverlay : IStarfieldModDisposableGetter
     public IStarfieldGroupGetter<IPERSGetter> PERS =>
         _pERS ??= new MergedGroup<IPERSGetter>(
             _sourceMods.Select(m => m.PERS));
+    public IStarfieldGroupGetter<IGravityWielderEffectDataGetter> GravityWielderEffectDatas =>
+        _gravityWielderEffectDatas ??= new MergedGroup<IGravityWielderEffectDataGetter>(
+            _sourceMods.Select(m => m.GravityWielderEffectDatas));
 
     BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter> IStarfieldModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IStarfieldModGetter>(this, StarfieldMod.StarfieldWriteBuilderInstantiator.Instance);

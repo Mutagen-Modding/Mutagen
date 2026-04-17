@@ -468,6 +468,7 @@ public partial class RecordTypes
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType GTYP = new(0x50595447);
     public static readonly RecordType GVAL = new(0x4C415647);
+    public static readonly RecordType GWED = new(0x44455747);
     public static readonly RecordType GWEI = new(0x49455747);
     public static readonly RecordType GWOR = new(0x524F5747);
     public static readonly RecordType HACK = new(0x4B434148);

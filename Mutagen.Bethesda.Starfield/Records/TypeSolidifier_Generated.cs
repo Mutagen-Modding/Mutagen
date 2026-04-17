@@ -1784,6 +1784,30 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
+        /// Scope a load order query to GravityWielderEffectData
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on GravityWielderEffectData</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGravityWielderEffectData, IGravityWielderEffectDataGetter> GravityWielderEffectData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGravityWielderEffectData, IGravityWielderEffectDataGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IGravityWielderEffectDataGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGravityWielderEffectData, IGravityWielderEffectDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GravityWielderEffectData
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on GravityWielderEffectData</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGravityWielderEffectData, IGravityWielderEffectDataGetter> GravityWielderEffectData(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGravityWielderEffectData, IGravityWielderEffectDataGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IGravityWielderEffectDataGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGravityWielderEffectData, IGravityWielderEffectDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to GroundCover
         /// </summary>
         /// <param name="listings">ModListings to query</param>

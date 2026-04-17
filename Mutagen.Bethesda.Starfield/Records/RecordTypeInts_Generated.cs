@@ -466,6 +466,7 @@ public partial class RecordTypeInts
     public const int GRUP = 0x50555247;
     public const int GTYP = 0x50595447;
     public const int GVAL = 0x4C415647;
+    public const int GWED = 0x44455747;
     public const int GWEI = 0x49455747;
     public const int GWOR = 0x524F5747;
     public const int HACK = 0x4B434148;

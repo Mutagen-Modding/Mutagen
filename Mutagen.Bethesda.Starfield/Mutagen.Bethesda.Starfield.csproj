@@ -5062,6 +5062,9 @@
     <Compile Include="Records\Major Records\ForceData_Generated.cs">
       <DependentUpon>ForceData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GravityWielderEffectData_Generated.cs">
+      <DependentUpon>GravityWielderEffectData.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\FormFolderKeywordList_Generated.cs">
       <DependentUpon>FormFolderKeywordList.xml</DependentUpon>
     </Compile>

@@ -619,6 +619,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             GetXPForNextLevelConditionData_Registration.Instance,
             Global_Registration.Instance,
             Grass_Registration.Instance,
+            GravityWielderEffectData_Registration.Instance,
             GroundCover_Registration.Instance,
             GroundCoverGrass_Registration.Instance,
             GroupedPackIn_Registration.Instance,
