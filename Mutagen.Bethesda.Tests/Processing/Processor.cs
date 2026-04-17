@@ -1055,6 +1055,14 @@ public abstract class Processor
         public StringsSource Source { get; set; }
     }
 
+    private class EmptyStringsLookup : IStringsLookup
+    {
+        public static readonly EmptyStringsLookup Instance = new();
+        public bool TryLookup(uint key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out string str) { str = null; return false; }
+        public IEnumerator<KeyValuePair<uint, string>> GetEnumerator() => Enumerable.Empty<KeyValuePair<uint, string>>().GetEnumerator();
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
     public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
@@ -1161,7 +1169,7 @@ public abstract class Processor
             foreach (var source in Enums<StringsSource>.Values)
             {
                 var dict = overlays[source];
-                var langDict = dict.Item2[language];
+                if (!dict.Item2.TryGetValue(language, out var langDict)) continue;
                 if (langDict.Count > 0)
                 {
                     foreach (var overlayStr in langDict.First(100))
@@ -1183,7 +1191,7 @@ public abstract class Processor
     {
         var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
         var sourceDict = folderOverlay.Get(source);
-        if (!sourceDict.TryGetValue(language, out var overlay)) return [];
+        sourceDict.TryGetValue(language, out var overlay);
         var ret = new List<StringEntry>();
         var stringAlignmentLookup = new Dictionary<RecordType, AStringsAlignment>();
         var stringAlignmentsForAll = new List<AStringsAlignment>();
@@ -1208,17 +1216,19 @@ public abstract class Processor
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(stream);
 
+        IStringsLookup stringsLookup = overlay?.Value.StringsLookup ?? EmptyStringsLookup.Instance;
+
         foreach (var rec in locs.ListedRecords)
         {
             stream.Position = rec.Key;
             var major = stream.GetMajorRecord();
             foreach (var alignment in stringAlignmentsForAll)
             {
-                alignment.Handler(stream.Position, major, ret, overlay.Value.StringsLookup);
+                alignment.Handler(stream.Position, major, ret, stringsLookup);
             }
             if (stringAlignmentLookup.TryGetValue(major.RecordType, out var instructions))
             {
-                instructions.Handler(stream.Position, major, ret, overlay.Value.StringsLookup);
+                instructions.Handler(stream.Position, major, ret, stringsLookup);
             }
         }
 
