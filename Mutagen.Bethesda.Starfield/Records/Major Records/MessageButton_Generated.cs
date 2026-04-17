@@ -58,6 +58,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IMessageButtonGetter.Text => this.Text;
         #endregion
+        #region ButtonText
+        public String? ButtonText { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMessageButtonGetter.ButtonText => this.ButtonText;
+        #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
@@ -122,16 +127,19 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Text = initialValue;
+                this.ButtonText = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.Reference = initialValue;
             }
 
             public Mask(
                 TItem Text,
+                TItem ButtonText,
                 TItem Conditions,
                 TItem Reference)
             {
                 this.Text = Text;
+                this.ButtonText = ButtonText;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.Reference = Reference;
             }
@@ -146,6 +154,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Text;
+            public TItem ButtonText;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem Reference;
             #endregion
@@ -161,6 +170,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Text, rhs.Text)) return false;
+                if (!object.Equals(this.ButtonText, rhs.ButtonText)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Reference, rhs.Reference)) return false;
                 return true;
@@ -169,6 +179,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.Text);
+                hash.Add(this.ButtonText);
                 hash.Add(this.Conditions);
                 hash.Add(this.Reference);
                 return hash.ToHashCode();
@@ -180,6 +191,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Text)) return false;
+                if (!eval(this.ButtonText)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -201,6 +213,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Text)) return true;
+                if (eval(this.ButtonText)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -229,6 +242,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Text = eval(this.Text);
+                obj.ButtonText = eval(this.ButtonText);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
@@ -266,6 +280,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Text ?? true)
                     {
                         sb.AppendItem(Text, "Text");
+                    }
+                    if (printMask?.ButtonText ?? true)
+                    {
+                        sb.AppendItem(ButtonText, "ButtonText");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
@@ -315,6 +333,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Text;
+            public Exception? ButtonText;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? Reference;
             #endregion
@@ -327,6 +346,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MessageButton_FieldIndex.Text:
                         return Text;
+                    case MessageButton_FieldIndex.ButtonText:
+                        return ButtonText;
                     case MessageButton_FieldIndex.Conditions:
                         return Conditions;
                     case MessageButton_FieldIndex.Reference:
@@ -343,6 +364,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MessageButton_FieldIndex.Text:
                         this.Text = ex;
+                        break;
+                    case MessageButton_FieldIndex.ButtonText:
+                        this.ButtonText = ex;
                         break;
                     case MessageButton_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -363,6 +387,9 @@ namespace Mutagen.Bethesda.Starfield
                     case MessageButton_FieldIndex.Text:
                         this.Text = (Exception?)obj;
                         break;
+                    case MessageButton_FieldIndex.ButtonText:
+                        this.ButtonText = (Exception?)obj;
+                        break;
                     case MessageButton_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
@@ -378,6 +405,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Text != null) return true;
+                if (ButtonText != null) return true;
                 if (Conditions != null) return true;
                 if (Reference != null) return true;
                 return false;
@@ -407,6 +435,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 {
                     sb.AppendItem(Text, "Text");
+                }
+                {
+                    sb.AppendItem(ButtonText, "ButtonText");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
@@ -438,6 +469,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Text = this.Text.Combine(rhs.Text);
+                ret.ButtonText = this.ButtonText.Combine(rhs.ButtonText);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Reference = this.Reference.Combine(rhs.Reference);
                 return ret;
@@ -464,6 +496,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Text;
+            public bool ButtonText;
             public Condition.TranslationMask? Conditions;
             public bool Reference;
             #endregion
@@ -476,6 +509,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Text = defaultOn;
+                this.ButtonText = defaultOn;
                 this.Reference = defaultOn;
             }
 
@@ -493,6 +527,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Text, null));
+                ret.Add((ButtonText, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Reference, null));
             }
@@ -574,6 +609,7 @@ namespace Mutagen.Bethesda.Starfield
         IMessageButtonGetter
     {
         new TranslatedString? Text { get; set; }
+        new String? ButtonText { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new IFormLinkNullable<IPlacedObjectGetter> Reference { get; set; }
     }
@@ -592,6 +628,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MessageButton_Registration.Instance;
         ITranslatedStringGetter? Text { get; }
+        String? ButtonText { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> Reference { get; }
 
@@ -764,8 +801,9 @@ namespace Mutagen.Bethesda.Starfield
     internal enum MessageButton_FieldIndex
     {
         Text = 0,
-        Conditions = 1,
-        Reference = 2,
+        ButtonText = 1,
+        Conditions = 2,
+        Reference = 3,
     }
     #endregion
 
@@ -776,9 +814,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(MessageButton.Mask<>);
 
@@ -809,10 +847,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(
                 RecordTypes.ITXT,
+                RecordTypes.IBIN,
                 RecordTypes.CTDA,
                 RecordTypes.DODT);
             var all = RecordCollection.Factory(
                 RecordTypes.ITXT,
+                RecordTypes.IBIN,
                 RecordTypes.CTDA,
                 RecordTypes.DODT,
                 RecordTypes.CITC,
@@ -863,6 +903,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Text = default;
+            item.ButtonText = default;
             item.Conditions.Clear();
             item.Reference.Clear();
         }
@@ -917,6 +958,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Text = object.Equals(item.Text, rhs.Text);
+            ret.ButtonText = string.Equals(item.ButtonText, rhs.ButtonText);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -971,6 +1013,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(TextItem, "Text");
             }
+            if ((printMask?.ButtonText ?? true)
+                && item.ButtonText is {} ButtonTextItem)
+            {
+                sb.AppendItem(ButtonTextItem, "ButtonText");
+            }
             if (printMask?.Conditions?.Overall ?? true)
             {
                 sb.AppendLine("Conditions =>");
@@ -1002,6 +1049,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.ButtonText) ?? true))
+            {
+                if (!string.Equals(lhs.ButtonText, rhs.ButtonText)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MessageButton_FieldIndex.Conditions)))) return false;
@@ -1019,6 +1070,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.Text is {} Textitem)
             {
                 hash.Add(Textitem);
+            }
+            if (item.ButtonText is {} ButtonTextitem)
+            {
+                hash.Add(ButtonTextitem);
             }
             hash.Add(item.Conditions);
             hash.Add(item.Reference);
@@ -1065,6 +1120,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
             {
                 item.Text = rhs.Text?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.ButtonText) ?? true))
+            {
+                item.ButtonText = rhs.ButtonText;
             }
             if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
             {
@@ -1209,6 +1268,11 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ITXT),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ButtonText,
+                header: translationParams.ConvertToCustom(RecordTypes.IBIN),
+                binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
@@ -1277,6 +1341,16 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)MessageButton_FieldIndex.Text;
+                }
+                case RecordTypeInts.IBIN:
+                {
+                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.ButtonText, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ButtonText = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)MessageButton_FieldIndex.ButtonText;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -1369,6 +1443,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _TextLocation;
         public ITranslatedStringGetter? Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
+        #region ButtonText
+        private int? _ButtonTextLocation;
+        public String? ButtonText => _ButtonTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ButtonTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region Reference
         private int? _ReferenceLocation;
@@ -1442,6 +1520,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Text, translationParams)) return ParseResult.Stop;
                     _TextLocation = (stream.Position - offset);
                     return (int)MessageButton_FieldIndex.Text;
+                }
+                case RecordTypeInts.IBIN:
+                {
+                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.ButtonText, translationParams)) return ParseResult.Stop;
+                    _ButtonTextLocation = (stream.Position - offset);
+                    return (int)MessageButton_FieldIndex.ButtonText;
                 }
                 case RecordTypeInts.CTDA:
                 {

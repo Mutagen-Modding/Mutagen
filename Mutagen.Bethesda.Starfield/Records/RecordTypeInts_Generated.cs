@@ -484,6 +484,7 @@ public partial class RecordTypeInts
     public const int HSTT = 0x54545348;
     public const int HTID = 0x44495448;
     public const int HULL = 0x4C4C5548;
+    public const int IBIN = 0x4E494249;
     public const int ICON = 0x4E4F4349;
     public const int IDAT = 0x54414449;
     public const int IDLA = 0x414C4449;

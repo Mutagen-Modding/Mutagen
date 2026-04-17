@@ -486,6 +486,7 @@ public partial class RecordTypes
     public static readonly RecordType HSTT = new(0x54545348);
     public static readonly RecordType HTID = new(0x44495448);
     public static readonly RecordType HULL = new(0x4C4C5548);
+    public static readonly RecordType IBIN = new(0x4E494249);
     public static readonly RecordType ICON = new(0x4E4F4349);
     public static readonly RecordType IDAT = new(0x54414449);
     public static readonly RecordType IDLA = new(0x414C4449);
