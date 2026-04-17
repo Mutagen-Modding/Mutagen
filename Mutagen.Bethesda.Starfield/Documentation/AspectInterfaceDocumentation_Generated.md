@@ -288,6 +288,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Ingestible
 - Key
 - Keyword
+- LegendaryItem
 - Light
 - Location
 - MagicEffect
@@ -853,6 +854,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### LegendaryItem
 - IHaveVirtualMachineAdapter
 - IModeled
+- INamed
 - IObjectBounded
 - IScripted
 ### LensFlare
