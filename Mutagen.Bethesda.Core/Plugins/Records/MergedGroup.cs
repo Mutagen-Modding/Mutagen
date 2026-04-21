@@ -160,18 +160,42 @@ public class MergedGroup<TMod, TModGetter> : ILoquiObject, IGroupGetter<TModGett
         }
     }
 
-    // IMajorRecordGetterEnumerable
-    public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords() => Cache.Values;
+    // IMajorRecordGetterEnumerable - yield each top-level record and recurse into nested majors
+    public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
+    {
+        foreach (var record in Cache.Values)
+        {
+            yield return record;
+            foreach (var nested in record.EnumerateMajorRecords())
+            {
+                yield return nested;
+            }
+        }
+    }
 
     public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true)
         where T : class, IMajorRecordQueryableGetter
     {
-        return Cache.Values.OfType<T>();
+        foreach (var record in Cache.Values)
+        {
+            if (record is T match) yield return match;
+            foreach (var nested in record.EnumerateMajorRecords<T>(throwIfUnknown))
+            {
+                yield return nested;
+            }
+        }
     }
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)
     {
-        return Cache.Values.Where(r => type.IsAssignableFrom(r.GetType()));
+        foreach (var record in Cache.Values)
+        {
+            if (type.IsAssignableFrom(record.GetType())) yield return record;
+            foreach (var nested in record.EnumerateMajorRecords(type, throwIfUnknown))
+            {
+                yield return nested;
+            }
+        }
     }
 
     IReadOnlyCache<TModGetter, FormKey> IGroupGetter<TModGetter>.RecordCache => this;

@@ -95,6 +95,7 @@ public partial class RecordTypes
     public static readonly RecordType GPOG = new(0x474F5047);
     public static readonly RecordType GRAS = new(0x53415247);
     public static readonly RecordType GRUP = new(0x50555247);
+    public static readonly RecordType GWED = new(0x44455747);
     public static readonly RecordType HAIR = new(0x52494148);
     public static readonly RecordType HAZD = new(0x445A4148);
     public static readonly RecordType HDPT = new(0x54504448);

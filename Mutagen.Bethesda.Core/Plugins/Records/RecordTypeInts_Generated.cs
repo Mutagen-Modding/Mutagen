@@ -93,6 +93,7 @@ public partial class RecordTypeInts
     public const int GPOG = 0x474F5047;
     public const int GRAS = 0x53415247;
     public const int GRUP = 0x50555247;
+    public const int GWED = 0x44455747;
     public const int HAIR = 0x52494148;
     public const int HAZD = 0x445A4148;
     public const int HDPT = 0x54504448;

@@ -1,11 +1,13 @@
 using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.Plugins.Masters;
+using Noggog;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
 
@@ -212,14 +214,10 @@ public class SkyrimMultiModOverlayTests
     }
 
     [Theory, MutagenModAutoData]
-    public void GetRecordCount_SumsAllMods(
+    public void GetRecordCount_DeduplicatesAcrossMods(
         SkyrimMod mod1,
         SkyrimMod mod2)
     {
-        // Get initial counts
-        var initialCount1 = mod1.GetRecordCount();
-        var initialCount2 = mod2.GetRecordCount();
-
         // Add records to both mods
         mod1.FormLists.AddNew();
         mod1.FormLists.AddNew();
@@ -234,9 +232,126 @@ public class SkyrimMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // Should sum all records from all mods (initial + newly added)
-        var expectedCount = mod1.GetRecordCount() + mod2.GetRecordCount();
-        overlay.GetRecordCount().ShouldBe(expectedCount);
+        // GetRecordCount = distinct major records + one per non-empty top-level group.
+        // The two mods collectively populate 3 groups: FormLists, Armors, Weapons.
+        var distinctFormKeys = mod1.EnumerateMajorRecords()
+            .Concat(mod2.EnumerateMajorRecords())
+            .Select(r => r.FormKey)
+            .Distinct()
+            .Count();
+        const uint nonEmptyTopLevelGroups = 3;
+        overlay.GetRecordCount().ShouldBe((uint)distinctFormKeys + nonEmptyTopLevelGroups);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void EnumerateAssetLinks_YieldsAllForDisjointMods(
+        SkyrimMod mod1,
+        SkyrimMod mod2)
+    {
+        // Each mod gets a unique Quest with a unique script → all inferred assets should show.
+        mod1.Quests.Add(new Quest(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        {
+            VirtualMachineAdapter = new QuestAdapter
+            {
+                Scripts = new ExtendedList<ScriptEntry> { new() { Name = "ScriptA" } }
+            }
+        });
+        mod2.Quests.Add(new Quest(mod2.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        {
+            VirtualMachineAdapter = new QuestAdapter
+            {
+                Scripts = new ExtendedList<ScriptEntry> { new() { Name = "ScriptB" } }
+            }
+        });
+
+        var overlay = new SkyrimMultiModOverlay(
+            new ModKey("TestMerged", ModType.Plugin),
+            new[] { mod1, mod2 },
+            Array.Empty<IMasterReferenceGetter>());
+
+        var paths = overlay.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
+            .Select(a => a.GivenPath)
+            .ToList();
+        paths.ShouldContain(p => p.Contains("ScriptA"));
+        paths.ShouldContain(p => p.Contains("ScriptB"));
+    }
+
+    [Theory, MutagenModAutoData]
+    public void EnumerateAssetLinks_PreservesNestedRecordsAcrossOverriddenParent(
+        SkyrimMod mod1,
+        SkyrimMod mod2)
+    {
+        // Same DialogTopic FormKey across mods, but each mod contributes a distinct
+        // nested DialogResponse (different FormKeys). Both nested responses survive
+        // the overlay, so their asset links must all be yielded.
+        var sharedTopicKey = mod1.GetNextFormKey();
+        var response1Key = mod1.GetNextFormKey();
+        var response2Key = mod2.GetNextFormKey();
+
+        mod1.DialogTopics.Add(new DialogTopic(sharedTopicKey, SkyrimRelease.SkyrimSE)
+        {
+            Responses =
+            {
+                new DialogResponses(response1Key, SkyrimRelease.SkyrimSE)
+                {
+                    VirtualMachineAdapter = new DialogResponsesAdapter
+                    {
+                        Scripts = new ExtendedList<ScriptEntry> { new() { Name = "ScriptResp1" } }
+                    }
+                }
+            }
+        });
+        mod2.DialogTopics.Add(new DialogTopic(sharedTopicKey, SkyrimRelease.SkyrimSE)
+        {
+            Responses =
+            {
+                new DialogResponses(response2Key, SkyrimRelease.SkyrimSE)
+                {
+                    VirtualMachineAdapter = new DialogResponsesAdapter
+                    {
+                        Scripts = new ExtendedList<ScriptEntry> { new() { Name = "ScriptResp2" } }
+                    }
+                }
+            }
+        });
+
+        var overlay = new SkyrimMultiModOverlay(
+            new ModKey("TestMerged", ModType.Plugin),
+            new[] { mod1, mod2 },
+            Array.Empty<IMasterReferenceGetter>());
+
+        var paths = overlay.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
+            .Select(a => a.GivenPath)
+            .ToList();
+        paths.ShouldContain(p => p.Contains("ScriptResp1"));
+        paths.ShouldContain(p => p.Contains("ScriptResp2"));
+    }
+
+    [Theory, MutagenModAutoData]
+    public void EnumerateAssetLinks_DoesNotDuplicateSingleRecord(
+        SkyrimMod mod1,
+        SkyrimMod mod2)
+    {
+        // A single record in one mod should yield each of its inferred asset links exactly once.
+        mod1.Quests.Add(new Quest(mod1.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        {
+            VirtualMachineAdapter = new QuestAdapter
+            {
+                Scripts = new ExtendedList<ScriptEntry> { new() { Name = "UniqueScript" } }
+            }
+        });
+
+        var overlay = new SkyrimMultiModOverlay(
+            new ModKey("TestMerged", ModType.Plugin),
+            new[] { mod1, mod2 },
+            Array.Empty<IMasterReferenceGetter>());
+
+        var paths = overlay.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
+            .Select(a => a.GivenPath)
+            .Where(p => p.Contains("UniqueScript"))
+            .ToList();
+        // Script produces one compiled (.pex) and one source (.psc) link. No more.
+        paths.Count.ShouldBe(2);
     }
 
     [Theory, MutagenModAutoData]
@@ -258,13 +373,14 @@ public class SkyrimMultiModOverlayTests
     }
 
     [Theory, MutagenModAutoData]
-    public void ModHeader_TakenFromFirstMod(
+    public void ModHeader_MatchingFieldsExposed(
         SkyrimMod mod1,
         SkyrimMod mod2)
     {
-        // Set distinct properties on mod1's header
         mod1.ModHeader.Author = "TestAuthor";
         mod1.ModHeader.Description = "TestDescription";
+        mod2.ModHeader.Author = "TestAuthor";
+        mod2.ModHeader.Description = "TestDescription";
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new SkyrimMultiModOverlay(
@@ -272,8 +388,22 @@ public class SkyrimMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // ModHeader should come from first mod
         overlay.ModHeader.Author.ShouldBe("TestAuthor");
         overlay.ModHeader.Description.ShouldBe("TestDescription");
+    }
+
+    [Theory, MutagenModAutoData]
+    public void ModHeader_MismatchingFieldsThrow(
+        SkyrimMod mod1,
+        SkyrimMod mod2)
+    {
+        mod1.ModHeader.Author = "AuthorA";
+        mod2.ModHeader.Author = "AuthorB";
+
+        var targetModKey = new ModKey("TestMerged", ModType.Plugin);
+        Should.Throw<System.IO.InvalidDataException>(() => new SkyrimMultiModOverlay(
+            targetModKey,
+            new[] { mod1, mod2 },
+            Array.Empty<IMasterReferenceGetter>()));
     }
 }
