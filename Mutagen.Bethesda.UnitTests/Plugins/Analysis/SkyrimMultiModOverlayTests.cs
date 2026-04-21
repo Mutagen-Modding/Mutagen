@@ -232,15 +232,7 @@ public class SkyrimMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // GetRecordCount = distinct major records + one per non-empty top-level group.
-        // The two mods collectively populate 3 groups: FormLists, Armors, Weapons.
-        var distinctFormKeys = mod1.EnumerateMajorRecords()
-            .Concat(mod2.EnumerateMajorRecords())
-            .Select(r => r.FormKey)
-            .Distinct()
-            .Count();
-        const uint nonEmptyTopLevelGroups = 3;
-        overlay.GetRecordCount().ShouldBe((uint)distinctFormKeys + nonEmptyTopLevelGroups);
+        overlay.GetRecordCount().ShouldBe(8u);
     }
 
     [Theory, MutagenModAutoData]
