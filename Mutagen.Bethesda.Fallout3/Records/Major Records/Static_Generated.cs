@@ -622,6 +622,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IStaticInternal>,
         IModeled,
         IObjectBoundedOptional,
+        IRegionTarget,
         IStaticGetter
     {
         /// <summary>
@@ -656,7 +657,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IStaticGetter>,
         IMapsToGetter<IStaticGetter>,
         IModeledGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;
         #region ObjectBounds

@@ -1,6 +1,8 @@
+using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -49,6 +51,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
         AddDynamicProcessing(RecordTypes.WTHR, ProcessWeather);
+        AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -265,6 +268,58 @@ public class Fallout3Processor : Processor
                 Instructions.SetSubstitution(dat2LenPos, BitConverter.GetBytes((ushort)20));
                 ProcessLengths(majorFrame, 8, fileOffset);
             }
+        }
+    }
+
+    private void ProcessRegions(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+
+        foreach (var pin in majorFrame.FindEnumerateSubrecords(RecordTypes.RDSI))
+        {
+            ProcessFormIDOverflow(pin, fileOffset);
+        }
+        foreach (var pin in majorFrame.FindEnumerateSubrecords(RecordTypes.RDSD))
+        {
+            int loc = 0;
+            while (loc + 12 <= pin.ContentLength)
+            {
+                ProcessFormIDOverflow(pin, fileOffset, ref loc);
+                loc += 8; // skip Flags + Chance
+            }
+        }
+
+        var rdat = RecordSpanExtensions.TryFindSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT);
+        if (rdat == null) return;
+
+        SortedList<uint, RangeInt64> rdats = new();
+        List<uint> raw = new();
+        while (rdat != null)
+        {
+            var index = BinaryPrimitives.ReadUInt32LittleEndian(rdat.Value.Content);
+            var nextRdat = RecordSpanExtensions.TryFindSubrecord(
+                majorFrame.Content,
+                majorFrame.Meta,
+                RecordTypes.RDAT,
+                offset: rdat.Value.EndLocation);
+            rdats[index] =
+                new RangeInt64(
+                    fileOffset + majorFrame.HeaderLength + rdat.Value.Location,
+                    nextRdat == null
+                        ? fileOffset + majorFrame.TotalLength - 1
+                        : nextRdat.Value.Location - 1 + fileOffset + majorFrame.HeaderLength);
+            raw.Add(index);
+            rdat = nextRdat;
+        }
+
+        if (raw.SequenceEqual(rdats.Keys)) return;
+        foreach (var item in rdats.Reverse())
+        {
+            Instructions.SetMove(
+                loc: fileOffset + majorFrame.TotalLength,
+                section: item.Value);
         }
     }
 

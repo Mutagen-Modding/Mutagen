@@ -8,12 +8,6 @@ namespace Mutagen.Bethesda.Fallout3;
 
 public partial class RegionData
 {
-    [Flags]
-    public enum RegionDataFlag
-    {
-        Override = 0x01
-    }
-
     public enum RegionDataType
     {
         Object = 2,
@@ -39,9 +33,7 @@ partial class RegionDataBinaryCreateTranslation
     {
         frame.ReadSubrecordHeader(RecordTypes.RDAT);
         frame.Position += 4;
-        item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
-            reader: frame,
-            length: 1);
+        item.Override = frame.ReadUInt8() != 0;
         item.Priority = frame.ReadUInt8();
         frame.Position += 2;
         return (int)RegionData_FieldIndex.Priority;
@@ -58,10 +50,7 @@ partial class RegionDataBinaryWriteTranslation
                 writer,
                 item.DataType,
                 length: 4);
-            EnumBinaryTranslation<RegionData.RegionDataFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 1);
+            writer.Write((byte)(item.Override ? 1 : 0));
             writer.Write(item.Priority);
             writer.WriteZeros(2);
         }
@@ -71,7 +60,7 @@ partial class RegionDataBinaryWriteTranslation
 partial class RegionDataBinaryOverlay
 {
     public abstract RegionData.RegionDataType DataType { get; }
-    public RegionData.RegionDataFlag Flags => (RegionData.RegionDataFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _rdatLocation, _package.MetaData.Constants).Slice(0x4, 0x1)[0];
+    public Boolean Override => HeaderTranslation.ExtractSubrecordMemory(_recordData, _rdatLocation, _package.MetaData.Constants).Span[0x4] != 0;
     public Byte Priority => HeaderTranslation.ExtractSubrecordMemory(_recordData, _rdatLocation, _package.MetaData.Constants).Span[0x5];
     private int _rdatLocation;
 
@@ -111,6 +100,16 @@ public partial class RegionMap
 partial class RegionMapBinaryOverlay
 {
     public override RegionData.RegionDataType DataType => RegionData.RegionDataType.Map;
+}
+
+public partial class RegionLand
+{
+    public override RegionData.RegionDataType DataType => RegionData.RegionDataType.Land;
+}
+
+partial class RegionLandBinaryOverlay
+{
+    public override RegionData.RegionDataType DataType => RegionData.RegionDataType.Land;
 }
 
 public partial class RegionGrasses

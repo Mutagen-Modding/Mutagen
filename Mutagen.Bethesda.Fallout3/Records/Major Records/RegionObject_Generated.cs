@@ -52,28 +52,20 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Object
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Object = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Object
+        private readonly IFormLink<IRegionTargetGetter> _Object = new FormLink<IRegionTargetGetter>();
+        public IFormLink<IRegionTargetGetter> Object
         {
             get => _Object;
             set => _Object.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IRegionObjectGetter.Object => this.Object;
+        IFormLinkGetter<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default(UInt16);
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[2];
-        public MemorySlice<Byte> Unused
-        {
-            get => _Unused;
-            set => this._Unused = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRegionObjectGetter.Unused => this.Unused;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
         #region Density
         public Single Density { get; set; } = default(Single);
@@ -88,10 +80,10 @@ namespace Mutagen.Bethesda.Fallout3
         public Byte MaxSlope { get; set; } = default(Byte);
         #endregion
         #region Flags
-        public Byte Flags { get; set; } = default(Byte);
+        public RegionObject.Flag Flags { get; set; } = default(RegionObject.Flag);
         #endregion
-        #region RadiusWrtPercent
-        public UInt16 RadiusWrtPercent { get; set; } = default(UInt16);
+        #region RadiusWrtParent
+        public UInt16 RadiusWrtParent { get; set; } = default(UInt16);
         #endregion
         #region Radius
         public UInt16 Radius { get; set; } = default(UInt16);
@@ -111,36 +103,14 @@ namespace Mutagen.Bethesda.Fallout3
         #region SizeVariance
         public Single SizeVariance { get; set; } = default(Single);
         #endregion
-        #region AngleVarianceX
-        public UInt16 AngleVarianceX { get; set; } = default(UInt16);
-        #endregion
-        #region AngleVarianceY
-        public UInt16 AngleVarianceY { get; set; } = default(UInt16);
-        #endregion
-        #region AngleVarianceZ
-        public UInt16 AngleVarianceZ { get; set; } = default(UInt16);
+        #region AngleVariance
+        public P3UInt16 AngleVariance { get; set; } = default(P3UInt16);
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[2];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRegionObjectGetter.Unknown => this.Unknown;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region Unknown2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown2 = new byte[4];
-        public MemorySlice<Byte> Unknown2
-        {
-            get => _Unknown2;
-            set => this._Unknown2 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRegionObjectGetter.Unknown2 => this.Unknown2;
+        public UInt32 Unknown2 { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -189,16 +159,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MinSlope = initialValue;
                 this.MaxSlope = initialValue;
                 this.Flags = initialValue;
-                this.RadiusWrtPercent = initialValue;
+                this.RadiusWrtParent = initialValue;
                 this.Radius = initialValue;
                 this.MinHeight = initialValue;
                 this.MaxHeight = initialValue;
                 this.Sink = initialValue;
                 this.SinkVariance = initialValue;
                 this.SizeVariance = initialValue;
-                this.AngleVarianceX = initialValue;
-                this.AngleVarianceY = initialValue;
-                this.AngleVarianceZ = initialValue;
+                this.AngleVariance = initialValue;
                 this.Unknown = initialValue;
                 this.Unknown2 = initialValue;
             }
@@ -212,16 +180,14 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MinSlope,
                 TItem MaxSlope,
                 TItem Flags,
-                TItem RadiusWrtPercent,
+                TItem RadiusWrtParent,
                 TItem Radius,
                 TItem MinHeight,
                 TItem MaxHeight,
                 TItem Sink,
                 TItem SinkVariance,
                 TItem SizeVariance,
-                TItem AngleVarianceX,
-                TItem AngleVarianceY,
-                TItem AngleVarianceZ,
+                TItem AngleVariance,
                 TItem Unknown,
                 TItem Unknown2)
             {
@@ -233,16 +199,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MinSlope = MinSlope;
                 this.MaxSlope = MaxSlope;
                 this.Flags = Flags;
-                this.RadiusWrtPercent = RadiusWrtPercent;
+                this.RadiusWrtParent = RadiusWrtParent;
                 this.Radius = Radius;
                 this.MinHeight = MinHeight;
                 this.MaxHeight = MaxHeight;
                 this.Sink = Sink;
                 this.SinkVariance = SinkVariance;
                 this.SizeVariance = SizeVariance;
-                this.AngleVarianceX = AngleVarianceX;
-                this.AngleVarianceY = AngleVarianceY;
-                this.AngleVarianceZ = AngleVarianceZ;
+                this.AngleVariance = AngleVariance;
                 this.Unknown = Unknown;
                 this.Unknown2 = Unknown2;
             }
@@ -264,16 +228,14 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem MinSlope;
             public TItem MaxSlope;
             public TItem Flags;
-            public TItem RadiusWrtPercent;
+            public TItem RadiusWrtParent;
             public TItem Radius;
             public TItem MinHeight;
             public TItem MaxHeight;
             public TItem Sink;
             public TItem SinkVariance;
             public TItem SizeVariance;
-            public TItem AngleVarianceX;
-            public TItem AngleVarianceY;
-            public TItem AngleVarianceZ;
+            public TItem AngleVariance;
             public TItem Unknown;
             public TItem Unknown2;
             #endregion
@@ -296,16 +258,14 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
                 if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.RadiusWrtPercent, rhs.RadiusWrtPercent)) return false;
+                if (!object.Equals(this.RadiusWrtParent, rhs.RadiusWrtParent)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
                 if (!object.Equals(this.MinHeight, rhs.MinHeight)) return false;
                 if (!object.Equals(this.MaxHeight, rhs.MaxHeight)) return false;
                 if (!object.Equals(this.Sink, rhs.Sink)) return false;
                 if (!object.Equals(this.SinkVariance, rhs.SinkVariance)) return false;
                 if (!object.Equals(this.SizeVariance, rhs.SizeVariance)) return false;
-                if (!object.Equals(this.AngleVarianceX, rhs.AngleVarianceX)) return false;
-                if (!object.Equals(this.AngleVarianceY, rhs.AngleVarianceY)) return false;
-                if (!object.Equals(this.AngleVarianceZ, rhs.AngleVarianceZ)) return false;
+                if (!object.Equals(this.AngleVariance, rhs.AngleVariance)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 return true;
@@ -321,16 +281,14 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MinSlope);
                 hash.Add(this.MaxSlope);
                 hash.Add(this.Flags);
-                hash.Add(this.RadiusWrtPercent);
+                hash.Add(this.RadiusWrtParent);
                 hash.Add(this.Radius);
                 hash.Add(this.MinHeight);
                 hash.Add(this.MaxHeight);
                 hash.Add(this.Sink);
                 hash.Add(this.SinkVariance);
                 hash.Add(this.SizeVariance);
-                hash.Add(this.AngleVarianceX);
-                hash.Add(this.AngleVarianceY);
-                hash.Add(this.AngleVarianceZ);
+                hash.Add(this.AngleVariance);
                 hash.Add(this.Unknown);
                 hash.Add(this.Unknown2);
                 return hash.ToHashCode();
@@ -349,16 +307,14 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.MinSlope)) return false;
                 if (!eval(this.MaxSlope)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.RadiusWrtPercent)) return false;
+                if (!eval(this.RadiusWrtParent)) return false;
                 if (!eval(this.Radius)) return false;
                 if (!eval(this.MinHeight)) return false;
                 if (!eval(this.MaxHeight)) return false;
                 if (!eval(this.Sink)) return false;
                 if (!eval(this.SinkVariance)) return false;
                 if (!eval(this.SizeVariance)) return false;
-                if (!eval(this.AngleVarianceX)) return false;
-                if (!eval(this.AngleVarianceY)) return false;
-                if (!eval(this.AngleVarianceZ)) return false;
+                if (!eval(this.AngleVariance)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Unknown2)) return false;
                 return true;
@@ -376,16 +332,14 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.MinSlope)) return true;
                 if (eval(this.MaxSlope)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.RadiusWrtPercent)) return true;
+                if (eval(this.RadiusWrtParent)) return true;
                 if (eval(this.Radius)) return true;
                 if (eval(this.MinHeight)) return true;
                 if (eval(this.MaxHeight)) return true;
                 if (eval(this.Sink)) return true;
                 if (eval(this.SinkVariance)) return true;
                 if (eval(this.SizeVariance)) return true;
-                if (eval(this.AngleVarianceX)) return true;
-                if (eval(this.AngleVarianceY)) return true;
-                if (eval(this.AngleVarianceZ)) return true;
+                if (eval(this.AngleVariance)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Unknown2)) return true;
                 return false;
@@ -410,16 +364,14 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MinSlope = eval(this.MinSlope);
                 obj.MaxSlope = eval(this.MaxSlope);
                 obj.Flags = eval(this.Flags);
-                obj.RadiusWrtPercent = eval(this.RadiusWrtPercent);
+                obj.RadiusWrtParent = eval(this.RadiusWrtParent);
                 obj.Radius = eval(this.Radius);
                 obj.MinHeight = eval(this.MinHeight);
                 obj.MaxHeight = eval(this.MaxHeight);
                 obj.Sink = eval(this.Sink);
                 obj.SinkVariance = eval(this.SinkVariance);
                 obj.SizeVariance = eval(this.SizeVariance);
-                obj.AngleVarianceX = eval(this.AngleVarianceX);
-                obj.AngleVarianceY = eval(this.AngleVarianceY);
-                obj.AngleVarianceZ = eval(this.AngleVarianceZ);
+                obj.AngleVariance = eval(this.AngleVariance);
                 obj.Unknown = eval(this.Unknown);
                 obj.Unknown2 = eval(this.Unknown2);
             }
@@ -472,9 +424,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.RadiusWrtPercent ?? true)
+                    if (printMask?.RadiusWrtParent ?? true)
                     {
-                        sb.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
+                        sb.AppendItem(RadiusWrtParent, "RadiusWrtParent");
                     }
                     if (printMask?.Radius ?? true)
                     {
@@ -500,17 +452,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(SizeVariance, "SizeVariance");
                     }
-                    if (printMask?.AngleVarianceX ?? true)
+                    if (printMask?.AngleVariance ?? true)
                     {
-                        sb.AppendItem(AngleVarianceX, "AngleVarianceX");
-                    }
-                    if (printMask?.AngleVarianceY ?? true)
-                    {
-                        sb.AppendItem(AngleVarianceY, "AngleVarianceY");
-                    }
-                    if (printMask?.AngleVarianceZ ?? true)
-                    {
-                        sb.AppendItem(AngleVarianceZ, "AngleVarianceZ");
+                        sb.AppendItem(AngleVariance, "AngleVariance");
                     }
                     if (printMask?.Unknown ?? true)
                     {
@@ -552,16 +496,14 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? MinSlope;
             public Exception? MaxSlope;
             public Exception? Flags;
-            public Exception? RadiusWrtPercent;
+            public Exception? RadiusWrtParent;
             public Exception? Radius;
             public Exception? MinHeight;
             public Exception? MaxHeight;
             public Exception? Sink;
             public Exception? SinkVariance;
             public Exception? SizeVariance;
-            public Exception? AngleVarianceX;
-            public Exception? AngleVarianceY;
-            public Exception? AngleVarianceZ;
+            public Exception? AngleVariance;
             public Exception? Unknown;
             public Exception? Unknown2;
             #endregion
@@ -588,8 +530,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MaxSlope;
                     case RegionObject_FieldIndex.Flags:
                         return Flags;
-                    case RegionObject_FieldIndex.RadiusWrtPercent:
-                        return RadiusWrtPercent;
+                    case RegionObject_FieldIndex.RadiusWrtParent:
+                        return RadiusWrtParent;
                     case RegionObject_FieldIndex.Radius:
                         return Radius;
                     case RegionObject_FieldIndex.MinHeight:
@@ -602,12 +544,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return SinkVariance;
                     case RegionObject_FieldIndex.SizeVariance:
                         return SizeVariance;
-                    case RegionObject_FieldIndex.AngleVarianceX:
-                        return AngleVarianceX;
-                    case RegionObject_FieldIndex.AngleVarianceY:
-                        return AngleVarianceY;
-                    case RegionObject_FieldIndex.AngleVarianceZ:
-                        return AngleVarianceZ;
+                    case RegionObject_FieldIndex.AngleVariance:
+                        return AngleVariance;
                     case RegionObject_FieldIndex.Unknown:
                         return Unknown;
                     case RegionObject_FieldIndex.Unknown2:
@@ -646,8 +584,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RegionObject_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case RegionObject_FieldIndex.RadiusWrtPercent:
-                        this.RadiusWrtPercent = ex;
+                    case RegionObject_FieldIndex.RadiusWrtParent:
+                        this.RadiusWrtParent = ex;
                         break;
                     case RegionObject_FieldIndex.Radius:
                         this.Radius = ex;
@@ -667,14 +605,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RegionObject_FieldIndex.SizeVariance:
                         this.SizeVariance = ex;
                         break;
-                    case RegionObject_FieldIndex.AngleVarianceX:
-                        this.AngleVarianceX = ex;
-                        break;
-                    case RegionObject_FieldIndex.AngleVarianceY:
-                        this.AngleVarianceY = ex;
-                        break;
-                    case RegionObject_FieldIndex.AngleVarianceZ:
-                        this.AngleVarianceZ = ex;
+                    case RegionObject_FieldIndex.AngleVariance:
+                        this.AngleVariance = ex;
                         break;
                     case RegionObject_FieldIndex.Unknown:
                         this.Unknown = ex;
@@ -716,8 +648,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RegionObject_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case RegionObject_FieldIndex.RadiusWrtPercent:
-                        this.RadiusWrtPercent = (Exception?)obj;
+                    case RegionObject_FieldIndex.RadiusWrtParent:
+                        this.RadiusWrtParent = (Exception?)obj;
                         break;
                     case RegionObject_FieldIndex.Radius:
                         this.Radius = (Exception?)obj;
@@ -737,14 +669,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RegionObject_FieldIndex.SizeVariance:
                         this.SizeVariance = (Exception?)obj;
                         break;
-                    case RegionObject_FieldIndex.AngleVarianceX:
-                        this.AngleVarianceX = (Exception?)obj;
-                        break;
-                    case RegionObject_FieldIndex.AngleVarianceY:
-                        this.AngleVarianceY = (Exception?)obj;
-                        break;
-                    case RegionObject_FieldIndex.AngleVarianceZ:
-                        this.AngleVarianceZ = (Exception?)obj;
+                    case RegionObject_FieldIndex.AngleVariance:
+                        this.AngleVariance = (Exception?)obj;
                         break;
                     case RegionObject_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
@@ -768,16 +694,14 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MinSlope != null) return true;
                 if (MaxSlope != null) return true;
                 if (Flags != null) return true;
-                if (RadiusWrtPercent != null) return true;
+                if (RadiusWrtParent != null) return true;
                 if (Radius != null) return true;
                 if (MinHeight != null) return true;
                 if (MaxHeight != null) return true;
                 if (Sink != null) return true;
                 if (SinkVariance != null) return true;
                 if (SizeVariance != null) return true;
-                if (AngleVarianceX != null) return true;
-                if (AngleVarianceY != null) return true;
-                if (AngleVarianceZ != null) return true;
+                if (AngleVariance != null) return true;
                 if (Unknown != null) return true;
                 if (Unknown2 != null) return true;
                 return false;
@@ -830,7 +754,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(RadiusWrtPercent, "RadiusWrtPercent");
+                    sb.AppendItem(RadiusWrtParent, "RadiusWrtParent");
                 }
                 {
                     sb.AppendItem(Radius, "Radius");
@@ -851,13 +775,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(SizeVariance, "SizeVariance");
                 }
                 {
-                    sb.AppendItem(AngleVarianceX, "AngleVarianceX");
-                }
-                {
-                    sb.AppendItem(AngleVarianceY, "AngleVarianceY");
-                }
-                {
-                    sb.AppendItem(AngleVarianceZ, "AngleVarianceZ");
+                    sb.AppendItem(AngleVariance, "AngleVariance");
                 }
                 {
                     sb.AppendItem(Unknown, "Unknown");
@@ -881,16 +799,14 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
                 ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.RadiusWrtPercent = this.RadiusWrtPercent.Combine(rhs.RadiusWrtPercent);
+                ret.RadiusWrtParent = this.RadiusWrtParent.Combine(rhs.RadiusWrtParent);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.MinHeight = this.MinHeight.Combine(rhs.MinHeight);
                 ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight);
                 ret.Sink = this.Sink.Combine(rhs.Sink);
                 ret.SinkVariance = this.SinkVariance.Combine(rhs.SinkVariance);
                 ret.SizeVariance = this.SizeVariance.Combine(rhs.SizeVariance);
-                ret.AngleVarianceX = this.AngleVarianceX.Combine(rhs.AngleVarianceX);
-                ret.AngleVarianceY = this.AngleVarianceY.Combine(rhs.AngleVarianceY);
-                ret.AngleVarianceZ = this.AngleVarianceZ.Combine(rhs.AngleVarianceZ);
+                ret.AngleVariance = this.AngleVariance.Combine(rhs.AngleVariance);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 return ret;
@@ -924,16 +840,14 @@ namespace Mutagen.Bethesda.Fallout3
             public bool MinSlope;
             public bool MaxSlope;
             public bool Flags;
-            public bool RadiusWrtPercent;
+            public bool RadiusWrtParent;
             public bool Radius;
             public bool MinHeight;
             public bool MaxHeight;
             public bool Sink;
             public bool SinkVariance;
             public bool SizeVariance;
-            public bool AngleVarianceX;
-            public bool AngleVarianceY;
-            public bool AngleVarianceZ;
+            public bool AngleVariance;
             public bool Unknown;
             public bool Unknown2;
             #endregion
@@ -953,16 +867,14 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MinSlope = defaultOn;
                 this.MaxSlope = defaultOn;
                 this.Flags = defaultOn;
-                this.RadiusWrtPercent = defaultOn;
+                this.RadiusWrtParent = defaultOn;
                 this.Radius = defaultOn;
                 this.MinHeight = defaultOn;
                 this.MaxHeight = defaultOn;
                 this.Sink = defaultOn;
                 this.SinkVariance = defaultOn;
                 this.SizeVariance = defaultOn;
-                this.AngleVarianceX = defaultOn;
-                this.AngleVarianceY = defaultOn;
-                this.AngleVarianceZ = defaultOn;
+                this.AngleVariance = defaultOn;
                 this.Unknown = defaultOn;
                 this.Unknown2 = defaultOn;
             }
@@ -988,16 +900,14 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MinSlope, null));
                 ret.Add((MaxSlope, null));
                 ret.Add((Flags, null));
-                ret.Add((RadiusWrtPercent, null));
+                ret.Add((RadiusWrtParent, null));
                 ret.Add((Radius, null));
                 ret.Add((MinHeight, null));
                 ret.Add((MaxHeight, null));
                 ret.Add((Sink, null));
                 ret.Add((SinkVariance, null));
                 ret.Add((SizeVariance, null));
-                ret.Add((AngleVarianceX, null));
-                ret.Add((AngleVarianceY, null));
-                ret.Add((AngleVarianceZ, null));
+                ret.Add((AngleVariance, null));
                 ret.Add((Unknown, null));
                 ret.Add((Unknown2, null));
             }
@@ -1078,26 +988,24 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IRegionObject>,
         IRegionObjectGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Object { get; set; }
+        new IFormLink<IRegionTargetGetter> Object { get; set; }
         new UInt16 ParentIndex { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
+        new UInt16 Unused { get; set; }
         new Single Density { get; set; }
         new Byte Clustering { get; set; }
         new Byte MinSlope { get; set; }
         new Byte MaxSlope { get; set; }
-        new Byte Flags { get; set; }
-        new UInt16 RadiusWrtPercent { get; set; }
+        new RegionObject.Flag Flags { get; set; }
+        new UInt16 RadiusWrtParent { get; set; }
         new UInt16 Radius { get; set; }
         new Single MinHeight { get; set; }
         new Single MaxHeight { get; set; }
         new Single Sink { get; set; }
         new Single SinkVariance { get; set; }
         new Single SizeVariance { get; set; }
-        new UInt16 AngleVarianceX { get; set; }
-        new UInt16 AngleVarianceY { get; set; }
-        new UInt16 AngleVarianceZ { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
-        new MemorySlice<Byte> Unknown2 { get; set; }
+        new P3UInt16 AngleVariance { get; set; }
+        new UInt16 Unknown { get; set; }
+        new UInt32 Unknown2 { get; set; }
     }
 
     public partial interface IRegionObjectGetter :
@@ -1113,26 +1021,24 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionObject_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Object { get; }
+        IFormLinkGetter<IRegionTargetGetter> Object { get; }
         UInt16 ParentIndex { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        UInt16 Unused { get; }
         Single Density { get; }
         Byte Clustering { get; }
         Byte MinSlope { get; }
         Byte MaxSlope { get; }
-        Byte Flags { get; }
-        UInt16 RadiusWrtPercent { get; }
+        RegionObject.Flag Flags { get; }
+        UInt16 RadiusWrtParent { get; }
         UInt16 Radius { get; }
         Single MinHeight { get; }
         Single MaxHeight { get; }
         Single Sink { get; }
         Single SinkVariance { get; }
         Single SizeVariance { get; }
-        UInt16 AngleVarianceX { get; }
-        UInt16 AngleVarianceY { get; }
-        UInt16 AngleVarianceZ { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
-        ReadOnlyMemorySlice<Byte> Unknown2 { get; }
+        P3UInt16 AngleVariance { get; }
+        UInt16 Unknown { get; }
+        UInt32 Unknown2 { get; }
 
     }
 
@@ -1310,18 +1216,16 @@ namespace Mutagen.Bethesda.Fallout3
         MinSlope = 5,
         MaxSlope = 6,
         Flags = 7,
-        RadiusWrtPercent = 8,
+        RadiusWrtParent = 8,
         Radius = 9,
         MinHeight = 10,
         MaxHeight = 11,
         Sink = 12,
         SinkVariance = 13,
         SizeVariance = 14,
-        AngleVarianceX = 15,
-        AngleVarianceY = 16,
-        AngleVarianceZ = 17,
-        Unknown = 18,
-        Unknown2 = 19,
+        AngleVariance = 15,
+        Unknown = 16,
+        Unknown2 = 17,
     }
     #endregion
 
@@ -1332,9 +1236,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(RegionObject.Mask<>);
 
@@ -1402,24 +1306,22 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Object.Clear();
             item.ParentIndex = default(UInt16);
-            item.Unused = new byte[2];
+            item.Unused = default(UInt16);
             item.Density = default(Single);
             item.Clustering = default(Byte);
             item.MinSlope = default(Byte);
             item.MaxSlope = default(Byte);
-            item.Flags = default(Byte);
-            item.RadiusWrtPercent = default(UInt16);
+            item.Flags = default(RegionObject.Flag);
+            item.RadiusWrtParent = default(UInt16);
             item.Radius = default(UInt16);
             item.MinHeight = default(Single);
             item.MaxHeight = default(Single);
             item.Sink = default(Single);
             item.SinkVariance = default(Single);
             item.SizeVariance = default(Single);
-            item.AngleVarianceX = default(UInt16);
-            item.AngleVarianceY = default(UInt16);
-            item.AngleVarianceZ = default(UInt16);
-            item.Unknown = new byte[2];
-            item.Unknown2 = new byte[4];
+            item.AngleVariance = default(P3UInt16);
+            item.Unknown = default(UInt16);
+            item.Unknown2 = default(UInt32);
         }
         
         #region Mutagen
@@ -1472,24 +1374,22 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Object = item.Object.Equals(rhs.Object);
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Unused = item.Unused == rhs.Unused;
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Clustering = item.Clustering == rhs.Clustering;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.RadiusWrtPercent = item.RadiusWrtPercent == rhs.RadiusWrtPercent;
+            ret.RadiusWrtParent = item.RadiusWrtParent == rhs.RadiusWrtParent;
             ret.Radius = item.Radius == rhs.Radius;
             ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
             ret.MaxHeight = item.MaxHeight.EqualsWithin(rhs.MaxHeight);
             ret.Sink = item.Sink.EqualsWithin(rhs.Sink);
             ret.SinkVariance = item.SinkVariance.EqualsWithin(rhs.SinkVariance);
             ret.SizeVariance = item.SizeVariance.EqualsWithin(rhs.SizeVariance);
-            ret.AngleVarianceX = item.AngleVarianceX == rhs.AngleVarianceX;
-            ret.AngleVarianceY = item.AngleVarianceY == rhs.AngleVarianceY;
-            ret.AngleVarianceZ = item.AngleVarianceZ == rhs.AngleVarianceZ;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
-            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
+            ret.AngleVariance = item.AngleVariance.Equals(rhs.AngleVariance);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
         public string Print(
@@ -1544,7 +1444,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.Density ?? true)
             {
@@ -1566,9 +1466,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.RadiusWrtPercent ?? true)
+            if (printMask?.RadiusWrtParent ?? true)
             {
-                sb.AppendItem(item.RadiusWrtPercent, "RadiusWrtPercent");
+                sb.AppendItem(item.RadiusWrtParent, "RadiusWrtParent");
             }
             if (printMask?.Radius ?? true)
             {
@@ -1594,25 +1494,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.SizeVariance, "SizeVariance");
             }
-            if (printMask?.AngleVarianceX ?? true)
+            if (printMask?.AngleVariance ?? true)
             {
-                sb.AppendItem(item.AngleVarianceX, "AngleVarianceX");
-            }
-            if (printMask?.AngleVarianceY ?? true)
-            {
-                sb.AppendItem(item.AngleVarianceY, "AngleVarianceY");
-            }
-            if (printMask?.AngleVarianceZ ?? true)
-            {
-                sb.AppendItem(item.AngleVarianceZ, "AngleVarianceZ");
+                sb.AppendItem(item.AngleVariance, "AngleVariance");
             }
             if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1633,7 +1525,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Density) ?? true))
             {
@@ -1655,9 +1547,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.RadiusWrtPercent) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.RadiusWrtParent) ?? true))
             {
-                if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
+                if (lhs.RadiusWrtParent != rhs.RadiusWrtParent) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Radius) ?? true))
             {
@@ -1683,25 +1575,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVarianceX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVariance) ?? true))
             {
-                if (lhs.AngleVarianceX != rhs.AngleVarianceX) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVarianceY) ?? true))
-            {
-                if (lhs.AngleVarianceY != rhs.AngleVarianceY) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVarianceZ) ?? true))
-            {
-                if (lhs.AngleVarianceZ != rhs.AngleVarianceZ) return false;
+                if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown2) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
             return true;
         }
@@ -1717,16 +1601,14 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MinSlope);
             hash.Add(item.MaxSlope);
             hash.Add(item.Flags);
-            hash.Add(item.RadiusWrtPercent);
+            hash.Add(item.RadiusWrtParent);
             hash.Add(item.Radius);
             hash.Add(item.MinHeight);
             hash.Add(item.MaxHeight);
             hash.Add(item.Sink);
             hash.Add(item.SinkVariance);
             hash.Add(item.SizeVariance);
-            hash.Add(item.AngleVarianceX);
-            hash.Add(item.AngleVarianceY);
-            hash.Add(item.AngleVarianceZ);
+            hash.Add(item.AngleVariance);
             hash.Add(item.Unknown);
             hash.Add(item.Unknown2);
             return hash.ToHashCode();
@@ -1772,7 +1654,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Density) ?? true))
             {
@@ -1794,9 +1676,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.RadiusWrtPercent) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.RadiusWrtParent) ?? true))
             {
-                item.RadiusWrtPercent = rhs.RadiusWrtPercent;
+                item.RadiusWrtParent = rhs.RadiusWrtParent;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Radius) ?? true))
             {
@@ -1822,25 +1704,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.SizeVariance = rhs.SizeVariance;
             }
-            if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVarianceX) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVariance) ?? true))
             {
-                item.AngleVarianceX = rhs.AngleVarianceX;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVarianceY) ?? true))
-            {
-                item.AngleVarianceY = rhs.AngleVarianceY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVarianceZ) ?? true))
-            {
-                item.AngleVarianceZ = rhs.AngleVarianceZ;
+                item.AngleVariance = rhs.AngleVariance;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2.ToArray();
+                item.Unknown2 = rhs.Unknown2;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1954,17 +1828,18 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Object);
             writer.Write(item.ParentIndex);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused);
+            writer.Write(item.Unused);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Density);
             writer.Write(item.Clustering);
             writer.Write(item.MinSlope);
             writer.Write(item.MaxSlope);
-            writer.Write(item.Flags);
-            writer.Write(item.RadiusWrtPercent);
+            EnumBinaryTranslation<RegionObject.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1);
+            writer.Write(item.RadiusWrtParent);
             writer.Write(item.Radius);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1981,15 +1856,11 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SizeVariance);
-            writer.Write(item.AngleVarianceX);
-            writer.Write(item.AngleVarianceY);
-            writer.Write(item.AngleVarianceZ);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            P3UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Unknown);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown2);
+                item: item.AngleVariance);
+            writer.Write(item.Unknown);
+            writer.Write(item.Unknown2);
         }
 
         public void Write(
@@ -2025,24 +1896,24 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.ParentIndex = frame.ReadUInt16();
-            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Unused = frame.ReadUInt16();
             item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Clustering = frame.ReadUInt8();
             item.MinSlope = frame.ReadUInt8();
             item.MaxSlope = frame.ReadUInt8();
-            item.Flags = frame.ReadUInt8();
-            item.RadiusWrtPercent = frame.ReadUInt16();
+            item.Flags = EnumBinaryTranslation<RegionObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.RadiusWrtParent = frame.ReadUInt16();
             item.Radius = frame.ReadUInt16();
             item.MinHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.MaxHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Sink = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.SinkVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.SizeVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.AngleVarianceX = frame.ReadUInt16();
-            item.AngleVarianceY = frame.ReadUInt16();
-            item.AngleVarianceZ = frame.ReadUInt16();
-            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(2));
-            item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.AngleVariance = P3UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown = frame.ReadUInt16();
+            item.Unknown2 = frame.ReadUInt32();
         }
 
     }
@@ -2109,26 +1980,24 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IRegionTargetGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<IRegionTargetGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x6, 0x2).ToArray();
+        public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         public Single Density => _structData.Slice(0x8, 0x4).Float();
         public Byte Clustering => _structData.Span[0xC];
         public Byte MinSlope => _structData.Span[0xD];
         public Byte MaxSlope => _structData.Span[0xE];
-        public Byte Flags => _structData.Span[0xF];
-        public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x10, 0x2));
+        public RegionObject.Flag Flags => (RegionObject.Flag)_structData.Span.Slice(0xF, 0x1)[0];
+        public UInt16 RadiusWrtParent => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x10, 0x2));
         public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x12, 0x2));
         public Single MinHeight => _structData.Slice(0x14, 0x4).Float();
         public Single MaxHeight => _structData.Slice(0x18, 0x4).Float();
         public Single Sink => _structData.Slice(0x1C, 0x4).Float();
         public Single SinkVariance => _structData.Slice(0x20, 0x4).Float();
         public Single SizeVariance => _structData.Slice(0x24, 0x4).Float();
-        public UInt16 AngleVarianceX => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x28, 0x2));
-        public UInt16 AngleVarianceY => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2A, 0x2));
-        public UInt16 AngleVarianceZ => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2C, 0x2));
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x2E, 0x2).ToArray();
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _structData.Span.Slice(0x30, 0x4).ToArray();
+        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x28, 0x6));
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2E, 0x2));
+        public UInt32 Unknown2 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x30, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

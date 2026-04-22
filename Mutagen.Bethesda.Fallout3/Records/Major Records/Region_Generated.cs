@@ -91,17 +91,17 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
         #endregion
-        #region RegionAreas
+        #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionArea> _RegionAreas = new ExtendedList<RegionArea>();
-        public ExtendedList<RegionArea> RegionAreas
+        private ExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> Areas
         {
-            get => this._RegionAreas;
-            init => this._RegionAreas = value;
+            get => this._Areas;
+            init => this._Areas = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IRegionAreaGetter> IRegionGetter.RegionAreas => _RegionAreas;
+        IReadOnlyList<IRegionAreaGetter> IRegionGetter.Areas => _Areas;
         #endregion
 
         #endregion
@@ -160,6 +160,17 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IRegionSoundsGetter? IRegionGetter.Sounds => this.Sounds;
         #endregion
+        #region Land
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionLand? _Land;
+        public RegionLand? Land
+        {
+            get => _Land;
+            set => _Land = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionLandGetter? IRegionGetter.Land => this.Land;
+        #endregion
         #region Imposters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RegionImposters? _Imposters;
@@ -199,12 +210,13 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.MapColor = initialValue;
                 this.Worldspace = initialValue;
-                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, []);
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, []);
                 this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(initialValue, new RegionObjects.Mask<TItem>(initialValue));
                 this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(initialValue, new RegionWeather.Mask<TItem>(initialValue));
                 this.MapName = new MaskItem<TItem, RegionMap.Mask<TItem>?>(initialValue, new RegionMap.Mask<TItem>(initialValue));
                 this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(initialValue, new RegionGrasses.Mask<TItem>(initialValue));
                 this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(initialValue, new RegionSounds.Mask<TItem>(initialValue));
+                this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(initialValue, new RegionLand.Mask<TItem>(initialValue));
                 this.Imposters = new MaskItem<TItem, RegionImposters.Mask<TItem>?>(initialValue, new RegionImposters.Mask<TItem>(initialValue));
             }
 
@@ -219,12 +231,13 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Icons,
                 TItem MapColor,
                 TItem Worldspace,
-                TItem RegionAreas,
+                TItem Areas,
                 TItem Objects,
                 TItem Weather,
                 TItem MapName,
                 TItem Grasses,
                 TItem Sounds,
+                TItem Land,
                 TItem Imposters)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -238,12 +251,13 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.MapColor = MapColor;
                 this.Worldspace = Worldspace;
-                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(RegionAreas, []);
+                this.Areas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(Areas, []);
                 this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(Objects, new RegionObjects.Mask<TItem>(Objects));
                 this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(Weather, new RegionWeather.Mask<TItem>(Weather));
                 this.MapName = new MaskItem<TItem, RegionMap.Mask<TItem>?>(MapName, new RegionMap.Mask<TItem>(MapName));
                 this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(Grasses, new RegionGrasses.Mask<TItem>(Grasses));
                 this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(Sounds, new RegionSounds.Mask<TItem>(Sounds));
+                this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(Land, new RegionLand.Mask<TItem>(Land));
                 this.Imposters = new MaskItem<TItem, RegionImposters.Mask<TItem>?>(Imposters, new RegionImposters.Mask<TItem>(Imposters));
             }
 
@@ -259,12 +273,13 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public TItem MapColor;
             public TItem Worldspace;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>? RegionAreas;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>? Areas;
             public MaskItem<TItem, RegionObjects.Mask<TItem>?>? Objects { get; set; }
             public MaskItem<TItem, RegionWeather.Mask<TItem>?>? Weather { get; set; }
             public MaskItem<TItem, RegionMap.Mask<TItem>?>? MapName { get; set; }
             public MaskItem<TItem, RegionGrasses.Mask<TItem>?>? Grasses { get; set; }
             public MaskItem<TItem, RegionSounds.Mask<TItem>?>? Sounds { get; set; }
+            public MaskItem<TItem, RegionLand.Mask<TItem>?>? Land { get; set; }
             public MaskItem<TItem, RegionImposters.Mask<TItem>?>? Imposters { get; set; }
             #endregion
 
@@ -282,12 +297,13 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.MapColor, rhs.MapColor)) return false;
                 if (!object.Equals(this.Worldspace, rhs.Worldspace)) return false;
-                if (!object.Equals(this.RegionAreas, rhs.RegionAreas)) return false;
+                if (!object.Equals(this.Areas, rhs.Areas)) return false;
                 if (!object.Equals(this.Objects, rhs.Objects)) return false;
                 if (!object.Equals(this.Weather, rhs.Weather)) return false;
                 if (!object.Equals(this.MapName, rhs.MapName)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                if (!object.Equals(this.Land, rhs.Land)) return false;
                 if (!object.Equals(this.Imposters, rhs.Imposters)) return false;
                 return true;
             }
@@ -297,12 +313,13 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Icons);
                 hash.Add(this.MapColor);
                 hash.Add(this.Worldspace);
-                hash.Add(this.RegionAreas);
+                hash.Add(this.Areas);
                 hash.Add(this.Objects);
                 hash.Add(this.Weather);
                 hash.Add(this.MapName);
                 hash.Add(this.Grasses);
                 hash.Add(this.Sounds);
+                hash.Add(this.Land);
                 hash.Add(this.Imposters);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -321,12 +338,12 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (!eval(this.MapColor)) return false;
                 if (!eval(this.Worldspace)) return false;
-                if (this.RegionAreas != null)
+                if (this.Areas != null)
                 {
-                    if (!eval(this.RegionAreas.Overall)) return false;
-                    if (this.RegionAreas.Specific != null)
+                    if (!eval(this.Areas.Overall)) return false;
+                    if (this.Areas.Specific != null)
                     {
-                        foreach (var item in this.RegionAreas.Specific)
+                        foreach (var item in this.Areas.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -358,6 +375,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Sounds.Overall)) return false;
                     if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
                 }
+                if (Land != null)
+                {
+                    if (!eval(this.Land.Overall)) return false;
+                    if (this.Land.Specific != null && !this.Land.Specific.All(eval)) return false;
+                }
                 if (Imposters != null)
                 {
                     if (!eval(this.Imposters.Overall)) return false;
@@ -378,12 +400,12 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (eval(this.MapColor)) return true;
                 if (eval(this.Worldspace)) return true;
-                if (this.RegionAreas != null)
+                if (this.Areas != null)
                 {
-                    if (eval(this.RegionAreas.Overall)) return true;
-                    if (this.RegionAreas.Specific != null)
+                    if (eval(this.Areas.Overall)) return true;
+                    if (this.Areas.Specific != null)
                     {
-                        foreach (var item in this.RegionAreas.Specific)
+                        foreach (var item in this.Areas.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -415,6 +437,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Sounds.Overall)) return true;
                     if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
                 }
+                if (Land != null)
+                {
+                    if (eval(this.Land.Overall)) return true;
+                    if (this.Land.Specific != null && this.Land.Specific.Any(eval)) return true;
+                }
                 if (Imposters != null)
                 {
                     if (eval(this.Imposters.Overall)) return true;
@@ -438,14 +465,14 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.MapColor = eval(this.MapColor);
                 obj.Worldspace = eval(this.Worldspace);
-                if (RegionAreas != null)
+                if (Areas != null)
                 {
-                    obj.RegionAreas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.RegionAreas.Overall), []);
-                    if (RegionAreas.Specific != null)
+                    obj.Areas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.Areas.Overall), []);
+                    if (Areas.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
-                        obj.RegionAreas.Specific = l;
-                        foreach (var item in RegionAreas.Specific)
+                        obj.Areas.Specific = l;
+                        foreach (var item in Areas.Specific)
                         {
                             MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -458,6 +485,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MapName = this.MapName == null ? null : new MaskItem<R, RegionMap.Mask<R>?>(eval(this.MapName.Overall), this.MapName.Specific?.Translate(eval));
                 obj.Grasses = this.Grasses == null ? null : new MaskItem<R, RegionGrasses.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
                 obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionSounds.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
+                obj.Land = this.Land == null ? null : new MaskItem<R, RegionLand.Mask<R>?>(eval(this.Land.Overall), this.Land.Specific?.Translate(eval));
                 obj.Imposters = this.Imposters == null ? null : new MaskItem<R, RegionImposters.Mask<R>?>(eval(this.Imposters.Overall), this.Imposters.Specific?.Translate(eval));
             }
             #endregion
@@ -489,16 +517,16 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Worldspace, "Worldspace");
                     }
-                    if ((printMask?.RegionAreas?.Overall ?? true)
-                        && RegionAreas is {} RegionAreasItem)
+                    if ((printMask?.Areas?.Overall ?? true)
+                        && Areas is {} AreasItem)
                     {
-                        sb.AppendLine("RegionAreas =>");
+                        sb.AppendLine("Areas =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(RegionAreasItem.Overall);
-                            if (RegionAreasItem.Specific != null)
+                            sb.AppendItem(AreasItem.Overall);
+                            if (AreasItem.Specific != null)
                             {
-                                foreach (var subItem in RegionAreasItem.Specific)
+                                foreach (var subItem in AreasItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -528,6 +556,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Sounds?.Print(sb);
                     }
+                    if (printMask?.Land?.Overall ?? true)
+                    {
+                        Land?.Print(sb);
+                    }
                     if (printMask?.Imposters?.Overall ?? true)
                     {
                         Imposters?.Print(sb);
@@ -546,12 +578,13 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public Exception? MapColor;
             public Exception? Worldspace;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>? RegionAreas;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>? Areas;
             public MaskItem<Exception?, RegionObjects.ErrorMask?>? Objects;
             public MaskItem<Exception?, RegionWeather.ErrorMask?>? Weather;
             public MaskItem<Exception?, RegionMap.ErrorMask?>? MapName;
             public MaskItem<Exception?, RegionGrasses.ErrorMask?>? Grasses;
             public MaskItem<Exception?, RegionSounds.ErrorMask?>? Sounds;
+            public MaskItem<Exception?, RegionLand.ErrorMask?>? Land;
             public MaskItem<Exception?, RegionImposters.ErrorMask?>? Imposters;
             #endregion
 
@@ -567,8 +600,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MapColor;
                     case Region_FieldIndex.Worldspace:
                         return Worldspace;
-                    case Region_FieldIndex.RegionAreas:
-                        return RegionAreas;
+                    case Region_FieldIndex.Areas:
+                        return Areas;
                     case Region_FieldIndex.Objects:
                         return Objects;
                     case Region_FieldIndex.Weather:
@@ -579,6 +612,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Grasses;
                     case Region_FieldIndex.Sounds:
                         return Sounds;
+                    case Region_FieldIndex.Land:
+                        return Land;
                     case Region_FieldIndex.Imposters:
                         return Imposters;
                     default:
@@ -600,8 +635,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Region_FieldIndex.Worldspace:
                         this.Worldspace = ex;
                         break;
-                    case Region_FieldIndex.RegionAreas:
-                        this.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ex, null);
+                    case Region_FieldIndex.Areas:
+                        this.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ex, null);
                         break;
                     case Region_FieldIndex.Objects:
                         this.Objects = new MaskItem<Exception?, RegionObjects.ErrorMask?>(ex, null);
@@ -617,6 +652,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Region_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, RegionSounds.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Land:
+                        this.Land = new MaskItem<Exception?, RegionLand.ErrorMask?>(ex, null);
                         break;
                     case Region_FieldIndex.Imposters:
                         this.Imposters = new MaskItem<Exception?, RegionImposters.ErrorMask?>(ex, null);
@@ -641,8 +679,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Region_FieldIndex.Worldspace:
                         this.Worldspace = (Exception?)obj;
                         break;
-                    case Region_FieldIndex.RegionAreas:
-                        this.RegionAreas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
+                    case Region_FieldIndex.Areas:
+                        this.Areas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
                         break;
                     case Region_FieldIndex.Objects:
                         this.Objects = (MaskItem<Exception?, RegionObjects.ErrorMask?>?)obj;
@@ -659,6 +697,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Region_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, RegionSounds.ErrorMask?>?)obj;
                         break;
+                    case Region_FieldIndex.Land:
+                        this.Land = (MaskItem<Exception?, RegionLand.ErrorMask?>?)obj;
+                        break;
                     case Region_FieldIndex.Imposters:
                         this.Imposters = (MaskItem<Exception?, RegionImposters.ErrorMask?>?)obj;
                         break;
@@ -674,12 +715,13 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Icons != null) return true;
                 if (MapColor != null) return true;
                 if (Worldspace != null) return true;
-                if (RegionAreas != null) return true;
+                if (Areas != null) return true;
                 if (Objects != null) return true;
                 if (Weather != null) return true;
                 if (MapName != null) return true;
                 if (Grasses != null) return true;
                 if (Sounds != null) return true;
+                if (Land != null) return true;
                 if (Imposters != null) return true;
                 return false;
             }
@@ -714,15 +756,15 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Worldspace, "Worldspace");
                 }
-                if (RegionAreas is {} RegionAreasItem)
+                if (Areas is {} AreasItem)
                 {
-                    sb.AppendLine("RegionAreas =>");
+                    sb.AppendLine("Areas =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(RegionAreasItem.Overall);
-                        if (RegionAreasItem.Specific != null)
+                        sb.AppendItem(AreasItem.Overall);
+                        if (AreasItem.Specific != null)
                         {
-                            foreach (var subItem in RegionAreasItem.Specific)
+                            foreach (var subItem in AreasItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -737,6 +779,7 @@ namespace Mutagen.Bethesda.Fallout3
                 MapName?.Print(sb);
                 Grasses?.Print(sb);
                 Sounds?.Print(sb);
+                Land?.Print(sb);
                 Imposters?.Print(sb);
             }
             #endregion
@@ -749,12 +792,13 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.MapColor = this.MapColor.Combine(rhs.MapColor);
                 ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
-                ret.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RegionAreas?.Overall, rhs.RegionAreas?.Overall), Noggog.ExceptionExt.Combine(this.RegionAreas?.Specific, rhs.RegionAreas?.Specific));
+                ret.Areas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Areas?.Overall, rhs.Areas?.Overall), Noggog.ExceptionExt.Combine(this.Areas?.Specific, rhs.Areas?.Specific));
                 ret.Objects = this.Objects.Combine(rhs.Objects, (l, r) => l.Combine(r));
                 ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
                 ret.MapName = this.MapName.Combine(rhs.MapName, (l, r) => l.Combine(r));
                 ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
                 ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
+                ret.Land = this.Land.Combine(rhs.Land, (l, r) => l.Combine(r));
                 ret.Imposters = this.Imposters.Combine(rhs.Imposters, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -781,12 +825,13 @@ namespace Mutagen.Bethesda.Fallout3
             public Icons.TranslationMask? Icons;
             public bool MapColor;
             public bool Worldspace;
-            public RegionArea.TranslationMask? RegionAreas;
+            public RegionArea.TranslationMask? Areas;
             public RegionObjects.TranslationMask? Objects;
             public RegionWeather.TranslationMask? Weather;
             public RegionMap.TranslationMask? MapName;
             public RegionGrasses.TranslationMask? Grasses;
             public RegionSounds.TranslationMask? Sounds;
+            public RegionLand.TranslationMask? Land;
             public RegionImposters.TranslationMask? Imposters;
             #endregion
 
@@ -808,12 +853,13 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((MapColor, null));
                 ret.Add((Worldspace, null));
-                ret.Add((RegionAreas == null ? DefaultOn : !RegionAreas.GetCrystal().CopyNothing, RegionAreas?.GetCrystal()));
+                ret.Add((Areas == null ? DefaultOn : !Areas.GetCrystal().CopyNothing, Areas?.GetCrystal()));
                 ret.Add((Objects != null ? Objects.OnOverall : DefaultOn, Objects?.GetCrystal()));
                 ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
                 ret.Add((MapName != null ? MapName.OnOverall : DefaultOn, MapName?.GetCrystal()));
                 ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
                 ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((Land != null ? Land.OnOverall : DefaultOn, Land?.GetCrystal()));
                 ret.Add((Imposters != null ? Imposters.OnOverall : DefaultOn, Imposters?.GetCrystal()));
             }
 
@@ -867,6 +913,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IRegion);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RegionSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -964,13 +1015,18 @@ namespace Mutagen.Bethesda.Fallout3
         new Icons? Icons { get; set; }
         new Color? MapColor { get; set; }
         new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
-        new ExtendedList<RegionArea> RegionAreas { get; }
+        new ExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
         new RegionMap? MapName { get; set; }
         new RegionGrasses? Grasses { get; set; }
         new RegionSounds? Sounds { get; set; }
+        new RegionLand? Land { get; set; }
         new RegionImposters? Imposters { get; set; }
+        #region Mutagen
+        new Region.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IRegionInternal :
@@ -1000,13 +1056,18 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
-        IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
+        IReadOnlyList<IRegionAreaGetter> Areas { get; }
         IRegionObjectsGetter? Objects { get; }
         IRegionWeatherGetter? Weather { get; }
         IRegionMapGetter? MapName { get; }
         IRegionGrassesGetter? Grasses { get; }
         IRegionSoundsGetter? Sounds { get; }
+        IRegionLandGetter? Land { get; }
         IRegionImpostersGetter? Imposters { get; }
+
+        #region Mutagen
+        Region.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1186,13 +1247,14 @@ namespace Mutagen.Bethesda.Fallout3
         Icons = 7,
         MapColor = 8,
         Worldspace = 9,
-        RegionAreas = 10,
+        Areas = 10,
         Objects = 11,
         Weather = 12,
         MapName = 13,
         Grasses = 14,
         Sounds = 15,
-        Imposters = 16,
+        Land = 16,
+        Imposters = 17,
     }
     #endregion
 
@@ -1203,9 +1265,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Region.Mask<>);
 
@@ -1291,12 +1353,13 @@ namespace Mutagen.Bethesda.Fallout3
             item.Icons = null;
             item.MapColor = default;
             item.Worldspace.Clear();
-            item.RegionAreas.Clear();
+            item.Areas.Clear();
             item.Objects = null;
             item.Weather = null;
             item.MapName = null;
             item.Grasses = null;
             item.Sounds = null;
+            item.Land = null;
             item.Imposters = null;
             base.Clear(item);
         }
@@ -1320,6 +1383,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Weather?.RemapLinks(mapping);
             obj.Grasses?.RemapLinks(mapping);
             obj.Sounds?.RemapLinks(mapping);
+            obj.Imposters?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRegion obj)
@@ -1420,8 +1484,8 @@ namespace Mutagen.Bethesda.Fallout3
                 include);
             ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
             ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
-            ret.RegionAreas = item.RegionAreas.CollectionEqualsHelper(
-                rhs.RegionAreas,
+            ret.Areas = item.Areas.CollectionEqualsHelper(
+                rhs.Areas,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Objects = EqualsMaskHelper.EqualsHelper(
@@ -1447,6 +1511,11 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Sounds = EqualsMaskHelper.EqualsHelper(
                 item.Sounds,
                 rhs.Sounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Land = EqualsMaskHelper.EqualsHelper(
+                item.Land,
+                rhs.Land,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Imposters = EqualsMaskHelper.EqualsHelper(
@@ -1517,12 +1586,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
             }
-            if (printMask?.RegionAreas?.Overall ?? true)
+            if (printMask?.Areas?.Overall ?? true)
             {
-                sb.AppendLine("RegionAreas =>");
+                sb.AppendLine("Areas =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.RegionAreas)
+                    foreach (var subItem in item.Areas)
                     {
                         using (sb.Brace())
                         {
@@ -1555,6 +1624,11 @@ namespace Mutagen.Bethesda.Fallout3
                 && item.Sounds is {} SoundsItem)
             {
                 SoundsItem?.Print(sb, "Sounds");
+            }
+            if ((printMask?.Land?.Overall ?? true)
+                && item.Land is {} LandItem)
+            {
+                LandItem?.Print(sb, "Land");
             }
             if ((printMask?.Imposters?.Overall ?? true)
                 && item.Imposters is {} ImpostersItem)
@@ -1627,9 +1701,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
-                if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Region_FieldIndex.RegionAreas)))) return false;
+                if (!lhs.Areas.SequenceEqual(rhs.Areas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Areas)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
@@ -1670,6 +1744,14 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!((RegionSoundsCommon)((IRegionSoundsGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Sounds))) return false;
                 }
                 else if (!isSoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Land, rhs.Land, out var lhsLand, out var rhsLand, out var isLandEqual))
+                {
+                    if (!((RegionLandCommon)((IRegionLandGetter)lhsLand).CommonInstance()!).Equals(lhsLand, rhsLand, equalsMask?.GetSubCrystal((int)Region_FieldIndex.Land))) return false;
+                }
+                else if (!isLandEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Region_FieldIndex.Imposters) ?? true))
             {
@@ -1716,7 +1798,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(MapColoritem);
             }
             hash.Add(item.Worldspace);
-            hash.Add(item.RegionAreas);
+            hash.Add(item.Areas);
             if (item.Objects is {} Objectsitem)
             {
                 hash.Add(Objectsitem);
@@ -1736,6 +1818,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (item.Sounds is {} Soundsitem)
             {
                 hash.Add(Soundsitem);
+            }
+            if (item.Land is {} Landitem)
+            {
+                hash.Add(Landitem);
             }
             if (item.Imposters is {} Impostersitem)
             {
@@ -1798,6 +1884,13 @@ namespace Mutagen.Bethesda.Fallout3
             if (obj.Sounds is {} SoundsItems)
             {
                 foreach (var item in SoundsItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Imposters is {} ImpostersItems)
+            {
+                foreach (var item in ImpostersItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1926,13 +2019,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Worldspace.SetTo(rhs.Worldspace.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
-                errorMask?.PushIndex((int)Region_FieldIndex.RegionAreas);
+                errorMask?.PushIndex((int)Region_FieldIndex.Areas);
                 try
                 {
-                    item.RegionAreas.SetTo(
-                        rhs.RegionAreas
+                    item.Areas.SetTo(
+                        rhs.Areas
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -2068,6 +2161,32 @@ namespace Mutagen.Bethesda.Fallout3
                     else
                     {
                         item.Sounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Land);
+                try
+                {
+                    if(rhs.Land is {} rhsLand)
+                    {
+                        item.Land = rhsLand.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Land));
+                    }
+                    else
+                    {
+                        item.Land = default;
                     }
                 }
                 catch (Exception ex)
@@ -2292,7 +2411,7 @@ namespace Mutagen.Bethesda.Fallout3
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
                 writer: writer,
-                items: item.RegionAreas,
+                items: item.Areas,
                 transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -2407,13 +2526,13 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
                 {
-                    item.RegionAreas.SetTo(
+                    item.Areas.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RegionArea_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RegionArea.TryCreateFromBinary));
-                    return (int)Region_FieldIndex.RegionAreas;
+                    return (int)Region_FieldIndex.Areas;
                 }
                 case RecordTypeInts.RDAT:
                 {
@@ -2486,6 +2605,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         protected override Type LinkType => typeof(IRegionGetter);
 
+        public Region.MajorFlag MajorFlags => (Region.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IIconsGetter? Icons { get; private set; }
         #region MapColor
@@ -2496,7 +2616,7 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _WorldspaceLocation;
         public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _WorldspaceLocation);
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = [];
+        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = [];
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
@@ -2593,12 +2713,12 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
                 {
-                    this.RegionAreas = this.ParseRepeatedTypelessSubrecord<IRegionAreaGetter>(
+                    this.Areas = this.ParseRepeatedTypelessSubrecord<IRegionAreaGetter>(
                         stream: stream,
                         translationParams: translationParams,
                         trigger: RegionArea_Registration.TriggerSpecs,
                         factory: RegionAreaBinaryOverlay.RegionAreaFactory);
-                    return (int)Region_FieldIndex.RegionAreas;
+                    return (int)Region_FieldIndex.Areas;
                 }
                 case RecordTypeInts.RDAT:
                 {

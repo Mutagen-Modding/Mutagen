@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [RegionGrasses, RegionImposters, RegionMap, RegionObjects, RegionSounds, RegionWeather]
+    /// Implemented by: [RegionGrasses, RegionImposters, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public abstract partial class RegionData :
         IEquatable<IRegionDataGetter>,
@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public RegionData.RegionDataFlag Flags { get; set; } = default(RegionData.RegionDataFlag);
+        #region Override
+        public Boolean Override { get; set; } = default(Boolean);
         #endregion
         #region Priority
         public Byte Priority { get; set; } = default(Byte);
@@ -99,15 +99,15 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Flags = initialValue;
+                this.Override = initialValue;
                 this.Priority = initialValue;
             }
 
             public Mask(
-                TItem Flags,
+                TItem Override,
                 TItem Priority)
             {
-                this.Flags = Flags;
+                this.Override = Override;
                 this.Priority = Priority;
             }
 
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Flags;
+            public TItem Override;
             public TItem Priority;
             #endregion
 
@@ -134,14 +134,14 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Override, rhs.Override)) return false;
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
+                hash.Add(this.Override);
                 hash.Add(this.Priority);
                 return hash.ToHashCode();
             }
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public virtual bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.Override)) return false;
                 if (!eval(this.Priority)) return false;
                 return true;
             }
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Flags)) return true;
+                if (eval(this.Override)) return true;
                 if (eval(this.Priority)) return true;
                 return false;
             }
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Flags = eval(this.Flags);
+                obj.Override = eval(this.Override);
                 obj.Priority = eval(this.Priority);
             }
             #endregion
@@ -196,9 +196,9 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(RegionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Override ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Override, "Override");
                     }
                     if (printMask?.Priority ?? true)
                     {
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? Flags;
+            public Exception? Override;
             public Exception? Priority;
             #endregion
 
@@ -238,8 +238,8 @@ namespace Mutagen.Bethesda.Fallout3
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Flags:
-                        return Flags;
+                    case RegionData_FieldIndex.Override:
+                        return Override;
                     case RegionData_FieldIndex.Priority:
                         return Priority;
                     default:
@@ -252,8 +252,8 @@ namespace Mutagen.Bethesda.Fallout3
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case RegionData_FieldIndex.Override:
+                        this.Override = ex;
                         break;
                     case RegionData_FieldIndex.Priority:
                         this.Priority = ex;
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Fallout3
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case RegionData_FieldIndex.Override:
+                        this.Override = (Exception?)obj;
                         break;
                     case RegionData_FieldIndex.Priority:
                         this.Priority = (Exception?)obj;
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Fallout3
             public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
+                if (Override != null) return true;
                 if (Priority != null) return true;
                 return false;
             }
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(Override, "Override");
                 }
                 {
                     sb.AppendItem(Priority, "Priority");
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Override = this.Override.Combine(rhs.Override);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
                 return ret;
             }
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Flags;
+            public bool Override;
             public bool Priority;
             #endregion
 
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Flags = defaultOn;
+                this.Override = defaultOn;
                 this.Priority = defaultOn;
             }
 
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Flags, null));
+                ret.Add((Override, null));
                 ret.Add((Priority, null));
             }
 
@@ -426,19 +426,19 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [RegionGrasses, RegionImposters, RegionMap, RegionObjects, RegionSounds, RegionWeather]
+    /// Implemented by: [RegionGrasses, RegionImposters, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionData :
         IFormLinkContainer,
         ILoquiObjectSetter<IRegionData>,
         IRegionDataGetter
     {
-        new RegionData.RegionDataFlag Flags { get; set; }
+        new Boolean Override { get; set; }
         new Byte Priority { get; set; }
     }
 
     /// <summary>
-    /// Implemented by: [RegionGrasses, RegionImposters, RegionMap, RegionObjects, RegionSounds, RegionWeather]
+    /// Implemented by: [RegionGrasses, RegionImposters, RegionLand, RegionMap, RegionObjects, RegionSounds, RegionWeather]
     /// </summary>
     public partial interface IRegionDataGetter :
         ILoquiObject,
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
-        RegionData.RegionDataFlag Flags { get; }
+        Boolean Override { get; }
         Byte Priority { get; }
 
     }
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum RegionData_FieldIndex
     {
-        Flags = 0,
+        Override = 0,
         Priority = 1,
     }
     #endregion
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual void Clear(IRegionData item)
         {
             ClearPartial();
-            item.Flags = default(RegionData.RegionDataFlag);
+            item.Override = default(Boolean);
             item.Priority = default(Byte);
         }
         
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Fallout3
             RegionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Override = item.Override == rhs.Override;
             ret.Priority = item.Priority == rhs.Priority;
         }
         
@@ -809,9 +809,9 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             RegionData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Flags ?? true)
+            if (printMask?.Override ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Override, "Override");
             }
             if (printMask?.Priority ?? true)
             {
@@ -826,9 +826,9 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Override) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.Override != rhs.Override) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
             {
@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IRegionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Flags);
+            hash.Add(item.Override);
             hash.Add(item.Priority);
             return hash.ToHashCode();
         }
@@ -874,9 +874,9 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Override) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Override = rhs.Override;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
             {
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Override, translationParams)) return ParseResult.Stop;
                     return RegionDataBinaryCreateTranslation.FillBinaryHeaderLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Override, translationParams)) return ParseResult.Stop;
                     return HeaderLogicCustomParse(
                         stream,
                         offset,

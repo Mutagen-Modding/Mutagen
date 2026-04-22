@@ -59,6 +59,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - PlacedObject
 ### IReferenceableObject
 - AcousticSpace
+### IRegionTarget
+- LandscapeTexture
+- Static
+- Tree
 ### IRelatable
 - Faction
 - Race
@@ -100,6 +104,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Key
 - IItem
+### LandscapeTexture
+- IRegionTarget
 ### LeveledCreature
 - INpcSpawn
 ### LeveledItem
@@ -141,6 +147,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEffectRecord
 ### Static
 - IItem
+- IRegionTarget
+### Tree
+- IRegionTarget
 ### Weapon
 - IBoundItem
 - IItem

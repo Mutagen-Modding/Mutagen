@@ -1104,6 +1104,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ITreeInternal>,
         IModeled,
         IObjectBounded,
+        IRegionTarget,
         ITreeGetter
     {
         /// <summary>
@@ -1157,7 +1158,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<ITreeGetter>,
         IMapsToGetter<ITreeGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         #region ObjectBounds

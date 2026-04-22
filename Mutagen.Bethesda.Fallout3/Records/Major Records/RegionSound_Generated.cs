@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
-        #region SoundFlags
-        public UInt32 SoundFlags { get; set; } = default(UInt32);
+        #region Flags
+        public RegionSound.Flag Flags { get; set; } = default(RegionSound.Flag);
         #endregion
         #region Chance
         public UInt32 Chance { get; set; } = default(UInt32);
@@ -107,17 +107,17 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Sound = initialValue;
-                this.SoundFlags = initialValue;
+                this.Flags = initialValue;
                 this.Chance = initialValue;
             }
 
             public Mask(
                 TItem Sound,
-                TItem SoundFlags,
+                TItem Flags,
                 TItem Chance)
             {
                 this.Sound = Sound;
-                this.SoundFlags = SoundFlags;
+                this.Flags = Flags;
                 this.Chance = Chance;
             }
 
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Sound;
-            public TItem SoundFlags;
+            public TItem Flags;
             public TItem Chance;
             #endregion
 
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
-                if (!object.Equals(this.SoundFlags, rhs.SoundFlags)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Chance, rhs.Chance)) return false;
                 return true;
             }
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.Sound);
-                hash.Add(this.SoundFlags);
+                hash.Add(this.Flags);
                 hash.Add(this.Chance);
                 return hash.ToHashCode();
             }
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Sound)) return false;
-                if (!eval(this.SoundFlags)) return false;
+                if (!eval(this.Flags)) return false;
                 if (!eval(this.Chance)) return false;
                 return true;
             }
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Sound)) return true;
-                if (eval(this.SoundFlags)) return true;
+                if (eval(this.Flags)) return true;
                 if (eval(this.Chance)) return true;
                 return false;
             }
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Sound = eval(this.Sound);
-                obj.SoundFlags = eval(this.SoundFlags);
+                obj.Flags = eval(this.Flags);
                 obj.Chance = eval(this.Chance);
             }
             #endregion
@@ -216,9 +216,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Sound, "Sound");
                     }
-                    if (printMask?.SoundFlags ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(SoundFlags, "SoundFlags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Chance ?? true)
                     {
@@ -249,7 +249,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Sound;
-            public Exception? SoundFlags;
+            public Exception? Flags;
             public Exception? Chance;
             #endregion
 
@@ -261,8 +261,8 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case RegionSound_FieldIndex.Sound:
                         return Sound;
-                    case RegionSound_FieldIndex.SoundFlags:
-                        return SoundFlags;
+                    case RegionSound_FieldIndex.Flags:
+                        return Flags;
                     case RegionSound_FieldIndex.Chance:
                         return Chance;
                     default:
@@ -278,8 +278,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RegionSound_FieldIndex.Sound:
                         this.Sound = ex;
                         break;
-                    case RegionSound_FieldIndex.SoundFlags:
-                        this.SoundFlags = ex;
+                    case RegionSound_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case RegionSound_FieldIndex.Chance:
                         this.Chance = ex;
@@ -297,8 +297,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RegionSound_FieldIndex.Sound:
                         this.Sound = (Exception?)obj;
                         break;
-                    case RegionSound_FieldIndex.SoundFlags:
-                        this.SoundFlags = (Exception?)obj;
+                    case RegionSound_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     case RegionSound_FieldIndex.Chance:
                         this.Chance = (Exception?)obj;
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Sound != null) return true;
-                if (SoundFlags != null) return true;
+                if (Flags != null) return true;
                 if (Chance != null) return true;
                 return false;
             }
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Sound, "Sound");
                 }
                 {
-                    sb.AppendItem(SoundFlags, "SoundFlags");
+                    sb.AppendItem(Flags, "Flags");
                 }
                 {
                     sb.AppendItem(Chance, "Chance");
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Sound = this.Sound.Combine(rhs.Sound);
-                ret.SoundFlags = this.SoundFlags.Combine(rhs.SoundFlags);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Chance = this.Chance.Combine(rhs.Chance);
                 return ret;
             }
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Sound;
-            public bool SoundFlags;
+            public bool Flags;
             public bool Chance;
             #endregion
 
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Sound = defaultOn;
-                this.SoundFlags = defaultOn;
+                this.Flags = defaultOn;
                 this.Chance = defaultOn;
             }
 
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Sound, null));
-                ret.Add((SoundFlags, null));
+                ret.Add((Flags, null));
                 ret.Add((Chance, null));
             }
 
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout3
         IRegionSoundGetter
     {
         new IFormLink<ISoundGetter> Sound { get; set; }
-        new UInt32 SoundFlags { get; set; }
+        new RegionSound.Flag Flags { get; set; }
         new UInt32 Chance { get; set; }
     }
 
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionSound_Registration.Instance;
         IFormLinkGetter<ISoundGetter> Sound { get; }
-        UInt32 SoundFlags { get; }
+        RegionSound.Flag Flags { get; }
         UInt32 Chance { get; }
 
     }
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum RegionSound_FieldIndex
     {
         Sound = 0,
-        SoundFlags = 1,
+        Flags = 1,
         Chance = 2,
     }
     #endregion
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Sound.Clear();
-            item.SoundFlags = default(UInt32);
+            item.Flags = default(RegionSound.Flag);
             item.Chance = default(UInt32);
         }
         
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Sound = item.Sound.Equals(rhs.Sound);
-            ret.SoundFlags = item.SoundFlags == rhs.SoundFlags;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.Chance = item.Chance == rhs.Chance;
         }
         
@@ -868,9 +868,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Sound.FormKey, "Sound");
             }
-            if (printMask?.SoundFlags ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendItem(item.SoundFlags, "SoundFlags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Chance ?? true)
             {
@@ -889,9 +889,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)RegionSound_FieldIndex.SoundFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
-                if (lhs.SoundFlags != rhs.SoundFlags) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Chance) ?? true))
             {
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.Sound);
-            hash.Add(item.SoundFlags);
+            hash.Add(item.Flags);
             hash.Add(item.Chance);
             return hash.ToHashCode();
         }
@@ -943,9 +943,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Sound.SetTo(rhs.Sound.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.SoundFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
-                item.SoundFlags = rhs.SoundFlags;
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Chance) ?? true))
             {
@@ -1062,7 +1062,10 @@ namespace Mutagen.Bethesda.Fallout3
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound);
-            writer.Write(item.SoundFlags);
+            EnumBinaryTranslation<RegionSound.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4);
             writer.Write(item.Chance);
         }
 
@@ -1098,7 +1101,9 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.SoundFlags = frame.ReadUInt32();
+            item.Flags = EnumBinaryTranslation<RegionSound.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Chance = frame.ReadUInt32();
         }
 
@@ -1167,7 +1172,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public IFormLinkGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public UInt32 SoundFlags => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public RegionSound.Flag Flags => (RegionSound.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public UInt32 Chance => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

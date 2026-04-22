@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -39,24 +38,24 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class RegionMap :
+    public partial class RegionLand :
         RegionData,
-        IEquatable<IRegionMapGetter>,
-        ILoquiObjectSetter<RegionMap>,
-        IRegionMap
+        IEquatable<IRegionLandGetter>,
+        ILoquiObjectSetter<RegionLand>,
+        IRegionLand
     {
         #region Ctor
-        public RegionMap()
+        public RegionLand()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Map
-        public TranslatedString? Map { get; set; }
+        #region LandIcon
+        public String? LandIcon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IRegionMapGetter.Map => this.Map;
+        String? IRegionLandGetter.LandIcon => this.LandIcon;
         #endregion
 
         #region To String
@@ -65,7 +64,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMapMixIn.Print(
+            RegionLandMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -76,16 +75,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IRegionMapGetter rhs) return false;
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IRegionLandGetter rhs) return false;
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRegionMapGetter? obj)
+        public bool Equals(IRegionLandGetter? obj)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,18 +98,18 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Map = initialValue;
+                this.LandIcon = initialValue;
             }
 
             public Mask(
                 TItem Override,
                 TItem Priority,
-                TItem Map)
+                TItem LandIcon)
             : base(
                 Override: Override,
                 Priority: Priority)
             {
-                this.Map = Map;
+                this.LandIcon = LandIcon;
             }
 
             #pragma warning disable CS8618
@@ -122,7 +121,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Map;
+            public TItem LandIcon;
             #endregion
 
             #region Equals
@@ -136,13 +135,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Map, rhs.Map)) return false;
+                if (!object.Equals(this.LandIcon, rhs.LandIcon)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Map);
+                hash.Add(this.LandIcon);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -153,7 +152,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Map)) return false;
+                if (!eval(this.LandIcon)) return false;
                 return true;
             }
             #endregion
@@ -162,7 +161,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Map)) return true;
+                if (eval(this.LandIcon)) return true;
                 return false;
             }
             #endregion
@@ -170,7 +169,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new RegionMap.Mask<R>();
+                var ret = new RegionLand.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -178,28 +177,28 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Map = eval(this.Map);
+                obj.LandIcon = eval(this.LandIcon);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(RegionMap.Mask<bool>? printMask = null)
+            public string Print(RegionLand.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, RegionMap.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RegionLand.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(RegionMap.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(RegionLand.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Map ?? true)
+                    if (printMask?.LandIcon ?? true)
                     {
-                        sb.AppendItem(Map, "Map");
+                        sb.AppendItem(LandIcon, "LandIcon");
                     }
                 }
             }
@@ -212,17 +211,17 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Map;
+            public Exception? LandIcon;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                RegionMap_FieldIndex enu = (RegionMap_FieldIndex)index;
+                RegionLand_FieldIndex enu = (RegionLand_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionMap_FieldIndex.Map:
-                        return Map;
+                    case RegionLand_FieldIndex.LandIcon:
+                        return LandIcon;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -230,11 +229,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                RegionMap_FieldIndex enu = (RegionMap_FieldIndex)index;
+                RegionLand_FieldIndex enu = (RegionLand_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionMap_FieldIndex.Map:
-                        this.Map = ex;
+                    case RegionLand_FieldIndex.LandIcon:
+                        this.LandIcon = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -244,11 +243,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                RegionMap_FieldIndex enu = (RegionMap_FieldIndex)index;
+                RegionLand_FieldIndex enu = (RegionLand_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionMap_FieldIndex.Map:
-                        this.Map = (Exception?)obj;
+                    case RegionLand_FieldIndex.LandIcon:
+                        this.LandIcon = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -259,7 +258,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Map != null) return true;
+                if (LandIcon != null) return true;
                 return false;
             }
             #endregion
@@ -287,7 +286,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Map, "Map");
+                    sb.AppendItem(LandIcon, "LandIcon");
                 }
             }
             #endregion
@@ -297,7 +296,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Map = this.Map.Combine(rhs.Map);
+                ret.LandIcon = this.LandIcon.Combine(rhs.LandIcon);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -320,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public bool Map;
+            public bool LandIcon;
             #endregion
 
             #region Ctors
@@ -329,7 +328,7 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Map = defaultOn;
+                this.LandIcon = defaultOn;
             }
 
             #endregion
@@ -337,7 +336,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Map, null));
+                ret.Add((LandIcon, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -350,23 +349,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RegionMapBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionLandBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RegionMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RegionLandBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static RegionMap CreateFromBinary(
+        public new static RegionLand CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new RegionMap();
-            ((RegionMapSetterCommon)((IRegionMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new RegionLand();
+            ((RegionLandSetterCommon)((IRegionLandGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -377,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out RegionMap item,
+            out RegionLand item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -392,75 +391,75 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((RegionMapSetterCommon)((IRegionMapGetter)this).CommonSetterInstance()!).Clear(this);
+            ((RegionLandSetterCommon)((IRegionLandGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new RegionMap GetNew()
+        internal static new RegionLand GetNew()
         {
-            return new RegionMap();
+            return new RegionLand();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IRegionMap :
-        ILoquiObjectSetter<IRegionMap>,
+    public partial interface IRegionLand :
+        ILoquiObjectSetter<IRegionLand>,
         IRegionData,
-        IRegionMapGetter
+        IRegionLandGetter
     {
-        new TranslatedString? Map { get; set; }
+        new String? LandIcon { get; set; }
     }
 
-    public partial interface IRegionMapGetter :
+    public partial interface IRegionLandGetter :
         IRegionDataGetter,
         IBinaryItem,
-        ILoquiObject<IRegionMapGetter>
+        ILoquiObject<IRegionLandGetter>
     {
-        static new ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
-        ITranslatedStringGetter? Map { get; }
+        static new ILoquiRegistration StaticRegistration => RegionLand_Registration.Instance;
+        String? LandIcon { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class RegionMapMixIn
+    public static partial class RegionLandMixIn
     {
-        public static void Clear(this IRegionMap item)
+        public static void Clear(this IRegionLand item)
         {
-            ((RegionMapSetterCommon)((IRegionMapGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((RegionLandSetterCommon)((IRegionLandGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static RegionMap.Mask<bool> GetEqualsMask(
-            this IRegionMapGetter item,
-            IRegionMapGetter rhs,
+        public static RegionLand.Mask<bool> GetEqualsMask(
+            this IRegionLandGetter item,
+            IRegionLandGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IRegionMapGetter item,
+            this IRegionLandGetter item,
             string? name = null,
-            RegionMap.Mask<bool>? printMask = null)
+            RegionLand.Mask<bool>? printMask = null)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).Print(
+            return ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IRegionMapGetter item,
+            this IRegionLandGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            RegionMap.Mask<bool>? printMask = null)
+            RegionLand.Mask<bool>? printMask = null)
         {
-            ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).Print(
+            ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -468,39 +467,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IRegionMapGetter item,
-            IRegionMapGetter rhs,
-            RegionMap.TranslationMask? equalsMask = null)
+            this IRegionLandGetter item,
+            IRegionLandGetter rhs,
+            RegionLand.TranslationMask? equalsMask = null)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).Equals(
+            return ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IRegionMap lhs,
-            IRegionMapGetter rhs,
-            out RegionMap.ErrorMask errorMask,
-            RegionMap.TranslationMask? copyMask = null)
+            this IRegionLand lhs,
+            IRegionLandGetter rhs,
+            out RegionLand.ErrorMask errorMask,
+            RegionLand.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RegionMapSetterTranslationCommon)((IRegionMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RegionLandSetterTranslationCommon)((IRegionLandGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = RegionMap.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionLand.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IRegionMap lhs,
-            IRegionMapGetter rhs,
+            this IRegionLand lhs,
+            IRegionLandGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RegionMapSetterTranslationCommon)((IRegionMapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RegionLandSetterTranslationCommon)((IRegionLandGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -508,32 +507,32 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static RegionMap DeepCopy(
-            this IRegionMapGetter item,
-            RegionMap.TranslationMask? copyMask = null)
+        public static RegionLand DeepCopy(
+            this IRegionLandGetter item,
+            RegionLand.TranslationMask? copyMask = null)
         {
-            return ((RegionMapSetterTranslationCommon)((IRegionMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RegionLandSetterTranslationCommon)((IRegionLandGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static RegionMap DeepCopy(
-            this IRegionMapGetter item,
-            out RegionMap.ErrorMask errorMask,
-            RegionMap.TranslationMask? copyMask = null)
+        public static RegionLand DeepCopy(
+            this IRegionLandGetter item,
+            out RegionLand.ErrorMask errorMask,
+            RegionLand.TranslationMask? copyMask = null)
         {
-            return ((RegionMapSetterTranslationCommon)((IRegionMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RegionLandSetterTranslationCommon)((IRegionLandGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static RegionMap DeepCopy(
-            this IRegionMapGetter item,
+        public static RegionLand DeepCopy(
+            this IRegionLandGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((RegionMapSetterTranslationCommon)((IRegionMapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RegionLandSetterTranslationCommon)((IRegionLandGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -541,11 +540,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IRegionMap item,
+            this IRegionLand item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((RegionMapSetterCommon)((IRegionMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((RegionLandSetterCommon)((IRegionLandGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -561,18 +560,18 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum RegionMap_FieldIndex
+    internal enum RegionLand_FieldIndex
     {
         Override = 0,
         Priority = 1,
-        Map = 2,
+        LandIcon = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class RegionMap_Registration : ILoquiRegistration
+    internal partial class RegionLand_Registration : ILoquiRegistration
     {
-        public static readonly RegionMap_Registration Instance = new RegionMap_Registration();
+        public static readonly RegionLand_Registration Instance = new RegionLand_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -580,23 +579,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(RegionMap.Mask<>);
+        public static readonly Type MaskType = typeof(RegionLand.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionMap.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RegionLand.ErrorMask);
 
-        public static readonly Type ClassType = typeof(RegionMap);
+        public static readonly Type ClassType = typeof(RegionLand);
 
-        public static readonly Type GetterType = typeof(IRegionMapGetter);
+        public static readonly Type GetterType = typeof(IRegionLandGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IRegionMap);
+        public static readonly Type SetterType = typeof(IRegionLand);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.RegionMap";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.RegionLand";
 
-        public const string Name = "RegionMap";
+        public const string Name = "RegionLand";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -611,12 +610,12 @@ namespace Mutagen.Bethesda.Fallout3
             var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
                 RecordTypes.RDAT,
-                RecordTypes.RDMP);
+                RecordTypes.ICON);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(RegionMapBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(RegionLandBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -647,26 +646,26 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class RegionMapSetterCommon : RegionDataSetterCommon
+    internal partial class RegionLandSetterCommon : RegionDataSetterCommon
     {
-        public new static readonly RegionMapSetterCommon Instance = new RegionMapSetterCommon();
+        public new static readonly RegionLandSetterCommon Instance = new RegionLandSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IRegionMap item)
+        public void Clear(IRegionLand item)
         {
             ClearPartial();
-            item.Map = default;
+            item.LandIcon = default;
             base.Clear(item);
         }
         
         public override void Clear(IRegionData item)
         {
-            Clear(item: (IRegionMap)item);
+            Clear(item: (IRegionLand)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IRegionMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IRegionLand obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -675,7 +674,7 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IRegionMap item,
+            IRegionLand item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -683,8 +682,8 @@ namespace Mutagen.Bethesda.Fallout3
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RegionMapBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RegionMapBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: RegionLandBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RegionLandBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -693,7 +692,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (RegionMap)item,
+                item: (RegionLand)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -701,17 +700,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class RegionMapCommon : RegionDataCommon
+    internal partial class RegionLandCommon : RegionDataCommon
     {
-        public new static readonly RegionMapCommon Instance = new RegionMapCommon();
+        public new static readonly RegionLandCommon Instance = new RegionLandCommon();
 
-        public RegionMap.Mask<bool> GetEqualsMask(
-            IRegionMapGetter item,
-            IRegionMapGetter rhs,
+        public RegionLand.Mask<bool> GetEqualsMask(
+            IRegionLandGetter item,
+            IRegionLandGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new RegionMap.Mask<bool>(false);
-            ((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new RegionLand.Mask<bool>(false);
+            ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -720,19 +719,19 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IRegionMapGetter item,
-            IRegionMapGetter rhs,
-            RegionMap.Mask<bool> ret,
+            IRegionLandGetter item,
+            IRegionLandGetter rhs,
+            RegionLand.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Map = object.Equals(item.Map, rhs.Map);
+            ret.LandIcon = string.Equals(item.LandIcon, rhs.LandIcon);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IRegionMapGetter item,
+            IRegionLandGetter item,
             string? name = null,
-            RegionMap.Mask<bool>? printMask = null)
+            RegionLand.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -744,18 +743,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IRegionMapGetter item,
+            IRegionLandGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            RegionMap.Mask<bool>? printMask = null)
+            RegionLand.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"RegionMap =>");
+                sb.AppendLine($"RegionLand =>");
             }
             else
             {
-                sb.AppendLine($"{name} (RegionMap) =>");
+                sb.AppendLine($"{name} (RegionLand) =>");
             }
             using (sb.Brace())
             {
@@ -767,29 +766,29 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IRegionMapGetter item,
+            IRegionLandGetter item,
             StructuredStringBuilder sb,
-            RegionMap.Mask<bool>? printMask = null)
+            RegionLand.Mask<bool>? printMask = null)
         {
             RegionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Map ?? true)
-                && item.Map is {} MapItem)
+            if ((printMask?.LandIcon ?? true)
+                && item.LandIcon is {} LandIconItem)
             {
-                sb.AppendItem(MapItem, "Map");
+                sb.AppendItem(LandIconItem, "LandIcon");
             }
         }
         
-        public static RegionMap_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
+        public static RegionLand_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
         {
             switch (index)
             {
                 case RegionData_FieldIndex.Override:
-                    return (RegionMap_FieldIndex)((int)index);
+                    return (RegionLand_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Priority:
-                    return (RegionMap_FieldIndex)((int)index);
+                    return (RegionLand_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -797,15 +796,15 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRegionMapGetter? lhs,
-            IRegionMapGetter? rhs,
+            IRegionLandGetter? lhs,
+            IRegionLandGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)RegionMap_FieldIndex.Map) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionLand_FieldIndex.LandIcon) ?? true))
             {
-                if (!object.Equals(lhs.Map, rhs.Map)) return false;
+                if (!string.Equals(lhs.LandIcon, rhs.LandIcon)) return false;
             }
             return true;
         }
@@ -816,17 +815,17 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRegionMapGetter?)lhs,
-                rhs: rhs as IRegionMapGetter,
+                lhs: (IRegionLandGetter?)lhs,
+                rhs: rhs as IRegionLandGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IRegionMapGetter item)
+        public virtual int GetHashCode(IRegionLandGetter item)
         {
             var hash = new HashCode();
-            if (item.Map is {} Mapitem)
+            if (item.LandIcon is {} LandIconitem)
             {
-                hash.Add(Mapitem);
+                hash.Add(LandIconitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override int GetHashCode(IRegionDataGetter item)
         {
-            return GetHashCode(item: (IRegionMapGetter)item);
+            return GetHashCode(item: (IRegionLandGetter)item);
         }
         
         #endregion
@@ -842,11 +841,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return RegionMap.GetNew();
+            return RegionLand.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionMapGetter obj, bool iterateNestedRecords = true)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionLandGetter obj, bool iterateNestedRecords = true)
         {
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
@@ -858,14 +857,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class RegionMapSetterTranslationCommon : RegionDataSetterTranslationCommon
+    internal partial class RegionLandSetterTranslationCommon : RegionDataSetterTranslationCommon
     {
-        public new static readonly RegionMapSetterTranslationCommon Instance = new RegionMapSetterTranslationCommon();
+        public new static readonly RegionLandSetterTranslationCommon Instance = new RegionLandSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IRegionMap item,
-            IRegionMapGetter rhs,
+            IRegionLand item,
+            IRegionLandGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -876,9 +875,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)RegionMap_FieldIndex.Map) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionLand_FieldIndex.LandIcon) ?? true))
             {
-                item.Map = rhs.Map?.DeepCopy();
+                item.LandIcon = rhs.LandIcon;
             }
             DeepCopyInCustom(
                 item: item,
@@ -889,8 +888,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IRegionMap item,
-            IRegionMapGetter rhs,
+            IRegionLand item,
+            IRegionLandGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -903,8 +902,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRegionMap)item,
-                rhs: (IRegionMapGetter)rhs,
+                item: (IRegionLand)item,
+                rhs: (IRegionLandGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -912,12 +911,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public RegionMap DeepCopy(
-            IRegionMapGetter item,
-            RegionMap.TranslationMask? copyMask = null)
+        public RegionLand DeepCopy(
+            IRegionLandGetter item,
+            RegionLand.TranslationMask? copyMask = null)
         {
-            RegionMap ret = (RegionMap)((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).GetNew();
-            ((RegionMapSetterTranslationCommon)((IRegionMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            RegionLand ret = (RegionLand)((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).GetNew();
+            ((RegionLandSetterTranslationCommon)((IRegionLandGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -926,30 +925,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public RegionMap DeepCopy(
-            IRegionMapGetter item,
-            out RegionMap.ErrorMask errorMask,
-            RegionMap.TranslationMask? copyMask = null)
+        public RegionLand DeepCopy(
+            IRegionLandGetter item,
+            out RegionLand.ErrorMask errorMask,
+            RegionLand.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            RegionMap ret = (RegionMap)((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).GetNew();
-            ((RegionMapSetterTranslationCommon)((IRegionMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            RegionLand ret = (RegionLand)((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).GetNew();
+            ((RegionLandSetterTranslationCommon)((IRegionLandGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = RegionMap.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = RegionLand.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public RegionMap DeepCopy(
-            IRegionMapGetter item,
+        public RegionLand DeepCopy(
+            IRegionLandGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            RegionMap ret = (RegionMap)((RegionMapCommon)((IRegionMapGetter)item).CommonInstance()!).GetNew();
-            ((RegionMapSetterTranslationCommon)((IRegionMapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            RegionLand ret = (RegionLand)((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).GetNew();
+            ((RegionLandSetterTranslationCommon)((IRegionLandGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -965,21 +964,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class RegionMap
+    public partial class RegionLand
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionMap_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => RegionLand_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionLand_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RegionMapCommon.Instance;
+        protected override object CommonInstance() => RegionLandCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return RegionMapSetterCommon.Instance;
+            return RegionLandSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RegionMapSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RegionLandSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -990,14 +989,14 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class RegionMapBinaryWriteTranslation :
+    public partial class RegionLandBinaryWriteTranslation :
         RegionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RegionMapBinaryWriteTranslation Instance = new();
+        public new static readonly RegionLandBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IRegionMapGetter item,
+            IRegionLandGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1007,15 +1006,14 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Map,
-                header: translationParams.ConvertToCustom(RecordTypes.RDMP),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
+                item: item.LandIcon,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
-            IRegionMapGetter item,
+            IRegionLandGetter item,
             TypedWriteParams translationParams)
         {
             RegionDataBinaryWriteTranslation.WriteEmbedded(
@@ -1033,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IRegionMapGetter)item,
+                item: (IRegionLandGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1044,19 +1042,19 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRegionMapGetter)item,
+                item: (IRegionLandGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class RegionMapBinaryCreateTranslation : RegionDataBinaryCreateTranslation
+    internal partial class RegionLandBinaryCreateTranslation : RegionDataBinaryCreateTranslation
     {
-        public new static readonly RegionMapBinaryCreateTranslation Instance = new RegionMapBinaryCreateTranslation();
+        public new static readonly RegionLandBinaryCreateTranslation Instance = new RegionLandBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IRegionMap item,
+            IRegionLand item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1067,16 +1065,14 @@ namespace Mutagen.Bethesda.Fallout3
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.RDMP:
+                case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Map = StringBinaryTranslation.Instance.Parse(
+                    item.LandIcon = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        eager: true,
-                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)RegionMap_FieldIndex.Map;
+                    return (int)RegionLand_FieldIndex.LandIcon;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1096,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class RegionMapBinaryTranslationMixIn
+    public static class RegionLandBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1105,38 +1101,38 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class RegionMapBinaryOverlay :
+    internal partial class RegionLandBinaryOverlay :
         RegionDataBinaryOverlay,
-        IRegionMapGetter
+        IRegionLandGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionMap_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => RegionMap_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => RegionLand_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => RegionLand_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RegionMapCommon.Instance;
+        protected override object CommonInstance() => RegionLandCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RegionMapSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RegionLandSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RegionMapBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RegionLandBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RegionMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RegionLandBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region Map
-        private int? _MapLocation;
-        public ITranslatedStringGetter? Map => _MapLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region LandIcon
+        private int? _LandIconLocation;
+        public String? LandIcon => _LandIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LandIconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1144,7 +1140,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected RegionMapBinaryOverlay(
+        protected RegionLandBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1154,7 +1150,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static IRegionMapGetter RegionMapFactory(
+        public static IRegionLandGetter RegionLandFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1166,7 +1162,7 @@ namespace Mutagen.Bethesda.Fallout3
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new RegionMapBinaryOverlay(
+            var ret = new RegionLandBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1178,12 +1174,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static IRegionMapGetter RegionMapFactory(
+        public static IRegionLandGetter RegionLandFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return RegionMapFactory(
+            return RegionLandFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1201,10 +1197,10 @@ namespace Mutagen.Bethesda.Fallout3
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.RDMP:
+                case RecordTypeInts.ICON:
                 {
-                    _MapLocation = (stream.Position - offset);
-                    return (int)RegionMap_FieldIndex.Map;
+                    _LandIconLocation = (stream.Position - offset);
+                    return (int)RegionLand_FieldIndex.LandIcon;
                 }
                 default:
                     return base.FillRecordType(
@@ -1223,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMapMixIn.Print(
+            RegionLandMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1234,16 +1230,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IRegionMapGetter rhs) return false;
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IRegionLandGetter rhs) return false;
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRegionMapGetter? obj)
+        public bool Equals(IRegionLandGetter? obj)
         {
-            return ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RegionMapCommon)((IRegionMapGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

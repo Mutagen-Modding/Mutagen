@@ -264,6 +264,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             RegionGrass_Registration.Instance,
             RegionGrasses_Registration.Instance,
             RegionImposters_Registration.Instance,
+            RegionLand_Registration.Instance,
             RegionMap_Registration.Instance,
             RegionObject_Registration.Instance,
             RegionObjects_Registration.Instance,

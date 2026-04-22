@@ -13,5 +13,6 @@
       </FormLink>
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
 </Loqui>

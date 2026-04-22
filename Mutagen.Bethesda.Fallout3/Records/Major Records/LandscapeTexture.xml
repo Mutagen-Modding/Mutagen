@@ -10,6 +10,7 @@
         <FormLink recordType="GNAM" refName="Grass" />
       </List>
     </Fields>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
   <Object name="HavokData" objType="Subrecord" recordType="HNAM">
     <Fields>

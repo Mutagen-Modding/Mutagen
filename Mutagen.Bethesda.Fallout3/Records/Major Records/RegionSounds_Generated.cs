@@ -69,26 +69,26 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkNullableGetter<IMusicTypeGetter> IRegionSoundsGetter.Music => this.Music;
         #endregion
         #region IncidentalMediaSet
-        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _IncidentalMediaSet = new FormLinkNullable<IFallout3MajorRecordGetter>();
-        public IFormLinkNullable<IFallout3MajorRecordGetter> IncidentalMediaSet
+        private readonly IFormLinkNullable<IMediaSetGetter> _IncidentalMediaSet = new FormLinkNullable<IMediaSetGetter>();
+        public IFormLinkNullable<IMediaSetGetter> IncidentalMediaSet
         {
             get => _IncidentalMediaSet;
             set => _IncidentalMediaSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IRegionSoundsGetter.IncidentalMediaSet => this.IncidentalMediaSet;
+        IFormLinkNullableGetter<IMediaSetGetter> IRegionSoundsGetter.IncidentalMediaSet => this.IncidentalMediaSet;
         #endregion
         #region BattleMediaSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> _BattleMediaSets = new ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>>();
-        public ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> BattleMediaSets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _BattleMediaSets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> BattleMediaSets
         {
             get => this._BattleMediaSets;
             init => this._BattleMediaSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> IRegionSoundsGetter.BattleMediaSets => _BattleMediaSets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IRegionSoundsGetter.BattleMediaSets => _BattleMediaSets;
         #endregion
 
         #endregion
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
             public Mask(
-                TItem Flags,
+                TItem Override,
                 TItem Priority,
                 TItem MusicType,
                 TItem Music,
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem BattleMediaSets,
                 TItem Sounds)
             : base(
-                Flags: Flags,
+                Override: Override,
                 Priority: Priority)
             {
                 this.MusicType = MusicType;
@@ -717,8 +717,8 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new UInt32? MusicType { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new IFormLinkNullable<IFallout3MajorRecordGetter> IncidentalMediaSet { get; set; }
-        new ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> BattleMediaSets { get; }
+        new IFormLinkNullable<IMediaSetGetter> IncidentalMediaSet { get; set; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> BattleMediaSets { get; }
         new ExtendedList<RegionSound>? Sounds { get; set; }
     }
 
@@ -731,8 +731,8 @@ namespace Mutagen.Bethesda.Fallout3
         static new ILoquiRegistration StaticRegistration => RegionSounds_Registration.Instance;
         UInt32? MusicType { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IncidentalMediaSet { get; }
-        IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> BattleMediaSets { get; }
+        IFormLinkNullableGetter<IMediaSetGetter> IncidentalMediaSet { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> BattleMediaSets { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 
     }
@@ -878,7 +878,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum RegionSounds_FieldIndex
     {
-        Flags = 0,
+        Override = 0,
         Priority = 1,
         MusicType = 2,
         Music = 3,
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Flags:
+                case RegionData_FieldIndex.Override:
                     return (RegionSounds_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Priority:
                     return (RegionSounds_FieldIndex)((int)index);
@@ -1312,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     item.BattleMediaSets.SetTo(
                         rhs.BattleMediaSets
-                            .Select(b => (IFormLinkGetter<IFallout3MajorRecordGetter>)new FormLink<IFallout3MajorRecordGetter>(b.FormKey)));
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1496,10 +1496,10 @@ namespace Mutagen.Bethesda.Fallout3
                     item: item.IncidentalMediaSet,
                     header: translationParams.ConvertToCustom(RecordTypes.RDSI));
             }
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout3MajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.BattleMediaSets,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout3MajorRecordGetter> subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1598,7 +1598,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RDSB:
                 {
                     item.BattleMediaSets.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout3MajorRecordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.RDSB),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1681,9 +1681,9 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region IncidentalMediaSet
         private int? _IncidentalMediaSetLocation;
-        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> IncidentalMediaSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _IncidentalMediaSetLocation);
+        public IFormLinkNullableGetter<IMediaSetGetter> IncidentalMediaSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMediaSetGetter>(_package, _recordData, _IncidentalMediaSetLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> BattleMediaSets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> BattleMediaSets { get; private set; } = [];
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1765,10 +1765,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RDSB:
                 {
-                    this.BattleMediaSets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IFallout3MajorRecordGetter>>(
+                    this.BattleMediaSets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(p, s),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

@@ -718,7 +718,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         IHasIcons,
         ILandscapeTextureGetter,
-        ILoquiObjectSetter<ILandscapeTextureInternal>
+        ILoquiObjectSetter<ILandscapeTextureInternal>,
+        IRegionTarget
     {
         /// <summary>
         /// Aspects: IHasIcons
@@ -745,7 +746,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainerGetter,
         IHasIconsGetter,
         ILoquiObject<ILandscapeTextureGetter>,
-        IMapsToGetter<ILandscapeTextureGetter>
+        IMapsToGetter<ILandscapeTextureGetter>,
+        IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => LandscapeTexture_Registration.Instance;
         #region Icons

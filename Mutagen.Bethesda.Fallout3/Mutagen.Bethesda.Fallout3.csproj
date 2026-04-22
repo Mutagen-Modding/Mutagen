@@ -1384,6 +1384,9 @@
     <Compile Include="Records\Major Records\RegionObjects_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\RegionObject.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RegionObject_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
@@ -1402,6 +1405,9 @@
     <Compile Include="Records\Major Records\RegionSounds_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\RegionSound.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RegionSound_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
@@ -1416,6 +1422,10 @@
     </Compile>
     <Compile Include="Records\Major Records\NoteVoice_Generated.cs">
       <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IRegionTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\RegionLand_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

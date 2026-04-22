@@ -260,7 +260,10 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("IDLM"),
             new RecordType("NOTE"),
             new RecordType("PROJ"),
-            new RecordType("LVLI"));
+            new RecordType("LVLI"),
+            new RecordType("WTHR"),
+            new RecordType("CLMT"),
+            new RecordType("REGN"));
         return ret;
     }
 }

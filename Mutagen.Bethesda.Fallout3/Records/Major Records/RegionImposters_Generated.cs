@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,14 +55,17 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Imposters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Imposters;
-        public MemorySlice<Byte>? Imposters
+        private ExtendedList<IFormLinkGetter<IPlacedObjectGetter>>? _Imposters;
+        public ExtendedList<IFormLinkGetter<IPlacedObjectGetter>>? Imposters
         {
             get => this._Imposters;
             set => this._Imposters = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IRegionImpostersGetter.Imposters => this.Imposters;
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>>? IRegionImpostersGetter.Imposters => _Imposters;
+        #endregion
+
         #endregion
 
         #region To String
@@ -104,18 +108,18 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Imposters = initialValue;
+                this.Imposters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
             public Mask(
-                TItem Flags,
+                TItem Override,
                 TItem Priority,
                 TItem Imposters)
             : base(
-                Flags: Flags,
+                Override: Override,
                 Priority: Priority)
             {
-                this.Imposters = Imposters;
+                this.Imposters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Imposters, []);
             }
 
             #pragma warning disable CS8618
@@ -127,7 +131,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Imposters;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Imposters;
             #endregion
 
             #region Equals
@@ -158,7 +162,17 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Imposters)) return false;
+                if (this.Imposters != null)
+                {
+                    if (!eval(this.Imposters.Overall)) return false;
+                    if (this.Imposters.Specific != null)
+                    {
+                        foreach (var item in this.Imposters.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -167,7 +181,17 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Imposters)) return true;
+                if (this.Imposters != null)
+                {
+                    if (eval(this.Imposters.Overall)) return true;
+                    if (this.Imposters.Specific != null)
+                    {
+                        foreach (var item in this.Imposters.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -183,7 +207,20 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Imposters = eval(this.Imposters);
+                if (Imposters != null)
+                {
+                    obj.Imposters = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Imposters.Overall), []);
+                    if (Imposters.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Imposters.Specific = l;
+                        foreach (var item in Imposters.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -202,9 +239,26 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(RegionImposters.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Imposters ?? true)
+                    if ((printMask?.Imposters?.Overall ?? true)
+                        && Imposters is {} ImpostersItem)
                     {
-                        sb.AppendItem(Imposters, "Imposters");
+                        sb.AppendLine("Imposters =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ImpostersItem.Overall);
+                            if (ImpostersItem.Specific != null)
+                            {
+                                foreach (var subItem in ImpostersItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -217,7 +271,7 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Imposters;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Imposters;
             #endregion
 
             #region IErrorMask
@@ -239,7 +293,7 @@ namespace Mutagen.Bethesda.Fallout3
                 switch (enu)
                 {
                     case RegionImposters_FieldIndex.Imposters:
-                        this.Imposters = ex;
+                        this.Imposters = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -253,7 +307,7 @@ namespace Mutagen.Bethesda.Fallout3
                 switch (enu)
                 {
                     case RegionImposters_FieldIndex.Imposters:
-                        this.Imposters = (Exception?)obj;
+                        this.Imposters = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -291,8 +345,25 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Imposters is {} ImpostersItem)
                 {
-                    sb.AppendItem(Imposters, "Imposters");
+                    sb.AppendLine("Imposters =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ImpostersItem.Overall);
+                        if (ImpostersItem.Specific != null)
+                        {
+                            foreach (var subItem in ImpostersItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -302,7 +373,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Imposters = this.Imposters.Combine(rhs.Imposters);
+                ret.Imposters = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Imposters?.Overall, rhs.Imposters?.Overall), Noggog.ExceptionExt.Combine(this.Imposters?.Specific, rhs.Imposters?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -351,6 +422,11 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RegionImpostersCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionImpostersSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -410,20 +486,22 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IRegionImposters :
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionImposters>,
         IRegionData,
         IRegionImpostersGetter
     {
-        new MemorySlice<Byte>? Imposters { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>>? Imposters { get; set; }
     }
 
     public partial interface IRegionImpostersGetter :
         IRegionDataGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IRegionImpostersGetter>
     {
         static new ILoquiRegistration StaticRegistration => RegionImposters_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? Imposters { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>>? Imposters { get; }
 
     }
 
@@ -568,7 +646,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum RegionImposters_FieldIndex
     {
-        Flags = 0,
+        Override = 0,
         Priority = 1,
         Imposters = 2,
     }
@@ -661,7 +739,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IRegionImposters item)
         {
             ClearPartial();
-            item.Imposters = default;
+            item.Imposters = null;
             base.Clear(item);
         }
         
@@ -674,6 +752,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IRegionImposters obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Imposters?.RemapLinks(mapping);
         }
         
         #endregion
@@ -730,7 +809,10 @@ namespace Mutagen.Bethesda.Fallout3
             RegionImposters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Imposters = MemorySliceExt.SequenceEqual(item.Imposters, rhs.Imposters);
+            ret.Imposters = item.Imposters.CollectionEqualsHelper(
+                rhs.Imposters,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -780,10 +862,20 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Imposters ?? true)
+            if ((printMask?.Imposters?.Overall ?? true)
                 && item.Imposters is {} ImpostersItem)
             {
-                sb.AppendLine($"Imposters => {SpanExt.ToHexString(ImpostersItem)}");
+                sb.AppendLine("Imposters =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ImpostersItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
         }
         
@@ -791,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Flags:
+                case RegionData_FieldIndex.Override:
                     return (RegionImposters_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Priority:
                     return (RegionImposters_FieldIndex)((int)index);
@@ -810,7 +902,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)RegionImposters_FieldIndex.Imposters) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.Imposters, rhs.Imposters)) return false;
+                if (!lhs.Imposters.SequenceEqualNullable(rhs.Imposters)) return false;
             }
             return true;
         }
@@ -829,10 +921,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IRegionImpostersGetter item)
         {
             var hash = new HashCode();
-            if (item.Imposters is {} ImpostersItem)
-            {
-                hash.Add(ImpostersItem);
-            }
+            hash.Add(item.Imposters);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -856,6 +945,13 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            if (obj.Imposters is {} ImpostersItem)
+            {
+                foreach (var item in ImpostersItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -883,13 +979,29 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)RegionImposters_FieldIndex.Imposters) ?? true))
             {
-                if(rhs.Imposters is {} Impostersrhs)
+                errorMask?.PushIndex((int)RegionImposters_FieldIndex.Imposters);
+                try
                 {
-                    item.Imposters = Impostersrhs.ToArray();
+                    if ((rhs.Imposters != null))
+                    {
+                        item.Imposters = 
+                            rhs.Imposters
+                                .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedObjectGetter>>();
+                    }
+                    else
+                    {
+                        item.Imposters = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Imposters = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             DeepCopyInCustom(
@@ -1017,13 +1129,16 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
-            {
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Imposters,
-                    header: translationParams.ConvertToCustom(RecordTypes.RDID));
-            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Imposters,
+                recordType: translationParams.ConvertToCustom(RecordTypes.RDID),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedObjectGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
         }
 
         public void Write(
@@ -1082,11 +1197,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.RDID:
                 {
-                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
-                    {
-                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.Imposters = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    }
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Imposters = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IPlacedObjectGetter>>();
                     return (int)RegionImposters_FieldIndex.Imposters;
                 }
                 default:
@@ -1133,6 +1249,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RegionImpostersCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionImpostersBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1145,10 +1262,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        #region Imposters
-        private int? _ImpostersLocation;
-        public ReadOnlyMemorySlice<Byte>? Imposters => _ImpostersLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpostersLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>>? Imposters { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1214,7 +1328,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.RDID:
                 {
-                    _ImpostersLocation = (stream.Position - offset);
+                    this.Imposters = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedObjectGetter>>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 4,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(p, s));
                     return (int)RegionImposters_FieldIndex.Imposters;
                 }
                 default:

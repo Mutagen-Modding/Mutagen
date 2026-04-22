@@ -8,6 +8,16 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Fallout3;
 
+public partial class Region
+{
+    [Flags]
+    public enum MajorFlag
+    {
+        BorderRegion = 0x0000_0040,
+    }
+
+}
+
 partial class RegionBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, PreviousParse lastParsed)
@@ -30,6 +40,7 @@ partial class RegionBinaryCreateTranslation
             RegionData.RegionDataType.Object => recordType.Equals(RecordTypes.RDOT),
             RegionData.RegionDataType.Weather => recordType.Equals(RecordTypes.RDWT),
             RegionData.RegionDataType.Map => recordType.Equals(RecordTypes.RDMP),
+            RegionData.RegionDataType.Land => recordType.Equals(RecordTypes.ICON),
             RegionData.RegionDataType.Grass => recordType.Equals(RecordTypes.RDGS),
             RegionData.RegionDataType.Sound => recordType.Equals(RecordTypes.RDSD)
                 || recordType.Equals(RecordTypes.RDMD)
@@ -73,6 +84,9 @@ partial class RegionBinaryCreateTranslation
             case RegionData.RegionDataType.Weather:
                 item.Weather = RegionWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                 break;
+            case RegionData.RegionDataType.Land:
+                item.Land = RegionLand.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
             case RegionData.RegionDataType.Imposter:
                 item.Imposters = RegionImposters.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
                 break;
@@ -91,6 +105,7 @@ partial class RegionBinaryWriteTranslation
         item.Objects?.WriteToBinary(writer);
         item.Weather?.WriteToBinary(writer);
         item.MapName?.WriteToBinary(writer);
+        item.Land?.WriteToBinary(writer);
         item.Grasses?.WriteToBinary(writer);
         item.Sounds?.WriteToBinary(writer);
         item.Imposters?.WriteToBinary(writer);
@@ -107,6 +122,9 @@ partial class RegionBinaryOverlay : IRegionGetter
 
     private ReadOnlyMemorySlice<byte>? _mapSpan;
     public IRegionMapGetter? MapName => _mapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new OverlayStream(_mapSpan.Value, _package), _package) : default;
+
+    private ReadOnlyMemorySlice<byte>? _landSpan;
+    public IRegionLandGetter? Land => _landSpan.HasValue ? RegionLandBinaryOverlay.RegionLandFactory(new OverlayStream(_landSpan.Value, _package), _package) : default;
 
     private ReadOnlyMemorySlice<byte>? _grassesSpan;
     public IRegionGrassesGetter? Grasses => _grassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new OverlayStream(_grassesSpan.Value, _package), _package) : default;
@@ -165,6 +183,9 @@ partial class RegionBinaryOverlay : IRegionGetter
                 break;
             case RegionData.RegionDataType.Weather:
                 _weatherSpan = _recordData.Slice(loc, len);
+                break;
+            case RegionData.RegionDataType.Land:
+                _landSpan = _recordData.Slice(loc, len);
                 break;
             case RegionData.RegionDataType.Imposter:
                 _impostersSpan = _recordData.Slice(loc, len);

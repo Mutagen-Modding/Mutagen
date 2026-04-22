@@ -112,11 +112,11 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
             public Mask(
-                TItem Flags,
+                TItem Override,
                 TItem Priority,
                 TItem Grasses)
             : base(
-                Flags: Flags,
+                Override: Override,
                 Priority: Priority)
             {
                 this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionGrass.Mask<TItem>?>>?>(Grasses, []);
@@ -644,7 +644,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum RegionGrasses_FieldIndex
     {
-        Flags = 0,
+        Override = 0,
         Priority = 1,
         Grasses = 2,
     }
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Flags:
+                case RegionData_FieldIndex.Override:
                     return (RegionGrasses_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Priority:
                     return (RegionGrasses_FieldIndex)((int)index);

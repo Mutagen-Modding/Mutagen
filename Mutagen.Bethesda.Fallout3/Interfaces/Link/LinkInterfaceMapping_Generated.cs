@@ -177,6 +177,18 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IReferenceableObject),
                 Getter: typeof(IReferenceableObjectGetter)));
         dict[typeof(IReferenceableObjectGetter)] = dict[typeof(IReferenceableObject)] with { Setter = false };
+        dict[typeof(IRegionTarget)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                LandscapeTexture_Registration.Instance,
+                Static_Registration.Instance,
+                Tree_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IRegionTarget),
+                Getter: typeof(IRegionTargetGetter)));
+        dict[typeof(IRegionTargetGetter)] = dict[typeof(IRegionTarget)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

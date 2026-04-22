@@ -31,5 +31,6 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
 </Loqui>

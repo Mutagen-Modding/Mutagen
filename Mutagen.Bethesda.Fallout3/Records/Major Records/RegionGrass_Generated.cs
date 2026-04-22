@@ -62,15 +62,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<IGrassGetter> IRegionGrassGetter.Grass => this.Grass;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[4];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRegionGrassGetter.Unknown => this.Unknown;
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -469,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout3
         IRegionGrassGetter
     {
         new IFormLink<IGrassGetter> Grass { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new UInt32 Unknown { get; set; }
     }
 
     public partial interface IRegionGrassGetter :
@@ -486,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionGrass_Registration.Instance;
         IFormLinkGetter<IGrassGetter> Grass { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        UInt32 Unknown { get; }
 
     }
 
@@ -737,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Grass.Clear();
-            item.Unknown = new byte[4];
+            item.Unknown = default(UInt32);
         }
         
         #region Mutagen
@@ -789,7 +781,7 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Grass = item.Grass.Equals(rhs.Grass);
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string Print(
@@ -840,7 +832,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -857,7 +849,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             return true;
         }
@@ -906,7 +898,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)RegionGrass_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1019,9 +1011,7 @@ namespace Mutagen.Bethesda.Fallout3
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Grass);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
+            writer.Write(item.Unknown);
         }
 
         public void Write(
@@ -1056,7 +1046,7 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.Grass.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Unknown = frame.ReadUInt32();
         }
 
     }
@@ -1124,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public IFormLinkGetter<IGrassGetter> Grass => FormLinkBinaryTranslation.Instance.OverlayFactory<IGrassGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x4, 0x4).ToArray();
+        public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
